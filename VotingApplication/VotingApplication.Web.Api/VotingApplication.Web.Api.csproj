@@ -197,7 +197,9 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="ApplicationInsights.config" />
+    <None Include="Properties\PublishProfiles\voting-application - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\voting-application - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\voting-application - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\voting-application - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\VotingApplication.pubxml" />
     <Content Include="Web.config" />

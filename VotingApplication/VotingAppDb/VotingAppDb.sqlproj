@@ -8,7 +8,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{f4e739a7-47f8-4b2d-ad89-7e53ce374343}</ProjectGuid>
-    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql120DatabaseSchemaProvider</DSP>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.SqlAzureDatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
@@ -20,7 +20,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetLanguage>CS</TargetLanguage>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <SqlServerVerification>False</SqlServerVerification>
+    <SqlServerVerification>True</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
   </PropertyGroup>
@@ -62,5 +62,8 @@
     <Folder Include="dbo\Stored Procedures" />
     <Folder Include="dbo\Tables" />
     <Folder Include="dbo\Views" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="VotingAppDb.publish.xml" />
   </ItemGroup>
 </Project>
