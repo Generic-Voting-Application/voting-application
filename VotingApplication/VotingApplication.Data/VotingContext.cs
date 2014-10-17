@@ -3,7 +3,7 @@ using VotingApplication.Data.Model;
 
 namespace VotingApplication.Data
 {
-    public class VotingContext
+    public class VotingContext : DbContext
     {
         public DbSet<Option> Options { get; set; }
         public DbSet<User> Users { get; set; }
