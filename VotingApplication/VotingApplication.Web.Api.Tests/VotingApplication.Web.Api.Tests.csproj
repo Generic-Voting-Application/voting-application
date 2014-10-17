@@ -56,18 +56,35 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VotingApplication.Common\VotingApplication.Common.csproj">
+      <Project>{51dd38fa-7531-4977-814a-bd0752e62ce5}</Project>
+      <Name>VotingApplication.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VotingApplication.Data\VotingApplication.Data.csproj">
+      <Project>{942dcb1b-5882-4c01-95ae-3fe71e4103f2}</Project>
+      <Name>VotingApplication.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VotingApplication.Web.Api.Models\VotingApplication.Web.Api.Models.csproj">
+      <Project>{f7142ea0-cb7c-4b2e-bf20-40617a6cabe0}</Project>
+      <Name>VotingApplication.Web.Api.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VotingApplication.Web.Api\VotingApplication.Web.Api.csproj">
+      <Project>{141c9d63-9053-44d8-b2e3-f436aee56ac0}</Project>
+      <Name>VotingApplication.Web.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VotingApplication.Web.Common\VotingApplication.Web.Common.csproj">
+      <Project>{969076f5-f2ad-4711-853b-ba1bd3439e13}</Project>
+      <Name>VotingApplication.Web.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-  </Target>
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
+  <Import Project="..\..\lib\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\lib\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
