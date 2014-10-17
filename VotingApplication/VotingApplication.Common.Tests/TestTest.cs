@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace VotingApplication.Web.Api.Tests
+namespace VotingApplication.Common.Tests
 {
     [TestClass]
     public class TestTest
