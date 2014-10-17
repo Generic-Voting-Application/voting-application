@@ -15,11 +15,5 @@ namespace VotingApplication.Common.Tests
         {
             Assert.IsTrue(true);
         }
-
-        [TestMethod]
-        public void Test_Fail()
-        {
-            Assert.Fail();
-        }
     }
 }
