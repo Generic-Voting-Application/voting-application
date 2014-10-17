@@ -182,5 +182,5 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 
-.nuget/Nuget.exe
+.nuget
 Packages.dgml
