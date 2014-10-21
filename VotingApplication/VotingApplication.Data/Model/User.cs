@@ -5,8 +5,7 @@ namespace VotingApplication.Data.Model
 {
     public class User
     {
-        [Key]
-        public virtual long Id { get; set; }
-        public virtual string Name { get; set; }
+        public long Id { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -4,10 +4,13 @@ using System.ComponentModel.DataAnnotations;
 namespace VotingApplication.Data.Model
 {
     public class Vote
-    {
-        [Key]
-        public virtual long Id  { get; set; }
-        public virtual Option Option { get; set; }
-        public virtual User User { get; set; }
+    {        
+        public long Id  { get; set; }
+
+        public long OptionId { get; set; }
+        public Option Option { get; set; }
+
+        public long UserId { get; set; }
+        public User User { get; set; }
     }
 }
