@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using VotingApplication.Data;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers;
@@ -12,30 +11,31 @@ using VotingApplication.Web.Api.Controllers;
 namespace VotingApplication.Web.Api.Tests
 {
     [TestClass]
-    public class UserControllerTests
+    public class OptionControllerTests
     {
-        private UserController _controller;
-        private User _bobUser;
+        private OptionController _controller;
+        private Option _burgerOption;
 
         [TestInitialize]
         public void setup()
         {
-            _bobUser = new User { Id = 1, Name = "Bob" };
-            List<User> dummyUsers = new List<User>();
-            dummyUsers.Add(_bobUser);
+            _burgerOption = new Option { Id = 1, Name = "Burger King" };
+            List<Option> dummyOptions = new List<Option>();
+            dummyOptions.Add(_burgerOption);
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
-            mockContext.Setup(a => a.Users).Returns(dummyUsers);
+            mockContext.Setup(a => a.Options).Returns(dummyOptions);
 
-            _controller = new UserController(mockContextFactory.Object);
+
+            _controller = new OptionController(mockContextFactory.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
 
         [TestMethod]
-        public void GetReturnsAllUsers()
+        public void GetReturnsAllOptions()
         {
             // Act
             var response = _controller.Get();
@@ -45,27 +45,27 @@ namespace VotingApplication.Web.Api.Tests
         }
 
         [TestMethod]
-        public void GetReturnsNonNullUsers()
+        public void GetReturnsNonNullOptions()
         {
             // Act
             var response = _controller.Get();
-            List<User> responseUsers = ((ObjectContent)response.Content).Value as List<User>;
+            List<Option> responseOptions = ((ObjectContent)response.Content).Value as List<Option>;
 
             // Assert
-            Assert.IsNotNull(responseUsers);
+            Assert.IsNotNull(responseOptions);
         }
 
         [TestMethod]
-        public void GetReturnsUsersFromTheDatabase()
+        public void GetReturnsOptionsFromTheDatabase()
         {
             // Act
             var response = _controller.Get();
-            List<User> responseUsers = ((ObjectContent)response.Content).Value as List<User>;
+            List<Option> responseOptions = ((ObjectContent)response.Content).Value as List<Option>;
 
             // Assert
-            List<User> expectedUsers = new List<User>();
-            expectedUsers.Add(_bobUser);
-            CollectionAssert.AreEquivalent(expectedUsers, responseUsers);
+            List<Option> expectedOptions = new List<Option>();
+            expectedOptions.Add(_burgerOption);
+            CollectionAssert.AreEquivalent(expectedOptions, responseOptions);
         }
     }
 }

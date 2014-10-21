@@ -65,9 +65,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OptionControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestTest.cs" />
     <Compile Include="UserControllerTests.cs" />
+    <Compile Include="VoteControllerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
