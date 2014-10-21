@@ -46,11 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context\ContextFactory.cs" />
+    <Compile Include="Context\IContextFactory.cs" />
+    <Compile Include="Context\IVotingContext.cs" />
     <Compile Include="Model\Option.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\Vote.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VotingContext.cs" />
+    <Compile Include="Context\VotingContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

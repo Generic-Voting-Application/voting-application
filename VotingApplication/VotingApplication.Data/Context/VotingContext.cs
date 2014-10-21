@@ -1,11 +1,11 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
 using VotingApplication.Data.Model;
 
-
-namespace VotingApplication.Data
+namespace VotingApplication.Data.Context
 {
-    public class VotingContext : DbContext
+    public class VotingContext : DbContext, IVotingContext
     {
         public VotingContext()
         {
@@ -22,9 +22,9 @@ namespace VotingApplication.Data
             modelBuilder.Configurations.Add(new VoteConfiguration());
         }
 
-        public IDbSet<Option> Options { get; set; }
-        public IDbSet<User> Users { get; set; }
-        public IDbSet<Vote> Votes { get; set; }
+        public IEnumerable<Option> Options { get; set; }
+        public IEnumerable<User> Users { get; set; }
+        public IEnumerable<Vote> Votes { get; set; }
     }
 
     public class VoteConfiguration : EntityTypeConfiguration<Vote>
