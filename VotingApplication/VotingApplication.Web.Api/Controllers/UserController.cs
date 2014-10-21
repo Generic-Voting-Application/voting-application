@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using VotingApplication.Data;
@@ -11,11 +13,11 @@ namespace VotingApplication.Web.Api.Controllers
     public class UserController : ApiController
     {
         #region Get
-        public IEnumerable<User> Get()
+        public HttpResponseMessage Get()
         {
             using (var context = new VotingContext())
             {
-                return context.Users.ToList<User>();
+                return this.Request.CreateResponse(HttpStatusCode.OK, context.Users.ToList<User>());
             }
         }
 
