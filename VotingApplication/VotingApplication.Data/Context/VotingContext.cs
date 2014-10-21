@@ -22,9 +22,9 @@ namespace VotingApplication.Data.Context
             modelBuilder.Configurations.Add(new VoteConfiguration());
         }
 
-        public IEnumerable<Option> Options { get; set; }
-        public IEnumerable<User> Users { get; set; }
-        public IEnumerable<Vote> Votes { get; set; }
+        public IDbSet<Option> Options { get; set; }
+        public IDbSet<User> Users { get; set; }
+        public IDbSet<Vote> Votes { get; set; }
     }
 
     public class VoteConfiguration : EntityTypeConfiguration<Vote>

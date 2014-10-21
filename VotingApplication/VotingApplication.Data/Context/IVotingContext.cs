@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using VotingApplication.Data.Model;
 
 namespace VotingApplication.Data.Context
 {
     public interface IVotingContext : IDisposable
     {
-        IEnumerable<Option> Options { get; set; }
-        IEnumerable<User> Users { get; set; }
-        IEnumerable<Vote> Votes { get; set; }
+        IDbSet<Option> Options { get; set; }
+        IDbSet<User> Users { get; set; }
+        IDbSet<Vote> Votes { get; set; }
     }
 }

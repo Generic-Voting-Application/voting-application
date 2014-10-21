@@ -15,6 +15,11 @@ namespace VotingApplication.Web.Api.Controllers
     {
         private readonly IContextFactory _contextFactory;
 
+        public UserController()
+        {
+            this._contextFactory = new ContextFactory();
+        }
+
         public UserController(IContextFactory contextFactory)
         {
             this._contextFactory = contextFactory;
@@ -29,9 +34,20 @@ namespace VotingApplication.Web.Api.Controllers
             }
         }
 
-        public User Get(long id)
+        public HttpResponseMessage Get(long id)
         {
-            throw new System.NotImplementedException();
+            using (var context = _contextFactory.CreateContext())
+            {
+                User userForId = context.Users.Where(u => u.Id == id).FirstOrDefault();
+                if (userForId == null)
+                {
+                    return this.Request.CreateResponse(HttpStatusCode.NotFound, (User)null);
+                }
+                else
+                {
+                    return this.Request.CreateResponse(HttpStatusCode.OK, userForId);
+                }
+            }
         } 
         #endregion 
     }

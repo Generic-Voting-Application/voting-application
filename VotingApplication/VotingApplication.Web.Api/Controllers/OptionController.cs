@@ -25,9 +25,20 @@ namespace VotingApplication.Web.Api.Controllers
             }
         }
 
-        public Option Get(long id)
+        public HttpResponseMessage Get(long id)
         {
-            throw new System.NotImplementedException();
+            using (var context = _contextFactory.CreateContext())
+            {
+                Option optionForId = context.Options.Where(u => u.Id == id).FirstOrDefault();
+                if (optionForId == null)
+                {
+                    return this.Request.CreateResponse(HttpStatusCode.NotFound, (Option)null);
+                }
+                else
+                {
+                    return this.Request.CreateResponse(HttpStatusCode.OK, optionForId);
+                }
+            }
         }
         #endregion
     }
