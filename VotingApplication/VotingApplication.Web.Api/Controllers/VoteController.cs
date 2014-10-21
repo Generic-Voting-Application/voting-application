@@ -32,7 +32,7 @@ namespace VotingApplication.Web.Api.Controllers
                 Vote voteForId = context.Votes.Where(u => u.Id == id).FirstOrDefault();
                 if (voteForId == null)
                 {
-                    return this.Request.CreateResponse(HttpStatusCode.NotFound, (Vote)null);
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Vote {0} not found", id));
                 }
                 else
                 {

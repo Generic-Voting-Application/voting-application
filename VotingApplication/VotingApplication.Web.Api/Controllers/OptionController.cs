@@ -32,7 +32,7 @@ namespace VotingApplication.Web.Api.Controllers
                 Option optionForId = context.Options.Where(u => u.Id == id).FirstOrDefault();
                 if (optionForId == null)
                 {
-                    return this.Request.CreateResponse(HttpStatusCode.NotFound, (Option)null);
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Option {0} not found", id));
                 }
                 else
                 {

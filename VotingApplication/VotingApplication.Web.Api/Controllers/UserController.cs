@@ -41,7 +41,7 @@ namespace VotingApplication.Web.Api.Controllers
                 User userForId = context.Users.Where(u => u.Id == id).FirstOrDefault();
                 if (userForId == null)
                 {
-                    return this.Request.CreateResponse(HttpStatusCode.NotFound, (User)null);
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("User {0} not found", id));
                 }
                 else
                 {
