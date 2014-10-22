@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
-using VotingApplication.Data;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 
@@ -20,17 +17,28 @@ namespace VotingApplication.Web.Api.Controllers
         }
 
         #region Get
-        public IEnumerable<Vote> Get()
+        public HttpResponseMessage Get()
         {
             using(var context = _contextFactory.CreateContext())
             {
-                return context.Votes.ToList<Vote>();
+                return this.Request.CreateResponse(HttpStatusCode.OK, context.Votes.ToList<Vote>());
             }
         }
 
-        public Vote Get(long id)
+        public HttpResponseMessage Get(long id)
         {
-            throw new System.NotImplementedException();
+            using (var context = _contextFactory.CreateContext())
+            {
+                Vote voteForId = context.Votes.Where(u => u.Id == id).FirstOrDefault();
+                if (voteForId == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Vote {0} not found", id));
+                }
+                else
+                {
+                    return this.Request.CreateResponse(HttpStatusCode.OK, voteForId);
+                }
+            }
         } 
         #endregion
     }
