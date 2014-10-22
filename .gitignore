@@ -6,6 +6,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+Web.Release.config
 
 # Build results
 [Dd]ebug/
