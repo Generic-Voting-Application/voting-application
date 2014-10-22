@@ -15,7 +15,3 @@ select,
 textarea {
     max-width: 280px;
 }
-
-td, th {
-    padding-right:30px;
-}
