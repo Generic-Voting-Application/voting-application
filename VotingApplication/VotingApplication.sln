@@ -35,6 +35,11 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "VotingAppDb", "VotingAppDb\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Web.Api", "VotingApplication.Web.Api\VotingApplication.Web.Api.csproj", "{141C9D63-9053-44D8-B2E3-F436AEE56AC0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B4664874-E386-4AA5-B494-3124CA40DCDB}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
