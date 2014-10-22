@@ -78,6 +78,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("User 3 not found", error.Message);
         }
 
         [TestMethod]
@@ -109,6 +111,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Vote 2 not found", error.Message);
         }
     }
 }

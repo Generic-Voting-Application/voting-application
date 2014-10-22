@@ -46,25 +46,24 @@ namespace VotingApplication.Web.Api.Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                var userExists = (context.Users.Where(u => u.Id == userId).Count() == 1);
-                if (userExists)
+                var userVoteResponse = Get(userId);
+                List<Vote> userVotes = ((ObjectContent)userVoteResponse.Content).Value as List<Vote>;
+                if (userVotes == null)
                 {
-                    var voteExists = context.Votes.Where(v => v.UserId == userId && v.Id == voteId).Count() == 1;
-                    if (voteExists)
-                    {
-                        return this.Request.CreateResponse(HttpStatusCode.OK, context.Votes.Where(v => v.UserId == userId && v.Id == voteId).FirstOrDefault());
-                    }
-                    else
-                    {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Vote {0} not found", voteId));
-                    }
-                    
+                    return userVoteResponse;
+                }
+
+                Vote matchingVote = userVotes.Where(v => v.Id == voteId).FirstOrDefault();
+                if (matchingVote != null)
+                {
+                    return this.Request.CreateResponse(HttpStatusCode.OK, matchingVote);
                 }
                 else
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("User {0} not found", userId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Vote {0} not found", voteId));
                 }
             }
+
         }
 
         #endregion
