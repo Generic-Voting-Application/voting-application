@@ -26,8 +26,7 @@ namespace VotingApplication.Web.Api.Tests
             User bobUser = new User { Id = 1, Name = "Bob" };
             User joeUser = new User { Id = 2, Name = "Joe" };
 
-            InMemoryDbSet<Vote> dummyVotes = new InMemoryDbSet<Vote>();
-            dummyVotes.Clear();
+            InMemoryDbSet<Vote> dummyVotes = new InMemoryDbSet<Vote>(true);
 
             _bobVote = new Vote() { Id = 1, Option = burgerOption, User = bobUser };
             dummyVotes.Add(_bobVote);

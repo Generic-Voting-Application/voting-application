@@ -3,9 +3,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using VotingApplication.Data;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers;
@@ -13,34 +15,33 @@ using VotingApplication.Web.Api.Controllers;
 namespace VotingApplication.Web.Api.Tests
 {
     [TestClass]
-    public class OptionControllerTests
+    public class UserControllerTests
     {
-        private OptionController _controller;
-        private Option _burgerOption;
-        private Option _pizzaOption;
+        private UserController _controller;
+        private User _bobUser;
+        private User _joeUser;
 
         [TestInitialize]
         public void setup()
         {
-            _burgerOption = new Option { Id = 1, Name = "Burger King" };
-            _pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
-            InMemoryDbSet<Option> dummyOptions = new InMemoryDbSet<Option>();
-            dummyOptions.Clear();
-            dummyOptions.Add(_burgerOption);
-            dummyOptions.Add(_pizzaOption);
+            _bobUser = new User { Id = 1, Name = "Bob" };
+            _joeUser = new User { Id = 2, Name = "Joe" };
+            InMemoryDbSet<User> dummyUsers = new InMemoryDbSet<User>(true);
+            dummyUsers.Add(_bobUser);
+            dummyUsers.Add(_joeUser);
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
-            mockContext.Setup(a => a.Options).Returns(dummyOptions);
+            mockContext.Setup(a => a.Users).Returns(dummyUsers);
 
-            _controller = new OptionController(mockContextFactory.Object);
+            _controller = new UserController(mockContextFactory.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
 
         [TestMethod]
-        public void GetReturnsAllOptions()
+        public void GetReturnsAllUsers()
         {
             // Act
             var response = _controller.Get();
@@ -50,32 +51,33 @@ namespace VotingApplication.Web.Api.Tests
         }
 
         [TestMethod]
-        public void GetReturnsNonNullOptions()
+        public void GetReturnsNonNullUsers()
         {
             // Act
             var response = _controller.Get();
-            List<Option> responseOptions = ((ObjectContent)response.Content).Value as List<Option>;
+            List<User> responseUsers = ((ObjectContent)response.Content).Value as List<User>;
 
             // Assert
-            Assert.IsNotNull(responseOptions);
+            Assert.IsNotNull(responseUsers);
         }
 
         [TestMethod]
-        public void GetReturnsOptionsFromTheDatabase()
+        public void GetReturnsUsersFromTheDatabase()
         {
             // Act
             var response = _controller.Get();
-            List<Option> responseOptions = ((ObjectContent)response.Content).Value as List<Option>;
+            List<User> responseUsers = ((ObjectContent)response.Content).Value as List<User>;
 
             // Assert
-            List<Option> expectedOptions = new List<Option>();
-            expectedOptions.Add(_burgerOption);
-            expectedOptions.Add(_pizzaOption);
-            CollectionAssert.AreEquivalent(expectedOptions, responseOptions);
+            List<User> expectedUsers = new List<User>();
+            expectedUsers.Add(_bobUser);
+            expectedUsers.Add(_joeUser);
+            Debug.WriteLine(responseUsers);
+            CollectionAssert.AreEquivalent(expectedUsers, responseUsers);
         }
 
         [TestMethod]
-        public void GetWithIdFindsOptionWithId()
+        public void GetWithIdFindsUserWithId()
         {
             // Act
             var response = _controller.Get(1);
@@ -85,19 +87,19 @@ namespace VotingApplication.Web.Api.Tests
         }
 
         [TestMethod]
-        public void GetWithIdReturnsOptionWithIdFromTheDatabase()
+        public void GetWithIdReturnsUserWithIdFromTheDatabase()
         {
             // Act
             var response = _controller.Get(2);
-            Option responseOption = ((ObjectContent)response.Content).Value as Option;
+            User responseUser = ((ObjectContent)response.Content).Value as User;
 
             // Assert
-            Assert.AreEqual(_pizzaOption.Id, responseOption.Id);
-            Assert.AreEqual(_pizzaOption.Name, responseOption.Name);
+            Assert.AreEqual(_joeUser.Id, responseUser.Id);
+            Assert.AreEqual(_joeUser.Name, responseUser.Name);
         }
 
         [TestMethod]
-        public void GetWithIdReturnsErrorCode404ForUnknownOptionID()
+        public void GetWithIdReturnsErrorCode404ForUnknownUserID()
         {
             // Act
             var response = _controller.Get(3);
@@ -107,14 +109,14 @@ namespace VotingApplication.Web.Api.Tests
         }
 
         [TestMethod]
-        public void GetWithIdReturnsNullUserForUnknownOptionID()
+        public void GetWithIdReturnsNullUserForUnknownUserID()
         {
             // Act
             var response = _controller.Get(3);
-            Option responseOption = ((ObjectContent)response.Content).Value as Option;
+            User responseUser = ((ObjectContent)response.Content).Value as User;
 
             // Assert
-            Assert.IsNull(responseOption);
+            Assert.IsNull(responseUser);
         }
     }
 }
