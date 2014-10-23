@@ -40,6 +40,7 @@ namespace VotingApplication.Web.Api.Tests
             _controller.Configuration = new HttpConfiguration();
         }
 
+        #region GET
         [TestMethod]
         public void GetReturnsAllUsers()
         {
@@ -117,6 +118,79 @@ namespace VotingApplication.Web.Api.Tests
 
             // Assert
             Assert.IsNull(responseUser);
+        } 
+        #endregion
+
+        #region PUT
+
+        [TestMethod]
+        public void PutIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put();
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
         }
+
+        [TestMethod]
+        public void PutByIdIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(1);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        #endregion
+
+        #region POST
+
+        [TestMethod]
+        public void PostIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Post();
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PostByIdIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Post(1);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        #endregion
+
+        #region DELETE
+
+        [TestMethod]
+        public void DeleteIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Delete();
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteByIdIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Delete(1);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        #endregion
     }
 }

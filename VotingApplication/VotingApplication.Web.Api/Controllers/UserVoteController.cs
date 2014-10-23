@@ -10,23 +10,14 @@ using VotingApplication.Data.Model;
 
 namespace VotingApplication.Web.Api.Controllers
 {
-    public class UserVoteController : ApiController
+    public class UserVoteController : WebApiController
     {
-        private readonly IContextFactory _contextFactory;
-
-        public UserVoteController()
-        {
-            this._contextFactory = new ContextFactory();
-        }
-
-        public UserVoteController(IContextFactory contextFactory)
-        {
-            this._contextFactory = contextFactory;
-        }
+        public UserVoteController() : base() {}
+        public UserVoteController(IContextFactory contextFactory) : base(contextFactory) { }
 
         #region GET
 
-        public HttpResponseMessage Get(long userId)
+        public override HttpResponseMessage Get(long userId)
         {
             using (var context = _contextFactory.CreateContext())
             {
