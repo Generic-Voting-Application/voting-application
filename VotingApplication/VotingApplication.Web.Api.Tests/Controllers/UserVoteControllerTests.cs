@@ -17,6 +17,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private UserVoteController _controller;
         private Vote _bobVote;
         private Vote _joeVote;
+        private InMemoryDbSet<Vote> _dummyVotes;
 
         [TestInitialize]
         public void setup()
@@ -24,27 +25,43 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
             User bobUser = new User { Id = 1, Name = "Bob" };
             User joeUser = new User { Id = 2, Name = "Joe" };
+            User billUser = new User { Id = 3, Name = "Bill" };
 
             InMemoryDbSet<User> dummyUsers = new InMemoryDbSet<User>(true);
-            InMemoryDbSet<Vote> dummyVotes = new InMemoryDbSet<Vote>(true);
+            _dummyVotes = new InMemoryDbSet<Vote>(true);
+            InMemoryDbSet<Option> dummyOptions = new InMemoryDbSet<Option>(true);
 
-            _bobVote = new Vote() { Id = 1, Option = burgerOption, User = bobUser, UserId = 1 };
+            dummyOptions.Add(burgerOption);
+
+            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1 };
             dummyUsers.Add(bobUser);
-            dummyVotes.Add(_bobVote);
+            _dummyVotes.Add(_bobVote);
 
-            _joeVote = new Vote() { Id = 2, Option = burgerOption, User = joeUser, UserId = 2 };
+            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2 };
             dummyUsers.Add(joeUser);
-            dummyVotes.Add(_joeVote);
+            _dummyVotes.Add(_joeVote);
+
+            dummyUsers.Add(billUser);
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
-            mockContext.Setup(a => a.Votes).Returns(dummyVotes);
+            mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
             mockContext.Setup(b => b.Users).Returns(dummyUsers);
+            mockContext.Setup(c => c.Options).Returns(dummyOptions);
+            mockContext.Setup(d => d.SaveChanges()).Callback(SaveChanges);
 
             _controller = new UserVoteController(mockContextFactory.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
+        }
+
+        private void SaveChanges()
+        {
+            for (int i = 0; i < _dummyVotes.Local.Count; i++)
+            {
+                _dummyVotes.Local[i].Id = (long)i + 1;
+            }
         }
 
         #region GET
@@ -76,12 +93,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetByUserIdReturns404ForUnknownUser()
         {
             // Act
-            var response = _controller.Get(3);
+            var response = _controller.Get(99);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("User 3 not found", error.Message);
+            Assert.AreEqual("User 99 not found", error.Message);
         }
 
         [TestMethod]
@@ -115,6 +132,29 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
             Assert.AreEqual("Vote 2 not found", error.Message);
+        }
+
+
+        [TestMethod]
+        public void GetVoteReturnsTheVoteWithAnOptionId()
+        {
+            // Act
+            var response = _controller.Get(2, 2);
+            Vote responseVote = ((ObjectContent)response.Content).Value as Vote;
+
+            // Assert
+            Assert.AreEqual(1, responseVote.OptionId);
+        }
+
+        [TestMethod]
+        public void GetVoteTheUserWithAUserId()
+        {
+            // Act
+            var response = _controller.Get(2, 2);
+            Vote responseVote = ((ObjectContent)response.Content).Value as Vote;
+
+            // Assert
+            Assert.AreEqual(2, responseVote.UserId);
         }
 
         #endregion
@@ -163,6 +203,82 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        #endregion
+
+        #region PUT
+
+        [TestMethod]
+        public void PutNonexistentUserIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(9, new Vote() { OptionId = 1 });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("User 9 does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void PutNonexistentOptionIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(1, new Vote() { OptionId = 7 });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Option 7 does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void PutMissingOptionIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(1, new Vote());
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Vote does not have an option", error.Message);
+        }
+
+        [TestMethod]
+        public void PutWithNewVoteIfNoneExistsIsAllowed()
+        {
+            // Act
+            var response = _controller.Put(3, new Vote() { OptionId = 1 });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PutAddsANewVoteIfNoneExistsAndReturnsVoteId()
+        {
+            // Act
+            var response = _controller.Put(3, new Vote() { OptionId = 1 });
+
+            // Assert
+            long responseVoteId = (long)((ObjectContent)response.Content).Value;
+            Assert.AreEqual(3, responseVoteId);
+        }
+
+        [TestMethod]
+        public void PutAddsANewVoteIfNoneExists()
+        {
+            // Act
+            var newVote = new Vote() { OptionId = 1 };
+            var response = _controller.Put(3, newVote);
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(_bobVote);
+            expectedVotes.Add(_joeVote);
+            expectedVotes.Add(newVote);
+            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
         }
 
         #endregion

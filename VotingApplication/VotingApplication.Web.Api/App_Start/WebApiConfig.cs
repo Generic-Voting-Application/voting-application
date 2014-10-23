@@ -30,7 +30,7 @@ namespace VotingApplication.Web.Api
             config.Routes.MapHttpRoute(
                 name:"UserVoteApiRoute",
                 routeTemplate: "api/user/{userId}/vote/{voteId}",
-                defaults: new {controller = "UserVote", statusId = RouteParameter.Optional}
+                defaults: new { controller = "UserVote", voteId = RouteParameter.Optional }
             );
 
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));

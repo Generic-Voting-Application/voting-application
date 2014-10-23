@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -24,7 +25,7 @@ namespace VotingApplication.Web.Api.Controllers
                 var userExists = (context.Users.Where(u => u.Id == userId).Count() == 1);
                 if (userExists)
                 {
-                    return this.Request.CreateResponse(HttpStatusCode.OK, context.Votes.Where(v => v.UserId == userId).ToList<Vote>());
+                    return this.Request.CreateResponse(HttpStatusCode.OK, context.Votes.Where(v => v.UserId == userId).Include(v => v.Option).Include(v => v.User).ToList<Vote>());
                 }
                 else
                 {
@@ -55,6 +56,39 @@ namespace VotingApplication.Web.Api.Controllers
                 }
             }
 
+        }
+
+        #endregion
+
+        #region PUT
+
+        public HttpResponseMessage Put(long userId, Vote vote)
+        {
+            using (var context = _contextFactory.CreateContext())
+            {
+                if (vote.OptionId == 0)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote does not have an option");
+                }
+
+                IEnumerable<User> users = context.Users.Where(u => u.Id == userId);
+                if(users.Count() == 0)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("User {0} does not exist", userId));
+                }
+
+                IEnumerable<Option> options = context.Options.Where(o => o.Id == vote.OptionId);
+                if (options.Count() == 0)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Option {0} does not exist", vote.OptionId));
+                }
+
+
+                context.Votes.Add(vote);
+                context.SaveChanges();
+
+                return this.Request.CreateResponse(HttpStatusCode.OK, vote.Id);
+            }
         }
 
         #endregion
