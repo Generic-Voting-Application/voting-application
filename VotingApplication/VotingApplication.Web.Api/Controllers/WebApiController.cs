@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using VotingApplication.Data.Context;
+using VotingApplication.Data.Model;
 
 namespace VotingApplication.Web.Api.Controllers
 {
@@ -53,12 +54,7 @@ namespace VotingApplication.Web.Api.Controllers
 
         #region POST
 
-        public virtual HttpResponseMessage Post()
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
-        }
-
-        public virtual HttpResponseMessage Post(long id)
+        public virtual HttpResponseMessage Post(long id, object obj)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
         }

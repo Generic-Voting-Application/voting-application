@@ -161,10 +161,10 @@ namespace VotingApplication.Web.Api.Tests
         #region POST
 
         [TestMethod]
-        public void PostIsNotAllowed()
+        public void PostByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Post();
+            var response = _controller.Post(1, new User());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);

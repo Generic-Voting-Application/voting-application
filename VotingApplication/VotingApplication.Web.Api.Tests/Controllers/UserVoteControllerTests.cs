@@ -143,30 +143,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         #endregion
 
-        #region POST
-
-        [TestMethod]
-        public void PostIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Post();
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void PostByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Post(1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        #endregion
-
         #region DELETE
 
         [TestMethod]
