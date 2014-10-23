@@ -38,25 +38,25 @@ namespace VotingApplication.Web.Api.Controllers
 
         #endregion
 
-        #region PUT
+        #region POST
 
-        public virtual HttpResponseMessage Put()
+        public virtual HttpResponseMessage Post()
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT on this controller");
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
         }
 
-        public virtual HttpResponseMessage Put(long id)
+        public virtual HttpResponseMessage Post(long id)
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT by id on this controller");
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
         }
 
         #endregion
 
-        #region POST
+        #region PUT
 
-        public virtual HttpResponseMessage Post(long id, object obj)
+        public virtual HttpResponseMessage Put(long id, object obj)
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT by id on this controller");
         }
 
         #endregion

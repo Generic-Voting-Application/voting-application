@@ -134,23 +134,23 @@ namespace VotingApplication.Web.Api.Tests
         } 
         #endregion
 
-        #region PUT
+        #region POST
 
         [TestMethod]
-        public void PutIsNotAllowed()
+        public void PostIsNotAllowed()
         {
             // Act
-            var response = _controller.Put();
+            var response = _controller.Post();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
         }
 
         [TestMethod]
-        public void PutByIdIsNotAllowed()
+        public void PostByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1);
+            var response = _controller.Post(1);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -158,33 +158,33 @@ namespace VotingApplication.Web.Api.Tests
 
         #endregion
 
-        #region POST
+        #region PUT
 
         [TestMethod]
-        public void PostByIdIsNotAllowed()
+        public void PutByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Post(1, new User());
+            var response = _controller.Put(1, new User());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
         }
 
         [TestMethod]
-        public void PostReturnsOK()
+        public void PutReturnsOK()
         {
             // Act
-            var response = _controller.Post(_billUser);
+            var response = _controller.Put(_billUser);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         [TestMethod]
-        public void PostNewUserAddsNewUserToUserList()
+        public void PutNewUserAddsNewUserToUserList()
         {
             // Act
-            var response = _controller.Post(_billUser);
+            var response = _controller.Put(_billUser);
 
             // Assert
             List<User> expectedList = new List<User>();
@@ -195,10 +195,10 @@ namespace VotingApplication.Web.Api.Tests
         }
 
         [TestMethod]
-        public void PostNewUserAssignsNewUserAUniqueId()
+        public void PutNewUserAssignsNewUserAUniqueId()
         {
             // Act
-            var response = _controller.Post(_billUser);
+            var response = _controller.Put(_billUser);
 
             // Assert
             Assert.AreEqual(3, dummyUsers.Local[2].Id);
@@ -206,10 +206,10 @@ namespace VotingApplication.Web.Api.Tests
 
 
         [TestMethod]
-        public void PostNewUserReturnsNewUserId()
+        public void PutNewUserReturnsNewUserId()
         {
             // Act
-            var response = _controller.Post(_billUser);
+            var response = _controller.Put(_billUser);
             long responseUserId = (long)((ObjectContent)response.Content).Value;
 
             // Assert
@@ -217,19 +217,31 @@ namespace VotingApplication.Web.Api.Tests
         }
 
         [TestMethod]
-        public void PostNewUserWithExistingUsernameIsNotAllowed()
+        public void PutNewUserWithExistingUsernameIsAllowed()
         {
             // Act
-            var response = _controller.Post(new User() { Name = "Bob" });
+            var response = _controller.Put(new User() { Name = "Bob" });
 
-            Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         [TestMethod]
-        public void PostNewUserWithExistingUsernameDoesNotChangeUserList()
+        public void PutNewUserWithExistingUsernameReturnsExistingUserId()
         {
             // Act
-            var response = _controller.Post(new User() { Name = "Bob" });
+            var response = _controller.Put(new User() { Name = "Bob" });
+            long responseUserId = (long)((ObjectContent)response.Content).Value;
+
+            // Assert
+            Assert.AreEqual(1, responseUserId);
+        }
+
+        [TestMethod]
+        public void PutNewUserWithExistingUsernameDoesNotChangeUserList()
+        {
+            // Act
+            var response = _controller.Put(new User() { Name = "Bob" });
 
             // Assert
             List<User> expectedList = new List<User>();
@@ -239,19 +251,19 @@ namespace VotingApplication.Web.Api.Tests
         }
 
         [TestMethod]
-        public void PostNewUserWithEmptyUsernameIsNotAllowed()
+        public void PutNewUserWithEmptyUsernameIsNotAllowed()
         {
             // Act
-            var response = _controller.Post(new User() { Name = String.Empty });
+            var response = _controller.Put(new User() { Name = String.Empty });
 
             Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
         }
 
         [TestMethod]
-        public void PostNewUserWithEmptyUsernameDoesNotChangeUserList()
+        public void PutNewUserWithEmptyUsernameDoesNotChangeUserList()
         {
             // Act
-            var response = _controller.Post(new User() { Name = String.Empty });
+            var response = _controller.Put(new User() { Name = String.Empty });
 
             // Assert
             List<User> expectedList = new List<User>();
@@ -261,19 +273,19 @@ namespace VotingApplication.Web.Api.Tests
         }
 
         [TestMethod]
-        public void PostNewUserWithMissingUsernameIsNotAllowed()
+        public void PutNewUserWithMissingUsernameIsNotAllowed()
         {
             // Act
-            var response = _controller.Post(new User());
+            var response = _controller.Put(new User());
 
             Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
         }
 
         [TestMethod]
-        public void PostNewUserWithMissingUsernameDoesNotChangeUserList()
+        public void PutNewUserWithMissingUsernameDoesNotChangeUserList()
         {
             // Act
-            var response = _controller.Post(new User());
+            var response = _controller.Put(new User());
 
             // Assert
             List<User> expectedList = new List<User>();

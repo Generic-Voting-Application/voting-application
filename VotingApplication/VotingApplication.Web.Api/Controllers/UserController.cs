@@ -42,9 +42,9 @@ namespace VotingApplication.Web.Api.Controllers
         } 
         #endregion 
 
-        #region Post
+        #region Put
 
-        public HttpResponseMessage Post(User newUser)
+        public HttpResponseMessage Put(User newUser)
         {
             using (var context = _contextFactory.CreateContext())
             {
@@ -53,9 +53,10 @@ namespace VotingApplication.Web.Api.Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Must provide a Username");
                 }
 
-                if (context.Users.Where(u => u.Name == newUser.Name).Count() != 0)
+                List<User> existingUsers = context.Users.Where(u => u.Name == newUser.Name).ToList<User>();
+                if (existingUsers.Count() != 0)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("Username {0} is taken", newUser.Name));
+                    return this.Request.CreateResponse(HttpStatusCode.OK, existingUsers.FirstOrDefault().Id);
                 }
 
                 context.Users.Add(newUser);

@@ -127,37 +127,13 @@ namespace VotingApplication.Web.Api.Tests
 
         #endregion
 
-        #region PUT
-
-        [TestMethod]
-        public void PutIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Put();
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void PutByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Put(1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        #endregion
-
         #region POST
 
         [TestMethod]
         public void PostIsNotAllowed()
         {
             // Act
-            var response = _controller.Post(new Vote());
+            var response = _controller.Post();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -167,7 +143,31 @@ namespace VotingApplication.Web.Api.Tests
         public void PostByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Post(1, new Vote());
+            var response = _controller.Post(1);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        #endregion
+
+        #region PUT
+
+        [TestMethod]
+        public void PutIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(new Vote());
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PutByIdIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(1, new Vote());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);

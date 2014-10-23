@@ -119,23 +119,23 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         #endregion
 
-        #region PUT
+        #region POST
 
         [TestMethod]
-        public void PutIsNotAllowed()
+        public void PostIsNotAllowed()
         {
             // Act
-            var response = _controller.Put();
+            var response = _controller.Post();
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
         }
 
         [TestMethod]
-        public void PutByIdIsNotAllowed()
+        public void PostByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1);
+            var response = _controller.Post(1);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
