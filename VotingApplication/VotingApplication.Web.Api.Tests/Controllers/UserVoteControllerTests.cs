@@ -23,6 +23,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void setup()
         {
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
+            Option pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
             User bobUser = new User { Id = 1, Name = "Bob" };
             User joeUser = new User { Id = 2, Name = "Joe" };
             User billUser = new User { Id = 3, Name = "Bill" };
@@ -32,6 +33,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             InMemoryDbSet<Option> dummyOptions = new InMemoryDbSet<Option>(true);
 
             dummyOptions.Add(burgerOption);
+            dummyOptions.Add(pizzaOption);
 
             _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1 };
             dummyUsers.Add(bobUser);
@@ -279,6 +281,20 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             expectedVotes.Add(_joeVote);
             expectedVotes.Add(newVote);
             CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
+        }
+
+        [TestMethod]
+        public void PutReplacesCurrentVote()
+        {
+            // Act
+            var newVote = new Vote() { OptionId = 2 };
+            var response = _controller.Put(1, newVote);
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(newVote);
+            expectedVotes.Add(_joeVote);
+            Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[0].OptionId);
         }
 
         #endregion

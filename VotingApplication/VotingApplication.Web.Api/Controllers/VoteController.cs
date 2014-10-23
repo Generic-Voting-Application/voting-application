@@ -1,7 +1,7 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 
@@ -17,7 +17,7 @@ namespace VotingApplication.Web.Api.Controllers
         {
             using(var context = _contextFactory.CreateContext())
             {
-                return this.Request.CreateResponse(HttpStatusCode.OK, context.Votes.ToList<Vote>());
+                return this.Request.CreateResponse(HttpStatusCode.OK, context.Votes.Include(v => v.Option).Include(v => v.User).ToList<Vote>());
             }
         }
 
@@ -25,7 +25,7 @@ namespace VotingApplication.Web.Api.Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Vote voteForId = context.Votes.Where(u => u.Id == id).FirstOrDefault();
+                Vote voteForId = context.Votes.Where(v => v.Id == id).Include(v => v.Option).Include(v => v.User).FirstOrDefault();
                 if (voteForId == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Vote {0} not found", id));

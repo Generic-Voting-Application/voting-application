@@ -4,8 +4,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web;
-using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 
@@ -83,11 +81,23 @@ namespace VotingApplication.Web.Api.Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Option {0} does not exist", vote.OptionId));
                 }
 
+                IEnumerable<Vote> votes = context.Votes.Where(v => v.UserId == userId);
+                if(votes.Count() == 0)
+                {
+                    vote.UserId = userId;
+                    context.Votes.Add(vote);
+                    context.SaveChanges();
+                    return this.Request.CreateResponse(HttpStatusCode.OK, vote.Id);
 
-                context.Votes.Add(vote);
-                context.SaveChanges();
+                }
+                else
+                {
+                    Vote oldVote = votes.FirstOrDefault();
+                    oldVote.OptionId = vote.OptionId;
+                    context.SaveChanges();
+                    return this.Request.CreateResponse(HttpStatusCode.OK, oldVote.Id);
+                }
 
-                return this.Request.CreateResponse(HttpStatusCode.OK, vote.Id);
             }
         }
 
