@@ -41,5 +41,29 @@ namespace VotingApplication.Web.Api.Controllers
             }
         } 
         #endregion 
+
+        #region Post
+
+        public HttpResponseMessage Post(User newUser)
+        {
+            using (var context = _contextFactory.CreateContext())
+            {
+                if (newUser.Name == null || newUser.Name.Equals(""))
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Must provide a Username");
+                }
+
+                if (context.Users.Where(u => u.Name == newUser.Name).Count() != 0)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("Username {0} is taken", newUser.Name));
+                }
+
+                context.Users.Add(newUser);
+                context.SaveChanges();
+                return this.Request.CreateResponse(HttpStatusCode.OK, newUser.Id);
+            }
+        }
+
+        #endregion
     }
 }
