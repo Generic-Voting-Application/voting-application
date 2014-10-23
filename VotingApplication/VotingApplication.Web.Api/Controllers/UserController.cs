@@ -11,22 +11,13 @@ using VotingApplication.Data.Model;
 
 namespace VotingApplication.Web.Api.Controllers
 {
-    public class UserController : ApiController
+    public class UserController : WebApiController
     {
-        private readonly IContextFactory _contextFactory;
-
-        public UserController()
-        {
-            this._contextFactory = new ContextFactory();
-        }
-
-        public UserController(IContextFactory contextFactory)
-        {
-            this._contextFactory = contextFactory;
-        }
+        public UserController() : base() { }
+        public UserController(IContextFactory contextFactory) : base(contextFactory) { }
 
         #region Get
-        public HttpResponseMessage Get()
+        public override HttpResponseMessage Get()
         {
             using (var context = _contextFactory.CreateContext())
             {
@@ -34,7 +25,7 @@ namespace VotingApplication.Web.Api.Controllers
             }
         }
 
-        public HttpResponseMessage Get(long id)
+        public override HttpResponseMessage Get(long id)
         {
             using (var context = _contextFactory.CreateContext())
             {
