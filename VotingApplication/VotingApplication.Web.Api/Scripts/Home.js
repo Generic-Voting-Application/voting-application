@@ -22,6 +22,28 @@
         });
     }
 
+    self.keyIsEnter = function (key) {
+        return (key && key.keyCode == 13);
+    }
+
+    // Do login
+    self.submitLogin = function () {
+        $.ajax({
+            type: 'PUT',
+            url: '/api/user',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                Name: $("#Name").val()
+            }),
+
+            success: function (data) {
+                userId = data;
+                $("#login-box").hide();
+                $("#vote-table").show();
+            }
+        });
+    }
+
     $(document).ready(function () {
         // Get all options
         $.ajax({
@@ -35,22 +57,12 @@
             }
         });
 
-        // Do login
-        $("#Name-submit").click(function () {
-            $.ajax({
-                type: 'PUT',
-                url: '/api/user',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    Name: $("#Name").val()
-                }),
-
-                success: function (data) {
-                    userId = data;
-                    $("#login-box").hide();
-                    $("#vote-table").show();
-                }
-            });
+        $("#Name-submit").click(self.submitLogin);
+        //Submit on pressing return key
+        $("#Name").keypress(event, function () {
+            if (self.keyIsEnter(event)) {
+                self.submitLogin();
+            }
         });
     });
 }
