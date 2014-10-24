@@ -11,6 +11,7 @@ namespace VotingApplication.Web.Api.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Home Page";
+            ViewBag.Script = "/Scripts/VoteAppPages/Home.js";
 
             return View();
         }
