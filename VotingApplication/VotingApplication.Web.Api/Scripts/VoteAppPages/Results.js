@@ -28,6 +28,35 @@
         return totalCounts;
     }
 
+    self.drawChart = function(data)
+    {
+        var voteData = new insight.DataSet(data);
+
+        var chart = new insight.Chart('', '#bar-chart')
+        .height(200);
+        var xAxis = new insight.Axis('Votes', insight.scales.linear)
+            .tickFrequency(1);
+        var yAxis = new insight.Axis('', insight.scales.ordinal)
+            .isOrdered(true);
+        chart.xAxis(xAxis);
+        chart.yAxis(yAxis);
+
+        var series = new insight.RowSeries('votes', voteData, xAxis, yAxis)
+        .keyFunction(function (d) {
+            return d.Name;
+        })
+        .valueFunction(function (d) {
+
+            return d.Count;
+        })
+        .tooltipFunction(function (d) {
+            return "Votes: " + d.Count + "<br />" +  d.Voters.toString().replace(",", "<br />");
+        });
+        chart.series([series]);
+
+        chart.draw();
+    }
+
     $(document).ready(function () {
         // Get all options
         $.ajax({
@@ -40,6 +69,8 @@
                 groupedVotes.forEach(function (vote) {
                     self.votes.push(vote);
                 });
+
+                self.drawChart(groupedVotes);
             }
         });
     });
