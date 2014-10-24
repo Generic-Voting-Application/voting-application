@@ -1,0 +1,23 @@
+﻿<div class="jumbotron">
+    <h1>Lunchtime Voting</h1>
+</div>
+<div class="row">
+    <div class="col-xs-4"></div>
+    <div class="col-xs-4 centered">
+        <table class="table">
+            <tr>
+                <th>Option</th>
+                <th>Total Votes</th>
+                <th>Voters</th>
+            </tr>
+            <tbody data-bind="foreach: votes">
+                <tr>
+                    <td data-bind="text: Name"></td>
+                    <td data-bind="text: Count"></td>
+                    <td data-bind="text: Voters"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-xs-4"></div>
+</div>
