@@ -2,24 +2,38 @@
     <h1>Lunchtime Voting</h1>
 </div>
 <div class="row">
-    <div class="col-md-3"></div>
-    <div class="col-md-6 centered">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Restaurant</th>
-                    <th>Description</th>
-                    <th>More info</th>
-                </tr>
-            </thead>
-            <tbody data-bind="foreach: options">
-                <tr>
-                    <td data-bind="text: Name"></td>
-                    <td data-bind="text: Description"></td>
-                    <td data-bind="text: Info"></td>
-                </tr>
-            </tbody>
-        </table>
+    <div id="login-box">
+        <div class="col-xs-4"></div>
+        <div class="col-xs-4 centered">
+                <label for="Name">Username</label>
+                <input id="Name" class="form-control" />
+                <br />
+                <button id="Name-submit" type="submit" class="btn btn-primary">Login</button>
+        </div>
+        <div class="col-xs-4"></div>
     </div>
-    <div class="col-md-3"></div>
+    <div id="vote-table" hidden>
+        <div class="col-xs-3"></div>
+        <div class="col-xs-6 centered">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Restaurant</th>
+                        <th>Description</th>
+                        <th>More info</th>
+                        <th>Vote</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: options">
+                    <tr>
+                        <td data-bind="text: Name"></td>
+                        <td data-bind="text: Description"></td>
+                        <td data-bind="text: Info"></td>
+                        <td><button data-bind="click: $parent.doVote.bind()">Vote</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xs-3"></div>
+    </div>
 </div>
