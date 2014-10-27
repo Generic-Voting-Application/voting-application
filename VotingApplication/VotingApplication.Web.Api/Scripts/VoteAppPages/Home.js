@@ -18,6 +18,8 @@
                 var currentRow = event.currentTarget.parentElement.parentElement;
                 $(currentRow).siblings().removeClass("success");
                 $(currentRow).addClass("success");
+
+                setTimeout(function () { window.location = "/Result"; }, 500);
             }
         });
     }
@@ -38,8 +40,27 @@
 
             success: function (data) {
                 userId = data;
+                self.highlightPreviousVote();
                 $("#login-box").hide();
                 $("#vote-table").show();
+            }
+        });
+    }
+
+    self.highlightPreviousVote = function () {
+        $.ajax({
+            type: 'GET',
+            url: '/api/user/' + userId + '/vote',
+            contentType: 'application/json',
+
+            success: function (data) {
+                if (data.length > 0) {
+                    var previousOptionId = data[0].OptionId;
+                    var previousOption = self.options().filter(function (d) { return d.Id == previousOptionId }).pop();
+                    var previousOptionRowIndex = self.options().indexOf(previousOption);
+                    var matchingRow = $("#inner-vote-table > tbody > tr").eq(previousOptionRowIndex);
+                    matchingRow.addClass("success");
+                }
             }
         });
     }

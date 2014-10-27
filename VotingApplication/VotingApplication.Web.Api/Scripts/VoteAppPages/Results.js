@@ -33,7 +33,8 @@
         var voteData = new insight.DataSet(data);
 
         var chart = new insight.Chart('', '#bar-chart')
-        .height(200);
+            .width(450)
+            .height(400);
         var xAxis = new insight.Axis('Votes', insight.scales.linear)
             .tickFrequency(1);
         var yAxis = new insight.Axis('', insight.scales.ordinal)
@@ -50,7 +51,7 @@
             return d.Count;
         })
         .tooltipFunction(function (d) {
-            return "Votes: " + d.Count + "<br />" +  d.Voters.toString().replace(",", "<br />");
+            return "Votes: " + d.Count + "<br />" +  d.Voters.toString().replace(/,/g, "<br />");
         });
         chart.series([series]);
 
