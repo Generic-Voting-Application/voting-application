@@ -263,6 +263,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\API Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Web Controllers\AdminController.cs" />
     <Compile Include="Controllers\Web Controllers\HomeController.cs" />
     <Compile Include="Controllers\API Controllers\OptionController.cs" />
     <Compile Include="Controllers\Web Controllers\ResultController.cs" />
@@ -319,6 +320,7 @@
     <None Include="Properties\PublishProfiles\voting-application - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\voting-application - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\VoteAppPages\Admin.js" />
     <Content Include="Scripts\VoteAppPages\Home.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -350,6 +352,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Result\Index.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VotingAppDb\VotingAppDb.sqlproj">
