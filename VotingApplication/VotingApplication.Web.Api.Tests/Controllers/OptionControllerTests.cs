@@ -126,7 +126,7 @@ namespace VotingApplication.Web.Api.Tests
         public void PostIsNotAllowed()
         {
             // Act
-            var response = _controller.Post();
+            var response = _controller.Post(new List<object>());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -136,7 +136,7 @@ namespace VotingApplication.Web.Api.Tests
         public void PostByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Post(1);
+            var response = _controller.Post(1, new Option());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);

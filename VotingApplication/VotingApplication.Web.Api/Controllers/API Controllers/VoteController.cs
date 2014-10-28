@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -40,7 +41,7 @@ namespace VotingApplication.Web.Api.Controllers
 
         #region PUT
 
-        public virtual HttpResponseMessage Put(object obj)
+        public virtual HttpResponseMessage Put(Vote newVote)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT on this controller");
         }
