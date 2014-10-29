@@ -32,6 +32,12 @@
                         <td><button data-bind="click: $parent.doVote.bind()">Vote</button></td>
                     </tr>
                 </tbody>
+                <tr>
+                    <td><input id="newName" placeholder="Restaurant" /></td>
+                    <td><input id="newDescription" placeholder="Description" /></td>
+                    <td><input id="newInfo" placeholder="More Info" /></td>
+                    <td><button data-bind="click: $root.addOption.bind()">Add Option</button></td>
+                </tr>
             </table>
         </div>
         <div class="col-xs-3"></div>
