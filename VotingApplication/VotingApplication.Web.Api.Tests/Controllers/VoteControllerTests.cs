@@ -213,13 +213,49 @@ namespace VotingApplication.Web.Api.Tests
         }
 
         [TestMethod]
-        public void DeleteByIdIsNotAllowed()
+        public void DeleteByIdIsAllowed()
         {
             // Act
             var response = _controller.Delete(1);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteByIdRemovesVoteWithMatchingId()
+        {
+            // Act
+            _controller.Delete(1);
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(_joeVote);
+            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
+        }
+
+        [TestMethod]
+        public void DeleteByIdIsAllowedIfNoVoteMatchesId()
+        {
+            // Act
+            var response = _controller.Delete(99);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+
+        [TestMethod]
+        public void DeleteByIdDoesNothingIfNoVoteMatchesId()
+        {
+            // Act
+            _controller.Delete(99);
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(_bobVote);
+            expectedVotes.Add(_joeVote);
+            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
         }
 
         #endregion

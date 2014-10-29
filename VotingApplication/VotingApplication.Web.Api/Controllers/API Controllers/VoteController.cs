@@ -65,6 +65,22 @@ namespace VotingApplication.Web.Api.Controllers
             }
         }
 
+        public override HttpResponseMessage Delete(long id)
+        {
+            using (var context = _contextFactory.CreateContext())
+            {
+                var matchingVotes = context.Votes.Where(v => v.Id == id);
+                if (matchingVotes.Count() > 0)
+                {
+                    context.Votes.Remove(matchingVotes.FirstOrDefault());
+                }
+
+                context.SaveChanges();
+
+                return this.Request.CreateResponse(HttpStatusCode.OK);
+            }
+        }
+
         #endregion
     }
 }
