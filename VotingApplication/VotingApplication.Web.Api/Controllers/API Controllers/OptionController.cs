@@ -39,11 +39,31 @@ namespace VotingApplication.Web.Api.Controllers
         }
         #endregion
 
-        #region PUT
+        #region Put
 
         public virtual HttpResponseMessage Put(object obj)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT on this controller");
+        }
+
+        #endregion
+
+        #region Post
+
+        public HttpResponseMessage Post(Option newOption)
+        {
+            using (var context = _contextFactory.CreateContext())
+            {
+                if (newOption.Name == null || newOption.Name.Length == 0)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Cannot create an option with a non-empty name");
+                }
+
+                context.Options.Add(newOption);
+                context.SaveChanges();
+
+                return this.Request.CreateResponse(HttpStatusCode.OK, newOption.Id);
+            }
         }
 
         #endregion

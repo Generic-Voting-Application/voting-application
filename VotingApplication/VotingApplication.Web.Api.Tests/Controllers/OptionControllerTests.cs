@@ -18,24 +18,34 @@ namespace VotingApplication.Web.Api.Tests
         private OptionController _controller;
         private Option _burgerOption;
         private Option _pizzaOption;
+        private InMemoryDbSet<Option> _dummyOptions;
 
         [TestInitialize]
         public void setup()
         {
             _burgerOption = new Option { Id = 1, Name = "Burger King" };
             _pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
-            InMemoryDbSet<Option> dummyOptions = new InMemoryDbSet<Option>(true);
-            dummyOptions.Add(_burgerOption);
-            dummyOptions.Add(_pizzaOption);
+            _dummyOptions = new InMemoryDbSet<Option>(true);
+            _dummyOptions.Add(_burgerOption);
+            _dummyOptions.Add(_pizzaOption);
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
-            mockContext.Setup(a => a.Options).Returns(dummyOptions);
+            mockContext.Setup(a => a.Options).Returns(_dummyOptions);
+            mockContext.Setup(a => a.SaveChanges()).Callback(this.SaveChanges);
 
             _controller = new OptionController(mockContextFactory.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
+        }
+
+        private void SaveChanges()
+        {
+            for (int i = 0; i < _dummyOptions.Local.Count; i++)
+            {
+                _dummyOptions.Local[i].Id = (long)i + 1;
+            }
         }
 
         #region GET
@@ -123,13 +133,94 @@ namespace VotingApplication.Web.Api.Tests
         #region POST
 
         [TestMethod]
-        public void PostIsNotAllowed()
+        public void PostIsAllowed()
         {
             // Act
-            var response = _controller.Post(new List<object>());
+            var response = _controller.Post(new Option() {Name="Abc", Description="Abc", Info="Abc"});
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PostWithoutNameIsRejected()
+        {
+            // Act
+            var response = _controller.Post(new Option() { Description = "Abc", Info = "Abc" });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PostWithEmptyNameIsRejected()
+        {
+            // Act
+            var response = _controller.Post(new Option() { Name="", Description = "Abc", Info = "Abc" });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Cannot create an option with a non-empty name", error.Message);
+        }
+
+
+        [TestMethod]
+        public void PostWithoutDescriptionIsAccepted()
+        {
+            // Act
+            var response = _controller.Post(new Option() { Name = "Abc", Info = "Abc" });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PostWithoutMoreInfoIsAccepted()
+        {
+            // Act
+            var response = _controller.Post(new Option() { Name = "Abc", Description = "Abc" });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PostAddsOptionToOptionList()
+        {
+            // Act
+            Option newOption = new Option() { Name = "Bella Vista" };
+            _controller.Post(newOption);
+
+            // Assert
+            List<Option> expectedOptions = new List<Option>();
+            expectedOptions.Add(_burgerOption);
+            expectedOptions.Add(_pizzaOption);
+            expectedOptions.Add(newOption);
+            CollectionAssert.AreEquivalent(expectedOptions, _dummyOptions.Local);
+        }
+
+        [TestMethod]
+        public void PostReturnsIdOfNewOption()
+        {
+            // Act
+            Option newOption = new Option() { Name = "Bella Vista" };
+            var response = _controller.Post(newOption);
+
+            // Assert
+            long optionId = (long)((ObjectContent)response.Content).Value;
+            Assert.AreEqual(3, optionId);
+        }
+
+        [TestMethod]
+        public void PostSetsIdOfNewOption()
+        {
+            // Act
+            Option newOption = new Option() { Name = "Bella Vista" };
+             _controller.Post(newOption);
+
+            // Assert
+            Assert.AreEqual(3, newOption.Id);
         }
 
         [TestMethod]
