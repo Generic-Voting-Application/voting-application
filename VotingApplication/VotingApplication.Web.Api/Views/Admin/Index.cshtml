@@ -8,3 +8,24 @@
     </div>
     <div class="col-xs-5"></div>
 </div>
+<br />
+<div class="row">
+    <div class="col-xs-3"></div>
+    <div class="col-xs-6 centered">
+        <table class="table">
+            <tr>
+                <th>User</th>
+                <th>Option</th>
+                <th></th>
+            </tr>
+            <tbody data-bind="foreach: votes">
+                <tr>
+                    <td data-bind="text: User.Name"></td>
+                    <td data-bind="text: Option.Name"></td>
+                    <td><button data-bind="click: $parent.deleteVote.bind()">Delete Vote</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-xs-3"></div>
+</div>
