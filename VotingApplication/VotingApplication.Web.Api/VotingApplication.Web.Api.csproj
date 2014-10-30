@@ -17,9 +17,9 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <ApplicationInsightsResourceId>/subscriptions/d00a5f91-e04b-4a76-aae3-e9b3a9a8323d/resourcegroups/Default-ApplicationInsights-CentralUS/providers/microsoft.insights/components/VotingApplication.Web.Api</ApplicationInsightsResourceId>
@@ -263,7 +263,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\API Controllers\AccountController.cs" />
-    <Compile Include="Controllers\Web Controllers\AdminController.cs" />
+    <Compile Include="Controllers\Web Controllers\Admin1790Controller.cs" />
     <Compile Include="Controllers\Web Controllers\HomeController.cs" />
     <Compile Include="Controllers\API Controllers\OptionController.cs" />
     <Compile Include="Controllers\Web Controllers\ResultController.cs" />
@@ -352,7 +352,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Result\Index.cshtml" />
-    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin1790\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VotingAppDb\VotingAppDb.sqlproj">

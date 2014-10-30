@@ -24,8 +24,11 @@
         });
     }
 
-    self.keyIsEnter = function (key) {
-        return (key && key.keyCode == 13);
+    self.keyIsEnter = function (key, callback) {
+        if (key && key.keyCode == 13)
+        {
+            callback();
+        }
     }
 
     // Do login
@@ -65,26 +68,49 @@
         });
     }
 
-    $(document).ready(function () {
+    self.allOptions = function () {
         // Get all options
         $.ajax({
             type: 'GET',
             url: "/api/option",
 
             success: function (data) {
-                data.forEach(function (option) {
-                    self.options.push(option);
-                });
+                self.options(data);
             }
         });
+    }
+
+    self.addOption = function () {
+        $.ajax({
+            type: 'POST',
+            url: '/api/option',
+            contentType: 'application/json',
+
+            data: JSON.stringify({
+                Name: $("#newName").val(),
+                Description: $("#newDescription").val(),
+                Info: $("#newInfo").val()
+            }),
+
+            success: function () {
+                self.allOptions();
+                $("#newName").val("")
+                $("#newDescription").val("")
+                $("#newInfo").val("")
+            }
+        })
+    }
+
+    $(document).ready(function () {
+
+        self.allOptions();
 
         $("#Name-submit").click(self.submitLogin);
         //Submit on pressing return key
-        $("#Name").keypress(event, function () {
-            if (self.keyIsEnter(event)) {
-                self.submitLogin();
-            }
-        });
+        $("#Name").keypress(function (event) { self.keyIsEnter(event, self.submitLogin); });
+
+        //Add option on pressing return key
+        $("#newOptionRow").keypress(function(event) { self.keyIsEnter(event, self.addOption); });
     });
 }
 
