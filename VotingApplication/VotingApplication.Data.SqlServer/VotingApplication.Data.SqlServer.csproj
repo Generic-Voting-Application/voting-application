@@ -41,6 +41,16 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VotingApplication.Common\VotingApplication.Common.csproj">
+      <Project>{51dd38fa-7531-4977-814a-bd0752e62ce5}</Project>
+      <Name>VotingApplication.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VotingApplication.Data\VotingApplication.Data.csproj">
+      <Project>{942dcb1b-5882-4c01-95ae-3fe71e4103f2}</Project>
+      <Name>VotingApplication.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

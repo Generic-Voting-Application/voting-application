@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
+using System.Net.Http.Headers;
 
 namespace VotingApplication.Web.Api
 {
@@ -25,6 +26,14 @@ namespace VotingApplication.Web.Api
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Routes.MapHttpRoute(
+                name:"UserVoteApiRoute",
+                routeTemplate: "api/user/{userId}/vote/{voteId}",
+                defaults: new { controller = "UserVote", voteId = RouteParameter.Optional }
+            );
+
+            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
         }
     }
 }

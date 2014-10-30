@@ -66,4 +66,7 @@
   <ItemGroup>
     <None Include="VotingAppDb.publish.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="dbo\Scripts\PopulateRestaurants.sql" />
+  </ItemGroup>
 </Project>
