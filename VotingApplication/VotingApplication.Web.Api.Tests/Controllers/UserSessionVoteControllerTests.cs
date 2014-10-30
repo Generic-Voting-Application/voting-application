@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using FakeDbSet;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using VotingApplication.Data.Context;
@@ -18,13 +19,47 @@ namespace VotingApplication.Web.Api.Tests.Controllers
     public class UserSessionVoteControllerTests
     {
         private UserSessionVoteController _controller;
+        private Vote _bobVote;
 
         [TestInitialize]
         public void setup()
         {
+            InMemoryDbSet<User> dummyUsers = new InMemoryDbSet<User>(true);
+            InMemoryDbSet<Vote> dummyVotes = new InMemoryDbSet<Vote>(true);
+            InMemoryDbSet<Option> dummyOptions = new InMemoryDbSet<Option>(true);
+            InMemoryDbSet<Session> dummySessions = new InMemoryDbSet<Session>(true);
+
+            Session mainSession = new Session() { Id = 1 };
+            Session otherSession = new Session() { Id = 2 };
+
+            Option burgerOption = new Option { Id = 1, Name = "Burger King" };
+
+            User bobUser = new User { Id = 1, Name = "Bob" };
+            User joeUser = new User { Id = 2, Name = "Joe" };
+
+            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, SessionId = 1 };
+            Vote joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, SessionId = 1 };
+            Vote otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, SessionId = 2 };
+
+            dummyUsers.Add(bobUser);
+            dummyUsers.Add(joeUser);
+
+            dummyVotes.Add(_bobVote);
+            dummyVotes.Add(joeVote);
+            dummyVotes.Add(otherVote);
+
+            dummyOptions.Add(burgerOption);
+
+            dummySessions.Add(mainSession);
+            dummySessions.Add(otherSession);
+
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
+            mockContext.Setup(a => a.Votes).Returns(dummyVotes);
+            mockContext.Setup(a => a.Users).Returns(dummyUsers);
+            mockContext.Setup(a => a.Options).Returns(dummyOptions);
+            mockContext.Setup(a => a.Sessions).Returns(dummySessions);
 
             _controller = new UserSessionVoteController(mockContextFactory.Object);
             _controller.Request = new HttpRequestMessage();
