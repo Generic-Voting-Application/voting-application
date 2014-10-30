@@ -69,13 +69,62 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region GET
 
         [TestMethod]
-        public void GetIsNotAllowed()
+        public void GetIsAllowed()
         {
             // Act
             var response = _controller.Get(1, 1);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void GetReturnsListOfVotesForUserAndSession()
+        {
+            // Act
+            var response = _controller.Get(1, 1);
+
+            // Assert
+            List<Vote> actualVotes = ((ObjectContent)response.Content).Value as List<Vote>;
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(_bobVote);
+            CollectionAssert.AreEquivalent(expectedVotes, actualVotes);
+        }
+
+        [TestMethod]
+        public void GetNonexistentUserIsNotFound()
+        {
+            // Act
+            var response = _controller.Get(99, 1);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("User 99 does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void GetNonexistentSessionIsNotFound()
+        {
+            // Act
+            var response = _controller.Get(1, 99);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Session 99 does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void GetForValidUserAndSessionWithNoVotesIsEmpty()
+        {
+            // Act
+            var response = _controller.Get(2, 2);
+
+            // Assert
+            List<Vote> actualVotes = ((ObjectContent)response.Content).Value as List<Vote>;
+            List<Vote> expectedVotes = new List<Vote>();
+            CollectionAssert.AreEquivalent(expectedVotes, actualVotes);
         }
 
         [TestMethod]
