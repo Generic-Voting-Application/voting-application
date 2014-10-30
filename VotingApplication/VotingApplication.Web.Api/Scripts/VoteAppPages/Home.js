@@ -110,9 +110,7 @@
         $("#Name").keypress(event, function ()              { self.keyIsEnter(event, self.submitLogin); });
 
         //Add option on pressing return key
-        $("#newName").keypress(event, function ()           { self.keyIsEnter(event, self.addOption); });
-        $("#newDescription").keypress(event, function ()    { self.keyIsEnter(event, self.addOption); });
-        $("#newInfo").keypress(event, function ()           { self.keyIsEnter(event, self.addOption); });
+        $("#newOptionRow").keypress(event, function () { self.keyIsEnter(event, self.addOption); });
     });
 }
 
