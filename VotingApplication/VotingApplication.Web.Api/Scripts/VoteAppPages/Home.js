@@ -107,10 +107,10 @@
 
         $("#Name-submit").click(self.submitLogin);
         //Submit on pressing return key
-        $("#Name").keypress(event, function ()              { self.keyIsEnter(event, self.submitLogin); });
+        $("#Name").keypress(function (event) { self.keyIsEnter(event, self.submitLogin); });
 
         //Add option on pressing return key
-        $("#newOptionRow").keypress(event, function () { self.keyIsEnter(event, self.addOption); });
+        $("#newOptionRow").keypress(function(event) { self.keyIsEnter(event, self.addOption); });
     });
 }
 
