@@ -156,9 +156,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http.Formatting">
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -262,11 +262,14 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\OptionController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="Controllers\VoteController.cs" />
+    <Compile Include="Controllers\API Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Web Controllers\HomeController.cs" />
+    <Compile Include="Controllers\API Controllers\OptionController.cs" />
+    <Compile Include="Controllers\Web Controllers\ResultController.cs" />
+    <Compile Include="Controllers\API Controllers\UserController.cs" />
+    <Compile Include="Controllers\API Controllers\UserVoteController.cs" />
+    <Compile Include="Controllers\API Controllers\VoteController.cs" />
+    <Compile Include="Controllers\API Controllers\WebApiController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -316,7 +319,9 @@
     <None Include="Properties\PublishProfiles\voting-application - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\voting-application - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\Home.js" />
+    <Content Include="Scripts\VoteAppPages\Home.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -327,6 +332,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\VoteAppPages\Results.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -343,6 +349,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Result\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VotingAppDb\VotingAppDb.sqlproj">

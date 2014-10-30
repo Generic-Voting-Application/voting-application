@@ -6,11 +6,12 @@ using System.Web.Mvc;
 
 namespace VotingApplication.Web.Api.Controllers
 {
-    public class HomeController : Controller
+    public class ResultController : Controller
     {
         public ActionResult Index()
         {
-            ViewBag.Title = "Home Page";
+            ViewBag.Title = "Voting Results";
+            ViewBag.Script = "/Scripts/VoteAppPages/Results.js";
 
             return View();
         }

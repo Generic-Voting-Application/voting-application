@@ -26,8 +26,7 @@ namespace VotingApplication.Web.Api.Tests
             User bobUser = new User { Id = 1, Name = "Bob" };
             User joeUser = new User { Id = 2, Name = "Joe" };
 
-            InMemoryDbSet<Vote> dummyVotes = new InMemoryDbSet<Vote>();
-            dummyVotes.Clear();
+            InMemoryDbSet<Vote> dummyVotes = new InMemoryDbSet<Vote>(true);
 
             _bobVote = new Vote() { Id = 1, Option = burgerOption, User = bobUser };
             dummyVotes.Add(_bobVote);
@@ -44,6 +43,8 @@ namespace VotingApplication.Web.Api.Tests
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
+
+        #region GET
 
         [TestMethod]
         public void GetReturnsAllVotes()
@@ -123,5 +124,79 @@ namespace VotingApplication.Web.Api.Tests
             // Assert
             Assert.IsNull(responseVote);
         }
+
+        #endregion
+
+        #region POST
+
+        [TestMethod]
+        public void PostIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Post();
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PostByIdIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Post(1);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        #endregion
+
+        #region PUT
+
+        [TestMethod]
+        public void PutIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(new Vote());
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PutByIdIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(1, new Vote());
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        #endregion
+
+        #region DELETE
+
+        [TestMethod]
+        public void DeleteIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Delete();
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteByIdIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Delete(1);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        #endregion
     }
 }
