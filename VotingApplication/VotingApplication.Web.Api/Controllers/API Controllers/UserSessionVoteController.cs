@@ -39,7 +39,23 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public virtual HttpResponseMessage Get(long userId, long sessionId, long voteId)
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET by id on this controller");
+            using (var context = _contextFactory.CreateContext())
+            {
+                var userSessionResponse = Get(userId, sessionId);
+                List<Vote> votesForUserSession = ((ObjectContent)userSessionResponse.Content).Value as List<Vote>;
+                if (votesForUserSession == null)
+                {
+                    return userSessionResponse;
+                }
+
+                Vote matchingVote = votesForUserSession.Where(v => v.Id == voteId).FirstOrDefault();
+                if (matchingVote == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Vote {0} does not exist", voteId));
+                }
+
+                return this.Request.CreateResponse(HttpStatusCode.OK, matchingVote);
+            }
         }
 
         #endregion

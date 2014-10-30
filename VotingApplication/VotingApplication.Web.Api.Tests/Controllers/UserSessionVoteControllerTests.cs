@@ -128,13 +128,85 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void GetByIdIsNotAllowed()
+        public void GetByIdIsAllowed()
         {
             // Act
             var response = _controller.Get(1, 1, 1);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+
+        [TestMethod]
+        public void GetByIdForNonexistentUserIsNotFound()
+        {
+            // Act
+            var response = _controller.Get(99, 1, 1);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("User 99 does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void GetByIdForNonexistentSessionIsNotFound()
+        {
+            // Act
+            var response = _controller.Get(1, 99, 1);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Session 99 does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void GetByIdForNonexistentVoteIsNotFound()
+        {
+            // Act
+            var response = _controller.Get(1, 1, 99);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Vote 99 does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void GetVoteForDifferentUserIsNotFound()
+        {
+            // Act
+            var response = _controller.Get(1, 1, 2); // Vote 2 belongs to User 2
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Vote 2 does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void GetVoteForDifferentSessionIsNotFound()
+        {
+            // Act
+            var response = _controller.Get(1, 1, 3); // Vote 3 belongs to Session 2
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Vote 3 does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void GetByIdFetchesIdForThatUserSession()
+        {
+            // Act
+            var response = _controller.Get(1, 1, 1);
+
+            // Assert
+            var responseVote = ((ObjectContent)response.Content).Value as Vote;
+            Assert.AreEqual(_bobVote, responseVote);
         }
 
         #endregion
