@@ -263,6 +263,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\API Controllers\AccountController.cs" />
+    <Compile Include="Controllers\API Controllers\UserSessionVoteController.cs" />
     <Compile Include="Controllers\Web Controllers\Admin1790Controller.cs" />
     <Compile Include="Controllers\Web Controllers\HomeController.cs" />
     <Compile Include="Controllers\API Controllers\OptionController.cs" />
