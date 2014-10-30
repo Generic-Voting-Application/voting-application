@@ -9,5 +9,8 @@
 
         public long UserId { get; set; }
         public User User { get; set; }
+
+        public long SessionId { get; set; }
+        public User Session { get; set; }
     }
 }

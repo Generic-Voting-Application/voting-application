@@ -22,6 +22,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         [TestInitialize]
         public void setup()
         {
+            Session mainSession = new Session() { Id = 1 };
+
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
             Option pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
             User bobUser = new User { Id = 1, Name = "Bob" };
@@ -31,9 +33,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             InMemoryDbSet<User> dummyUsers = new InMemoryDbSet<User>(true);
             _dummyVotes = new InMemoryDbSet<Vote>(true);
             InMemoryDbSet<Option> dummyOptions = new InMemoryDbSet<Option>(true);
+            InMemoryDbSet<Session> dummySessions = new InMemoryDbSet<Session>(true);
 
             dummyOptions.Add(burgerOption);
             dummyOptions.Add(pizzaOption);
+
+            dummySessions.Add(mainSession);
 
             _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1 };
             dummyUsers.Add(bobUser);
@@ -49,9 +54,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
             mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
-            mockContext.Setup(b => b.Users).Returns(dummyUsers);
-            mockContext.Setup(c => c.Options).Returns(dummyOptions);
-            mockContext.Setup(d => d.SaveChanges()).Callback(SaveChanges);
+            mockContext.Setup(a => a.Users).Returns(dummyUsers);
+            mockContext.Setup(a => a.Options).Returns(dummyOptions);
+            mockContext.Setup(a => a.Sessions).Returns(dummySessions);
+            mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
             _controller = new UserVoteController(mockContextFactory.Object);
             _controller.Request = new HttpRequestMessage();
@@ -215,7 +221,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutNonexistentUserIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(9, new Vote() { OptionId = 1 });
+            var response = _controller.Put(9, new Vote() { OptionId = 1, SessionId = 1 });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
@@ -227,12 +233,36 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutNonexistentOptionIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, new Vote() { OptionId = 7 });
+            var response = _controller.Put(1, new Vote() { OptionId = 7, SessionId = 1 });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
             Assert.AreEqual("Option 7 does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void PutMissingSessionIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(1, new Vote() { OptionId = 1 });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Vote does not have a session", error.Message);
+        }
+
+        [TestMethod]
+        public void PutNonexistentSessionIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(1, new Vote() { OptionId = 1, SessionId = 99 });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Session 99 does not exist", error.Message);
         }
 
         [TestMethod]
@@ -251,7 +281,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithNewVoteIfNoneExistsIsAllowed()
         {
             // Act
-            var response = _controller.Put(3, new Vote() { OptionId = 1 });
+            var response = _controller.Put(3, new Vote() { OptionId = 1, SessionId = 1 });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -261,7 +291,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutAddsANewVoteIfNoneExistsAndReturnsVoteId()
         {
             // Act
-            var response = _controller.Put(3, new Vote() { OptionId = 1 });
+            var response = _controller.Put(3, new Vote() { OptionId = 1, SessionId = 1 });
 
             // Assert
             long responseVoteId = (long)((ObjectContent)response.Content).Value;
@@ -272,7 +302,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutAddsANewVoteIfNoneExists()
         {
             // Act
-            var newVote = new Vote() { OptionId = 1 };
+            var newVote = new Vote() { OptionId = 1, SessionId = 1 };
             var response = _controller.Put(3, newVote);
 
             // Assert
@@ -287,7 +317,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutReplacesCurrentVote()
         {
             // Act
-            var newVote = new Vote() { OptionId = 2 };
+            var newVote = new Vote() { OptionId = 2, SessionId = 1 };
             var response = _controller.Put(1, newVote);
 
             // Assert

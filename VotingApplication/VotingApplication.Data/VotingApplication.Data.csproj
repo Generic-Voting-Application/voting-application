@@ -51,6 +51,7 @@
     <Compile Include="Context\IContextFactory.cs" />
     <Compile Include="Context\IVotingContext.cs" />
     <Compile Include="Model\Option.cs" />
+    <Compile Include="Model\Session.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\Vote.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
