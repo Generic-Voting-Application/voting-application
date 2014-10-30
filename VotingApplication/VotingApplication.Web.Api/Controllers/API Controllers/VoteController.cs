@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -40,9 +41,44 @@ namespace VotingApplication.Web.Api.Controllers
 
         #region PUT
 
-        public virtual HttpResponseMessage Put(object obj)
+        public virtual HttpResponseMessage Put(Vote newVote)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT on this controller");
+        }
+
+        #endregion
+
+        #region Delete
+
+        public override HttpResponseMessage Delete()
+        {
+            using (var context = _contextFactory.CreateContext())
+            {
+                foreach (var entity in context.Votes.ToList())
+                {
+                    context.Votes.Remove(entity);
+                }
+
+                context.SaveChanges();
+
+                return this.Request.CreateResponse(HttpStatusCode.OK);
+            }
+        }
+
+        public override HttpResponseMessage Delete(long id)
+        {
+            using (var context = _contextFactory.CreateContext())
+            {
+                var matchingVotes = context.Votes.Where(v => v.Id == id);
+                if (matchingVotes.Count() > 0)
+                {
+                    context.Votes.Remove(matchingVotes.FirstOrDefault());
+                }
+
+                context.SaveChanges();
+
+                return this.Request.CreateResponse(HttpStatusCode.OK);
+            }
         }
 
         #endregion

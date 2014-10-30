@@ -18,6 +18,7 @@ namespace VotingApplication.Web.Api.Tests
         private VoteController _controller;
         private Vote _bobVote;
         private Vote _joeVote;
+        private InMemoryDbSet<Vote> _dummyVotes;
 
         [TestInitialize]
         public void setup()
@@ -26,18 +27,18 @@ namespace VotingApplication.Web.Api.Tests
             User bobUser = new User { Id = 1, Name = "Bob" };
             User joeUser = new User { Id = 2, Name = "Joe" };
 
-            InMemoryDbSet<Vote> dummyVotes = new InMemoryDbSet<Vote>(true);
+            _dummyVotes = new InMemoryDbSet<Vote>(true);
 
             _bobVote = new Vote() { Id = 1, Option = burgerOption, User = bobUser };
-            dummyVotes.Add(_bobVote);
+            _dummyVotes.Add(_bobVote);
 
             _joeVote = new Vote() { Id = 2, Option = burgerOption, User = joeUser };
-            dummyVotes.Add(_joeVote);
+            _dummyVotes.Add(_joeVote);
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
-            mockContext.Setup(a => a.Votes).Returns(dummyVotes);
+            mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
 
             _controller = new VoteController(mockContextFactory.Object);
             _controller.Request = new HttpRequestMessage();
@@ -133,7 +134,7 @@ namespace VotingApplication.Web.Api.Tests
         public void PostIsNotAllowed()
         {
             // Act
-            var response = _controller.Post();
+            var response = _controller.Post(new List<object>());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -143,7 +144,7 @@ namespace VotingApplication.Web.Api.Tests
         public void PostByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Post(1);
+            var response = _controller.Post(1, new Vote());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -178,23 +179,83 @@ namespace VotingApplication.Web.Api.Tests
         #region DELETE
 
         [TestMethod]
-        public void DeleteIsNotAllowed()
+        public void DeleteIsAllowed()
         {
             // Act
             var response = _controller.Delete();
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         [TestMethod]
-        public void DeleteByIdIsNotAllowed()
+        public void DeleteRemovesAllVotes()
+        {
+            // Act
+            var response = _controller.Delete();
+
+            // Assert
+            var expectedVotes = new List<Vote>();
+            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
+        }
+
+        [TestMethod]
+        public void DeleteWithNoVotesIsAllowed()
+        {
+            // Arrange
+            _dummyVotes.Local.Clear();
+
+            // Act
+            var response = _controller.Delete();
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteByIdIsAllowed()
         {
             // Act
             var response = _controller.Delete(1);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteByIdRemovesVoteWithMatchingId()
+        {
+            // Act
+            _controller.Delete(1);
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(_joeVote);
+            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
+        }
+
+        [TestMethod]
+        public void DeleteByIdIsAllowedIfNoVoteMatchesId()
+        {
+            // Act
+            var response = _controller.Delete(99);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+
+        [TestMethod]
+        public void DeleteByIdDoesNothingIfNoVoteMatchesId()
+        {
+            // Act
+            _controller.Delete(99);
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(_bobVote);
+            expectedVotes.Add(_joeVote);
+            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
         }
 
         #endregion

@@ -34,7 +34,7 @@
 
         var chart = new insight.Chart('', '#bar-chart')
             .width(450)
-            .height(400);
+            .height(data.length * 50 + 100);
         var xAxis = new insight.Axis('Votes', insight.scales.linear)
             .tickFrequency(1);
         var yAxis = new insight.Axis('', insight.scales.ordinal)

@@ -40,12 +40,12 @@ namespace VotingApplication.Web.Api.Controllers
 
         #region POST
 
-        public virtual HttpResponseMessage Post()
+        public virtual HttpResponseMessage Post(object objs)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
         }
 
-        public virtual HttpResponseMessage Post(long id)
+        public virtual HttpResponseMessage Post(long id, object obj)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
         }
