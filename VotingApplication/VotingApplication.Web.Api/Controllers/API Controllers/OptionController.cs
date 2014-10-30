@@ -67,5 +67,24 @@ namespace VotingApplication.Web.Api.Controllers
         }
 
         #endregion
+
+        #region Delete
+
+        public override HttpResponseMessage Delete(long id)
+        {
+            using (var context = _contextFactory.CreateContext())
+            {
+                Option option = context.Options.Where(o => o.Id == id).FirstOrDefault();
+                if (option != null)
+                {
+                    context.Options.Remove(option);
+                    context.SaveChanges();
+                }
+
+                return this.Request.CreateResponse(HttpStatusCode.OK);
+            }
+        }
+
+        #endregion
     }
 }
