@@ -291,6 +291,7 @@ namespace VotingApplication.Web.Api.Tests
             List<Option> expectedOptions = new List<Option>();
             expectedOptions.Add(_pizzaOption);
             CollectionAssert.AreEquivalent(expectedOptions, _dummyOptions.Local);
+            // Note: We assume that related entities that foreign key into this option will be deleted by entity framework
         }
 
         [TestMethod]

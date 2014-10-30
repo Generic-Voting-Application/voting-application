@@ -2,9 +2,10 @@
     var self = this;
 
     self.votes = ko.observableArray();
+    self.options = ko.observableArray();
+    self.selectedDeleteOptionId = null;
 
     $(document).ready(function () {
-
         self.resetVotes = function () {
             $.ajax({
                 type: 'DELETE',
@@ -42,9 +43,38 @@
             });
         }
 
+        self.populateOptions = function () {
+            $.ajax({
+                type: 'GET',
+                url: "/api/option",
+
+                success: function (data) {
+                    self.options(data);
+                }
+            });
+        }
+
+        self.showDeleteModal = function (data, event) {
+            $('#deleteOptionModal').modal();
+            self.selectedDeleteOptionId = data.Id;
+        }
+
         $("#reset-votes").click(self.resetVotes);
         self.populateVotes();
+        self.populateOptions();
     });
+
+    self.deleteOption = function (data, event) {
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/option?id=' + self.selectedDeleteOptionId,
+            contentType: 'application/json',
+
+            success: function () {
+                self.populateOptions();
+            }
+        });
+    }
 }
 
 ko.applyBindings(new AdminViewModel());
