@@ -54,27 +54,22 @@
             });
         }
 
-        self.showDeleteModal = function (data, event) {
-            $('#deleteOptionModal').modal();
-            self.selectedDeleteOptionId = data.Id;
+        self.deleteOption = function (data, event) {
+            $.ajax({
+                type: 'DELETE',
+                url: '/api/option?id=' + data.Id,
+                contentType: 'application/json',
+
+                success: function () {
+                    self.populateOptions();
+                }
+            });
         }
 
         $("#reset-votes").click(self.resetVotes);
         self.populateVotes();
         self.populateOptions();
     });
-
-    self.deleteOption = function (data, event) {
-        $.ajax({
-            type: 'DELETE',
-            url: '/api/option?id=' + self.selectedDeleteOptionId,
-            contentType: 'application/json',
-
-            success: function () {
-                self.populateOptions();
-            }
-        });
-    }
 }
 
 ko.applyBindings(new AdminViewModel());
