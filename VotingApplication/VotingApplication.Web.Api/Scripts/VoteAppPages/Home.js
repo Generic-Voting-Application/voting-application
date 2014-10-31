@@ -1,8 +1,10 @@
 ﻿function HomeViewModel() {
     var self = this;
     var userId = 0;
+    var sessionId = 0;
 
     self.options = ko.observableArray();
+    self.sessions = ko.observableArray();
 
     // Submit a vote
     self.doVote = function (data, event) {
@@ -12,7 +14,7 @@
             contentType: 'application/json',
             data: JSON.stringify({
                 OptionId: data.Id,
-                SessionId: 1
+                SessionId: sessionId
             }),
 
             success: function (returnData) {
@@ -51,10 +53,15 @@
         });
     }
 
+    self.submitSession = function () {
+        sessionId = $("#session-select").val();
+        window.location = "?session=" + sessionId;
+    }
+
     self.highlightPreviousVote = function () {
         $.ajax({
             type: 'GET',
-            url: '/api/user/' + userId + '/session/1/vote',
+            url: '/api/user/' + userId + '/session/' + sessionId + '/vote',
             contentType: 'application/json',
 
             success: function (data) {
@@ -67,6 +74,17 @@
                 }
             }
         });
+    }
+
+    self.allSessions = function () {
+        $.ajax({
+            type: 'GET',
+            url: '/api/session',
+
+            success: function (data) {
+                self.sessions(data);
+            }
+        })
     }
 
     self.allOptions = function () {
@@ -102,7 +120,29 @@
         })
     }
 
+    function getJsonFromUrl() {
+        var query = location.search.substr(1);
+        var result = {};
+        query.split("&").forEach(function (part) {
+            var item = part.split("=");
+            result[item[0]] = decodeURIComponent(item[1]);
+        });
+        return result;
+    }
+
     $(document).ready(function () {
+        var windowArgs = getJsonFromUrl();
+
+        if (!windowArgs['session']) {
+            self.allSessions();
+            $("#login-box").hide();
+            $("#sessions").show();
+        }
+        else {
+            sessionId = windowArgs['session'];
+            $("#sessions").hide();
+            $("#login-box").show();
+        }
 
         self.allOptions();
 
