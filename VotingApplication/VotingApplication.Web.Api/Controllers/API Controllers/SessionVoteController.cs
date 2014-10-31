@@ -18,7 +18,17 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public virtual HttpResponseMessage Get(long sessionId)
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET on this controller");
+            using (var context = _contextFactory.CreateContext())
+            {
+                Session session = context.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
+                if (session == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
+                }
+
+                List<Vote> sessionVotes = context.Votes.Where(v => v.SessionId == sessionId).ToList();
+                return this.Request.CreateResponse(HttpStatusCode.OK, sessionVotes);
+            }
         }
 
         public virtual HttpResponseMessage Get(long sessionId, long voteId)

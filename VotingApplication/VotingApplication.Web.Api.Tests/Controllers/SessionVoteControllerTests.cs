@@ -20,17 +20,20 @@ namespace VotingApplication.Web.Api.Tests.Controllers
     {
         private SessionVoteController _controller;
         private Vote _bobVote;
+        private Vote _joeVote;
+        private InMemoryDbSet<Vote> _dummyVotes;
 
         [TestInitialize]
         public void setup()
         {
             InMemoryDbSet<User> dummyUsers = new InMemoryDbSet<User>(true);
-            InMemoryDbSet<Vote> dummyVotes = new InMemoryDbSet<Vote>(true);
+            _dummyVotes = new InMemoryDbSet<Vote>(true);
             InMemoryDbSet<Option> dummyOptions = new InMemoryDbSet<Option>(true);
             InMemoryDbSet<Session> dummySessions = new InMemoryDbSet<Session>(true);
 
             Session mainSession = new Session() { Id = 1 };
             Session otherSession = new Session() { Id = 2 };
+            Session emptySession = new Session() { Id = 3 };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
 
@@ -38,25 +41,26 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             User joeUser = new User { Id = 2, Name = "Joe" };
 
             _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, SessionId = 1 };
-            Vote joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, SessionId = 1 };
+            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, SessionId = 1 };
             Vote otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, SessionId = 2 };
 
             dummyUsers.Add(bobUser);
             dummyUsers.Add(joeUser);
 
-            dummyVotes.Add(_bobVote);
-            dummyVotes.Add(joeVote);
-            dummyVotes.Add(otherVote);
+            _dummyVotes.Add(_bobVote);
+            _dummyVotes.Add(_joeVote);
+            _dummyVotes.Add(otherVote);
 
             dummyOptions.Add(burgerOption);
 
             dummySessions.Add(mainSession);
             dummySessions.Add(otherSession);
+            dummySessions.Add(emptySession);
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
-            mockContext.Setup(a => a.Votes).Returns(dummyVotes);
+            mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
             mockContext.Setup(a => a.Users).Returns(dummyUsers);
             mockContext.Setup(a => a.Options).Returns(dummyOptions);
             mockContext.Setup(a => a.Sessions).Returns(dummySessions);
@@ -69,13 +73,51 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region GET
 
         [TestMethod]
-        public void GetIsNotAllowed()
+        public void GetIsAllowed()
         {
             // Act
             var response = _controller.Get(1);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void GetNonexistentSessionIsNotFound()
+        {
+            // Act
+            var response = _controller.Get(99);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Session 99 does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void GetReturnsVotesForThatSession()
+        {
+            // Act
+            var response = _controller.Get(1);
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(_bobVote);
+            expectedVotes.Add(_joeVote);
+            List<Vote> responseVotes = ((ObjectContent)response.Content).Value as List<Vote>;
+            CollectionAssert.AreEquivalent(expectedVotes, responseVotes);
+        }
+
+        [TestMethod]
+        public void GetOnEmptySessionReturnsEmptyList()
+        {
+            // Act
+            var response = _controller.Get(3);
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            List<Vote> responseVotes = ((ObjectContent)response.Content).Value as List<Vote>;
+            CollectionAssert.AreEquivalent(expectedVotes, responseVotes);
         }
 
         [TestMethod]
