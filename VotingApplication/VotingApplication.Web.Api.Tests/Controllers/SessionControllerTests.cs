@@ -55,13 +55,27 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region GET
 
         [TestMethod]
-        public void GetIsNotAllowed()
+        public void GetIsAllowed()
         {
             // Act
             var response = _controller.Get();
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void GetFetchesAllSessions()
+        {
+            // Act
+            var response = _controller.Get();
+
+            // Assert
+            List<Session> responseSessions = ((ObjectContent)response.Content).Value as List<Session>;
+            List<Session> expectedSessions = new List<Session>();
+            expectedSessions.Add(_mainSession);
+            expectedSessions.Add(_otherSession);
+            CollectionAssert.AreEquivalent(expectedSessions, responseSessions);
         }
 
         [TestMethod]

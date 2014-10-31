@@ -16,6 +16,14 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region Get
 
+        public override HttpResponseMessage Get()
+        {
+            using (var context = _contextFactory.CreateContext())
+            {
+                return this.Request.CreateResponse(HttpStatusCode.OK, context.Sessions.ToList());
+            }
+        }
+
         public override HttpResponseMessage Get(long sessionId)
         {
             using (var context = _contextFactory.CreateContext())
