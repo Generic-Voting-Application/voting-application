@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 
@@ -26,7 +25,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
                 }
 
-                List<Vote> sessionVotes = context.Votes.Where(v => v.SessionId == sessionId).ToList();
+                List<Vote> sessionVotes = context.Votes.Where(v => v.SessionId == sessionId)
+                    .Include(v => v.Option).Include(v => v.User)
+                    .ToList();
                 return this.Request.CreateResponse(HttpStatusCode.OK, sessionVotes);
             }
         }

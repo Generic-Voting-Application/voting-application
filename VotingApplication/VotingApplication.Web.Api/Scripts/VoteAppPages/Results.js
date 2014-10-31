@@ -62,7 +62,7 @@
         // Get all options
         $.ajax({
             type: 'GET',
-            url: "/api/vote",
+            url: "/api/session/1/vote",
 
             success: function (data) {
                 var groupedVotes = self.countVotes(data);
