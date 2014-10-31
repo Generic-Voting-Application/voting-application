@@ -74,6 +74,8 @@
 
         if (windowArgs['session']) {
             sessionId = windowArgs['session'];
+            $("#HomeLink").attr('href', '/?session=' + sessionId);
+            $("#ResultLink").attr('href', '/Result?session=' + sessionId);
         }
 
         // Get all options
@@ -83,11 +85,7 @@
 
             success: function (data) {
                 var groupedVotes = self.countVotes(data);
-
-                groupedVotes.forEach(function (vote) {
-                    self.votes.push(vote);
-                });
-
+                self.votes(groupedVotes);
                 self.drawChart(groupedVotes);
             }
         });

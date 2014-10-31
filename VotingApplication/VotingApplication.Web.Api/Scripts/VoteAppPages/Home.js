@@ -140,6 +140,8 @@
         }
         else {
             sessionId = windowArgs['session'];
+            $("#HomeLink").attr('href', '/?session=' + sessionId);
+            $("#ResultLink").attr('href', '/Result?session=' + sessionId);
             $("#sessions").hide();
             $("#login-box").show();
         }
