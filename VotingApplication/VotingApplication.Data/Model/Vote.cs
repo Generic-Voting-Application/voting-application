@@ -11,6 +11,6 @@
         public User User { get; set; }
 
         public long SessionId { get; set; }
-        public User Session { get; set; }
+        public Session Session { get; set; }
     }
 }
