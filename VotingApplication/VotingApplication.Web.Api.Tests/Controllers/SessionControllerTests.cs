@@ -37,10 +37,19 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
             mockContext.Setup(a => a.Sessions).Returns(_dummySessions);
+            mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
             _controller = new SessionController(mockContextFactory.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
+        }
+
+        private void SaveChanges()
+        {
+            for (int i = 0; i < _dummySessions.Local.Count; i++)
+            {
+                _dummySessions.Local[i].Id = (long)i + 1;
+            }
         }
 
         #region GET
@@ -94,13 +103,74 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region POST
 
         [TestMethod]
-        public void PostIsNotAllowed()
+        public void PostIsAllowed()
+        {
+            // Act
+            var response = _controller.Post(new Session(){ Name = "New Session" });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PostRejectsSessionWithMissingName()
         {
             // Act
             var response = _controller.Post(new Session());
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Session did not have a name", error.Message);
+        }
+
+        [TestMethod]
+        public void PostRejectsSessionWithBlankName()
+        {
+            // Act
+            var response = _controller.Post(new Session() { Name = "" });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Session did not have a name", error.Message);
+        }
+
+        [TestMethod]
+        public void PostReturnsIdOfNewSession()
+        {
+            // Act
+            var response = _controller.Post(new Session() { Name = "New Session" });
+
+            // Assert
+            long newSessionId = (long)((ObjectContent)response.Content).Value;
+            Assert.AreEqual(3, newSessionId);
+        }
+
+        [TestMethod]
+        public void PostSetsIdOfNewSession()
+        {
+            // Act
+            Session newSession = new Session() { Name = "New Session" };
+            var response = _controller.Post(newSession);
+
+            // Assert
+            Assert.AreEqual(3, newSession.Id);
+        }
+
+        [TestMethod]
+        public void PostAddsNewSessionToSessions()
+        {
+            // Act
+            Session newSession = new Session() { Name = "New Session" };
+            _controller.Post(newSession);
+
+            // Assert
+            List<Session> expectedSessions = new List<Session>();
+            expectedSessions.Add(_mainSession);
+            expectedSessions.Add(_otherSession);
+            expectedSessions.Add(newSession);
+            CollectionAssert.AreEquivalent(expectedSessions, _dummySessions.Local);
         }
 
         [TestMethod]

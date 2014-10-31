@@ -25,9 +25,20 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region Post
 
-        public virtual HttpResponseMessage Post(object obj)
+        public virtual HttpResponseMessage Post(Session newSession)
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
+            using (var context = _contextFactory.CreateContext())
+            {
+                if (newSession.Name == null || newSession.Name.Length == 0)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Session did not have a name");
+                }
+
+                context.Sessions.Add(newSession);
+                context.SaveChanges();
+
+                return this.Request.CreateResponse(HttpStatusCode.OK, newSession.Id);
+            }
         }
 
         #endregion
