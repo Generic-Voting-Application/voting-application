@@ -39,6 +39,12 @@ namespace VotingApplication.Web.Api
                 defaults: new { controller = "UserSessionVote", voteId = RouteParameter.Optional }
             );
 
+            config.Routes.MapHttpRoute(
+                name: "SessionVoteApiRoute",
+                routeTemplate: "api/session/{sessionId}/vote/{voteId}",
+                defaults: new { controller = "SessionVote", voteId = RouteParameter.Optional }
+            );
+
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
         }
     }
