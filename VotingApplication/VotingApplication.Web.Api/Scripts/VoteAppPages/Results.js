@@ -1,5 +1,6 @@
 ﻿function ResultViewModel() {
     var self = this;
+    var sessionId = 0;
 
     self.votes = ko.observableArray();
 
@@ -58,11 +59,27 @@
         chart.draw();
     }
 
+    function getJsonFromUrl() {
+        var query = location.search.substr(1);
+        var result = {};
+        query.split("&").forEach(function (part) {
+            var item = part.split("=");
+            result[item[0]] = decodeURIComponent(item[1]);
+        });
+        return result;
+    }
+
     $(document).ready(function () {
+        var windowArgs = getJsonFromUrl();
+
+        if (windowArgs['session']) {
+            sessionId = windowArgs['session'];
+        }
+
         // Get all options
         $.ajax({
             type: 'GET',
-            url: "/api/session/1/vote",
+            url: '/api/session/' + sessionId + '/vote',
 
             success: function (data) {
                 var groupedVotes = self.countVotes(data);

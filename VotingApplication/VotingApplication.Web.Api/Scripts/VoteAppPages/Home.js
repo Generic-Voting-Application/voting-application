@@ -22,7 +22,7 @@
                 $(currentRow).siblings().removeClass("success");
                 $(currentRow).addClass("success");
 
-                setTimeout(function () { window.location = "/Result"; }, 500);
+                setTimeout(function () { window.location = "/Result?session=" + sessionId; }, 500);
             }
         });
     }
