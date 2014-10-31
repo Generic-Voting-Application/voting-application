@@ -15,7 +15,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region GET
 
-        public virtual HttpResponseMessage Get(long sessionId)
+        public override HttpResponseMessage Get(long sessionId)
         {
             using (var context = _contextFactory.CreateContext())
             {
@@ -69,7 +69,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region DELETE
 
-        public virtual HttpResponseMessage Delete(long sessionId)
+        public override HttpResponseMessage Delete(long sessionId)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
         }
