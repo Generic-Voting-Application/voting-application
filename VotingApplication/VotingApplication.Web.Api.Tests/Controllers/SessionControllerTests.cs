@@ -65,13 +65,36 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void GetByIdIsNotAllowed()
+        public void GetByIdIsAllowed()
         {
             // Act
             var response = _controller.Get(1);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void GetByIdOnNonexistentSessionsAreNotFound()
+        {
+            // Act
+            var response = _controller.Get(99);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Session 99 does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void GetByIdReturnsSessionWithMatchingId()
+        {
+            // Act
+            var response = _controller.Get(2);
+
+            // Assert
+            Session responseSession = ((ObjectContent)response.Content).Value as Session;
+            Assert.AreEqual(_otherSession, responseSession);
         }
 
         #endregion

@@ -14,6 +14,24 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         public SessionController() : base() { }
         public SessionController(IContextFactory contextFactory) : base(contextFactory) { }
 
+        #region Get
+
+        public override HttpResponseMessage Get(long sessionId)
+        {
+            using (var context = _contextFactory.CreateContext())
+            {
+                Session matchingSession = context.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
+                if (matchingSession == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
+                }
+
+                return this.Request.CreateResponse(HttpStatusCode.OK, matchingSession);
+            }
+        }
+
+        #endregion
+
         #region Put
 
         public virtual HttpResponseMessage Put(object obj)
