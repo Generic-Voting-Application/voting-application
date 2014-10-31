@@ -11,7 +11,8 @@
             url: '/api/user/'+userId+'/vote',
             contentType: 'application/json',
             data: JSON.stringify({
-                OptionId: data.Id
+                OptionId: data.Id,
+                SessionId: 1
             }),
 
             success: function (returnData) {
@@ -53,12 +54,12 @@
     self.highlightPreviousVote = function () {
         $.ajax({
             type: 'GET',
-            url: '/api/user/' + userId + '/vote',
+            url: '/api/user/' + userId + '/session/1/vote',
             contentType: 'application/json',
 
             success: function (data) {
-                if (data.length > 0) {
-                    var previousOptionId = data[0].OptionId;
+                for (var index = 0; index < data.length; index++) {
+                    var previousOptionId = data[index].OptionId;
                     var previousOption = self.options().filter(function (d) { return d.Id == previousOptionId }).pop();
                     var previousOptionRowIndex = self.options().indexOf(previousOption);
                     var matchingRow = $("#inner-vote-table > tbody > tr").eq(previousOptionRowIndex);
