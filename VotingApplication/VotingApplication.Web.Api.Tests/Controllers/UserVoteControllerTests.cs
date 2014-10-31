@@ -17,12 +17,14 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private UserVoteController _controller;
         private Vote _bobVote;
         private Vote _joeVote;
+        private Vote _otherVote;
         private InMemoryDbSet<Vote> _dummyVotes;
 
         [TestInitialize]
         public void setup()
         {
             Session mainSession = new Session() { Id = 1 };
+            Session otherSession = new Session() { Id = 2 };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
             Option pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
@@ -39,14 +41,18 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             dummyOptions.Add(pizzaOption);
 
             dummySessions.Add(mainSession);
+            dummySessions.Add(otherSession);
 
-            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1 };
+            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, SessionId = 1 };
             dummyUsers.Add(bobUser);
             _dummyVotes.Add(_bobVote);
 
-            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2 };
+            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, SessionId = 1 };
             dummyUsers.Add(joeUser);
             _dummyVotes.Add(_joeVote);
+
+            _otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, SessionId = 2 };
+            _dummyVotes.Add(_otherVote);
 
             dummyUsers.Add(billUser);
 
@@ -94,6 +100,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             List<Vote> expectedVotes = new List<Vote>();
             expectedVotes.Add(_bobVote);
+            expectedVotes.Add(_otherVote);
             CollectionAssert.AreEquivalent(expectedVotes, responseVotes);
         }
 
@@ -295,7 +302,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             long responseVoteId = (long)((ObjectContent)response.Content).Value;
-            Assert.AreEqual(3, responseVoteId);
+            Assert.AreEqual(4, responseVoteId);
         }
 
         [TestMethod]
@@ -309,6 +316,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             List<Vote> expectedVotes = new List<Vote>();
             expectedVotes.Add(_bobVote);
             expectedVotes.Add(_joeVote);
+            expectedVotes.Add(_otherVote);
             expectedVotes.Add(newVote);
             CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
         }
@@ -321,10 +329,18 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Put(1, newVote);
 
             // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            expectedVotes.Add(newVote);
-            expectedVotes.Add(_joeVote);
             Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[0].OptionId);
+        }
+
+        [TestMethod]
+        public void PutWithSessionReplacesInThatSession()
+        {
+            // Act
+            var newVote = new Vote() { OptionId = 2, SessionId = 2 };
+            _controller.Put(1, newVote);
+
+            // Assert
+            Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[2].OptionId);
         }
 
         #endregion
