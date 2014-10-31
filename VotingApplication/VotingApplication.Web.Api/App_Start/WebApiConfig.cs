@@ -34,7 +34,7 @@ namespace VotingApplication.Web.Api
             );
 
             config.Routes.MapHttpRoute(
-                name: "UserVoteApiRoute",
+                name: "UserSessionVoteApiRoute",
                 routeTemplate: "api/user/{userId}/session/{sessionId}/vote/{voteId}",
                 defaults: new { controller = "UserSessionVote", voteId = RouteParameter.Optional }
             );
