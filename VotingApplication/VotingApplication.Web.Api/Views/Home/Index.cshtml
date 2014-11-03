@@ -4,15 +4,23 @@
 <div class="row">
     <div id="sessions" hidden>
         <div class="col-xs-4"></div>
-        <div class="col-xs-4 centered">
+        <div class="col-xs-3 centered">
             <label for="session-select">Session</label>
             <br />
             <select id="session-select" data-bind="options: sessions, optionsText: 'Name', optionsValue: 'Id'" style="width:100%"></select>
             <br />
             <br />
             <button type="submit" class="btn btn-primary" data-bind="click: $root.submitSession.bind()">Go</button>
+            <h2 style="text-align:center">- OR -</h2>
+            <br />
+            <label for="session-create">Session Name</label>
+            <br />
+            <input id="session-create" style="width:100%" placeholder="Name" />
+            <br />
+            <br />
+            <button type="submit" class="btn btn-primary" data-bind="click: $root.createSession.bind()">Create Session</button>
         </div>
-        <div class="col-xs-4"></div>
+        <div class="col-xs-5"></div>
     </div>
     <div id="login-box" hidden>
         <div class="col-xs-4"></div>

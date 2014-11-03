@@ -58,6 +58,23 @@
         window.location = "?session=" + sessionId;
     }
 
+    self.createSession = function () {
+        $.ajax({
+            type: 'POST',
+            url: '/api/session',
+            contentType: 'application/json',
+
+            data: JSON.stringify({
+                Name: $("#session-create").val()
+            }),
+
+            success: function (data) {
+                sessionId = data;
+                window.location = "?session=" + sessionId;
+            }
+        })
+    }
+
     self.highlightPreviousVote = function () {
         $.ajax({
             type: 'GET',
