@@ -355,10 +355,6 @@
     <Content Include="Views\Admin1790\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VotingAppDb\VotingAppDb.sqlproj">
-      <Project>{f4e739a7-47f8-4b2d-ad89-7e53ce374343}</Project>
-      <Name>VotingAppDb</Name>
-    </ProjectReference>
     <ProjectReference Include="..\VotingApplication.Common.Tests\VotingApplication.Common.Tests.csproj">
       <Project>{4bdf66aa-1547-4631-9ccb-4b36d17d0a97}</Project>
       <Name>VotingApplication.Common.Tests</Name>

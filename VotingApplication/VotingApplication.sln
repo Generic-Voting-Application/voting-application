@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Web
+# Visual Studio 2013
 VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Common", "VotingApplication.Common\VotingApplication.Common.csproj", "{51DD38FA-7531-4977-814A-BD0752E62CE5}"
@@ -30,8 +30,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Web.Api.Models", "VotingApplication.Web.Api.Models\VotingApplication.Web.Api.Models.csproj", "{F7142EA0-CB7C-4B2E-BF20-40617A6CABE0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Web.Common", "VotingApplication.Web.Common\VotingApplication.Web.Common.csproj", "{969076F5-F2AD-4711-853B-BA1BD3439E13}"
-EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "VotingAppDb", "VotingAppDb\VotingAppDb.sqlproj", "{F4E739A7-47F8-4B2D-AD89-7E53CE374343}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Web.Api", "VotingApplication.Web.Api\VotingApplication.Web.Api.csproj", "{141C9D63-9053-44D8-B2E3-F436AEE56AC0}"
 EndProject
@@ -74,12 +72,6 @@ Global
 		{969076F5-F2AD-4711-853B-BA1BD3439E13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{969076F5-F2AD-4711-853B-BA1BD3439E13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{969076F5-F2AD-4711-853B-BA1BD3439E13}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F4E739A7-47F8-4B2D-AD89-7E53CE374343}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F4E739A7-47F8-4B2D-AD89-7E53CE374343}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F4E739A7-47F8-4B2D-AD89-7E53CE374343}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{F4E739A7-47F8-4B2D-AD89-7E53CE374343}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F4E739A7-47F8-4B2D-AD89-7E53CE374343}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F4E739A7-47F8-4B2D-AD89-7E53CE374343}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{141C9D63-9053-44D8-B2E3-F436AEE56AC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{141C9D63-9053-44D8-B2E3-F436AEE56AC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{141C9D63-9053-44D8-B2E3-F436AEE56AC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
