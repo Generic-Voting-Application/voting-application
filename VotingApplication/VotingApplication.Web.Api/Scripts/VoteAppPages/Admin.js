@@ -20,16 +20,6 @@
         });
     }
 
-    function getJsonFromUrl() {
-        var query = location.search.substr(1);
-        var result = {};
-        query.split("&").forEach(function (part) {
-            var item = part.split("=");
-            result[item[0]] = decodeURIComponent(item[1]);
-        });
-        return result;
-    }
-
     self.deleteVote = function (data, event) {
         $.ajax({
             type: 'DELETE',
@@ -94,18 +84,15 @@
     }
 
     $(document).ready(function () {
-        var windowArgs = getJsonFromUrl();
+        sessionId = getSessionId();
 
-        if (!windowArgs['session']) {
+        if (!sessionId) {
             self.allSessions();
             $("#admin-panel").hide();
             $("#sessions").show();
             return;
         }
 
-        sessionId = windowArgs['session'];
-        $("#HomeLink").attr('href', '/?session=' + sessionId);
-        $("#ResultLink").attr('href', '/Result?session=' + sessionId);
         $("#sessions").hide();
         $("#admin-panel").show();
 

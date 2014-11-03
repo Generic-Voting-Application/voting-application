@@ -137,28 +137,15 @@
         })
     }
 
-    function getJsonFromUrl() {
-        var query = location.search.substr(1);
-        var result = {};
-        query.split("&").forEach(function (part) {
-            var item = part.split("=");
-            result[item[0]] = decodeURIComponent(item[1]);
-        });
-        return result;
-    }
-
     $(document).ready(function () {
-        var windowArgs = getJsonFromUrl();
+        sessionId = getSessionId();
 
-        if (!windowArgs['session']) {
+        if (!sessionId) {
             self.allSessions();
             $("#login-box").hide();
             $("#sessions").show();
         }
         else {
-            sessionId = windowArgs['session'];
-            $("#HomeLink").attr('href', '/?session=' + sessionId);
-            $("#ResultLink").attr('href', '/Result?session=' + sessionId);
             $("#sessions").hide();
             $("#login-box").show();
         }

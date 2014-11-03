@@ -59,25 +59,8 @@
         chart.draw();
     }
 
-    function getJsonFromUrl() {
-        var query = location.search.substr(1);
-        var result = {};
-        query.split("&").forEach(function (part) {
-            var item = part.split("=");
-            result[item[0]] = decodeURIComponent(item[1]);
-        });
-        return result;
-    }
-
-    $(document).ready(function () {
-        var windowArgs = getJsonFromUrl();
-
-        if (windowArgs['session']) {
-            sessionId = windowArgs['session'];
-            $("#HomeLink").attr('href', '/?session=' + sessionId);
-            $("#ResultLink").attr('href', '/Result?session=' + sessionId);
-        }
-
+    self.getOptions = function()
+    {
         // Get all options
         $.ajax({
             type: 'GET',
@@ -89,6 +72,11 @@
                 self.drawChart(groupedVotes);
             }
         });
+    }
+
+    $(document).ready(function () {
+        sessionId = getSessionId();
+        self.getOptions();
     });
 }
 
