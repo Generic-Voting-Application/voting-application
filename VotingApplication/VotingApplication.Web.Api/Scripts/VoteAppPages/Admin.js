@@ -1,49 +1,93 @@
 ﻿function AdminViewModel() {
     var self = this;
+    var sessionId = 0;
 
     self.votes = ko.observableArray();
+    self.sessions = ko.observableArray();
+
+    self.resetVotes = function () {
+        $.ajax({
+            type: 'DELETE',
+            url: "/api/session/" + sessionId + "/vote",
+
+            success: function () {
+                $("#reset-votes").attr('disabled', 'disabled');
+                $("#reset-votes").text("Votes were reset");
+                self.populateVotes();
+            }
+        });
+    }
+
+    function getJsonFromUrl() {
+        var query = location.search.substr(1);
+        var result = {};
+        query.split("&").forEach(function (part) {
+            var item = part.split("=");
+            result[item[0]] = decodeURIComponent(item[1]);
+        });
+        return result;
+    }
+
+    self.deleteVote = function (data, event) {
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/session/' + sessionId + '/vote?id=' + data.Id,
+            contentType: 'application/json',
+
+            success: function () {
+                self.populateVotes();
+            }
+        });
+    }
+
+    self.populateVotes = function () {
+        $.ajax({
+            type: 'GET',
+            url: "/api/session/" + sessionId + "/vote",
+
+            success: function (data) {
+                //Replace contents of self.votes with 'data'
+                self.votes(data);
+            }
+        });
+    }
+
+    self.submitSession = function () {
+        sessionId = $("#session-select").val();
+        window.location = "?session=" + sessionId;
+    }
+
+    self.allSessions = function () {
+        $.ajax({
+            type: 'GET',
+            url: '/api/session',
+
+            success: function (data) {
+                self.sessions(data);
+            }
+        })
+    }
 
     $(document).ready(function () {
+        var windowArgs = getJsonFromUrl();
 
-        self.resetVotes = function () {
-            $.ajax({
-                type: 'DELETE',
-                url: "/api/vote",
-
-                success: function () {
-                    $("#reset-votes").attr('disabled', 'disabled');
-                    $("#reset-votes").text("Votes were reset");
-                    self.populateVotes();
-                }
-            });
+        if (!windowArgs['session']) {
+            self.allSessions();
+            $("#admin-panel").hide();
+            $("#sessions").show();
+            return;
         }
 
-        self.deleteVote = function (data, event) {
-            $.ajax({
-                type: 'DELETE',
-                url: '/api/vote?id=' + data.Id,
-                contentType: 'application/json',
+        sessionId = windowArgs['session'];
+        $("#HomeLink").attr('href', '/?session=' + sessionId);
+        $("#ResultLink").attr('href', '/Result?session=' + sessionId);
+        $("#sessions").hide();
+        $("#admin-panel").show();
 
-                success: function () {
-                    self.populateVotes();
-                }
-            });
-        }
+        self.populateVotes();
 
-        self.populateVotes = function () {
-            $.ajax({
-                type: 'GET',
-                url: "/api/vote",
-
-                success: function (data) {
-                    //Replace contents of self.votes with 'data'
-                    self.votes(data);
-                }
-            });
-        }
 
         $("#reset-votes").click(self.resetVotes);
-        self.populateVotes();
     });
 }
 
