@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Filters;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -69,6 +70,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region DELETE
 
+        [BasicAuthenticator(realm: "GVA")]
         public override HttpResponseMessage Delete(long sessionId)
         {
             using (var context = _contextFactory.CreateContext())
@@ -91,6 +93,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
+        [BasicAuthenticator(realm: "GVA")]
         public virtual HttpResponseMessage Delete(long sessionId, long voteId)
         {
             using (var context = _contextFactory.CreateContext())
