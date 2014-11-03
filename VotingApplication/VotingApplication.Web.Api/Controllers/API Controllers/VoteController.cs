@@ -61,33 +61,12 @@ namespace VotingApplication.Web.Api.Controllers
 
         public override HttpResponseMessage Delete()
         {
-            using (var context = _contextFactory.CreateContext())
-            {
-                foreach (var entity in context.Votes.ToList())
-                {
-                    context.Votes.Remove(entity);
-                }
-
-                context.SaveChanges();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK);
-            }
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
         }
 
         public override HttpResponseMessage Delete(long id)
         {
-            using (var context = _contextFactory.CreateContext())
-            {
-                var matchingVotes = context.Votes.Where(v => v.Id == id);
-                if (matchingVotes.Count() > 0)
-                {
-                    context.Votes.Remove(matchingVotes.FirstOrDefault());
-                }
-
-                context.SaveChanges();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK);
-            }
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
         }
 
         #endregion
