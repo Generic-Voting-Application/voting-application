@@ -49,14 +49,14 @@
                         <td data-bind="text: Name"></td>
                         <td data-bind="text: Description"></td>
                         <td data-bind="text: Info"></td>
-                        <td><button data-bind="click: $parent.doVote.bind()">Vote</button></td>
+                        <td><button class="btn btn-primary" data-bind="click: $parent.doVote.bind()">Vote</button></td>
                     </tr>
                 </tbody>
                 <tr id="newOptionRow">
-                    <td><input id="newName" placeholder="Restaurant" /></td>
-                    <td><input id="newDescription" placeholder="Description" /></td>
-                    <td><input id="newInfo" placeholder="More Info" /></td>
-                    <td><button data-bind="click: $root.addOption.bind()">Add Option</button></td>
+                    <td><input class="form-control" id="newName" placeholder="Restaurant" /></td>
+                    <td><input class="form-control" id="newDescription" placeholder="Description" /></td>
+                    <td><input class="form-control" id="newInfo" placeholder="More Info" /></td>
+                    <td><button class="btn btn-primary" data-bind="click: $root.addOption.bind()">Add Option</button></td>
                 </tr>
             </table>
         </div>

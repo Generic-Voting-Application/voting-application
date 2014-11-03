@@ -17,7 +17,7 @@
     <div class="row">
         <div class="col-xs-5"></div>
         <div class="col-xs-2">
-            <button id="reset-votes" style="width:100%; height:40px">Reset Vote</button>
+            <button class="btn btn-primary" id="reset-votes" style="width:100%; height:40px">Reset Vote</button>
         </div>
         <div class="col-xs-5"></div>
     </div>
@@ -26,18 +26,38 @@
         <div class="col-xs-3"></div>
         <div class="col-xs-6 centered">
             <table class="table">
-                <tr>
-                    <th>User</th>
-                    <th>Option</th>
-                    <th></th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th width="25%">User</th>
+                        <th>Option</th>
+                        <th width="10%"></th>
+                    </tr>
+                </thead>
                 <tbody data-bind="foreach: votes">
                     <tr>
                         <td data-bind="text: User.Name"></td>
                         <td data-bind="text: Option.Name"></td>
-                        <td><button data-bind="click: $parent.deleteVote.bind()">Delete Vote</button></td>
+                        <td style="align-content:flex-end"><button class="btn btn-danger" data-bind="click: $parent.deleteVote.bind()">Delete Vote</button></td>
                     </tr>
-                </tbody>
+            </tbody>
+        </table>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th width="25%">Option</th>
+                    <th>Description</th>
+                    <th>More info</th>
+                    <th width="10%"></th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: options">
+                <tr>
+                    <td data-bind="text: Name"></td>
+                    <td data-bind="text: Description"></td>
+                    <td data-bind="text: Info"></td>
+                    <td><button class="btn btn-danger" data-bind="click: $root.deleteOption.bind()" data-toggle="modal" data-target="#deleteOptionModal">Delete</button></td>
+                </tr>
             </table>
         </div>
         <div class="col-xs-3"></div>

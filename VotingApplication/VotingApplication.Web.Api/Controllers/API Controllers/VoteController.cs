@@ -3,8 +3,10 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Filters;
 
 namespace VotingApplication.Web.Api.Controllers
 {
@@ -58,12 +60,13 @@ namespace VotingApplication.Web.Api.Controllers
         #endregion
 
         #region Delete
-
+        [BasicAuthenticator(realm: "GVA")]
         public override HttpResponseMessage Delete()
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
         }
 
+        [BasicAuthenticator(realm: "GVA")]
         public override HttpResponseMessage Delete(long id)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
