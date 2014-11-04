@@ -11,5 +11,7 @@ namespace VotingApplication.Data.Model
         public long Id { get; set; }
 
         public string Name { get; set; }
+
+        public Guid UUID { get; set; }
     }
 }

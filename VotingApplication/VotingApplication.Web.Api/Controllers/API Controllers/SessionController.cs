@@ -60,6 +60,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Session did not have a name");
                 }
 
+                newSession.UUID = Guid.NewGuid();
+
                 context.Sessions.Add(newSession);
                 context.SaveChanges();
 

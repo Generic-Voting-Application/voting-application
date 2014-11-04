@@ -211,6 +211,17 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
+        public void PostAssignsSessionUUID()
+        {
+            // Act
+            Session newSession = new Session() { Name = "New Session" };
+            _controller.Post(newSession);
+
+            // Assert
+            Assert.AreNotEqual(Guid.Empty, newSession.UUID);
+        }
+
+        [TestMethod]
         public void PostByIdIsNotAllowed()
         {
             // Act
