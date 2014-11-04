@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
-using VotingApplication.Web.Api.Filters;
 
 namespace VotingApplication.Web.Api.Controllers
 {
@@ -60,37 +57,14 @@ namespace VotingApplication.Web.Api.Controllers
         #endregion
 
         #region Delete
-        [BasicAuthenticator(realm: "GVA")]
         public override HttpResponseMessage Delete()
         {
-            using (var context = _contextFactory.CreateContext())
-            {
-                foreach (var entity in context.Votes.ToList())
-                {
-                    context.Votes.Remove(entity);
-                }
-
-                context.SaveChanges();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK);
-            }
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
         }
 
-        [BasicAuthenticator(realm: "GVA")]
         public override HttpResponseMessage Delete(long id)
         {
-            using (var context = _contextFactory.CreateContext())
-            {
-                var matchingVotes = context.Votes.Where(v => v.Id == id);
-                if (matchingVotes.Count() > 0)
-                {
-                    context.Votes.Remove(matchingVotes.FirstOrDefault());
-                }
-
-                context.SaveChanges();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK);
-            }
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
         }
 
         #endregion
