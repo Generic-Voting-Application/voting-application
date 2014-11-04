@@ -31,11 +31,6 @@ namespace VotingApplication.Web.Api.Controllers
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET on this controller");
         }
 
-        public virtual HttpResponseMessage Get(long id)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET by id on this controller");
-        }
-
         #endregion
 
         #region POST
