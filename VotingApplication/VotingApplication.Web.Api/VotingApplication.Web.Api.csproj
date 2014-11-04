@@ -266,7 +266,7 @@
     <Compile Include="Controllers\API Controllers\SessionController.cs" />
     <Compile Include="Controllers\API Controllers\SessionVoteController.cs" />
     <Compile Include="Controllers\API Controllers\UserSessionVoteController.cs" />
-    <Compile Include="Controllers\Web Controllers\Admin1790Controller.cs" />
+    <Compile Include="Controllers\Web Controllers\AdminController.cs" />
     <Compile Include="Controllers\Web Controllers\HomeController.cs" />
     <Compile Include="Controllers\API Controllers\OptionController.cs" />
     <Compile Include="Controllers\Web Controllers\ResultController.cs" />
@@ -357,7 +357,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Result\Index.cshtml" />
-    <Content Include="Views\Admin1790\Index.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VotingAppDb\VotingAppDb.sqlproj">

@@ -2,7 +2,7 @@
 
 namespace VotingApplication.Web.Api.Controllers.Web_Controllers
 {
-    public class Admin1790Controller : Controller
+    public class AdminController : Controller
     {
         public ActionResult Index()
         {
