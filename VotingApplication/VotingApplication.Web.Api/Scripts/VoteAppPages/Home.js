@@ -40,7 +40,8 @@
             contentType: 'application/json',
 
             data: JSON.stringify({
-                Name: $("#session-create").val()
+                Name: $("#session-create").val(),
+                OptionSetId: 1
             }),
 
             success: function (data) {
