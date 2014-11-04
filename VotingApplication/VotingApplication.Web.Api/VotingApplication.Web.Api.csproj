@@ -265,7 +265,6 @@
     <Compile Include="Controllers\API Controllers\AccountController.cs" />
     <Compile Include="Controllers\API Controllers\OptionSetController.cs" />
     <Compile Include="Controllers\API Controllers\SessionController.cs" />
-    <Compile Include="Controllers\API Controllers\SessionOptionSetController.cs" />
     <Compile Include="Controllers\API Controllers\SessionVoteController.cs" />
     <Compile Include="Controllers\API Controllers\UserSessionVoteController.cs" />
     <Compile Include="Controllers\Web Controllers\VoteController.cs" />

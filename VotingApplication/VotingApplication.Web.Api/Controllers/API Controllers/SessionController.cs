@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Data.Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -20,7 +21,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                return this.Request.CreateResponse(HttpStatusCode.OK, context.Sessions.ToList());
+                return this.Request.CreateResponse(HttpStatusCode.OK, context.Sessions.Include(s => s.OptionSet.Options).ToList());
             }
         }
 
@@ -28,7 +29,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session matchingSession = context.Sessions.Where(s => s.Id == id).FirstOrDefault();
+                Session matchingSession = context.Sessions.Where(s => s.Id == id).Include(s => s.OptionSet.Options).FirstOrDefault();
                 if (matchingSession == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", id));

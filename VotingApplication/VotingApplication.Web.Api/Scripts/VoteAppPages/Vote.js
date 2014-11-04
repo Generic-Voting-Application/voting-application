@@ -55,10 +55,10 @@
         // Get all options
         $.ajax({
             type: 'GET',
-            url: "/api/session/" + sessionId + "/optionset",
+            url: "/api/session/" + sessionId,
 
             success: function (data) {
-                self.options(data);
+                self.options(data.OptionSet.Options);
             }
         });
     }
