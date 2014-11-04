@@ -1,5 +1,5 @@
 ﻿<div class="jumbotron">
-    <h1>Lunchtime Voting</h1>
+    <h1>Generic Voting Application</h1>
 </div>
 <div class="row">
     <div id="sessions" hidden>
@@ -7,7 +7,7 @@
         <div class="col-xs-3 centered">
             <label for="session-select">Session</label>
             <br />
-            <select id="session-select" data-bind="options: sessions, optionsText: 'Name', optionsValue: 'UUID'" style="width:100%"></select>
+            <select id="session-select" data-bind="options: sessions, optionsText: 'Name', optionsValue: 'Id'" style="width:100%"></select>
             <br />
             <br />
             <button type="submit" class="btn btn-primary" data-bind="click: $root.submitSession.bind()">Go</button>
@@ -31,35 +31,5 @@
                 <button id="Name-submit" type="submit" class="btn btn-primary">Login</button>
         </div>
         <div class="col-xs-4"></div>
-    </div>
-    <div id="vote-table" hidden>
-        <div class="col-xs-3"></div>
-        <div class="col-xs-6 centered">
-            <table id="inner-vote-table" class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Restaurant</th>
-                        <th>Description</th>
-                        <th>More info</th>
-                        <th>Vote</th>
-                    </tr>
-                </thead>
-                <tbody data-bind="foreach: options">
-                    <tr>
-                        <td data-bind="text: Name"></td>
-                        <td data-bind="text: Description"></td>
-                        <td data-bind="text: Info"></td>
-                        <td><button class="btn btn-primary" data-bind="click: $parent.doVote.bind()">Vote</button></td>
-                    </tr>
-                </tbody>
-                <tr id="newOptionRow">
-                    <td><input class="form-control" id="newName" placeholder="Restaurant" /></td>
-                    <td><input class="form-control" id="newDescription" placeholder="Description" /></td>
-                    <td><input class="form-control" id="newInfo" placeholder="More Info" /></td>
-                    <td><button class="btn btn-primary" data-bind="click: $root.addOption.bind()">Add Option</button></td>
-                </tr>
-            </table>
-        </div>
-        <div class="col-xs-3"></div>
     </div>
 </div>

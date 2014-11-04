@@ -1,31 +1,7 @@
 ﻿function HomeViewModel() {
     var self = this;
-    var userId = 0;
-    var sessionId = 0;
 
-    self.options = ko.observableArray();
     self.sessions = ko.observableArray();
-
-    // Submit a vote
-    self.doVote = function (data, event) {
-        $.ajax({
-            type: 'PUT',
-            url: '/api/user/'+userId+'/vote',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                OptionId: data.Id,
-                SessionId: sessionId
-            }),
-
-            success: function (returnData) {
-                var currentRow = event.currentTarget.parentElement.parentElement;
-                $(currentRow).siblings().removeClass("success");
-                $(currentRow).addClass("success");
-
-                setTimeout(function () { window.location = "/Result?session=" + sessionId; }, 500);
-            }
-        });
-    }
 
     self.keyIsEnter = function (key, callback) {
         if (key && key.keyCode == 13)
@@ -46,16 +22,15 @@
 
             success: function (data) {
                 userId = data;
-                self.highlightPreviousVote();
-                $("#login-box").hide();
-                $("#vote-table").show();
+                localStorage["userId"] = userId;
+                window.location = "vote?session=" + self.sessionId;
             }
         });
     }
 
     self.submitSession = function () {
-        sessionId = $("#session-select").val();
-        window.location = "?session=" + sessionId;
+        self.sessionId = $("#session-select").val();
+        window.location = "?session=" + self.sessionId;
     }
 
     self.createSession = function () {
@@ -69,28 +44,10 @@
             }),
 
             success: function (data) {
-                sessionId = data;
-                window.location = "?session=" + sessionId;
+                self.sessionId = data;
+                window.location = "?session=" + self.sessionId;
             }
         })
-    }
-
-    self.highlightPreviousVote = function () {
-        $.ajax({
-            type: 'GET',
-            url: '/api/user/' + userId + '/session/' + sessionId + '/vote',
-            contentType: 'application/json',
-
-            success: function (data) {
-                for (var index = 0; index < data.length; index++) {
-                    var previousOptionId = data[index].OptionId;
-                    var previousOption = self.options().filter(function (d) { return d.Id == previousOptionId }).pop();
-                    var previousOptionRowIndex = self.options().indexOf(previousOption);
-                    var matchingRow = $("#inner-vote-table > tbody > tr").eq(previousOptionRowIndex);
-                    matchingRow.addClass("success");
-                }
-            }
-        });
     }
 
     self.allSessions = function () {
@@ -104,64 +61,21 @@
         })
     }
 
-    self.allOptions = function () {
-        // Get all options
-        $.ajax({
-            type: 'GET',
-            url: "/api/option",
-
-            success: function (data) {
-                self.options(data);
-            }
-        });
-    }
-
-    self.addOption = function () {
-        //Don't submit without an entry in the name field
-        if ($("#newName").val() == "") {
-            return;
-        }
-
-        var newName = $("#newName").val();
-        var newDescription = $("#newDescription").val()
-        var newInfo = $("#newInfo").val()
-
-        //Reset before posting, to prevent double posts.
-        $("#newName").val("")
-        $("#newDescription").val("")
-        $("#newInfo").val("")
-
-        $.ajax({
-            type: 'POST',
-            url: '/api/option',
-            contentType: 'application/json',
-
-            data: JSON.stringify({
-                Name: newName,
-                Description: newDescription,
-                Info: newInfo
-            }),
-
-            success: function () {
-                self.allOptions();
-            }
-        })
-    }
-
     $(document).ready(function () {
-        sessionId = getSessionId();
+        self.sessionId = getSessionId();
+        self.userId = localStorage["userId"];
 
-        if (!sessionId) {
+        if (!self.sessionId) {
             self.allSessions();
             $("#login-box").hide();
             $("#sessions").show();
         }
-        else {
+        else if(!self.userId){
             $("#sessions").hide();
             $("#login-box").show();
+        } else {
+            window.location = "vote/?session=" + self.sessionId;
         }
-
-        self.allOptions();
 
         $("#Name-submit").click(self.submitLogin);
         //Submit on pressing return key

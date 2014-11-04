@@ -16,7 +16,7 @@ namespace VotingApplication.Web.Api.Controllers
 
         #region GET
 
-        public override HttpResponseMessage Get(long userId)
+        public virtual HttpResponseMessage Get(long userId)
         {
             using (var context = _contextFactory.CreateContext())
             {

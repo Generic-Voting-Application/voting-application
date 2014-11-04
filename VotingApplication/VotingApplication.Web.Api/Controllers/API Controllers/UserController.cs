@@ -25,7 +25,7 @@ namespace VotingApplication.Web.Api.Controllers
             }
         }
 
-        public override HttpResponseMessage Get(long id)
+        public virtual HttpResponseMessage Get(long id)
         {
             using (var context = _contextFactory.CreateContext())
             {

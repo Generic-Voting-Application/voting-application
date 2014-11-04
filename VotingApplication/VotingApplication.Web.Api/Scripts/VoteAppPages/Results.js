@@ -1,7 +1,7 @@
 ﻿function ResultViewModel() {
     var self = this;
-    var sessionId = 0;
 
+    self.sessionName = ko.observable();
     self.votes = ko.observableArray();
 
     self.countVotes = function(voteArray)
@@ -64,7 +64,7 @@
         // Get all options
         $.ajax({
             type: 'GET',
-            url: '/api/session/' + sessionId + '/vote',
+            url: '/api/session/' + self.sessionId + '/vote',
 
             success: function (data) {
                 var groupedVotes = self.countVotes(data);
@@ -74,8 +74,22 @@
         });
     }
 
+    self.getSession = function (sessionId) {
+        if (sessionId) {
+            $.ajax({
+                type: 'GET',
+                url: "/api/session/" + sessionId,
+
+                success: function (data) {
+                    self.sessionName(data.Name);
+                }
+            });
+        }
+    }
+
     $(document).ready(function () {
-        sessionId = getSessionId();
+        self.sessionId = getSessionId();
+        self.getSession(self.sessionId);
         self.getOptions();
     });
 }
