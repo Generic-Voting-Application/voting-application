@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -19,12 +20,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Vote _joeVote;
         private Vote _otherVote;
         private InMemoryDbSet<Vote> _dummyVotes;
+        private Guid _mainUUID;
+        private Guid _otherUUID;
 
         [TestInitialize]
         public void setup()
         {
-            Session mainSession = new Session() { Id = 1 };
-            Session otherSession = new Session() { Id = 2 };
+            _mainUUID = Guid.NewGuid();
+            _otherUUID = Guid.NewGuid();
+            Session mainSession = new Session() { Id = _mainUUID };
+            Session otherSession = new Session() { Id = _otherUUID };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
             Option pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
@@ -43,15 +48,15 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             dummySessions.Add(mainSession);
             dummySessions.Add(otherSession);
 
-            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, SessionId = 1 };
+            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, SessionId = _mainUUID };
             dummyUsers.Add(bobUser);
             _dummyVotes.Add(_bobVote);
 
-            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, SessionId = 1 };
+            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, SessionId = _mainUUID };
             dummyUsers.Add(joeUser);
             _dummyVotes.Add(_joeVote);
 
-            _otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, SessionId = 2 };
+            _otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, SessionId = _otherUUID };
             _dummyVotes.Add(_otherVote);
 
             dummyUsers.Add(billUser);
@@ -228,7 +233,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutNonexistentUserIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(9, new Vote() { OptionId = 1, SessionId = 1 });
+            var response = _controller.Put(9, new Vote() { OptionId = 1, SessionId = _mainUUID });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
@@ -240,7 +245,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutNonexistentOptionIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, new Vote() { OptionId = 7, SessionId = 1 });
+            var response = _controller.Put(1, new Vote() { OptionId = 7, SessionId = _mainUUID });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
@@ -264,12 +269,13 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutNonexistentSessionIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, new Vote() { OptionId = 1, SessionId = 99 });
+            Guid newGuid = Guid.NewGuid();
+            var response = _controller.Put(1, new Vote() { OptionId = 1, SessionId = newGuid });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session 99 does not exist", error.Message);
+            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
         }
 
         [TestMethod]
@@ -288,7 +294,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithNewVoteIfNoneExistsIsAllowed()
         {
             // Act
-            var response = _controller.Put(3, new Vote() { OptionId = 1, SessionId = 1 });
+            var response = _controller.Put(3, new Vote() { OptionId = 1, SessionId = _mainUUID });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -298,7 +304,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutAddsANewVoteIfNoneExistsAndReturnsVoteId()
         {
             // Act
-            var response = _controller.Put(3, new Vote() { OptionId = 1, SessionId = 1 });
+            var response = _controller.Put(3, new Vote() { OptionId = 1, SessionId = _mainUUID });
 
             // Assert
             long responseVoteId = (long)((ObjectContent)response.Content).Value;
@@ -309,7 +315,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutAddsANewVoteIfNoneExists()
         {
             // Act
-            var newVote = new Vote() { OptionId = 1, SessionId = 1 };
+            var newVote = new Vote() { OptionId = 1, SessionId = _mainUUID };
             var response = _controller.Put(3, newVote);
 
             // Assert
@@ -325,7 +331,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutReplacesCurrentVote()
         {
             // Act
-            var newVote = new Vote() { OptionId = 2, SessionId = 1 };
+            var newVote = new Vote() { OptionId = 2, SessionId = _mainUUID };
             var response = _controller.Put(1, newVote);
 
             // Assert
@@ -336,7 +342,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithSessionReplacesInThatSession()
         {
             // Act
-            var newVote = new Vote() { OptionId = 2, SessionId = 2 };
+            var newVote = new Vote() { OptionId = 2, SessionId = _otherUUID };
             _controller.Put(1, newVote);
 
             // Assert

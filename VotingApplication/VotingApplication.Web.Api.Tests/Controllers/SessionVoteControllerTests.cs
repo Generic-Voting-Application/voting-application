@@ -22,6 +22,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Vote _bobVote;
         private Vote _joeVote;
         private Vote _otherVote;
+        private Guid _mainUUID;
+        private Guid _otherUUID;
+        private Guid _emptyUUID;
         private InMemoryDbSet<Vote> _dummyVotes;
 
         [TestInitialize]
@@ -32,18 +35,22 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             InMemoryDbSet<Option> dummyOptions = new InMemoryDbSet<Option>(true);
             InMemoryDbSet<Session> dummySessions = new InMemoryDbSet<Session>(true);
 
-            Session mainSession = new Session() { Id = 1 };
-            Session otherSession = new Session() { Id = 2 };
-            Session emptySession = new Session() { Id = 3 };
+            _mainUUID = Guid.NewGuid();
+            _otherUUID = Guid.NewGuid();
+            _emptyUUID = Guid.NewGuid();
+
+            Session mainSession = new Session() { Id = _mainUUID };
+            Session otherSession = new Session() { Id = _otherUUID };
+            Session emptySession = new Session() { Id = _emptyUUID };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
 
             User bobUser = new User { Id = 1, Name = "Bob" };
             User joeUser = new User { Id = 2, Name = "Joe" };
 
-            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, SessionId = 1 };
-            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, SessionId = 1 };
-            _otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, SessionId = 2 };
+            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, SessionId = _mainUUID };
+            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, SessionId = _mainUUID };
+            _otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, SessionId = _otherUUID };
 
             dummyUsers.Add(bobUser);
             dummyUsers.Add(joeUser);
@@ -77,7 +84,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetIsAllowed()
         {
             // Act
-            var response = _controller.Get(1);
+            var response = _controller.Get(_mainUUID);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -87,19 +94,20 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetNonexistentSessionIsNotFound()
         {
             // Act
-            var response = _controller.Get(99);
+            Guid newGuid = Guid.NewGuid();
+            var response = _controller.Get(newGuid);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session 99 does not exist", error.Message);
+            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
         }
 
         [TestMethod]
         public void GetReturnsVotesForThatSession()
         {
             // Act
-            var response = _controller.Get(1);
+            var response = _controller.Get(_mainUUID);
 
             // Assert
             List<Vote> expectedVotes = new List<Vote>();
@@ -113,7 +121,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetOnEmptySessionReturnsEmptyList()
         {
             // Act
-            var response = _controller.Get(3);
+            var response = _controller.Get(_emptyUUID);
 
             // Assert
             List<Vote> expectedVotes = new List<Vote>();
@@ -187,7 +195,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void DeleteIsAllowed()
         {
             // Act
-            var response = _controller.Delete(1);
+            var response = _controller.Delete(_mainUUID);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -197,7 +205,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void DeleteFromSessionWithNoVotesIsAllowed()
         {
             // Act
-            var response = _controller.Delete(3);
+            var response = _controller.Delete(_emptyUUID);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -207,19 +215,20 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void DeleteFromMissingSessionIsNotFound()
         {
             // Act
-            var response = _controller.Delete(99);
+            Guid newGuid = Guid.NewGuid();
+            var response = _controller.Delete(newGuid);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session 99 does not exist", error.Message);
+            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
         }
 
         [TestMethod]
         public void DeleteOnlyRemovesVotesFromMatchingSession()
         {
             // Act
-            var response = _controller.Delete(1);
+            var response = _controller.Delete(_mainUUID);
 
             // Assert
             List<Vote> expectedVotes = new List<Vote>();
@@ -231,7 +240,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void DeleteByIdIsAllowed()
         {
             // Act
-            var response = _controller.Delete(1, 1);
+            var response = _controller.Delete(_mainUUID, 1);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -241,7 +250,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void DeleteByIdRemovesMatchingVote()
         {
             // Act
-            var response = _controller.Delete(1, 2);
+            var response = _controller.Delete(_mainUUID, 2);
 
             // Assert
             List<Vote> expectedVotes = new List<Vote>();
@@ -254,7 +263,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void DeleteByIdOnMissingVoteIsAllowed()
         {
             // Act
-            var response = _controller.Delete(1, 99);
+            var response = _controller.Delete(_mainUUID, 99);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -264,7 +273,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void DeleteByIdOnMissingVoteDoesNotModifyVotes()
         {
             // Act
-            var response = _controller.Delete(1, 99);
+            var response = _controller.Delete(_mainUUID, 99);
 
             // Assert
             List<Vote> expectedVotes = new List<Vote>();
@@ -278,19 +287,20 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void DeleteByIdOnMissingSessionIsNotFound()
         {
             // Act
-            var response = _controller.Delete(99, 1);
+            Guid newGuid = Guid.NewGuid();
+            var response = _controller.Delete(newGuid, 1);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session 99 does not exist", error.Message);
+            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
         }
 
         [TestMethod]
         public void DeleteByIdOnVoteInOtherSessionIsAllowed()
         {
             // Act
-            var response = _controller.Delete(3, 1);
+            var response = _controller.Delete(_emptyUUID, 1);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -300,7 +310,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void DeleteByIdOnVoteInOtherSessionDoesNotRemoveOtherVote()
         {
             // Act
-            var response = _controller.Delete(3, 1);
+            var response = _controller.Delete(_emptyUUID, 1);
 
             // Assert
             List<Vote> expectedVotes = new List<Vote>();

@@ -16,7 +16,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region GET
 
-        public virtual HttpResponseMessage Get(long userId, long sessionId)
+        public virtual HttpResponseMessage Get(long userId, Guid sessionId)
         {
             using (var context = _contextFactory.CreateContext())
             {
@@ -37,7 +37,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
-        public virtual HttpResponseMessage Get(long userId, long sessionId, long voteId)
+        public virtual HttpResponseMessage Get(long userId, Guid sessionId, long voteId)
         {
             using (var context = _contextFactory.CreateContext())
             {

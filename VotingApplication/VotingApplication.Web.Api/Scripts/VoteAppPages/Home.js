@@ -168,7 +168,10 @@
         $("#Name").keypress(function (event) { self.keyIsEnter(event, self.submitLogin); });
 
         //Add option on pressing return key
-        $("#newOptionRow").keypress(function(event) { self.keyIsEnter(event, self.addOption); });
+        $("#newOptionRow").keypress(function (event) { self.keyIsEnter(event, self.addOption); });
+
+        //Create session on pressing return key
+        $("#session-create").keypress(function (event) { self.keyIsEnter(event, self.createSession); });
     });
 }
 

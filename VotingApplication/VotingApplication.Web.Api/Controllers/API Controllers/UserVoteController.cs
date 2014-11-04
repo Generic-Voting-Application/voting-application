@@ -69,7 +69,7 @@ namespace VotingApplication.Web.Api.Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote does not have an option");
                 }
 
-                if (vote.SessionId == 0)
+                if (vote.SessionId == Guid.Empty)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote does not have a session");
                 }
