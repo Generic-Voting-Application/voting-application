@@ -24,14 +24,14 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
-        public virtual HttpResponseMessage Get(Guid sessionId)
+        public virtual HttpResponseMessage Get(Guid id)
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session matchingSession = context.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
+                Session matchingSession = context.Sessions.Where(s => s.Id == id).FirstOrDefault();
                 if (matchingSession == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", id));
                 }
 
                 return this.Request.CreateResponse(HttpStatusCode.OK, matchingSession);
