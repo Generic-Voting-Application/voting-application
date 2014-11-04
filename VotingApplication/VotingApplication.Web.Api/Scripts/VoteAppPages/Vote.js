@@ -55,7 +55,7 @@
         // Get all options
         $.ajax({
             type: 'GET',
-            url: "/api/session/" + sessionId + "/option",
+            url: "/api/session/" + sessionId + "/optionset",
 
             success: function (data) {
                 self.options(data);
