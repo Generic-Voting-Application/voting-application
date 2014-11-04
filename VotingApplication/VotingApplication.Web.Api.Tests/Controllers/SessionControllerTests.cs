@@ -174,14 +174,26 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostReturnsIdOfNewSession()
+        public void PostAssignsSessionUUID()
         {
             // Act
-            var response = _controller.Post(new Session() { Name = "New Session" });
+            Session newSession = new Session() { Name = "New Session" };
+            _controller.Post(newSession);
 
             // Assert
-            long newSessionId = (long)((ObjectContent)response.Content).Value;
-            Assert.AreEqual(3, newSessionId);
+            Assert.AreNotEqual(Guid.Empty, newSession.UUID);
+        }
+
+        [TestMethod]
+        public void PostReturnsUUIDOfNewSession()
+        {
+            // Act
+            Session newSession = new Session() { Name = "New Session" };
+            var response = _controller.Post(newSession);
+
+            // Assert
+            Guid newSessionUUID = (Guid)((ObjectContent)response.Content).Value;
+            Assert.AreEqual(newSession.UUID, newSessionUUID);
         }
 
         [TestMethod]
@@ -208,17 +220,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             expectedSessions.Add(_otherSession);
             expectedSessions.Add(newSession);
             CollectionAssert.AreEquivalent(expectedSessions, _dummySessions.Local);
-        }
-
-        [TestMethod]
-        public void PostAssignsSessionUUID()
-        {
-            // Act
-            Session newSession = new Session() { Name = "New Session" };
-            _controller.Post(newSession);
-
-            // Assert
-            Assert.AreNotEqual(Guid.Empty, newSession.UUID);
         }
 
         [TestMethod]

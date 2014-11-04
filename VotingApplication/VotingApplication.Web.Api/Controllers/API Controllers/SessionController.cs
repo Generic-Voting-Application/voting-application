@@ -65,7 +65,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 context.Sessions.Add(newSession);
                 context.SaveChanges();
 
-                return this.Request.CreateResponse(HttpStatusCode.OK, newSession.Id);
+                return this.Request.CreateResponse(HttpStatusCode.OK, newSession.UUID);
             }
         }
 
