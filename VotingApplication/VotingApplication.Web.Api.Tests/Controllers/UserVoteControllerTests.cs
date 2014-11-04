@@ -28,8 +28,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             _mainUUID = Guid.NewGuid();
             _otherUUID = Guid.NewGuid();
-            Session mainSession = new Session() { Id = 1, UUID = _mainUUID };
-            Session otherSession = new Session() { Id = 2, UUID = _otherUUID };
+            Session mainSession = new Session() { Id = _mainUUID };
+            Session otherSession = new Session() { Id = _otherUUID };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
             Option pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };

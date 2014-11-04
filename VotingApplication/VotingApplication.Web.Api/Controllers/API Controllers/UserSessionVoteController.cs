@@ -26,7 +26,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("User {0} does not exist", userId));
                 }
 
-                Session matchingSession = context.Sessions.Where(s => s.UUID == sessionId).FirstOrDefault();
+                Session matchingSession = context.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
                 if (matchingSession == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));

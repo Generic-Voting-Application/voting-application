@@ -24,7 +24,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
-        public override HttpResponseMessage Get(long sessionId)
+        public virtual HttpResponseMessage Get(Guid sessionId)
         {
             using (var context = _contextFactory.CreateContext())
             {
@@ -60,12 +60,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Session did not have a name");
                 }
 
-                newSession.UUID = Guid.NewGuid();
-
                 context.Sessions.Add(newSession);
                 context.SaveChanges();
 
-                return this.Request.CreateResponse(HttpStatusCode.OK, newSession.UUID);
+                return this.Request.CreateResponse(HttpStatusCode.OK, newSession.Id);
             }
         }
 

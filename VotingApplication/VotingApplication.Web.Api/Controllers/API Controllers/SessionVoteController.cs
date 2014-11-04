@@ -21,7 +21,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session session = context.Sessions.Where(s => s.UUID == sessionId).FirstOrDefault();
+                Session session = context.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
                 if (session == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
@@ -76,7 +76,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session matchingSession = context.Sessions.Where(s => s.UUID == sessionId).FirstOrDefault();
+                Session matchingSession = context.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
                 if (matchingSession == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
@@ -99,7 +99,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session matchingSession = context.Sessions.Where(s => s.UUID == sessionId).FirstOrDefault();
+                Session matchingSession = context.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
                 if (matchingSession == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));

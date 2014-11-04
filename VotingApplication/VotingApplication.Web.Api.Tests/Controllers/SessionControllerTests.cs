@@ -21,13 +21,15 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private SessionController _controller;
         private Session _mainSession;
         private Session _otherSession;
+        private Guid[] UUIDs;
         private InMemoryDbSet<Session> _dummySessions;
 
         [TestInitialize]
         public void setup()
         {
-            _mainSession = new Session() { Id = 1 };
-            _otherSession = new Session() { Id = 2 };
+            UUIDs = new [] {Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()};
+            _mainSession = new Session() { Id = UUIDs[0] };
+            _otherSession = new Session() { Id = UUIDs[1] };
 
             _dummySessions = new InMemoryDbSet<Session>(true);
             _dummySessions.Add(_mainSession);
@@ -48,7 +50,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             for (int i = 0; i < _dummySessions.Local.Count; i++)
             {
-                _dummySessions.Local[i].Id = (long)i + 1;
+                _dummySessions.Local[i].Id = UUIDs[i];
             }
         }
 
@@ -82,7 +84,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetByIdIsAllowed()
         {
             // Act
-            var response = _controller.Get(1);
+            var response = _controller.Get(UUIDs[0]);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -92,19 +94,20 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetByIdOnNonexistentSessionsAreNotFound()
         {
             // Act
-            var response = _controller.Get(99);
+            Guid newGuid = Guid.NewGuid();
+            var response = _controller.Get(newGuid);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session 99 does not exist", error.Message);
+            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
         }
 
         [TestMethod]
         public void GetByIdReturnsSessionWithMatchingId()
         {
             // Act
-            var response = _controller.Get(2);
+            var response = _controller.Get(UUIDs[1]);
 
             // Assert
             Session responseSession = ((ObjectContent)response.Content).Value as Session;
@@ -181,7 +184,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Post(newSession);
 
             // Assert
-            Assert.AreNotEqual(Guid.Empty, newSession.UUID);
+            Assert.AreNotEqual(Guid.Empty, newSession.Id);
         }
 
         [TestMethod]
@@ -193,7 +196,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             Guid newSessionUUID = (Guid)((ObjectContent)response.Content).Value;
-            Assert.AreEqual(newSession.UUID, newSessionUUID);
+            Assert.AreEqual(newSession.Id, newSessionUUID);
         }
 
         [TestMethod]
@@ -204,7 +207,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Post(newSession);
 
             // Assert
-            Assert.AreEqual(3, newSession.Id);
+            Assert.AreEqual(UUIDs[2], newSession.Id);
         }
 
         [TestMethod]
