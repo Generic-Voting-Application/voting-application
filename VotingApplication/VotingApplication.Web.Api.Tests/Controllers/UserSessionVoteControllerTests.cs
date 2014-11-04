@@ -20,6 +20,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
     {
         private UserSessionVoteController _controller;
         private Vote _bobVote;
+        private Guid _mainSessionUUID;
+        private Guid _otherSessionUUID;
 
         [TestInitialize]
         public void setup()
@@ -29,17 +31,19 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             InMemoryDbSet<Option> dummyOptions = new InMemoryDbSet<Option>(true);
             InMemoryDbSet<Session> dummySessions = new InMemoryDbSet<Session>(true);
 
-            Session mainSession = new Session() { Id = 1 };
-            Session otherSession = new Session() { Id = 2 };
+            _mainSessionUUID = Guid.NewGuid();
+            _otherSessionUUID = Guid.NewGuid();
+            Session mainSession = new Session() { Id = 1, UUID = _mainSessionUUID };
+            Session otherSession = new Session() { Id = 2, UUID = _otherSessionUUID };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
 
             User bobUser = new User { Id = 1, Name = "Bob" };
             User joeUser = new User { Id = 2, Name = "Joe" };
 
-            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, SessionId = 1 };
-            Vote joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, SessionId = 1 };
-            Vote otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, SessionId = 2 };
+            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, SessionId = _mainSessionUUID };
+            Vote joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, SessionId = _mainSessionUUID };
+            Vote otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, SessionId = _otherSessionUUID };
 
             dummyUsers.Add(bobUser);
             dummyUsers.Add(joeUser);
@@ -72,7 +76,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetIsAllowed()
         {
             // Act
-            var response = _controller.Get(1, 1);
+            var response = _controller.Get(1, _mainSessionUUID);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -82,7 +86,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetReturnsListOfVotesForUserAndSession()
         {
             // Act
-            var response = _controller.Get(1, 1);
+            var response = _controller.Get(1, _mainSessionUUID);
 
             // Assert
             List<Vote> actualVotes = ((ObjectContent)response.Content).Value as List<Vote>;
@@ -95,7 +99,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetNonexistentUserIsNotFound()
         {
             // Act
-            var response = _controller.Get(99, 1);
+            var response = _controller.Get(99, _mainSessionUUID);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
@@ -107,19 +111,20 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetNonexistentSessionIsNotFound()
         {
             // Act
-            var response = _controller.Get(1, 99);
+            Guid newGuid = Guid.NewGuid();
+            var response = _controller.Get(1, newGuid);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session 99 does not exist", error.Message);
+            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
         }
 
         [TestMethod]
         public void GetForValidUserAndSessionWithNoVotesIsEmpty()
         {
             // Act
-            var response = _controller.Get(2, 2);
+            var response = _controller.Get(2, _otherSessionUUID);
 
             // Assert
             List<Vote> actualVotes = ((ObjectContent)response.Content).Value as List<Vote>;
@@ -131,7 +136,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetByIdIsAllowed()
         {
             // Act
-            var response = _controller.Get(1, 1, 1);
+            var response = _controller.Get(1, _mainSessionUUID, 1);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -142,7 +147,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetByIdForNonexistentUserIsNotFound()
         {
             // Act
-            var response = _controller.Get(99, 1, 1);
+            var response = _controller.Get(99, _mainSessionUUID, 1);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
@@ -154,19 +159,20 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetByIdForNonexistentSessionIsNotFound()
         {
             // Act
-            var response = _controller.Get(1, 99, 1);
+            Guid newGuid = Guid.NewGuid();
+            var response = _controller.Get(1, newGuid, 1);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session 99 does not exist", error.Message);
+            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
         }
 
         [TestMethod]
         public void GetByIdForNonexistentVoteIsNotFound()
         {
             // Act
-            var response = _controller.Get(1, 1, 99);
+            var response = _controller.Get(1, _mainSessionUUID, 99);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
@@ -178,7 +184,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetVoteForDifferentUserIsNotFound()
         {
             // Act
-            var response = _controller.Get(1, 1, 2); // Vote 2 belongs to User 2
+            var response = _controller.Get(1, _mainSessionUUID, 2); // Vote 2 belongs to User 2
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
@@ -190,7 +196,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetVoteForDifferentSessionIsNotFound()
         {
             // Act
-            var response = _controller.Get(1, 1, 3); // Vote 3 belongs to Session 2
+            var response = _controller.Get(1, _mainSessionUUID, 3); // Vote 3 belongs to Session 2
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
@@ -202,7 +208,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetByIdFetchesIdForThatUserSession()
         {
             // Act
-            var response = _controller.Get(1, 1, 1);
+            var response = _controller.Get(1, _mainSessionUUID, 1);
 
             // Assert
             var responseVote = ((ObjectContent)response.Content).Value as Vote;

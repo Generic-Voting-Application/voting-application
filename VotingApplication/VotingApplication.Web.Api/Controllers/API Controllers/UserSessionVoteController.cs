@@ -16,7 +16,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region GET
 
-        public virtual HttpResponseMessage Get(long userId, long sessionId)
+        public virtual HttpResponseMessage Get(long userId, Guid sessionId)
         {
             using (var context = _contextFactory.CreateContext())
             {
@@ -26,7 +26,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("User {0} does not exist", userId));
                 }
 
-                Session matchingSession = context.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
+                Session matchingSession = context.Sessions.Where(s => s.UUID == sessionId).FirstOrDefault();
                 if (matchingSession == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
@@ -37,7 +37,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
-        public virtual HttpResponseMessage Get(long userId, long sessionId, long voteId)
+        public virtual HttpResponseMessage Get(long userId, Guid sessionId, long voteId)
         {
             using (var context = _contextFactory.CreateContext())
             {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -16,11 +17,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region GET
 
-        public override HttpResponseMessage Get(long sessionId)
+        public virtual HttpResponseMessage Get(Guid sessionId)
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session session = context.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
+                Session session = context.Sessions.Where(s => s.UUID == sessionId).FirstOrDefault();
                 if (session == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
@@ -71,11 +72,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         #region DELETE
 
         [BasicAuthenticator(realm: "GVA")]
-        public override HttpResponseMessage Delete(long sessionId)
+        public virtual HttpResponseMessage Delete(Guid sessionId)
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session matchingSession = context.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
+                Session matchingSession = context.Sessions.Where(s => s.UUID == sessionId).FirstOrDefault();
                 if (matchingSession == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
@@ -94,11 +95,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         }
 
         [BasicAuthenticator(realm: "GVA")]
-        public virtual HttpResponseMessage Delete(long sessionId, long voteId)
+        public virtual HttpResponseMessage Delete(Guid sessionId, long voteId)
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session matchingSession = context.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
+                Session matchingSession = context.Sessions.Where(s => s.UUID == sessionId).FirstOrDefault();
                 if (matchingSession == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
