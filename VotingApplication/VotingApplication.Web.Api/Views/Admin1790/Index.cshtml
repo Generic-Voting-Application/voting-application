@@ -1,31 +1,65 @@
 ﻿<div class="jumbotron">
     <h1>Lunchtime Voting</h1>
 </div>
-<div class="row">
-    <div class="col-xs-5"></div>
-    <div class="col-xs-2">
-        <button id="reset-votes" style="width:100%; height:40px">Reset Vote</button>
+<div class="row" id="sessions">
+    <div class="col-xs-4"></div>
+    <div class="col-xs-3 centered">
+        <label for="session-select">Session</label>
+        <br />
+        <select id="session-select" data-bind="options: sessions, optionsText: 'Name', optionsValue: 'Id'" style="width:100%"></select>
+        <br />
+        <br />
+        <button type="submit" class="btn btn-primary" data-bind="click: $root.submitSession.bind()">Go</button>
     </div>
     <div class="col-xs-5"></div>
 </div>
-<br />
-<div class="row">
-    <div class="col-xs-3"></div>
-    <div class="col-xs-6 centered">
-        <table class="table">
-            <tr>
-                <th>User</th>
-                <th>Option</th>
-                <th></th>
-            </tr>
-            <tbody data-bind="foreach: votes">
-                <tr>
-                    <td data-bind="text: User.Name"></td>
-                    <td data-bind="text: Option.Name"></td>
-                    <td><button data-bind="click: $parent.deleteVote.bind()">Delete Vote</button></td>
-                </tr>
+<div id="admin-panel" hidden>
+    <div class="row">
+        <div class="col-xs-5"></div>
+        <div class="col-xs-2">
+            <button class="btn btn-primary" id="reset-votes" style="width:100%; height:40px">Reset Vote</button>
+        </div>
+        <div class="col-xs-5"></div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-xs-3"></div>
+        <div class="col-xs-6 centered">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th width="25%">User</th>
+                        <th>Option</th>
+                        <th width="10%"></th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: votes">
+                    <tr>
+                        <td data-bind="text: User.Name"></td>
+                        <td data-bind="text: Option.Name"></td>
+                        <td style="align-content:flex-end"><button class="btn btn-danger" data-bind="click: $parent.deleteVote.bind()">Delete Vote</button></td>
+                    </tr>
             </tbody>
         </table>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th width="25%">Option</th>
+                    <th>Description</th>
+                    <th>More info</th>
+                    <th width="10%"></th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: options">
+                <tr>
+                    <td data-bind="text: Name"></td>
+                    <td data-bind="text: Description"></td>
+                    <td data-bind="text: Info"></td>
+                    <td><button class="btn btn-danger" data-bind="click: $root.deleteOption.bind()" data-toggle="modal" data-target="#deleteOptionModal">Delete</button></td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-xs-3"></div>
     </div>
-    <div class="col-xs-3"></div>
 </div>

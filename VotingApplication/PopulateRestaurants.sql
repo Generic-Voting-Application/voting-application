@@ -12,3 +12,5 @@ INSERT INTO dbo.Options (Name, Description, Info) VALUES
 	('Dynasty', 'Chinese crispy duck pancakes', '0117 925 0888'),
 	('Small Bar', 'Hotdogs and Sandwiches', 'N/A'),
 	('Start the Bus', 'Burgers', '0117 930 4370');
+DELETE FROM dbo.Sessions;
+INSERT INTO dbo.Sessions (Name) VALUES ('Main Session'), ('Other Session');

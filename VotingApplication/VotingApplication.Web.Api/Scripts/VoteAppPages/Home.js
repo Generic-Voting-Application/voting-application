@@ -1,8 +1,10 @@
 ﻿function HomeViewModel() {
     var self = this;
     var userId = 0;
+    var sessionId = 0;
 
     self.options = ko.observableArray();
+    self.sessions = ko.observableArray();
 
     // Submit a vote
     self.doVote = function (data, event) {
@@ -11,7 +13,8 @@
             url: '/api/user/'+userId+'/vote',
             contentType: 'application/json',
             data: JSON.stringify({
-                OptionId: data.Id
+                OptionId: data.Id,
+                SessionId: sessionId
             }),
 
             success: function (returnData) {
@@ -19,7 +22,7 @@
                 $(currentRow).siblings().removeClass("success");
                 $(currentRow).addClass("success");
 
-                setTimeout(function () { window.location = "/Result"; }, 500);
+                setTimeout(function () { window.location = "/Result?session=" + sessionId; }, 500);
             }
         });
     }
@@ -50,15 +53,37 @@
         });
     }
 
+    self.submitSession = function () {
+        sessionId = $("#session-select").val();
+        window.location = "?session=" + sessionId;
+    }
+
+    self.createSession = function () {
+        $.ajax({
+            type: 'POST',
+            url: '/api/session',
+            contentType: 'application/json',
+
+            data: JSON.stringify({
+                Name: $("#session-create").val()
+            }),
+
+            success: function (data) {
+                sessionId = data;
+                window.location = "?session=" + sessionId;
+            }
+        })
+    }
+
     self.highlightPreviousVote = function () {
         $.ajax({
             type: 'GET',
-            url: '/api/user/' + userId + '/vote',
+            url: '/api/user/' + userId + '/session/' + sessionId + '/vote',
             contentType: 'application/json',
 
             success: function (data) {
-                if (data.length > 0) {
-                    var previousOptionId = data[0].OptionId;
+                for (var index = 0; index < data.length; index++) {
+                    var previousOptionId = data[index].OptionId;
                     var previousOption = self.options().filter(function (d) { return d.Id == previousOptionId }).pop();
                     var previousOptionRowIndex = self.options().indexOf(previousOption);
                     var matchingRow = $("#inner-vote-table > tbody > tr").eq(previousOptionRowIndex);
@@ -66,6 +91,17 @@
                 }
             }
         });
+    }
+
+    self.allSessions = function () {
+        $.ajax({
+            type: 'GET',
+            url: '/api/session',
+
+            success: function (data) {
+                self.sessions(data);
+            }
+        })
     }
 
     self.allOptions = function () {
@@ -113,6 +149,17 @@
     }
 
     $(document).ready(function () {
+        sessionId = getSessionId();
+
+        if (!sessionId) {
+            self.allSessions();
+            $("#login-box").hide();
+            $("#sessions").show();
+        }
+        else {
+            $("#sessions").hide();
+            $("#login-box").show();
+        }
 
         self.allOptions();
 

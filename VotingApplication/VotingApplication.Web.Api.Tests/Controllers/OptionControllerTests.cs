@@ -272,13 +272,36 @@ namespace VotingApplication.Web.Api.Tests
         }
 
         [TestMethod]
-        public void DeleteByIdIsNotAllowed()
+        public void DeleteByIdIsAllowed()
         {
             // Act
             var response = _controller.Delete(1);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteByIdRemovesOptionWithMatchingId()
+        {
+            // Act
+            _controller.Delete(1);
+
+            // Assert
+            List<Option> expectedOptions = new List<Option>();
+            expectedOptions.Add(_pizzaOption);
+            CollectionAssert.AreEquivalent(expectedOptions, _dummyOptions.Local);
+            // Note: We assume that related entities that foreign key into this option will be deleted by entity framework
+        }
+
+        [TestMethod]
+        public void DeleteByIdIsAllowedIfNoOptionMatchesId()
+        {
+            // Act
+            var response = _controller.Delete(99);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         #endregion
