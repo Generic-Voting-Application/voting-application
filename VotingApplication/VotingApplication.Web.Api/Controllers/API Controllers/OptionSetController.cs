@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Net.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
@@ -12,9 +13,26 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region Get
 
+        public override HttpResponseMessage Get()
+        {
+            using (var context = _contextFactory.CreateContext())
+            {
+                return this.Request.CreateResponse(HttpStatusCode.OK, context.OptionSets.ToList<OptionSet>());
+            }
+        }
+
         public virtual HttpResponseMessage Get(long id)
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET by Id on this controller");
+            using (var context = _contextFactory.CreateContext())
+            {
+                OptionSet matchingOptionSet = context.OptionSets.Where(os => os.Id == id).FirstOrDefault();
+                if (matchingOptionSet == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("OptionSet {0} does not exist", id));
+                }
+
+                return this.Request.CreateResponse(HttpStatusCode.OK, matchingOptionSet);
+            }
         }
 
         #endregion
