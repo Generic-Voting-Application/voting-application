@@ -27,6 +27,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         [TestInitialize]
         public void setup()
         {
+            OptionSet emptyOptionSet = new OptionSet() { Id = 1 };
+            InMemoryDbSet<OptionSet> dummyOptionSets = new InMemoryDbSet<OptionSet>();
+            dummyOptionSets.Add(emptyOptionSet);
+
             UUIDs = new [] {Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()};
             _mainSession = new Session() { Id = UUIDs[0] };
             _otherSession = new Session() { Id = UUIDs[1] };
@@ -39,6 +43,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
             mockContext.Setup(a => a.Sessions).Returns(_dummySessions);
+            mockContext.Setup(a => a.OptionSets).Returns(dummyOptionSets);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
             _controller = new SessionController(mockContextFactory.Object);
@@ -146,7 +151,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostIsAllowed()
         {
             // Act
-            var response = _controller.Post(new Session(){ Name = "New Session" });
+            var response = _controller.Post(new Session(){ Name = "New Session", OptionSetId = 1 });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -165,10 +170,34 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
+        public void PostRejectsSessionWithMissingOptionSet()
+        {
+            // Act
+            var response = _controller.Post(new Session() { Name = "New Session" });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Session did not have an Option Set", error.Message);
+        }
+
+        [TestMethod]
+        public void PostRejectsSessionWithNonexistentOptionSet()
+        {
+            // Act
+            var response = _controller.Post(new Session() { Name = "New Session", OptionSetId = 99 });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Option Set 99 does not exist", error.Message);
+        }
+
+        [TestMethod]
         public void PostRejectsSessionWithBlankName()
         {
             // Act
-            var response = _controller.Post(new Session() { Name = "" });
+            var response = _controller.Post(new Session() { Name = "", OptionSetId = 1 });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -180,7 +209,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostAssignsSessionUUID()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session" };
+            Session newSession = new Session() { Name = "New Session", OptionSetId = 1 };
             _controller.Post(newSession);
 
             // Assert
@@ -191,7 +220,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostReturnsUUIDOfNewSession()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session" };
+            Session newSession = new Session() { Name = "New Session", OptionSetId = 1 };
             var response = _controller.Post(newSession);
 
             // Assert
@@ -203,7 +232,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostSetsIdOfNewSession()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session" };
+            Session newSession = new Session() { Name = "New Session", OptionSetId = 1 };
             var response = _controller.Post(newSession);
 
             // Assert
@@ -214,7 +243,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostAddsNewSessionToSessions()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session" };
+            Session newSession = new Session() { Name = "New Session", OptionSetId = 1 };
             _controller.Post(newSession);
 
             // Assert

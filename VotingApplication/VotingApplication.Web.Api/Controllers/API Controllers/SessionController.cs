@@ -60,6 +60,17 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Session did not have a name");
                 }
 
+                if (newSession.OptionSetId == 0)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Session did not have an Option Set");
+                }
+
+                OptionSet matchingOptionSet = context.OptionSets.Where(os => os.Id == newSession.OptionSetId).FirstOrDefault();
+                if (matchingOptionSet == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Option Set {0} does not exist", newSession.OptionSetId));
+                }
+
                 newSession.Id = Guid.NewGuid();
 
                 context.Sessions.Add(newSession);

@@ -26,6 +26,7 @@ namespace VotingApplication.Data.Context
         public IDbSet<User> Users { get; set; }
         public IDbSet<Vote> Votes { get; set; }
         public IDbSet<Session> Sessions { get; set; }
+        public IDbSet<OptionSet> OptionSets { get; set; }
     }
 
     public class VoteConfiguration : EntityTypeConfiguration<Vote>

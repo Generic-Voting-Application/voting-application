@@ -9,7 +9,9 @@ namespace VotingApplication.Data.Model
     public class Session
     {
         public Guid Id { get; set; }
-
         public string Name { get; set; }
+
+        public long OptionSetId { get; set; }
+        public OptionSet OptionSet { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace VotingApplication.Data.Context
         IDbSet<User> Users { get; set; }
         IDbSet<Vote> Votes { get; set; }
         IDbSet<Session> Sessions { get; set; }
+        IDbSet<OptionSet> OptionSets { get; set; }
 
         int SaveChanges();
     }
