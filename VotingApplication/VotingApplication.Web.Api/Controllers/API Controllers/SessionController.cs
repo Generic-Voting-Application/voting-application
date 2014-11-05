@@ -29,7 +29,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session matchingSession = context.Sessions.Where(s => s.Id == id).Include(s => s.OptionSet.Options).FirstOrDefault();
+                Session matchingSession = context.Sessions.Where(s => s.UUID == id).Include(s => s.OptionSet.Options).FirstOrDefault();
                 if (matchingSession == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", id));
@@ -72,12 +72,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Option Set {0} does not exist", newSession.OptionSetId));
                 }
 
-                newSession.Id = Guid.NewGuid();
+                newSession.UUID = Guid.NewGuid();
 
                 context.Sessions.Add(newSession);
                 context.SaveChanges();
 
-                return this.Request.CreateResponse(HttpStatusCode.OK, newSession.Id);
+                return this.Request.CreateResponse(HttpStatusCode.OK, newSession.UUID);
             }
         }
 

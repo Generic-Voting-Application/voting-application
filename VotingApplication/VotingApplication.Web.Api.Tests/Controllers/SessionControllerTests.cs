@@ -32,8 +32,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             dummyOptionSets.Add(emptyOptionSet);
 
             UUIDs = new [] {Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()};
-            _mainSession = new Session() { Id = UUIDs[0] };
-            _otherSession = new Session() { Id = UUIDs[1] };
+            _mainSession = new Session() { UUID = UUIDs[0] };
+            _otherSession = new Session() { UUID = UUIDs[1] };
 
             _dummySessions = new InMemoryDbSet<Session>(true);
             _dummySessions.Add(_mainSession);
@@ -55,7 +55,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             for (int i = 0; i < _dummySessions.Local.Count; i++)
             {
-                _dummySessions.Local[i].Id = UUIDs[i];
+                _dummySessions.Local[i].UUID = UUIDs[i];
             }
         }
 
@@ -225,7 +225,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             Guid newSessionUUID = (Guid)((ObjectContent)response.Content).Value;
-            Assert.AreEqual(newSession.Id, newSessionUUID);
+            Assert.AreEqual(newSession.UUID, newSessionUUID);
         }
 
         [TestMethod]
@@ -236,7 +236,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Post(newSession);
 
             // Assert
-            Assert.AreEqual(UUIDs[2], newSession.Id);
+            Assert.AreEqual(UUIDs[2], newSession.UUID);
         }
 
         [TestMethod]

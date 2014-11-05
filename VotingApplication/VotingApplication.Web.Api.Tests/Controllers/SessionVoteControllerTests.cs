@@ -39,9 +39,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _otherUUID = Guid.NewGuid();
             _emptyUUID = Guid.NewGuid();
 
-            Session mainSession = new Session() { Id = _mainUUID };
-            Session otherSession = new Session() { Id = _otherUUID };
-            Session emptySession = new Session() { Id = _emptyUUID };
+            Session mainSession = new Session() { UUID = _mainUUID };
+            Session otherSession = new Session() { UUID = _otherUUID };
+            Session emptySession = new Session() { UUID = _emptyUUID };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
 

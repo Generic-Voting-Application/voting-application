@@ -33,8 +33,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             _mainSessionUUID = Guid.NewGuid();
             _otherSessionUUID = Guid.NewGuid();
-            Session mainSession = new Session() { Id = _mainSessionUUID };
-            Session otherSession = new Session() { Id = _otherSessionUUID };
+            Session mainSession = new Session() { UUID = _mainSessionUUID };
+            Session otherSession = new Session() { UUID = _otherSessionUUID };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
 

@@ -86,7 +86,7 @@ namespace VotingApplication.Web.Api.Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Option {0} does not exist", vote.OptionId));
                 }
 
-                IEnumerable<Session> sessions = context.Sessions.Where(o => o.Id == vote.SessionId);
+                IEnumerable<Session> sessions = context.Sessions.Where(o => o.UUID == vote.SessionId);
                 if (sessions.Count() == 0)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Session {0} does not exist", vote.SessionId));
