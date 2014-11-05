@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -51,7 +52,23 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public virtual HttpResponseMessage Post(OptionSet newOptionSet)
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
+            using (var context = _contextFactory.CreateContext())
+            {
+                if (newOptionSet.Name == null || newOptionSet.Name.Length == 0)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "OptionSet does not have a name");
+                }
+
+                if (newOptionSet.Options == null)
+                {
+                    newOptionSet.Options = new List<Option>();
+                }
+
+                context.OptionSets.Add(newOptionSet);
+                context.SaveChanges();
+
+                return this.Request.CreateResponse(HttpStatusCode.OK, newOptionSet.Id);
+            }
         }
 
         #endregion
