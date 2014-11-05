@@ -6,6 +6,8 @@
     self.sessions = ko.observableArray();
     self.options = ko.observableArray();
     self.selectedDeleteOptionId = null;
+    self.currentSession = null;
+    self.sessionName = ko.observable();
 
     self.resetVotes = function () {
         $.ajax({
@@ -30,6 +32,19 @@
                 self.populateVotes();
             }
         });
+    }
+
+    self.populateSession = function () {
+        $.ajax({
+            type: 'GET',
+            url: 'api/session/' + sessionId,
+
+            success: function (data) {
+                self.currentSession = data;
+                self.sessionName(data.Name);
+                self.options(data.OptionSet.Options);
+            }
+        })
     }
 
     self.populateVotes = function () {
@@ -60,17 +75,6 @@
         })
     }
 
-    self.populateOptions = function () {
-        $.ajax({
-            type: 'GET',
-            url: "/api/option",
-
-            success: function (data) {
-                self.options(data);
-            }
-        });
-    }
-
     self.deleteOption = function (data, event) {
         $.ajax({
             type: 'DELETE',
@@ -97,8 +101,7 @@
         $("#admin-panel").show();
 
         self.populateVotes();
-        self.populateOptions();
-
+        self.populateSession();
 
         $("#reset-votes").click(self.resetVotes);
     });
