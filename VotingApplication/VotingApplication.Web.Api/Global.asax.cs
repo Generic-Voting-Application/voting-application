@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Newtonsoft.Json;
 
 namespace VotingApplication.Web.Api
 {
@@ -18,6 +19,10 @@ namespace VotingApplication.Web.Api
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            // Fix the infinite recursion of Session.OptionSet.Options[0].OptionSets[0].Options[0].[...]
+            // by not populating the Option.OptionSets after already encountering Session.OptionSet
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
         }
     }
 }
