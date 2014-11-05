@@ -96,7 +96,7 @@
 
     self.publishSession = function () {
         $.ajax({
-            type: 'PUT',
+            type: 'POST',
             url: '/api/session/' + sessionId,
             contentType: 'application/json',
             data: self.currentSession,

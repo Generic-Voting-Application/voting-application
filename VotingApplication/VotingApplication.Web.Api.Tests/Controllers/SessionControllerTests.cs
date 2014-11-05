@@ -258,7 +258,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Post(1, new Session());
+            var response = _controller.Post(UUIDs[0], new Session());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);

@@ -223,7 +223,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, 1, new Vote());
+            var response = _controller.Put(1, _mainSessionUUID, new Vote());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -233,7 +233,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, 1, 1, new Vote());
+            var response = _controller.Put(1, _mainSessionUUID, 1, new Vote());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -247,7 +247,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostIsNotAllowed()
         {
             // Act
-            var response = _controller.Post(1, 1, new Vote());
+            var response = _controller.Post(1, _mainSessionUUID, new Vote());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -257,7 +257,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Post(1, 1, 1, new Vote());
+            var response = _controller.Post(1, _mainSessionUUID, 1, new Vote());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -271,7 +271,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void DeleteIsNotAllowed()
         {
             // Act
-            var response = _controller.Delete(1, 1);
+            var response = _controller.Delete(1, _mainSessionUUID);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -281,7 +281,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void DeleteByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Delete(1, 1, 1);
+            var response = _controller.Delete(1, _mainSessionUUID, 1);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);

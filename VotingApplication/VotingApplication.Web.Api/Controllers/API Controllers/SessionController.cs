@@ -81,6 +81,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
+        public virtual HttpResponseMessage Post(Guid id, Session newSession)
+        {
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
+        }
+
         #endregion
     }
 }

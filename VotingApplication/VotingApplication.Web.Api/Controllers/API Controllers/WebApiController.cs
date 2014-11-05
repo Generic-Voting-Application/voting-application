@@ -33,15 +33,6 @@ namespace VotingApplication.Web.Api.Controllers
 
         #endregion
 
-        #region POST
-
-        public virtual HttpResponseMessage Post(long id, object obj)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
-        }
-
-        #endregion
-
         #region PUT
 
         public virtual HttpResponseMessage Put(long id, object obj)
