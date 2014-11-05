@@ -85,6 +85,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
+                if (newSession == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Session is null");
+                }
+
                 if (newSession.Name == null || newSession.Name.Length == 0)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Session does not have a name");

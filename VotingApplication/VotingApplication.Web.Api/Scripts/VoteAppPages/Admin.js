@@ -90,6 +90,7 @@
         var matchingOption = self.options().filter(function (x) { return x.Id == data.Id })[0];
         var matchingIndex = self.options().indexOf(matchingOption);
         self.options().splice(matchingIndex, 1);
+        self.currentSession.OptionSet.Options = self.options();
 
         self.createOptionSet(self.publishSession);
     }
@@ -99,7 +100,7 @@
             type: 'POST',
             url: '/api/session/' + sessionId,
             contentType: 'application/json',
-            data: self.currentSession,
+            data: JSON.stringify(self.currentSession),
 
             success: function () {
                 self.populateOptions();

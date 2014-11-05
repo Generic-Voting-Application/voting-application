@@ -265,6 +265,18 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
+        public void PostByIdRejectsNullSession()
+        {
+            // Act
+            var response = _controller.Post(UUIDs[0], null);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Session is null", error.Message);
+        }
+
+        [TestMethod]
         public void PostByIdRejectsSessionWithMissingOptionSetId()
         {
             // Act
