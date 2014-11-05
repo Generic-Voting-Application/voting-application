@@ -2,6 +2,7 @@
     var self = this;
 
     self.sessions = ko.observableArray();
+    self.optionSets = ko.observableArray();
 
     self.keyIsEnter = function (key, callback) {
         if (key && key.keyCode == 13)
@@ -41,7 +42,7 @@
 
             data: JSON.stringify({
                 Name: $("#session-create").val(),
-                OptionSetId: 1
+                OptionSetId: $("#optionset-select").val()
             }),
 
             success: function (data) {
@@ -62,12 +63,24 @@
         })
     }
 
+    self.allOptionSets = function () {
+        $.ajax({
+            type: 'GET',
+            url: '/api/optionset',
+
+            success: function (data) {
+                self.optionSets(data);
+            }
+        })
+    }
+
     $(document).ready(function () {
         self.sessionId = getSessionId();
         self.userId = localStorage["userId"];
 
         if (!self.sessionId) {
             self.allSessions();
+            self.allOptionSets();
             $("#login-box").hide();
             $("#sessions").show();
         }

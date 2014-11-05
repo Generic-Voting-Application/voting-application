@@ -7,16 +7,20 @@
         <div class="col-xs-3 centered">
             <label for="session-select">Session</label>
             <br />
-            <select id="session-select" data-bind="options: sessions, optionsText: 'Name', optionsValue: 'Id'" style="width:100%"></select>
+            <select id="session-select" data-bind="options: sessions, optionsText: 'Name', optionsValue: 'UUID'" style="width:100%"></select>
             <br />
             <br />
             <button type="submit" class="btn btn-primary" data-bind="click: $root.submitSession.bind()">Go</button>
             <h2 style="text-align:center">- OR -</h2>
-            <br />
-            <label for="session-create">Session Name</label>
-            <br />
-            <input id="session-create" style="width:100%" placeholder="Name" />
-            <br />
+            <p>
+                <label for="session-create">Session Name</label>
+                <br />
+                <input id="session-create" style="width:100%" placeholder="Name" />
+            </p>
+            <p>
+                <label for="optionset-select">Default Options</label>
+                <select id="optionset-select" data-bind="options: optionSets, optionsText: 'Name', optionsValue: 'Id'" style="width:100%"></select>
+            </p>
             <br />
             <button type="submit" class="btn btn-primary" data-bind="click: $root.createSession.bind()">Create Session</button>
         </div>
