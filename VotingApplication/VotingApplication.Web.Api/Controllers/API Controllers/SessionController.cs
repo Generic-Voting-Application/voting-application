@@ -83,7 +83,29 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public virtual HttpResponseMessage Post(Guid id, Session newSession)
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
+            using (var context = _contextFactory.CreateContext())
+            {
+                if (newSession.Name == null || newSession.Name.Length == 0)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Session does not have a name");
+                }
+
+                if (newSession.OptionSetId == 0)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Session does not have an OptionSet ID");
+                }
+
+                Session matchingSession = context.Sessions.Where(s => s.UUID == id).FirstOrDefault();
+                if (matchingSession != null)
+                {
+                    context.Sessions.Remove(matchingSession);
+                }
+
+                context.Sessions.Add(newSession);
+                context.SaveChanges();
+
+                return this.Request.CreateResponse(HttpStatusCode.OK, newSession.UUID);
+            }
         }
 
         #endregion
