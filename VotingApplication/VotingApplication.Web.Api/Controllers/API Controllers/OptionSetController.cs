@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using VotingApplication.Data.Context;
@@ -17,7 +18,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                return this.Request.CreateResponse(HttpStatusCode.OK, context.OptionSets.ToList<OptionSet>());
+                return this.Request.CreateResponse(HttpStatusCode.OK, context.OptionSets.Include(s => s.Options).ToList<OptionSet>());
             }
         }
 
@@ -25,7 +26,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                OptionSet matchingOptionSet = context.OptionSets.Where(os => os.Id == id).FirstOrDefault();
+                OptionSet matchingOptionSet = context.OptionSets.Where(os => os.Id == id).Include(s => s.Options).FirstOrDefault();
                 if (matchingOptionSet == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("OptionSet {0} does not exist", id));
