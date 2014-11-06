@@ -115,9 +115,6 @@
 
         self.getSession(self.sessionId);
         self.allOptions();
-
-        //Add option on pressing return key
-        $("#newOptionRow").keypress(function (event) { self.keyIsEnter(event, self.addOption); });
     });
 }
 

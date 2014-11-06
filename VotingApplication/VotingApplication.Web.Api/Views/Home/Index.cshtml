@@ -13,22 +13,27 @@
             <button type="submit" class="btn btn-primary" data-bind="click: $root.submitSession.bind()">Go</button>
             <h2 style="text-align:center">- OR -</h2>
             <br />
-            <label for="session-create">Session Name</label>
-            <br />
-            <input id="session-create" style="width:100%" placeholder="Name" />
-            <br />
-            <br />
-            <button type="submit" class="btn btn-primary" data-bind="click: $root.createSession.bind()">Create Session</button>
+            <form>
+                <label for="session-create">Create a session</label>
+                <br />
+                <input id="session-create" style="width:100%" placeholder="Name" />
+                <br />
+                <br />
+                <button type="submit" class="btn btn-primary" data-bind="click: $root.createSession.bind()">Create Session</button>
+            </form>
+            
         </div>
         <div class="col-xs-5"></div>
     </div>
     <div id="login-box" hidden>
         <div class="col-xs-4"></div>
         <div class="col-xs-4 centered">
+            <form>
                 <label for="Name">Username</label>
                 <input id="Name" class="form-control" />
                 <br />
-                <button id="Name-submit" type="submit" class="btn btn-primary">Login</button>
+                <button id="Name-submit" type="submit" class="btn btn-primary" data-bind="click: $root.submitLogin">Login</button>
+            </form>
         </div>
         <div class="col-xs-4"></div>
     </div>

@@ -3,13 +3,6 @@
 
     self.sessions = ko.observableArray();
 
-    self.keyIsEnter = function (key, callback) {
-        if (key && key.keyCode == 13)
-        {
-            callback();
-        }
-    }
-
     // Do login
     self.submitLogin = function () {
         $.ajax({
@@ -76,16 +69,6 @@
         } else {
             window.location = "vote/?session=" + self.sessionId;
         }
-
-        $("#Name-submit").click(self.submitLogin);
-        //Submit on pressing return key
-        $("#Name").keypress(function (event) { self.keyIsEnter(event, self.submitLogin); });
-
-        //Add option on pressing return key
-        $("#newOptionRow").keypress(function (event) { self.keyIsEnter(event, self.addOption); });
-
-        //Create session on pressing return key
-        $("#session-create").keypress(function (event) { self.keyIsEnter(event, self.createSession); });
     });
 }
 
