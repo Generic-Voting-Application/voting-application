@@ -325,6 +325,7 @@
     <None Include="Properties\PublishProfiles\voting-application - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\voting-application - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\SocketClient.js" />
     <Content Include="Scripts\VoteAppPages\Admin.js" />
     <Content Include="Scripts\VoteAppPages\Common.js" />
     <Content Include="Scripts\VoteAppPages\Home.js">

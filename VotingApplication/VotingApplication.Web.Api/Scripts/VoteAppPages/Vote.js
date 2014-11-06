@@ -4,6 +4,9 @@
     self.options = ko.observableArray();
     self.sessionName = ko.observable();
 
+    self.chatMessages = ko.observableArray();
+    self.socketClient = null;
+
     // Submit a vote
     self.doVote = function (data, event) {
         if (self.userId && self.sessionId) {
@@ -109,6 +112,13 @@
         }
     }
 
+    self.sendChatMessage = function () {
+        if (self.socketClient.sendMessage) {
+            self.socketClient.sendMessage($('#chatTextInput').val());
+        }
+        $('#chatTextInput').val('');
+    }
+
     $(document).ready(function () {
         self.sessionId = getSessionId();
         self.userId = localStorage["userId"];
@@ -118,6 +128,21 @@
 
         //Add option on pressing return key
         $("#newOptionRow").keypress(function (event) { self.keyIsEnter(event, self.addOption); });
+
+        var onOpen = function () {
+            self.chatMessages.unshift("Connected to chat");
+        }
+
+        var onMessage = function (message) {
+            self.chatMessages.unshift(message);
+        }
+
+        var onClose = function () {
+            self.chatMessages.unshift("Disconnected");
+        }
+
+        self.socketClient = new WebSocketClient(onOpen, onMessage, onClose);
+        self.socketClient.connect();
     });
 }
 
