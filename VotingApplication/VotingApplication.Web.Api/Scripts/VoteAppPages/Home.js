@@ -23,7 +23,14 @@
             success: function (data) {
                 userId = data;
                 localStorage["userId"] = userId;
+                $('#loginForm').addClass("has-success");
                 window.location = "vote?session=" + self.sessionId;
+            },
+
+            error:function(jqXHR, textStatus, errorThrown){
+                if (jqXHR.status == 400) {
+                    $('#loginForm').addClass("has-error");
+                }
             }
         });
     }
