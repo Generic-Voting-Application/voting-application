@@ -109,6 +109,10 @@
         }
     }
 
+    self.viewResults = function () {
+        window.location = "/Result?session=" + sessionId;
+    }
+
     $(document).ready(function () {
         self.sessionId = getSessionId();
         self.userId = localStorage["userId"];
