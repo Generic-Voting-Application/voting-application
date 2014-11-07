@@ -21,7 +21,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                return this.Request.CreateResponse(HttpStatusCode.OK, context.Sessions.Include(s => s.OptionSet.Options).ToList());
+                return this.Request.CreateResponse(HttpStatusCode.OK, context.Sessions.Include(s => s.Options).ToList());
             }
         }
 
@@ -29,7 +29,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session matchingSession = context.Sessions.Where(s => s.UUID == id).Include(s => s.OptionSet.Options).FirstOrDefault();
+                Session matchingSession = context.Sessions.Where(s => s.UUID == id).Include(s => s.Options).FirstOrDefault();
                 if (matchingSession == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", id));
@@ -61,15 +61,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Session did not have a name");
                 }
 
-                if (newSession.OptionSetId == 0)
+                if (newSession.Options == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Session did not have an Option Set");
-                }
-
-                OptionSet matchingOptionSet = context.OptionSets.Where(os => os.Id == newSession.OptionSetId).FirstOrDefault();
-                if (matchingOptionSet == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Option Set {0} does not exist", newSession.OptionSetId));
+                    newSession.Options = new List<Option>();
                 }
 
                 newSession.UUID = Guid.NewGuid();
@@ -95,9 +89,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Session does not have a name");
                 }
 
-                if (newSession.OptionSetId == 0)
+                if (newSession.Options == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Session does not have an OptionSet ID");
+                    newSession.Options = new List<Option>();
                 }
 
                 Session matchingSession = context.Sessions.Where(s => s.UUID == id).FirstOrDefault();

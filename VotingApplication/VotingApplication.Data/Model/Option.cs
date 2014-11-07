@@ -13,5 +13,6 @@ namespace VotingApplication.Data.Model
         public string Info { get; set; }
 
         public List<OptionSet> OptionSets { get; set; }
+        public List<Session> Sessions { get; set; }
     }
 }
