@@ -22,14 +22,18 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Session _mainSession;
         private Session _otherSession;
         private Guid[] UUIDs;
+        private Option _redOption;
         private InMemoryDbSet<Session> _dummySessions;
 
         [TestInitialize]
         public void setup()
         {
+            _redOption = new Option() { Name = "Red" };
             OptionSet emptyOptionSet = new OptionSet() { Id = 1 };
-            InMemoryDbSet<OptionSet> dummyOptionSets = new InMemoryDbSet<OptionSet>();
+            OptionSet redOptionSet = new OptionSet() { Id = 2, Options = new List<Option>() { _redOption } };
+            InMemoryDbSet<OptionSet> dummyOptionSets = new InMemoryDbSet<OptionSet>(true);
             dummyOptionSets.Add(emptyOptionSet);
+            dummyOptionSets.Add(redOptionSet);
 
             UUIDs = new [] {Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()};
             _mainSession = new Session() { UUID = UUIDs[0] };
@@ -191,10 +195,22 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
+        public void PostPopulatesOptionsByOptionSetId()
+        {
+            // Act
+            Session newSession = new Session() { Name = "New Session", OptionSetId = 2 };
+            var response = _controller.Post(newSession);
+
+            // Assert
+            List<Option> expectedOptions = new List<Option>() { _redOption };
+            CollectionAssert.AreEquivalent(expectedOptions, newSession.Options);
+        }
+
+        [TestMethod]
         public void PostRetainsSuppliedOptionSet()
         {
             // Act
-            List<Option> customOptions = new List<Option>() { new Option() { Name = "Red" } };
+            List<Option> customOptions = new List<Option>() { _redOption };
             Session newSession = new Session() { Name = "New Session", Options = customOptions };
             var response = _controller.Post(newSession);
 
@@ -286,7 +302,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostByIdAcceptsSessionWithMissingOptionSet()
+        public void PostByIdAcceptsSessionWithMissingOptionSetId()
         {
             // Act
             var response = _controller.Post(UUIDs[0], new Session() { Name = "New Session" });
@@ -307,10 +323,22 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
+        public void PostByIdPopulatesOptionsByOptionSetId()
+        {
+            // Act
+            Session newSession = new Session() { Name = "New Session", OptionSetId = 2 };
+            var response = _controller.Post(UUIDs[0], newSession);
+
+            // Assert
+            List<Option> expectedOptions = new List<Option>() { _redOption };
+            CollectionAssert.AreEquivalent(expectedOptions, newSession.Options);
+        }
+
+        [TestMethod]
         public void PostByIdRetainsSuppliedOptionSet()
         {
             // Act
-            List<Option> customOptions = new List<Option>() { new Option() { Name = "Red" } };
+            List<Option> customOptions = new List<Option>() { _redOption };
             Session newSession = new Session() { Name = "New Session", Options = customOptions };
             var response = _controller.Post(UUIDs[0], newSession);
 

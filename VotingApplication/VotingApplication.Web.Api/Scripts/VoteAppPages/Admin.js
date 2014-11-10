@@ -41,8 +41,8 @@
 
             success: function (data) {
                 self.currentSession = data;
-                self.optionSetName(data.OptionSet.Name);
-                self.options(data.OptionSet.Options);
+                self.optionSetName(data.Name);
+                self.options(data.Options);
             }
         })
     }
@@ -53,7 +53,7 @@
             url: 'api/session/' + sessionId,
 
             success: function (data) {
-                self.options(data.OptionSet.Options);
+                self.options(data.Options);
             }
         })
     }

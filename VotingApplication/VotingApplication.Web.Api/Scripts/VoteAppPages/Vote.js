@@ -58,7 +58,7 @@
             url: "/api/session/" + sessionId,
 
             success: function (data) {
-                self.options(data.OptionSet.Options);
+                self.options(data.Options);
             }
         });
     }

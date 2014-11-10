@@ -63,7 +63,14 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (newSession.Options == null)
                 {
-                    newSession.Options = new List<Option>();
+                    if (newSession.OptionSetId != 0)
+                    {
+                        newSession.Options = context.OptionSets.Where(os => os.Id == newSession.OptionSetId).Include(os => os.Options).FirstOrDefault().Options;
+                    }
+                    else
+                    {
+                        newSession.Options = new List<Option>();
+                    }
                 }
 
                 newSession.UUID = Guid.NewGuid();
@@ -91,7 +98,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (newSession.Options == null)
                 {
-                    newSession.Options = new List<Option>();
+                    List<Option> options = new List<Option>();
+                    if (newSession.OptionSetId != 0)
+                    {
+                        options = context.OptionSets.Where(os => os.Id == newSession.OptionSetId).Include(os => os.Options).FirstOrDefault().Options;
+                    }
+
+                    newSession.Options = options;
                 }
 
                 Session matchingSession = context.Sessions.Where(s => s.UUID == id).FirstOrDefault();
