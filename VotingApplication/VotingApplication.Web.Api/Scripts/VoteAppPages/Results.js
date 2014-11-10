@@ -52,8 +52,15 @@
             return d.Count;
         })
         .tooltipFunction(function (d) {
-            return "Votes: " + d.Count + "<br />" +  d.Voters.toString().replace(/,/g, "<br />");
+            var maxToDisplay = 5;
+            if (d.Count <= maxToDisplay) {
+                return "Votes: " + d.Count + "<br />" + d.Voters.toString().replace(/,/g, "<br />");
+            }
+            else {
+                return "Votes: " + d.Count + "<br />" + d.Voters.slice(0, maxToDisplay).toString().replace(/,/g, "<br />") + "<br />" + "+ " + (d.Count - maxToDisplay) + " others";
+            }
         });
+
         chart.series([series]);
 
         chart.draw();
