@@ -256,7 +256,7 @@ namespace VotingApplication.Web.Api.Tests
             // Act
             var response = _controller.Put(new User() { Name = String.Empty });
 
-            Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [TestMethod]
@@ -278,7 +278,7 @@ namespace VotingApplication.Web.Api.Tests
             // Act
             var response = _controller.Put(new User());
 
-            Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [TestMethod]
@@ -286,6 +286,28 @@ namespace VotingApplication.Web.Api.Tests
         {
             // Act
             var response = _controller.Put(new User());
+
+            // Assert
+            List<User> expectedList = new List<User>();
+            expectedList.Add(_bobUser);
+            expectedList.Add(_joeUser);
+            CollectionAssert.AreEquivalent(expectedList, dummyUsers.Local);
+        }
+
+        [TestMethod]
+        public void PutNewUserWithInvalidUsernameIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(new User() { Name = "<span>" });
+
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PutNewUserWithInvalidUsernameDoesNotChangeUserList()
+        {
+            // Act
+            var response = _controller.Put(new User() { Name = "<span>" });
 
             // Assert
             List<User> expectedList = new List<User>();
