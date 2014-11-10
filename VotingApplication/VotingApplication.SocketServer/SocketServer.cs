@@ -10,7 +10,7 @@ namespace VotingApplication.SocketServer
         public static void Main(string[] args)
         {
             var connections = new List<IWebSocketConnection>();
-            var server = new WebSocketServer("ws://0.0.0.0:5000");
+            var server = new WebSocketServer("ws://0.0.0.0:80");
             server.Start(socket =>
             {
                 socket.OnOpen = () => connections.Add(socket);
