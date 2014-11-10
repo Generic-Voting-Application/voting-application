@@ -138,8 +138,6 @@
 
         self.populateVotes();
         self.populateSession();
-
-        $("#reset-votes").click(self.resetVotes);
     });
 }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -30,6 +31,9 @@ namespace VotingApplication.Web.Api
             //Enable automatic migrations
             //Database.SetInitializer(new MigrateDatabaseToLatestVersion<VotingContext, Configuration>());
             //new VotingContext().Database.Initialize(false);
+
+            //Enable chat box
+            new Thread(() => VotingApplication.SocketServer.SocketServer.Main(new string[0])).Start();
         }
     }
 }

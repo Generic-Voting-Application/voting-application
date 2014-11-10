@@ -4,13 +4,6 @@
     self.sessions = ko.observableArray();
     self.optionSets = ko.observableArray();
 
-    self.keyIsEnter = function (key, callback) {
-        if (key && key.keyCode == 13)
-        {
-            callback();
-        }
-    }
-
     // Do login
     self.submitLogin = function () {
         $.ajax({
@@ -24,7 +17,15 @@
             success: function (data) {
                 userId = data;
                 localStorage["userId"] = userId;
+                $('#loginForm').addClass("has-success");
                 window.location = "vote?session=" + self.sessionId;
+            },
+
+            error:function(jqXHR, textStatus, errorThrown){
+                if (jqXHR.status == 400) {
+                    $('#loginForm').addClass("has-error");
+                    $('#usernameWarnMessage').show();
+                }
             }
         });
     }
@@ -90,16 +91,6 @@
         } else {
             window.location = "vote/?session=" + self.sessionId;
         }
-
-        $("#Name-submit").click(self.submitLogin);
-        //Submit on pressing return key
-        $("#Name").keypress(function (event) { self.keyIsEnter(event, self.submitLogin); });
-
-        //Add option on pressing return key
-        $("#newOptionRow").keypress(function (event) { self.keyIsEnter(event, self.addOption); });
-
-        //Create session on pressing return key
-        $("#session-create").keypress(function (event) { self.keyIsEnter(event, self.createSession); });
     });
 }
 
