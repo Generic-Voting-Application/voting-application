@@ -28,8 +28,8 @@ namespace VotingApplication.Web.Api
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 
             //Enable automatic migrations
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<VotingContext, Configuration>());
-            new VotingContext().Database.Initialize(false);
+            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<VotingContext, Configuration>());
+            //new VotingContext().Database.Initialize(false);
         }
     }
 }

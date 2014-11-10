@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Web;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Filters;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -89,9 +90,27 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
         }
 
+        [BasicAuthenticator(realm: "GVA")]
         public virtual HttpResponseMessage Delete(Guid sessionId, long optionId)
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE by id on this controller");
+            using (var context = _contextFactory.CreateContext())
+            {
+                Session matchingSession = context.Sessions.Where(s => s.UUID == sessionId).Include(s => s.Options).FirstOrDefault();
+                if (matchingSession == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
+                }
+
+                Option matchingOption = matchingSession.Options.Where(o => o.Id == optionId).FirstOrDefault();
+                if (matchingOption != null)
+                {
+                    matchingSession.Options.Remove(matchingOption);
+                }
+
+                context.SaveChanges();
+
+                return this.Request.CreateResponse(HttpStatusCode.OK);
+            }
         }
 
         #endregion

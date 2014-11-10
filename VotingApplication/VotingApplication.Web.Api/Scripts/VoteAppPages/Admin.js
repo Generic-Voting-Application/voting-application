@@ -87,12 +87,15 @@
     }
 
     self.deleteOption = function (data, event) {
-        var matchingOption = self.options().filter(function (x) { return x.Id == data.Id })[0];
-        var matchingIndex = self.options().indexOf(matchingOption);
-        self.options().splice(matchingIndex, 1);
-        self.currentSession.OptionSet.Options = self.options();
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/session/' + sessionId + '/option/' + data.Id,
+            contentType: 'application/json',
 
-        self.createOptionSet(self.publishSession);
+            success: function () {
+                self.populateOptions();
+            }
+        });
     }
 
     self.publishSession = function () {
@@ -108,7 +111,7 @@
         });
     }
 
-    self.createOptionSet = function (callback) {
+    self.createOptionSet = function () {
         $.ajax({
             type: 'POST',
             url: '/api/optionset/',
@@ -117,11 +120,6 @@
                 Name: $("#optionset-name").val(),
                 Options: self.options
             }),
-
-            success: function (data) {
-                self.currentSession.OptionSetId = data
-                if (callback) { callback(); }
-            }
         });
     }
 
@@ -142,7 +140,6 @@
         self.populateSession();
 
         $("#reset-votes").click(self.resetVotes);
-        $("#save-options-as").click(self.createOptionSet);
     });
 }
 

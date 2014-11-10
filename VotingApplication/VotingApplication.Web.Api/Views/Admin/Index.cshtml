@@ -64,11 +64,13 @@
         <div class="row">
             <div class="col-xs-4"></div>
             <div class="col-xs-3">
-                <p>
-                    <label for="optionset-name">OptionSet Name</label>
-                    <input id="optionset-name" style="width:100%" placeholder="Name" data-bind="value: optionSetName" />
-                </p>
-                <button class="btn btn-primary" id="save-options-as" style="width:100%; height:40px">Save as new OptionSet</button>
+                <form>
+                    <p>
+                        <label for="optionset-name">OptionSet Name</label>
+                        <input id="optionset-name" style="width:100%" placeholder="Name" data-bind="value: optionSetName" />
+                    </p>
+                    <button class="btn btn-primary" id="save-options-as" style="width:100%; height:40px" data-bind="click: $root.createOptionSet">Save as new OptionSet</button>
+                </form>
             </div>
             <div class="col-xs-5"></div>
         </div>
