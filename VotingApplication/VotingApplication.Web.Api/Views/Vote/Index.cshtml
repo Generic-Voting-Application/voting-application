@@ -23,12 +23,15 @@
                     </tr>
                 </tbody>
                 <tr id="newOptionRow">
-                    <td><input class="form-control" id="newName" placeholder="Option" /></td>
-                    <td><input class="form-control" id="newDescription" placeholder="Description" /></td>
-                    <td><input class="form-control" id="newInfo" placeholder="More Info" /></td>
-                    <td><button class="btn btn-primary" data-bind="click: $root.addOption.bind()">Add Option</button></td>
+                    <form>
+                        <td><input class="form-control" id="newName" placeholder="Option" /></td>
+                        <td><input class="form-control" id="newDescription" placeholder="Description" /></td>
+                        <td><input class="form-control" id="newInfo" placeholder="More Info" /></td>
+                        <td><button class="btn btn-primary" data-bind="click: $root.addOption.bind()">Add Option</button></td>
+                    </form>
                 </tr>
             </table>
+            <a data-bind="attr: {href : resultsUrl }"><button class="btn btn-primary">View Results</button></a>
         </div>
         <div class="col-xs-3"></div>
     </div>

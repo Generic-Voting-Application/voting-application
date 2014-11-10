@@ -3,6 +3,7 @@
 
     self.options = ko.observableArray();
     self.sessionName = ko.observable();
+    self.resultsUrl = ko.observable();
 
     // Submit a vote
     self.doVote = function (data, event) {
@@ -109,15 +110,15 @@
         }
     }
 
+
     $(document).ready(function () {
         self.sessionId = getSessionId();
         self.userId = localStorage["userId"];
 
+        self.resultsUrl("/Result?session=" + self.sessionId);
+
         self.getSession(self.sessionId);
         self.allOptions();
-
-        //Add option on pressing return key
-        $("#newOptionRow").keypress(function (event) { self.keyIsEnter(event, self.addOption); });
     });
 }
 
