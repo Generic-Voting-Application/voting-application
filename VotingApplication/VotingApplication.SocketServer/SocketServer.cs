@@ -7,7 +7,7 @@ namespace VotingApplication.SocketServer
 {
     public class SocketServer
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var connections = new List<IWebSocketConnection>();
             var server = new WebSocketServer("ws://0.0.0.0:5000");
