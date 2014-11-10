@@ -3,6 +3,7 @@
 
     self.options = ko.observableArray();
     self.sessionName = ko.observable();
+    self.resultsUrl = ko.observable();
 
     self.chatMessages = ko.observableArray();
     self.socketClient = null;
@@ -122,6 +123,8 @@
     $(document).ready(function () {
         self.sessionId = getSessionId();
         self.userId = localStorage["userId"];
+
+        self.resultsUrl("/Result?session=" + self.sessionId);
 
         self.getSession(self.sessionId);
         self.allOptions();

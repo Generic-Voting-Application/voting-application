@@ -98,9 +98,6 @@
 
         self.populateVotes();
         self.populateOptions();
-
-
-        $("#reset-votes").click(self.resetVotes);
     });
 }
 
