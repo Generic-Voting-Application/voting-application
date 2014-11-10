@@ -33,6 +33,19 @@
             </table>
             <a data-bind="attr: {href : resultsUrl }"><button class="btn btn-primary">View Results</button></a>
         </div>
-        <div class="col-xs-3"></div>
+        <div class="col-xs-3">
+            <div class="panel-heading"><span class="panel-title">Chat</span></div>
+            <div style="height:300px; overflow-y:auto" class="panel-body" data-bind="foreach: {data: chatMessages, as: 'message'}">
+                <div data-bind="text: message"></div>
+            </div>
+            <div class="panel-footer">
+                <form>
+                    <div class="input-append form-group">
+                        <input class="form-control" type='text' id="chatTextInput" placeholder="Message" />
+                        <button class="btn btn-primary" data-bind="click: $root.sendChatMessage">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
