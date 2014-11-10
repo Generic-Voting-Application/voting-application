@@ -3,6 +3,7 @@
 
     self.options = ko.observableArray();
     self.sessionName = ko.observable();
+    self.resultsUrl = ko.observable();
 
     // Submit a vote
     self.doVote = function (data, event) {
@@ -109,13 +110,12 @@
         }
     }
 
-    self.viewResults = function () {
-        window.location = "/Result?session=" + sessionId;
-    }
 
     $(document).ready(function () {
         self.sessionId = getSessionId();
         self.userId = localStorage["userId"];
+
+        self.resultsUrl("/Result?session=" + self.sessionId);
 
         self.getSession(self.sessionId);
         self.allOptions();
