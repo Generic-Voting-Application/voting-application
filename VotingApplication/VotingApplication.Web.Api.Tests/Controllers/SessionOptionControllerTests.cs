@@ -20,6 +20,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
     {
         private SessionOptionController _controller;
         private Guid _mainUUID;
+        private Guid _emptyUUID;
         private Option _burgerOption;
         private Option _pizzaOption;
         private Session _mainSession;
@@ -29,6 +30,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void setup()
         {
             _mainUUID = Guid.NewGuid();
+            _emptyUUID = Guid.NewGuid();
 
             _burgerOption = new Option { Id = 1, Name = "Burger King" };
             _pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
@@ -38,7 +40,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             InMemoryDbSet<Session> dummySessions = new InMemoryDbSet<Session>(true);
             _mainSession = new Session() { UUID = _mainUUID, Options = new List<Option>() { _burgerOption, _pizzaOption } };
+            Session emptySession = new Session() { UUID = _emptyUUID, Options = new List<Option>() };
             dummySessions.Add(_mainSession);
+            dummySessions.Add(emptySession);
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
@@ -63,13 +67,50 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region GET
 
         [TestMethod]
-        public void GetIsNotAllowed()
+        public void GetIsAllowed()
         {
             // Act
             var response = _controller.Get(_mainUUID);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void GetWithNonexistentSessionIsNotFound()
+        {
+            // Act
+            Guid newGuid = Guid.NewGuid();
+            var response = _controller.Get(newGuid);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void GetWithEmptySessionReturnsEmptyOptionList()
+        {
+            // Act
+            var response = _controller.Get(_emptyUUID);
+            
+            // Assert
+            List<Option> expectedOptions = new List<Option>();
+            List<Option> responseOptions = ((ObjectContent)response.Content).Value as List<Option>;
+            CollectionAssert.AreEquivalent(expectedOptions, responseOptions);
+        }
+
+        [TestMethod]
+        public void GetWithPopulatedSessionReturnsOptionsForThatSession()
+        {
+            // Act
+            var response = _controller.Get(_mainUUID);
+            
+            // Assert
+            List<Option> expectedOptions = new List<Option>() { _burgerOption, _pizzaOption };
+            List<Option> responseOptions = ((ObjectContent)response.Content).Value as List<Option>;
+            CollectionAssert.AreEquivalent(expectedOptions, responseOptions);
         }
 
         [TestMethod]
