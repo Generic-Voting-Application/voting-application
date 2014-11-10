@@ -80,7 +80,7 @@
 
         $.ajax({
             type: 'POST',
-            url: '/api/option',
+            url: '/api/session/' + sessionId + '/option',
             contentType: 'application/json',
 
             data: JSON.stringify({

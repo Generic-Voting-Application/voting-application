@@ -81,6 +81,7 @@
     <Compile Include="Controllers\OptionControllerTests.cs" />
     <Compile Include="Controllers\OptionSetControllerTests.cs" />
     <Compile Include="Controllers\SessionControllerTests.cs" />
+    <Compile Include="Controllers\SessionOptionControllerTests.cs" />
     <Compile Include="Controllers\SessionVoteControllerTests.cs" />
     <Compile Include="Controllers\UserSessionVoteControllerTests.cs" />
     <Compile Include="Controllers\UserVoteControllerTests.cs" />
