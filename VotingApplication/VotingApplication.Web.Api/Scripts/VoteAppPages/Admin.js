@@ -1,4 +1,4 @@
-﻿require(['jquery', 'knockout'], function ($, ko) {
+﻿require(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
     function AdminViewModel() {
         var self = this;
         var sessionId = 0;
@@ -125,7 +125,7 @@
         }
 
         $(document).ready(function () {
-            sessionId = getSessionId();
+            sessionId = Common.getSessionId();
 
             if (!sessionId) {
                 self.allSessions();

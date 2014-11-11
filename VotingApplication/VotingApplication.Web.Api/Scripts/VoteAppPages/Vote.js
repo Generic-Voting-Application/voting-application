@@ -1,4 +1,4 @@
-﻿require(['jquery', 'knockout'], function ($, ko) {
+﻿require(['jquery', 'knockout', 'Common', 'SocketClient'], function ($, ko, Common, SocketClient) {
     function VoteViewModel() {
         var self = this;
 
@@ -122,7 +122,7 @@
         }
 
         $(document).ready(function () {
-            self.sessionId = getSessionId();
+            self.sessionId = Common.getSessionId();
             self.userId = localStorage["userId"];
 
             self.resultsUrl("/Result?session=" + self.sessionId);
@@ -145,7 +145,7 @@
                 self.chatMessages.unshift("Disconnected");
             }
 
-            self.socketClient = new WebSocketClient(onOpen, onMessage, onClose);
+            self.socketClient = new SocketClient(onOpen, onMessage, onClose);
             self.socketClient.connect();
         });
     }

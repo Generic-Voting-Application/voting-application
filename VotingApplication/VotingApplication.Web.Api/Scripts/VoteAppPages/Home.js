@@ -1,4 +1,4 @@
-﻿require(['jquery', 'knockout'], function ($, ko) {
+﻿require(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
     function HomeViewModel() {
         var self = this;
 
@@ -77,7 +77,7 @@
         }
 
         $(document).ready(function () {
-            self.sessionId = getSessionId();
+            self.sessionId = Common.getSessionId();
             self.userId = localStorage["userId"];
 
             if (!self.sessionId) {

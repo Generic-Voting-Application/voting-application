@@ -338,7 +338,7 @@
     <Content Include="Scripts\require.js" />
     <Content Include="Scripts\SocketClient.js" />
     <Content Include="Scripts\VoteAppPages\Admin.js" />
-    <Content Include="Scripts\VoteAppPages\Common.js" />
+    <Content Include="Scripts\Common.js" />
     <Content Include="Scripts\VoteAppPages\Home.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
