@@ -34,7 +34,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
-        public virtual HttpResponseMessage Get(long sessionId, long voteId)
+        public virtual HttpResponseMessage Get(Guid sessionId, long voteId)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET by id on this controller");
         }
@@ -43,12 +43,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region POST
 
-        public virtual HttpResponseMessage Post(long sessionId, Vote vote)
+        public virtual HttpResponseMessage Post(Guid sessionId, Vote vote)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
         }
 
-        public virtual HttpResponseMessage Post(long sessionId, long voteId, Vote vote)
+        public virtual HttpResponseMessage Post(Guid sessionId, long voteId, Vote vote)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
         }
