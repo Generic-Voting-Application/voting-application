@@ -132,21 +132,6 @@
 
             //Add option on pressing return key
             $("#newOptionRow").keypress(function (event) { self.keyIsEnter(event, self.addOption); });
-
-            var onOpen = function () {
-                self.chatMessages.unshift("Connected to chat");
-            }
-
-            var onMessage = function (message) {
-                self.chatMessages.unshift(message);
-            }
-
-            var onClose = function () {
-                self.chatMessages.unshift("Disconnected");
-            }
-
-            self.socketClient = new SocketClient(onOpen, onMessage, onClose);
-            self.socketClient.connect();
         });
     }
 
