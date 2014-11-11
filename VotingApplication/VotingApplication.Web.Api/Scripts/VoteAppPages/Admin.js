@@ -6,6 +6,8 @@
     self.sessions = ko.observableArray();
     self.options = ko.observableArray();
     self.selectedDeleteOptionId = null;
+    self.currentSession = null;
+    self.optionSetName = ko.observable();
 
     self.resetVotes = function () {
         $.ajax({
@@ -30,6 +32,30 @@
                 self.populateVotes();
             }
         });
+    }
+
+    self.populateSession = function () {
+        $.ajax({
+            type: 'GET',
+            url: 'api/session/' + sessionId,
+
+            success: function (data) {
+                self.currentSession = data;
+                self.optionSetName(data.Name);
+                self.populateOptions();
+            }
+        })
+    }
+
+    self.populateOptions = function() {
+        $.ajax({
+            type: 'GET',
+            url: 'api/session/' + sessionId + '/option',
+
+            success: function (data) {
+                self.options(data);
+            }
+        })
     }
 
     self.populateVotes = function () {
@@ -60,26 +86,40 @@
         })
     }
 
-    self.populateOptions = function () {
-        $.ajax({
-            type: 'GET',
-            url: "/api/option",
-
-            success: function (data) {
-                self.options(data);
-            }
-        });
-    }
-
     self.deleteOption = function (data, event) {
         $.ajax({
             type: 'DELETE',
-            url: '/api/option?id=' + data.Id,
+            url: '/api/session/' + sessionId + '/option/' + data.Id,
             contentType: 'application/json',
 
             success: function () {
                 self.populateOptions();
             }
+        });
+    }
+
+    self.publishSession = function () {
+        $.ajax({
+            type: 'POST',
+            url: '/api/session/' + sessionId,
+            contentType: 'application/json',
+            data: JSON.stringify(self.currentSession),
+
+            success: function () {
+                self.populateOptions();
+            }
+        });
+    }
+
+    self.createOptionSet = function () {
+        $.ajax({
+            type: 'POST',
+            url: '/api/optionset/',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                Name: $("#optionset-name").val(),
+                Options: self.options
+            }),
         });
     }
 
@@ -97,7 +137,7 @@
         $("#admin-panel").show();
 
         self.populateVotes();
-        self.populateOptions();
+        self.populateSession();
     });
 }
 

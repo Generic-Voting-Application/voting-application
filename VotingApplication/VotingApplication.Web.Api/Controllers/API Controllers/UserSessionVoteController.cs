@@ -26,7 +26,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("User {0} does not exist", userId));
                 }
 
-                Session matchingSession = context.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
+                Session matchingSession = context.Sessions.Where(s => s.UUID == sessionId).FirstOrDefault();
                 if (matchingSession == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
@@ -62,12 +62,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region POST
 
-        public virtual HttpResponseMessage Post(long userId, long sessionId, Vote vote)
+        public virtual HttpResponseMessage Post(long userId, Guid sessionId, Vote vote)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
         }
 
-        public virtual HttpResponseMessage Post(long userId, long sessionId, long voteId, Vote vote)
+        public virtual HttpResponseMessage Post(long userId, Guid sessionId, long voteId, Vote vote)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
         }
@@ -76,12 +76,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region PUT
 
-        public virtual HttpResponseMessage Put(long userId, long sessionId, Vote vote)
+        public virtual HttpResponseMessage Put(long userId, Guid sessionId, Vote vote)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT on this controller");
         }
 
-        public virtual HttpResponseMessage Put(long userId, long sessionId, long voteId, Vote vote)
+        public virtual HttpResponseMessage Put(long userId, Guid sessionId, long voteId, Vote vote)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT by id on this controller");
         }
@@ -90,12 +90,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region DELETE
 
-        public virtual HttpResponseMessage Delete(long userId, long sessionId)
+        public virtual HttpResponseMessage Delete(long userId, Guid sessionId)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
         }
 
-        public virtual HttpResponseMessage Delete(long userId, long sessionId, long voteId)
+        public virtual HttpResponseMessage Delete(long userId, Guid sessionId, long voteId)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE by id on this controller");
         }

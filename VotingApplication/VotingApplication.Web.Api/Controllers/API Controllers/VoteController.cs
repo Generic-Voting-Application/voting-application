@@ -54,6 +54,11 @@ namespace VotingApplication.Web.Api.Controllers
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
         }
 
+        public virtual HttpResponseMessage Post(long id, Vote newVote)
+        {
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
+        }
+
         #endregion
 
         #region Delete

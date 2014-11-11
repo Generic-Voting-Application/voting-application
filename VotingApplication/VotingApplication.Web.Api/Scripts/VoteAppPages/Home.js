@@ -2,6 +2,7 @@
     var self = this;
 
     self.sessions = ko.observableArray();
+    self.optionSets = ko.observableArray();
 
     // Do login
     self.submitLogin = function () {
@@ -41,7 +42,8 @@
             contentType: 'application/json',
 
             data: JSON.stringify({
-                Name: $("#session-create").val()
+                Name: $("#session-create").val(),
+                OptionSetId: $("#optionset-select").val()
             }),
 
             success: function (data) {
@@ -62,12 +64,24 @@
         })
     }
 
+    self.allOptionSets = function () {
+        $.ajax({
+            type: 'GET',
+            url: '/api/optionset',
+
+            success: function (data) {
+                self.optionSets(data);
+            }
+        })
+    }
+
     $(document).ready(function () {
         self.sessionId = getSessionId();
         self.userId = localStorage["userId"];
 
         if (!self.sessionId) {
             self.allSessions();
+            self.allOptionSets();
             $("#login-box").hide();
             $("#sessions").show();
         }

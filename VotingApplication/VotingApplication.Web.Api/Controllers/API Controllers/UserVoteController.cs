@@ -86,7 +86,7 @@ namespace VotingApplication.Web.Api.Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Option {0} does not exist", vote.OptionId));
                 }
 
-                IEnumerable<Session> sessions = context.Sessions.Where(o => o.Id == vote.SessionId);
+                IEnumerable<Session> sessions = context.Sessions.Where(o => o.UUID == vote.SessionId);
                 if (sessions.Count() == 0)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Session {0} does not exist", vote.SessionId));
@@ -117,6 +117,11 @@ namespace VotingApplication.Web.Api.Controllers
         #region Post
 
         public virtual HttpResponseMessage Post(object obj)
+        {
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
+        }
+
+        public virtual HttpResponseMessage Post(long id, Vote newUser)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
         }
