@@ -263,7 +263,9 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\API Controllers\AccountController.cs" />
+    <Compile Include="Controllers\API Controllers\OptionSetController.cs" />
     <Compile Include="Controllers\API Controllers\SessionController.cs" />
+    <Compile Include="Controllers\API Controllers\SessionOptionController.cs" />
     <Compile Include="Controllers\API Controllers\SessionVoteController.cs" />
     <Compile Include="Controllers\API Controllers\UserSessionVoteController.cs" />
     <Compile Include="Controllers\Web Controllers\VoteController.cs" />
@@ -279,6 +281,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201411051130041_Initial.cs" />
+    <Compile Include="Migrations\201411051130041_Initial.Designer.cs">
+      <DependentUpon>201411051130041_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -328,6 +335,7 @@
     <None Include="Properties\PublishProfiles\voting-application - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\require.js" />
+    <Content Include="Scripts\SocketClient.js" />
     <Content Include="Scripts\VoteAppPages\Admin.js" />
     <Content Include="Scripts\VoteAppPages\Common.js" />
     <Content Include="Scripts\VoteAppPages\Home.js">
@@ -370,6 +378,10 @@
       <Project>{942dcb1b-5882-4c01-95ae-3fe71e4103f2}</Project>
       <Name>VotingApplication.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VotingApplication.SocketServer\VotingApplication.SocketServer.csproj">
+      <Project>{4bea2d17-4af7-404e-84ab-c58f8be23a58}</Project>
+      <Name>VotingApplication.SocketServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VotingApplication.Web.Common\VotingApplication.Web.Common.csproj">
       <Project>{969076f5-f2ad-4711-853b-ba1bd3439e13}</Project>
       <Name>VotingApplication.Web.Common</Name>
@@ -378,7 +390,11 @@
   <ItemGroup>
     <None Include="Project_Readme.html" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201411051130041_Initial.resx">
+      <DependentUpon>201411051130041_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

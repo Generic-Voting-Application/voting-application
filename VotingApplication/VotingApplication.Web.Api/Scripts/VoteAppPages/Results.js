@@ -32,6 +32,7 @@
         self.drawChart = function (data) {
             var voteData = new insight.DataSet(data);
 
+<<<<<<< HEAD
             var chart = new insight.Chart('', '#bar-chart')
                 .width(450)
                 .height(data.length * 50 + 100);
@@ -41,6 +42,21 @@
                 .isOrdered(true);
             chart.xAxis(xAxis);
             chart.yAxis(yAxis);
+=======
+            return d.Count;
+        })
+        .tooltipFunction(function (d) {
+            var maxToDisplay = 5;
+            if (d.Count <= maxToDisplay) {
+                return "Votes: " + d.Count + "<br />" + d.Voters.toString().replace(/,/g, "<br />");
+            }
+            else {
+                return "Votes: " + d.Count + "<br />" + d.Voters.slice(0, maxToDisplay).toString().replace(/,/g, "<br />") + "<br />" + "+ " + (d.Count - maxToDisplay) + " others";
+            }
+        });
+
+        chart.series([series]);
+>>>>>>> develop
 
             var series = new insight.RowSeries('votes', voteData, xAxis, yAxis)
             .keyFunction(function (d) {

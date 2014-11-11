@@ -39,9 +39,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _otherUUID = Guid.NewGuid();
             _emptyUUID = Guid.NewGuid();
 
-            Session mainSession = new Session() { Id = _mainUUID };
-            Session otherSession = new Session() { Id = _otherUUID };
-            Session emptySession = new Session() { Id = _emptyUUID };
+            Session mainSession = new Session() { UUID = _mainUUID };
+            Session otherSession = new Session() { UUID = _otherUUID };
+            Session emptySession = new Session() { UUID = _emptyUUID };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
 
@@ -133,7 +133,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Get(1, 1);
+            var response = _controller.Get(_mainUUID, 1);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -157,7 +157,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, 1, new Vote());
+            var response = _controller.Put(_mainUUID, 1, new Vote());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -171,7 +171,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostIsNotAllowed()
         {
             // Act
-            var response = _controller.Post(1, new Vote());
+            var response = _controller.Post(_mainUUID, new Vote());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -181,7 +181,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Post(1, 1, new Vote());
+            var response = _controller.Post(_mainUUID, 1, new Vote());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
