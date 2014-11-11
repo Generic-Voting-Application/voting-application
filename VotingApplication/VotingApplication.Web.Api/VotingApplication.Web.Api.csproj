@@ -293,6 +293,7 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Content Include="Scripts\knockout-3.2.0.js" />
+    <Content Include="Scripts\main.js" />
     <Content Include="Scripts\requireconfig.js" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
