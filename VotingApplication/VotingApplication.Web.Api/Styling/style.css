@@ -18,3 +18,32 @@ select,
 textarea {
     max-width: 280px;
 }
+
+h2 {
+    text-align:center;
+}
+
+input, select {
+    width:100%;
+}
+
+label.info-message {
+    font-size:small;
+}
+
+#reset-votes, #save-options-as {
+    width:100%;
+    height:40px;
+}
+
+#delete-vote-row {
+    align-content:flex-end
+}
+
+th:first-child {
+    width:25%;
+}
+
+th:last-child {
+    width:10%;
+}
