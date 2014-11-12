@@ -16,8 +16,11 @@
                 }),
 
                 success: function (data) {
+                    //Expire in 6 hours
+                    var expiryTime = Date.now() + (6 * 60 * 60 * 1000)
                     userId = data;
-                    localStorage["userId"] = userId;
+                    
+                    localStorage["userId"] = JSON.stringify({ id: userId, expires: expiryTime });
                     $('#loginForm').addClass("has-success");
                     window.location = "vote?session=" + self.sessionId;
                 },
@@ -78,7 +81,18 @@
 
         $(document).ready(function () {
             self.sessionId = Common.getSessionId();
-            self.userId = localStorage["userId"];
+
+            var localUserJSON = localStorage["userId"];
+
+            if (localUserJSON) {
+                var localUser = $.parseJSON(localUserJSON);
+                if (localUser.expires < Date.now()) {
+                    localStorage.removeItem("userId");
+                }
+                else {
+                    self.userId = localUser.id;
+                }
+            }
 
             if (!self.sessionId) {
                 self.allSessions();
