@@ -7,21 +7,21 @@
         <div class="col-xs-3 centered">
             <label for="session-select">Session</label>
             <br />
-            <select id="session-select" data-bind="options: sessions, optionsText: 'Name', optionsValue: 'UUID'" style="width:100%"></select>
+            <select id="session-select" data-bind="options: sessions, optionsText: 'Name', optionsValue: 'UUID'"></select>
             <br />
             <br />
             <button type="submit" class="btn btn-primary" data-bind="click: $root.submitSession.bind()">Go</button>
-            <h2 style="text-align:center">- OR -</h2>
+            <h2>- OR -</h2>
             <br />
             <form>
                 <p>
                 <label for="session-create">Create a session</label>
                 <br />
-                <input id="session-create" style="width:100%" placeholder="Name" />
+                <input id="session-create" placeholder="Name" />
                     </p>
                 <p>
                     <label for="optionset-select">Default Options</label>
-                    <select id="optionset-select" data-bind="options: optionSets, optionsText: 'Name', optionsValue: 'Id'" style="width:100%"></select>
+                    <select id="optionset-select" data-bind="options: optionSets, optionsText: 'Name', optionsValue: 'Id'"></select>
                 </p>
                 <button type="submit" class="btn btn-primary" data-bind="click: $root.createSession.bind()">Create Session</button>
             </form>
@@ -34,7 +34,7 @@
             <form>
                 <label for="Name" class="control-label">Username</label>
                 <input id="Name" class="form-control" />
-                <label class="control-label" style="font-size:small" id="usernameWarnMessage" hidden> Username must be alpha-numeric</label>
+                <label class="control-label info-message" id="usernameWarnMessage" hidden> Username must be alpha-numeric</label>
                 <br />
                 <button id="Name-submit" type="submit" class="btn btn-primary" data-bind="click: $root.submitLogin">Login</button>
             </form>

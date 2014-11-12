@@ -6,7 +6,7 @@
     <div class="col-xs-3 centered">
         <label for="session-select">Session</label>
         <br />
-        <select id="session-select" data-bind="options: sessions, optionsText: 'Name', optionsValue: 'UUID'" style="width:100%"></select>
+        <select id="session-select" data-bind="options: sessions, optionsText: 'Name', optionsValue: 'UUID'"></select>
         <br />
         <br />
         <button type="submit" class="btn btn-primary" data-bind="click: $root.submitSession.bind()">Go</button>
@@ -17,7 +17,7 @@
     <div class="row">
         <div class="col-xs-5"></div>
         <div class="col-xs-2">
-            <button class="btn btn-primary" id="reset-votes" style="width:100%; height:40px" data-bind="click: $root.resetVotes">Reset Vote</button>
+            <button class="btn btn-primary" id="reset-votes" data-bind="click: $root.resetVotes">Reset Vote</button>
         </div>
         <div class="col-xs-5"></div>
     </div>
@@ -28,16 +28,16 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th width="25%">User</th>
+                        <th>User</th>
                         <th>Option</th>
-                        <th width="10%"></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: votes">
                     <tr>
                         <td data-bind="text: User.Name"></td>
                         <td data-bind="text: Option.Name"></td>
-                        <td style="align-content:flex-end"><button class="btn btn-danger" data-bind="click: $parent.deleteVote.bind()">Delete Vote</button></td>
+                        <td class="delete-vote-row"><button class="btn btn-danger" data-bind="click: $parent.deleteVote.bind()">Delete Vote</button></td>
                     </tr>
             </tbody>
         </table>
@@ -45,10 +45,10 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th width="25%">Option</th>
+                    <th>Option</th>
                     <th>Description</th>
                     <th>More info</th>
-                    <th width="10%"></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody data-bind="foreach: options">
@@ -67,9 +67,9 @@
                 <form>
                     <p>
                         <label for="optionset-name">OptionSet Name</label>
-                        <input id="optionset-name" style="width:100%" placeholder="Name" data-bind="value: optionSetName" />
+                        <input id="optionset-name" placeholder="Name" data-bind="value: optionSetName" />
                     </p>
-                    <button class="btn btn-primary" id="save-options-as" style="width:100%; height:40px" data-bind="click: $root.createOptionSet">Save as new OptionSet</button>
+                    <button class="btn btn-primary" id="save-options-as"data-bind="click: $root.createOptionSet">Save as new OptionSet</button>
                 </form>
             </div>
             <div class="col-xs-5"></div>
