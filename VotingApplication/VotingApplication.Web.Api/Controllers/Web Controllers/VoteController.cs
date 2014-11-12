@@ -7,7 +7,7 @@ namespace VotingApplication.Web.Api.Controllers.Web_Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Voting";
-            ViewBag.Script = "/Scripts/VoteAppPages/Vote.js";
+            ViewBag.Script = "/Scripts/Vote.js";
 
             return View();
         }

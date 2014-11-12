@@ -7,7 +7,7 @@ namespace VotingApplication.Web.Api.Controllers.Web_Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Admin Panel";
-            ViewBag.Script = "/Scripts/VoteAppPages/Admin.js";
+            ViewBag.Script = "/Scripts/Admin.js";
 
             return View();
         }
