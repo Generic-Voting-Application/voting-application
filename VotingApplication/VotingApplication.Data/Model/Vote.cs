@@ -1,4 +1,5 @@
-﻿namespace VotingApplication.Data.Model
+﻿using System;
+namespace VotingApplication.Data.Model
 {
     public class Vote
     {
@@ -9,5 +10,8 @@
 
         public long UserId { get; set; }
         public User User { get; set; }
+
+        public Guid SessionId { get; set; }
+        public Session Session { get; set; }
     }
 }

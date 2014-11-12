@@ -25,6 +25,8 @@ namespace VotingApplication.Data.Context
         public IDbSet<Option> Options { get; set; }
         public IDbSet<User> Users { get; set; }
         public IDbSet<Vote> Votes { get; set; }
+        public IDbSet<Session> Sessions { get; set; }
+        public IDbSet<OptionSet> OptionSets { get; set; }
     }
 
     public class VoteConfiguration : EntityTypeConfiguration<Vote>
@@ -33,6 +35,7 @@ namespace VotingApplication.Data.Context
         {
             this.Property(v => v.OptionId).HasColumnName("OptionId");
             this.Property(v => v.UserId).HasColumnName("UserId");
+            this.Property(v => v.SessionId).HasColumnName("SessionId");
         }
     }
 }

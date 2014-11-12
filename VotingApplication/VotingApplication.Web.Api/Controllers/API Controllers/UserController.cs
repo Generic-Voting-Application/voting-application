@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
 using VotingApplication.Data;
@@ -25,7 +26,7 @@ namespace VotingApplication.Web.Api.Controllers
             }
         }
 
-        public override HttpResponseMessage Get(long id)
+        public virtual HttpResponseMessage Get(long id)
         {
             using (var context = _contextFactory.CreateContext())
             {
@@ -50,7 +51,11 @@ namespace VotingApplication.Web.Api.Controllers
             {
                 if (newUser.Name == null || newUser.Name.Equals(""))
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Must provide a Username");
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Must provide a Username");
+                }
+                else if (new Regex(@"[^\w| ]").IsMatch(newUser.Name))
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Unacceptable Username");
                 }
 
                 List<User> existingUsers = context.Users.Where(u => u.Name == newUser.Name).ToList<User>();
@@ -70,6 +75,11 @@ namespace VotingApplication.Web.Api.Controllers
         #region Post
 
         public virtual HttpResponseMessage Post(object obj)
+        {
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
+        }
+
+        public virtual HttpResponseMessage Post(long id, User newUser)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
         }

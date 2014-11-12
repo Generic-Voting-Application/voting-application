@@ -1,4 +1,5 @@
 ﻿USE VotingApplication
+
 DELETE FROM dbo.Options;
 INSERT INTO dbo.Options (Name, Description, Info) VALUES
 	('Guissepes', 'Italian on the steps', '0117 926 4869'),
@@ -12,3 +13,10 @@ INSERT INTO dbo.Options (Name, Description, Info) VALUES
 	('Dynasty', 'Chinese crispy duck pancakes', '0117 925 0888'),
 	('Small Bar', 'Hotdogs and Sandwiches', 'N/A'),
 	('Start the Bus', 'Burgers', '0117 930 4370');
+
+DELETE FROM dbo.OptionSets;
+INSERT INTO dbo.OptionSets (Name) VALUES ('Restaurants'), ('Empty Set');
+
+DELETE FROM dbo.OptionSetOptions;
+INSERT INTO dbo.OptionSetOptions (OptionSet_Id, Option_Id) VALUES
+  (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8), (1, 9), (1, 10), (1, 11);

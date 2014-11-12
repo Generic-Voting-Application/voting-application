@@ -1,0 +1,78 @@
+﻿<div class="jumbotron">
+    <h1>Admin</h1>
+</div>
+<div class="row" id="sessions">
+    <div class="col-xs-4"></div>
+    <div class="col-xs-3 centered">
+        <label for="session-select">Session</label>
+        <br />
+        <select id="session-select" data-bind="options: sessions, optionsText: 'Name', optionsValue: 'UUID'"></select>
+        <br />
+        <br />
+        <button type="submit" class="btn btn-primary" data-bind="click: $root.submitSession.bind()">Go</button>
+    </div>
+    <div class="col-xs-5"></div>
+</div>
+<div id="admin-panel" hidden>
+    <div class="row">
+        <div class="col-xs-5"></div>
+        <div class="col-xs-2">
+            <button class="btn btn-primary" id="reset-votes" data-bind="click: $root.resetVotes">Reset Vote</button>
+        </div>
+        <div class="col-xs-5"></div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-xs-3"></div>
+        <div class="col-xs-6 centered">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Option</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: votes">
+                    <tr>
+                        <td data-bind="text: User.Name"></td>
+                        <td data-bind="text: Option.Name"></td>
+                        <td class="delete-vote-row"><button class="btn btn-danger" data-bind="click: $parent.deleteVote.bind()">Delete Vote</button></td>
+                    </tr>
+            </tbody>
+        </table>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Option</th>
+                    <th>Description</th>
+                    <th>More info</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: options">
+                <tr>
+                    <td data-bind="text: Name"></td>
+                    <td data-bind="text: Description"></td>
+                    <td data-bind="text: Info"></td>
+                    <td><button class="btn btn-danger" data-bind="click: $root.deleteOption.bind()" data-toggle="modal" data-target="#deleteOptionModal">Delete</button></td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-xs-3"></div>
+        <div class="row">
+            <div class="col-xs-4"></div>
+            <div class="col-xs-3">
+                <form>
+                    <p>
+                        <label for="optionset-name">OptionSet Name</label>
+                        <input id="optionset-name" placeholder="Name" data-bind="value: optionSetName" />
+                    </p>
+                    <button class="btn btn-primary" id="save-options-as"data-bind="click: $root.createOptionSet">Save as new OptionSet</button>
+                </form>
+            </div>
+            <div class="col-xs-5"></div>
+        </div>
+    </div>
+</div>

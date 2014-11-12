@@ -16,7 +16,7 @@ namespace VotingApplication.Web.Api.Controllers
 
         #region GET
 
-        public override HttpResponseMessage Get(long userId)
+        public virtual HttpResponseMessage Get(long userId)
         {
             using (var context = _contextFactory.CreateContext())
             {
@@ -69,6 +69,11 @@ namespace VotingApplication.Web.Api.Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote does not have an option");
                 }
 
+                if (vote.SessionId == Guid.Empty)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote does not have a session");
+                }
+
                 IEnumerable<User> users = context.Users.Where(u => u.Id == userId);
                 if(users.Count() == 0)
                 {
@@ -81,7 +86,13 @@ namespace VotingApplication.Web.Api.Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Option {0} does not exist", vote.OptionId));
                 }
 
-                IEnumerable<Vote> votes = context.Votes.Where(v => v.UserId == userId);
+                IEnumerable<Session> sessions = context.Sessions.Where(o => o.UUID == vote.SessionId);
+                if (sessions.Count() == 0)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Session {0} does not exist", vote.SessionId));
+                }
+
+                IEnumerable<Vote> votes = context.Votes.Where(v => v.UserId == userId && v.SessionId == vote.SessionId);
                 if(votes.Count() == 0)
                 {
                     vote.UserId = userId;
@@ -106,6 +117,11 @@ namespace VotingApplication.Web.Api.Controllers
         #region Post
 
         public virtual HttpResponseMessage Post(object obj)
+        {
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
+        }
+
+        public virtual HttpResponseMessage Post(long id, Vote newUser)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
         }
