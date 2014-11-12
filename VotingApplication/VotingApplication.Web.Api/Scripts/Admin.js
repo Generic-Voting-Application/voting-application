@@ -119,7 +119,7 @@
                 contentType: 'application/json',
                 data: JSON.stringify({
                     Name: $("#optionset-name").val(),
-                    Options: self.options
+                    Options: self.options()
                 }),
             });
         }
