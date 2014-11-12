@@ -19,5 +19,21 @@
         return sessionId;
     }
 
+    Common.currentUserId = function () {
+        var localUserJSON = localStorage["userId"];
+
+        if (localUserJSON) {
+            var localUser = $.parseJSON(localUserJSON);
+            if (localUser.expires < Date.now()) {
+                localStorage.removeItem("userId");
+            }
+            else {
+                return localUser.id;
+            }
+        }
+
+        return undefined;
+    }
+
     return Common;
 });

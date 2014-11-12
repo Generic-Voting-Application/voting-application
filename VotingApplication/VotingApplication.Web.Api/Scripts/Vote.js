@@ -123,7 +123,7 @@
 
         $(document).ready(function () {
             self.sessionId = Common.getSessionId();
-            self.userId = localStorage["userId"];
+            self.userId = Common.currentUserId();
 
             self.resultsUrl("/Result?session=" + self.sessionId);
 
