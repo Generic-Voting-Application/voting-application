@@ -82,17 +82,7 @@
         $(document).ready(function () {
             self.sessionId = Common.getSessionId();
 
-            var localUserJSON = localStorage["userId"];
-
-            if (localUserJSON) {
-                var localUser = $.parseJSON(localUserJSON);
-                if (localUser.expires < Date.now()) {
-                    localStorage.removeItem("userId");
-                }
-                else {
-                    self.userId = localUser.id;
-                }
-            }
+            self.userId = Common.currentUserId();
 
             if (!self.sessionId) {
                 self.allSessions();
