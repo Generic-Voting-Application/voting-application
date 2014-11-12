@@ -22,7 +22,7 @@
                     
                     localStorage["userId"] = JSON.stringify({ id: userId, expires: expiryTime });
                     $('#loginForm').addClass("has-success");
-                    window.location = "vote?session=" + self.sessionId;
+                    window.location.replace("vote?session=" + self.sessionId);
                 },
 
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -94,7 +94,7 @@
                 $("#sessions").hide();
                 $("#login-box").show();
             } else {
-                window.location = "vote/?session=" + self.sessionId;
+                window.location.replace("vote?session=" + self.sessionId);
             }
         });
     }

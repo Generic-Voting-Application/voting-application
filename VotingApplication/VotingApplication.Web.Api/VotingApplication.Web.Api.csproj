@@ -337,7 +337,6 @@
     </Content>
     <Content Include="Scripts\Vote.js" />
     <Content Include="Scripts\Results.js" />
-    <Content Include="Scripts\Vote.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
