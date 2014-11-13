@@ -114,6 +114,14 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 if (matchingOption != null)
                 {
                     matchingSession.Options.Remove(matchingOption);
+
+                    // Remove votes for this option/session set
+                    List<Vote> optionVotes = context.Votes.Where(v => v.OptionId == optionId && v.SessionId == sessionId).ToList();
+
+                    foreach (Vote vote in optionVotes)
+                    {
+                        context.Votes.Remove(vote);
+                    }
                 }
 
                 context.SaveChanges();

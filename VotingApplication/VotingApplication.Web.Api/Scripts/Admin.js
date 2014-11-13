@@ -95,6 +95,7 @@
 
                 success: function () {
                     self.populateOptions();
+                    self.populateVotes();
                 }
             });
         }
