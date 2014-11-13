@@ -7,13 +7,13 @@ namespace VotingApplication.Web.Api.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.0-30225")]
-    public sealed partial class Initial : IMigrationMetadata
+    public sealed partial class v02 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(v02));
         
         string IMigrationMetadata.Id
         {
-            get { return "201411051130041_Initial"; }
+            get { return "201411131002169_v0.2"; }
         }
         
         string IMigrationMetadata.Source
