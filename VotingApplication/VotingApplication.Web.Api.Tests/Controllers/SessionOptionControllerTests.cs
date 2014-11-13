@@ -23,8 +23,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Guid _emptyUUID;
         private Option _burgerOption;
         private Option _pizzaOption;
+        private Vote _burgerVote;
         private Session _mainSession;
         private InMemoryDbSet<Option> _dummyOptions;
+        private InMemoryDbSet<Vote> _dummyVotes;
 
         [TestInitialize]
         public void setup()
@@ -38,6 +40,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _dummyOptions.Add(_burgerOption);
             _dummyOptions.Add(_pizzaOption);
 
+            _burgerVote = new Vote() { Id = 1, SessionId = _mainUUID, OptionId = 1 };
+            _dummyVotes = new InMemoryDbSet<Vote>(true);
+            _dummyVotes.Add(_burgerVote);
+
             InMemoryDbSet<Session> dummySessions = new InMemoryDbSet<Session>(true);
             _mainSession = new Session() { UUID = _mainUUID, Options = new List<Option>() { _burgerOption, _pizzaOption } };
             Session emptySession = new Session() { UUID = _emptyUUID, Options = new List<Option>() };
@@ -50,6 +56,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Options).Returns(_dummyOptions);
             mockContext.Setup(a => a.Sessions).Returns(dummySessions);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
+            mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
 
             _controller = new SessionOptionController(mockContextFactory.Object);
             _controller.Request = new HttpRequestMessage();
@@ -363,6 +370,36 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
             Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void DeleteOptionRemovesRelevantVotes()
+        {
+            // Act
+            _controller.Delete(_mainUUID, 1);
+
+            // Assert
+            CollectionAssert.AreEquivalent(new List<Vote>(), _dummyVotes.Local);
+        }
+
+        [TestMethod]
+        public void DeleteOptionDoesNotRemoveOtherVotes()
+        {
+            // Act
+            _controller.Delete(_mainUUID, 2);
+
+            // Assert
+            CollectionAssert.AreEquivalent(new List<Vote>() { _burgerVote }, _dummyVotes.Local);
+        }
+
+        [TestMethod]
+        public void DeleteOptionOnlyDeletesFromCurrentSession()
+        {
+            // Act
+            _controller.Delete(_emptyUUID, 1);
+
+            // Assert
+            CollectionAssert.AreEquivalent(new List<Vote>() { _burgerVote }, _dummyVotes.Local);
         }
 
         #endregion
