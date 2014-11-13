@@ -4,6 +4,7 @@
 
         self.sessionName = ko.observable();
         self.votes = ko.observableArray();
+        self.votesUrl = ko.observable();
 
         self.countVotes = function (voteArray) {
             var totalCounts = [];
@@ -94,6 +95,9 @@
 
         $(document).ready(function () {
             self.sessionId = Common.getSessionId();
+
+            self.votesUrl("/Vote?session=" + self.sessionId);
+
             self.getSession(self.sessionId);
             self.getOptions();
         });
