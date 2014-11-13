@@ -41,7 +41,7 @@
         self.highlightPreviousVote = function () {
             $.ajax({
                 type: 'GET',
-                url: '/api/user/' + userId + '/session/' + sessionId + '/vote',
+                url: '/api/user/' + self.userId + '/session/' + self.sessionId + '/vote',
                 contentType: 'application/json',
 
                 success: function (data) {
@@ -64,6 +64,7 @@
 
                 success: function (data) {
                     self.options(data);
+                    self.highlightPreviousVote();
                 }
             });
         }
