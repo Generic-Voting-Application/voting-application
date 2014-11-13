@@ -13,9 +13,15 @@
         return result;
     }
 
-    Common.getSessionId = function () {
+    Common.getPollId = function () {
         var windowArgs = Common.getJsonFromUrl();
-        sessionId = windowArgs['session'];
+        sessionId = windowArgs['poll'];
+        return sessionId;
+    }
+
+    Common.getManageId = function () {
+        var windowArgs = Common.getJsonFromUrl();
+        sessionId = windowArgs['manage'];
         return sessionId;
     }
 
