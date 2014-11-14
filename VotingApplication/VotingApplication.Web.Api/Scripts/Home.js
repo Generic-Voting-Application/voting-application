@@ -28,8 +28,8 @@
         dataType: 'html',
 
         success: function (data) {
-            $("#content").append(data);
             require([javascriptToLoad]);
+            $("#content").append(data);
         }
     })
 });
