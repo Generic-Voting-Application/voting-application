@@ -24,6 +24,12 @@ h2 {
 }
 
 input, select {
+    margin-bottom:15px;
+    width:100%;
+}
+
+label {
+    margin-bottom:0px;
     width:100%;
 }
 
