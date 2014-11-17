@@ -295,6 +295,7 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Content Include="Scripts\Create.js" />
+    <Content Include="Scripts\Lib\bootstrap.min.js" />
     <Content Include="Scripts\Lib\jquery-2.1.1.min.js" />
     <Content Include="Scripts\Lib\knockout-3.2.0.js" />
     <Content Include="Scripts\Main.js" />
