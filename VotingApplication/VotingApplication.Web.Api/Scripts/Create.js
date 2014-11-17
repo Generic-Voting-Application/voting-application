@@ -22,8 +22,36 @@
             var email = $("#email").val();
             var templateId = $("#template").val();
 
-            console.log("Submitted");
+            $.ajax({
+                type: 'POST',
+                url: '/api/session',
+                contentType: 'application/json',
+
+                data: JSON.stringify({
+                    Name: pollName,
+                    Creator: creatorName,
+                    optionSetId: templateId
+                }),
+
+                success: function (data) {
+                    self.sendEmail(email, data);
+                }
+            });
         };
+
+        self.sendEmail = function (email, data) {
+            $.ajax({
+                type: 'POST',
+                url: '/api/mail',
+                contentType: 'application/json',
+
+                data: JSON.stringify({
+                    email: email,
+                    PollId: data,
+                    ManageId: "123"
+                })
+            });
+        }
 
         self.validateField = function (field) {
             var inputField = $(field).find('input')[0];
