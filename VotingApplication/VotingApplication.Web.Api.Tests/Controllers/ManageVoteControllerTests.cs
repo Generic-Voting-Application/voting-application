@@ -157,13 +157,48 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region DELETE
 
         [TestMethod]
-        public void DeleteIsNotAllowed()
+        public void DeleteIsAllowed()
         {
             // Act
             var response = _controller.Delete(_manageMainUUID);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteFromSessionWithNoVotesIsAllowed()
+        {
+            // Act
+            var response = _controller.Delete(_manageMainUUID);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteFromMissingSessionIsNotFound()
+        {
+            // Act
+            Guid newGuid = Guid.NewGuid();
+            var response = _controller.Delete(newGuid);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void DeleteOnlyRemovesVotesFromMatchingSession()
+        {
+            // Act
+            var response = _controller.Delete(_manageMainUUID);
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(_otherVote);
+            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
         }
 
         [TestMethod]
