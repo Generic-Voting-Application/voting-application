@@ -10,10 +10,10 @@ using VotingApplication.Data.Model;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
-    public class ManageVoteController : WebApiController
+    public class ManageOptionController : WebApiController
     {
-        public ManageVoteController() : base() {}
-        public ManageVoteController(IContextFactory contextFactory) : base(contextFactory) { }
+        public ManageOptionController() : base() {}
+        public ManageOptionController(IContextFactory contextFactory) : base(contextFactory) { }
 
         #region GET
 
@@ -21,17 +21,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session matchingSession = context.Sessions.Where(s => s.ManageID == manageId).FirstOrDefault();
+                Session matchingSession = context.Sessions.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
                 if (matchingSession == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", manageId));
                 }
 
-                List<Vote> votes = context.Votes.Where(v => v.SessionId == matchingSession.UUID)
-                    .Include(v => v.Option).Include(v => v.User)
-                    .ToList();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, votes);
+                return this.Request.CreateResponse(HttpStatusCode.OK, matchingSession.Options);
             }
         }
 
@@ -74,43 +70,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public virtual HttpResponseMessage Delete(Guid manageId)
         {
-            using (var context = _contextFactory.CreateContext())
-            {
-                Session matchingSession = context.Sessions.Where(s => s.ManageID == manageId).FirstOrDefault();
-                if (matchingSession == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", manageId));
-                }
-
-                List<Vote> votesInManagedSession = context.Votes.Where(v => v.SessionId == matchingSession.UUID).ToList();
-                foreach (Vote vote in votesInManagedSession)
-                {
-                    context.Votes.Remove(vote);
-                }
-
-                context.SaveChanges();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK);
-            }
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
         }
 
         public virtual HttpResponseMessage Delete(Guid manageId, long voteId)
         {
-            using (var context = _contextFactory.CreateContext())
-            {
-                Session matchingSession = context.Sessions.Where(s => s.ManageID == manageId).FirstOrDefault();
-                if (matchingSession == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", manageId));
-                }
-
-                Vote matchingVote = context.Votes.Where(v => v.Id == voteId && v.SessionId == matchingSession.UUID).FirstOrDefault();
-
-                context.Votes.Remove(matchingVote);
-                context.SaveChanges();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK);
-            }
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE by id on this controller");
         }
 
         #endregion

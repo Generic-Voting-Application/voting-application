@@ -85,15 +85,54 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region GET
 
         [TestMethod]
-        public void GetIsNotAllowed()
+        public void GetIsAllowed()
         {
             // Act
             var response = _controller.Get(_manageMainUUID);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
-        
+
+        [TestMethod]
+        public void GetNonexistentSessionIsNotFound()
+        {
+            // Act
+            Guid newGuid = Guid.NewGuid();
+            var response = _controller.Get(newGuid);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void GetReturnsVotesForThatSession()
+        {
+            // Act
+            var response = _controller.Get(_manageMainUUID);
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(_bobVote);
+            expectedVotes.Add(_joeVote);
+            List<Vote> responseVotes = ((ObjectContent)response.Content).Value as List<Vote>;
+            CollectionAssert.AreEquivalent(expectedVotes, responseVotes);
+        }
+
+        [TestMethod]
+        public void GetOnEmptySessionReturnsEmptyList()
+        {
+            // Act
+            var response = _controller.Get(_manageEmptyUUID);
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            List<Vote> responseVotes = ((ObjectContent)response.Content).Value as List<Vote>;
+            CollectionAssert.AreEquivalent(expectedVotes, responseVotes);
+        }
+
         [TestMethod]
         public void GetByIdIsNotAllowed()
         {

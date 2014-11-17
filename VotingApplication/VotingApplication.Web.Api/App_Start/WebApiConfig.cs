@@ -57,6 +57,12 @@ namespace VotingApplication.Web.Api
                 defaults: new { controller = "ManageVote", voteId = RouteParameter.Optional }
             );
 
+            config.Routes.MapHttpRoute(
+                name: "ManageOptionApiRoute",
+                routeTemplate: "api/manage/{manageId}/option/{optionId}",
+                defaults: new { controller = "ManageOption", optionId = RouteParameter.Optional }
+            );
+
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
         }
     }
