@@ -76,11 +76,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 }
 
                 newSession.UUID = Guid.NewGuid();
+                newSession.ManageID = Guid.NewGuid();
 
                 string targetEmail = newSession.Email;
                 newSession.Email = null; // Don't store email longer than we need to
 
-                SendEmail(targetEmail, newSession.UUID, newSession.UUID);
+                SendEmail(targetEmail, newSession.UUID, newSession.ManageID);
 
                 context.Sessions.Add(newSession);
                 context.SaveChanges();
@@ -93,6 +94,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             string hostEmail = WebConfigurationManager.AppSettings["HostEmail"];
             string hostPassword = WebConfigurationManager.AppSettings["HostPassword"];
+
+            if (hostEmail == null || hostPassword == null)
+            {
+                return;
+            }
 
             SmtpClient client = new SmtpClient();
             client.Port = 25;
