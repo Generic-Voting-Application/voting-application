@@ -17,6 +17,9 @@
                 return;
             }
 
+            $("#poll-create-btn").attr('disabled', 'disabled')
+            $("#poll-create-btn").text('Creating...');
+
             var creatorName = $("#poll-creator").val();
             var pollName = $("#poll-name").val();
             var email = $("#email").val();
@@ -32,9 +35,26 @@
                     Creator: creatorName,
                     Email: email,
                     optionSetId: templateId
-                })
+                }),
+
+                success: function() {
+                    self.sessionCreated();
+                }
             });
         };
+
+        self.sessionCreated = function() {
+            // Load partial HTML
+            $.ajax({
+                type: 'GET',
+                url: '/Partials/CheckEmail.html',
+                dataType: 'html',
+
+                success: function (data) {
+                    $("#content").html(data);
+                }
+            })
+        }
 
         self.validateField = function (field) {
             var inputField = $(field).find('input')[0];
