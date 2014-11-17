@@ -99,35 +99,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
         }
 
-        [BasicAuthenticator(realm: "GVA")]
         public virtual HttpResponseMessage Delete(Guid sessionId, long optionId)
         {
-            using (var context = _contextFactory.CreateContext())
-            {
-                Session matchingSession = context.Sessions.Where(s => s.UUID == sessionId).Include(s => s.Options).FirstOrDefault();
-                if (matchingSession == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
-                }
-
-                Option matchingOption = matchingSession.Options.Where(o => o.Id == optionId).FirstOrDefault();
-                if (matchingOption != null)
-                {
-                    matchingSession.Options.Remove(matchingOption);
-
-                    // Remove votes for this option/session set
-                    List<Vote> optionVotes = context.Votes.Where(v => v.OptionId == optionId && v.SessionId == sessionId).ToList();
-
-                    foreach (Vote vote in optionVotes)
-                    {
-                        context.Votes.Remove(vote);
-                    }
-                }
-
-                context.SaveChanges();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK);
-            }
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE by id on this controller");
         }
 
         #endregion

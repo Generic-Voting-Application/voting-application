@@ -315,91 +315,13 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void DeleteByIdIsAllowed()
+        public void DeleteByIdIsNotAllowed()
         {
             // Act
             var response = _controller.Delete(_mainUUID, 1);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void DeleteByIdRemovesOptionWithMatchingIdFromSession()
-        {
-            // Act
-            _controller.Delete(_mainUUID, 1);
-
-            // Assert
-            List<Option> expectedOptions = new List<Option>();
-            expectedOptions.Add(_pizzaOption);
-            CollectionAssert.AreEquivalent(expectedOptions, _mainSession.Options);
-        }
-
-        [TestMethod]
-        public void DeleteByIdDoesNotRemoveOptionFromGlobalOptions()
-        {
-            // Act
-            _controller.Delete(_mainUUID, 1);
-
-            // Assert
-            List<Option> expectedOptions = new List<Option>();
-            expectedOptions.Add(_burgerOption);
-            expectedOptions.Add(_pizzaOption);
-            CollectionAssert.AreEquivalent(expectedOptions, _dummyOptions.Local);
-        }
-
-        [TestMethod]
-        public void DeleteByIdIsAllowedIfNoOptionMatchesId()
-        {
-            // Act
-            var response = _controller.Delete(_mainUUID, 99);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void DeleteByIdIsIsNotAllowedForMissingSessionUUID()
-        {
-            // Act
-            Guid newGuid = Guid.NewGuid();
-            var response = _controller.Delete(newGuid, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
-        }
-
-        [TestMethod]
-        public void DeleteOptionRemovesRelevantVotes()
-        {
-            // Act
-            _controller.Delete(_mainUUID, 1);
-
-            // Assert
-            CollectionAssert.AreEquivalent(new List<Vote>(), _dummyVotes.Local);
-        }
-
-        [TestMethod]
-        public void DeleteOptionDoesNotRemoveOtherVotes()
-        {
-            // Act
-            _controller.Delete(_mainUUID, 2);
-
-            // Assert
-            CollectionAssert.AreEquivalent(new List<Vote>() { _burgerVote }, _dummyVotes.Local);
-        }
-
-        [TestMethod]
-        public void DeleteOptionOnlyDeletesFromCurrentSession()
-        {
-            // Act
-            _controller.Delete(_emptyUUID, 1);
-
-            // Assert
-            CollectionAssert.AreEquivalent(new List<Vote>() { _burgerVote }, _dummyVotes.Local);
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
         }
 
         #endregion

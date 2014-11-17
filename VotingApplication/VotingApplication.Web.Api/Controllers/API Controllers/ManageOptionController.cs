@@ -73,9 +73,33 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
         }
 
-        public virtual HttpResponseMessage Delete(Guid manageId, long voteId)
+        public virtual HttpResponseMessage Delete(Guid manageId, long optionId)
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE by id on this controller");
+            using (var context = _contextFactory.CreateContext())
+            {
+                Session matchingSession = context.Sessions.Where(s => s.ManageID == manageId).FirstOrDefault();
+                if (matchingSession == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", manageId));
+                }
+
+                Option matchingOption = matchingSession.Options.Where(o => o.Id == optionId).FirstOrDefault();
+                if (matchingOption != null)
+                {
+                    matchingSession.Options.Remove(matchingOption);
+
+                    // Remove votes for this option/session combo
+                    List<Vote> optionVotes = context.Votes.Where(v => v.OptionId == optionId && v.SessionId == matchingSession.UUID).ToList();
+                    foreach (Vote vote in optionVotes)
+                    {
+                        context.Votes.Remove(vote);
+                    }
+                }
+
+                context.SaveChanges();
+
+                return this.Request.CreateResponse(HttpStatusCode.OK);
+            }
         }
 
         #endregion
