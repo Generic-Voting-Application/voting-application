@@ -13,6 +13,8 @@ namespace VotingApplication.Data.Model
         public Guid UUID { get; set; }
         public string Name { get; set; }
 
+        public string Email { get; set; }
+
         public long OptionSetId { get; set; }
         public List<Option> Options { get; set; }
     }
