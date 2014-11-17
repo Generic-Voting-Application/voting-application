@@ -23,7 +23,7 @@
         self.deleteVote = function (data, event) {
             $.ajax({
                 type: 'DELETE',
-                url: '/api/manage/' + manageId + '/vote?id=' + data.Id,
+                url: '/api/manage/' + manageId + '/vote/' + data.Id,
                 contentType: 'application/json',
 
                 success: function () {
@@ -48,7 +48,7 @@
         self.populateOptions = function () {
             $.ajax({
                 type: 'GET',
-                url: 'api/manage/' + manageId + '/option',
+                url: '/api/manage/' + manageId + '/option',
 
                 success: function (data) {
                     self.options(data);

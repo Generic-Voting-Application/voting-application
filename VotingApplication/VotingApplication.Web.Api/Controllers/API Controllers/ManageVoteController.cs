@@ -94,7 +94,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
-        public virtual HttpResponseMessage Delete(Guid manageId, long voteId)
+        public HttpResponseMessage Delete(Guid manageId, long voteId)
         {
             using (var context = _contextFactory.CreateContext())
             {
