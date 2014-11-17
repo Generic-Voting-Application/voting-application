@@ -83,7 +83,21 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public virtual HttpResponseMessage Delete(Guid manageId, long voteId)
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE by id on this controller");
+            using (var context = _contextFactory.CreateContext())
+            {
+                Session matchingSession = context.Sessions.Where(s => s.ManageID == manageId).FirstOrDefault();
+                if (matchingSession == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", manageId));
+                }
+
+                Vote matchingVote = context.Votes.Where(v => v.Id == voteId && v.SessionId == matchingSession.UUID).FirstOrDefault();
+
+                context.Votes.Remove(matchingVote);
+                context.SaveChanges();
+
+                return this.Request.CreateResponse(HttpStatusCode.OK);
+            }
         }
 
         #endregion

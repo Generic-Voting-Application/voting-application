@@ -202,14 +202,89 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void DeleteByIdIsNotAllowed()
+        public void DeleteByIdIsAllowed()
         {
             // Act
             var response = _controller.Delete(_manageMainUUID, 1);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
+
+        [TestMethod]
+        public void DeleteByIdRemovesMatchingVote()
+        {
+            // Act
+            var response = _controller.Delete(_manageMainUUID, 2);
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(_bobVote);
+            expectedVotes.Add(_otherVote);
+            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
+        }
+
+        [TestMethod]
+        public void DeleteByIdOnMissingVoteIsAllowed()
+        {
+            // Act
+            var response = _controller.Delete(_manageMainUUID, 99);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteByIdOnMissingVoteDoesNotModifyVotes()
+        {
+            // Act
+            var response = _controller.Delete(_manageMainUUID, 99);
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(_bobVote);
+            expectedVotes.Add(_joeVote);
+            expectedVotes.Add(_otherVote);
+            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
+        }
+
+        [TestMethod]
+        public void DeleteByIdOnMissingSessionIsNotFound()
+        {
+            // Act
+            Guid newGuid = Guid.NewGuid();
+            var response = _controller.Delete(newGuid, 1);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void DeleteByIdOnVoteInOtherSessionIsAllowed()
+        {
+            // Act
+            var response = _controller.Delete(_manageEmptyUUID, 1);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteByIdOnVoteInOtherSessionDoesNotRemoveOtherVote()
+        {
+            // Act
+            var response = _controller.Delete(_manageEmptyUUID, 1);
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(_bobVote);
+            expectedVotes.Add(_joeVote);
+            expectedVotes.Add(_otherVote);
+            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
+        }
+
 
         #endregion
 
