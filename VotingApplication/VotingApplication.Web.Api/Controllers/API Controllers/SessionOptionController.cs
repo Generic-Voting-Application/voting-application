@@ -43,32 +43,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public virtual HttpResponseMessage Post(Guid sessionId, Option option)
         {
-            using (var context = _contextFactory.CreateContext())
-            {
-                if (option.Name == null || option.Name == "")
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Cannot create an option with a non-empty name");
-                }
-
-                Session matchingSession = context.Sessions.Where(s => s.UUID == sessionId).Include(s => s.Options).FirstOrDefault();
-                if (matchingSession == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
-                }
-
-                if (option.Sessions == null)
-                {
-                    option.Sessions = new List<Session>();
-                }
-
-                option.Sessions.Add(matchingSession);
-                matchingSession.Options.Add(option);
-
-                context.Options.Add(option);
-                context.SaveChanges();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, option.Id);
-            }
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
         }
 
         public virtual HttpResponseMessage Post(Guid sessionId, long optionId, Option option)

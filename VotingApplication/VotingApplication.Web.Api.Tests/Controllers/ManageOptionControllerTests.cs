@@ -140,7 +140,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, new Vote());
+            var response = _controller.Put(1, new Option());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -150,7 +150,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(_manageMainUUID, 1, new Vote());
+            var response = _controller.Put(_manageMainUUID, 1, new Option());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -161,20 +161,142 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region POST
 
         [TestMethod]
-        public void PostIsNotAllowed()
+        public void PostIsAllowed()
         {
             // Act
-            var response = _controller.Post(_manageMainUUID, new Vote());
+            var response = _controller.Post(_manageMainUUID, new Option() { Name = "Abc", Description = "Abc", Info = "Abc" });
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PostWithoutNameIsRejected()
+        {
+            // Act
+            var response = _controller.Post(_manageMainUUID, new Option() { Description = "Abc", Info = "Abc" });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Cannot create an option with a non-empty name", error.Message);
+        }
+
+        [TestMethod]
+        public void PostWithEmptyNameIsRejected()
+        {
+            // Act
+            var response = _controller.Post(_manageMainUUID, new Option() { Name = "", Description = "Abc", Info = "Abc" });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Cannot create an option with a non-empty name", error.Message);
+        }
+
+
+        [TestMethod]
+        public void PostWithoutDescriptionIsAccepted()
+        {
+            // Act
+            var response = _controller.Post(_manageMainUUID, new Option() { Name = "Abc", Info = "Abc" });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PostWithoutMoreInfoIsAccepted()
+        {
+            // Act
+            var response = _controller.Post(_manageMainUUID, new Option() { Name = "Abc", Description = "Abc" });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PostAddsOptionToOptionList()
+        {
+            // Act
+            Option newOption = new Option() { Name = "Bella Vista" };
+            _controller.Post(_manageMainUUID, newOption);
+
+            // Assert
+            List<Option> expectedOptions = new List<Option>();
+            expectedOptions.Add(_burgerOption);
+            expectedOptions.Add(_pizzaOption);
+            expectedOptions.Add(newOption);
+            CollectionAssert.AreEquivalent(expectedOptions, _dummyOptions.Local);
+        }
+
+        [TestMethod]
+        public void PostReturnsIdOfNewOption()
+        {
+            // Act
+            Option newOption = new Option() { Name = "Bella Vista" };
+            var response = _controller.Post(_manageMainUUID, newOption);
+
+            // Assert
+            long optionId = (long)((ObjectContent)response.Content).Value;
+            Assert.AreEqual(3, optionId);
+        }
+
+        [TestMethod]
+        public void PostSetsIdOfNewOption()
+        {
+            // Act
+            Option newOption = new Option() { Name = "Bella Vista" };
+            _controller.Post(_manageMainUUID, newOption);
+
+            // Assert
+            Assert.AreEqual(3, newOption.Id);
+        }
+
+
+        [TestMethod]
+        public void PostReturnsNotFoundForMissingSession()
+        {
+            // Act
+            Guid newGuid = Guid.NewGuid();
+            Option newOption = new Option() { Name = "Bella Vista" };
+            var response = _controller.Post(newGuid, newOption);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void PostAddsOptionToSession()
+        {
+            // Act
+            Option newOption = new Option() { Name = "Bella Vista" };
+            _controller.Post(_manageMainUUID, newOption);
+
+            // Assert
+            List<Option> expectedOptions = new List<Option>() { _burgerOption, _pizzaOption, newOption };
+            CollectionAssert.AreEquivalent(expectedOptions, _mainSession.Options);
+        }
+
+        [TestMethod]
+        public void PostAddsSessionToOptions()
+        {
+            // Act
+            Option newOption = new Option() { Name = "Bella Vista" };
+            _controller.Post(_manageMainUUID, newOption);
+
+            // Assert
+            List<Session> expectedSessions = new List<Session>() { _mainSession };
+            CollectionAssert.AreEquivalent(expectedSessions, newOption.Sessions);
         }
 
         [TestMethod]
         public void PostByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Post(_manageMainUUID, 1, new Vote());
+            var response = _controller.Post(_manageMainUUID, 1, new Option());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);

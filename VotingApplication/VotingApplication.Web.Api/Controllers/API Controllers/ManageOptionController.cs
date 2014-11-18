@@ -40,12 +40,38 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region POST
 
-        public virtual HttpResponseMessage Post(Guid manageId, Vote vote)
+        public virtual HttpResponseMessage Post(Guid manageId, Option option)
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
+            using (var context = _contextFactory.CreateContext())
+            {
+                if (option.Name == null || option.Name == "")
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Cannot create an option with a non-empty name");
+
+                }
+
+                Session matchingSession = context.Sessions.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
+                if (matchingSession == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", manageId));
+                }
+
+                if (option.Sessions == null)
+                {
+                    option.Sessions = new List<Session>();
+                }
+
+                matchingSession.Options.Add(option);
+                option.Sessions.Add(matchingSession);
+
+                context.Options.Add(option);
+                context.SaveChanges();
+
+                return this.Request.CreateResponse(HttpStatusCode.OK, option.Id);
+            }
         }
 
-        public virtual HttpResponseMessage Post(Guid manageId, long voteId, Vote vote)
+        public virtual HttpResponseMessage Post(Guid manageId, long voteId, Option option)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
         }
@@ -54,12 +80,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region PUT
 
-        public virtual HttpResponseMessage Put(Guid manageId, Vote vote)
+        public virtual HttpResponseMessage Put(Guid manageId, Option option)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT on this controller");
         }
 
-        public virtual HttpResponseMessage Put(Guid manageId, long voteId, Vote vote)
+        public virtual HttpResponseMessage Put(Guid manageId, long voteId, Option option)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT by id on this controller");
         }
