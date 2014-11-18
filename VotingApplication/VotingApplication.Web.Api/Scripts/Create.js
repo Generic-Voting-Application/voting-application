@@ -73,7 +73,7 @@
             }
         }
 
-        self.allTemplates = function () {
+        self.populateTemplates = function () {
             $.ajax({
                 type: 'GET',
                 url: '/api/optionset',
@@ -85,7 +85,7 @@
         }
         
         $(document).ready(function () {
-            self.allTemplates();
+            self.populateTemplates();
         });
     }
 

@@ -111,9 +111,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             MailMessage mail = new MailMessage(hostEmail, targetEmailAddress);
 
             string messageBody =
-                "Your poll is now created and ready to go!\n\n" +
-                "You can invite people to vote by giving them this link: http://voting-app.azurewebsites.net?poll=" + pollId + ".\n\n" +
-                "You can administer your poll at http://voting-app.azurewebsites.net?poll=" + manageId + ". Don't share this link around!";
+@"Your poll is now created and ready to go!
+
+You can invite people to vote by giving them this link: http://voting-app.azurewebsites.net?poll=" + pollId + @"
+
+You can administer your poll at http://voting-app.azurewebsites.net?manage=" + manageId + ". Don't share this link around!";
 
             mail.Subject = "Your poll is ready!";
             mail.Body = messageBody;
