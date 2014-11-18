@@ -3,81 +3,68 @@
     <div class="col-xs-8 centered">
         <!--Login Section-->
         <div class="accordion" id="accordion">
-            <div class="accordion-group panel panel-default">
-                <div class="accordion-heading panel-heading">
-                    <h5>Login</h5>
+            <div id="loginSection" class="accordion-group panel panel-default">
+                <div class="accordion-heading panel-heading clickable" data-bind="click: $root.showSection.bind($data, $element)">
+                    <h4>1. Login</h4>
                 </div>
-                <div id="loginSection" class="accordion-body panel-body collapse in">
-                    <div class="accordion-inner row">
-                        <div class="col-xs-4"></div>
-                        <div class="col-xs-4 centered form-group">
-                            <form>
-                                <label for="loginUsername" class="control-label">Username</label>
-                                <input id="loginUsername" class="form-control" autofocus />
-                                <label class="control-label info-message" id="usernameWarnMessage" hidden> Username must be alpha-numeric</label>
-                                <br />
-                                <button id="Name-loginSubmit" class="btn btn-primary" data-bind="click: $root.submitLogin">Login</button>
-                            </form>
-                        </div>
-                        <div class="col-xs-4"></div>
+                <div class="accordion-body panel-body collapse row">
+                    <div class="col-xs-4"></div>
+                    <div class="col-xs-4 centered form-group">
+                        <form>
+                            <label for="loginUsername" class="control-label">Username</label>
+                            <input id="loginUsername" class="form-control" autofocus />
+                            <label class="control-label info-message" id="usernameWarnMessage" hidden> Username must be alpha-numeric</label>
+                            <br />
+                            <button id="Name-loginSubmit" class="btn btn-primary" data-bind="click: $root.submitLogin">Login</button>
+                        </form>
                     </div>
+                    <div class="col-xs-4"></div>
                 </div>
             </div>
             <!--Voting Section-->
-            <div class="accordion-group panel panel-default">
-                <div class="accordion-heading panel-heading">
-                    <div class="accordion-heading panel-heading">
-                        <h5>Vote</h5>
-                    </div>
+            <div id="voteSection" class="accordion-group panel panel-default">
+                <div class="accordion-heading panel-heading clickable" data-bind="click: $root.showSection.bind($data, $element)">
+                    <h4>2. Vote</h4>
                 </div>
-                <div id="voteSection" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                        Voting stuff here
+                <div class="accordion-body panel-body collapse row">
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-10 centered">
+                        <table id="optionTable" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Description</th>
+                                    <th>More info</th>
+                                    <th>Vote</th>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: options">
+                                <tr>
+                                    <td data-bind="text: Name"></td>
+                                    <td data-bind="text: Description"></td>
+                                    <td data-bind="text: Info"></td>
+                                    <td><button class="btn btn-primary" data-bind="click: $parent.doVote">Vote</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
+                    <div class="col-xs-1"></div>
                 </div>
             </div>
-        </div>
-        <!--Results Section-->
-        <div class="accordion-group panel panel-default">
-            <div class="accordion-heading panel-heading">
-                <div class="accordion-heading panel-heading">
-                    <h5>Results</h5>
+            <!--Results Section-->
+            <div id="resultSection" class="accordion-group panel panel-default">
+                <div class="accordion-heading panel-heading clickable" data-bind="click: $root.showSection.bind($data, $element)">
+                    <h4>3. Results</h4>
                 </div>
-            </div>
-            <div id="resultSection" class="accordion-body collapse">
-                <div class="accordion-inner">
-                    Results here
+                <div class="accordion-body panel-body collapse row">
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-10 centered">
+                        <div id="bar-chart"></div>
+                    </div>
+                    <div class="col-xs-1"></div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!--<table id="inner-vote-table" class="table table-hover">
-        <thead>
-            <tr>
-                <th>Option</th>
-                <th>Description</th>
-                <th>More info</th>
-                <th>Vote</th>
-            </tr>
-        </thead>
-        <tbody data-bind="foreach: options">
-            <tr>
-                <td data-bind="text: Name"></td>
-                <td data-bind="text: Description"></td>
-                <td data-bind="text: Info"></td>
-                <td><button class="btn btn-primary">Vote</button></td>
-            </tr>
-        </tbody>
-        <tr id="newOptionRow">
-            <form>
-                <td><input class="form-control" id="newName" placeholder="Option" /></td>
-                <td><input class="form-control" id="newDescription" placeholder="Description" /></td>
-                <td><input class="form-control" id="newInfo" placeholder="More Info" /></td>
-                <td><button class="btn btn-primary" data-bind="">Add Option</button></td>
-            </form>
-        </tr>
-    </table>-->
-    <!--<a><button class="btn btn-primary">View Results</button></a>-->
     <div class="col-xs-2"></div>
 </div>

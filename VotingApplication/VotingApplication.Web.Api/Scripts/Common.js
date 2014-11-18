@@ -1,4 +1,26 @@
-﻿define([], function () {
+﻿define(['jquery'], function () {
+
+    // Checks if elements are collapsed
+    (function () {
+
+        $.fn.isCollapsed = function () {
+            var $this = $(this).find('.accordion-body').filter(':visible');
+            return $this ? !$this.parents().toArray().some(function (element) {
+                return !$(element).hasClass('in');
+            }) : false;
+        };
+
+        $.fn.collapseSection = function (collapse) {
+            if (($(this).isCollapsed() && collapse == 'hide')
+                || (!$(this).isCollapsed() && collapse == 'show'))
+            {
+                return;
+            }
+            
+            $(this).find('.accordion-body').collapse(collapse);
+        }
+    })();
+
     function Common() {
 
     }
