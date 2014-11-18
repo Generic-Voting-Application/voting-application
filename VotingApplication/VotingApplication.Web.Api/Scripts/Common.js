@@ -73,5 +73,11 @@
         localStorage["user"] = JSON.stringify({ id: userId, 'userName': userName, expires: expiryTime });
     }
 
+    Common.keyIsEnter = function (key, callback) {
+        if (key && key.keyCode == 13) {
+            callback();
+        }
+    }
+
     return Common;
 });

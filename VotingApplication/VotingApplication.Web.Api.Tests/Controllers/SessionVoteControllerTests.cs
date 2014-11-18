@@ -192,132 +192,23 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region DELETE
 
         [TestMethod]
-        public void DeleteIsAllowed()
+        public void DeleteIsNotAllowed()
         {
             // Act
             var response = _controller.Delete(_mainUUID);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
         }
 
         [TestMethod]
-        public void DeleteFromSessionWithNoVotesIsAllowed()
-        {
-            // Act
-            var response = _controller.Delete(_emptyUUID);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void DeleteFromMissingSessionIsNotFound()
-        {
-            // Act
-            Guid newGuid = Guid.NewGuid();
-            var response = _controller.Delete(newGuid);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
-        }
-
-        [TestMethod]
-        public void DeleteOnlyRemovesVotesFromMatchingSession()
-        {
-            // Act
-            var response = _controller.Delete(_mainUUID);
-
-            // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            expectedVotes.Add(_otherVote);
-            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
-        }
-
-        [TestMethod]
-        public void DeleteByIdIsAllowed()
+        public void DeleteByIdIsNotAllowed()
         {
             // Act
             var response = _controller.Delete(_mainUUID, 1);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void DeleteByIdRemovesMatchingVote()
-        {
-            // Act
-            var response = _controller.Delete(_mainUUID, 2);
-
-            // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            expectedVotes.Add(_bobVote);
-            expectedVotes.Add(_otherVote);
-            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
-        }
-
-        [TestMethod]
-        public void DeleteByIdOnMissingVoteIsAllowed()
-        {
-            // Act
-            var response = _controller.Delete(_mainUUID, 99);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void DeleteByIdOnMissingVoteDoesNotModifyVotes()
-        {
-            // Act
-            var response = _controller.Delete(_mainUUID, 99);
-
-            // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            expectedVotes.Add(_bobVote);
-            expectedVotes.Add(_joeVote);
-            expectedVotes.Add(_otherVote);
-            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
-        }
-
-        [TestMethod]
-        public void DeleteByIdOnMissingSessionIsNotFound()
-        {
-            // Act
-            Guid newGuid = Guid.NewGuid();
-            var response = _controller.Delete(newGuid, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
-        }
-
-        [TestMethod]
-        public void DeleteByIdOnVoteInOtherSessionIsAllowed()
-        {
-            // Act
-            var response = _controller.Delete(_emptyUUID, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void DeleteByIdOnVoteInOtherSessionDoesNotRemoveOtherVote()
-        {
-            // Act
-            var response = _controller.Delete(_emptyUUID, 1);
-
-            // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            expectedVotes.Add(_bobVote);
-            expectedVotes.Add(_joeVote);
-            expectedVotes.Add(_otherVote);
-            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
         }
 
         #endregion

@@ -36,8 +36,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             dummyOptionSets.Add(redOptionSet);
 
             UUIDs = new [] {Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()};
-            _mainSession = new Session() { UUID = UUIDs[0] };
-            _otherSession = new Session() { UUID = UUIDs[1] };
+            _mainSession = new Session() { UUID = UUIDs[0], ManageID = Guid.NewGuid() };
+            _otherSession = new Session() { UUID = UUIDs[1], ManageID = Guid.NewGuid() };
 
             _dummySessions = new InMemoryDbSet<Session>(true);
             _dummySessions.Add(_mainSession);
@@ -66,29 +66,15 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region GET
 
         [TestMethod]
-        public void GetIsAllowed()
+        public void GetIsNotAllowed()
         {
             // Act
             var response = _controller.Get();
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
         }
-
-        [TestMethod]
-        public void GetFetchesAllSessions()
-        {
-            // Act
-            var response = _controller.Get();
-
-            // Assert
-            List<Session> responseSessions = ((ObjectContent)response.Content).Value as List<Session>;
-            List<Session> expectedSessions = new List<Session>();
-            expectedSessions.Add(_mainSession);
-            expectedSessions.Add(_otherSession);
-            CollectionAssert.AreEquivalent(expectedSessions, responseSessions);
-        }
-
+        
         [TestMethod]
         public void GetByIdIsAllowed()
         {
@@ -121,6 +107,17 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Session responseSession = ((ObjectContent)response.Content).Value as Session;
             Assert.AreEqual(_otherSession, responseSession);
+        }
+
+        [TestMethod]
+        public void GetByIdDoesNotIncludeManageId()
+        {
+            // Act
+            var response = _controller.Get(UUIDs[0]);
+
+            // Assert
+            Session responseSession = ((ObjectContent)response.Content).Value as Session;
+            Assert.AreEqual(Guid.Empty, responseSession.ManageID);
         }
 
         #endregion

@@ -71,46 +71,14 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region DELETE
 
-        [BasicAuthenticator(realm: "GVA")]
         public virtual HttpResponseMessage Delete(Guid sessionId)
         {
-            using (var context = _contextFactory.CreateContext())
-            {
-                Session matchingSession = context.Sessions.Where(s => s.UUID == sessionId).FirstOrDefault();
-                if (matchingSession == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
-                }
-
-                List<Vote> votesInSession = context.Votes.Where(v => v.SessionId == sessionId).ToList();
-                foreach (Vote vote in votesInSession)
-                {
-                    context.Votes.Remove(vote);
-                }
-
-                context.SaveChanges();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK);
-            }
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
         }
 
-        [BasicAuthenticator(realm: "GVA")]
         public virtual HttpResponseMessage Delete(Guid sessionId, long voteId)
         {
-            using (var context = _contextFactory.CreateContext())
-            {
-                Session matchingSession = context.Sessions.Where(s => s.UUID == sessionId).FirstOrDefault();
-                if (matchingSession == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
-                }
-
-                Vote matchingVote = context.Votes.Where(v => v.Id == voteId && v.SessionId == sessionId).FirstOrDefault();
-                context.Votes.Remove(matchingVote);
-                context.SaveChanges();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK);
-            }
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE by id on this controller");
         }
 
         #endregion
