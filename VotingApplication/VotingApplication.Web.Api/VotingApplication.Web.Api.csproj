@@ -263,16 +263,16 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\API Controllers\AccountController.cs" />
+    <Compile Include="Controllers\API Controllers\ManageOptionController.cs" />
+    <Compile Include="Controllers\API Controllers\ManageVoteController.cs" />
     <Compile Include="Controllers\API Controllers\OptionSetController.cs" />
     <Compile Include="Controllers\API Controllers\SessionController.cs" />
     <Compile Include="Controllers\API Controllers\SessionOptionController.cs" />
     <Compile Include="Controllers\API Controllers\SessionVoteController.cs" />
     <Compile Include="Controllers\API Controllers\UserSessionVoteController.cs" />
-    <Compile Include="Controllers\Web Controllers\VoteController.cs" />
     <Compile Include="Controllers\Web Controllers\AdminController.cs" />
     <Compile Include="Controllers\Web Controllers\HomeController.cs" />
     <Compile Include="Controllers\API Controllers\OptionController.cs" />
-    <Compile Include="Controllers\Web Controllers\ResultController.cs" />
     <Compile Include="Controllers\API Controllers\UserController.cs" />
     <Compile Include="Controllers\API Controllers\UserVoteController.cs" />
     <Compile Include="Controllers\API Controllers\VoteController.cs" />
@@ -296,6 +296,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
+    <Content Include="img\poll.jpg" />
+    <Content Include="Partials\CheckEmail.html" />
+    <Content Include="Scripts\Create.js" />
+    <Content Include="Scripts\Lib\bootstrap.min.js" />
+    <Content Include="Scripts\Lib\crossfilter.min.js" />
+    <Content Include="Scripts\Lib\d3.min.js" />
+    <Content Include="Scripts\Lib\insight.min.js" />
     <Content Include="Scripts\Lib\jquery-2.1.1.min.js" />
     <Content Include="Scripts\Lib\knockout-3.2.0.js" />
     <Content Include="Scripts\Main.js" />
@@ -333,14 +340,17 @@
     <None Include="Properties\PublishProfiles\voting-application - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\voting-application - Web Deploy.pubxml" />
     <Content Include="Scripts\Lib\require.js" />
+    <Content Include="Scripts\Manage.js" />
+    <Content Include="Scripts\Poll.js" />
     <Content Include="Scripts\SocketClient.js" />
     <Content Include="Scripts\Admin.js" />
     <Content Include="Scripts\Common.js" />
     <Content Include="Scripts\Home.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\Vote.js" />
-    <Content Include="Scripts\Results.js" />
+    <Content Include="Partials\Create.html" />
+    <Content Include="Partials\Manage.html" />
+    <Content Include="Partials\Poll.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -355,9 +365,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Result\Index.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Vote\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VotingApplication.Data\VotingApplication.Data.csproj">
@@ -384,6 +392,7 @@
       <DependentUpon>201411131002169_v0.2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
