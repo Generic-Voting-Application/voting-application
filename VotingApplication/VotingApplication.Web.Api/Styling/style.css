@@ -24,6 +24,13 @@ h2 {
 }
 
 input, select {
+    margin-bottom:15px;
+    width:100%;
+    border-width: 1px;
+}
+
+label {
+    margin-bottom:0px;
     width:100%;
 }
 
@@ -46,4 +53,21 @@ th:first-child {
 
 th:last-child {
     width:10%;
+}
+
+/* To stop the option caption being selectable. Surprised Knockout doesn't already do this. */
+option:first-child {
+    display:none;
+}
+
+.error {
+    border-color: red;
+    border-width: 2px;
+}
+
+.error-message {
+    font-size:small;
+    color:red;
+    position:relative;
+    top:-15px;
 }

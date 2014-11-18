@@ -7,6 +7,8 @@ using System.Net.Http;
 using System.Web;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using System.Net.Mail;
+using System.Web.Configuration;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -74,11 +76,57 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 }
 
                 newSession.UUID = Guid.NewGuid();
+                newSession.ManageID = Guid.NewGuid();
+
+                string targetEmail = newSession.Email;
+                newSession.Email = null; // Don't store email longer than we need to
+
+                SendEmail(targetEmail, newSession.UUID, newSession.ManageID);
 
                 context.Sessions.Add(newSession);
                 context.SaveChanges();
 
                 return this.Request.CreateResponse(HttpStatusCode.OK, newSession.UUID);
+            }
+        }
+
+        private void SendEmail(string targetEmailAddress, Guid pollId, Guid manageId)
+        {
+            string hostEmail = WebConfigurationManager.AppSettings["HostEmail"];
+            string hostPassword = WebConfigurationManager.AppSettings["HostPassword"];
+
+            if (hostEmail == null || hostPassword == null)
+            {
+                return;
+            }
+
+            SmtpClient client = new SmtpClient();
+            client.Port = 25;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
+            client.Host = "outlook.office365.com";
+            client.EnableSsl = true;
+            client.Credentials = new NetworkCredential(hostEmail, hostPassword);
+
+            MailMessage mail = new MailMessage(hostEmail, targetEmailAddress);
+
+            string messageBody =
+@"Your poll is now created and ready to go!
+
+You can invite people to vote by giving them this link: http://voting-app.azurewebsites.net?poll=" + pollId + @"
+
+You can administer your poll at http://voting-app.azurewebsites.net?manage=" + manageId + ". Don't share this link around!";
+
+            mail.Subject = "Your poll is ready!";
+            mail.Body = messageBody;
+
+            try
+            {
+                client.Send(mail);
+            }
+            catch (SmtpException e)
+            {
+                // Do nothing
             }
         }
 
