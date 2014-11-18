@@ -3,14 +3,18 @@
         var self = this;
 
         self.options = ko.observableArray();
+        self.pollName = ko.observable("Poll Name");
+        self.pollCreator = ko.observable("Poll Creator");
 
-        var getOptions = function (pollId) {
+        var getPollDetails = function (pollId) {
             $.ajax({
                 type: 'GET',
-                url: "/api/session/" + pollId + "/option",
+                url: "/api/session/" + pollId,
 
                 success: function (data) {
-                    self.options(data);
+                    self.pollName(data.Name);
+                    self.pollCreator(data.Creator);
+                    self.options(data.Options);
                 }
             });
         }
@@ -195,10 +199,9 @@
             self.pollId = Common.getPollId()
             self.userId = Common.currentUserId();
 
-            getOptions(self.pollId);
+            getPollDetails(self.pollId);
 
             if (self.userId) {
-                debugger;
                 $('#loginUsername').val(Common.currentUserName());
                 showSection($('#voteSection'));
             } else {
