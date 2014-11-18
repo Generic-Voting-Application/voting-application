@@ -238,7 +238,29 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Post(newSession);
 
             // Assert
-            Assert.AreNotEqual(Guid.Empty, newSession.Id);
+            Assert.AreNotEqual(Guid.Empty, newSession.UUID);
+        }
+
+        [TestMethod]
+        public void PostAssignsSessionManageID()
+        {
+            // Act
+            Session newSession = new Session() { Name = "New Session" };
+            _controller.Post(newSession);
+
+            // Assert
+            Assert.AreNotEqual(Guid.Empty, newSession.ManageID);
+        }
+
+        [TestMethod]
+        public void PostAssignsSessionManageIDDifferentFromPollId()
+        {
+            // Act
+            Session newSession = new Session() { Name = "New Session" };
+            _controller.Post(newSession);
+
+            // Assert
+            Assert.AreNotEqual(newSession.UUID, newSession.ManageID);
         }
 
         [TestMethod]
