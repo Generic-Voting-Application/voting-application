@@ -1,1 +1,50 @@
-﻿<h1>Manage</h1>
+﻿<div class="col-xs-3"></div>
+<div class="col-xs-6">
+    <div class="text-center">
+        <button class="btn btn-primary" id="reset-votes" data-bind="click: $root.resetVotes">Reset Vote</button>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Option</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: votes">
+            <tr>
+                <td data-bind="text: User.Name"></td>
+                <td data-bind="text: Option.Name"></td>
+                <td class="delete-vote-row"><button class="btn btn-danger" data-bind="click: $parent.deleteVote.bind()">Delete Vote</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Option</th>
+                <th>Description</th>
+                <th>More info</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: options">
+            <tr>
+                <td data-bind="text: Name"></td>
+                <td data-bind="text: Description"></td>
+                <td data-bind="text: Info"></td>
+                <td><button class="btn btn-danger" data-bind="click: $root.deleteOption.bind()" data-toggle="modal" data-target="#deleteOptionModal">Delete</button></td>
+            </tr>
+        </tbody>
+        <tr id="newOptionRow">
+            <form>
+                <td><input class="form-control" id="newName" placeholder="Option" /></td>
+                <td><input class="form-control" id="newDescription" placeholder="Description" /></td>
+                <td><input class="form-control" id="newInfo" placeholder="More Info" /></td>
+                <td><button type="submit" class="btn btn-primary" data-bind="click: $root.addOption.bind()">Add Option</button></td>
+            </form>
+        </tr>
+    </table>
+</div>
+<div class="col-xs-3"></div>

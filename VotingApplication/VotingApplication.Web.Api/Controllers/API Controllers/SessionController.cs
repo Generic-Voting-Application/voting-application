@@ -21,10 +21,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public override HttpResponseMessage Get()
         {
-            using (var context = _contextFactory.CreateContext())
-            {
-                return this.Request.CreateResponse(HttpStatusCode.OK, context.Sessions.Include(s => s.Options).ToList());
-            }
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET on this controller");
         }
 
         public virtual HttpResponseMessage Get(Guid id)
@@ -36,6 +33,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", id));
                 }
+
+                // Hide the manageID to prevent a GET on the poll ID from giving Poll Creator access
+                matchingSession.ManageID = Guid.Empty;
 
                 return this.Request.CreateResponse(HttpStatusCode.OK, matchingSession);
             }
