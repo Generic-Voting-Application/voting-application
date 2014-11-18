@@ -115,7 +115,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
 You can invite people to vote by giving them this link: http://voting-app.azurewebsites.net?poll=" + pollId + @"
 
-You can administer your poll at http://voting-app.azurewebsites.net?poll=" + manageId + ". Don't share this link around!";
+You can administer your poll at http://voting-app.azurewebsites.net?manage=" + manageId + ". Don't share this link around!";
 
             mail.Subject = "Your poll is ready!";
             mail.Body = messageBody;
