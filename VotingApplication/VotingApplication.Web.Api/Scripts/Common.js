@@ -41,5 +41,11 @@
         return undefined;
     }
 
+    Common.keyIsEnter = function (key, callback) {
+        if (key && key.keyCode == 13) {
+            callback();
+        }
+    }
+
     return Common;
 });

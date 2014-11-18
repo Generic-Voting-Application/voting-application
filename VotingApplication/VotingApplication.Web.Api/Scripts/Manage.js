@@ -20,6 +20,38 @@
             });
         }
 
+        self.addOption = function () {
+            //Don't submit without an entry in the name field
+            if ($("#newName").val() == "") {
+                return;
+            }
+
+            var newName = $("#newName").val();
+            var newDescription = $("#newDescription").val()
+            var newInfo = $("#newInfo").val()
+
+            //Reset before posting, to prevent double posts.
+            $("#newName").val("")
+            $("#newDescription").val("")
+            $("#newInfo").val("")
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/manage/' + manageId + '/option',
+                contentType: 'application/json',
+
+                data: JSON.stringify({
+                    Name: newName,
+                    Description: newDescription,
+                    Info: newInfo
+                }),
+
+                success: function () {
+                    self.populateOptions();
+                }
+            })
+        }
+
         self.deleteVote = function (data, event) {
             $.ajax({
                 type: 'DELETE',
@@ -73,6 +105,9 @@
 
             self.populateVotes();
             self.populateOptions();
+
+            //Add option on pressing return key
+            $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
         });
     }
 
