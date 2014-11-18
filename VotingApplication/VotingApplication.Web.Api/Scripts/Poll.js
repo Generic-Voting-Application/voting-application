@@ -52,19 +52,20 @@
         }
 
         var drawChart = function (data) {
+            // Hack to fix insight's lack of data reloading
+            $('#bar-chart').html('');
             var voteData = new insight.DataSet(data);
 
-            if (!self.chart) {
-                self.chart = new insight.Chart('', '#bar-chart')
-                .width(450)
-                .height(data.length * 50 + 100);
-            }
+            var chart = new insight.Chart('', '#bar-chart')
+            .width(450)
+            .height(data.length * 50 + 100);
+
             var xAxis = new insight.Axis('Votes', insight.scales.linear)
                 .tickFrequency(1);
             var yAxis = new insight.Axis('', insight.scales.ordinal)
                 .isOrdered(true);
-            self.chart.xAxis(xAxis);
-            self.chart.yAxis(yAxis);
+            chart.xAxis(xAxis);
+            chart.yAxis(yAxis);
 
             var series = new insight.RowSeries('votes', voteData, xAxis, yAxis)
             .keyFunction(function (d) {
@@ -84,14 +85,20 @@
                 }
             });
 
-            self.chart.series([series]);
+            chart.series([series]);
 
-            self.chart.draw();
+            chart.draw();
+        }
+
+        var clearOptionHighlighting = function () {
+            $("#optionTable > tbody > tr").removeClass("success");
         }
 
         var highlightOption = function (optionId) {
-            var optionRows = $("#optionTable > tbody > tr")
-            optionRows.removeClass("success");
+
+            clearOptionHighlighting();
+
+            var optionRows = $("#optionTable > tbody > tr");
             var option = self.options().filter(function (d) { return d.Id == optionId }).pop();
             var optionRowIndex = self.options().indexOf(option);
 
@@ -106,7 +113,12 @@
                 contentType: 'application/json',
 
                 success: function (data) {
-                    highlightOption(data[0].OptionId);
+                    if (data[0]) {
+                        highlightOption(data[0].OptionId);
+                    }
+                    else {
+                        clearOptionHighlighting();
+                    }
                 }
             });
         }
@@ -115,8 +127,11 @@
             var siblings = element.siblings();
             for (var i = 0; i < siblings.length; i++) {
                 $(siblings[i]).collapseSection('hide');
+                $(siblings[i]).removeClass('panel-primary')
+
             }
-            element.collapseSection('show')
+            element.collapseSection('show');
+            element.addClass('panel-primary');
         }
 
         self.showSection = function (data, event) {
@@ -124,19 +139,18 @@
         }
 
         self.submitLogin = function (data, event) {
+            var username = $("#loginUsername").val()
             $.ajax({
                 type: 'PUT',
                 url: '/api/user',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    Name: $("#loginUsername").val()
+                    Name: username
                 }),
 
                 success: function (data) {
-                    //Expire in 6 hours
-                    var expiryTime = Date.now() + (6 * 60 * 60 * 1000)
+                    Common.loginUser(data, username);
                     self.userId = data;
-                    localStorage["userId"] = JSON.stringify({ id: self.userId, expires: expiryTime });
                     showSection($('#voteSection'));
                 },
 
@@ -144,7 +158,7 @@
                     if (jqXHR.status == 400) {
                         $('#loginSection').addClass("has-error");
                         $('#usernameWarnMessage').show();
-                        
+
                     }
                 }
             });
@@ -184,6 +198,8 @@
             getOptions(self.pollId);
 
             if (self.userId) {
+                debugger;
+                $('#loginUsername').val(Common.currentUserName());
                 showSection($('#voteSection'));
             } else {
                 showSection($('#loginSection'));

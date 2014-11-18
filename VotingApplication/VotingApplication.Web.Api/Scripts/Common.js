@@ -48,12 +48,12 @@
     }
 
     Common.currentUserId = function () {
-        var localUserJSON = localStorage["userId"];
+        var localUserJSON = localStorage["user"];
 
         if (localUserJSON) {
             var localUser = $.parseJSON(localUserJSON);
             if (localUser.expires < Date.now()) {
-                localStorage.removeItem("userId");
+                localStorage.removeItem("user");
             }
             else {
                 return localUser.id;
@@ -61,6 +61,16 @@
         }
 
         return undefined;
+    }
+
+    Common.currentUserName = function () {
+        return $.parseJSON(localStorage["user"]).userName;
+    }
+
+    Common.loginUser = function (userId, userName) {
+        //Expire in 6 hours
+        var expiryTime = Date.now() + (6 * 60 * 60 * 1000);
+        localStorage["user"] = JSON.stringify({ id: userId, 'userName': userName, expires: expiryTime });
     }
 
     return Common;
