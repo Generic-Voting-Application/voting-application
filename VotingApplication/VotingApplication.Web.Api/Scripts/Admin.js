@@ -73,7 +73,7 @@
 
         self.submitSession = function () {
             sessionId = $("#session-select").val();
-            window.location = "?session=" + sessionId;
+            window.location = "?poll=" + sessionId;
         }
 
         self.allSessions = function () {
@@ -126,7 +126,7 @@
         }
 
         $(document).ready(function () {
-            sessionId = Common.getSessionId();
+            sessionId = Common.getPollId();
 
             if (!sessionId) {
                 self.allSessions();

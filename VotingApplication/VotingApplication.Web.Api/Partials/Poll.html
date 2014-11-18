@@ -1,0 +1,70 @@
+﻿<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8 centered">
+        <!--Login Section-->
+        <div class="accordion" id="accordion">
+            <div id="loginSection" class="accordion-group panel panel-default">
+                <div class="accordion-heading panel-heading clickable" data-bind="click: $root.showSection.bind($data, $element)">
+                    <h4>Login</h4>
+                </div>
+                <div class="accordion-body panel-body collapse row">
+                    <div class="col-xs-4"></div>
+                    <div class="col-xs-4 centered form-group">
+                        <form>
+                            <label for="loginUsername" class="control-label">Username</label>
+                            <input id="loginUsername" class="form-control" autofocus />
+                            <label class="control-label info-message" id="usernameWarnMessage" hidden> Username must be alpha-numeric</label>
+                            <br />
+                            <button id="Name-loginSubmit" class="btn btn-primary" data-bind="click: $root.submitLogin">Login</button>
+                        </form>
+                    </div>
+                    <div class="col-xs-4"></div>
+                </div>
+            </div>
+            <!--Voting Section-->
+            <div id="voteSection" class="accordion-group panel panel-default">
+                <div class="accordion-heading panel-heading clickable" data-bind="click: $root.showSection.bind($data, $element)">
+                    <h4>Vote</h4>
+                </div>
+                <div class="accordion-body panel-body collapse row">
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-10 centered">
+                        <table id="optionTable" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Description</th>
+                                    <th>More info</th>
+                                    <th>Vote</th>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: options">
+                                <tr>
+                                    <td data-bind="text: Name"></td>
+                                    <td data-bind="text: Description"></td>
+                                    <td data-bind="text: Info"></td>
+                                    <td><button class="btn btn-primary" data-bind="click: $parent.doVote">Vote</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-xs-1"></div>
+                </div>
+            </div>
+            <!--Results Section-->
+            <div id="resultSection" class="accordion-group panel panel-default">
+                <div class="accordion-heading panel-heading clickable" data-bind="click: $root.showSection.bind($data, $element)">
+                    <h4>Results</h4>
+                </div>
+                <div class="accordion-body panel-body collapse row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10 centered">
+                        <div id="bar-chart"></div>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+</div>

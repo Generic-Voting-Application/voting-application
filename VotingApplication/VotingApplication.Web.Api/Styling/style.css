@@ -1,5 +1,6 @@
 ﻿@import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css";
 @import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css";
+@import "//cdnjs.cloudflare.com/ajax/libs/insightjs/1.2.0/insight.min.css";
 
 body {
     padding-top: 50px;
@@ -23,12 +24,20 @@ h2 {
     text-align:center;
 }
 
+h4 {
+    font-weight: bold;
+}
+
 input, select {
     width:100%;
 }
 
 label.info-message {
     font-size:small;
+}
+
+.clickable {
+    cursor: pointer;
 }
 
 #reset-votes, #save-options-as {
@@ -46,4 +55,22 @@ th:first-child {
 
 th:last-child {
     width:10%;
+}
+
+.accordion-group {
+    margin: 0px;
+    border-radius: 0px;
+    overflow:hidden
+}
+
+.accordion-group:first-child {
+    border-radius: 10px 10px 0px 0px;
+}
+
+.accordion-group:last-child {
+    border-radius: 0px 0px 10px 10px;
+}
+
+.accordion-heading {
+    border-radius: 0px;
 }

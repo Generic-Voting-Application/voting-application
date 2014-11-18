@@ -2,43 +2,5 @@
     <h1>Generic Voting Application</h1>
 </div>
 <div class="row">
-    <div id="sessions" hidden>
-        <div class="col-xs-4"></div>
-        <div class="col-xs-3 centered">
-            <label for="session-select">Session</label>
-            <br />
-            <select id="session-select" data-bind="options: sessions, optionsText: 'Name', optionsValue: 'UUID'"></select>
-            <br />
-            <br />
-            <button type="submit" class="btn btn-primary" data-bind="click: $root.submitSession.bind()">Go</button>
-            <h2>- OR -</h2>
-            <br />
-            <form>
-                <p>
-                <label for="session-create">Create a session</label>
-                <br />
-                <input id="session-create" placeholder="Name" />
-                    </p>
-                <p>
-                    <label for="optionset-select">Default Options</label>
-                    <select id="optionset-select" data-bind="options: optionSets, optionsText: 'Name', optionsValue: 'Id'"></select>
-                </p>
-                <button type="submit" class="btn btn-primary" data-bind="click: $root.createSession.bind()">Create Session</button>
-            </form>
-        </div>
-        <div class="col-xs-5"></div>
-    </div>
-    <div id="login-box" hidden>
-        <div class="col-xs-4"></div>
-        <div class="col-xs-4 centered form-group" id="loginForm">
-            <form>
-                <label for="Name" class="control-label">Username</label>
-                <input id="Name" class="form-control" />
-                <label class="control-label info-message" id="usernameWarnMessage" hidden> Username must be alpha-numeric</label>
-                <br />
-                <button id="Name-submit" type="submit" class="btn btn-primary" data-bind="click: $root.submitLogin">Login</button>
-            </form>
-        </div>
-        <div class="col-xs-4"></div>
-    </div>
+    <div id="content"></div>
 </div>
