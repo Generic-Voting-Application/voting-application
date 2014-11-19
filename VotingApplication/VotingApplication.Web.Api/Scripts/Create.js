@@ -24,7 +24,8 @@
             var pollName = $("#poll-name").val();
             var email = $("#email").val();
             var templateId = $("#template").val();
-
+            var invites = $("#invites").val();
+            
             $.ajax({
                 type: 'POST',
                 url: '/api/session',
@@ -34,6 +35,7 @@
                     Name: pollName,
                     Creator: creatorName,
                     Email: email,
+                    Invites: invites.split('\n'),
                     optionSetId: templateId
                 }),
 
@@ -83,7 +85,7 @@
                 }
             })
         }
-        
+
         $(document).ready(function () {
             self.populateTemplates();
         });
