@@ -80,11 +80,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 newSession.UUID = Guid.NewGuid();
                 newSession.ManageID = Guid.NewGuid();
 
-                string targetEmail = newSession.Email;
-                newSession.Email = null; // Don't store email longer than we need to
+                string creatorEmail = newSession.Email;
+                List<string> invitations = newSession.Invites ?? new List<string>();
+
 
                 // Do the long-running SendEmail task in a different thread, so we can return early
-                Thread newThread = new Thread(new ThreadStart(() => SendEmail(targetEmail, newSession.UUID, newSession.ManageID)));
+                Thread newThread = new Thread(new ThreadStart(() => SendEmails(creatorEmail, invitations, newSession)));
                 newThread.Start();
 
                 context.Sessions.Add(newSession);
@@ -94,7 +95,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
-        private void SendEmail(string targetEmailAddress, Guid pollId, Guid manageId)
+        private void SendEmails(string creatorEmail, List<string> invitations, Session session)
         {
             string hostEmail = WebConfigurationManager.AppSettings["HostEmail"];
             string hostPassword = WebConfigurationManager.AppSettings["HostPassword"];
@@ -112,26 +113,47 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             client.EnableSsl = true;
             client.Credentials = new NetworkCredential(hostEmail, hostPassword);
 
+            SendCreateEmail(client, creatorEmail, session);
+            foreach (string inviteEmail in invitations)
+            {
+                SendVoteEmail(client, inviteEmail, session);
+            }
+        }
+
+        private void SendCreateEmail(SmtpClient client, string targetEmailAddress, Session session)
+        {
+            string hostEmail = WebConfigurationManager.AppSettings["HostEmail"];
+
             MailMessage mail = new MailMessage(hostEmail, targetEmailAddress);
 
             string messageBody =
 @"Your poll is now created and ready to go!
 
-You can invite people to vote by giving them this link: http://voting-app.azurewebsites.net?poll=" + pollId + @"
+You can invite people to vote by giving them this link: http://voting-app.azurewebsites.net?poll=" + session.UUID + @"
 
-You can administer your poll at http://voting-app.azurewebsites.net?manage=" + manageId + ". Don't share this link around!";
+You can administer your poll at http://voting-app.azurewebsites.net?manage=" + session.ManageID + ". Don't share this link around!";
 
             mail.Subject = "Your poll is ready!";
             mail.Body = messageBody;
 
-            try
-            {
-                client.SendMailAsync(mail);
-            }
-            catch (SmtpException)
-            {
-                // Do nothing
-            }
+            client.Send(mail);
+        }
+
+        private void SendVoteEmail(SmtpClient client, string targetEmailAddress, Session session)
+        {
+            string hostEmail = WebConfigurationManager.AppSettings["HostEmail"];
+
+            MailMessage mail = new MailMessage(hostEmail, targetEmailAddress);
+
+            string messageBody =
+@"You've been invited by " + session.Creator + " to vote on " + session.Name + @".
+
+Have your say at: http://voting-app.azurewebsites.net?poll=" + session.UUID + "!";
+
+            mail.Subject = "Have your say!";
+            mail.Body = messageBody;
+
+            client.Send(mail);
         }
 
         public virtual HttpResponseMessage Post(Guid id, Session newSession)

@@ -13,13 +13,6 @@ body {
     padding-right: 15px;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
-}
-
 h2 {
     text-align:center;
 }
@@ -28,10 +21,11 @@ h4 {
     font-weight: bold;
 }
 
-input, select {
+input, select, textarea {
     margin-bottom:15px;
     width:100%;
     border-width: 1px;
+    max-width:100%;
 }
 
 label {
@@ -41,6 +35,8 @@ label {
 
 label.info-message {
     font-size:small;
+    position:relative;
+    top:-15px;
 }
 
 .clickable {
