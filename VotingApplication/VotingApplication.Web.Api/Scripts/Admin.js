@@ -21,7 +21,7 @@
                     self.populateVotes();
                 }
             });
-        }
+        };
 
         self.deleteVote = function (data, event) {
             $.ajax({
@@ -33,7 +33,7 @@
                     self.populateVotes();
                 }
             });
-        }
+        };
 
         self.populateSession = function () {
             $.ajax({
@@ -45,8 +45,8 @@
                     self.optionSetName(data.Name);
                     self.populateOptions();
                 }
-            })
-        }
+            });
+        };
 
         self.populateOptions = function () {
             $.ajax({
@@ -56,8 +56,8 @@
                 success: function (data) {
                     self.options(data);
                 }
-            })
-        }
+            });
+        };
 
         self.populateVotes = function () {
             $.ajax({
@@ -69,12 +69,12 @@
                     self.votes(data);
                 }
             });
-        }
+        };
 
         self.submitSession = function () {
             sessionId = $("#session-select").val();
             window.location = "?poll=" + sessionId;
-        }
+        };
 
         self.allSessions = function () {
             $.ajax({
@@ -84,8 +84,8 @@
                 success: function (data) {
                     self.sessions(data);
                 }
-            })
-        }
+            });
+        };
 
         self.deleteOption = function (data, event) {
             $.ajax({
@@ -98,7 +98,7 @@
                     self.populateVotes();
                 }
             });
-        }
+        };
 
         self.publishSession = function () {
             $.ajax({
@@ -111,7 +111,7 @@
                     self.populateOptions();
                 }
             });
-        }
+        };
 
         self.createOptionSet = function () {
             $.ajax({
@@ -123,7 +123,7 @@
                     Options: self.options()
                 }),
             });
-        }
+        };
 
         $(document).ready(function () {
             sessionId = Common.getPollId();

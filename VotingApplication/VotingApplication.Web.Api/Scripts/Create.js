@@ -17,7 +17,7 @@
                 return;
             }
 
-            $("#poll-create-btn").attr('disabled', 'disabled')
+            $("#poll-create-btn").attr('disabled', 'disabled');
             $("#poll-create-btn").text('Creating...');
 
             var creatorName = $("#poll-creator").val();
@@ -39,13 +39,13 @@
                     optionSetId: templateId
                 }),
 
-                success: function() {
+                success: function () {
                     self.sessionCreated();
                 }
             });
         };
 
-        self.sessionCreated = function() {
+        self.sessionCreated = function () {
             // Load partial HTML
             $.ajax({
                 type: 'GET',
@@ -55,8 +55,8 @@
                 success: function (data) {
                     $("#content").html(data);
                 }
-            })
-        }
+            });
+        };
 
         self.validateField = function (field) {
             var inputField = $(field).find('input')[0];
@@ -73,7 +73,7 @@
             else {
                 $(inputField).removeClass('error');
             }
-        }
+        };
 
         self.populateTemplates = function () {
             $.ajax({
@@ -83,8 +83,8 @@
                 success: function (data) {
                     self.templates(data);
                 }
-            })
-        }
+            });
+        };
 
         $(document).ready(function () {
             self.populateTemplates();

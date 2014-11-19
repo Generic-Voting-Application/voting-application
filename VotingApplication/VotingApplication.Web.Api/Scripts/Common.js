@@ -11,14 +11,12 @@
         };
 
         $.fn.collapseSection = function (collapse) {
-            if (($(this).isCollapsed() && collapse == 'hide')
-                || (!$(this).isCollapsed() && collapse == 'show'))
-            {
+            if (($(this).isCollapsed() && collapse == 'hide') || (!$(this).isCollapsed() && collapse == 'show')) {
                 return;
             }
-            
+
             $(this).find('.accordion-body').collapse(collapse);
-        }
+        };
     })();
 
     function Common() {
@@ -33,19 +31,19 @@
             result[item[0]] = decodeURIComponent(item[1]);
         });
         return result;
-    }
+    };
 
     Common.getPollId = function () {
         var windowArgs = Common.getJsonFromUrl();
         sessionId = windowArgs['poll'];
         return sessionId;
-    }
+    };
 
     Common.getManageId = function () {
         var windowArgs = Common.getJsonFromUrl();
         sessionId = windowArgs['manage'];
         return sessionId;
-    }
+    };
 
     Common.currentUserId = function () {
         var localUserJSON = localStorage["user"];
@@ -61,23 +59,23 @@
         }
 
         return undefined;
-    }
+    };
 
     Common.currentUserName = function () {
         return $.parseJSON(localStorage["user"]).userName;
-    }
+    };
 
     Common.loginUser = function (userId, userName) {
         //Expire in 6 hours
         var expiryTime = Date.now() + (6 * 60 * 60 * 1000);
         localStorage["user"] = JSON.stringify({ id: userId, 'userName': userName, expires: expiryTime });
-    }
+    };
 
     Common.keyIsEnter = function (key, callback) {
         if (key && key.keyCode == 13) {
             callback();
         }
-    }
+    };
 
     return Common;
 });

@@ -14,7 +14,7 @@ body {
 }
 
 h2 {
-    text-align:center;
+    text-align: center;
 }
 
 h4 {
@@ -22,15 +22,15 @@ h4 {
 }
 
 input, select, textarea {
-    margin-bottom:15px;
-    width:100%;
+    margin-bottom: 15px;
+    width: 100%;
     border-width: 1px;
-    max-width:100%;
+    max-width: 100%;
 }
 
 label {
-    margin-bottom:0px;
-    width:100%;
+    margin-bottom: 0px;
+    width: 100%;
 }
 
 label.info-message {
@@ -44,26 +44,26 @@ label.info-message {
 }
 
 #reset-votes, #save-options-as {
-    width:150px;
-    height:40px;
+    width: 150px;
+    height: 40px;
 }
 
 #delete-vote-row {
-    align-content:flex-end
+    align-content: flex-end;
 }
 
 th:first-child {
-    width:25%;
+    width: 25%;
 }
 
 th:last-child {
-    width:10%;
+    width: 10%;
 }
 
 .accordion-group {
     margin: 0px;
     border-radius: 0px;
-    overflow:hidden
+    overflow: hidden;
 }
 
 .accordion-group:first-child {
@@ -80,7 +80,7 @@ th:last-child {
 
 /* To stop the option caption being selectable. Surprised Knockout doesn't already do this. */
 option:first-child {
-    display:none;
+    display: none;
 }
 
 .error {
@@ -89,8 +89,12 @@ option:first-child {
 }
 
 .error-message {
-    font-size:small;
-    color:red;
-    position:relative;
-    top:-15px;
+    font-size: small;
+    color: red;
+    position: relative;
+    top: -15px;
+}
+
+.text-center {
+    margin-bottom: 20px;
 }
