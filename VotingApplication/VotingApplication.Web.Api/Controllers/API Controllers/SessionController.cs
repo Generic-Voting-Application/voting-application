@@ -9,6 +9,8 @@ using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using System.Net.Mail;
 using System.Web.Configuration;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -81,7 +83,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 string targetEmail = newSession.Email;
                 newSession.Email = null; // Don't store email longer than we need to
 
-                SendEmail(targetEmail, newSession.UUID, newSession.ManageID);
+                // Do the long-running SendEmail task in a different thread, so we can return early
+                Thread newThread = new Thread(new ThreadStart(() => SendEmail(targetEmail, newSession.UUID, newSession.ManageID)));
+                newThread.Start();
 
                 context.Sessions.Add(newSession);
                 context.SaveChanges();
@@ -122,9 +126,9 @@ You can administer your poll at http://voting-app.azurewebsites.net?manage=" + m
 
             try
             {
-                client.Send(mail);
+                client.SendMailAsync(mail);
             }
-            catch (SmtpException e)
+            catch (SmtpException)
             {
                 // Do nothing
             }
