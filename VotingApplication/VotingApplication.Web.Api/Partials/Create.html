@@ -1,17 +1,17 @@
-﻿<div class="col-md-4"></div>
-<div class="col-md-3">
+﻿<div class="col-md-4 col-sm-2"></div>
+<div class="col-md-4 col-sm-8">
     <div class="page-header">
         <h2>Create a Poll</h2>
     </div>
     <form id="poll-create-form">
-        <div id="poll-creator-group">
-            <label class="control-label" for="poll-creator">Creator Name</label>
-            <input class="form-control" id="poll-creator" placeholder="E.g. John Smith" required />
-        </div>
-
         <div id="poll-name-group">
             <label class="control-label" for="poll-name">Poll Name</label>
             <input class="form-control" id="poll-name" placeholder="E.g. 2015 Elections" required />
+        </div>
+
+        <div id="poll-creator-group">
+            <label class="control-label" for="poll-creator">Creator Name</label>
+            <input class="form-control" id="poll-creator" placeholder="E.g. John Smith" required />
         </div>
 
         <div id="email-group">
@@ -27,4 +27,4 @@
         <button id="poll-create-btn" class="btn btn-primary" type="submit" data-bind="click: $root.createPoll.bind()">Create Poll</button>
     </form>
 </div>
-<div class="col-md-5"></div>
+<div class="col-md-4 col-sm-2"></div>

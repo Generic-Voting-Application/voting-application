@@ -21,7 +21,7 @@ textarea {
 }
 
 h2 {
-    text-align:center;
+    text-align: center;
 }
 
 h4 {
@@ -29,54 +29,54 @@ h4 {
 }
 
 input, select {
-    margin-bottom:15px;
-    width:100%;
+    margin-bottom: 15px;
+    width: 100%;
     border-width: 1px;
 }
 
 label {
-    margin-bottom:0px;
-    width:100%;
+    margin-bottom: 0px;
+    width: 100%;
 }
 
-label.info-message {
-    font-size:small;
-}
+    label.info-message {
+        font-size: small;
+    }
 
 .clickable {
     cursor: pointer;
 }
 
 #reset-votes, #save-options-as {
-    width:150px;
-    height:40px;
+    width: 150px;
+    height: 40px;
 }
 
 #delete-vote-row {
-    align-content:flex-end
+    align-content: flex-end;
 }
 
 th:first-child {
-    width:25%;
+    width: 25%;
 }
 
 th:last-child {
-    width:10%;
+    width: 10%;
 }
 
 .accordion-group {
     margin: 0px;
     border-radius: 0px;
-    overflow:hidden
+    overflow: hidden;
 }
 
-.accordion-group:first-child {
-    border-radius: 10px 10px 0px 0px;
-}
+    .accordion-group:first-child {
+        border-radius: 10px 10px 0px 0px;
+    }
 
-.accordion-group:last-child {
-    border-radius: 0px 0px 10px 10px;
-}
+    .accordion-group:last-child {
+        border-radius: 0px 0px 10px 10px;
+    }
 
 .accordion-heading {
     border-radius: 0px;
@@ -84,7 +84,7 @@ th:last-child {
 
 /* To stop the option caption being selectable. Surprised Knockout doesn't already do this. */
 option:first-child {
-    display:none;
+    display: none;
 }
 
 .error {
@@ -93,8 +93,12 @@ option:first-child {
 }
 
 .error-message {
-    font-size:small;
-    color:red;
-    position:relative;
-    top:-15px;
+    font-size: small;
+    color: red;
+    position: relative;
+    top: -15px;
+}
+
+.text-center {
+    margin-bottom: 20px;
 }

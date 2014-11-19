@@ -27,8 +27,8 @@
             }
 
             var newName = $("#newName").val();
-
             var newInfo = $("#newInfo").val();
+            var newDescription = $("#newDescription").val();
 
             //Reset before posting, to prevent double posts.
             $("#newName").val("");
