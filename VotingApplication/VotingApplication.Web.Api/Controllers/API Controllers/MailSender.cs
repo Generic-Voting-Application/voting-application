@@ -8,9 +8,11 @@ using System.Web.Configuration;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
-    public class MailSender
+    public static class MailSender
     {
-        public static void SendMail(string to, string subject, string message)
+        private static SmtpClient client;
+
+        static MailSender()
         {
             string hostEmail = WebConfigurationManager.AppSettings["HostEmail"];
             string hostPassword = WebConfigurationManager.AppSettings["HostPassword"];
@@ -20,13 +22,18 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 return;
             }
 
-            SmtpClient client = new SmtpClient();
+            client = new SmtpClient();
             client.Port = 25;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
             client.Host = "smtp.gmail.com";
             client.EnableSsl = true;
             client.Credentials = new NetworkCredential(hostEmail, hostPassword);
+        }
+
+        public static void SendMail(string to, string subject, string message)
+        {
+            string hostEmail = WebConfigurationManager.AppSettings["HostEmail"];
 
             MailMessage mail = new MailMessage(hostEmail, to);
             mail.Subject = subject;
