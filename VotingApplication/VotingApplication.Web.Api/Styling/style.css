@@ -34,9 +34,9 @@ label {
 }
 
 label.info-message {
-    font-size: small;
-    position: relative;
-    top: -15px;
+    font-size:small;
+    position:relative;
+    top:-15px;
 }
 
 .clickable {

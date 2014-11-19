@@ -9,6 +9,8 @@ using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using System.Net.Mail;
 using System.Web.Configuration;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -78,10 +80,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 newSession.UUID = Guid.NewGuid();
                 newSession.ManageID = Guid.NewGuid();
 
-                string targetEmail = newSession.Email;
-                newSession.Email = null; // Don't store email longer than we need to
-
-                SendEmail(targetEmail, newSession.UUID, newSession.ManageID);
+                // Do the long-running SendEmail task in a different thread, so we can return early
+                Thread newThread = new Thread(new ThreadStart(() => SendEmails(newSession)));
+                newThread.Start();
 
                 context.Sessions.Add(newSession);
                 context.SaveChanges();
@@ -90,44 +91,34 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
-        private void SendEmail(string targetEmailAddress, Guid pollId, Guid manageId)
+        private void SendEmails(Session session)
         {
-            string hostEmail = WebConfigurationManager.AppSettings["HostEmail"];
-            string hostPassword = WebConfigurationManager.AppSettings["HostPassword"];
+            List<string> invitations = session.Invites ?? new List<string>();
 
-            if (hostEmail == null || hostPassword == null)
+            SendCreateEmail(session);
+            foreach (string inviteEmail in invitations)
             {
-                return;
+                SendVoteEmail(inviteEmail, session);
             }
+        }
 
-            SmtpClient client = new SmtpClient();
-            client.Port = 25;
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.UseDefaultCredentials = false;
-            client.Host = "outlook.office365.com";
-            client.EnableSsl = true;
-            client.Credentials = new NetworkCredential(hostEmail, hostPassword);
+        private void SendCreateEmail(Session session)
+        {
+            string message = String.Join("\n\n", new List<string>()
+                {"Your poll is now created and ready to go!",
+                 "You can invite people to vote by giving them this link: http://voting-app.azurewebsites.net?poll=" + session.UUID + ".",
+                 "You can administer your poll at http://voting-app.azurewebsites.net?manage=" + session.ManageID + ". Don't share this link around!"});
 
-            MailMessage mail = new MailMessage(hostEmail, targetEmailAddress);
+            MailSender.SendMail(session.Email, "Your poll is ready!", message);
+        }
 
-            string messageBody =
-@"Your poll is now created and ready to go!
+        private void SendVoteEmail(string targetEmailAddress, Session session)
+        {
+            string message = String.Join("\n\n", new List<string>()
+                {"You've been invited by " + session.Creator + " to vote on " + session.Name + ".",
+                 "Have your say at: http://voting-app.azurewebsites.net?poll=" + session.UUID + "!"});
 
-You can invite people to vote by giving them this link: http://voting-app.azurewebsites.net?poll=" + pollId + @"
-
-You can administer your poll at http://voting-app.azurewebsites.net?manage=" + manageId + ". Don't share this link around!";
-
-            mail.Subject = "Your poll is ready!";
-            mail.Body = messageBody;
-
-            try
-            {
-                client.Send(mail);
-            }
-            catch (SmtpException e)
-            {
-                // Do nothing
-            }
+            MailSender.SendMail(targetEmailAddress, "Have your say!", message);
         }
 
         public virtual HttpResponseMessage Post(Guid id, Session newSession)
