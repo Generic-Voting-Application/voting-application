@@ -7,17 +7,17 @@
 
     if (pollId) {
         // Go to voting
-        pageToLoad = "/Partials/Poll.html"
+        pageToLoad = "/Partials/Poll.html";
         javascriptToLoad = '/Scripts/Poll.js';
     }
     else if (manageId) {
         // Go to poll management
-        pageToLoad = "/Partials/Manage.html"
+        pageToLoad = "/Partials/Manage.html";
         javascriptToLoad = '/Scripts/Manage.js';
     }
     else {
         // Go to poll creation
-        pageToLoad = "/Partials/Create.html"
+        pageToLoad = "/Partials/Create.html";
         javascriptToLoad = '/Scripts/Create.js';
     }
 
@@ -31,5 +31,5 @@
             require([javascriptToLoad]);
             $("#content").append(data);
         }
-    })
+    });
 });

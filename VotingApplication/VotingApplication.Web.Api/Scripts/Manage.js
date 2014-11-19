@@ -18,22 +18,22 @@
                     self.populateVotes();
                 }
             });
-        }
+        };
 
         self.addOption = function () {
             //Don't submit without an entry in the name field
-            if ($("#newName").val() == "") {
+            if ($("#newName").val() === "") {
                 return;
             }
 
             var newName = $("#newName").val();
-            var newDescription = $("#newDescription").val()
-            var newInfo = $("#newInfo").val()
+
+            var newInfo = $("#newInfo").val();
 
             //Reset before posting, to prevent double posts.
-            $("#newName").val("")
-            $("#newDescription").val("")
-            $("#newInfo").val("")
+            $("#newName").val("");
+            $("#newDescription").val("");
+            $("#newInfo").val("");
 
             $.ajax({
                 type: 'POST',
@@ -49,8 +49,8 @@
                 success: function () {
                     self.populateOptions();
                 }
-            })
-        }
+            });
+        };
 
         self.deleteVote = function (data, event) {
             $.ajax({
@@ -62,7 +62,7 @@
                     self.populateVotes();
                 }
             });
-        }
+        };
 
         self.deleteOption = function (data, event) {
             $.ajax({
@@ -75,7 +75,7 @@
                     self.populateVotes();
                 }
             });
-        }
+        };
 
         self.populateOptions = function () {
             $.ajax({
@@ -85,8 +85,8 @@
                 success: function (data) {
                     self.options(data);
                 }
-            })
-        }
+            });
+        };
 
         self.populateVotes = function () {
             $.ajax({
@@ -98,7 +98,7 @@
                     self.votes(data);
                 }
             });
-        }
+        };
 
         $(document).ready(function () {
             manageId = Common.getManageId();

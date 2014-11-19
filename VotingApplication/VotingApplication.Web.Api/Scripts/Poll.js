@@ -17,7 +17,7 @@
                     self.options(data.Options);
                 }
             });
-        }
+        };
 
         var getResults = function () {
             $.ajax({
@@ -29,7 +29,7 @@
                     drawChart(groupedVotes);
                 }
             });
-        }
+        };
 
         var countVotes = function (votes) {
             var totalCounts = [];
@@ -53,7 +53,7 @@
                 }
             });
             return totalCounts;
-        }
+        };
 
         var drawChart = function (data) {
             // Hack to fix insight's lack of data reloading
@@ -61,7 +61,7 @@
             var voteData = new insight.DataSet(data);
 
             var chart = new insight.Chart('', '#bar-chart')
-            .width(450)
+            .width($("#bar-chart").width())
             .height(data.length * 50 + 100);
 
             var xAxis = new insight.Axis('Votes', insight.scales.linear)
@@ -92,23 +92,23 @@
             chart.series([series]);
 
             chart.draw();
-        }
+        };
 
         var clearOptionHighlighting = function () {
             $("#optionTable > tbody > tr").removeClass("success");
-        }
+        };
 
         var highlightOption = function (optionId) {
 
             clearOptionHighlighting();
 
             var optionRows = $("#optionTable > tbody > tr");
-            var option = self.options().filter(function (d) { return d.Id == optionId }).pop();
+            var option = self.options().filter(function (d) { return d.Id == optionId; }).pop();
             var optionRowIndex = self.options().indexOf(option);
 
             var matchingRow = optionRows.eq(optionRowIndex);
             matchingRow.addClass("success");
-        }
+        };
 
         var getVotes = function () {
             $.ajax({
@@ -125,25 +125,25 @@
                     }
                 }
             });
-        }
+        };
 
         var showSection = function (element) {
             var siblings = element.siblings();
             for (var i = 0; i < siblings.length; i++) {
                 $(siblings[i]).collapseSection('hide');
-                $(siblings[i]).removeClass('panel-primary')
+                $(siblings[i]).removeClass('panel-primary');
 
             }
             element.collapseSection('show');
             element.addClass('panel-primary');
-        }
+        };
 
         self.showSection = function (data, event) {
             showSection($(data).parent());
-        }
+        };
 
         self.submitLogin = function (data, event) {
-            var username = $("#loginUsername").val()
+            var username = $("#loginUsername").val();
             $.ajax({
                 type: 'PUT',
                 url: '/api/user',
@@ -166,7 +166,7 @@
                     }
                 }
             });
-        }
+        };
 
         self.doVote = function (data, event) {
             if (self.userId && self.pollId) {
@@ -185,7 +185,7 @@
                     }
                 });
             }
-        }
+        };
 
         $('#voteSection .accordion-body').on('show.bs.collapse', function () {
             getVotes();
@@ -196,7 +196,7 @@
         });
 
         $(document).ready(function () {
-            self.pollId = Common.getPollId()
+            self.pollId = Common.getPollId();
             self.userId = Common.currentUserId();
 
             getPollDetails(self.pollId);
@@ -212,4 +212,3 @@
 
     ko.applyBindings(new VoteViewModel());
 });
-
