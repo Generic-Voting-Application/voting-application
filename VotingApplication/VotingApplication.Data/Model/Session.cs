@@ -14,6 +14,7 @@ namespace VotingApplication.Data.Model
         public Guid ManageID { get; set; }
         public string Name { get; set; }
 
+        public string Creator { get; set; }
         public string Email { get; set; }
 
         public long OptionSetId { get; set; }
