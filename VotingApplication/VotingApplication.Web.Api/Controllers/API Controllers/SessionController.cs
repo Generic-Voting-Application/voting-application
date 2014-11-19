@@ -108,7 +108,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             client.Port = 25;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
-            client.Host = "outlook.office365.com";
+            client.Host = "smtp.gmail.com";
             client.EnableSsl = true;
             client.Credentials = new NetworkCredential(hostEmail, hostPassword);
 
