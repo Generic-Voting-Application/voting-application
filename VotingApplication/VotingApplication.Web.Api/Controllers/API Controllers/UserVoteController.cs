@@ -92,6 +92,11 @@ namespace VotingApplication.Web.Api.Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Session {0} does not exist", vote.SessionId));
                 }
 
+                if (vote.Value <= 0)
+                {
+                    vote.Value = 1;
+                }
+
                 IEnumerable<Vote> votes = context.Votes.Where(v => v.UserId == userId && v.SessionId == vote.SessionId);
                 if(votes.Count() == 0)
                 {

@@ -349,6 +349,28 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[2].OptionId);
         }
 
+        [TestMethod]
+        public void PutWithoutValueDefaultsToOne()
+        {
+            // Act
+            var newVote = new Vote() { OptionId = 1, SessionId = _mainUUID };
+            _controller.Put(1, newVote);
+
+            // Assert
+            Assert.AreEqual(newVote.Value, 1);
+        }
+
+        [TestMethod]
+        public void PutWithValueRetainsTheValue()
+        {
+            // Act
+            var newVote = new Vote() { OptionId = 1, SessionId = _mainUUID, Value = 35 };
+            _controller.Put(1, newVote);
+
+            // Assert
+            Assert.AreEqual(newVote.Value, 35);
+        }
+
         #endregion
     }
 }
