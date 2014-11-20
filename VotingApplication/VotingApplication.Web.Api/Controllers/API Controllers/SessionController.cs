@@ -79,7 +79,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 newSession.UUID = Guid.NewGuid();
                 newSession.ManageID = Guid.NewGuid();
-                newSession.VotingStrategy = "Basic";
 
                 // Do the long-running SendEmail task in a different thread, so we can return early
                 Thread newThread = new Thread(new ThreadStart(() => SendEmails(newSession)));

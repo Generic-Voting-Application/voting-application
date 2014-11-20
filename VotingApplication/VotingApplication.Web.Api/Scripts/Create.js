@@ -36,7 +36,8 @@
                     Creator: creatorName,
                     Email: email,
                     Invites: invites.split('\n'),
-                    optionSetId: templateId
+                    optionSetId: templateId,
+                    VotingStrategy: 'Basic'
                 }),
 
                 success: function () {
