@@ -36,22 +36,6 @@
                     <div class="col-md-1"></div>
                     <div class="col-md-10 centered">
                         <table id="optionTable" class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Option</th>
-                                    <th>Description</th>
-                                    <th class="hidden-xs hidden-sm">More info</th>
-                                    <th>Vote</th>
-                                </tr>
-                            </thead>
-                            <tbody data-bind="foreach: options">
-                                <tr>
-                                    <td data-bind="text: Name"></td>
-                                    <td data-bind="text: Description"></td>
-                                    <td class="hidden-xs hidden-sm" data-bind="text: Info"></td>
-                                    <td><button class="btn btn-primary" data-bind="click: $parent.doVote">Vote</button></td>
-                                </tr>
-                            </tbody>
                         </table>
                     </div>
                     <div class="col-md-1"></div>
