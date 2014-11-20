@@ -6,8 +6,9 @@
         'insight': 'Lib/insight.min',
         'd3': 'Lib/d3.min',
         'crossfilter': 'Lib/crossfilter.min',
-        'BasicVote': 'VotingStrategies/BasicVote'
-    },
+        'BasicVote': 'VotingStrategies/BasicVote',
+        'PointsVote': 'VotingStrategies/PointsVote'
+},
     shim: {
         'jquery': {
             exports: '$'
