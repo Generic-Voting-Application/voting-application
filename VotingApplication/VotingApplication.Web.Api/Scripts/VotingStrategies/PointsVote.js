@@ -100,7 +100,7 @@
             if (userId && pollId) {
                 $.ajax({
                     type: 'PUT',
-                    url: '/api/user/' + userId + '/vote',
+                    url: '/api/user/' + userId + '/pointsvote',
                     contentType: 'application/json',
                     data: JSON.stringify({
                         OptionId: data.Id,
@@ -118,7 +118,7 @@
         self.getVotes = function (pollId, userId) {
             $.ajax({
                 type: 'GET',
-                url: '/api/user/' + userId + '/session/' + pollId + '/vote',
+                url: '/api/user/' + userId + '/session/' + pollId + '/pointsvote',
                 contentType: 'application/json',
 
                 success: function (data) {
@@ -135,7 +135,7 @@
         self.getResults = function (pollId) {
             $.ajax({
                 type: 'GET',
-                url: '/api/session/' + pollId + '/vote',
+                url: '/api/session/' + pollId + '/pointsvote',
 
                 success: function (data) {
                     var groupedVotes = countVotes(data);
