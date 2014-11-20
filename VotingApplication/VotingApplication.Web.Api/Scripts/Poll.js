@@ -17,9 +17,6 @@
                     self.pollName(data.Name);
                     self.pollCreator(data.Creator);
 
-                    //Hardcode
-                    data.VotingStrategy = 'Basic';
-
                     var options = data.Options;
 
                     switch (data.VotingStrategy) {

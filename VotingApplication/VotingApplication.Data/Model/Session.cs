@@ -17,6 +17,8 @@ namespace VotingApplication.Data.Model
 
         public string Creator { get; set; }
 
+        public string VotingStrategy { get; set; }
+
         [NotMapped]
         public string Email { get; set; }
         [NotMapped]
