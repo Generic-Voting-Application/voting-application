@@ -11,11 +11,10 @@
             clearOptionHighlighting();
 
             var optionRows = $("#optionTable > tbody > tr");
-            var option = self.options().filter(function (d) { return d.Id == optionId; }).pop();
-            var optionRowIndex = self.options().indexOf(option);
-
-            var matchingRow = optionRows.eq(optionRowIndex);
-            matchingRow.addClass("success");
+            optionRows.filter(function () {
+                console.log($(this).attr('data-id'));
+                return $(this).attr('data-id') == optionId;
+            }).addClass("success");
         };
 
         var clearOptionHighlighting = function () {

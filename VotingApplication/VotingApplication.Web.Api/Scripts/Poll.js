@@ -19,14 +19,17 @@
 
                     var options = data.Options;
 
-                    data.VotingStrategy = 'Points';
+                    data.VotingStrategy = 'Basic';
 
                     switch (data.VotingStrategy) {
                         case 'Basic':
-                            pickStrategy('/Partials/VotingStrategies/BasicVote.html', 'BasicVote', options);
+                            pickStrategy('/Partials/VotingStrategies/BasicVote.html', 'VotingStrategies/BasicVote', options);
                             break;
                         case 'Points':
-                            pickStrategy('/Partials/VotingStrategies/PointsVote.html', 'PointsVote', options);
+                            pickStrategy('/Partials/VotingStrategies/PointsVote.html', 'VotingStrategies/PointsVote', options);
+                            break;
+                        case 'Ranked':
+                            pickStrategy('/Partials/VotingStrategies/RankedVote.html', 'VotingStrategies/RankedVote', options);
                             break;
                     }
                 }
@@ -42,7 +45,7 @@
                 dataType: 'html',
 
                 success: function (data) {
-                    $("#optionTable").append(data);
+                    $("#votingArea").append(data);
                     require([votingStrategy], function (strategy) {
                         votingStrategyFunc(strategy, options);
                     });
@@ -57,7 +60,7 @@
                 return votingStrategy;
             }
 
-            ko.applyBindings(new StrategyViewModel(), $('#optionTable')[0]);
+            ko.applyBindings(new StrategyViewModel(), $('#votingArea')[0]);
         };
 
         var showSection = function (element) {
