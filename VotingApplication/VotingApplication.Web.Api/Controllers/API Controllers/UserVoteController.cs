@@ -102,19 +102,17 @@ namespace VotingApplication.Web.Api.Controllers
                     }
 
                     IEnumerable<Vote> ContextVotes = context.Votes.Where(v => v.UserId == userId && v.SessionId == vote.SessionId);
-                    if (ContextVotes.Count() == 0)
+                    foreach (Vote contextVote in ContextVotes)
                     {
-                        vote.UserId = userId;
-                        context.Votes.Add(vote);
-                        context.SaveChanges();
-                        voteIds.Add(vote.Id);
+                        context.Votes.Remove(contextVote);
                     }
-                    else
-                    {
-                        Vote oldVote = ContextVotes.FirstOrDefault();
-                        oldVote.OptionId = vote.OptionId;
-                        voteIds.Add(oldVote.Id);
-                    }
+
+                    vote.UserId = userId;
+                }
+
+                foreach (Vote vote in votes)
+                {
+                    context.Votes.Add(vote);
                 }
 
                 context.SaveChanges();

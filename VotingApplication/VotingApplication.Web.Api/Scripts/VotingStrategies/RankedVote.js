@@ -7,13 +7,35 @@
         self.previousOptions = ko.observableArray();
         self.selectedOptions = ko.observableArray();
 
+        var selectOption = function (option) {
+            var $option = $('#optionTable > tbody > tr').filter(function () {
+                return $(this).attr('data-id') == option.Id;
+            });
+
+            $('#selectionTable > tbody').append($option.remove());
+            self.selectedOptions.push(option)
+        }
+
+        var selectPickedOptions = function (pickedOptions) {
+            self.selectedOptions.removeAll();
+            self.previousOptions.removeAll();
+
+            pickedOptions.forEach(function (option) {
+                var pickedOption = ko.utils.arrayFirst(self.options(), function (item) {
+                    return item.Id == option.OptionId;
+                });
+
+                selectOption(pickedOption);
+            });
+        }
+
         self.doVote = function (data, event) {
             var userId = Common.currentUserId();
             var pollId = Common.getPollId();
 
             if (userId && pollId) {
 
-                var selectionRows = $("#selectionTable > tbody > tr");
+                var selectionRows = $('#selectionTable > tbody > tr');
 
                 var selectedOptionsArray = [];
                 ko.utils.arrayForEach(self.selectedOptions(), function (selection) {
@@ -27,15 +49,15 @@
                     selectedOptionsArray.push({
                         OptionId: selection.Id,
                         SessionId: pollId,
-                        Value: rank
+                        PollValue: rank
                     });
                 });
 
                 // Offset by the first value to account for table headers and sort out 0 index
-                var lowestValue = selectedOptionsArray[0].Value - 1;
+                var lowestValue = selectedOptionsArray[0].PollValue - 1;
                 selectedOptionsArray.map(function (option) {
-                    option.Value -= lowestValue;
-                })
+                    option.PollValue -= lowestValue;
+                });
 
                 $.ajax({
                     type: 'PUT',
@@ -48,7 +70,7 @@
                     }
                 });
 
-                console.log();
+                
             }
         };
 
@@ -59,7 +81,7 @@
                 contentType: 'application/json',
 
                 success: function (data) {
-                    // Do stuff with data here
+                    selectPickedOptions(data);
                 }
             });
         };
