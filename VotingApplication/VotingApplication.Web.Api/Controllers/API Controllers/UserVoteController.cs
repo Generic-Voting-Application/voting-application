@@ -101,7 +101,7 @@ namespace VotingApplication.Web.Api.Controllers
                         vote.Value = 1;
                     }
 
-                    IEnumerable<Vote> ContextVotes = context.Votes.Where(v => v.UserId == userId && v.SessionId == vote.SessionId);
+                    List<Vote> ContextVotes = context.Votes.Where(v => v.UserId == userId && v.SessionId == vote.SessionId).ToList<Vote>();
                     foreach (Vote contextVote in ContextVotes)
                     {
                         context.Votes.Remove(contextVote);
@@ -113,9 +113,10 @@ namespace VotingApplication.Web.Api.Controllers
                 foreach (Vote vote in votes)
                 {
                     context.Votes.Add(vote);
+                    context.SaveChanges();
+                    voteIds.Add(vote.Id);
                 }
 
-                context.SaveChanges();
                 return this.Request.CreateResponse(HttpStatusCode.OK, voteIds);
             }
         }
