@@ -5,12 +5,25 @@
 
         self = this;
         self.options = ko.observableArray(options);
-        //Populate with an array of options.length number of 0-values
-        self.pointsArray = ko.observableArray(Array.apply(null, Array(options.length)).map(Boolean).map(Number));
+        self.pointsArray = ko.observableArray();
 
         var maxPoints = 7;
         var maxPerVote = 3;
         
+        var resetVote = function () {
+            //Populate with an array of options.length number of 0-values
+            self.pointsArray(Array.apply(null, Array(options.length)).map(Boolean).map(Number));
+            updateAllButtons();
+        };
+
+        var updateAllButtons = function () {
+            var allButtonGroups = $("#optionTable span");
+            for (var i = 0; i < allButtonGroups.length; i++) {
+                var buttonGroup = allButtonGroups[i];
+                updateButtons(buttonGroup);
+            }
+        }
+
         var countVotes = function (votes) {
             var totalCounts = [];
             votes.forEach(function (vote) {
@@ -165,6 +178,22 @@
                 contentType: 'application/json',
 
                 success: function (data) {
+                    resetVote();
+                    var allOptions = self.options();
+                    for (var i = 0; i < data.length; i++) {
+                        //Find index of previously voted option
+                        var vote = allOptions.filter(function (d) {
+                            return d.Id == data[i].OptionId;
+                        })[0];
+                        var optionIndex = self.options().indexOf(vote);
+
+                        if (optionIndex == -1)
+                            continue;
+
+                        self.pointsArray()[optionIndex] = data[i].Value;
+                        self.pointsArray.valueHasMutated();
+                    }
+                    updateAllButtons();
                 }
             });
         };
@@ -180,6 +209,8 @@
                 }
             });
         };
+
+        resetVote();
     }
 
 });
