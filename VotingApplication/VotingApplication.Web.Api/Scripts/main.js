@@ -6,8 +6,8 @@
         'insight': 'Lib/insight.min',
         'd3': 'Lib/d3.min',
         'crossfilter': 'Lib/crossfilter.min',
-        'BasicVote': 'VotingStrategies/BasicVote',
-        'PointsVote': 'VotingStrategies/PointsVote'
+        'sortable': 'Lib/jquery-sortable-min',
+        'jqueryUI': 'Lib/jquery-ui.min'
 },
     shim: {
         'jquery': {
@@ -20,6 +20,12 @@
         'insight': {
             deps: ['d3', 'crossfilter'],
             exports: 'insight'
+        },
+        'sortable': {
+            deps: ['jquery']
+        },
+        'jqueryUI': {
+            deps: ['jquery']
         }
     }
 });

@@ -33,31 +33,14 @@ label {
     width: 100%;
 }
 
-label.info-message {
-    font-size:small;
-    position:relative;
-    top:-15px;
-}
+    label.info-message {
+        font-size: small;
+        position: relative;
+        top: -15px;
+    }
 
 .clickable {
     cursor: pointer;
-}
-
-#reset-votes, #save-options-as {
-    width: 150px;
-    height: 40px;
-}
-
-#delete-vote-row {
-    align-content: flex-end;
-}
-
-th:first-child {
-    width: 25%;
-}
-
-th:last-child {
-    width: 10%;
 }
 
 .accordion-group {
@@ -66,13 +49,13 @@ th:last-child {
     overflow: hidden;
 }
 
-.accordion-group:first-child {
-    border-radius: 10px 10px 0px 0px;
-}
+    .accordion-group:first-child {
+        border-radius: 10px 10px 0px 0px;
+    }
 
-.accordion-group:last-child {
-    border-radius: 0px 0px 10px 10px;
-}
+    .accordion-group:last-child {
+        border-radius: 0px 0px 10px 10px;
+    }
 
 .accordion-heading {
     border-radius: 0px;
@@ -103,4 +86,20 @@ option:first-child {
     display: inline;
     font-size: 24px;
     margin: 10px;
+}
+
+/*.selection-area {
+    margin: 3px;
+    border-style: dashed;
+    border-width: 3px;
+    border-radius: 5px;
+}*/
+
+#reset-votes, #save-options-as {
+    width: 150px;
+    height: 40px;
+}
+
+#delete-vote-row {
+    align-content: flex-end;
 }

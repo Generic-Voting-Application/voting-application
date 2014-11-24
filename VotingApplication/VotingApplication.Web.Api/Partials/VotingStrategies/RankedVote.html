@@ -1,0 +1,41 @@
+﻿<div class="panel panel-default">
+    <div class="panel-heading">
+        <h2 class="panel-title">Options</h2>
+    </div>
+    <table id="optionTable" class="table table-hover sortable">
+        <thead>
+            <tr>
+                <th class="col-md-3">Option</th>
+                <th class="col-md-6">Description</th>
+                <th class="col-md-3 hidden-xs hidden-sm">More info</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: options">
+            <tr class="clickable" data-bind="attr: {'data-id': Id}">
+                <td data-bind="text: Name"></td>
+                <td data-bind="text: Description"></td>
+                <td data-bind="text: Info"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h2 class="panel-title">Selection</h2>
+    </div>
+    <table id="selectionTable" class="table table-hover sortable selection-content">
+        <thead>
+            <tr data-bind="visible: $root.selectedOptions().length == 0">
+                <th colspan="3">Drag options here in preference order</th>
+            </tr>
+            <tr>
+                <th class="col-md-3">Option</th>
+                <th class="col-md-6">Description</th>
+                <th class="col-md-3 hidden-xs hidden-sm">More info</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<button class="btn btn-primary"  data-bind="click: $root.doVote">Submit Vote</button>
