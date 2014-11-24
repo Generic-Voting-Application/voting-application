@@ -12,7 +12,6 @@
 
             var optionRows = $("#optionTable > tbody > tr");
             optionRows.filter(function () {
-                console.log($(this).attr('data-id'));
                 return $(this).attr('data-id') == optionId;
             }).addClass("success");
         };
