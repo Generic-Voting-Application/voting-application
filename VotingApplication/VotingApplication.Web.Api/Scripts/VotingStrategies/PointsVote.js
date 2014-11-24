@@ -60,12 +60,13 @@
                 return d.Sum;
             })
             .tooltipFunction(function (d) {
+                var voterCount = d.Voters.length;
                 var maxToDisplay = 5;
-                if (d.Count <= maxToDisplay) {
-                    return "Votes: " + d.Count + "<br />" + d.Voters.toString().replace(/,/g, "<br />");
+                if (voterCount <= maxToDisplay) {
+                    return "Votes: " + d.Sum + "<br />" + d.Voters.toString().replace(/,/g, "<br />");
                 }
                 else {
-                    return "Votes: " + d.Count + "<br />" + d.Voters.slice(0, maxToDisplay).toString().replace(/,/g, "<br />") + "<br />" + "+ " + (d.Count - maxToDisplay) + " others";
+                    return "Votes: " + d.Sum + "<br />" + d.Voters.slice(0, maxToDisplay).toString().replace(/,/g, "<br />") + "<br />" + "+ " + (voterCount - maxToDisplay) + " others";
                 }
             });
 
