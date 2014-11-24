@@ -10,8 +10,8 @@
 
             clearOptionHighlighting();
 
-            var optionRows = $("#optionTable > tbody > tr");
-            optionRows.filter(function () {
+            var $optionRows = $("#optionTable > tbody > tr");
+            $optionRows.filter(function () {
                 return $(this).attr('data-id') == optionId;
             }).addClass("success");
         };

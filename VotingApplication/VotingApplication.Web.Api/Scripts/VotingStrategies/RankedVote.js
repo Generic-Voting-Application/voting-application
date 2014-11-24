@@ -12,7 +12,43 @@
             var pollId = Common.getPollId();
 
             if (userId && pollId) {
-                // Vote logic here
+
+                var selectionRows = $("#selectionTable > tbody > tr");
+
+                var selectedOptionsArray = [];
+                ko.utils.arrayForEach(self.selectedOptions(), function (selection) {
+
+                    var $optionElement = selectionRows.filter(function () {
+                        return $(this).attr('data-id') == selection.Id;
+                    });
+
+                    var rank = $optionElement[0].rowIndex;
+
+                    selectedOptionsArray.push({
+                        OptionId: selection.Id,
+                        SessionId: pollId,
+                        Value: rank
+                    });
+                });
+
+                // Offset by the first value to account for table headers and sort out 0 index
+                var lowestValue = selectedOptionsArray[0].Value - 1;
+                selectedOptionsArray.map(function (option) {
+                    option.Value -= lowestValue;
+                })
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/api/user/' + userId + '/vote',
+                    contentType: 'application/json',
+                    data: JSON.stringify(selectedOptionsArray),
+
+                    success: function (returnData) {
+                        $('#resultSection > div')[0].click();
+                    }
+                });
+
+                console.log();
             }
         };
 
