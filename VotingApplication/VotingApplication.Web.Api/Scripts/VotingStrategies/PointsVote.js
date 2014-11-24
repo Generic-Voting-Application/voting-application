@@ -1,11 +1,16 @@
 ﻿define(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
 
 
-    return function BasicVote() {
+    return function PointsVote(options) {
 
         self = this;
-        self.options = ko.observableArray();
+        self.options = ko.observableArray(options);
+        //Populate with an array of options.length number of 0-values
+        self.pointsArray = ko.observableArray(Array.apply(null, Array(options.length)).map(Boolean).map(Number));
 
+        var maxPoints = 7;
+        var maxPerVote = 3;
+        
         var highlightOption = function (optionId) {
 
             clearOptionHighlighting();
@@ -85,12 +90,53 @@
             chart.draw();
         };
 
-        self.reduceVote = function (data, event) {
-            console.log("decrease");
+        self.decreaseVote = function (data, event) {
+            var pointsIndex = self.options().indexOf(data);
+            self.pointsArray()[pointsIndex]--;
+            self.pointsArray.valueHasMutated();
+
+            updateButtons(event.target.parentElement);
         }
 
         self.increaseVote = function (data, event) {
-            console.log("increase");
+            var pointsIndex = self.options().indexOf(data);
+            self.pointsArray()[pointsIndex]++;
+            self.pointsArray.valueHasMutated();
+
+            updateButtons(event.target.parentElement);
+        }
+
+        var updateButtons = function (buttonGroup) {
+            var index = $("#optionTable span").index(buttonGroup);
+            var minusButton = $(buttonGroup).find(".btn.pull-left");
+
+            var sumOfAllPoints = self.pointsArray().reduce(function(prevValue, currentValue) { return prevValue + currentValue; });
+            var pointsForGroup = self.pointsArray()[index];
+
+            // Minus button clickable for value > 0
+            if (pointsForGroup > 0) {
+                minusButton.removeAttr('disabled');
+            }
+            else {
+                minusButton.attr('disabled', 'disabled');
+            }
+
+            // Plus button clickable if more points can be added to group and total
+            if (sumOfAllPoints >= maxPoints) {
+                $("#optionTable span .btn.pull-right").attr('disabled', 'disabled');
+            }
+            else  {
+                var $allPlusButtons = $("#optionTable span .btn.pull-right");
+                for (var i = 0; i < $allPlusButtons.length; i++) {
+                    var plusButton = $allPlusButtons[i];
+                    if (self.pointsArray()[i] >= maxPerVote) {
+                        $(plusButton).attr('disabled', 'disabled');
+                    }
+                    else {
+                        $(plusButton).removeAttr('disabled');
+                    }
+                }
+            }
         }
 
         self.doVote = function (data, event) {

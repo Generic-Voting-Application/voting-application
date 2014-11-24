@@ -14,7 +14,7 @@
         <td>
             <span class="btn-group">
                 <button class="btn btn-primary pull-left" data-bind="click: $parent.decreaseVote" disabled>-</button>
-                <label class="points-label">0</label>
+                <label class="points-label" data-bind="text: $root.pointsArray()[$index()]"></label>
                 <button class="btn btn-primary pull-right" data-bind="click: $parent.increaseVote">+</button>
             </span>
         </td>

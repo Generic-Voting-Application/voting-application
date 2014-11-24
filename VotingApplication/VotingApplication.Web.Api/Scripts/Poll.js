@@ -52,8 +52,7 @@
 
         var votingStrategyFunc = function (strategy, options) {
             function StrategyViewModel() {
-                votingStrategy = new strategy();
-                votingStrategy.options(options);
+                votingStrategy = new strategy(options);
                 return votingStrategy;
             }
 
