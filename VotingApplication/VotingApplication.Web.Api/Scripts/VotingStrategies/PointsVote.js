@@ -11,22 +11,6 @@
         var maxPoints = 7;
         var maxPerVote = 3;
         
-        var highlightOption = function (optionId) {
-
-            clearOptionHighlighting();
-
-            var optionRows = $("#optionTable > tbody > tr");
-            var option = self.options().filter(function (d) { return d.Id == optionId; }).pop();
-            var optionRowIndex = self.options().indexOf(option);
-
-            var matchingRow = optionRows.eq(optionRowIndex);
-            matchingRow.addClass("success");
-        };
-
-        var clearOptionHighlighting = function () {
-            $("#optionTable > tbody > tr").removeClass("success");
-        };
-
         var countVotes = function (votes) {
             var totalCounts = [];
             votes.forEach(function (vote) {
@@ -37,13 +21,13 @@
                 var existingOption = totalCounts.filter(function (vote) { return vote.Name == optionName; }).pop();
 
                 if (existingOption) {
-                    existingOption.Count++;
+                    existingOption.Sum += vote.Value;
                     existingOption.Voters.push(voter);
                 }
                 else {
                     totalCounts.push({
                         Name: optionName,
-                        Count: 1,
+                        Sum: vote.Value,
                         Voters: [voter]
                     });
                 }
@@ -73,7 +57,7 @@
             })
             .valueFunction(function (d) {
 
-                return d.Count;
+                return d.Sum;
             })
             .tooltipFunction(function (d) {
                 var maxToDisplay = 5;
@@ -143,18 +127,30 @@
             var userId = Common.currentUserId();
             var pollId = Common.getPollId();
 
+            var votesData = [];
+
+            for (var i = 0; i < self.options().length; i++) {
+                if (self.pointsArray()[i] == 0) {
+                    continue;
+                }
+
+                var vote = {
+                    OptionId: self.options()[i].Id,
+                    SessionId: pollId,
+                    Value: self.pointsArray()[i]
+                };
+
+                votesData.push(vote);
+            }
+
             if (userId && pollId) {
                 $.ajax({
                     type: 'PUT',
                     url: '/api/user/' + userId + '/vote',
                     contentType: 'application/json',
-                    data: JSON.stringify({
-                        OptionId: data.Id,
-                        SessionId: pollId
-                    }),
+                    data: JSON.stringify(votesData),
 
                     success: function (returnData) {
-                        var currentRow = event.currentTarget.parentElement.parentElement;
                         $('#resultSection > div')[0].click();
                     }
                 });
@@ -168,12 +164,6 @@
                 contentType: 'application/json',
 
                 success: function (data) {
-                    if (data[0]) {
-                        highlightOption(data[0].OptionId);
-                    }
-                    else {
-                        clearOptionHighlighting();
-                    }
                 }
             });
         };
