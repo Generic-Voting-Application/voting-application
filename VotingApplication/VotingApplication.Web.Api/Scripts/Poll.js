@@ -19,8 +19,6 @@
 
                     var options = data.Options;
 
-                    data.VotingStrategy = 'Points';
-
                     switch (data.VotingStrategy) {
                         case 'Basic':
                             pickStrategy('/Partials/VotingStrategies/BasicVote.html', 'BasicVote', options);

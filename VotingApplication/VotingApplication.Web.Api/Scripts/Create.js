@@ -25,6 +25,7 @@
             var email = $("#email").val();
             var templateId = $("#template").val();
             var invites = $("#invites").val();
+            var strategy = $("#voting-strategy").val();
             
             $.ajax({
                 type: 'POST',
@@ -37,7 +38,7 @@
                     Email: email,
                     Invites: invites.split('\n'),
                     optionSetId: templateId,
-                    VotingStrategy: 'Basic'
+                    VotingStrategy: strategy
                 }),
 
                 success: function () {
