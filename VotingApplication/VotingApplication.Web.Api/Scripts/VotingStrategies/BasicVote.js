@@ -46,7 +46,7 @@
 
         var drawChart = function (data) {
             // Hack to fix insight's lack of data reloading
-            $('#bar-chart').html('');
+            $('#results').html('');
             var voteData = new insight.DataSet(data);
 
             var chart = new insight.Chart('', '#bar-chart')

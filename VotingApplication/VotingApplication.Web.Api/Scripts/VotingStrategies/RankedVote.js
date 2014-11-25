@@ -4,7 +4,6 @@
 
         self = this;
         self.options = ko.observableArray();
-        self.previousOptions = ko.observableArray();
         self.selectedOptions = ko.observableArray();
 
         var selectOption = function (option) {
@@ -18,7 +17,6 @@
 
         var selectPickedOptions = function (pickedOptions) {
             self.selectedOptions.removeAll();
-            self.previousOptions.removeAll();
 
             pickedOptions.forEach(function (option) {
                 var pickedOption = ko.utils.arrayFirst(self.options(), function (item) {
@@ -27,6 +25,88 @@
 
                 selectOption(pickedOption);
             });
+        }
+
+        var resetOptions = function () {
+            $('#optionTable > tbody').append($('#selectionTable > tbody').remove('tr').children());
+        }
+
+        var countVotes = function (votes) {
+            var options = [];
+            var orderedOptions = [];
+            var ballots = [];
+            var totalBallots = 0;
+            var totalOptions = self.options().length;
+
+            for (var k = 0; k < totalOptions; k++) {
+                var optionId = self.options()[k].Id;
+                options[k] = { Id: optionId, ballots: [] };
+            }
+
+            // Group votes into ballots (per user)
+            votes.forEach(function (vote) {
+                if (!ballots[vote.UserId]) {
+                    ballots[vote.UserId] = [];
+                    totalBallots++;
+                }
+                ballots[vote.UserId].push(vote);
+            });
+
+            // Sort the votes on the ballots and assign each ballot to first choice
+            ballots.forEach(function (ballot) {
+                ballot.sort(function (a, b) {
+                    return a.PollValue - b.PollValue;
+                });
+                var firstChoiceId = ballot[0].OptionId
+                options.filter(function (option) { return option.Id == firstChoiceId })[0].ballots.push(ballot);
+            });
+
+            // Start counting
+            var majorityReached = false;
+            while (options.length > 1) {
+
+                // Sort the options based on number of ballots
+                options.sort(function (a, b) {
+                    var diff = a.ballots.length - b.ballots.length;
+                    if (diff == 0) {
+                        return a.Id - b.Id;
+                    } else {
+                        return diff;
+                    }
+                });
+
+                // End if we have a majority
+                if (options[options.length - 1].ballots.length > totalBallots / 2) {
+                    break;
+                }
+
+                // Redistribute votes
+                var lastPlaceOption = options.shift();
+                var lastPlaceOptionId = lastPlaceOption.Id;
+
+                lastPlaceOption.ballots.forEach(function (ballot) {
+                    while (ballot.length > 0) {
+                        var nextOptionChoiceId = ballot[0].OptionId;
+                        var nextOptionChoice = options.filter(function (option) {
+                            return option.Id == nextOptionChoiceId;
+                        })[0];
+                        if (nextOptionChoice) {
+                            nextOptionChoice.ballots.push(ballot);
+                            break;
+                        } else {
+                            ballot.shift();
+                        }
+                    }
+                });
+
+                orderedOptions.push(lastPlaceOption);
+            }
+
+            orderedOptions.push.apply(orderedOptions, options);
+            orderedOptions.reverse();
+
+
+            return orderedOptions;
         }
 
         self.doVote = function (data, event) {
@@ -70,11 +150,14 @@
                     }
                 });
 
-                
+
             }
         };
 
         self.getVotes = function (pollId, userId) {
+
+            resetOptions();
+
             $.ajax({
                 type: 'GET',
                 url: '/api/user/' + userId + '/session/' + pollId + '/vote',
@@ -92,11 +175,10 @@
                 url: '/api/session/' + pollId + '/vote',
 
                 success: function (data) {
-                    // Do stuff with results here
+                    countVotes(data);
                 }
             });
         };
-
 
         $(document).ready(function () {
             $(".sortable").sortable({
