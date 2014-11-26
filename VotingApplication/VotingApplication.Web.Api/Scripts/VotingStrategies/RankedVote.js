@@ -5,6 +5,7 @@
         self = this;
         self.options = ko.observableArray();
         self.selectedOptions = ko.observableArray();
+        self.resultOptions = ko.observableArray();
 
         var selectOption = function (option) {
             var $option = $('#optionTable > tbody > tr').filter(function () {
@@ -105,8 +106,22 @@
             orderedOptions.push.apply(orderedOptions, options);
             orderedOptions.reverse();
 
-
             return orderedOptions;
+        }
+
+        var displayResults = function (votes) {
+            var orderedResults = countVotes(votes);
+            self.resultOptions.removeAll();
+            for (var i = 0; i < orderedResults.length; i++) {
+
+                var option = ko.utils.arrayFirst(self.options(), function (item) {
+                    return item.Id == orderedResults[i].Id;
+                });
+
+                option.Rank = i + 1;
+
+                self.resultOptions.push(option);
+            }
         }
 
         self.doVote = function (data, event) {
@@ -155,7 +170,6 @@
         };
 
         self.getVotes = function (pollId, userId) {
-
             resetOptions();
 
             $.ajax({
@@ -170,12 +184,13 @@
         };
 
         self.getResults = function (pollId) {
+
             $.ajax({
                 type: 'GET',
                 url: '/api/session/' + pollId + '/vote',
 
                 success: function (data) {
-                    countVotes(data);
+                    displayResults(data);
                 }
             });
         };
@@ -201,6 +216,17 @@
                     $(this).find("tbody").append(ui.item);
                 }
             });
+        });
+
+        $.ajax({
+            type: 'GET',
+            url: '/Partials/VotingStrategies/RankedVoteResults.html',
+            dataType: 'html',
+
+            success: function (data) {
+                $("#results").append(data);
+                ko.applyBindings(self, $('#results')[0]);
+            }
         });
     }
 
