@@ -113,9 +113,9 @@ namespace VotingApplication.Web.Api.Controllers
                 foreach (Vote vote in votes)
                 {
                     context.Votes.Add(vote);
+                    context.SaveChanges();
+                    voteIds.Add(vote.Id);
                 }
-
-                context.SaveChanges();
                 return this.Request.CreateResponse(HttpStatusCode.OK, voteIds);
             }
         }

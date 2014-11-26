@@ -24,10 +24,18 @@
             <textarea cols=40 rows=3 class="form-control" id="invites" placeholder="E.g. email@example.com"/>
         </div>
 
-
         <div id="template-group">
             <label class="control-label" for="template">Poll Template</label>
-            <select class="form-control" id="template" data-bind="options:templates, optionsText:'Name', optionsValue:'Id', optionsCaption:'Select a template..'"></select>
+            <select class="form-control select-placeholder" id="template" data-bind="options:templates, optionsText:'Name', optionsValue:'Id', optionsCaption:'Select a template..'"></select>
+        </div>
+
+        <div id="strategy-group">
+            <label class="control-label" for="voting-strategy">Vote type</label>
+            <select class="form-control" id="voting-strategy">
+                <option value="Basic">Single Vote</option>
+                <option value="Ranked">Single-Transferable Vote</option>
+                <option value="Points">Points-weighted Vote</option>
+            </select>
         </div>
 
         <button id="poll-create-btn" class="btn btn-primary" type="submit" data-bind="click: $root.createPoll.bind()">Create Poll</button>

@@ -1,10 +1,10 @@
 ﻿define(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
 
 
-    return function BasicVote() {
+    return function BasicVote(options) {
 
         self = this;
-        self.options = ko.observableArray();
+        self.options = ko.observableArray(options);
 
         var highlightOption = function (optionId) {
 
@@ -92,10 +92,10 @@
                     type: 'PUT',
                     url: '/api/user/' + userId + '/vote',
                     contentType: 'application/json',
-                    data: JSON.stringify({
+                    data: JSON.stringify([{
                         OptionId: data.Id,
                         SessionId: pollId
-                    }),
+                    }]),
 
                     success: function (returnData) {
                         var currentRow = event.currentTarget.parentElement.parentElement;

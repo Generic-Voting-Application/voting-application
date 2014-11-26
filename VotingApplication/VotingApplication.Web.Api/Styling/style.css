@@ -62,7 +62,7 @@ label {
 }
 
 /* To stop the option caption being selectable. Surprised Knockout doesn't already do this. */
-option:first-child {
+.select-placeholder option:first-child {
     display: none;
 }
 

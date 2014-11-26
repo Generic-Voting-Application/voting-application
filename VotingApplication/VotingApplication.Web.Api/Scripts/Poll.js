@@ -19,14 +19,12 @@
 
                     var options = data.Options;
 
-                    data.VotingStrategy = 'Basic';
-
                     switch (data.VotingStrategy) {
                         case 'Basic':
-                            loadStrategy('/Partials/VotingStrategies/BasicVote.html', 'VotingStrategies/BasicVote', options, callback);
+                            pickStrategy('/Partials/VotingStrategies/BasicVote.html', '/Scripts/VotingStrategies/BasicVote.js', options);
                             break;
                         case 'Points':
-                            loadStrategy('/Partials/VotingStrategies/PointsVote.html', 'VotingStrategies/PointsVote', options, callback);
+                            pickStrategy('/Partials/VotingStrategies/PointsVote.html', '/Scripts/VotingStrategies/PointsVote.js', options);
                             break;
                         case 'Ranked':
                             loadStrategy('/Partials/VotingStrategies/RankedVote.html', 'VotingStrategies/RankedVote', options, callback);
@@ -56,8 +54,7 @@
 
         var votingStrategyFunc = function (strategy, options) {
             function StrategyViewModel() {
-                votingStrategy = new strategy();
-                votingStrategy.options(options);
+                votingStrategy = new strategy(options);
                 return votingStrategy;
             }
 
