@@ -1,0 +1,58 @@
+﻿<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8 centered">
+        <div class="page-header">
+            <h1>
+                <span data-bind="text: $root.pollName"></span>
+                <small>by <span data-bind="text: $root.pollCreator"></span></small>
+            </h1>
+        </div>
+        <!--Login Section-->
+        <div class="accordion" id="accordion">
+            <div id="loginSection" class="accordion-group panel panel-default">
+                <div class="accordion-heading panel-heading clickable" data-bind="click: $root.showSection.bind($data, $element)">
+                    <h4>Login</h4>
+                </div>
+                <div class="accordion-body panel-body collapse row">
+                    <div class="col-sm-4 col-xs-2"></div>
+                    <div class="col-sm-4 col-xs-8 centered form-group">
+                        <form>
+                            <label for="loginUsername" class="control-label">Username</label>
+                            <input id="loginUsername" class="form-control" autofocus />
+                            <label class="control-label info-message" id="usernameWarnMessage" hidden> Username must be alpha-numeric</label>
+                            <br />
+                            <button id="Name-loginSubmit" class="btn btn-primary" data-bind="click: $root.submitLogin">Login</button>
+                        </form>
+                    </div>
+                    <div class="col-sm-4 col-xs-2"></div>
+                </div>
+            </div>
+            <!--Voting Section-->
+            <div id="voteSection" class="accordion-group panel panel-default">
+                <div class="accordion-heading panel-heading clickable" data-bind="click: $root.showSection.bind($data, $element)">
+                    <h4>Vote</h4>
+                </div>
+                <div class="accordion-body panel-body collapse row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10 centered" id="votingArea">
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+            <!--Results Section-->
+            <div id="resultSection" class="accordion-group panel panel-default">
+                <div class="accordion-heading panel-heading clickable" data-bind="click: $root.showSection.bind($data, $element)">
+                    <h4>Results</h4>
+                </div>
+                <div class="accordion-body panel-body collapse row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10 centered">
+                        <div id="results"></div>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+</div>

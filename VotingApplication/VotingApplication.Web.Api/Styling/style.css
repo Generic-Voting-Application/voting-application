@@ -1,5 +1,6 @@
 ﻿@import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css";
 @import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css";
+@import "//cdnjs.cloudflare.com/ajax/libs/insightjs/1.2.0/insight.min.css";
 
 body {
     padding-top: 50px;
@@ -12,38 +13,86 @@ body {
     padding-right: 15px;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
-}
-
 h2 {
-    text-align:center;
+    text-align: center;
 }
 
-input, select {
-    width:100%;
+h4 {
+    font-weight: bold;
 }
 
-label.info-message {
-    font-size:small;
+input, select, textarea {
+    margin-bottom: 15px;
+    width: 100%;
+    border-width: 1px;
+    max-width: 100%;
+}
+
+label {
+    margin-bottom: 0px;
+    width: 100%;
+}
+
+    label.info-message {
+        font-size: small;
+        position: relative;
+        top: -15px;
+    }
+
+.clickable {
+    cursor: pointer;
+}
+
+.accordion-group {
+    margin: 0px;
+    border-radius: 0px;
+    overflow: hidden;
+}
+
+    .accordion-group:first-child {
+        border-radius: 10px 10px 0px 0px;
+    }
+
+    .accordion-group:last-child {
+        border-radius: 0px 0px 10px 10px;
+    }
+
+.accordion-heading {
+    border-radius: 0px;
+}
+
+/* To stop the option caption being selectable. Surprised Knockout doesn't already do this. */
+.select-placeholder option:first-child {
+    display: none;
+}
+
+.error {
+    border-color: red;
+    border-width: 2px;
+}
+
+.error-message {
+    font-size: small;
+    color: red;
+    position: relative;
+    top: -15px;
+}
+
+.text-center {
+    margin-bottom: 20px;
+}
+
+.points-label {
+    display: inline;
+    font-size: 24px;
+    margin: 10px;
 }
 
 #reset-votes, #save-options-as {
-    width:100%;
-    height:40px;
+    width: 150px;
+    height: 40px;
 }
 
 #delete-vote-row {
-    align-content:flex-end
-}
-
-th:first-child {
-    width:25%;
-}
-
-th:last-child {
-    width:10%;
+    align-content: flex-end;
 }
