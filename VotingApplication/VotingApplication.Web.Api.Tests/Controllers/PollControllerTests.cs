@@ -16,14 +16,14 @@ using VotingApplication.Web.Api.Controllers.API_Controllers;
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
     [TestClass]
-    public class SessionControllerTests
+    public class PollControllerTests
     {
-        private SessionController _controller;
-        private Session _mainSession;
-        private Session _otherSession;
+        private PollController _controller;
+        private Poll _mainPoll;
+        private Poll _otherPoll;
         private Guid[] UUIDs;
         private Option _redOption;
-        private InMemoryDbSet<Session> _dummySessions;
+        private InMemoryDbSet<Poll> _dummyPolls;
 
         [TestInitialize]
         public void setup()
@@ -36,30 +36,30 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             dummyTemplates.Add(redTemplate);
 
             UUIDs = new [] {Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()};
-            _mainSession = new Session() { UUID = UUIDs[0], ManageID = Guid.NewGuid() };
-            _otherSession = new Session() { UUID = UUIDs[1], ManageID = Guid.NewGuid() };
+            _mainPoll = new Poll() { UUID = UUIDs[0], ManageID = Guid.NewGuid() };
+            _otherPoll = new Poll() { UUID = UUIDs[1], ManageID = Guid.NewGuid() };
 
-            _dummySessions = new InMemoryDbSet<Session>(true);
-            _dummySessions.Add(_mainSession);
-            _dummySessions.Add(_otherSession);
+            _dummyPolls = new InMemoryDbSet<Poll>(true);
+            _dummyPolls.Add(_mainPoll);
+            _dummyPolls.Add(_otherPoll);
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
-            mockContext.Setup(a => a.Sessions).Returns(_dummySessions);
+            mockContext.Setup(a => a.Polls).Returns(_dummyPolls);
             mockContext.Setup(a => a.Templates).Returns(dummyTemplates);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
-            _controller = new SessionController(mockContextFactory.Object);
+            _controller = new PollController(mockContextFactory.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
 
         private void SaveChanges()
         {
-            for (int i = 0; i < _dummySessions.Local.Count; i++)
+            for (int i = 0; i < _dummyPolls.Local.Count; i++)
             {
-                _dummySessions.Local[i].UUID = UUIDs[i];
+                _dummyPolls.Local[i].UUID = UUIDs[i];
             }
         }
 
@@ -86,7 +86,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void GetByIdOnNonexistentSessionsAreNotFound()
+        public void GetByIdOnNonexistentPollsAreNotFound()
         {
             // Act
             Guid newGuid = Guid.NewGuid();
@@ -95,18 +95,18 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
+            Assert.AreEqual("Poll " + newGuid + " does not exist", error.Message);
         }
 
         [TestMethod]
-        public void GetByIdReturnsSessionWithMatchingId()
+        public void GetByIdReturnsPollWithMatchingId()
         {
             // Act
             var response = _controller.Get(UUIDs[1]);
 
             // Assert
-            Session responseSession = ((ObjectContent)response.Content).Value as Session;
-            Assert.AreEqual(_otherSession, responseSession);
+            Poll responsePoll = ((ObjectContent)response.Content).Value as Poll;
+            Assert.AreEqual(_otherPoll, responsePoll);
         }
 
         [TestMethod]
@@ -116,8 +116,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(UUIDs[0]);
 
             // Assert
-            Session responseSession = ((ObjectContent)response.Content).Value as Session;
-            Assert.AreEqual(Guid.Empty, responseSession.ManageID);
+            Poll responsePoll = ((ObjectContent)response.Content).Value as Poll;
+            Assert.AreEqual(Guid.Empty, responsePoll.ManageID);
         }
 
         #endregion
@@ -128,7 +128,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(new Session());
+            var response = _controller.Put(new Poll());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -138,7 +138,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, new Session());
+            var response = _controller.Put(1, new Poll());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -152,55 +152,55 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostIsAllowed()
         {
             // Act
-            var response = _controller.Post(new Session(){ Name = "New Session" });
+            var response = _controller.Post(new Poll() { Name = "New Poll" });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         [TestMethod]
-        public void PostRejectsSessionWithMissingName()
+        public void PostRejectsPollWithMissingName()
         {
             // Act
-            var response = _controller.Post(new Session());
+            var response = _controller.Post(new Poll());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session did not have a name", error.Message);
+            Assert.AreEqual("Poll did not have a name", error.Message);
         }
 
         [TestMethod]
-        public void PostAcceptsSessionWithMissingTemplate()
+        public void PostAcceptsPollWithMissingTemplate()
         {
             // Act
-            var response = _controller.Post(new Session() { Name = "New Session" });
+            var response = _controller.Post(new Poll() { Name = "New Poll" });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         [TestMethod]
-        public void PostAddsEmptyOptionsListToSessionWithoutTemplate()
+        public void PostAddsEmptyOptionsListToPollWithoutTemplate()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session" };
-            var response = _controller.Post(newSession);
+            Poll newPoll = new Poll() { Name = "New Poll" };
+            var response = _controller.Post(newPoll);
 
             // Assert
-            CollectionAssert.AreEquivalent(new List<Session>(), newSession.Options);
+            CollectionAssert.AreEquivalent(new List<Poll>(), newPoll.Options);
         }
 
         [TestMethod]
         public void PostPopulatesOptionsByTemplateId()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session", TemplateId = 2 };
-            var response = _controller.Post(newSession);
+            Poll newPoll = new Poll() { Name = "New Poll", TemplateId = 2 };
+            var response = _controller.Post(newPoll);
 
             // Assert
             List<Option> expectedOptions = new List<Option>() { _redOption };
-            CollectionAssert.AreEquivalent(expectedOptions, newSession.Options);
+            CollectionAssert.AreEquivalent(expectedOptions, newPoll.Options);
         }
 
         [TestMethod]
@@ -208,108 +208,108 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             List<Option> customOptions = new List<Option>() { _redOption };
-            Session newSession = new Session() { Name = "New Session", Options = customOptions };
-            var response = _controller.Post(newSession);
+            Poll newPoll = new Poll() { Name = "New Poll", Options = customOptions };
+            var response = _controller.Post(newPoll);
 
             // Assert
-            CollectionAssert.AreEquivalent(customOptions, newSession.Options);
+            CollectionAssert.AreEquivalent(customOptions, newPoll.Options);
         }
 
         [TestMethod]
-        public void PostRejectsSessionWithBlankName()
+        public void PostRejectsPollWithBlankName()
         {
             // Act
-            var response = _controller.Post(new Session() { Name = "" });
+            var response = _controller.Post(new Poll() { Name = "" });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session did not have a name", error.Message);
+            Assert.AreEqual("Poll did not have a name", error.Message);
         }
 
         [TestMethod]
-        public void PostAssignsSessionUUID()
+        public void PostAssignsPollUUID()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session" };
-            _controller.Post(newSession);
+            Poll newPoll = new Poll() { Name = "New Poll" };
+            _controller.Post(newPoll);
 
             // Assert
-            Assert.AreNotEqual(Guid.Empty, newSession.UUID);
+            Assert.AreNotEqual(Guid.Empty, newPoll.UUID);
         }
 
         [TestMethod]
-        public void PostAssignsSessionManageID()
+        public void PostAssignsPollManageID()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session" };
-            _controller.Post(newSession);
+            Poll newPoll = new Poll() { Name = "New Poll" };
+            _controller.Post(newPoll);
 
             // Assert
-            Assert.AreNotEqual(Guid.Empty, newSession.ManageID);
+            Assert.AreNotEqual(Guid.Empty, newPoll.ManageID);
         }
 
         [TestMethod]
-        public void PostAssignsSessionManageIDDifferentFromPollId()
+        public void PostAssignsPollManageIDDifferentFromPollId()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session" };
-            _controller.Post(newSession);
+            Poll newPoll = new Poll() { Name = "New Poll" };
+            _controller.Post(newPoll);
 
             // Assert
-            Assert.AreNotEqual(newSession.UUID, newSession.ManageID);
+            Assert.AreNotEqual(newPoll.UUID, newPoll.ManageID);
         }
 
         [TestMethod]
-        public void PostReturnsUUIDOfNewSession()
+        public void PostReturnsUUIDOfNewPoll()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session" };
-            var response = _controller.Post(newSession);
+            Poll newPoll = new Poll() { Name = "New Poll" };
+            var response = _controller.Post(newPoll);
 
             // Assert
-            Guid newSessionUUID = (Guid)((ObjectContent)response.Content).Value;
-            Assert.AreEqual(newSession.UUID, newSessionUUID);
+            Guid newPollUUID = (Guid)((ObjectContent)response.Content).Value;
+            Assert.AreEqual(newPoll.UUID, newPollUUID);
         }
 
         [TestMethod]
-        public void PostSetsIdOfNewSession()
+        public void PostSetsIdOfNewPoll()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session" };
-            var response = _controller.Post(newSession);
+            Poll newPoll = new Poll() { Name = "New Poll" };
+            var response = _controller.Post(newPoll);
 
             // Assert
-            Assert.AreEqual(UUIDs[2], newSession.UUID);
+            Assert.AreEqual(UUIDs[2], newPoll.UUID);
         }
 
         [TestMethod]
-        public void PostAddsNewSessionToSessions()
+        public void PostAddsNewPollToPolls()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session" };
-            _controller.Post(newSession);
+            Poll newPoll = new Poll() { Name = "New Poll" };
+            _controller.Post(newPoll);
 
             // Assert
-            List<Session> expectedSessions = new List<Session>();
-            expectedSessions.Add(_mainSession);
-            expectedSessions.Add(_otherSession);
-            expectedSessions.Add(newSession);
-            CollectionAssert.AreEquivalent(expectedSessions, _dummySessions.Local);
+            List<Poll> expectedPolls = new List<Poll>();
+            expectedPolls.Add(_mainPoll);
+            expectedPolls.Add(_otherPoll);
+            expectedPolls.Add(newPoll);
+            CollectionAssert.AreEquivalent(expectedPolls, _dummyPolls.Local);
         }
 
         [TestMethod]
         public void PostByIdIsAllowed()
         {
             // Act
-            var response = _controller.Post(UUIDs[0], new Session() { Name = "New Session" });
+            var response = _controller.Post(UUIDs[0], new Poll() { Name = "New Poll" });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         [TestMethod]
-        public void PostByIdRejectsNullSession()
+        public void PostByIdRejectsNullPoll()
         {
             // Act
             var response = _controller.Post(UUIDs[0], null);
@@ -317,40 +317,40 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session is null", error.Message);
+            Assert.AreEqual("Poll is null", error.Message);
         }
 
         [TestMethod]
-        public void PostByIdAcceptsSessionWithMissingTemplateId()
+        public void PostByIdAcceptsPollWithMissingTemplateId()
         {
             // Act
-            var response = _controller.Post(UUIDs[0], new Session() { Name = "New Session" });
+            var response = _controller.Post(UUIDs[0], new Poll() { Name = "New Poll" });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         [TestMethod]
-        public void PostByIdAddsEmptyOptionsListToSessionWithoutTemplate()
+        public void PostByIdAddsEmptyOptionsListToPollWithoutTemplate()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session" };
-            var response = _controller.Post(UUIDs[0], newSession);
+            Poll newPoll = new Poll() { Name = "New Poll" };
+            var response = _controller.Post(UUIDs[0], newPoll);
 
             // Assert
-            CollectionAssert.AreEquivalent(new List<Session>(), newSession.Options);
+            CollectionAssert.AreEquivalent(new List<Poll>(), newPoll.Options);
         }
 
         [TestMethod]
         public void PostByIdPopulatesOptionsByTemplateId()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session", TemplateId = 2 };
-            var response = _controller.Post(UUIDs[0], newSession);
+            Poll newPoll = new Poll() { Name = "New Poll", TemplateId = 2 };
+            var response = _controller.Post(UUIDs[0], newPoll);
 
             // Assert
             List<Option> expectedOptions = new List<Option>() { _redOption };
-            CollectionAssert.AreEquivalent(expectedOptions, newSession.Options);
+            CollectionAssert.AreEquivalent(expectedOptions, newPoll.Options);
         }
 
         [TestMethod]
@@ -358,57 +358,57 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             List<Option> customOptions = new List<Option>() { _redOption };
-            Session newSession = new Session() { Name = "New Session", Options = customOptions };
-            var response = _controller.Post(UUIDs[0], newSession);
+            Poll newPoll = new Poll() { Name = "New Poll", Options = customOptions };
+            var response = _controller.Post(UUIDs[0], newPoll);
 
             // Assert
-            CollectionAssert.AreEquivalent(customOptions, newSession.Options);
+            CollectionAssert.AreEquivalent(customOptions, newPoll.Options);
         }
 
         [TestMethod]
-        public void PostByIdRejectsSessionWithMissingName()
+        public void PostByIdRejectsPollWithMissingName()
         {
             // Act
-            var response = _controller.Post(UUIDs[0], new Session() { });
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session does not have a name", error.Message);
-        }
-
-        [TestMethod]
-        public void PostByIdRejectsSessionWithBlankName()
-        {
-            // Act
-            var response = _controller.Post(UUIDs[0], new Session() { Name = "" });
+            var response = _controller.Post(UUIDs[0], new Poll() { });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session does not have a name", error.Message);
+            Assert.AreEqual("Poll does not have a name", error.Message);
         }
 
         [TestMethod]
-        public void PostByIdReplacesTheSessionWithThatId()
+        public void PostByIdRejectsPollWithBlankName()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session" };
-            var response = _controller.Post(UUIDs[1], newSession);
+            var response = _controller.Post(UUIDs[0], new Poll() { Name = "" });
 
             // Assert
-            List<Session> expectedSessions = new List<Session>();
-            expectedSessions.Add(_mainSession);
-            expectedSessions.Add(newSession);
-            CollectionAssert.AreEquivalent(expectedSessions, _dummySessions.Local);
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Poll does not have a name", error.Message);
         }
 
         [TestMethod]
-        public void PostByIdReturnsIdOfTheReplacedSession()
+        public void PostByIdReplacesThePollWithThatId()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session" };
-            var response = _controller.Post(UUIDs[1], newSession);
+            Poll newPoll = new Poll() { Name = "New Poll" };
+            var response = _controller.Post(UUIDs[1], newPoll);
+
+            // Assert
+            List<Poll> expectedPolls = new List<Poll>();
+            expectedPolls.Add(_mainPoll);
+            expectedPolls.Add(newPoll);
+            CollectionAssert.AreEquivalent(expectedPolls, _dummyPolls.Local);
+        }
+
+        [TestMethod]
+        public void PostByIdReturnsIdOfTheReplacedPoll()
+        {
+            // Act
+            Poll newPoll = new Poll() { Name = "New Poll" };
+            var response = _controller.Post(UUIDs[1], newPoll);
 
             // Assert
             Guid responseUUID = (Guid)((ObjectContent)response.Content).Value;
@@ -420,8 +420,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             Guid newUUID = UUIDs[2];
-            Session newSession = new Session() { Name = "New Session" };
-            var response = _controller.Post(newUUID, newSession);
+            Poll newPoll = new Poll() { Name = "New Poll" };
+            var response = _controller.Post(newUUID, newPoll);
 
             // Assert
             Guid responseUUID = (Guid)((ObjectContent)response.Content).Value;
@@ -429,15 +429,15 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostByIdForNewIdSetsUUIDOnSession()
+        public void PostByIdForNewIdSetsUUIDOnPoll()
         {
             // Act
             Guid newUUID = UUIDs[2];
-            Session newSession = new Session() { Name = "New Session" };
-            var response = _controller.Post(newUUID, newSession);
+            Poll newPoll = new Poll() { Name = "New Poll" };
+            var response = _controller.Post(newUUID, newPoll);
 
             // Assert
-            Assert.AreEqual(newUUID, newSession.UUID);
+            Assert.AreEqual(newUUID, newPoll.UUID);
         }
 
         #endregion

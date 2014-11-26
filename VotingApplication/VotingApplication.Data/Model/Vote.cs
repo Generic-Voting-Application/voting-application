@@ -13,7 +13,7 @@ namespace VotingApplication.Data.Model
         public long UserId { get; set; }
         public User User { get; set; }
 
-        public Guid SessionId { get; set; }
-        public Session Session { get; set; }
+        public Guid PollId { get; set; }
+        public Poll Poll { get; set; }
     }
 }

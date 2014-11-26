@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VotingApplication.Data.Model
 {
-    public class Session
+    public class Poll
     {
         public long Id { get; set; }
 

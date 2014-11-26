@@ -13,6 +13,6 @@ namespace VotingApplication.Data.Model
         public string Info { get; set; }
 
         public List<Template> Templates { get; set; }
-        public List<Session> Sessions { get; set; }
+        public List<Poll> Polls { get; set; }
     }
 }

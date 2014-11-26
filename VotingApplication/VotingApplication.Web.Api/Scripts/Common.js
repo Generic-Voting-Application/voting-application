@@ -35,14 +35,14 @@
 
     Common.getPollId = function () {
         var windowArgs = Common.getJsonFromUrl();
-        sessionId = windowArgs['poll'];
-        return sessionId;
+        pollId = windowArgs['poll'];
+        return pollId;
     };
 
     Common.getManageId = function () {
         var windowArgs = Common.getJsonFromUrl();
-        sessionId = windowArgs['manage'];
-        return sessionId;
+        pollId = windowArgs['manage'];
+        return pollId;
     };
 
     Common.currentUserId = function () {

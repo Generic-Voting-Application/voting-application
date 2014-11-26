@@ -1,15 +1,15 @@
 ﻿<div class="jumbotron">
     <h1>Admin</h1>
 </div>
-<div class="row" id="sessions">
+<div class="row" id="polls">
     <div class="col-xs-4"></div>
     <div class="col-xs-3 centered">
-        <label for="session-select">Session</label>
+        <label for="poll-select">Poll</label>
         <br />
-        <select id="session-select" data-bind="options: sessions, optionsText: 'Name', optionsValue: 'UUID'"></select>
+        <select id="poll-select" data-bind="options: polls, optionsText: 'Name', optionsValue: 'UUID'"></select>
         <br />
         <br />
-        <button type="submit" class="btn btn-primary" data-bind="click: $root.submitSession.bind()">Go</button>
+        <button type="submit" class="btn btn-primary" data-bind="click: $root.submitPoll.bind()">Go</button>
     </div>
     <div class="col-xs-5"></div>
 </div>

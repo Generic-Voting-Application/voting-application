@@ -29,7 +29,7 @@
             
             $.ajax({
                 type: 'POST',
-                url: '/api/session',
+                url: '/api/poll',
                 contentType: 'application/json',
 
                 data: JSON.stringify({
@@ -42,12 +42,12 @@
                 }),
 
                 success: function () {
-                    self.sessionCreated();
+                    self.pollCreated();
                 }
             });
         };
 
-        self.sessionCreated = function () {
+        self.pollCreated = function () {
             // Load partial HTML
             $.ajax({
                 type: 'GET',

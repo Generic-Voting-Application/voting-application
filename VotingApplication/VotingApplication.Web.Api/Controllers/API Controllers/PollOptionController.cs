@@ -11,28 +11,28 @@ using VotingApplication.Web.Api.Filters;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
-    public class SessionOptionController : WebApiController
+    public class PollOptionController : WebApiController
     {
-        public SessionOptionController() : base() { }
-        public SessionOptionController(IContextFactory contextFactory) : base(contextFactory) { }
+        public PollOptionController() : base() { }
+        public PollOptionController(IContextFactory contextFactory) : base(contextFactory) { }
 
         #region GET
 
-        public virtual HttpResponseMessage Get(Guid sessionId)
+        public virtual HttpResponseMessage Get(Guid pollId)
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session matchingSession = context.Sessions.Where(s => s.UUID == sessionId).Include(s => s.Options).FirstOrDefault();
-                if (matchingSession == null)
+                Poll matchingPoll = context.Polls.Where(s => s.UUID == pollId).Include(s => s.Options).FirstOrDefault();
+                if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", pollId));
                 }
 
-                return this.Request.CreateResponse(HttpStatusCode.OK, matchingSession.Options);
+                return this.Request.CreateResponse(HttpStatusCode.OK, matchingPoll.Options);
             }
         }
 
-        public virtual HttpResponseMessage Get(Guid sessionId, long optionId)
+        public virtual HttpResponseMessage Get(Guid pollId, long optionId)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET by id on this controller");
         }
@@ -41,12 +41,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region POST
 
-        public virtual HttpResponseMessage Post(Guid sessionId, Option option)
+        public virtual HttpResponseMessage Post(Guid pollId, Option option)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
         }
 
-        public virtual HttpResponseMessage Post(Guid sessionId, long optionId, Option option)
+        public virtual HttpResponseMessage Post(Guid pollId, long optionId, Option option)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
         }
@@ -55,12 +55,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region PUT
 
-        public virtual HttpResponseMessage Put(Guid sessionId, Option option)
+        public virtual HttpResponseMessage Put(Guid pollId, Option option)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT on this controller");
         }
 
-        public virtual HttpResponseMessage Put(Guid sessionId, long optionId, Option option)
+        public virtual HttpResponseMessage Put(Guid pollId, long optionId, Option option)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT by id on this controller");
         }
@@ -69,12 +69,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region DELETE
 
-        public virtual HttpResponseMessage Delete(Guid sessionId)
+        public virtual HttpResponseMessage Delete(Guid pollId)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
         }
 
-        public virtual HttpResponseMessage Delete(Guid sessionId, long optionId)
+        public virtual HttpResponseMessage Delete(Guid pollId, long optionId)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE by id on this controller");
         }
