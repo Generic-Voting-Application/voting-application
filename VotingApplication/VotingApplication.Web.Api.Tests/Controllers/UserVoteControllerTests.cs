@@ -233,7 +233,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutNonexistentUserIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(9, new Vote() { OptionId = 1, SessionId = _mainUUID });
+            var response = _controller.Put(9, new List<Vote>(){ new Vote() { OptionId = 1, SessionId = _mainUUID }});
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
@@ -245,7 +245,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutNonexistentOptionIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, new Vote() { OptionId = 7, SessionId = _mainUUID });
+            var response = _controller.Put(1, new List<Vote>(){ new Vote() { OptionId = 7, SessionId = _mainUUID }});
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
@@ -257,7 +257,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutMissingSessionIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, new Vote() { OptionId = 1 });
+            var response = _controller.Put(1, new List<Vote>(){ new Vote() { OptionId = 1 }});
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -270,7 +270,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            var response = _controller.Put(1, new Vote() { OptionId = 1, SessionId = newGuid });
+            var response = _controller.Put(1, new List<Vote>(){ new Vote() { OptionId = 1, SessionId = newGuid }});
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
@@ -282,7 +282,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutMissingOptionIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, new Vote());
+            var response = _controller.Put(1, new List<Vote>(){ new Vote() });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -294,7 +294,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithNewVoteIfNoneExistsIsAllowed()
         {
             // Act
-            var response = _controller.Put(3, new Vote() { OptionId = 1, SessionId = _mainUUID });
+            var response = _controller.Put(3, new List<Vote>(){ new Vote() { OptionId = 1, SessionId = _mainUUID }});
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -304,11 +304,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutAddsANewVoteIfNoneExistsAndReturnsVoteId()
         {
             // Act
-            var response = _controller.Put(3, new Vote() { OptionId = 1, SessionId = _mainUUID });
+            var response = _controller.Put(3, new List<Vote>(){ new Vote() { OptionId = 1, SessionId = _mainUUID }});
 
             // Assert
-            long responseVoteId = (long)((ObjectContent)response.Content).Value;
-            Assert.AreEqual(4, responseVoteId);
+            List<long> responseVoteIds = ((ObjectContent)response.Content).Value as List<long>;
+            CollectionAssert.AreEquivalent(new List<long>() {4}, responseVoteIds);
         }
 
         [TestMethod]
@@ -316,7 +316,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             var newVote = new Vote() { OptionId = 1, SessionId = _mainUUID };
-            var response = _controller.Put(3, newVote);
+            var response = _controller.Put(3, new List<Vote>(){ newVote });
 
             // Assert
             List<Vote> expectedVotes = new List<Vote>();
@@ -332,7 +332,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             var newVote = new Vote() { OptionId = 2, SessionId = _mainUUID };
-            var response = _controller.Put(1, newVote);
+            var response = _controller.Put(1, new List<Vote>(){ newVote });
 
             // Assert
             Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[0].OptionId);
@@ -343,10 +343,32 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             var newVote = new Vote() { OptionId = 2, SessionId = _otherUUID };
-            _controller.Put(1, newVote);
+            _controller.Put(1, new List<Vote>(){ newVote });
 
             // Assert
             Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[2].OptionId);
+        }
+
+        [TestMethod]
+        public void PutWithoutValueDefaultsToOne()
+        {
+            // Act
+            var newVote = new Vote() { OptionId = 1, SessionId = _mainUUID };
+            _controller.Put(1, new List<Vote>(){ newVote });
+
+            // Assert
+            Assert.AreEqual(newVote.Value, 1);
+        }
+
+        [TestMethod]
+        public void PutWithValueRetainsTheValue()
+        {
+            // Act
+            var newVote = new Vote() { OptionId = 1, SessionId = _mainUUID, Value = 35 };
+            _controller.Put(1, new List<Vote>(){ newVote });
+
+            // Assert
+            Assert.AreEqual(newVote.Value, 35);
         }
 
         #endregion

@@ -5,9 +5,8 @@
         'bootstrap': 'Lib/bootstrap.min',
         'insight': 'Lib/insight.min',
         'd3': 'Lib/d3.min',
-        'crossfilter': 'Lib/crossfilter.min',
-        'BasicVote': 'VotingStrategies/BasicVote'
-    },
+        'crossfilter': 'Lib/crossfilter.min'
+},
     shim: {
         'jquery': {
             exports: '$'

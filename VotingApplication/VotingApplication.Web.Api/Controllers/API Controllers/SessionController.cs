@@ -79,7 +79,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 newSession.UUID = Guid.NewGuid();
                 newSession.ManageID = Guid.NewGuid();
-                newSession.VotingStrategy = "Basic";
 
                 // Do the long-running SendEmail task in a different thread, so we can return early
                 Thread newThread = new Thread(new ThreadStart(() => SendEmails(newSession)));
@@ -107,8 +106,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             string message = String.Join("\n\n", new List<string>()
                 {"Your poll is now created and ready to go!",
-                 "You can invite people to vote by giving them this link: http://voting-app.azurewebsites.net?poll=" + session.UUID + ".",
-                 "You can administer your poll at http://voting-app.azurewebsites.net?manage=" + session.ManageID + ". Don't share this link around!"});
+                 "You can invite people to vote by giving them this link: http://votingapp.azurewebsites.net?poll=" + session.UUID + ".",
+                 "You can administer your poll at http://votingapp.azurewebsites.net?manage=" + session.ManageID + ". Don't share this link around!"});
 
             MailSender.SendMail(session.Email, "Your poll is ready!", message);
         }
@@ -117,7 +116,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             string message = String.Join("\n\n", new List<string>()
                 {"You've been invited by " + session.Creator + " to vote on " + session.Name + ".",
-                 "Have your say at: http://voting-app.azurewebsites.net?poll=" + session.UUID + "!"});
+                 "Have your say at: http://votingapp.azurewebsites.net?poll=" + session.UUID + "!"});
 
             MailSender.SendMail(targetEmailAddress, "Have your say!", message);
         }
