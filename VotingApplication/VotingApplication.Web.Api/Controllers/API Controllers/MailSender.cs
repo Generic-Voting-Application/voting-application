@@ -33,22 +33,22 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public static void SendMail(string to, string subject, string message)
         {
-            if (to.Length == 0)
-            {
-                return;
-            }
-
-            string hostEmail = WebConfigurationManager.AppSettings["HostEmail"];
-
-            MailMessage mail = new MailMessage(hostEmail, to);
-            mail.Subject = subject;
-            mail.Body = message;
-
             try
             {
+                if (to.Length == 0)
+                {
+                    return;
+                }
+
+                string hostEmail = WebConfigurationManager.AppSettings["HostEmail"];
+
+                MailMessage mail = new MailMessage(hostEmail, to);
+                mail.Subject = subject;
+                mail.Body = message;
+
                 client.Send(mail);
             }
-            catch (SmtpException)
+            catch (Exception)
             {
                 // Ignore the mail
             }

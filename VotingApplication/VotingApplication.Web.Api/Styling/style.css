@@ -88,13 +88,6 @@ label {
     margin: 10px;
 }
 
-/*.selection-area {
-    margin: 3px;
-    border-style: dashed;
-    border-width: 3px;
-    border-radius: 5px;
-}*/
-
 #reset-votes, #save-options-as {
     width: 150px;
     height: 40px;
