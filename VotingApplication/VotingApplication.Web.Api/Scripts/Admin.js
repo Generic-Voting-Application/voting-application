@@ -1,19 +1,19 @@
 ﻿require(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
     function AdminViewModel() {
         var self = this;
-        var sessionId = 0;
+        var pollId = 0;
 
         self.votes = ko.observableArray();
-        self.sessions = ko.observableArray();
+        self.polls = ko.observableArray();
         self.options = ko.observableArray();
         self.selectedDeleteOptionId = null;
-        self.currentSession = null;
-        self.optionSetName = ko.observable();
+        self.currentPoll = null;
+        self.templateName = ko.observable();
 
         self.resetVotes = function () {
             $.ajax({
                 type: 'DELETE',
-                url: "/api/session/" + sessionId + "/vote",
+                url: "/api/poll/" + pollId + "/vote",
 
                 success: function () {
                     $("#reset-votes").attr('disabled', 'disabled');
@@ -21,76 +21,76 @@
                     self.populateVotes();
                 }
             });
-        }
+        };
 
         self.deleteVote = function (data, event) {
             $.ajax({
                 type: 'DELETE',
-                url: '/api/session/' + sessionId + '/vote?id=' + data.Id,
+                url: '/api/poll/' + pollId + '/vote?id=' + data.Id,
                 contentType: 'application/json',
 
                 success: function () {
                     self.populateVotes();
                 }
             });
-        }
+        };
 
-        self.populateSession = function () {
+        self.populatePoll = function () {
             $.ajax({
                 type: 'GET',
-                url: 'api/session/' + sessionId,
+                url: 'api/poll/' + pollId,
 
                 success: function (data) {
-                    self.currentSession = data;
-                    self.optionSetName(data.Name);
+                    self.currentPoll = data;
+                    self.templateName(data.Name);
                     self.populateOptions();
                 }
-            })
-        }
+            });
+        };
 
         self.populateOptions = function () {
             $.ajax({
                 type: 'GET',
-                url: 'api/session/' + sessionId + '/option',
+                url: 'api/poll/' + pollId + '/option',
 
                 success: function (data) {
                     self.options(data);
                 }
-            })
-        }
+            });
+        };
 
         self.populateVotes = function () {
             $.ajax({
                 type: 'GET',
-                url: "/api/session/" + sessionId + "/vote",
+                url: "/api/poll/" + pollId + "/vote",
 
                 success: function (data) {
                     //Replace contents of self.votes with 'data'
                     self.votes(data);
                 }
             });
-        }
+        };
 
-        self.submitSession = function () {
-            sessionId = $("#session-select").val();
-            window.location = "?session=" + sessionId;
-        }
+        self.submitPoll = function () {
+            pollId = $("#poll-select").val();
+            window.location = "?poll=" + pollId;
+        };
 
-        self.allSessions = function () {
+        self.allPolls = function () {
             $.ajax({
                 type: 'GET',
-                url: '/api/session',
+                url: '/api/poll',
 
                 success: function (data) {
-                    self.sessions(data);
+                    self.polls(data);
                 }
-            })
-        }
+            });
+        };
 
         self.deleteOption = function (data, event) {
             $.ajax({
                 type: 'DELETE',
-                url: '/api/session/' + sessionId + '/option/' + data.Id,
+                url: '/api/poll/' + pollId + '/option/' + data.Id,
                 contentType: 'application/json',
 
                 success: function () {
@@ -98,48 +98,48 @@
                     self.populateVotes();
                 }
             });
-        }
+        };
 
-        self.publishSession = function () {
+        self.publishPoll = function () {
             $.ajax({
                 type: 'POST',
-                url: '/api/session/' + sessionId,
+                url: '/api/poll/' + pollId,
                 contentType: 'application/json',
-                data: JSON.stringify(self.currentSession),
+                data: JSON.stringify(self.currentPoll),
 
                 success: function () {
                     self.populateOptions();
                 }
             });
-        }
+        };
 
-        self.createOptionSet = function () {
+        self.createTemplate = function () {
             $.ajax({
                 type: 'POST',
-                url: '/api/optionset/',
+                url: '/api/template/',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    Name: $("#optionset-name").val(),
+                    Name: $("#template-name").val(),
                     Options: self.options()
                 }),
             });
-        }
+        };
 
         $(document).ready(function () {
-            sessionId = Common.getSessionId();
+            pollId = Common.getPollId();
 
-            if (!sessionId) {
-                self.allSessions();
+            if (!pollId) {
+                self.allPolls();
                 $("#admin-panel").hide();
-                $("#sessions").show();
+                $("#polls").show();
                 return;
             }
 
-            $("#sessions").hide();
+            $("#polls").hide();
             $("#admin-panel").show();
 
             self.populateVotes();
-            self.populateSession();
+            self.populatePoll();
         });
     }
 

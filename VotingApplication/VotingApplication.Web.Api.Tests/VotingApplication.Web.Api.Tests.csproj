@@ -78,6 +78,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ManageOptionControllerTests.cs" />
+    <Compile Include="Controllers\ManageVoteControllerTests.cs" />
     <Compile Include="Controllers\OptionControllerTests.cs" />
     <Compile Include="Controllers\OptionSetControllerTests.cs" />
     <Compile Include="Controllers\SessionControllerTests.cs" />

@@ -28,8 +28,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             _mainUUID = Guid.NewGuid();
             _otherUUID = Guid.NewGuid();
-            Session mainSession = new Session() { UUID = _mainUUID };
-            Session otherSession = new Session() { UUID = _otherUUID };
+            Poll mainPoll = new Poll() { UUID = _mainUUID };
+            Poll otherPoll = new Poll() { UUID = _otherUUID };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
             Option pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
@@ -40,23 +40,23 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             InMemoryDbSet<User> dummyUsers = new InMemoryDbSet<User>(true);
             _dummyVotes = new InMemoryDbSet<Vote>(true);
             InMemoryDbSet<Option> dummyOptions = new InMemoryDbSet<Option>(true);
-            InMemoryDbSet<Session> dummySessions = new InMemoryDbSet<Session>(true);
+            InMemoryDbSet<Poll> dummyPolls = new InMemoryDbSet<Poll>(true);
 
             dummyOptions.Add(burgerOption);
             dummyOptions.Add(pizzaOption);
 
-            dummySessions.Add(mainSession);
-            dummySessions.Add(otherSession);
+            dummyPolls.Add(mainPoll);
+            dummyPolls.Add(otherPoll);
 
-            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, SessionId = _mainUUID };
+            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = _mainUUID };
             dummyUsers.Add(bobUser);
             _dummyVotes.Add(_bobVote);
 
-            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, SessionId = _mainUUID };
+            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, PollId = _mainUUID };
             dummyUsers.Add(joeUser);
             _dummyVotes.Add(_joeVote);
 
-            _otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, SessionId = _otherUUID };
+            _otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, PollId = _otherUUID };
             _dummyVotes.Add(_otherVote);
 
             dummyUsers.Add(billUser);
@@ -67,7 +67,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
             mockContext.Setup(a => a.Users).Returns(dummyUsers);
             mockContext.Setup(a => a.Options).Returns(dummyOptions);
-            mockContext.Setup(a => a.Sessions).Returns(dummySessions);
+            mockContext.Setup(a => a.Polls).Returns(dummyPolls);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
             _controller = new UserVoteController(mockContextFactory.Object);
@@ -233,7 +233,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutNonexistentUserIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(9, new Vote() { OptionId = 1, SessionId = _mainUUID });
+            var response = _controller.Put(9, new List<Vote>() { new Vote() { OptionId = 1, PollId = _mainUUID } });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
@@ -245,7 +245,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutNonexistentOptionIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, new Vote() { OptionId = 7, SessionId = _mainUUID });
+            var response = _controller.Put(1, new List<Vote>() { new Vote() { OptionId = 7, PollId = _mainUUID } });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
@@ -254,35 +254,35 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PutMissingSessionIsNotAllowed()
+        public void PutMissingPollIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, new Vote() { OptionId = 1 });
+            var response = _controller.Put(1, new List<Vote>(){ new Vote() { OptionId = 1 }});
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Vote does not have a session", error.Message);
+            Assert.AreEqual("Vote does not have a poll", error.Message);
         }
 
         [TestMethod]
-        public void PutNonexistentSessionIsNotAllowed()
+        public void PutNonexistentPollIsNotAllowed()
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            var response = _controller.Put(1, new Vote() { OptionId = 1, SessionId = newGuid });
+            var response = _controller.Put(1, new List<Vote>() { new Vote() { OptionId = 1, PollId = newGuid } });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
+            Assert.AreEqual("Poll " + newGuid + " does not exist", error.Message);
         }
 
         [TestMethod]
         public void PutMissingOptionIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, new Vote());
+            var response = _controller.Put(1, new List<Vote>(){ new Vote() });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -294,7 +294,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithNewVoteIfNoneExistsIsAllowed()
         {
             // Act
-            var response = _controller.Put(3, new Vote() { OptionId = 1, SessionId = _mainUUID });
+            var response = _controller.Put(3, new List<Vote>() { new Vote() { OptionId = 1, PollId = _mainUUID } });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -304,19 +304,19 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutAddsANewVoteIfNoneExistsAndReturnsVoteId()
         {
             // Act
-            var response = _controller.Put(3, new Vote() { OptionId = 1, SessionId = _mainUUID });
+            var response = _controller.Put(3, new List<Vote>() { new Vote() { OptionId = 1, PollId = _mainUUID } });
 
             // Assert
-            long responseVoteId = (long)((ObjectContent)response.Content).Value;
-            Assert.AreEqual(4, responseVoteId);
+            List<long> responseVoteIds = ((ObjectContent)response.Content).Value as List<long>;
+            CollectionAssert.AreEquivalent(new List<long>() {4}, responseVoteIds);
         }
 
         [TestMethod]
         public void PutAddsANewVoteIfNoneExists()
         {
             // Act
-            var newVote = new Vote() { OptionId = 1, SessionId = _mainUUID };
-            var response = _controller.Put(3, newVote);
+            var newVote = new Vote() { OptionId = 1, PollId = _mainUUID };
+            var response = _controller.Put(3, new List<Vote>(){ newVote });
 
             // Assert
             List<Vote> expectedVotes = new List<Vote>();
@@ -331,22 +331,44 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutReplacesCurrentVote()
         {
             // Act
-            var newVote = new Vote() { OptionId = 2, SessionId = _mainUUID };
-            var response = _controller.Put(1, newVote);
+            var newVote = new Vote() { OptionId = 2, PollId = _mainUUID };
+            var response = _controller.Put(1, new List<Vote>(){ newVote });
 
             // Assert
             Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[0].OptionId);
         }
 
         [TestMethod]
-        public void PutWithSessionReplacesInThatSession()
+        public void PutWithPollReplacesInThatPoll()
         {
             // Act
-            var newVote = new Vote() { OptionId = 2, SessionId = _otherUUID };
-            _controller.Put(1, newVote);
+            var newVote = new Vote() { OptionId = 2, PollId = _otherUUID };
+            _controller.Put(1, new List<Vote>(){ newVote });
 
             // Assert
             Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[2].OptionId);
+        }
+
+        [TestMethod]
+        public void PutWithoutValueDefaultsToOne()
+        {
+            // Act
+            var newVote = new Vote() { OptionId = 1, PollId = _mainUUID };
+            _controller.Put(1, new List<Vote>(){ newVote });
+
+            // Assert
+            Assert.AreEqual(newVote.PollValue, 1);
+        }
+
+        [TestMethod]
+        public void PutWithValueRetainsTheValue()
+        {
+            // Act
+            var newVote = new Vote() { OptionId = 1, PollId = _mainUUID, PollValue = 35 };
+            _controller.Put(1, new List<Vote>(){ newVote });
+
+            // Assert
+            Assert.AreEqual(newVote.PollValue, 35);
         }
 
         #endregion

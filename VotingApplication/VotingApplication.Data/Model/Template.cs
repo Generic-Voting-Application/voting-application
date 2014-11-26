@@ -2,7 +2,7 @@
 
 namespace VotingApplication.Data.Model
 {
-    public class OptionSet
+    public class Template
     {
         public long Id { get; set; }
         public string Name { get; set; }
