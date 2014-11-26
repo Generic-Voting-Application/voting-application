@@ -11,7 +11,7 @@ namespace VotingApplication.Web.Api.Controllers
 {
     public class UserVoteController : WebApiController
     {
-        public UserVoteController() : base() {}
+        public UserVoteController() : base() { }
         public UserVoteController(IContextFactory contextFactory) : base(contextFactory) { }
 
         #region GET
@@ -60,55 +60,64 @@ namespace VotingApplication.Web.Api.Controllers
 
         #region PUT
 
-        public HttpResponseMessage Put(long userId, Vote vote)
+        public HttpResponseMessage Put(long userId, List<Vote> votes)
         {
             using (var context = _contextFactory.CreateContext())
             {
-                if (vote.OptionId == 0)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote does not have an option");
-                }
+                List<long> voteIds = new List<long>();
 
-                if (vote.SessionId == Guid.Empty)
+                foreach (Vote vote in votes)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote does not have a session");
-                }
+                    if (vote.OptionId == 0)
+                    {
+                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote does not have an option");
+                    }
 
-                IEnumerable<User> users = context.Users.Where(u => u.Id == userId);
-                if(users.Count() == 0)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("User {0} does not exist", userId));
-                }
+                    if (vote.SessionId == Guid.Empty)
+                    {
+                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote does not have a session");
+                    }
 
-                IEnumerable<Option> options = context.Options.Where(o => o.Id == vote.OptionId);
-                if (options.Count() == 0)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Option {0} does not exist", vote.OptionId));
-                }
+                    IEnumerable<User> users = context.Users.Where(u => u.Id == userId);
+                    if (users.Count() == 0)
+                    {
+                        return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("User {0} does not exist", userId));
+                    }
 
-                IEnumerable<Session> sessions = context.Sessions.Where(o => o.UUID == vote.SessionId);
-                if (sessions.Count() == 0)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Session {0} does not exist", vote.SessionId));
-                }
+                    IEnumerable<Option> options = context.Options.Where(o => o.Id == vote.OptionId);
+                    if (options.Count() == 0)
+                    {
+                        return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Option {0} does not exist", vote.OptionId));
+                    }
 
-                IEnumerable<Vote> votes = context.Votes.Where(v => v.UserId == userId && v.SessionId == vote.SessionId);
-                if(votes.Count() == 0)
-                {
+                    IEnumerable<Session> sessions = context.Sessions.Where(o => o.UUID == vote.SessionId);
+                    if (sessions.Count() == 0)
+                    {
+                        return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Session {0} does not exist", vote.SessionId));
+                    }
+
+                    if (vote.PollValue <= 0)
+                    {
+                        vote.PollValue = 1;
+                    }
+
+                    List<Vote> contextVotes = context.Votes.Where(v => v.UserId == userId && v.SessionId == vote.SessionId).ToList<Vote>();
+                    foreach (Vote contextVote in contextVotes)
+                    {
+                        context.Votes.Remove(contextVote);
+                    }
+
                     vote.UserId = userId;
+                }
+
+                foreach (Vote vote in votes)
+                {
                     context.Votes.Add(vote);
                     context.SaveChanges();
-                    return this.Request.CreateResponse(HttpStatusCode.OK, vote.Id);
-
-                }
-                else
-                {
-                    Vote oldVote = votes.FirstOrDefault();
-                    oldVote.OptionId = vote.OptionId;
-                    context.SaveChanges();
-                    return this.Request.CreateResponse(HttpStatusCode.OK, oldVote.Id);
+                    voteIds.Add(vote.Id);
                 }
 
+                return this.Request.CreateResponse(HttpStatusCode.OK, voteIds);
             }
         }
 

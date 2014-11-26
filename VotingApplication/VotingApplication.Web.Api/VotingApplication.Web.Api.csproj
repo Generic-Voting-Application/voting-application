@@ -299,12 +299,18 @@
     <Compile Include="Results\ChallengeResult.cs" />
     <Content Include="img\poll.jpg" />
     <Content Include="Partials\CheckEmail.html" />
+    <Content Include="Partials\VotingStrategies\RankedVote.html" />
+    <Content Include="Partials\VotingStrategies\PointsVote.html" />
+    <Content Include="Partials\VotingStrategies\BasicVote.html" />
+    <Content Include="Partials\VotingStrategies\RankedVoteResults.html" />
     <Content Include="Scripts\Create.js" />
     <Content Include="Scripts\Lib\bootstrap.min.js" />
     <Content Include="Scripts\Lib\crossfilter.min.js" />
     <Content Include="Scripts\Lib\d3.min.js" />
     <Content Include="Scripts\Lib\insight.min.js" />
     <Content Include="Scripts\Lib\jquery-2.1.1.min.js" />
+    <Content Include="Scripts\Lib\jquery-sortable-min.js" />
+    <Content Include="Scripts\Lib\jquery-ui.min.js" />
     <Content Include="Scripts\Lib\knockout-3.2.0.js" />
     <Content Include="Scripts\Main.js" />
     <Compile Include="Startup.cs" />
@@ -352,6 +358,9 @@
     <Content Include="Partials\Create.html" />
     <Content Include="Partials\Manage.html" />
     <Content Include="Partials\Poll.html" />
+    <Content Include="Scripts\VotingStrategies\RankedVote.js" />
+    <Content Include="Scripts\VotingStrategies\PointsVote.js" />
+    <Content Include="Scripts\VotingStrategies\BasicVote.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
