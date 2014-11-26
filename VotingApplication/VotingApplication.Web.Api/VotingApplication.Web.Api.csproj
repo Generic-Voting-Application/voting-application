@@ -267,10 +267,10 @@
     <Compile Include="Controllers\API Controllers\ManageOptionController.cs" />
     <Compile Include="Controllers\API Controllers\ManageVoteController.cs" />
     <Compile Include="Controllers\API Controllers\TemplateController.cs" />
-    <Compile Include="Controllers\API Controllers\SessionController.cs" />
-    <Compile Include="Controllers\API Controllers\SessionOptionController.cs" />
-    <Compile Include="Controllers\API Controllers\SessionVoteController.cs" />
-    <Compile Include="Controllers\API Controllers\UserSessionVoteController.cs" />
+    <Compile Include="Controllers\API Controllers\PollController.cs" />
+    <Compile Include="Controllers\API Controllers\PollOptionController.cs" />
+    <Compile Include="Controllers\API Controllers\PollVoteController.cs" />
+    <Compile Include="Controllers\API Controllers\UserPollVoteController.cs" />
     <Compile Include="Controllers\Web Controllers\AdminController.cs" />
     <Compile Include="Controllers\Web Controllers\HomeController.cs" />
     <Compile Include="Controllers\API Controllers\OptionController.cs" />
