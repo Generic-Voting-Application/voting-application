@@ -67,9 +67,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (newSession.Options == null)
                 {
-                    if (newSession.OptionSetId != 0)
+                    if (newSession.TemplateId != 0)
                     {
-                        newSession.Options = context.OptionSets.Where(os => os.Id == newSession.OptionSetId).Include(os => os.Options).FirstOrDefault().Options;
+                        newSession.Options = context.Templates.Where(os => os.Id == newSession.TemplateId).Include(os => os.Options).FirstOrDefault().Options;
                     }
                     else
                     {
@@ -138,9 +138,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 if (newSession.Options == null)
                 {
                     List<Option> options = new List<Option>();
-                    if (newSession.OptionSetId != 0)
+                    if (newSession.TemplateId != 0)
                     {
-                        options = context.OptionSets.Where(os => os.Id == newSession.OptionSetId).Include(os => os.Options).FirstOrDefault().Options;
+                        options = context.Templates.Where(os => os.Id == newSession.TemplateId).Include(os => os.Options).FirstOrDefault().Options;
                     }
 
                     newSession.Options = options;

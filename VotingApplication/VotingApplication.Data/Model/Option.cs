@@ -12,7 +12,7 @@ namespace VotingApplication.Data.Model
         public string Description { get; set; }
         public string Info { get; set; }
 
-        public List<OptionSet> OptionSets { get; set; }
+        public List<Template> Templates { get; set; }
         public List<Session> Sessions { get; set; }
     }
 }

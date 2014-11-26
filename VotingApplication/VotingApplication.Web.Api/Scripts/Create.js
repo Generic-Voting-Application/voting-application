@@ -37,7 +37,7 @@
                     Creator: creatorName,
                     Email: email,
                     Invites: invites.split('\n'),
-                    optionSetId: templateId,
+                    templateId: templateId,
                     VotingStrategy: strategy
                 }),
 
@@ -80,7 +80,7 @@
         self.populateTemplates = function () {
             $.ajax({
                 type: 'GET',
-                url: '/api/optionset',
+                url: '/api/template',
 
                 success: function (data) {
                     self.templates(data);

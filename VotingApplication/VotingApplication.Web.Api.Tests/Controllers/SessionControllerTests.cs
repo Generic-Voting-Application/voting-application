@@ -29,11 +29,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void setup()
         {
             _redOption = new Option() { Name = "Red" };
-            OptionSet emptyOptionSet = new OptionSet() { Id = 1 };
-            OptionSet redOptionSet = new OptionSet() { Id = 2, Options = new List<Option>() { _redOption } };
-            InMemoryDbSet<OptionSet> dummyOptionSets = new InMemoryDbSet<OptionSet>(true);
-            dummyOptionSets.Add(emptyOptionSet);
-            dummyOptionSets.Add(redOptionSet);
+            Template emptyTemplate = new Template() { Id = 1 };
+            Template redTemplate = new Template() { Id = 2, Options = new List<Option>() { _redOption } };
+            InMemoryDbSet<Template> dummyTemplates = new InMemoryDbSet<Template>(true);
+            dummyTemplates.Add(emptyTemplate);
+            dummyTemplates.Add(redTemplate);
 
             UUIDs = new [] {Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()};
             _mainSession = new Session() { UUID = UUIDs[0], ManageID = Guid.NewGuid() };
@@ -47,7 +47,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
             mockContext.Setup(a => a.Sessions).Returns(_dummySessions);
-            mockContext.Setup(a => a.OptionSets).Returns(dummyOptionSets);
+            mockContext.Setup(a => a.Templates).Returns(dummyTemplates);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
             _controller = new SessionController(mockContextFactory.Object);
@@ -171,7 +171,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostAcceptsSessionWithMissingOptionSet()
+        public void PostAcceptsSessionWithMissingTemplate()
         {
             // Act
             var response = _controller.Post(new Session() { Name = "New Session" });
@@ -181,7 +181,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostAddsEmptyOptionsListToSessionWithoutOptionSet()
+        public void PostAddsEmptyOptionsListToSessionWithoutTemplate()
         {
             // Act
             Session newSession = new Session() { Name = "New Session" };
@@ -192,10 +192,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostPopulatesOptionsByOptionSetId()
+        public void PostPopulatesOptionsByTemplateId()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session", OptionSetId = 2 };
+            Session newSession = new Session() { Name = "New Session", TemplateId = 2 };
             var response = _controller.Post(newSession);
 
             // Assert
@@ -204,7 +204,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostRetainsSuppliedOptionSet()
+        public void PostRetainsSuppliedTemplate()
         {
             // Act
             List<Option> customOptions = new List<Option>() { _redOption };
@@ -321,7 +321,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostByIdAcceptsSessionWithMissingOptionSetId()
+        public void PostByIdAcceptsSessionWithMissingTemplateId()
         {
             // Act
             var response = _controller.Post(UUIDs[0], new Session() { Name = "New Session" });
@@ -331,7 +331,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostByIdAddsEmptyOptionsListToSessionWithoutOptionSet()
+        public void PostByIdAddsEmptyOptionsListToSessionWithoutTemplate()
         {
             // Act
             Session newSession = new Session() { Name = "New Session" };
@@ -342,10 +342,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostByIdPopulatesOptionsByOptionSetId()
+        public void PostByIdPopulatesOptionsByTemplateId()
         {
             // Act
-            Session newSession = new Session() { Name = "New Session", OptionSetId = 2 };
+            Session newSession = new Session() { Name = "New Session", TemplateId = 2 };
             var response = _controller.Post(UUIDs[0], newSession);
 
             // Assert
@@ -354,7 +354,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostByIdRetainsSuppliedOptionSet()
+        public void PostByIdRetainsSuppliedTemplate()
         {
             // Act
             List<Option> customOptions = new List<Option>() { _redOption };
