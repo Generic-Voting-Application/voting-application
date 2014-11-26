@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VotingApplication.Data.Model
 {
-    public class Session
+    public class Poll
     {
         public long Id { get; set; }
 
@@ -24,7 +24,7 @@ namespace VotingApplication.Data.Model
         [NotMapped]
         public List<string> Invites { get; set; }
 
-        public long OptionSetId { get; set; }
+        public long TemplateId { get; set; }
         public List<Option> Options { get; set; }
     }
 }

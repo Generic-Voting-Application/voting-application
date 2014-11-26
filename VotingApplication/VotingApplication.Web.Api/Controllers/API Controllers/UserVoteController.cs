@@ -73,9 +73,9 @@ namespace VotingApplication.Web.Api.Controllers
                         return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote does not have an option");
                     }
 
-                    if (vote.SessionId == Guid.Empty)
+                    if (vote.PollId == Guid.Empty)
                     {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote does not have a session");
+                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote does not have a poll");
                     }
 
                     IEnumerable<User> users = context.Users.Where(u => u.Id == userId);
@@ -90,10 +90,10 @@ namespace VotingApplication.Web.Api.Controllers
                         return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Option {0} does not exist", vote.OptionId));
                     }
 
-                    IEnumerable<Session> sessions = context.Sessions.Where(o => o.UUID == vote.SessionId);
-                    if (sessions.Count() == 0)
+                    IEnumerable<Poll> polls = context.Polls.Where(o => o.UUID == vote.PollId);
+                    if (polls.Count() == 0)
                     {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Session {0} does not exist", vote.SessionId));
+                        return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Poll {0} does not exist", vote.PollId));
                     }
 
                     if (vote.PollValue <= 0)
@@ -101,7 +101,7 @@ namespace VotingApplication.Web.Api.Controllers
                         vote.PollValue = 1;
                     }
 
-                    List<Vote> contextVotes = context.Votes.Where(v => v.UserId == userId && v.SessionId == vote.SessionId).ToList<Vote>();
+                    List<Vote> contextVotes = context.Votes.Where(v => v.UserId == userId && v.PollId == vote.PollId).ToList<Vote>();
                     foreach (Vote contextVote in contextVotes)
                     {
                         context.Votes.Remove(contextVote);

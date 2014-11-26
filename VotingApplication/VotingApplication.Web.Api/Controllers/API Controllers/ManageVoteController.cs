@@ -21,13 +21,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session matchingSession = context.Sessions.Where(s => s.ManageID == manageId).FirstOrDefault();
-                if (matchingSession == null)
+                Poll matchingPoll = context.Polls.Where(s => s.ManageID == manageId).FirstOrDefault();
+                if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", manageId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", manageId));
                 }
 
-                List<Vote> votes = context.Votes.Where(v => v.SessionId == matchingSession.UUID)
+                List<Vote> votes = context.Votes.Where(v => v.PollId == matchingPoll.UUID)
                     .Include(v => v.Option).Include(v => v.User)
                     .ToList();
 
@@ -76,14 +76,14 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session matchingSession = context.Sessions.Where(s => s.ManageID == manageId).FirstOrDefault();
-                if (matchingSession == null)
+                Poll matchingPoll = context.Polls.Where(s => s.ManageID == manageId).FirstOrDefault();
+                if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", manageId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", manageId));
                 }
 
-                List<Vote> votesInManagedSession = context.Votes.Where(v => v.SessionId == matchingSession.UUID).ToList();
-                foreach (Vote vote in votesInManagedSession)
+                List<Vote> votesInManagedPoll = context.Votes.Where(v => v.PollId == matchingPoll.UUID).ToList();
+                foreach (Vote vote in votesInManagedPoll)
                 {
                     context.Votes.Remove(vote);
                 }
@@ -98,13 +98,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session matchingSession = context.Sessions.Where(s => s.ManageID == manageId).FirstOrDefault();
-                if (matchingSession == null)
+                Poll matchingPoll = context.Polls.Where(s => s.ManageID == manageId).FirstOrDefault();
+                if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", manageId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", manageId));
                 }
 
-                Vote matchingVote = context.Votes.Where(v => v.Id == voteId && v.SessionId == matchingSession.UUID).FirstOrDefault();
+                Vote matchingVote = context.Votes.Where(v => v.Id == voteId && v.PollId == matchingPoll.UUID).FirstOrDefault();
 
                 context.Votes.Remove(matchingVote);
                 context.SaveChanges();

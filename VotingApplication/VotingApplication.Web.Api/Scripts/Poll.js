@@ -11,7 +11,7 @@
         var getPollDetails = function (pollId, callback) {
             $.ajax({
                 type: 'GET',
-                url: "/api/session/" + pollId,
+                url: "/api/poll/" + pollId,
 
                 success: function (data) {
                     self.pollName(data.Name);

@@ -34,21 +34,21 @@ namespace VotingApplication.Web.Api
             );
 
             config.Routes.MapHttpRoute(
-                name: "UserSessionVoteApiRoute",
-                routeTemplate: "api/user/{userId}/session/{sessionId}/vote/{voteId}",
-                defaults: new { controller = "UserSessionVote", voteId = RouteParameter.Optional }
+                name: "UserPollVoteApiRoute",
+                routeTemplate: "api/user/{userId}/poll/{pollId}/vote/{voteId}",
+                defaults: new { controller = "UserPollVote", voteId = RouteParameter.Optional }
             );
 
             config.Routes.MapHttpRoute(
-                name: "SessionVoteApiRoute",
-                routeTemplate: "api/session/{sessionId}/vote/{voteId}",
-                defaults: new { controller = "SessionVote", voteId = RouteParameter.Optional }
+                name: "PollVoteApiRoute",
+                routeTemplate: "api/poll/{pollId}/vote/{voteId}",
+                defaults: new { controller = "PollVote", voteId = RouteParameter.Optional }
             );
 
             config.Routes.MapHttpRoute(
-                name: "SessionOptionApiRoute",
-                routeTemplate: "api/session/{sessionId}/option/{optionId}",
-                defaults: new { controller = "SessionOption", optionId = RouteParameter.Optional }
+                name: "PollOptionApiRoute",
+                routeTemplate: "api/poll/{pollId}/option/{optionId}",
+                defaults: new { controller = "PollOption", optionId = RouteParameter.Optional }
             );
 
             config.Routes.MapHttpRoute(

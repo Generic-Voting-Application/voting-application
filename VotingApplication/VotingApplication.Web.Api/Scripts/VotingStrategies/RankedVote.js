@@ -143,7 +143,7 @@
 
                     selectedOptionsArray.push({
                         OptionId: selection.Id,
-                        SessionId: pollId,
+                        PollId: pollId,
                         PollValue: rank
                     });
                 });
@@ -174,7 +174,7 @@
 
             $.ajax({
                 type: 'GET',
-                url: '/api/user/' + userId + '/session/' + pollId + '/vote',
+                url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
                 contentType: 'application/json',
 
                 success: function (data) {
@@ -187,7 +187,7 @@
 
             $.ajax({
                 type: 'GET',
-                url: '/api/session/' + pollId + '/vote',
+                url: '/api/poll/' + pollId + '/vote',
 
                 success: function (data) {
                     displayResults(data);

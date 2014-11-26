@@ -29,7 +29,7 @@
             
             $.ajax({
                 type: 'POST',
-                url: '/api/session',
+                url: '/api/poll',
                 contentType: 'application/json',
 
                 data: JSON.stringify({
@@ -37,17 +37,17 @@
                     Creator: creatorName,
                     Email: email,
                     Invites: invites.split('\n'),
-                    optionSetId: templateId,
+                    templateId: templateId,
                     VotingStrategy: strategy
                 }),
 
                 success: function () {
-                    self.sessionCreated();
+                    self.pollCreated();
                 }
             });
         };
 
-        self.sessionCreated = function () {
+        self.pollCreated = function () {
             // Load partial HTML
             $.ajax({
                 type: 'GET',
@@ -80,7 +80,7 @@
         self.populateTemplates = function () {
             $.ajax({
                 type: 'GET',
-                url: '/api/optionset',
+                url: '/api/template',
 
                 success: function (data) {
                     self.templates(data);
