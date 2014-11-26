@@ -84,7 +84,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void GetWithNonexistentSessionIsNotFound()
+        public void GetWithNonexistentPollIsNotFound()
         {
             // Act
             Guid newGuid = Guid.NewGuid();
@@ -93,11 +93,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Session " + newGuid + " does not exist", error.Message);
+            Assert.AreEqual("Poll " + newGuid + " does not exist", error.Message);
         }
 
         [TestMethod]
-        public void GetWithEmptySessionReturnsEmptyOptionList()
+        public void GetWithEmptyPollReturnsEmptyOptionList()
         {
             // Act
             var response = _controller.Get(_emptyUUID);
@@ -109,7 +109,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void GetWithPopulatedSessionReturnsOptionsForThatSession()
+        public void GetWithPopulatedPollReturnsOptionsForThatPoll()
         {
             // Act
             var response = _controller.Get(_mainUUID);
