@@ -33,11 +33,11 @@ label {
     width: 100%;
 }
 
-    label.info-message {
-        font-size: small;
-        position: relative;
-        top: -15px;
-    }
+label.info-message {
+    font-size: small;
+    position: relative;
+    top: -15px;
+}
 
 .clickable {
     cursor: pointer;
@@ -49,13 +49,13 @@ label {
     overflow: hidden;
 }
 
-    .accordion-group:first-child {
-        border-radius: 10px 10px 0px 0px;
-    }
+.accordion-group:first-child {
+    border-radius: 10px 10px 0px 0px;
+}
 
-    .accordion-group:last-child {
-        border-radius: 0px 0px 10px 10px;
-    }
+.accordion-group:last-child {
+    border-radius: 0px 0px 10px 10px;
+}
 
 .accordion-heading {
     border-radius: 0px;
