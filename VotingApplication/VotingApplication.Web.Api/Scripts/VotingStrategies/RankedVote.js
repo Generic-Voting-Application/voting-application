@@ -1,9 +1,9 @@
 ﻿define(['jquery', 'knockout', 'jqueryUI', 'Common'], function ($, ko, jqueryUI, Common) {
 
-    return function RankedVote() {
+    return function RankedVote(options) {
 
         self = this;
-        self.options = ko.observableArray();
+        self.options = ko.observableArray(options);
         self.selectedOptions = ko.observableArray();
         self.resultOptions = ko.observableArray();
 
