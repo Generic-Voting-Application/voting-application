@@ -53,8 +53,8 @@
             $('#results').html('');
             var voteData = new insight.DataSet(data);
 
-            var chart = new insight.Chart('', '#bar-chart')
-            .width($("#bar-chart").width())
+            var chart = new insight.Chart('', '#results')
+            .width($("#results").width())
             .height(data.length * 50 + 100);
 
             var xAxis = new insight.Axis('Votes', insight.scales.linear)

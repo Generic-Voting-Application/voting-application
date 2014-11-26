@@ -21,10 +21,10 @@
 
                     switch (data.VotingStrategy) {
                         case 'Basic':
-                            pickStrategy('/Partials/VotingStrategies/BasicVote.html', '/Scripts/VotingStrategies/BasicVote.js', options);
+                            loadStrategy('/Partials/VotingStrategies/BasicVote.html', '/Scripts/VotingStrategies/BasicVote.js', options, callback);
                             break;
                         case 'Points':
-                            pickStrategy('/Partials/VotingStrategies/PointsVote.html', '/Scripts/VotingStrategies/PointsVote.js', options);
+                            loadStrategy('/Partials/VotingStrategies/PointsVote.html', '/Scripts/VotingStrategies/PointsVote.js', options, callback);
                             break;
                         case 'Ranked':
                             loadStrategy('/Partials/VotingStrategies/RankedVote.html', 'VotingStrategies/RankedVote', options, callback);
