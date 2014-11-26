@@ -1,16 +1,16 @@
 ﻿<table id="optionTable" class="table table-hover">
     <thead>
         <tr>
-            <th>Option</th>
-            <th>Description</th>
-            <th class="hidden-xs hidden-sm">More info</th>
-            <th style="width:20%">Vote</th>
+            <th class="col-xs-6 col-md-3">Option</th>
+            <th class="hidden-xs col-md-3">Description</th>
+            <th class="hidden-xs hidden-sm col-md-3">More info</th>
+            <th class="col-xs-6 col-md-3">Vote</th>
         </tr>
     </thead>
     <tbody data-bind="foreach: options">
         <tr>
             <td data-bind="text: Name"></td>
-            <td data-bind="text: Description"></td>
+            <td class="hidden-xs" data-bind="text: Description"></td>
             <td class="hidden-xs hidden-sm" data-bind="text: Info"></td>
             <td>
                 <span class="btn-group">
