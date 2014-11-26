@@ -5,9 +5,7 @@
         'bootstrap': 'Lib/bootstrap.min',
         'insight': 'Lib/insight.min',
         'd3': 'Lib/d3.min',
-        'crossfilter': 'Lib/crossfilter.min',
-        'BasicVote': 'VotingStrategies/BasicVote',
-        'PointsVote': 'VotingStrategies/PointsVote'
+        'crossfilter': 'Lib/crossfilter.min'
 },
     shim: {
         'jquery': {
