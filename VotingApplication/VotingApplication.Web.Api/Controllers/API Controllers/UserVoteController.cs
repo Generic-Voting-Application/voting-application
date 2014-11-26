@@ -11,7 +11,7 @@ namespace VotingApplication.Web.Api.Controllers
 {
     public class UserVoteController : WebApiController
     {
-        public UserVoteController() : base() {}
+        public UserVoteController() : base() { }
         public UserVoteController(IContextFactory contextFactory) : base(contextFactory) { }
 
         #region GET
@@ -96,13 +96,13 @@ namespace VotingApplication.Web.Api.Controllers
                         return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Session {0} does not exist", vote.SessionId));
                     }
 
-                    if (vote.Value <= 0)
+                    if (vote.PollValue <= 0)
                     {
-                        vote.Value = 1;
+                        vote.PollValue = 1;
                     }
 
-                    List<Vote> ContextVotes = context.Votes.Where(v => v.UserId == userId && v.SessionId == vote.SessionId).ToList<Vote>();
-                    foreach (Vote contextVote in ContextVotes)
+                    List<Vote> contextVotes = context.Votes.Where(v => v.UserId == userId && v.SessionId == vote.SessionId).ToList<Vote>();
+                    foreach (Vote contextVote in contextVotes)
                     {
                         context.Votes.Remove(contextVote);
                     }

@@ -34,13 +34,13 @@
                 var existingOption = totalCounts.filter(function (vote) { return vote.Name == optionName; }).pop();
 
                 if (existingOption) {
-                    existingOption.Sum += vote.Value;
+                    existingOption.Sum += vote.PollValue;
                     existingOption.Voters.push(voter);
                 }
                 else {
                     totalCounts.push({
                         Name: optionName,
-                        Sum: vote.Value,
+                        Sum: vote.PollValue,
                         Voters: [voter]
                     });
                 }
@@ -50,7 +50,7 @@
 
         var drawChart = function (data) {
             // Hack to fix insight's lack of data reloading
-            $('#bar-chart').html('');
+            $('#results').html('');
             var voteData = new insight.DataSet(data);
 
             var chart = new insight.Chart('', '#bar-chart')
@@ -151,7 +151,7 @@
                 var vote = {
                     OptionId: self.options()[i].Id,
                     SessionId: pollId,
-                    Value: self.pointsArray()[i]
+                    PollValue: self.pointsArray()[i]
                 };
 
                 votesData.push(vote);
@@ -190,7 +190,7 @@
                         if (optionIndex == -1)
                             continue;
 
-                        self.pointsArray()[optionIndex] = data[i].Value;
+                        self.pointsArray()[optionIndex] = data[i].PollValue;
                         self.pointsArray.valueHasMutated();
                     }
                     updateAllButtons();

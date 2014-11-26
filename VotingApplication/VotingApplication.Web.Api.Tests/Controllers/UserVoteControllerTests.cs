@@ -357,18 +357,18 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Put(1, new List<Vote>(){ newVote });
 
             // Assert
-            Assert.AreEqual(newVote.Value, 1);
+            Assert.AreEqual(newVote.PollValue, 1);
         }
 
         [TestMethod]
         public void PutWithValueRetainsTheValue()
         {
             // Act
-            var newVote = new Vote() { OptionId = 1, SessionId = _mainUUID, Value = 35 };
+            var newVote = new Vote() { OptionId = 1, SessionId = _mainUUID, PollValue = 35 };
             _controller.Put(1, new List<Vote>(){ newVote });
 
             // Assert
-            Assert.AreEqual(newVote.Value, 35);
+            Assert.AreEqual(newVote.PollValue, 35);
         }
 
         #endregion

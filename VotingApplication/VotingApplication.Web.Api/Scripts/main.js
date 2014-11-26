@@ -5,7 +5,9 @@
         'bootstrap': 'Lib/bootstrap.min',
         'insight': 'Lib/insight.min',
         'd3': 'Lib/d3.min',
-        'crossfilter': 'Lib/crossfilter.min'
+        'crossfilter': 'Lib/crossfilter.min',
+        'sortable': 'Lib/jquery-sortable-min',
+        'jqueryUI': 'Lib/jquery-ui.min'
 },
     shim: {
         'jquery': {
@@ -18,6 +20,12 @@
         'insight': {
             deps: ['d3', 'crossfilter'],
             exports: 'insight'
+        },
+        'sortable': {
+            deps: ['jquery']
+        },
+        'jqueryUI': {
+            deps: ['jquery']
         }
     }
 });

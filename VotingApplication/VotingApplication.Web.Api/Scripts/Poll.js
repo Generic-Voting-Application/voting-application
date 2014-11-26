@@ -8,7 +8,7 @@
         self.pollCreator = ko.observable("Poll Creator");
         self.options = ko.observableArray();
 
-        var getPollDetails = function (pollId) {
+        var getPollDetails = function (pollId, callback) {
             $.ajax({
                 type: 'GET',
                 url: "/api/session/" + pollId,
@@ -26,12 +26,15 @@
                         case 'Points':
                             pickStrategy('/Partials/VotingStrategies/PointsVote.html', '/Scripts/VotingStrategies/PointsVote.js', options);
                             break;
+                        case 'Ranked':
+                            loadStrategy('/Partials/VotingStrategies/RankedVote.html', 'VotingStrategies/RankedVote', options, callback);
+                            break;
                     }
                 }
             });
         };
 
-        var pickStrategy = function (htmlFile, votingStrategy, options) {
+        var loadStrategy = function (htmlFile, votingStrategy, options, callback) {
 
             // Load partial HTML
             $.ajax({
@@ -40,9 +43,10 @@
                 dataType: 'html',
 
                 success: function (data) {
-                    $("#optionTable").append(data);
+                    $("#votingArea").append(data);
                     require([votingStrategy], function (strategy) {
                         votingStrategyFunc(strategy, options);
+                        callback();
                     });
                 }
             });
@@ -54,7 +58,7 @@
                 return votingStrategy;
             }
 
-            ko.applyBindings(new StrategyViewModel(), $('#optionTable')[0]);
+            ko.applyBindings(new StrategyViewModel(), $('#votingArea')[0]);
         };
 
         var showSection = function (element) {
@@ -114,14 +118,14 @@
             self.pollId = Common.getPollId();
             self.userId = Common.currentUserId();
 
-            getPollDetails(self.pollId);
-
-            if (self.userId) {
-                $('#loginUsername').val(Common.currentUserName());
-                showSection($('#voteSection'));
-            } else {
-                showSection($('#loginSection'));
-            }
+            getPollDetails(self.pollId, function () {
+                if (self.userId) {
+                    $('#loginUsername').val(Common.currentUserName());
+                    showSection($('#voteSection'));
+                } else {
+                    showSection($('#loginSection'));
+                }
+            });            
         });
     }
 

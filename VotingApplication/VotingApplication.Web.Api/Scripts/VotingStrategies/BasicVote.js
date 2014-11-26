@@ -10,12 +10,10 @@
 
             clearOptionHighlighting();
 
-            var optionRows = $("#optionTable > tbody > tr");
-            var option = self.options().filter(function (d) { return d.Id == optionId; }).pop();
-            var optionRowIndex = self.options().indexOf(option);
-
-            var matchingRow = optionRows.eq(optionRowIndex);
-            matchingRow.addClass("success");
+            var $optionRows = $("#optionTable > tbody > tr");
+            $optionRows.filter(function () {
+                return $(this).attr('data-id') == optionId;
+            }).addClass("success");
         };
 
         var clearOptionHighlighting = function () {
@@ -48,7 +46,7 @@
 
         var drawChart = function (data) {
             // Hack to fix insight's lack of data reloading
-            $('#bar-chart').html('');
+            $('#results').html('');
             var voteData = new insight.DataSet(data);
 
             var chart = new insight.Chart('', '#bar-chart')

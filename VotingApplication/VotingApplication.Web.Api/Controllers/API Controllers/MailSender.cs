@@ -33,7 +33,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public static void SendMail(string to, string subject, string message)
         {
-            if (to.Length == 0)
+            if (to == null || to.Length == 0)
             {
                 return;
             }
