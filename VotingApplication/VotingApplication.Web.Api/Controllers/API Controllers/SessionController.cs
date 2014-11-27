@@ -115,8 +115,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         private void SendVoteEmail(string targetEmailAddress, Session session)
         {
             string message = String.Join("\n\n", new List<string>()
-                {"You've been invited by " + session.Creator + " to vote on " + session.Name + ".",
-                 "Have your say at: http://voting-app.azurewebsites.net?poll=" + session.UUID + "!"});
+                {"You've been invited by " + session.Creator + " to vote on " + session.Name,
+                 "Have your say at: http://voting-app.azurewebsites.net?poll=" + session.UUID});
 
             MailSender.SendMail(targetEmailAddress, "Have your say!", message);
         }
