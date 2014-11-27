@@ -1,4 +1,4 @@
-﻿require(['jquery', 'knockout', 'bootstrap', 'insight', 'Common'], function ($, ko, bs, insight, Common) {
+﻿require(['jquery', 'knockout', 'bootstrap', 'insight', 'Common', '/Scripts/SocketClient.js'], function ($, ko, bs, insight, Common, SocketClient) {
     function VoteViewModel() {
         var self = this;
 
@@ -125,8 +125,37 @@
                 } else {
                     showSection($('#loginSection'));
                 }
-            });            
+            });
+
+            self.socketClient = new SocketClient(onOpen, onMessage, onClose);
+            self.socketClient.connect();
         });
+
+        /** Chat methods */
+        self.chatMessages = ko.observableArray();
+
+        self.sendChatMessage = function () {
+            if (self.socketClient.sendMessage) {
+                self.socketClient.sendMessage($('#chatTextInput').val());
+            }
+            $('#chatTextInput').val('');
+        }
+
+
+        //Add option on pressing return key
+        $("#newOptionRow").keypress(function (event) { self.keyIsEnter(event, self.addOption); });
+
+        var onOpen = function () {
+            self.chatMessages.unshift("Connected to chat");
+        }
+
+        var onMessage = function (message) {
+            self.chatMessages.unshift(message);
+        }
+
+        var onClose = function () {
+            self.chatMessages.unshift("Disconnected");
+        }
     }
 
     ko.applyBindings(new VoteViewModel());

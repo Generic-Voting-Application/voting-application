@@ -6,7 +6,7 @@
 
         // Connect to the web socket
         self.connect = function () {
-            var webSocket = new WebSocket("ws://localhost:5000");
+            var webSocket = new WebSocket("ws://votingapp-dev.azurewebsites.net:5000");
 
             webSocket.onopen = function () {
                 // Send a message to the server

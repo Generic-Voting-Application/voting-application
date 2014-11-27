@@ -31,6 +31,9 @@ namespace VotingApplication.Web.Api
             //Enable automatic migrations
             //Database.SetInitializer(new MigrateDatabaseToLatestVersion<VotingContext, Configuration>());
             //new VotingContext().Database.Initialize(false);
+
+            // Enable Chat
+            new Thread(() => VotingApplication.SocketServer.SocketServer.Main(new string[0])).Start();
         }
     }
 }
