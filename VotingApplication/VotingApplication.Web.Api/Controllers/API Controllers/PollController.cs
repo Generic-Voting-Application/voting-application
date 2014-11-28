@@ -104,10 +104,16 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         private void SendCreateEmail(Poll poll)
         {
+            String hostUri = WebConfigurationManager.AppSettings["HostURI"];
+            if(hostUri == String.Empty)
+            {
+                return;
+            }
+
             string message = String.Join("\n\n", new List<string>()
                 {"Your poll is now created and ready to go!",
-                 "You can invite people to vote by giving them this link: http://votingapp.azurewebsites.net?poll=" + poll.UUID,
-                 "You can administer your poll at http://votingapp.azurewebsites.net?manage=" + poll.ManageID,
+                 "You can invite people to vote by giving them this link: " + hostUri + "?poll=" + poll.UUID,
+                 "You can administer your poll at "+ hostUri + "?manage=" + poll.ManageID,
                  "(Don't share this link around!)"});
 
             MailSender.SendMail(poll.Email, "Your poll is ready!", message);
@@ -115,9 +121,15 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         private void SendVoteEmail(string targetEmailAddress, Poll poll)
         {
+            String hostUri = WebConfigurationManager.AppSettings["HostURI"];
+            if (hostUri == String.Empty)
+            {
+                return;
+            }
+
             string message = String.Join("\n\n", new List<string>()
                 {"You've been invited by " + poll.Creator + " to vote on " + poll.Name,
-                 "Have your say at: http://voting-app.azurewebsites.net?poll=" + poll.UUID});
+                 "Have your say at: " + hostUri + "?poll=" + poll.UUID});
 
             MailSender.SendMail(targetEmailAddress, "Have your say!", message);
         }
