@@ -33,11 +33,11 @@ label {
     width: 100%;
 }
 
-label.info-message {
-    font-size: small;
-    position: relative;
-    top: -15px;
-}
+    label.info-message {
+        font-size: small;
+        position: relative;
+        top: -15px;
+    }
 
 .clickable {
     cursor: pointer;
@@ -46,15 +46,7 @@ label.info-message {
 .accordion-group {
     margin: 0px;
     border-radius: 0px;
-    overflow: hidden;
-}
-
-.accordion-group:first-child {
-    border-radius: 10px 10px 0px 0px;
-}
-
-.accordion-group:last-child {
-    border-radius: 0px 0px 10px 10px;
+    border-style:none;
 }
 
 .accordion-heading {
@@ -95,4 +87,12 @@ label.info-message {
 
 #delete-vote-row {
     align-content: flex-end;
+}
+
+#accordion {
+    overflow: hidden;
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: #ddd;
+    border-style: solid;
 }
