@@ -34,30 +34,13 @@ label {
 }
 
 label.info-message {
-    font-size:small;
-    position:relative;
-    top:-15px;
+    font-size: small;
+    position: relative;
+    top: -15px;
 }
 
 .clickable {
     cursor: pointer;
-}
-
-#reset-votes, #save-options-as {
-    width: 150px;
-    height: 40px;
-}
-
-#delete-vote-row {
-    align-content: flex-end;
-}
-
-th:first-child {
-    width: 25%;
-}
-
-th:last-child {
-    width: 10%;
 }
 
 .accordion-group {
@@ -79,7 +62,7 @@ th:last-child {
 }
 
 /* To stop the option caption being selectable. Surprised Knockout doesn't already do this. */
-option:first-child {
+.select-placeholder option:first-child {
     display: none;
 }
 
@@ -97,4 +80,19 @@ option:first-child {
 
 .text-center {
     margin-bottom: 20px;
+}
+
+.points-label {
+    display: inline;
+    font-size: 24px;
+    margin: 10px;
+}
+
+#reset-votes, #save-options-as {
+    width: 150px;
+    height: 40px;
+}
+
+#delete-vote-row {
+    align-content: flex-end;
 }

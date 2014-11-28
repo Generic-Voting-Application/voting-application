@@ -2,129 +2,63 @@
     function VoteViewModel() {
         var self = this;
 
-        self.options = ko.observableArray();
+        var votingStrategy;
+
         self.pollName = ko.observable("Poll Name");
         self.pollCreator = ko.observable("Poll Creator");
+        self.options = ko.observableArray();
 
-        var getPollDetails = function (pollId) {
+        var getPollDetails = function (pollId, callback) {
             $.ajax({
                 type: 'GET',
-                url: "/api/session/" + pollId,
+                url: "/api/poll/" + pollId,
 
                 success: function (data) {
                     self.pollName(data.Name);
                     self.pollCreator(data.Creator);
-                    self.options(data.Options);
+
+                    var options = data.Options;
+
+                    switch (data.VotingStrategy) {
+                        case 'Basic':
+                            loadStrategy('/Partials/VotingStrategies/BasicVote.html', '/Scripts/VotingStrategies/BasicVote.js', options, callback);
+                            break;
+                        case 'Points':
+                            loadStrategy('/Partials/VotingStrategies/PointsVote.html', '/Scripts/VotingStrategies/PointsVote.js', options, callback);
+                            break;
+                        case 'Ranked':
+                            loadStrategy('/Partials/VotingStrategies/RankedVote.html', 'VotingStrategies/RankedVote', options, callback);
+                            break;
+                    }
                 }
             });
         };
 
-        var getResults = function () {
+        var loadStrategy = function (htmlFile, votingStrategy, options, callback) {
+
+            // Load partial HTML
             $.ajax({
                 type: 'GET',
-                url: '/api/session/' + self.pollId + '/vote',
+                url: htmlFile,
+                dataType: 'html',
 
                 success: function (data) {
-                    var groupedVotes = countVotes(data);
-                    drawChart(groupedVotes);
-                }
-            });
-        };
-
-        var countVotes = function (votes) {
-            var totalCounts = [];
-            votes.forEach(function (vote) {
-                var optionName = vote.Option.Name;
-                var voter = vote.User.Name;
-
-                // Find a vote with the same Option.Name, if it exists.
-                var existingOption = totalCounts.filter(function (vote) { return vote.Name == optionName; }).pop();
-
-                if (existingOption) {
-                    existingOption.Count++;
-                    existingOption.Voters.push(voter);
-                }
-                else {
-                    totalCounts.push({
-                        Name: optionName,
-                        Count: 1,
-                        Voters: [voter]
+                    $("#votingArea").append(data);
+                    require([votingStrategy], function (strategy) {
+                        votingStrategyFunc(strategy, options);
+                        callback();
                     });
                 }
             });
-            return totalCounts;
         };
 
-        var drawChart = function (data) {
-            // Hack to fix insight's lack of data reloading
-            $('#bar-chart').html('');
-            var voteData = new insight.DataSet(data);
+        var votingStrategyFunc = function (strategy, options) {
+            function StrategyViewModel() {
+                votingStrategy = new strategy(options);
+                return votingStrategy;
+            }
 
-            var chart = new insight.Chart('', '#bar-chart')
-            .width($("#bar-chart").width())
-            .height(data.length * 50 + 100);
-
-            var xAxis = new insight.Axis('Votes', insight.scales.linear)
-                .tickFrequency(1);
-            var yAxis = new insight.Axis('', insight.scales.ordinal)
-                .isOrdered(true);
-            chart.xAxis(xAxis);
-            chart.yAxis(yAxis);
-
-            var series = new insight.RowSeries('votes', voteData, xAxis, yAxis)
-            .keyFunction(function (d) {
-                return d.Name;
-            })
-            .valueFunction(function (d) {
-
-                return d.Count;
-            })
-            .tooltipFunction(function (d) {
-                var maxToDisplay = 5;
-                if (d.Count <= maxToDisplay) {
-                    return "Votes: " + d.Count + "<br />" + d.Voters.toString().replace(/,/g, "<br />");
-                }
-                else {
-                    return "Votes: " + d.Count + "<br />" + d.Voters.slice(0, maxToDisplay).toString().replace(/,/g, "<br />") + "<br />" + "+ " + (d.Count - maxToDisplay) + " others";
-                }
-            });
-
-            chart.series([series]);
-
-            chart.draw();
-        };
-
-        var clearOptionHighlighting = function () {
-            $("#optionTable > tbody > tr").removeClass("success");
-        };
-
-        var highlightOption = function (optionId) {
-
-            clearOptionHighlighting();
-
-            var optionRows = $("#optionTable > tbody > tr");
-            var option = self.options().filter(function (d) { return d.Id == optionId; }).pop();
-            var optionRowIndex = self.options().indexOf(option);
-
-            var matchingRow = optionRows.eq(optionRowIndex);
-            matchingRow.addClass("success");
-        };
-
-        var getVotes = function () {
-            $.ajax({
-                type: 'GET',
-                url: '/api/user/' + self.userId + '/session/' + self.pollId + '/vote',
-                contentType: 'application/json',
-
-                success: function (data) {
-                    if (data[0]) {
-                        highlightOption(data[0].OptionId);
-                    }
-                    else {
-                        clearOptionHighlighting();
-                    }
-                }
-            });
+            ko.applyBindings(new StrategyViewModel(), $('#votingArea')[0]);
         };
 
         var showSection = function (element) {
@@ -168,45 +102,30 @@
             });
         };
 
-        self.doVote = function (data, event) {
-            if (self.userId && self.pollId) {
-                $.ajax({
-                    type: 'PUT',
-                    url: '/api/user/' + self.userId + '/vote',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        OptionId: data.Id,
-                        SessionId: self.pollId
-                    }),
-
-                    success: function (returnData) {
-                        var currentRow = event.currentTarget.parentElement.parentElement;
-                        showSection($('#resultSection'));
-                    }
-                });
-            }
-        };
-
         $('#voteSection .accordion-body').on('show.bs.collapse', function () {
-            getVotes();
+            if (votingStrategy) {
+                votingStrategy.getVotes(self.pollId, self.userId);
+            }
         });
 
         $('#resultSection .accordion-body').on('show.bs.collapse', function () {
-            getResults();
+            if (votingStrategy) {
+                votingStrategy.getResults(self.pollId);
+            }
         });
 
         $(document).ready(function () {
             self.pollId = Common.getPollId();
             self.userId = Common.currentUserId();
 
-            getPollDetails(self.pollId);
-
-            if (self.userId) {
-                $('#loginUsername').val(Common.currentUserName());
-                showSection($('#voteSection'));
-            } else {
-                showSection($('#loginSection'));
-            }
+            getPollDetails(self.pollId, function () {
+                if (self.userId) {
+                    $('#loginUsername').val(Common.currentUserName());
+                    showSection($('#voteSection'));
+                } else {
+                    showSection($('#loginSection'));
+                }
+            });            
         });
     }
 

@@ -21,13 +21,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session matchingSession = context.Sessions.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
-                if (matchingSession == null)
+                Poll matchingPoll = context.Polls.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
+                if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", manageId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", manageId));
                 }
 
-                return this.Request.CreateResponse(HttpStatusCode.OK, matchingSession.Options);
+                return this.Request.CreateResponse(HttpStatusCode.OK, matchingPoll.Options);
             }
         }
 
@@ -50,19 +50,19 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 }
 
-                Session matchingSession = context.Sessions.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
-                if (matchingSession == null)
+                Poll matchingPoll = context.Polls.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
+                if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", manageId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", manageId));
                 }
 
-                if (option.Sessions == null)
+                if (option.Polls == null)
                 {
-                    option.Sessions = new List<Session>();
+                    option.Polls = new List<Poll>();
                 }
 
-                matchingSession.Options.Add(option);
-                option.Sessions.Add(matchingSession);
+                matchingPoll.Options.Add(option);
+                option.Polls.Add(matchingPoll);
 
                 context.Options.Add(option);
                 context.SaveChanges();
@@ -103,19 +103,19 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Session matchingSession = context.Sessions.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
-                if (matchingSession == null)
+                Poll matchingPoll = context.Polls.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
+                if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", manageId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", manageId));
                 }
 
-                Option matchingOption = matchingSession.Options.Where(o => o.Id == optionId).FirstOrDefault();
+                Option matchingOption = matchingPoll.Options.Where(o => o.Id == optionId).FirstOrDefault();
                 if (matchingOption != null)
                 {
-                    matchingSession.Options.Remove(matchingOption);
+                    matchingPoll.Options.Remove(matchingOption);
 
-                    // Remove votes for this option/session combo
-                    List<Vote> optionVotes = context.Votes.Where(v => v.OptionId == optionId && v.SessionId == matchingSession.UUID).ToList();
+                    // Remove votes for this option/poll combo
+                    List<Vote> optionVotes = context.Votes.Where(v => v.OptionId == optionId && v.PollId == matchingPoll.UUID).ToList();
                     foreach (Vote vote in optionVotes)
                     {
                         context.Votes.Remove(vote);
