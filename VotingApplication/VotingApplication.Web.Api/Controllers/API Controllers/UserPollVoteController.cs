@@ -9,14 +9,14 @@ using VotingApplication.Data.Model;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
-    public class UserSessionVoteController : WebApiController
+    public class UserPollVoteController : WebApiController
     {
-        public UserSessionVoteController() : base() {}
-        public UserSessionVoteController(IContextFactory contextFactory) : base(contextFactory) { }
+        public UserPollVoteController() : base() {}
+        public UserPollVoteController(IContextFactory contextFactory) : base(contextFactory) { }
 
         #region GET
 
-        public virtual HttpResponseMessage Get(long userId, Guid sessionId)
+        public virtual HttpResponseMessage Get(long userId, Guid pollId)
         {
             using (var context = _contextFactory.CreateContext())
             {
@@ -26,29 +26,29 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("User {0} does not exist", userId));
                 }
 
-                Session matchingSession = context.Sessions.Where(s => s.UUID == sessionId).FirstOrDefault();
-                if (matchingSession == null)
+                Poll matchingPoll = context.Polls.Where(s => s.UUID == pollId).FirstOrDefault();
+                if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Session {0} does not exist", sessionId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", pollId));
                 }
 
-                IEnumerable<Vote> allVotesForUserInSession = context.Votes.Where(v => v.UserId == userId && v.SessionId == sessionId);
-                return this.Request.CreateResponse(HttpStatusCode.OK, allVotesForUserInSession.ToList());
+                IEnumerable<Vote> allVotesForUserInPoll = context.Votes.Where(v => v.UserId == userId && v.PollId == pollId);
+                return this.Request.CreateResponse(HttpStatusCode.OK, allVotesForUserInPoll.ToList());
             }
         }
 
-        public virtual HttpResponseMessage Get(long userId, Guid sessionId, long voteId)
+        public virtual HttpResponseMessage Get(long userId, Guid pollId, long voteId)
         {
             using (var context = _contextFactory.CreateContext())
             {
-                var userSessionResponse = Get(userId, sessionId);
-                List<Vote> votesForUserSession = ((ObjectContent)userSessionResponse.Content).Value as List<Vote>;
-                if (votesForUserSession == null)
+                var userPollResponse = Get(userId, pollId);
+                List<Vote> votesForUserPoll = ((ObjectContent)userPollResponse.Content).Value as List<Vote>;
+                if (votesForUserPoll == null)
                 {
-                    return userSessionResponse;
+                    return userPollResponse;
                 }
 
-                Vote matchingVote = votesForUserSession.Where(v => v.Id == voteId).FirstOrDefault();
+                Vote matchingVote = votesForUserPoll.Where(v => v.Id == voteId).FirstOrDefault();
                 if (matchingVote == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Vote {0} does not exist", voteId));
@@ -62,12 +62,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region POST
 
-        public virtual HttpResponseMessage Post(long userId, Guid sessionId, Vote vote)
+        public virtual HttpResponseMessage Post(long userId, Guid pollId, Vote vote)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
         }
 
-        public virtual HttpResponseMessage Post(long userId, Guid sessionId, long voteId, Vote vote)
+        public virtual HttpResponseMessage Post(long userId, Guid pollId, long voteId, Vote vote)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
         }
@@ -76,12 +76,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region PUT
 
-        public virtual HttpResponseMessage Put(long userId, Guid sessionId, Vote vote)
+        public virtual HttpResponseMessage Put(long userId, Guid pollId, Vote vote)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT on this controller");
         }
 
-        public virtual HttpResponseMessage Put(long userId, Guid sessionId, long voteId, Vote vote)
+        public virtual HttpResponseMessage Put(long userId, Guid pollId, long voteId, Vote vote)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT by id on this controller");
         }
@@ -90,12 +90,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region DELETE
 
-        public virtual HttpResponseMessage Delete(long userId, Guid sessionId)
+        public virtual HttpResponseMessage Delete(long userId, Guid pollId)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
         }
 
-        public virtual HttpResponseMessage Delete(long userId, Guid sessionId, long voteId)
+        public virtual HttpResponseMessage Delete(long userId, Guid pollId, long voteId)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE by id on this controller");
         }

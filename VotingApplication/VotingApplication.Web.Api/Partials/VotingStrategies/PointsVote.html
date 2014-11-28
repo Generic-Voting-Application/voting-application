@@ -1,0 +1,29 @@
+﻿<table id="optionTable" class="table table-hover">
+    <thead>
+        <tr>
+            <th class="col-xs-6 col-md-3">Option</th>
+            <th class="hidden-xs col-md-3">Description</th>
+            <th class="hidden-xs hidden-sm col-md-3">More info</th>
+            <th class="col-xs-6 col-md-3">Vote</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: options">
+        <tr>
+            <td data-bind="text: Name"></td>
+            <td class="hidden-xs" data-bind="text: Description"></td>
+            <td class="hidden-xs hidden-sm" data-bind="text: Info"></td>
+            <td>
+                <span class="btn-group">
+                    <button class="btn btn-primary pull-left" data-bind="click: $parent.decreaseVote">-</button>
+                    <label class="points-label" data-bind="text: $root.pointsArray()[$index()]"></label>
+                    <button class="btn btn-primary pull-right" data-bind="click: $parent.increaseVote">+</button>
+                </span>
+            </td>
+        </tr>
+    </tbody>
+    <tr>
+        <td colspan="4" style="text-align:center">
+            <button class="btn btn-primary" data-bind="click: doVote">Submit</button>
+        </td>
+    </tr>
+</table>

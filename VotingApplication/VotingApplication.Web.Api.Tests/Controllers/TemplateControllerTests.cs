@@ -12,12 +12,12 @@ using VotingApplication.Web.Api.Controllers.API_Controllers;
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
     [TestClass]
-    public class OptionSetControllerTests
+    public class TemplateControllerTests
     {
-        private OptionSetController _controller;
-        private OptionSet _colourOptionSet;
-        private OptionSet _emptyOptionSet;
-        private InMemoryDbSet<OptionSet> _dummyOptionSets;
+        private TemplateController _controller;
+        private Template _colourTemplate;
+        private Template _emptyTemplate;
+        private InMemoryDbSet<Template> _dummyTemplates;
 
         [TestInitialize]
         public void setup()
@@ -26,29 +26,29 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Option blueOption = new Option() { Name = "Blue" };
             Option greenOption = new Option() { Name = "Green" };
 
-            _colourOptionSet = new OptionSet() { Id = 1, Name = "Colours", Options = new List<Option>() { redOption, greenOption, blueOption } };
-            _emptyOptionSet = new OptionSet() { Id = 2, Name = "Empty Set", Options = new List<Option>() };
+            _colourTemplate = new Template() { Id = 1, Name = "Colours", Options = new List<Option>() { redOption, greenOption, blueOption } };
+            _emptyTemplate = new Template() { Id = 2, Name = "Empty Set", Options = new List<Option>() };
 
-            _dummyOptionSets = new InMemoryDbSet<OptionSet>(true);
-            _dummyOptionSets.Add(_colourOptionSet);
-            _dummyOptionSets.Add(_emptyOptionSet);
+            _dummyTemplates = new InMemoryDbSet<Template>(true);
+            _dummyTemplates.Add(_colourTemplate);
+            _dummyTemplates.Add(_emptyTemplate);
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
-            mockContext.Setup(a => a.OptionSets).Returns(_dummyOptionSets);
+            mockContext.Setup(a => a.Templates).Returns(_dummyTemplates);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
-            _controller = new OptionSetController(mockContextFactory.Object);
+            _controller = new TemplateController(mockContextFactory.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
 
         private void SaveChanges()
         {
-            for (int i = 0; i < _dummyOptionSets.Local.Count; i++)
+            for (int i = 0; i < _dummyTemplates.Local.Count; i++)
             {
-                _dummyOptionSets.Local[i].Id = (long)i + 1;
+                _dummyTemplates.Local[i].Id = (long)i + 1;
             }
         }
 
@@ -65,15 +65,15 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void GetReturnsAllOptionSets()
+        public void GetReturnsAllTemplates()
         {
             // Act
             var response = _controller.Get();
 
             // Assert
-            List<OptionSet> expectedOptionSets = new List<OptionSet>() { _colourOptionSet, _emptyOptionSet };
-            List<OptionSet> responseOptionSets = ((ObjectContent)response.Content).Value as List<OptionSet>;
-            CollectionAssert.AreEquivalent(expectedOptionSets, responseOptionSets);
+            List<Template> expectedTemplates = new List<Template>() { _colourTemplate, _emptyTemplate };
+            List<Template> responseTemplates = ((ObjectContent)response.Content).Value as List<Template>;
+            CollectionAssert.AreEquivalent(expectedTemplates, responseTemplates);
         }
 
         [TestMethod]
@@ -87,18 +87,18 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void GetByIdReturnsOptionSetWithMatchingId()
+        public void GetByIdReturnsTemplateWithMatchingId()
         {
             // Act
             var response = _controller.Get(2);
 
             // Assert
-            OptionSet responseOptionSet = ((ObjectContent)response.Content).Value as OptionSet;
-            Assert.AreEqual(_emptyOptionSet, responseOptionSet);
+            Template responseTemplate = ((ObjectContent)response.Content).Value as Template;
+            Assert.AreEqual(_emptyTemplate, responseTemplate);
         }
 
         [TestMethod]
-        public void GetNonexistentOptionSetByIdIsNotFound()
+        public void GetNonexistentTemplateByIdIsNotFound()
         {
             // Act
             var response = _controller.Get(99);
@@ -106,7 +106,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("OptionSet 99 does not exist", error.Message);
+            Assert.AreEqual("Template 99 does not exist", error.Message);
         }
 
         #endregion
@@ -117,78 +117,78 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostIsAllowed()
         {
             // Act
-            var response = _controller.Post(new OptionSet() { Name = "New OptionSet", Options = new List<Option>() });
+            var response = _controller.Post(new Template() { Name = "New Template", Options = new List<Option>() });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         [TestMethod]
-        public void PostRejectsOptionSetWithoutAName()
+        public void PostRejectsTemplateWithoutAName()
         {
             // Act
-            var response = _controller.Post(new OptionSet() { Options = new List<Option>() });
+            var response = _controller.Post(new Template() { Options = new List<Option>() });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("OptionSet does not have a name", error.Message);
+            Assert.AreEqual("Template does not have a name", error.Message);
         }
 
         [TestMethod]
-        public void PostRejectsOptionSetWithABlankName()
+        public void PostRejectsTemplateWithABlankName()
         {
             // Act
-            var response = _controller.Post(new OptionSet() { Name = "", Options = new List<Option>() });
+            var response = _controller.Post(new Template() { Name = "", Options = new List<Option>() });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("OptionSet does not have a name", error.Message);
+            Assert.AreEqual("Template does not have a name", error.Message);
         }
 
         [TestMethod]
-        public void PostAcceptsOptionSetWithoutAnOptionList()
+        public void PostAcceptsTemplateWithoutAnOptionList()
         {
             // Act
-            var response = _controller.Post(new OptionSet() { Name = "New OptionSet" });
+            var response = _controller.Post(new Template() { Name = "New Template" });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         [TestMethod]
-        public void PostOptionSetWithoutAnOptionListDefaultsToEmptyList()
+        public void PostTemplateWithoutAnOptionListDefaultsToEmptyList()
         {
             // Act
-            OptionSet newOptionSet = new OptionSet() { Name = "New OptionSet" };
-            var response = _controller.Post(newOptionSet);
+            Template newTemplate = new Template() { Name = "New Template" };
+            var response = _controller.Post(newTemplate);
 
             // Assert
-            CollectionAssert.AreEquivalent(new List<Option>(), newOptionSet.Options);
+            CollectionAssert.AreEquivalent(new List<Option>(), newTemplate.Options);
         }
 
         [TestMethod]
-        public void PostOptionSetWithAnOptionListRetainsOptionList()
+        public void PostTemplateWithAnOptionListRetainsOptionList()
         {
             // Act
             List<Option> optionList = new List<Option>();
             Option purpleOption = new Option() { Name = "Purple" };
             optionList.Add(purpleOption);
 
-            OptionSet newOptionSet = new OptionSet() { Name = "New OptionSet", Options = optionList };
-            var response = _controller.Post(newOptionSet);
+            Template newTemplate = new Template() { Name = "New Template", Options = optionList };
+            var response = _controller.Post(newTemplate);
 
             // Assert
-            CollectionAssert.AreEquivalent(optionList, newOptionSet.Options);
+            CollectionAssert.AreEquivalent(optionList, newTemplate.Options);
         }
 
         [TestMethod]
-        public void PostWithValidOptionSetReturnsNewOptionSetId()
+        public void PostWithValidTemplateReturnsNewTemplateId()
         {
             // Act
-            OptionSet newOptionSet = new OptionSet() { Name = "New OptionSet" };
-            var response = _controller.Post(newOptionSet);
+            Template newTemplate = new Template() { Name = "New Template" };
+            var response = _controller.Post(newTemplate);
 
             // Assert
             long responseId = (long)((ObjectContent)response.Content).Value;
@@ -196,36 +196,36 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostWithValidOptionSetAssignsNewOptionSetId()
+        public void PostWithValidTemplateAssignsNewTemplateId()
         {
             // Act
-            OptionSet newOptionSet = new OptionSet() { Name = "New OptionSet" };
-            var response = _controller.Post(newOptionSet);
+            Template newTemplate = new Template() { Name = "New Template" };
+            var response = _controller.Post(newTemplate);
 
             // Assert
-            Assert.AreEqual(3, newOptionSet.Id);
+            Assert.AreEqual(3, newTemplate.Id);
         }
 
         [TestMethod]
-        public void PostWithValidOptionSetAddsToOptionSets()
+        public void PostWithValidTemplateAddsToTemplates()
         {
             // Act
-            OptionSet newOptionSet = new OptionSet() { Name = "New OptionSet" };
-            var response = _controller.Post(newOptionSet);
+            Template newTemplate = new Template() { Name = "New Template" };
+            var response = _controller.Post(newTemplate);
 
             // Assign
-            List<OptionSet> expectedSets = new List<OptionSet>();
-            expectedSets.Add(_colourOptionSet);
-            expectedSets.Add(_emptyOptionSet);
-            expectedSets.Add(newOptionSet);
-            CollectionAssert.AreEquivalent(expectedSets, _dummyOptionSets.Local);
+            List<Template> expectedSets = new List<Template>();
+            expectedSets.Add(_colourTemplate);
+            expectedSets.Add(_emptyTemplate);
+            expectedSets.Add(newTemplate);
+            CollectionAssert.AreEquivalent(expectedSets, _dummyTemplates.Local);
         }
 
         [TestMethod]
         public void PostByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Post(1, new OptionSet());
+            var response = _controller.Post(1, new Template());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -239,7 +239,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(new OptionSet());
+            var response = _controller.Put(new Template());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
@@ -249,7 +249,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutByIdIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, new OptionSet());
+            var response = _controller.Put(1, new Template());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
