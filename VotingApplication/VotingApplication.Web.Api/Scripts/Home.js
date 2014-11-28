@@ -1,7 +1,6 @@
 ﻿require(['jquery', 'Common'], function ($, Common) {
     var pollId = Common.getPollId();
     var manageId = Common.getManageId();
-    var pageName = Common.getPageName();
 
     var pageToLoad;
     var javascriptToLoad;
@@ -15,9 +14,6 @@
         // Go to poll management
         pageToLoad = "/Partials/Manage.html";
         javascriptToLoad = '/Scripts/Manage.js';
-    }
-    else if (pageName) {
-        pageToLoad = "/Partials/"+pageName+".html";
     }
     else {
         // Go to poll creation

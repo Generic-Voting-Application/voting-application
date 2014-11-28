@@ -272,6 +272,7 @@
     <Compile Include="Controllers\API Controllers\PollVoteController.cs" />
     <Compile Include="Controllers\API Controllers\UserPollVoteController.cs" />
     <Compile Include="Controllers\Web Controllers\AdminController.cs" />
+    <Compile Include="Controllers\Web Controllers\InfoController.cs" />
     <Compile Include="Controllers\Web Controllers\HomeController.cs" />
     <Compile Include="Controllers\API Controllers\OptionController.cs" />
     <Compile Include="Controllers\API Controllers\UserController.cs" />
@@ -299,7 +300,6 @@
     <Compile Include="Results\ChallengeResult.cs" />
     <Content Include="img\poll.jpg" />
     <Content Include="Partials\CheckEmail.html" />
-    <Content Include="Partials\Info.html" />
     <Content Include="Partials\VotingStrategies\RankedVote.html" />
     <Content Include="Partials\VotingStrategies\PointsVote.html" />
     <Content Include="Partials\VotingStrategies\BasicVote.html" />
@@ -377,6 +377,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Info\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VotingApplication.Data\VotingApplication.Data.csproj">
