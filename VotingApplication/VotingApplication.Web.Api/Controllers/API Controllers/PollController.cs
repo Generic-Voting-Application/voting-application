@@ -104,7 +104,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         private void SendCreateEmail(Poll poll)
         {
-            String hostUri = WebConfigurationManager.AppSettings["HostPassword"];
+            String hostUri = WebConfigurationManager.AppSettings["HostURI"];
             if(hostUri == String.Empty)
             {
                 return;
@@ -121,7 +121,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         private void SendVoteEmail(string targetEmailAddress, Poll poll)
         {
-            String hostUri = WebConfigurationManager.AppSettings["HostPassword"];
+            String hostUri = WebConfigurationManager.AppSettings["HostURI"];
             if (hostUri == String.Empty)
             {
                 return;
