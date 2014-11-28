@@ -1,6 +1,7 @@
 ﻿require(['jquery', 'Common'], function ($, Common) {
     var pollId = Common.getPollId();
     var manageId = Common.getManageId();
+    var pageName = Common.getPageName();
 
     var pageToLoad;
     var javascriptToLoad;
@@ -15,6 +16,9 @@
         pageToLoad = "/Partials/Manage.html";
         javascriptToLoad = '/Scripts/Manage.js';
     }
+    else if (pageName) {
+        pageToLoad = "/Partials/"+pageName+".html";
+    }
     else {
         // Go to poll creation
         pageToLoad = "/Partials/Create.html";
@@ -28,7 +32,9 @@
         dataType: 'html',
 
         success: function (data) {
-            require([javascriptToLoad]);
+            if (javascriptToLoad) {
+                require([javascriptToLoad]);
+            }
             $("#content").append(data);
         }
     });
