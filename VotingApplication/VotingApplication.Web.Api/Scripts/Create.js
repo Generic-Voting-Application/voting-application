@@ -41,13 +41,13 @@
                     VotingStrategy: strategy
                 }),
 
-                success: function () {
-                    self.pollCreated();
+                success: function (data) {
+                    self.pollCreated(data.UUID, data.ManageID);
                 }
             });
         };
 
-        self.pollCreated = function () {
+        self.pollCreated = function (PollId, ManageId) {
             // Load partial HTML
             $.ajax({
                 type: 'GET',
@@ -56,6 +56,8 @@
 
                 success: function (data) {
                     $("#content").html(data);
+                    $("#poll-id").attr("href", "/?poll=" + PollId);
+                    $("#manage-id").attr("href", "/?manage=" + ManageId);
                 }
             });
         };

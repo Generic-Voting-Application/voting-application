@@ -87,7 +87,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 context.Polls.Add(newPoll);
                 context.SaveChanges();
 
-                return this.Request.CreateResponse(HttpStatusCode.OK, newPoll.UUID);
+                Poll returnData = new Poll() { UUID = newPoll.UUID, ManageID = newPoll.ManageID };
+
+                return this.Request.CreateResponse(HttpStatusCode.OK, returnData);
             }
         }
 

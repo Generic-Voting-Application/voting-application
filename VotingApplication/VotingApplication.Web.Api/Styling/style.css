@@ -31,12 +31,18 @@ input, select, textarea {
 label {
     margin-bottom: 0px;
     width: 100%;
+    padding-left: 12px;
 }
 
 label.info-message {
     font-size: small;
     position: relative;
     top: -15px;
+}
+
+.required-label {
+    color: red;
+    padding-left: 2px;
 }
 
 .clickable {

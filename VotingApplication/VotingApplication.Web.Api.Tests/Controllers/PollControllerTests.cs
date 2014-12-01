@@ -261,15 +261,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostReturnsUUIDOfNewPoll()
+        public void PostReturnsIDsOfNewPoll()
         {
             // Act
             Poll newPoll = new Poll() { Name = "New Poll" };
             var response = _controller.Post(newPoll);
 
             // Assert
-            Guid newPollUUID = (Guid)((ObjectContent)response.Content).Value;
-            Assert.AreEqual(newPoll.UUID, newPollUUID);
+            Poll responsePoll = ((ObjectContent)response.Content).Value as Poll;
+            Assert.AreEqual(newPoll.UUID, responsePoll.UUID);
+            Assert.AreEqual(newPoll.ManageID, responsePoll.ManageID);
         }
 
         [TestMethod]

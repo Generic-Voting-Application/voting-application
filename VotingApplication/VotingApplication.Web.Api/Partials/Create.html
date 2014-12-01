@@ -5,18 +5,18 @@
     </div>
     <form id="poll-create-form">
         <div id="poll-name-group">
-            <label class="control-label" for="poll-name">Poll Name</label>
+            <label class="control-label" for="poll-name">Poll Name<span class="required-label">*</span></label>
             <input class="form-control" id="poll-name" placeholder="E.g. 2015 Elections" required />
         </div>
         
         <div id="poll-creator-group">
-            <label class="control-label" for="poll-creator">Creator Name</label>
+            <label class="control-label" for="poll-creator">Creator Name<span class="required-label">*</span></label>
             <input class="form-control" id="poll-creator" placeholder="E.g. John Smith" required />
         </div>
 
         <div id="email-group">
             <label class="control-label" for="email">Creator Email</label>
-            <input class="form-control" type="email" id="email" placeholder="E.g. email@example.com" required pattern="\w+@\w+(\.\w+)+">
+            <input class="form-control" type="email" id="email" placeholder="E.g. email@example.com" pattern="\w+@\w+(\.\w+)+">
         </div>
 
         <div id="invites-group">
@@ -30,7 +30,7 @@
         </div>
 
         <div id="strategy-group">
-            <label class="control-label" for="voting-strategy">Vote type</label>
+            <label class="control-label" for="voting-strategy">Vote type<span class="required-label">*</span></label>
             <select class="form-control" id="voting-strategy">
                 <option value="Basic">Single Vote</option>
                 <option value="Ranked">Single-Transferable Vote</option>
