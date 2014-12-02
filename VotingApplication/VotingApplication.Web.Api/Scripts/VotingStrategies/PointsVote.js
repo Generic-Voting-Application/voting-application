@@ -1,15 +1,15 @@
 ﻿define(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
 
 
-    return function PointsVote(options) {
+    return function PointsVote(options, pollData) {
 
         self = this;
         self.options = ko.observableArray(options);
         self.pointsArray = ko.observableArray();
 
-        var maxPoints = 7;
-        var maxPerVote = 3;
-        
+        var maxPoints = pollData.MaxPoints;
+        var maxPerVote = pollData.MaxPerVote;
+
         var resetVote = function () {
             //Populate with an array of options.length number of 0-values
             self.pointsArray(Array.apply(null, Array(options.length)).map(Boolean).map(Number));
@@ -110,8 +110,11 @@
             var index = $("#optionTable span").index(buttonGroup);
             var minusButton = $(buttonGroup).find(".btn.pull-left");
 
-            var sumOfAllPoints = self.pointsArray().reduce(function(prevValue, currentValue) { return prevValue + currentValue; });
-            var pointsForGroup = self.pointsArray()[index];
+            if (self.pointsArray().length > 0) {
+                var sumOfAllPoints = self.pointsArray().reduce(function (prevValue, currentValue) { return prevValue + currentValue; });
+                var pointsForGroup = self.pointsArray()[index];
+            }
+
 
             // Minus button clickable for value > 0
             if (pointsForGroup > 0) {
@@ -125,7 +128,7 @@
             if (sumOfAllPoints >= maxPoints) {
                 $("#optionTable span .btn.pull-right").attr('disabled', 'disabled');
             }
-            else  {
+            else {
                 var $allPlusButtons = $("#optionTable span .btn.pull-right");
                 for (var i = 0; i < $allPlusButtons.length; i++) {
                     var plusButton = $allPlusButtons[i];
