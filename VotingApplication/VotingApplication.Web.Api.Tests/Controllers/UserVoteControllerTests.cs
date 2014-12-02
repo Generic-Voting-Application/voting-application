@@ -22,14 +22,22 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private InMemoryDbSet<Vote> _dummyVotes;
         private Guid _mainUUID;
         private Guid _otherUUID;
+        private Guid _pointsUUID;
 
         [TestInitialize]
         public void setup()
         {
             _mainUUID = Guid.NewGuid();
             _otherUUID = Guid.NewGuid();
+            _pointsUUID = Guid.NewGuid();
+
             Poll mainPoll = new Poll() { UUID = _mainUUID };
             Poll otherPoll = new Poll() { UUID = _otherUUID };
+            Poll pointsPoll = new Poll() { UUID = _pointsUUID };
+
+            pointsPoll.VotingStrategy = "Points";
+            pointsPoll.MaxPerVote = 5;
+            pointsPoll.MaxPoints = 3;
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
             Option pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
@@ -47,6 +55,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             dummyPolls.Add(mainPoll);
             dummyPolls.Add(otherPoll);
+            dummyPolls.Add(pointsPoll);
 
             _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = _mainUUID };
             dummyUsers.Add(bobUser);
@@ -369,6 +378,21 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             Assert.AreEqual(newVote.PollValue, 35);
+        }
+
+        [TestMethod]
+        public void PutWithInvalidValueNotAllowed()
+        {
+            // Arrange
+            var newVote = new Vote() { OptionId = 1, PollId = _pointsUUID, PollValue = 99 };
+
+            // Act
+            var response = _controller.Put(1, new List<Vote>() { newVote });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Invalid vote value: 99", error.Message);
         }
 
         #endregion
