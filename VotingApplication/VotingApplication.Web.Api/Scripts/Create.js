@@ -3,6 +3,7 @@
         var self = this;
 
         self.templates = ko.observableArray();
+        self.selectedStrategy = ko.observable();
 
         self.createPoll = function () {
             //Clear out previous error messages
@@ -26,6 +27,8 @@
             var templateId = $("#template").val();
             var invites = $("#invites").val();
             var strategy = $("#voting-strategy").val();
+            var maxPoints = $("#max-points").val();
+            var maxPerVote = $("#max-per-vote").val();
             
             $.ajax({
                 type: 'POST',
@@ -38,7 +41,9 @@
                     Email: email,
                     Invites: invites.split('\n'),
                     templateId: templateId,
-                    VotingStrategy: strategy
+                    VotingStrategy: strategy,
+                    MaxPoints: maxPoints,
+                    MaxPerVote: maxPerVote
                 }),
 
                 success: function (data) {

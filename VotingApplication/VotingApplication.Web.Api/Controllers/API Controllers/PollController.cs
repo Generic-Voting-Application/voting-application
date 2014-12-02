@@ -77,6 +77,19 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     }
                 }
 
+                if (newPoll.VotingStrategy == "Points")
+                {
+                    if (newPoll.MaxPerVote == 0)
+                    {
+                        newPoll.MaxPerVote = 3;
+                    }
+
+                    if (newPoll.MaxPoints == 0)
+                    {
+                        newPoll.MaxPoints = 7;
+                    }
+                }
+
                 newPoll.UUID = Guid.NewGuid();
                 newPoll.ManageID = Guid.NewGuid();
 
@@ -107,7 +120,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         private void SendCreateEmail(Poll poll)
         {
             String hostUri = WebConfigurationManager.AppSettings["HostURI"];
-            if(hostUri == String.Empty)
+            if (hostUri == String.Empty)
             {
                 return;
             }
