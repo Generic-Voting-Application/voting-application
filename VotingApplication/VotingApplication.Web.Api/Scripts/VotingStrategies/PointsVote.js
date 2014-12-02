@@ -29,19 +29,21 @@
             votes.forEach(function (vote) {
                 var optionName = vote.Option.Name;
                 var voter = vote.User.Name;
+                var voteValue = vote.PollValue;
+                var voteString = voter + " (" + voteValue + ")";
 
                 // Find a vote with the same Option.Name, if it exists.
                 var existingOption = totalCounts.filter(function (vote) { return vote.Name == optionName; }).pop();
 
                 if (existingOption) {
                     existingOption.Sum += vote.PollValue;
-                    existingOption.Voters.push(voter);
+                    existingOption.Voters.push(voteString);
                 }
                 else {
                     totalCounts.push({
                         Name: optionName,
                         Sum: vote.PollValue,
-                        Voters: [voter]
+                        Voters: [voteString]
                     });
                 }
             });
