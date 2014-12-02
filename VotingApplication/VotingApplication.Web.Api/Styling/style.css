@@ -84,6 +84,15 @@ label {
     display: inline;
     font-size: 24px;
     margin: 10px;
+    padding-left: 0px;
+}
+
+.progress {
+    margin:0px 12px
+}
+
+.progress-bar {
+    min-width: 30px;
 }
 
 #reset-votes, #save-options-as {

@@ -6,9 +6,21 @@
         self = this;
         self.options = ko.observableArray(options);
         self.pointsArray = ko.observableArray();
+        self.maxPerVote = ko.observable(pollData.MaxPerVote);
+        self.maxPoints = ko.observable(pollData.MaxPoints);
 
-        var maxPoints = pollData.MaxPoints;
-        var maxPerVote = pollData.MaxPerVote;
+        self.pointsRemaining = ko.computed(function () {
+            var total = 0;
+            ko.utils.arrayForEach(self.pointsArray(), function (item) {
+                total += item;
+            });
+            var remaining = self.maxPoints() - total;
+            return remaining;
+        });
+
+        self.percentRemaining = ko.computed(function () {
+            return (self.pointsRemaining() / self.maxPoints()) * 100;
+        });
 
         var resetVote = function () {
             //Populate with an array of options.length number of 0-values
@@ -125,14 +137,14 @@
             }
 
             // Plus button clickable if more points can be added to group and total
-            if (sumOfAllPoints >= maxPoints) {
+            if (sumOfAllPoints >= self.maxPoints()) {
                 $("#optionTable span .btn.pull-right").attr('disabled', 'disabled');
             }
             else {
                 var $allPlusButtons = $("#optionTable span .btn.pull-right");
                 for (var i = 0; i < $allPlusButtons.length; i++) {
                     var plusButton = $allPlusButtons[i];
-                    if (self.pointsArray()[i] >= maxPerVote) {
+                    if (self.pointsArray()[i] >= self.maxPerVote()) {
                         $(plusButton).attr('disabled', 'disabled');
                     }
                     else {
