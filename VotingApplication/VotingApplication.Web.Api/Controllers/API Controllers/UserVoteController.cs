@@ -96,9 +96,17 @@ namespace VotingApplication.Web.Api.Controllers
                         return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Poll {0} does not exist", vote.PollId));
                     }
 
+                    Poll poll = polls.FirstOrDefault();
+
+                    // Validate poll value
                     if (vote.PollValue <= 0)
                     {
                         vote.PollValue = 1;
+                    }
+
+                    if (poll.VotingStrategy == "Points" && (vote.PollValue > poll.MaxPerVote || vote.PollValue > poll.MaxPoints))
+                    {
+                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, String.Format("Invalid vote value: {0}", vote.PollValue));
                     }
 
                     List<Vote> contextVotes = context.Votes.Where(v => v.UserId == userId && v.PollId == vote.PollId).ToList<Vote>();

@@ -17,25 +17,22 @@
                     self.pollName(data.Name);
                     self.pollCreator(data.Creator);
 
-                    var options = data.Options;
-
                     switch (data.VotingStrategy) {
                         case 'Basic':
-                            loadStrategy('/Partials/VotingStrategies/BasicVote.html', '/Scripts/VotingStrategies/BasicVote.js', options, callback);
+                            loadStrategy('/Partials/VotingStrategies/BasicVote.html', '/Scripts/VotingStrategies/BasicVote.js', data, callback);
                             break;
                         case 'Points':
-                            loadStrategy('/Partials/VotingStrategies/PointsVote.html', '/Scripts/VotingStrategies/PointsVote.js', options, callback);
+                            loadStrategy('/Partials/VotingStrategies/PointsVote.html', '/Scripts/VotingStrategies/PointsVote.js', data, callback);
                             break;
                         case 'Ranked':
-                            loadStrategy('/Partials/VotingStrategies/RankedVote.html', 'VotingStrategies/RankedVote', options, callback);
+                            loadStrategy('/Partials/VotingStrategies/RankedVote.html', 'VotingStrategies/RankedVote', data, callback);
                             break;
                     }
                 }
             });
         };
 
-        var loadStrategy = function (htmlFile, votingStrategy, options, callback) {
-
+        var loadStrategy = function (htmlFile, votingStrategy, pollData, callback) {
             // Load partial HTML
             $.ajax({
                 type: 'GET',
@@ -45,16 +42,16 @@
                 success: function (data) {
                     $("#votingArea").append(data);
                     require([votingStrategy], function (strategy) {
-                        votingStrategyFunc(strategy, options);
+                        votingStrategyFunc(strategy, pollData);
                         callback();
                     });
                 }
             });
         };
 
-        var votingStrategyFunc = function (strategy, options) {
+        var votingStrategyFunc = function (strategy, pollData) {
             function StrategyViewModel() {
-                votingStrategy = new strategy(options);
+                votingStrategy = new strategy(pollData.Options, pollData);
                 return votingStrategy;
             }
 

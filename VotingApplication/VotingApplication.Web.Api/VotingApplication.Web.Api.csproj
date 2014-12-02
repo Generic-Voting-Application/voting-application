@@ -264,6 +264,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\API Controllers\AccountController.cs" />
     <Compile Include="Controllers\API Controllers\MailSender.cs" />
+    <Compile Include="Controllers\API Controllers\ManageController.cs" />
     <Compile Include="Controllers\API Controllers\ManageOptionController.cs" />
     <Compile Include="Controllers\API Controllers\ManageVoteController.cs" />
     <Compile Include="Controllers\API Controllers\TemplateController.cs" />

@@ -5,7 +5,32 @@
 
         self.votes = ko.observableArray();
         self.options = ko.observableArray();
+        self.votingStrategy = ko.observable(false);
+
         self.selectedDeleteOptionId = null;
+
+        var getPollDetails = function () {
+            $.ajax({
+                type: 'GET',
+                url: '/api/manage/' + manageId,
+
+                success: function (data) {
+                    self.options(data.Options);
+                }
+            });
+        };
+
+        var populateVotes = function () {
+            $.ajax({
+                type: 'GET',
+                url: "/api/manage/" + manageId + "/vote",
+
+                success: function (data) {
+                    //Replace contents of self.votes with 'data'
+                    self.votes(data);
+                }
+            });
+        };
 
         self.resetVotes = function () {
             $.ajax({
@@ -15,7 +40,7 @@
                 success: function () {
                     $("#reset-votes").attr('disabled', 'disabled');
                     $("#reset-votes").text("Votes were reset");
-                    self.populateVotes();
+                    populateVotes();
                 }
             });
         };
@@ -47,7 +72,7 @@
                 }),
 
                 success: function () {
-                    self.populateOptions();
+                    getPollDetails();
                 }
             });
         };
@@ -59,7 +84,7 @@
                 contentType: 'application/json',
 
                 success: function () {
-                    self.populateVotes();
+                    populateVotes();
                 }
             });
         };
@@ -71,41 +96,22 @@
                 contentType: 'application/json',
 
                 success: function () {
-                    self.populateOptions();
-                    self.populateVotes();
+                    getPollDetails();
+                    populateVotes();
                 }
             });
         };
 
-        self.populateOptions = function () {
-            $.ajax({
-                type: 'GET',
-                url: '/api/manage/' + manageId + '/option',
+        self.updatePoll = function () {
 
-                success: function (data) {
-                    self.options(data);
-                }
-            });
-        };
-
-        self.populateVotes = function () {
-            $.ajax({
-                type: 'GET',
-                url: "/api/manage/" + manageId + "/vote",
-
-                success: function (data) {
-                    //Replace contents of self.votes with 'data'
-                    self.votes(data);
-                }
-            });
-        };
+        }
 
         $(document).ready(function () {
             manageId = Common.getManageId();
 
-            self.populateVotes();
-            self.populateOptions();
-
+            getPollDetails();
+            populateVotes();
+            
             //Add option on pressing return key
             $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
         });
