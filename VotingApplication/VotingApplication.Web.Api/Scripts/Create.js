@@ -27,8 +27,8 @@
             var templateId = $("#template").val();
             var invites = $("#invites").val();
             var strategy = $("#voting-strategy").val();
-            var maxPoints = $("#max-points").val();
-            var maxPerVote = $("#max-per-vote").val();
+            var maxPoints = $("#max-points").val() || 7;
+            var maxPerVote = $("#max-per-vote").val() || 3;
             
             $.ajax({
                 type: 'POST',
