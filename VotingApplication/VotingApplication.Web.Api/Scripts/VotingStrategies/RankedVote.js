@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'jqueryUI', 'Common'], function ($, ko, jqueryUI, Common) {
+﻿define(['jquery', 'knockout', 'jqueryUI', 'Common', 'jqueryTouch'], function ($, ko, jqueryUI, Common) {
 
     return function RankedVote(options) {
 
