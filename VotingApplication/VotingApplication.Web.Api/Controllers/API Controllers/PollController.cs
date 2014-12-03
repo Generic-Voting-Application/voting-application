@@ -80,6 +80,16 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     }
                 }
 
+                // Create a list of tokens for each invite
+                if(newPoll.InviteOnly)
+                {
+                    newPoll.Tokens = new List<Guid>();
+                    foreach(string email in newPoll.Invites)
+                    {
+                        newPoll.Tokens.Add(Guid.NewGuid());
+                    }
+                }
+
                 newPoll.UUID = Guid.NewGuid();
                 newPoll.ManageID = Guid.NewGuid();
 
@@ -99,11 +109,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         private void SendEmails(Poll poll)
         {
             List<string> invitations = poll.Invites ?? new List<string>();
+            Queue<Guid> tokens = poll.InviteOnly ? new Queue<Guid>(poll.Tokens) : null;
 
             SendCreateEmail(poll);
-            foreach (string inviteEmail in invitations)
+            foreach(string invitation in invitations)
             {
-                SendVoteEmail(inviteEmail, poll);
+                SendVoteEmail(invitation, poll, poll.InviteOnly ? tokens.Dequeue() : Guid.Empty);
             }
         }
 
@@ -124,7 +135,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             MailSender.SendMail(poll.Email, "Your poll is ready!", message);
         }
 
-        private void SendVoteEmail(string targetEmailAddress, Poll poll)
+        private void SendVoteEmail(string targetEmailAddress, Poll poll, Guid token)
         {
             String hostUri = WebConfigurationManager.AppSettings["HostURI"];
             if (hostUri == String.Empty)
@@ -132,9 +143,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 return;
             }
 
+            string tokenString = (poll.InviteOnly && token != null && token != Guid.Empty) ? "&token=" + token : "";
+
             string message = String.Join("\n\n", new List<string>()
                 {"You've been invited by " + poll.Creator + " to vote on " + poll.Name,
-                 "Have your say at: " + hostUri + "?poll=" + poll.UUID});
+                 "Have your say at: " + hostUri + "?poll=" + poll.UUID + tokenString});
 
             MailSender.SendMail(targetEmailAddress, "Have your say!", message);
         }

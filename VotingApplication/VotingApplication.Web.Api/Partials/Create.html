@@ -8,7 +8,7 @@
             <label class="control-label" for="poll-name">Poll Name<span class="required-label">*</span></label>
             <input class="form-control" id="poll-name" placeholder="E.g. 2015 Elections" required />
         </div>
-        
+
         <div id="poll-creator-group" class="form-group">
             <label class="control-label" for="poll-creator">Creator Name<span class="required-label">*</span></label>
             <input class="form-control" id="poll-creator" placeholder="E.g. John Smith" required />
@@ -22,6 +22,11 @@
         <div id="invites-group" class="form-group">
             <label class="control-label" for="invites">Invitations (one per line)</label>
             <textarea cols=40 rows=3 class="form-control" id="invites" placeholder="E.g. email@example.com" />
+        </div>
+
+        <div id="invite-group" class="form-group">
+            <label class="control-label" for="invite-only">Invite only</label>
+            <input class="checkbox-inline" type="checkbox" id="invite-only">
         </div>
 
         <div id="template-group" class="form-group">
@@ -42,6 +47,7 @@
             <label class="control-label" for="max-points">Max points</label>
             <input class="form-control" id="max-points" placeholder="7" />
         </div>
+
         <div id="points-per-vote-group" data-bind="visible: selectedStrategy() == 'Points'" class="form-group">
             <label class="control-label" for="max-per-vote">Max points per vote</label>
             <input class="form-control" id="max-per-vote" placeholder="3" />

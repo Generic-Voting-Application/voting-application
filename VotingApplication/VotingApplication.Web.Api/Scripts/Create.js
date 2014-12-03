@@ -1,4 +1,4 @@
-﻿require(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
+﻿require(['jquery', 'knockout', 'Common', 'bootstrapSwitch'], function ($, ko, Common) {
     function HomeViewModel() {
         var self = this;
 
@@ -29,6 +29,7 @@
             var strategy = $("#voting-strategy").val();
             var maxPoints = $("#max-points").val() || 7;
             var maxPerVote = $("#max-per-vote").val() || 3;
+            var inviteOnly = $('#invite-only').bootstrapSwitch('state');
             
             $.ajax({
                 type: 'POST',
@@ -43,7 +44,8 @@
                     templateId: templateId,
                     VotingStrategy: strategy,
                     MaxPoints: maxPoints,
-                    MaxPerVote: maxPerVote
+                    MaxPerVote: maxPerVote,
+                    InviteOnly: inviteOnly
                 }),
 
                 success: function (data) {
@@ -97,6 +99,7 @@
 
         $(document).ready(function () {
             self.populateTemplates();
+            $('#invite-only').bootstrapSwitch({size : 'small', state: false, onText: 'Yes', offText: 'No'});
         });
     }
 

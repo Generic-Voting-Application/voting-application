@@ -97,8 +97,7 @@ namespace VotingApplication.Web.Api.Controllers
                     }
 
                     Poll poll = polls.FirstOrDefault();
-                    Boolean isTokenPoll = poll.Tokens != null && poll.Tokens.Count > 0;
-
+                    Boolean isTokenPoll = poll.InviteOnly;
 
                     if (isTokenPoll)
                     {

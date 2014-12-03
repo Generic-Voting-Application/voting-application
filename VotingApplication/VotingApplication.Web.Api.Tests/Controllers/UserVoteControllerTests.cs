@@ -46,6 +46,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             tokenPoll.Tokens = new List<Guid>();
             tokenPoll.Tokens.Add(_validToken);
+            tokenPoll.InviteOnly = true;
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
             Option pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
