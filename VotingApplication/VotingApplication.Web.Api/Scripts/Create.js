@@ -53,6 +53,13 @@
         };
 
         self.pollCreated = function (PollId, ManageId) {
+
+            // Simulate a page change and make the back button simply refresh the page.
+            history.pushState({}, "");
+            window.addEventListener("popstate", function (e) {
+                history.go(0);
+            });
+
             // Load partial HTML
             $.ajax({
                 type: 'GET',
