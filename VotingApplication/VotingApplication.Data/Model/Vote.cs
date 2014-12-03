@@ -15,5 +15,7 @@ namespace VotingApplication.Data.Model
 
         public Guid PollId { get; set; }
         public Poll Poll { get; set; }
+
+        public Guid Token { get; set; }
     }
 }

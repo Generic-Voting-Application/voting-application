@@ -39,6 +39,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 // Hide the manageID to prevent a GET on the poll ID from giving Poll Creator access
                 matchingPoll.ManageID = Guid.Empty;
 
+                // Similarly with tokens
+                matchingPoll.Tokens = new List<Guid>();
+
                 return this.Request.CreateResponse(HttpStatusCode.OK, matchingPoll);
             }
         }

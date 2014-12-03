@@ -97,6 +97,21 @@ namespace VotingApplication.Web.Api.Controllers
                     }
 
                     Poll poll = polls.FirstOrDefault();
+                    Boolean isTokenPoll = poll.Tokens != null && poll.Tokens.Count > 0;
+
+
+                    if (isTokenPoll)
+                    {
+                        // Validate tokens if required
+                        if (vote.Token == Guid.Empty)
+                        {
+                            return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Token required for this poll");
+                        }
+                        else if (!poll.Tokens.Contains(vote.Token))
+                        {
+                            return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("Invalid token: {0}", vote.Token));
+                        }
+                    }
 
                     // Validate poll value
                     if (vote.PollValue <= 0)
@@ -107,9 +122,19 @@ namespace VotingApplication.Web.Api.Controllers
                     if (poll.VotingStrategy == "Points" && (vote.PollValue > poll.MaxPerVote || vote.PollValue > poll.MaxPoints))
                     {
                         return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, String.Format("Invalid vote value: {0}", vote.PollValue));
-                    }
+                    } 
 
-                    List<Vote> contextVotes = context.Votes.Where(v => v.UserId == userId && v.PollId == vote.PollId).ToList<Vote>();
+                    List<Vote> contextVotes;
+
+                    if(isTokenPoll) 
+                    {
+                       contextVotes = context.Votes.Where(v => v.Token == vote.Token && v.PollId == vote.PollId).ToList<Vote>();
+                    }
+                    else
+                    {
+                        contextVotes = context.Votes.Where(v => v.UserId == userId && v.PollId == vote.PollId).ToList<Vote>();
+                    }
+                    
                     foreach (Vote contextVote in contextVotes)
                     {
                         context.Votes.Remove(contextVote);

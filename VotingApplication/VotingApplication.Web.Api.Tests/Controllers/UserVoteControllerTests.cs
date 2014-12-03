@@ -23,6 +23,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Guid _mainUUID;
         private Guid _otherUUID;
         private Guid _pointsUUID;
+        private Guid _tokenUUID;
+        private Guid _validToken;
 
         [TestInitialize]
         public void setup()
@@ -30,14 +32,20 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _mainUUID = Guid.NewGuid();
             _otherUUID = Guid.NewGuid();
             _pointsUUID = Guid.NewGuid();
+            _tokenUUID = Guid.NewGuid();
+            _validToken = Guid.NewGuid();
 
             Poll mainPoll = new Poll() { UUID = _mainUUID };
             Poll otherPoll = new Poll() { UUID = _otherUUID };
             Poll pointsPoll = new Poll() { UUID = _pointsUUID };
+            Poll tokenPoll = new Poll() { UUID = _tokenUUID };
 
             pointsPoll.VotingStrategy = "Points";
             pointsPoll.MaxPerVote = 5;
             pointsPoll.MaxPoints = 3;
+
+            tokenPoll.Tokens = new List<Guid>();
+            tokenPoll.Tokens.Add(_validToken);
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
             Option pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
@@ -56,6 +64,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             dummyPolls.Add(mainPoll);
             dummyPolls.Add(otherPoll);
             dummyPolls.Add(pointsPoll);
+            dummyPolls.Add(tokenPoll);
 
             _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = _mainUUID };
             dummyUsers.Add(bobUser);
@@ -393,6 +402,70 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
             Assert.AreEqual("Invalid vote value: 99", error.Message);
+        }
+
+        [TestMethod]
+        public void PutWithNoTokenOnTokenPollNotAllowed()
+        {
+            // Arrange
+            var newVote = new Vote() { OptionId = 1, PollId = _tokenUUID};
+
+            // Act
+            var response = _controller.Put(1, new List<Vote>() { newVote });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Token required for this poll", error.Message);
+        }
+
+        [TestMethod]
+        public void PutWithInvalidTokenOnTokenPollNotAllowed()
+        {
+            // Arrange
+            Guid invalidToken = Guid.NewGuid();
+            var newVote = new Vote() { OptionId = 1, PollId = _tokenUUID, Token = invalidToken };
+
+            // Act
+            var response = _controller.Put(1, new List<Vote>() { newVote });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual(String.Format("Invalid token: {0}", invalidToken), error.Message);
+        }
+
+        [TestMethod]
+        public void PutWithValidTokenOnTokenPollAllowed()
+        {
+            // Arrange
+            var newVote = new Vote() { OptionId = 1, PollId = _tokenUUID, Token = _validToken };
+
+            // Act
+            _controller.Put(1, new List<Vote>() { newVote });
+
+            // Assert
+            Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[0].OptionId);
+        }
+
+
+        [TestMethod]
+        public void PutWithOnTokenPollClearsExistingVotesWithSameToken()
+        {
+            // Arrange
+            _dummyVotes.Add(new Vote() { Id = 4, OptionId = 1, UserId = 1, PollId = _tokenUUID, Token = _validToken });
+            var newVote = new Vote() { OptionId = 1, PollId = _tokenUUID, Token = _validToken };
+
+            // Act
+            _controller.Put(2, new List<Vote>() { newVote });
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(_bobVote);
+            expectedVotes.Add(_joeVote);
+            expectedVotes.Add(_otherVote);
+            expectedVotes.Add(newVote);
+            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
         }
 
         #endregion
