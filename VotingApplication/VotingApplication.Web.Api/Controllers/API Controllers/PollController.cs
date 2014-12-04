@@ -40,7 +40,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 matchingPoll.ManageID = Guid.Empty;
 
                 // Similarly with tokens
-                matchingPoll.Tokens = new List<Guid>();
+                matchingPoll.Tokens = new List<Token>();
 
                 return this.Request.CreateResponse(HttpStatusCode.OK, matchingPoll);
             }
@@ -83,10 +83,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 // Create a list of tokens for each invite
                 if(newPoll.InviteOnly)
                 {
-                    newPoll.Tokens = new List<Guid>();
+                    newPoll.Tokens = new List<Token>();
                     foreach(string email in newPoll.Invites)
                     {
-                        newPoll.Tokens.Add(Guid.NewGuid());
+                        newPoll.Tokens.Add(new Token { TokenGuid = Guid.NewGuid() });
                     }
                 }
 
@@ -109,12 +109,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         private void SendEmails(Poll poll)
         {
             List<string> invitations = poll.Invites ?? new List<string>();
-            Queue<Guid> tokens = poll.InviteOnly ? new Queue<Guid>(poll.Tokens) : null;
+            Queue<Token> tokens = poll.InviteOnly ? new Queue<Token>(poll.Tokens) : null;
 
             SendCreateEmail(poll);
             foreach(string invitation in invitations)
             {
-                SendVoteEmail(invitation, poll, poll.InviteOnly ? tokens.Dequeue() : Guid.Empty);
+                SendVoteEmail(invitation, poll, poll.InviteOnly ? tokens.Dequeue() : new Token { TokenGuid = Guid.Empty });
             }
         }
 
@@ -135,7 +135,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             MailSender.SendMail(poll.Email, "Your poll is ready!", message);
         }
 
-        private void SendVoteEmail(string targetEmailAddress, Poll poll, Guid token)
+        private void SendVoteEmail(string targetEmailAddress, Poll poll, Token token)
         {
             String hostUri = WebConfigurationManager.AppSettings["HostURI"];
             if (hostUri == String.Empty)
@@ -143,7 +143,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 return;
             }
 
-            string tokenString = (poll.InviteOnly && token != null && token != Guid.Empty) ? "&token=" + token : "";
+            string tokenString = (poll.InviteOnly && token != null && token.TokenGuid != Guid.Empty) ? "&token=" + token.TokenGuid : "";
 
             string message = String.Join("\n\n", new List<string>()
                 {"You've been invited by " + poll.Creator + " to vote on " + poll.Name,

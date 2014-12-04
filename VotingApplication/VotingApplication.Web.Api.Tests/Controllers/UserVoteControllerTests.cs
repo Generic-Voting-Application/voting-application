@@ -24,7 +24,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Guid _otherUUID;
         private Guid _pointsUUID;
         private Guid _tokenUUID;
-        private Guid _validToken;
+        private Token _validToken;
 
         [TestInitialize]
         public void setup()
@@ -33,7 +33,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _otherUUID = Guid.NewGuid();
             _pointsUUID = Guid.NewGuid();
             _tokenUUID = Guid.NewGuid();
-            _validToken = Guid.NewGuid();
+            _validToken = new Token { TokenGuid = Guid.NewGuid() };
 
             Poll mainPoll = new Poll() { UUID = _mainUUID };
             Poll otherPoll = new Poll() { UUID = _otherUUID };
@@ -44,7 +44,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             pointsPoll.MaxPerVote = 5;
             pointsPoll.MaxPoints = 3;
 
-            tokenPoll.Tokens = new List<Guid>();
+            tokenPoll.Tokens = new List<Token>();
             tokenPoll.Tokens.Add(_validToken);
             tokenPoll.InviteOnly = true;
 
@@ -424,7 +424,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithInvalidTokenOnTokenPollNotAllowed()
         {
             // Arrange
-            Guid invalidToken = Guid.NewGuid();
+            Token invalidToken = new Token { TokenGuid = Guid.NewGuid() };
             var newVote = new Vote() { OptionId = 1, PollId = _tokenUUID, Token = invalidToken };
 
             // Act

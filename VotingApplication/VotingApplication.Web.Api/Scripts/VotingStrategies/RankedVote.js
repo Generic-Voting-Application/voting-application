@@ -127,6 +127,7 @@
         self.doVote = function (data, event) {
             var userId = Common.currentUserId();
             var pollId = Common.getPollId();
+            var token = Common.getToken();
 
             if (userId && pollId) {
 
@@ -144,7 +145,8 @@
                     selectedOptionsArray.push({
                         OptionId: selection.Id,
                         PollId: pollId,
-                        PollValue: rank
+                        PollValue: rank,
+                        Token: { TokenGuid: token }
                     });
                 });
 

@@ -90,7 +90,7 @@ namespace VotingApplication.Web.Api.Controllers
                         return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Option {0} does not exist", vote.OptionId));
                     }
 
-                    IEnumerable<Poll> polls = context.Polls.Where(o => o.UUID == vote.PollId);
+                    IEnumerable<Poll> polls = context.Polls.Where(p => p.UUID == vote.PollId).Include(p => p.Tokens);
                     if (polls.Count() == 0)
                     {
                         return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Poll {0} does not exist", vote.PollId));
@@ -102,11 +102,11 @@ namespace VotingApplication.Web.Api.Controllers
                     if (isTokenPoll)
                     {
                         // Validate tokens if required
-                        if (vote.Token == Guid.Empty)
+                        if (vote.Token == null || vote.Token.TokenGuid == Guid.Empty)
                         {
                             return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Token required for this poll");
                         }
-                        else if (!poll.Tokens.Contains(vote.Token))
+                        else if (poll.Tokens == null || !poll.Tokens.Any(t => t.TokenGuid == vote.Token.TokenGuid))
                         {
                             return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("Invalid token: {0}", vote.Token));
                         }
@@ -127,7 +127,8 @@ namespace VotingApplication.Web.Api.Controllers
 
                     if(isTokenPoll) 
                     {
-                       contextVotes = context.Votes.Where(v => v.Token == vote.Token && v.PollId == vote.PollId).ToList<Vote>();
+                        var z = context.Votes.Where(v => v.Token.TokenGuid == vote.Token.TokenGuid && v.PollId == vote.PollId);
+                        contextVotes = context.Votes.Where(v => v.Token != null && v.Token.TokenGuid == vote.Token.TokenGuid && v.PollId == vote.PollId).ToList<Vote>();
                     }
                     else
                     {

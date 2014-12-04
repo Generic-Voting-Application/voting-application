@@ -157,6 +157,7 @@
         self.doVote = function (data, event) {
             var userId = Common.currentUserId();
             var pollId = Common.getPollId();
+            var token = Common.getToken();
 
             var votesData = [];
 
@@ -168,7 +169,8 @@
                 var vote = {
                     OptionId: self.options()[i].Id,
                     PollId: pollId,
-                    PollValue: self.pointsArray()[i]
+                    PollValue: self.pointsArray()[i],
+                    Token: { TokenGuid: token }
                 };
 
                 votesData.push(vote);
