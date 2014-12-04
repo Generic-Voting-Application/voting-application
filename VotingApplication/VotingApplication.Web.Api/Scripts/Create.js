@@ -1,4 +1,4 @@
-﻿require(['jquery', 'knockout', 'Common', 'bootstrapSwitch'], function ($, ko, Common) {
+﻿require(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
     function HomeViewModel() {
         var self = this;
 
@@ -99,7 +99,6 @@
 
         $(document).ready(function () {
             self.populateTemplates();
-            $('#invite-only').bootstrapSwitch({size : 'small', state: false, onText: 'Yes', offText: 'No'});
         });
     }
 

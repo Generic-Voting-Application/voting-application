@@ -8,8 +8,7 @@
         'crossfilter': 'Lib/crossfilter.min',
         'sortable': 'Lib/jquery-sortable-min',
         'jqueryUI': 'Lib/jquery-ui.min',
-        'jqueryTouch': 'Lib/jquery.ui.touch-punch.min',
-        'bootstrapSwitch': 'Lib/bootstrap-switch.min'
+        'jqueryTouch': 'Lib/jquery.ui.touch-punch.min'
 },
     shim: {
         'jquery': {
@@ -31,9 +30,6 @@
         },
         'jqueryTouch': {
             deps: ['jquery']
-        },
-        'bootstrapSwitch': {
-            deps: ['bootstrap']
         }
     }
 });
