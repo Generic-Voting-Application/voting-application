@@ -219,6 +219,14 @@
 
                         //Insert at index in selectedOptions
                         self.selectedOptions.splice(insertionIndex, 0, item);
+
+                        //Make sure rows are a part of the table body
+                        if (rows.length == 0) {
+                            $(this).find('tbody').append(ui.item)
+                        }
+                        else {
+                            rows.eq(insertionIndex).before(ui.item);
+                        }
                     } else {
                         self.selectedOptions.remove(item);
                     }
