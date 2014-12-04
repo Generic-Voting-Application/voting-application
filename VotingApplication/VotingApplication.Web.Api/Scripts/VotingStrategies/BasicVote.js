@@ -86,16 +86,20 @@
         self.doVote = function (data, event) {
             var userId = Common.currentUserId();
             var pollId = Common.getPollId();
+            var token = Common.getToken();
+
+            var voteData = JSON.stringify([{
+                OptionId: data.Id,
+                PollId: pollId,
+                Token: { TokenGuid: token }
+            }]);
 
             if (userId && pollId) {
                 $.ajax({
                     type: 'PUT',
                     url: '/api/user/' + userId + '/vote',
                     contentType: 'application/json',
-                    data: JSON.stringify([{
-                        OptionId: data.Id,
-                        PollId: pollId
-                    }]),
+                    data: voteData,
 
                     success: function (returnData) {
                         var currentRow = event.currentTarget.parentElement.parentElement;

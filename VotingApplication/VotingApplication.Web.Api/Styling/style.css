@@ -95,6 +95,17 @@ label {
     min-width: 30px;
 }
 
+.checkbox-label {
+    float:left;
+    width:90%;
+}
+
+.checkbox-inline {
+    float:right; 
+    width:10%; 
+    margin-bottom: 20px !important;
+}
+
 #reset-votes, #save-options-as {
     width: 150px;
     height: 40px;

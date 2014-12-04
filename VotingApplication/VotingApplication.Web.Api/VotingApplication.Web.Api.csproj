@@ -306,6 +306,7 @@
     <Content Include="Partials\VotingStrategies\BasicVote.html" />
     <Content Include="Partials\VotingStrategies\RankedVoteResults.html" />
     <Content Include="Scripts\Create.js" />
+    <Content Include="Scripts\Lib\bootstrap-switch.min.js" />
     <Content Include="Scripts\Lib\bootstrap.min.js" />
     <Content Include="Scripts\Lib\crossfilter.min.js" />
     <Content Include="Scripts\Lib\d3.min.js" />
@@ -313,6 +314,7 @@
     <Content Include="Scripts\Lib\jquery-2.1.1.min.js" />
     <Content Include="Scripts\Lib\jquery-sortable-min.js" />
     <Content Include="Scripts\Lib\jquery-ui.min.js" />
+    <Content Include="Scripts\Lib\jquery.ui.touch-punch.min.js" />
     <Content Include="Scripts\Lib\knockout-3.2.0.js" />
     <Content Include="Scripts\Main.js" />
     <Compile Include="Startup.cs" />

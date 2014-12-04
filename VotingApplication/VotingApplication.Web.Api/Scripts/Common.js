@@ -45,6 +45,12 @@
         return manageId;
     };
 
+    Common.getToken = function () {
+        var windowArgs = Common.getJsonFromUrl();
+        var token = windowArgs['token'];
+        return token;
+    }
+
     Common.currentUserId = function () {
         var localUserJSON = localStorage["user"];
 
