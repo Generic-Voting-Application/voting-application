@@ -127,7 +127,6 @@ namespace VotingApplication.Web.Api.Controllers
 
                     if(isTokenPoll) 
                     {
-                        var z = context.Votes.Where(v => v.Token.TokenGuid == vote.Token.TokenGuid && v.PollId == vote.PollId);
                         contextVotes = context.Votes.Where(v => v.Token != null && v.Token.TokenGuid == vote.Token.TokenGuid && v.PollId == vote.PollId).ToList<Vote>();
                     }
                     else
