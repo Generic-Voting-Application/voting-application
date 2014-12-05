@@ -27,6 +27,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Web.Api",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B4664874-E386-4AA5-B494-3124CA40DCDB}"
 	ProjectSection(SolutionItems) = preProject
+		VotingApplication.Web.Api\App_Start\NinjectWebCommon.cs = VotingApplication.Web.Api\App_Start\NinjectWebCommon.cs
 		.nuget\packages.config = .nuget\packages.config
 		VotingApplication.Data\Model\Poll.cs = VotingApplication.Data\Model\Poll.cs
 	EndProjectSection

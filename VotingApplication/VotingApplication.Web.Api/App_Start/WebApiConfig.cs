@@ -59,6 +59,12 @@ namespace VotingApplication.Web.Api
             );
 
             config.Routes.MapHttpRoute(
+                name: "PollChatMessageApiRoute",
+                routeTemplate: "api/poll/{pollId}/chat",
+                defaults: new { controller = "PollChatMessage" }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "ManageVoteApiRoute",
                 routeTemplate: "api/manage/{manageId}/vote/{voteId}",
                 defaults: new { controller = "ManageVote", voteId = RouteParameter.Optional }

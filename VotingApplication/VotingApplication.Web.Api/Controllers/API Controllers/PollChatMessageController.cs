@@ -11,6 +11,7 @@ using System.Net.Mail;
 using System.Web.Configuration;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Web.OData;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -26,6 +27,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET on this controller");
         }
 
+        [EnableQuery]
         public virtual HttpResponseMessage Get(Guid pollId)
         {
             using (var context = _contextFactory.CreateContext())
@@ -41,7 +43,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 return this.Request.CreateResponse(HttpStatusCode.OK, messages);
             }
         }
-
         #endregion
 
         #region Put
@@ -87,6 +88,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 }
 
                 newMessage.User = matchingUser;
+                newMessage.Timestamp = DateTime.Now;
                 if (matchingPoll.ChatMessages == null)
                 {
                     matchingPoll.ChatMessages = new List<ChatMessage>();
