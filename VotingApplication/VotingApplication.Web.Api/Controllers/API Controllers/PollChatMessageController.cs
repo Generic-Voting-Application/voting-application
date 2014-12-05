@@ -69,6 +69,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Message requires a user");
                 }
 
+                if (newMessage.Message == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Message text required");
+                }
+
                 User matchingUser = context.Users.Where(u => u.Id == newMessage.User.Id).FirstOrDefault();
                 if (matchingUser == null)
                 {
@@ -82,6 +87,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 }
 
                 newMessage.User = matchingUser;
+                if (matchingPoll.ChatMessages == null)
+                {
+                    matchingPoll.ChatMessages = new List<ChatMessage>();
+                }
                 matchingPoll.ChatMessages.Add(newMessage);
                 context.SaveChanges();
 

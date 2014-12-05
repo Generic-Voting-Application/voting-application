@@ -22,12 +22,14 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Guid _mainUUID;
         private Guid _emptyUUID;
         private ChatMessage _simpleMessage;
+        private User _bobUser;
+        private InMemoryDbSet<Poll> _dummyPolls;
 
         [TestInitialize]
         public void setup()
         {
             InMemoryDbSet<User> dummyUsers = new InMemoryDbSet<User>(true);
-            InMemoryDbSet<Poll> dummyPolls = new InMemoryDbSet<Poll>(true);
+            _dummyPolls = new InMemoryDbSet<Poll>(true);
 
             _mainUUID = Guid.NewGuid();
             _emptyUUID = Guid.NewGuid();
@@ -35,25 +37,23 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Poll mainPoll = new Poll() { UUID = _mainUUID };
             Poll emptyPoll = new Poll() { UUID = _emptyUUID };
 
-            User bobUser = new User { Id = 1, Name = "Bob" };
-            User joeUser = new User { Id = 2, Name = "Joe" };
+            _bobUser = new User { Id = 1, Name = "Bob" };
 
-            _simpleMessage = new ChatMessage { Id = 1, User = bobUser, Message = "Hello world" };
+            _simpleMessage = new ChatMessage { Id = 1, User = _bobUser, Message = "Hello world" };
 
             mainPoll.ChatMessages = new List<ChatMessage>();
             mainPoll.ChatMessages.Add(_simpleMessage);
 
-            dummyUsers.Add(bobUser);
-            dummyUsers.Add(joeUser);
+            dummyUsers.Add(_bobUser);
 
-            dummyPolls.Add(mainPoll);
-            dummyPolls.Add(emptyPoll);
+            _dummyPolls.Add(mainPoll);
+            _dummyPolls.Add(emptyPoll);
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
             mockContext.Setup(a => a.Users).Returns(dummyUsers);
-            mockContext.Setup(a => a.Polls).Returns(dummyPolls);
+            mockContext.Setup(a => a.Polls).Returns(_dummyPolls);
 
             _controller = new PollChatMessageController(mockContextFactory.Object);
             _controller.Request = new HttpRequestMessage();
@@ -141,23 +141,97 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region POST
 
         [TestMethod]
-        public void PostIsNotAllowed()
+        public void PostWithInvalidPollIdNotAllowed()
         {
+            // Arrange
+            Guid newGuid = new Guid();
+            User simpleBobUser = new User { Id = 1 };
+            ChatMessage newMessage = new ChatMessage { Message = "", User = simpleBobUser };
+
             // Act
-            //var response = _controller.Post(_mainUUID, new Vote());
+            var response = _controller.Post(newGuid, newMessage);
 
             // Assert
-           // Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Poll " + newGuid + " does not exist", error.Message);
         }
 
         [TestMethod]
-        public void PostByIdIsNotAllowed()
+        public void PostWithNoMessageNotAllowed()
         {
+            // Arrange
+            User simpleBobUser = new User { Id = 1 };
+            ChatMessage newMessage = new ChatMessage { User = simpleBobUser };
+
             // Act
-            //var response = _controller.Post(_mainUUID, 1, new Vote());
+            var response = _controller.Post(_mainUUID, newMessage);
 
             // Assert
-            //Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Message text required", error.Message);
+        }
+
+        [TestMethod]
+        public void PostWithInvalidUserNotAllowed()
+        {
+            // Arrange
+            User simpleBobUser = new User { Id = 99 };
+            ChatMessage newMessage = new ChatMessage { Message = "", User = simpleBobUser };
+
+            // Act
+            var response = _controller.Post(_mainUUID, newMessage);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("User " + simpleBobUser.Id + " does not exist", error.Message);
+        }
+
+        [TestMethod]
+        public void PostWithValidDetailsAddsMessage()
+        {
+            // Arrange
+            User simpleBobUser = new User { Id = 1 };
+            ChatMessage newMessage = new ChatMessage { Message = "", User = simpleBobUser };
+
+            // Act
+            var response = _controller.Post(_mainUUID, newMessage);
+
+            // Assert
+            List<ChatMessage> expectedMessages = new List<ChatMessage>();
+            expectedMessages.Add(_simpleMessage);
+            ChatMessage addedNewMessage = newMessage;
+            addedNewMessage.User = _bobUser;
+            expectedMessages.Add(addedNewMessage);
+            
+            List<ChatMessage> actualMessages = _dummyPolls.Where(p => p.UUID == _mainUUID).FirstOrDefault().ChatMessages;
+
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            CollectionAssert.AreEquivalent(expectedMessages, actualMessages);
+        }
+
+        [TestMethod]
+        public void PostWithValidDetailsAddsMessageToMessagelessPoll()
+        {
+            // Arrange
+            User simpleBobUser = new User { Id = 1 };
+            ChatMessage newMessage = new ChatMessage { Message = "", User = simpleBobUser };
+
+            // Act
+            var response = _controller.Post(_emptyUUID, newMessage);
+
+            // Assert
+            List<ChatMessage> expectedMessages = new List<ChatMessage>();
+            ChatMessage addedNewMessage = newMessage;
+            addedNewMessage.User = _bobUser;
+            expectedMessages.Add(addedNewMessage);
+
+            List<ChatMessage> actualMessages = _dummyPolls.Where(p => p.UUID == _emptyUUID).FirstOrDefault().ChatMessages;
+
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            CollectionAssert.AreEquivalent(expectedMessages, actualMessages);
         }
 
         #endregion
