@@ -50,6 +50,7 @@
     <Compile Include="Context\ContextFactory.cs" />
     <Compile Include="Context\IContextFactory.cs" />
     <Compile Include="Context\IVotingContext.cs" />
+    <Compile Include="Model\ChatMessage.cs" />
     <Compile Include="Model\Option.cs" />
     <Compile Include="Model\Template.cs" />
     <Compile Include="Model\Poll.cs" />
