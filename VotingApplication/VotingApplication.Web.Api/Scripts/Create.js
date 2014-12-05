@@ -29,7 +29,7 @@
             var strategy = $("#voting-strategy").val();
             var maxPoints = $("#max-points").val() || 7;
             var maxPerVote = $("#max-per-vote").val() || 3;
-            var inviteOnly = $('#invite-only').bootstrapSwitch('state');
+            var inviteOnly = $('#invite-only').is(':checked')
             
             $.ajax({
                 type: 'POST',
