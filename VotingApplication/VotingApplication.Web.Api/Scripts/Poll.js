@@ -3,7 +3,6 @@
         var self = this;
 
         var votingStrategy;
-        var lastMessageCheck = 0;
 
         self.pollName = ko.observable("Poll Name");
         self.pollCreator = ko.observable("Poll Creator");
