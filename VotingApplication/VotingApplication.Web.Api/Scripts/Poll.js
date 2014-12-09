@@ -1,4 +1,4 @@
-﻿require(['jquery', 'knockout', 'bootstrap', 'insight', 'Common'], function ($, ko, bs, insight, Common) {
+﻿require(['jquery', 'knockout', 'bootstrap', 'insight', 'Common', 'platform'], function ($, ko, bs, insight, Common) {
     function VoteViewModel() {
         var self = this;
 
@@ -115,6 +115,25 @@
             showSection($(data).parent());
         };
 
+        self.googleLogin = function (authResult) {
+            //Login failed
+            if (!authResult['status']['signed_in']) {
+                return;
+            }
+
+            //Load the username and login to GVA
+            gapi.client.load('plus', 'v1', function () {
+                var request = gapi.client.plus.people.get({
+                    'userId': 'me'
+                });
+                request.execute(function (resp) {
+                    //Hijack the regular login
+                    $("#loginUsername").val(resp.displayName);
+                    self.submitLogin();
+                });
+            });
+        }
+
         self.submitLogin = function (data, event) {
             var username = $("#loginUsername").val();
             $.ajax({
@@ -187,6 +206,17 @@
 
             getChatMessages();
             setInterval(getChatMessages, 3000);
+
+            // Additional params including the callback, the rest of the params will
+            // come from the page-level configuration.
+            var additionalParams = {
+                'callback': self.googleLogin
+            };
+
+            // Attach a click listener to a button to trigger the flow.
+            $('#signinButton')[0].addEventListener('click', function () {
+                gapi.auth.signIn(additionalParams); // Will use page level configuration
+            });
         });
     }
 

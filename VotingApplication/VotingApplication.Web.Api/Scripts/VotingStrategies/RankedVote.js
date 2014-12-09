@@ -213,25 +213,26 @@
                         return item.Id == itemId;
                     });
 
-                    if ($(e.target).hasClass('selection-content')) {
-                        //Get index of where we dropped the item
-                        var rows = $(".selection-content > tbody > tr");
-                        var rowIds = $.map(rows, function (d, i) { return $(d).data("id") });
-                        var insertionIndex = rowIds.indexOf(item.Id);
+                    var rows = $(this).find('tbody > tr');
+                    var rowIds = $.map(rows, function (d, i) { return $(d).data("id") });
+                    var insertionIndex = rowIds.indexOf(item.Id);
 
+                    if ($(e.target).hasClass('selection-content')) {
                         //Insert at index in selectedOptions
                         self.selectedOptions.splice(insertionIndex, 0, item);
-
-                        //Make sure rows are a part of the table body
-                        if (rows.length == 0) {
-                            $(this).find('tbody').append(ui.item)
-                        }
-                        else {
-                            rows.eq(insertionIndex).before(ui.item);
-                        }
                     } else {
+                        //Get index of where we dropped the item
                         self.selectedOptions.remove(item);
                     }
+
+                    //Make sure rows are a part of the table body
+                    if (rows.length == 0) {
+                        $(this).find('tbody').append(ui.item)
+                    }
+                    else {
+                        rows.eq(insertionIndex).before(ui.item);
+                    }
+
                 }
             });
         });
