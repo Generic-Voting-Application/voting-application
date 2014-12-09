@@ -300,6 +300,7 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Content Include="img\poll.jpg" />
+    <Content Include="img\sign-in-with-google.png" />
     <Content Include="Partials\CheckEmail.html" />
     <Content Include="Partials\VotingStrategies\RankedVote.html" />
     <Content Include="Partials\VotingStrategies\PointsVote.html" />
