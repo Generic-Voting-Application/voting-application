@@ -1,4 +1,4 @@
-﻿require(['jquery', 'knockout', 'bootstrap', 'insight', 'Common', 'https://apis.google.com/js/client:platform.js'], function ($, ko, bs, insight, Common) {
+﻿require(['jquery', 'knockout', 'bootstrap', 'insight', 'Common', 'platform'], function ($, ko, bs, insight, Common) {
     function VoteViewModel() {
         var self = this;
 
