@@ -7,6 +7,8 @@
         self.pollName = ko.observable("Poll Name");
         self.pollCreator = ko.observable("Poll Creator");
         self.options = ko.observableArray();
+        self.chatMessages = ko.observableArray();
+        self.lastMessageId = 0;
 
         var getPollDetails = function (pollId, callback) {
             $.ajax({
@@ -69,6 +71,46 @@
             element.addClass('panel-primary');
         };
 
+        var scrollChatWindow = function () {
+            $("#chat-messages").animate({
+                scrollTop: $("#chat-messages")[0].scrollHeight
+            });
+        };
+
+        var getChatMessages = function () {
+            if (self.pollId) {
+                var timestamp = Math.floor((new Date).getTime() / 1000);
+                var url = 'api/poll/' + self.pollId + '/chat?$orderby=Id&$filter=Id gt ' + self.lastMessageId;
+
+                $.ajax({
+                    type: 'GET',
+                    'url': url,
+                    contentType: 'application/json',
+                    success: function (data) {
+
+                        //Only fetch last 10 messages when we first sign on
+                        if (!self.lastMessageId && data.length > 10) {
+                            data = data.slice(data.length - 10);
+                        }
+
+                        if (data.length > 0) {
+                            var messageId = data[data.length - 1].Id
+                            if (!self.lastMessageId || messageId > self.lastMessageId) {
+                                self.lastMessageId = messageId;
+                            }
+
+                            data.forEach(function (message) {
+                                self.chatMessages.push(message);
+                            });
+                            scrollChatWindow();
+                        }
+                    }
+                });
+
+
+            }
+        }
+
         self.showSection = function (data, event) {
             showSection($(data).parent());
         };
@@ -118,6 +160,25 @@
             });
         };
 
+        self.sendChatMessage = function (data, event) {
+            if (self.userId && self.pollId) {
+                var url = 'api/poll/' + self.pollId + '/chat';
+                var chatMessage = $('#chatTextInput').val();
+                $('#chatTextInput').val('');
+
+                $.ajax({
+                    type: 'POST',
+                    'url': url,
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        User: { Id: self.userId },
+                        Message: chatMessage
+                    })
+                });
+            }
+
+        }
+
         $('#voteSection .accordion-body').on('show.bs.collapse', function () {
             if (votingStrategy) {
                 votingStrategy.getVotes(self.pollId, self.userId);
@@ -142,6 +203,9 @@
                     showSection($('#loginSection'));
                 }
             });
+
+            getChatMessages();
+            setInterval(getChatMessages, 3000);
 
             // Additional params including the callback, the rest of the params will
             // come from the page-level configuration.
