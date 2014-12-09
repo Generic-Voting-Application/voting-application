@@ -400,10 +400,6 @@
       <Project>{942dcb1b-5882-4c01-95ae-3fe71e4103f2}</Project>
       <Name>VotingApplication.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VotingApplication.SocketServer\VotingApplication.SocketServer.csproj">
-      <Project>{4bea2d17-4af7-404e-84ab-c58f8be23a58}</Project>
-      <Name>VotingApplication.SocketServer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\VotingApplication.Web.Common\VotingApplication.Web.Common.csproj">
       <Project>{969076f5-f2ad-4711-853b-ba1bd3439e13}</Project>
       <Name>VotingApplication.Web.Common</Name>

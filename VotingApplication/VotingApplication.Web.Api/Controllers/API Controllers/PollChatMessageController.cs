@@ -32,7 +32,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(p => p.UUID == pollId).Include(p => p.ChatMessages).FirstOrDefault();
+                Poll matchingPoll = context.Polls.Where(p => p.UUID == pollId).Include(p => p.ChatMessages.Select(m => m.User)).FirstOrDefault();
                 if (matchingPoll == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", pollId));
@@ -88,7 +88,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 }
 
                 newMessage.User = matchingUser;
-                newMessage.Timestamp = DateTime.Now;
                 if (matchingPoll.ChatMessages == null)
                 {
                     matchingPoll.ChatMessages = new List<ChatMessage>();
