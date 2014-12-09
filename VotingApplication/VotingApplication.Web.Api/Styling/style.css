@@ -143,3 +143,10 @@ label {
 #signinButton > img {
     width:200px;
 }
+
+@media (min-width: 768px) {
+    .divider {
+        border-right: 1px solid #ccc;
+        height: 150px;
+    }
+}
