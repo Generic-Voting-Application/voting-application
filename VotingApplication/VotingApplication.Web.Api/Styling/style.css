@@ -123,6 +123,10 @@ label {
     border-style: solid;
 }
 
+#chat-panel {
+    margin-top:20px;
+}
+
 .navbar-nav {
     float: left;
     margin: 0;
@@ -131,4 +135,22 @@ label {
 .navbar-nav>li>a {
     padding-top: 15px;
     padding-bottom: 15px;
+}
+
+#signinButton {
+    padding: 0px;
+    margin: 0px;
+    border-style: hidden;
+    background-color: transparent;
+}
+
+#signinButton > img {
+    width:200px;
+}
+
+@media (min-width: 768px) {
+    .divider {
+        border-right: 1px solid #ccc;
+        height: 150px;
+    }
 }
