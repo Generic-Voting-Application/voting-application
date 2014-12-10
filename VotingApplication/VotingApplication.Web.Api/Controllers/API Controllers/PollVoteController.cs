@@ -32,7 +32,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 if (poll.AnonymousVoting)
                 {
                     pollVotes = context.Votes.Where(v => v.PollId == pollId)
-                    .ToList();
+                    .Include(v => v.Option).ToList();
                 }
                 else
                 {

@@ -29,7 +29,8 @@
             var strategy = $("#voting-strategy").val();
             var maxPoints = $("#max-points").val() || 7;
             var maxPerVote = $("#max-per-vote").val() || 3;
-            var inviteOnly = $('#invite-only').is(':checked')
+            var inviteOnly = $('#invite-only').is(':checked');
+            var anonymousVoting = $('#anonymous-voting').is(':checked');
             
             $.ajax({
                 type: 'POST',
@@ -45,7 +46,8 @@
                     VotingStrategy: strategy,
                     MaxPoints: maxPoints,
                     MaxPerVote: maxPerVote,
-                    InviteOnly: inviteOnly
+                    InviteOnly: inviteOnly,
+                    AnonymousVoting: anonymousVoting
                 }),
 
                 success: function (data) {
