@@ -12,7 +12,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
     public class PollVoteController : WebApiController
     {
-        public PollVoteController() : base() {}
+        public PollVoteController() : base() { }
         public PollVoteController(IContextFactory contextFactory) : base(contextFactory) { }
 
         #region GET
@@ -27,9 +27,21 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", pollId));
                 }
 
-                List<Vote> pollVotes = context.Votes.Where(v => v.PollId == pollId)
+                List<Vote> pollVotes;
+
+                if (poll.AnonymousVoting)
+                {
+                    pollVotes = context.Votes.Where(v => v.PollId == pollId)
+                    .ToList();
+                }
+                else
+                {
+                    pollVotes = context.Votes.Where(v => v.PollId == pollId)
                     .Include(v => v.Option).Include(v => v.User)
                     .ToList();
+                }
+
+
                 return this.Request.CreateResponse(HttpStatusCode.OK, pollVotes);
             }
         }
