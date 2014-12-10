@@ -50,6 +50,11 @@
     <Compile Include="Context\ContextFactory.cs" />
     <Compile Include="Context\IContextFactory.cs" />
     <Compile Include="Context\IVotingContext.cs" />
+    <Compile Include="Migrations\201412101113388_Initial.cs" />
+    <Compile Include="Migrations\201412101113388_Initial.Designer.cs">
+      <DependentUpon>201412101113388_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\ChatMessage.cs" />
     <Compile Include="Model\Option.cs" />
     <Compile Include="Model\Template.cs" />
@@ -63,6 +68,11 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201412101113388_Initial.resx">
+      <DependentUpon>201412101113388_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
