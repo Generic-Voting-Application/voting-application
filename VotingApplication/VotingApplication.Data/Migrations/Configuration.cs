@@ -1,20 +1,18 @@
-namespace VotingApplication.Web.Api.Migrations
+namespace VotingApplication.Data.Migrations
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
-    using VotingApplication.Data.Context;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<VotingContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<VotingApplication.Data.Context.VotingContext>
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
-            AutomaticMigrationDataLossAllowed = true;
+            AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(VotingContext context)
+        protected override void Seed(VotingApplication.Data.Context.VotingContext context)
         {
             //  This method will be called after migrating to the latest version.
 
