@@ -90,7 +90,7 @@ namespace VotingApplication.Web.Api.Controllers
                         return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Option {0} does not exist", vote.OptionId));
                     }
 
-                    IEnumerable<Poll> polls = context.Polls.Where(p => p.UUID == vote.PollId).Include(p => p.Tokens);
+                    IEnumerable<Poll> polls = context.Polls.Where(p => p.UUID == vote.PollId).Include(p => p.Tokens).Include(p => p.Options);
                     if (polls.Count() == 0)
                     {
                         return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Poll {0} does not exist", vote.PollId));
