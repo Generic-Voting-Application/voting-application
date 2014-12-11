@@ -68,7 +68,19 @@
     };
 
     Common.currentUserName = function () {
-        return $.parseJSON(localStorage["user"]).userName;
+        var localUserJSON = localStorage["user"];
+
+        if (localUserJSON) {
+            var localUser = $.parseJSON(localUserJSON);
+            if (localUser.expires < Date.now()) {
+                localStorage.removeItem("user");
+            }
+            else {
+                return localUser.userName;
+            }
+        }
+
+        return undefined;
     };
 
     Common.loginUser = function (userId, userName) {

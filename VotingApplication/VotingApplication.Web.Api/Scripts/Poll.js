@@ -10,6 +10,7 @@
         self.options = ko.observableArray();
         self.chatMessages = ko.observableArray();
         self.lastMessageId = 0;
+        self.userName = ko.observable(Common.currentUserName());
 
         var getPollDetails = function (pollId, callback) {
             $.ajax({
@@ -153,6 +154,7 @@
 
                 success: function (data) {
                     Common.loginUser(data, username);
+                    self.userName(username);
                     self.userId = data;
                     showSection($('#voteSection'));
                 },
