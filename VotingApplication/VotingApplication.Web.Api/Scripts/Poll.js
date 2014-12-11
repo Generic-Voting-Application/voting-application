@@ -3,12 +3,14 @@
         var self = this;
 
         var votingStrategy;
+        var lockCollapse = false;
 
         self.pollName = ko.observable("Poll Name");
         self.pollCreator = ko.observable("Poll Creator");
         self.options = ko.observableArray();
         self.chatMessages = ko.observableArray();
         self.lastMessageId = 0;
+        self.userName = ko.observable(Common.currentUserName());
 
         var getPollDetails = function (pollId, callback) {
             $.ajax({
@@ -61,14 +63,20 @@
         };
 
         var showSection = function (element) {
-            var siblings = element.siblings();
-            for (var i = 0; i < siblings.length; i++) {
-                $(siblings[i]).collapseSection('hide');
-                $(siblings[i]).removeClass('panel-primary');
+            if (!lockCollapse) {
+                lockCollapse = true;
+                var siblings = element.siblings();
+                for (var i = 0; i < siblings.length; i++) {
+                    $(siblings[i]).collapseSection('hide');
+                    $(siblings[i]).removeClass('panel-primary');
 
+                }
+                element.collapseSection('show');
+                $(element).on('shown.bs.collapse', function (e) {
+                    lockCollapse = false;
+                });
+                element.addClass('panel-primary');
             }
-            element.collapseSection('show');
-            element.addClass('panel-primary');
         };
 
         var scrollChatWindow = function () {
@@ -146,6 +154,7 @@
 
                 success: function (data) {
                     Common.loginUser(data, username);
+                    self.userName(username);
                     self.userId = data;
                     showSection($('#voteSection'));
                 },
