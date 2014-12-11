@@ -17,7 +17,7 @@ namespace VotingApplication.Data.Model
 
         public string Creator { get; set; }
 
-        public string VotingStrategy { get; set; }
+        public String VotingStrategy { get; set; }
 
         [NotMapped]
         public string Email { get; set; }
@@ -26,5 +26,14 @@ namespace VotingApplication.Data.Model
 
         public long TemplateId { get; set; }
         public List<Option> Options { get; set; }
+
+        public int MaxPoints { get; set; }
+        public int MaxPerVote { get; set; }
+
+        public bool InviteOnly { get; set; }
+        public List<Token> Tokens { get; set; }
+
+        public List<ChatMessage> ChatMessages { get; set; }
+        public bool AnonymousVoting { get; set; }
     }
 }

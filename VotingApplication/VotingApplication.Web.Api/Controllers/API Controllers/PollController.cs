@@ -39,6 +39,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 // Hide the manageID to prevent a GET on the poll ID from giving Poll Creator access
                 matchingPoll.ManageID = Guid.Empty;
 
+                // Similarly with tokens
+                matchingPoll.Tokens = new List<Token>();
+
                 return this.Request.CreateResponse(HttpStatusCode.OK, matchingPoll);
             }
         }
@@ -77,6 +80,16 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     }
                 }
 
+                // Create a list of tokens for each invite
+                if(newPoll.InviteOnly)
+                {
+                    newPoll.Tokens = new List<Token>();
+                    foreach(string email in newPoll.Invites)
+                    {
+                        newPoll.Tokens.Add(new Token { TokenGuid = Guid.NewGuid() });
+                    }
+                }
+
                 newPoll.UUID = Guid.NewGuid();
                 newPoll.ManageID = Guid.NewGuid();
 
@@ -87,36 +100,54 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 context.Polls.Add(newPoll);
                 context.SaveChanges();
 
-                return this.Request.CreateResponse(HttpStatusCode.OK, newPoll.UUID);
+                Poll returnData = new Poll() { UUID = newPoll.UUID, ManageID = newPoll.ManageID };
+
+                return this.Request.CreateResponse(HttpStatusCode.OK, returnData);
             }
         }
 
         private void SendEmails(Poll poll)
         {
             List<string> invitations = poll.Invites ?? new List<string>();
+            Queue<Token> tokens = poll.InviteOnly ? new Queue<Token>(poll.Tokens) : null;
 
             SendCreateEmail(poll);
-            foreach (string inviteEmail in invitations)
+            foreach(string invitation in invitations)
             {
-                SendVoteEmail(inviteEmail, poll);
+                SendVoteEmail(invitation, poll, poll.InviteOnly ? tokens.Dequeue() : new Token { TokenGuid = Guid.Empty });
             }
         }
 
         private void SendCreateEmail(Poll poll)
         {
+            String hostUri = WebConfigurationManager.AppSettings["HostURI"];
+            if (hostUri == String.Empty)
+            {
+                return;
+            }
+
             string message = String.Join("\n\n", new List<string>()
                 {"Your poll is now created and ready to go!",
-                 "You can invite people to vote by giving them this link: http://votingapp.azurewebsites.net?poll=" + poll.UUID + ".",
-                 "You can administer your poll at http://votingapp.azurewebsites.net?manage=" + poll.ManageID + ". Don't share this link around!"});
+                 "You can invite people to vote by giving them this link: " + hostUri + "?poll=" + poll.UUID,
+                 "You can administer your poll at "+ hostUri + "?manage=" + poll.ManageID,
+                 "(Don't share this link around!)"});
 
             MailSender.SendMail(poll.Email, "Your poll is ready!", message);
         }
 
-        private void SendVoteEmail(string targetEmailAddress, Poll poll)
+        private void SendVoteEmail(string targetEmailAddress, Poll poll, Token token)
         {
+            String hostUri = WebConfigurationManager.AppSettings["HostURI"];
+            if (hostUri == String.Empty)
+            {
+                return;
+            }
+
+            string tokenString = (poll.InviteOnly && token != null && token.TokenGuid != Guid.Empty) ? "&token=" + token.TokenGuid : "";
+
             string message = String.Join("\n\n", new List<string>()
-                {"You've been invited by " + poll.Creator + " to vote on " + poll.Name + ".",
-                 "Have your say at: http://votingapp.azurewebsites.net?poll=" + poll.UUID + "!"});
+                {"You've been invited by " + poll.Creator + " to vote on " + poll.Name,
+                 "Have your say at: " + hostUri + "?poll=" + poll.UUID + tokenString});
 
             MailSender.SendMail(targetEmailAddress, "Have your say!", message);
         }

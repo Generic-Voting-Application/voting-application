@@ -1,5 +1,8 @@
-﻿<div class="row">
-    <div class="col-md-2"></div>
+﻿<meta name="google-signin-clientid" content="411410182235-0p8378ip8snlvbut4grq5ar61r8p60c2.apps.googleusercontent.com" />
+<meta name="google-signin-scope" content="profile" />
+<meta name="google-signin-cookiepolicy" content="single_host_origin" />
+
+<div class="row">
     <div class="col-md-8 centered">
         <div class="page-header">
             <h1>
@@ -7,24 +10,32 @@
                 <small>by <span data-bind="text: $root.pollCreator"></span></small>
             </h1>
         </div>
-        <!--Login Section-->
-        <div class="accordion" id="accordion">
+        <div class="accordion" id="accordion"> 
+            <!--Login Section-->
             <div id="loginSection" class="accordion-group panel panel-default">
                 <div class="accordion-heading panel-heading clickable" data-bind="click: $root.showSection.bind($data, $element)">
-                    <h4>Login</h4>
+                    <h4>Login</h4><span data-bind="text: '(Logged in as: '+userName()+')', visible: userName() "></span>
                 </div>
                 <div class="accordion-body panel-body collapse row">
-                    <div class="col-sm-4 col-xs-2"></div>
-                    <div class="col-sm-4 col-xs-8 centered form-group">
+                    <div class="col-xs-1"></div>
+
+                    <div class="col-sm-4 centered form-group">
+                        <h4>Vote anonymously...</h4>
                         <form>
-                            <label for="loginUsername" class="control-label">Username</label>
-                            <input id="loginUsername" class="form-control" autofocus />
+                            <label for="loginUsername" class="control-label">Name</label>
+                            <input id="loginUsername" class="form-control" autofocus placeholder="E.g. Your Name" />
                             <label class="control-label info-message" id="usernameWarnMessage" hidden> Username must be alpha-numeric</label>
-                            <br />
-                            <button id="Name-loginSubmit" class="btn btn-primary" data-bind="click: $root.submitLogin">Login</button>
+                            <button id="Name-loginSubmit" class="btn btn-primary" data-bind="click: $root.submitLogin">Submit</button>
                         </form>
                     </div>
-                    <div class="col-sm-4 col-xs-2"></div>
+                    <div class="col-sm-1 divider"></div>
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-4 centered form-group">
+                        <h4>...or sign in</h4>
+                        <br />
+                        <button id="signinButton"><img src="/img/sign-in-with-google.png" /></button>
+                    </div>
+                    <div class="col-xs-1"></div>
                 </div>
             </div>
             <!--Voting Section-->
@@ -54,5 +65,20 @@
             </div>
         </div>
     </div>
-    <div class="col-md-2"></div>
+    <div class="col-md-4">
+        <div class="panel panel-default" id="chat-panel">
+            <div class="panel-heading"><span class="panel-title">Chat</span></div>
+            <div style="height:300px; overflow-y:auto" id="chat-messages" class="panel-body" data-bind="foreach: {data: chatMessages, as: 'message'}">
+                <div data-bind="text: message.User.Name + ': ' + message.Message"></div>
+            </div>
+            <div class="panel-footer">
+                <form>
+                    <div class="input-append form-group">
+                        <input class="form-control" type='text' id="chatTextInput" placeholder="Message" />
+                        <button class="btn btn-primary" data-bind="click: $root.sendChatMessage">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

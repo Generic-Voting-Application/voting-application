@@ -15,6 +15,7 @@
                 <tr>
                     <th>User</th>
                     <th>Option</th>
+                    <th>Vote Weighting</th>
                     <th></th>
                 </tr>
             </thead>
@@ -22,6 +23,7 @@
                 <tr>
                     <td data-bind="text: User.Name"></td>
                     <td data-bind="text: Option.Name"></td>
+                    <td data-bind="text: PollValue"></td>
                     <td class="delete-vote-row"><button class="btn btn-danger" data-bind="click: $parent.deleteVote.bind()">Delete Vote</button></td>
                 </tr>
             </tbody>
@@ -43,7 +45,7 @@
                     <td><button class="btn btn-danger" data-bind="click: $root.deleteOption.bind()" data-toggle="modal" data-target="#deleteOptionModal">Delete</button></td>
                 </tr>
             </tbody>
-            <tr>
+            <tr id="newOptionRow">
                 <td>
                     <input class="form-control input-block" id="newName" placeholder="Option" />
                 </td>

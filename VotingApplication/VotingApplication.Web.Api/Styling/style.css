@@ -31,12 +31,18 @@ input, select, textarea {
 label {
     margin-bottom: 0px;
     width: 100%;
+    padding-left: 12px;
 }
 
-label.info-message {
-    font-size: small;
-    position: relative;
-    top: -15px;
+    label.info-message {
+        font-size: small;
+        position: relative;
+        top: -15px;
+    }
+
+.required-label {
+    color: red;
+    padding-left: 2px;
 }
 
 .clickable {
@@ -46,15 +52,7 @@ label.info-message {
 .accordion-group {
     margin: 0px;
     border-radius: 0px;
-    overflow: hidden;
-}
-
-.accordion-group:first-child {
-    border-radius: 10px 10px 0px 0px;
-}
-
-.accordion-group:last-child {
-    border-radius: 0px 0px 10px 10px;
+    border-style:none;
 }
 
 .accordion-heading {
@@ -86,6 +84,30 @@ label.info-message {
     display: inline;
     font-size: 24px;
     margin: 10px;
+    padding-left: 0px;
+}
+
+.progress {
+    margin:0px 12px
+}
+
+.progress-bar {
+    min-width: 30px;
+}
+
+.checkbox-label {
+    float:left;
+    width:90%;
+}
+
+.checkbox-inline {
+    float:right; 
+    width:10%; 
+    margin-bottom: 20px !important;
+}
+
+.form-group {
+    min-height: 20px;
 }
 
 #reset-votes, #save-options-as {
@@ -95,4 +117,44 @@ label.info-message {
 
 #delete-vote-row {
     align-content: flex-end;
+}
+
+#accordion {
+    overflow: hidden;
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: #ddd;
+    border-style: solid;
+}
+
+#chat-panel {
+    margin-top:20px;
+}
+
+.navbar-nav {
+    float: left;
+    margin: 0;
+}
+
+.navbar-nav>li>a {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+#signinButton {
+    padding: 0px;
+    margin: 0px;
+    border-style: hidden;
+    background-color: transparent;
+}
+
+#signinButton > img {
+    width:200px;
+}
+
+@media (min-width: 768px) {
+    .divider {
+        border-right: 1px solid #ccc;
+        height: 150px;
+    }
 }

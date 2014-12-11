@@ -22,9 +22,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Vote _bobVote;
         private Vote _joeVote;
         private Vote _otherVote;
+        private Vote _anonymousVote;
         private Guid _mainUUID;
         private Guid _otherUUID;
         private Guid _emptyUUID;
+        private Guid _anonymousUUID;
         private InMemoryDbSet<Vote> _dummyVotes;
 
         [TestInitialize]
@@ -38,10 +40,14 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _mainUUID = Guid.NewGuid();
             _otherUUID = Guid.NewGuid();
             _emptyUUID = Guid.NewGuid();
+            _anonymousUUID = Guid.NewGuid();
 
             Poll mainPoll = new Poll() { UUID = _mainUUID };
             Poll otherPoll = new Poll() { UUID = _otherUUID };
             Poll emptyPoll = new Poll() { UUID = _emptyUUID };
+            Poll anonymousPoll = new Poll() { UUID = _anonymousUUID };
+
+            anonymousPoll.AnonymousVoting = true;
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
 
@@ -51,6 +57,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = _mainUUID };
             _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, PollId = _mainUUID };
             _otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, PollId = _otherUUID };
+            _anonymousVote = new Vote() { Id = 4, OptionId = 1, UserId = 1, PollId = _anonymousUUID };
 
             dummyUsers.Add(bobUser);
             dummyUsers.Add(joeUser);
@@ -58,12 +65,14 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _dummyVotes.Add(_bobVote);
             _dummyVotes.Add(_joeVote);
             _dummyVotes.Add(_otherVote);
+            _dummyVotes.Add(_anonymousVote);
 
             dummyOptions.Add(burgerOption);
 
             dummyPolls.Add(mainPoll);
             dummyPolls.Add(otherPoll);
             dummyPolls.Add(emptyPoll);
+            dummyPolls.Add(anonymousPoll);
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
@@ -137,6 +146,18 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void GetOnAnonPollDoesNotReturnUsernames()
+        {
+            // Act
+            var response = _controller.Get(_anonymousUUID);
+
+            // Assert
+            List<Vote> responseVotes = ((ObjectContent)response.Content).Value as List<Vote>;
+            Assert.AreEqual(1, responseVotes.Count);
+            Assert.IsNull(responseVotes[0].User);
         }
 
         #endregion

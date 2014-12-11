@@ -22,13 +22,20 @@ namespace VotingApplication.Web.Api
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
+                name: "ManageApiRoute",
+                routeTemplate: "api/manage/{manageId}",
+                defaults: new { controller = "Manage", manageId = RouteParameter.Optional }
+            );
+
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
 
             config.Routes.MapHttpRoute(
-                name:"UserVoteApiRoute",
+                name: "UserVoteApiRoute",
                 routeTemplate: "api/user/{userId}/vote/{voteId}",
                 defaults: new { controller = "UserVote", voteId = RouteParameter.Optional }
             );
@@ -49,6 +56,12 @@ namespace VotingApplication.Web.Api
                 name: "PollOptionApiRoute",
                 routeTemplate: "api/poll/{pollId}/option/{optionId}",
                 defaults: new { controller = "PollOption", optionId = RouteParameter.Optional }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "PollChatMessageApiRoute",
+                routeTemplate: "api/poll/{pollId}/chat/{messageId}",
+                defaults: new { controller = "PollChatMessage", messageId = RouteParameter.Optional }
             );
 
             config.Routes.MapHttpRoute(

@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'jqueryUI', 'Common'], function ($, ko, jqueryUI, Common) {
+﻿define(['jquery', 'knockout', 'jqueryUI', 'Common', 'jqueryTouch'], function ($, ko, jqueryUI, Common) {
 
     return function RankedVote(options) {
 
@@ -31,6 +31,10 @@
         var resetOptions = function () {
             $('#optionTable > tbody').append($('#selectionTable > tbody').remove('tr').children());
         }
+        
+        var sortByPollValue = function (a, b) {
+            return a.PollValue - b.PollValue;
+        }
 
         var countVotes = function (votes) {
             var options = [];
@@ -55,9 +59,7 @@
 
             // Sort the votes on the ballots and assign each ballot to first choice
             ballots.forEach(function (ballot) {
-                ballot.sort(function (a, b) {
-                    return a.PollValue - b.PollValue;
-                });
+                ballot.sort(sortByPollValue);
                 var firstChoiceId = ballot[0].OptionId
                 options.filter(function (option) { return option.Id == firstChoiceId })[0].ballots.push(ballot);
             });
@@ -127,31 +129,34 @@
         self.doVote = function (data, event) {
             var userId = Common.currentUserId();
             var pollId = Common.getPollId();
+            var token = Common.getToken();
 
             if (userId && pollId) {
 
                 var selectionRows = $('#selectionTable > tbody > tr');
 
                 var selectedOptionsArray = [];
+                var minRank = Number.MAX_VALUE;
                 ko.utils.arrayForEach(self.selectedOptions(), function (selection) {
 
                     var $optionElement = selectionRows.filter(function () {
                         return $(this).attr('data-id') == selection.Id;
                     });
 
-                    var rank = $optionElement[0].rowIndex;
+                    var rank = $("#selectionTable > tbody > tr").index($optionElement[0]);
+                    minRank = Math.min(minRank, rank);
 
                     selectedOptionsArray.push({
                         OptionId: selection.Id,
                         PollId: pollId,
-                        PollValue: rank
+                        PollValue: rank,
+                        Token: { TokenGuid: token }
                     });
                 });
 
                 // Offset by the first value to account for table headers and sort out 0 index
-                var lowestValue = selectedOptionsArray[0].PollValue - 1;
                 selectedOptionsArray.map(function (option) {
-                    option.PollValue -= lowestValue;
+                    option.PollValue -= minRank - 1;
                 });
 
                 $.ajax({
@@ -178,6 +183,7 @@
                 contentType: 'application/json',
 
                 success: function (data) {
+                    data.sort(sortByPollValue);
                     selectPickedOptions(data);
                 }
             });
@@ -207,13 +213,26 @@
                         return item.Id == itemId;
                     });
 
+                    var rows = $(this).find('tbody > tr');
+                    var rowIds = $.map(rows, function (d, i) { return $(d).data("id") });
+                    var insertionIndex = rowIds.indexOf(item.Id);
+
                     if ($(e.target).hasClass('selection-content')) {
-                        self.selectedOptions.push(item);
+                        //Insert at index in selectedOptions
+                        self.selectedOptions.splice(insertionIndex, 0, item);
                     } else {
+                        //Get index of where we dropped the item
                         self.selectedOptions.remove(item);
                     }
 
-                    $(this).find("tbody").append(ui.item);
+                    //Make sure rows are a part of the table body
+                    if (rows.length == 0) {
+                        $(this).find('tbody').append(ui.item)
+                    }
+                    else {
+                        rows.eq(insertionIndex).before(ui.item);
+                    }
+
                 }
             });
         });

@@ -35,15 +35,21 @@
 
     Common.getPollId = function () {
         var windowArgs = Common.getJsonFromUrl();
-        pollId = windowArgs['poll'];
+        var pollId = windowArgs['poll'];
         return pollId;
     };
 
     Common.getManageId = function () {
         var windowArgs = Common.getJsonFromUrl();
-        pollId = windowArgs['manage'];
-        return pollId;
+        var manageId = windowArgs['manage'];
+        return manageId;
     };
+
+    Common.getToken = function () {
+        var windowArgs = Common.getJsonFromUrl();
+        var token = windowArgs['token'];
+        return token;
+    }
 
     Common.currentUserId = function () {
         var localUserJSON = localStorage["user"];
@@ -62,7 +68,19 @@
     };
 
     Common.currentUserName = function () {
-        return $.parseJSON(localStorage["user"]).userName;
+        var localUserJSON = localStorage["user"];
+
+        if (localUserJSON) {
+            var localUser = $.parseJSON(localUserJSON);
+            if (localUser.expires < Date.now()) {
+                localStorage.removeItem("user");
+            }
+            else {
+                return localUser.userName;
+            }
+        }
+
+        return undefined;
     };
 
     Common.loginUser = function (userId, userName) {

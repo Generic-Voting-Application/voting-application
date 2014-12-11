@@ -1,15 +1,27 @@
 ﻿define(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
 
 
-    return function PointsVote(options) {
+    return function PointsVote(options, pollData) {
 
         self = this;
         self.options = ko.observableArray(options);
         self.pointsArray = ko.observableArray();
+        self.maxPerVote = ko.observable(pollData.MaxPerVote);
+        self.maxPoints = ko.observable(pollData.MaxPoints);
 
-        var maxPoints = 7;
-        var maxPerVote = 3;
-        
+        self.pointsRemaining = ko.computed(function () {
+            var total = 0;
+            ko.utils.arrayForEach(self.pointsArray(), function (item) {
+                total += item;
+            });
+            var remaining = self.maxPoints() - total;
+            return remaining;
+        });
+
+        self.percentRemaining = ko.computed(function () {
+            return (self.pointsRemaining() / self.maxPoints()) * 100;
+        });
+
         var resetVote = function () {
             //Populate with an array of options.length number of 0-values
             self.pointsArray(Array.apply(null, Array(options.length)).map(Boolean).map(Number));
@@ -28,20 +40,26 @@
             var totalCounts = [];
             votes.forEach(function (vote) {
                 var optionName = vote.Option.Name;
-                var voter = vote.User.Name;
+                var voter = "Anonymous User";
+                var voteValue = vote.PollValue;
+                var voteString = voter + " (" + voteValue + ")";
+
+                if (vote.User) {
+                    voter = vote.User.Name;
+                }
 
                 // Find a vote with the same Option.Name, if it exists.
                 var existingOption = totalCounts.filter(function (vote) { return vote.Name == optionName; }).pop();
 
                 if (existingOption) {
                     existingOption.Sum += vote.PollValue;
-                    existingOption.Voters.push(voter);
+                    existingOption.Voters.push(voteString);
                 }
                 else {
                     totalCounts.push({
                         Name: optionName,
                         Sum: vote.PollValue,
-                        Voters: [voter]
+                        Voters: [voteString]
                     });
                 }
             });
@@ -108,8 +126,11 @@
             var index = $("#optionTable span").index(buttonGroup);
             var minusButton = $(buttonGroup).find(".btn.pull-left");
 
-            var sumOfAllPoints = self.pointsArray().reduce(function(prevValue, currentValue) { return prevValue + currentValue; });
-            var pointsForGroup = self.pointsArray()[index];
+            if (self.pointsArray().length > 0) {
+                var sumOfAllPoints = self.pointsArray().reduce(function (prevValue, currentValue) { return prevValue + currentValue; });
+                var pointsForGroup = self.pointsArray()[index];
+            }
+
 
             // Minus button clickable for value > 0
             if (pointsForGroup > 0) {
@@ -120,14 +141,14 @@
             }
 
             // Plus button clickable if more points can be added to group and total
-            if (sumOfAllPoints >= maxPoints) {
+            if (sumOfAllPoints >= self.maxPoints()) {
                 $("#optionTable span .btn.pull-right").attr('disabled', 'disabled');
             }
-            else  {
+            else {
                 var $allPlusButtons = $("#optionTable span .btn.pull-right");
                 for (var i = 0; i < $allPlusButtons.length; i++) {
                     var plusButton = $allPlusButtons[i];
-                    if (self.pointsArray()[i] >= maxPerVote) {
+                    if (self.pointsArray()[i] >= self.maxPerVote()) {
                         $(plusButton).attr('disabled', 'disabled');
                     }
                     else {
@@ -140,6 +161,7 @@
         self.doVote = function (data, event) {
             var userId = Common.currentUserId();
             var pollId = Common.getPollId();
+            var token = Common.getToken();
 
             var votesData = [];
 
@@ -151,7 +173,8 @@
                 var vote = {
                     OptionId: self.options()[i].Id,
                     PollId: pollId,
-                    PollValue: self.pointsArray()[i]
+                    PollValue: self.pointsArray()[i],
+                    Token: { TokenGuid: token }
                 };
 
                 votesData.push(vote);

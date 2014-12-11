@@ -1,10 +1,12 @@
 ﻿define(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
 
 
-    return function BasicVote(options) {
+    return function BasicVote(options, pollData) {
 
         self = this;
         self.options = ko.observableArray(options);
+
+        var anonymousPoll = pollData.AnonymousVoting;
 
         var highlightOption = function (optionId) {
 
@@ -24,7 +26,11 @@
             var totalCounts = [];
             votes.forEach(function (vote) {
                 var optionName = vote.Option.Name;
-                var voter = vote.User.Name;
+                var voter = "Anonymous User";
+
+                if (vote.User) {
+                    voter = vote.User.Name;
+                }
 
                 // Find a vote with the same Option.Name, if it exists.
                 var existingOption = totalCounts.filter(function (vote) { return vote.Name == optionName; }).pop();
@@ -78,6 +84,11 @@
                 }
             });
 
+            if (anonymousPoll) {
+                //Prevent tooltip from ever displaying
+                series.mouseOver = function () { };
+            }
+
             chart.series([series]);
 
             chart.draw();
@@ -86,16 +97,20 @@
         self.doVote = function (data, event) {
             var userId = Common.currentUserId();
             var pollId = Common.getPollId();
+            var token = Common.getToken();
+
+            var voteData = JSON.stringify([{
+                OptionId: data.Id,
+                PollId: pollId,
+                Token: { TokenGuid: token }
+            }]);
 
             if (userId && pollId) {
                 $.ajax({
                     type: 'PUT',
                     url: '/api/user/' + userId + '/vote',
                     contentType: 'application/json',
-                    data: JSON.stringify([{
-                        OptionId: data.Id,
-                        PollId: pollId
-                    }]),
+                    data: voteData,
 
                     success: function (returnData) {
                         var currentRow = event.currentTarget.parentElement.parentElement;

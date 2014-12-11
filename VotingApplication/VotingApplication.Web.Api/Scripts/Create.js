@@ -3,6 +3,7 @@
         var self = this;
 
         self.templates = ko.observableArray();
+        self.selectedStrategy = ko.observable();
 
         self.createPoll = function () {
             //Clear out previous error messages
@@ -26,6 +27,10 @@
             var templateId = $("#template").val();
             var invites = $("#invites").val();
             var strategy = $("#voting-strategy").val();
+            var maxPoints = $("#max-points").val() || 7;
+            var maxPerVote = $("#max-per-vote").val() || 3;
+            var inviteOnly = $('#invite-only').is(':checked');
+            var anonymousVoting = $('#anonymous-voting').is(':checked');
             
             $.ajax({
                 type: 'POST',
@@ -38,16 +43,27 @@
                     Email: email,
                     Invites: invites.split('\n'),
                     templateId: templateId,
-                    VotingStrategy: strategy
+                    VotingStrategy: strategy,
+                    MaxPoints: maxPoints,
+                    MaxPerVote: maxPerVote,
+                    InviteOnly: inviteOnly,
+                    AnonymousVoting: anonymousVoting
                 }),
 
-                success: function () {
-                    self.pollCreated();
+                success: function (data) {
+                    self.pollCreated(data.UUID, data.ManageID);
                 }
             });
         };
 
-        self.pollCreated = function () {
+        self.pollCreated = function (PollId, ManageId) {
+
+            // Simulate a page change and make the back button simply refresh the page.
+            history.pushState({}, "");
+            window.addEventListener("popstate", function (e) {
+                history.go(0);
+            });
+
             // Load partial HTML
             $.ajax({
                 type: 'GET',
@@ -56,6 +72,8 @@
 
                 success: function (data) {
                     $("#content").html(data);
+                    $("#poll-id").attr("href", "/?poll=" + PollId);
+                    $("#manage-id").attr("href", "/?manage=" + ManageId);
                 }
             });
         };

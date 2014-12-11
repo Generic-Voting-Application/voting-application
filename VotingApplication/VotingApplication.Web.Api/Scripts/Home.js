@@ -28,7 +28,9 @@
         dataType: 'html',
 
         success: function (data) {
-            require([javascriptToLoad]);
+            if (javascriptToLoad) {
+                require([javascriptToLoad]);
+            }
             $("#content").append(data);
         }
     });

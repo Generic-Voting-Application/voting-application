@@ -1,4 +1,11 @@
-﻿<table id="optionTable" class="table table-hover">
+﻿<label>
+    Points remaining:
+</label>
+<div class="progress" id="progress-bar">
+    <div data-bind="text: $root.pointsRemaining(), style: { width: $root.percentRemaining() + '%'}"  class="progress-bar" role="progressbar"></div>
+</div>
+
+<table id="optionTable" class="table table-hover">
     <thead>
         <tr>
             <th class="col-xs-6 col-md-3">Option</th>
@@ -15,7 +22,7 @@
             <td>
                 <span class="btn-group">
                     <button class="btn btn-primary pull-left" data-bind="click: $parent.decreaseVote">-</button>
-                    <label class="points-label" data-bind="text: $root.pointsArray()[$index()]"></label>
+                    <label class="points-label" data-bind="text: $root.pointsArray()[$index()] + '/' + $root.maxPerVote()"></label>
                     <button class="btn btn-primary pull-right" data-bind="click: $parent.increaseVote">+</button>
                 </span>
             </td>

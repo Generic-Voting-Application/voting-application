@@ -7,8 +7,10 @@
         'd3': 'Lib/d3.min',
         'crossfilter': 'Lib/crossfilter.min',
         'sortable': 'Lib/jquery-sortable-min',
-        'jqueryUI': 'Lib/jquery-ui.min'
-},
+        'jqueryUI': 'Lib/jquery-ui.min',
+        'jqueryTouch': 'Lib/jquery.ui.touch-punch.min',
+        'platform': 'https://apis.google.com/js/client:platform'
+    },
     shim: {
         'jquery': {
             exports: '$'
@@ -25,6 +27,9 @@
             deps: ['jquery']
         },
         'jqueryUI': {
+            deps: ['jquery']
+        },
+        'jqueryTouch': {
             deps: ['jquery']
         }
     }
