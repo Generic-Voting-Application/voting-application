@@ -97,6 +97,14 @@ namespace VotingApplication.Web.Api.Controllers
                     }
 
                     Poll poll = polls.FirstOrDefault();
+
+                    // Check that the option is valid for the poll
+                    Option option = options.FirstOrDefault();
+                    if(poll.Options == null || poll.Options.Count == 0 || !poll.Options.Contains(option))
+                    {
+                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, String.Format("Option not valid for poll {0}", vote.PollId));
+                    }
+
                     Boolean isTokenPoll = poll.InviteOnly;
 
                     if (isTokenPoll)
