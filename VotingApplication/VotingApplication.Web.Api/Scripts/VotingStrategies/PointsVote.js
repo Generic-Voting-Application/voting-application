@@ -42,11 +42,12 @@
                 var optionName = vote.Option.Name;
                 var voter = "Anonymous User";
                 var voteValue = vote.PollValue;
-                var voteString = voter + " (" + voteValue + ")";
 
                 if (vote.User) {
                     voter = vote.User.Name;
                 }
+
+                var voteString = voter + " (" + voteValue + ")";
 
                 // Find a vote with the same Option.Name, if it exists.
                 var existingOption = totalCounts.filter(function (vote) { return vote.Name == optionName; }).pop();
