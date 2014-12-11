@@ -1,10 +1,12 @@
 ﻿define(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
 
 
-    return function BasicVote(options) {
+    return function BasicVote(options, pollData) {
 
         self = this;
         self.options = ko.observableArray(options);
+
+        var anonymousPoll = pollData.AnonymousVoting;
 
         var highlightOption = function (optionId) {
 
@@ -81,6 +83,11 @@
                     return "Votes: " + d.Count + "<br />" + d.Voters.slice(0, maxToDisplay).toString().replace(/,/g, "<br />") + "<br />" + "+ " + (d.Count - maxToDisplay) + " others";
                 }
             });
+
+            if (anonymousPoll) {
+                //Prevent tooltip from ever displaying
+                series.mouseOver = function () { };
+            }
 
             chart.series([series]);
 
