@@ -3,6 +3,7 @@
         var self = this;
 
         var votingStrategy;
+        var lockCollapse = false;
 
         self.pollName = ko.observable("Poll Name");
         self.pollCreator = ko.observable("Poll Creator");
@@ -61,14 +62,20 @@
         };
 
         var showSection = function (element) {
-            var siblings = element.siblings();
-            for (var i = 0; i < siblings.length; i++) {
-                $(siblings[i]).collapseSection('hide');
-                $(siblings[i]).removeClass('panel-primary');
+            if (!lockCollapse) {
+                lockCollapse = true;
+                var siblings = element.siblings();
+                for (var i = 0; i < siblings.length; i++) {
+                    $(siblings[i]).collapseSection('hide');
+                    $(siblings[i]).removeClass('panel-primary');
 
+                }
+                element.collapseSection('show');
+                $(element).on('shown.bs.collapse', function (e) {
+                    lockCollapse = false;
+                });
+                element.addClass('panel-primary');
             }
-            element.collapseSection('show');
-            element.addClass('panel-primary');
         };
 
         var scrollChatWindow = function () {
