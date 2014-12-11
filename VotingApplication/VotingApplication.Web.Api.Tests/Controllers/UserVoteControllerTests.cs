@@ -50,6 +50,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
             Option pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
+            Option otherOption = new Option { Id = 3, Name = "Other" };
             User bobUser = new User { Id = 1, Name = "Bob" };
             User joeUser = new User { Id = 2, Name = "Joe" };
             User billUser = new User { Id = 3, Name = "Bill" };
@@ -61,6 +62,23 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             dummyOptions.Add(burgerOption);
             dummyOptions.Add(pizzaOption);
+            dummyOptions.Add(otherOption);
+
+            mainPoll.Options = new List<Option>();
+            mainPoll.Options.Add(burgerOption);
+            mainPoll.Options.Add(pizzaOption);
+
+            otherPoll.Options = new List<Option>();
+            otherPoll.Options.Add(burgerOption);
+            otherPoll.Options.Add(pizzaOption);
+
+            pointsPoll.Options = new List<Option>();
+            pointsPoll.Options.Add(burgerOption);
+            pointsPoll.Options.Add(pizzaOption);
+
+            tokenPoll.Options = new List<Option>();
+            tokenPoll.Options.Add(burgerOption);
+            tokenPoll.Options.Add(pizzaOption);
 
             dummyPolls.Add(mainPoll);
             dummyPolls.Add(otherPoll);
@@ -467,6 +485,18 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             expectedVotes.Add(_otherVote);
             expectedVotes.Add(newVote);
             CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
+        }
+
+        [TestMethod]
+        public void PutInvalidOptionIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(1, new List<Vote>() { new Vote { OptionId = 3, PollId = _mainUUID} });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual(String.Format("Option not valid for poll {0}", _mainUUID), error.Message);
         }
 
         #endregion
