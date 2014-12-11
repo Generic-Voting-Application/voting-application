@@ -96,11 +96,6 @@
                     contentType: 'application/json',
                     success: function (data) {
 
-                        //Only fetch last 10 messages when we first sign on
-                        if (!self.lastMessageId && data.length > 10) {
-                            data = data.slice(data.length - 10);
-                        }
-
                         if (data.length > 0) {
                             var messageId = data[data.length - 1].Id
                             if (!self.lastMessageId || messageId > self.lastMessageId) {
