@@ -34,6 +34,11 @@
             var anonymousVoting = $('#anonymous-voting').is(':checked');
             var expiry = $('#expiry').is(':checked');
             var expiryDate = new Date($('#expiry-date').val());
+
+            if (expiryDate == 'Invalid Date') {
+                expiryDate = new Date();
+                expiryDate.setMinutes(expiryDate.getMinutes() + 30);
+            }
             
             $.ajax({
                 type: 'POST',

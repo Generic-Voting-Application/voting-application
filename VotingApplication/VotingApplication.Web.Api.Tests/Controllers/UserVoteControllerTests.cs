@@ -54,6 +54,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             timedPoll.Expires = true;
             timedPoll.ExpiryDate = DateTime.Now.AddMinutes(-30);
 
+            mainPoll.Expires = true;
+            mainPoll.ExpiryDate = DateTime.Now.AddMinutes(30);
+
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
             Option pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
             Option otherOption = new Option { Id = 3, Name = "Other" };
