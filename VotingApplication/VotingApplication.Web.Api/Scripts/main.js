@@ -11,7 +11,8 @@
         'jqueryTouch': 'Lib/jquery.ui.touch-punch.min',
         'platform': 'https://apis.google.com/js/client:platform',
         'moment': 'Lib/moment',
-        'datetimepicker': 'Lib/bootstrap-datetimepicker.min'
+        'datetimepicker': 'Lib/bootstrap-datetimepicker.min',
+        'countdown': 'Lib/countdown.min'
     },
     shim: {
         'jquery': {

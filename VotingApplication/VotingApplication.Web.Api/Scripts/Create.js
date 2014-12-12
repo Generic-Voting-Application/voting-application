@@ -1,4 +1,4 @@
-﻿require(['jquery', 'knockout', 'Common', 'datetimepicker'], function ($, ko, Common) {
+﻿require(['jquery', 'knockout', 'datetimepicker', 'Common', ], function ($, ko, datetimepicker, Common) {
     function HomeViewModel() {
         var self = this;
 

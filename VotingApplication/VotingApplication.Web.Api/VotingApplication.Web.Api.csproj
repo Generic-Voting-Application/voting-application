@@ -313,6 +313,7 @@
     <Content Include="Scripts\Create.js" />
     <Content Include="Scripts\Lib\bootstrap-switch.min.js" />
     <Content Include="Scripts\Lib\bootstrap.min.js" />
+    <Content Include="Scripts\Lib\countdown.min.js" />
     <Content Include="Scripts\Lib\crossfilter.min.js" />
     <Content Include="Scripts\Lib\d3.min.js" />
     <Content Include="Scripts\Lib\insight.min.js" />

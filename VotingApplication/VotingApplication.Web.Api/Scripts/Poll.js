@@ -1,9 +1,10 @@
-﻿require(['jquery', 'knockout', 'bootstrap', 'insight', 'Common', 'platform'], function ($, ko, bs, insight, Common) {
+﻿require(['jquery', 'knockout', 'bootstrap', 'insight', 'countdown', 'Common', 'platform'], function ($, ko, bs, insight, countdown, Common) {
     function VoteViewModel() {
         var self = this;
 
         var votingStrategy;
         var lockCollapse = false;
+        var selectedPanel = null;
 
         self.pollName = ko.observable("Poll Name");
         self.pollCreator = ko.observable("Poll Creator");
@@ -11,6 +12,19 @@
         self.chatMessages = ko.observableArray();
         self.lastMessageId = 0;
         self.userName = ko.observable(Common.currentUserName());
+
+        self.pollExpires = ko.observable(false);
+        self.pollExpiryDate = ko.observable();
+        self.pollExpired = ko.computed(function () {
+            return self.pollExpires() && self.pollExpiryDate() <= new Date();
+        });
+        self.pollExpiryOffset = ko.computed(function () {
+            if (!self.pollExpired()) {
+                return countdown(self.pollExpiryDate()).toString();
+            } else {
+                return null;
+            }
+        });
 
         var getPollDetails = function (pollId, callback) {
             $.ajax({
@@ -20,6 +34,14 @@
                 success: function (data) {
                     self.pollName(data.Name);
                     self.pollCreator(data.Creator);
+                    self.pollExpires(data.Expires);
+                    self.pollExpiryDate(new Date(data.ExpiryDate));
+
+                    if (data.Expires) {
+                        setInterval(function () {
+                            self.pollExpiryDate.notifySubscribers();
+                        }, 1000);
+                    }
 
                     switch (data.VotingStrategy) {
                         case 'Basic':
@@ -63,21 +85,21 @@
         };
 
         var showSection = function (element) {
-            if (!lockCollapse) {
-                if (!element.hasClass('panel-primary')) {
+            if (selectedPanel == null || (selectedPanel[0] != element[0])) {
+                selectedPanel = element;
+                if (!lockCollapse) {
                     lockCollapse = true;
+                    var siblings = element.siblings();
+                    for (var i = 0; i < siblings.length; i++) {
+                        $(siblings[i]).collapseSection('hide');
+                        $(siblings[i]).removeClass('panel-primary');
+                    }
+                    element.collapseSection('show');
+                    $(element).on('shown.bs.collapse', function (e) {
+                        lockCollapse = false;
+                    });
+                    element.addClass('panel-primary');
                 }
-                var siblings = element.siblings();
-                for (var i = 0; i < siblings.length; i++) {
-                    $(siblings[i]).collapseSection('hide');
-                    $(siblings[i]).removeClass('panel-primary');
-
-                }
-                element.collapseSection('show');
-                $(element).on('shown.bs.collapse', function (e) {
-                    lockCollapse = false;
-                });
-                element.addClass('panel-primary');
             }
         };
 
@@ -204,7 +226,12 @@
             getPollDetails(self.pollId, function () {
                 if (self.userId) {
                     $('#loginUsername').val(Common.currentUserName());
-                    showSection($('#voteSection'));
+                    if (!self.pollExpired()){
+                        showSection($('#voteSection'));
+                    } else {
+                        showSection($('#resultSection'));
+                    }
+                    
                 } else {
                     showSection($('#loginSection'));
                 }
