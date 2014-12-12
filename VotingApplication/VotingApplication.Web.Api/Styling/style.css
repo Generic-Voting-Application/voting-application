@@ -141,14 +141,14 @@ label {
     padding-bottom: 15px;
 }
 
-#signinButton {
+.signinButton {
     padding: 0px;
     margin: 0px;
     border-style: hidden;
     background-color: transparent;
 }
 
-#signinButton > img {
+.signinButton > img {
     width:200px;
 }
 
