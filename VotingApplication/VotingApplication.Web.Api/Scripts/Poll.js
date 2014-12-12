@@ -64,7 +64,9 @@
 
         var showSection = function (element) {
             if (!lockCollapse) {
-                lockCollapse = true;
+                if (!element.hasClass('panel-primary')) {
+                    lockCollapse = true;
+                }
                 var siblings = element.siblings();
                 for (var i = 0; i < siblings.length; i++) {
                     $(siblings[i]).collapseSection('hide');
