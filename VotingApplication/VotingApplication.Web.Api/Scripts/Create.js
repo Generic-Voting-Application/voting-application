@@ -31,6 +31,7 @@
             var maxPerVote = $("#max-per-vote").val() || 3;
             var inviteOnly = $('#invite-only').is(':checked');
             var anonymousVoting = $('#anonymous-voting').is(':checked');
+            var requireAuth = $('#require-auth').is(':checked');
             
             $.ajax({
                 type: 'POST',
@@ -47,7 +48,8 @@
                     MaxPoints: maxPoints,
                     MaxPerVote: maxPerVote,
                     InviteOnly: inviteOnly,
-                    AnonymousVoting: anonymousVoting
+                    AnonymousVoting: anonymousVoting,
+                    RequireAuth: requireAuth
                 }),
 
                 success: function (data) {
