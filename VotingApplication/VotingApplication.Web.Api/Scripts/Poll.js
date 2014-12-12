@@ -78,6 +78,11 @@
         var votingStrategyFunc = function (strategy, pollData) {
             function StrategyViewModel() {
                 votingStrategy = new strategy(pollData.Options, pollData);
+
+                //Refresh results every 10 seconds
+                var allResults = function() { votingStrategy.getResults(self.pollId) };
+                setInterval(allResults, 10000);
+
                 return votingStrategy;
             }
 
@@ -262,7 +267,7 @@
                 FB.login(function (response) {
                     self.facebookLogin(response);
                 });
-            })
+            });
         });
     }
 

@@ -5,6 +5,7 @@
 
         self = this;
         self.options = ko.observableArray(options);
+        var chart;
 
         var anonymousPoll = pollData.AnonymousVoting;
 
@@ -51,11 +52,15 @@
         };
 
         var drawChart = function (data) {
+            //Exit early if data has not changed
+            if (chart && JSON.stringify(data) == JSON.stringify(chart.series()[0].data.rawData()))
+                return;
+
             // Hack to fix insight's lack of data reloading
             $('#results').html('');
             var voteData = new insight.DataSet(data);
 
-            var chart = new insight.Chart('', '#results')
+            chart = new insight.Chart('', '#results')
             .width($("#results").width())
             .height(data.length * 50 + 100);
 
