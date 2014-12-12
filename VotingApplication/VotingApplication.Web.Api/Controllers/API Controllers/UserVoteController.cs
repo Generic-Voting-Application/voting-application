@@ -98,6 +98,11 @@ namespace VotingApplication.Web.Api.Controllers
 
                     Poll poll = polls.FirstOrDefault();
 
+                    if(poll.Expires && poll.ExpiryDate < DateTime.Now)
+                    {
+                        return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", vote.PollId));
+                    }
+
                     // Check that the option is valid for the poll
                     Option option = options.FirstOrDefault();
                     if(poll.Options == null || poll.Options.Count == 0 || !poll.Options.Contains(option))
