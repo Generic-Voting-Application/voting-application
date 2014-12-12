@@ -1,6 +1,7 @@
 ﻿@import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css";
 @import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css";
 @import "//cdnjs.cloudflare.com/ajax/libs/insightjs/1.2.0/insight.min.css";
+@import "Lib/bootstrap-datetimepicker.min.css";
 
 body {
     padding-top: 50px;

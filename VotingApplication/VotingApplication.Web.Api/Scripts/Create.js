@@ -1,9 +1,10 @@
-﻿require(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
+﻿require(['jquery', 'knockout', 'Common', 'datetimepicker'], function ($, ko, Common) {
     function HomeViewModel() {
         var self = this;
 
         self.templates = ko.observableArray();
         self.selectedStrategy = ko.observable();
+        self.expires = ko.observable(false);
 
         self.createPoll = function () {
             //Clear out previous error messages
@@ -31,6 +32,8 @@
             var maxPerVote = $("#max-per-vote").val() || 3;
             var inviteOnly = $('#invite-only').is(':checked');
             var anonymousVoting = $('#anonymous-voting').is(':checked');
+            var expiry = $('#expiry').is(':checked');
+            var expiryDate = new Date($('#expiry-date').val());
             
             $.ajax({
                 type: 'POST',
@@ -47,7 +50,9 @@
                     MaxPoints: maxPoints,
                     MaxPerVote: maxPerVote,
                     InviteOnly: inviteOnly,
-                    AnonymousVoting: anonymousVoting
+                    AnonymousVoting: anonymousVoting,
+                    Expires: expiry,
+                    ExpiryDate: expiryDate
                 }),
 
                 success: function (data) {
@@ -108,6 +113,7 @@
 
         $(document).ready(function () {
             self.populateTemplates();
+            $('#expiry-date').datetimepicker();
         });
     }
 

@@ -34,6 +34,16 @@
             <input class="checkbox-inline" type="checkbox" id="anonymous-voting">
         </div>
 
+        <div id="expiry-voting-group" class="form-group">
+            <label class="control-label checkbox-label" for="expiry">Time limt</label>
+            <input class="checkbox-inline" type="checkbox" id="expiry" data-bind="checked: expires">
+        </div>
+
+        <div id="expiry-date-group" class="form-group" data-bind="visible: expires">
+            <label class="control-label" for="expiry-date">Expiry Date</label>
+            <input class="form-control" id="expiry-date" placeholder="E.g. 01/04/2015 3:14">
+        </div>
+
         <div id="template-group" class="form-group">
             <label class="control-label" for="template">Poll Template</label>
             <select class="form-control select-placeholder" id="template" data-bind="options:templates, optionsText:'Name', optionsValue:'Id', optionsCaption:'Select a template..'"></select>

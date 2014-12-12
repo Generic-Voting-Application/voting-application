@@ -9,7 +9,9 @@
         'sortable': 'Lib/jquery-sortable-min',
         'jqueryUI': 'Lib/jquery-ui.min',
         'jqueryTouch': 'Lib/jquery.ui.touch-punch.min',
-        'platform': 'https://apis.google.com/js/client:platform'
+        'platform': 'https://apis.google.com/js/client:platform',
+        'moment': 'Lib/moment',
+        'datetimepicker': 'Lib/bootstrap-datetimepicker.min'
     },
     shim: {
         'jquery': {
@@ -31,6 +33,9 @@
         },
         'jqueryTouch': {
             deps: ['jquery']
+        },
+        'datetimepicker': {
+            deps: ['bootstrap', 'moment']
         }
     }
 });
