@@ -97,6 +97,8 @@
                 var lastPlaceBallotCount = lastPlaceOption.ballots.length;
 
                 var removedOptions = options.filter(function (d) { return d.ballots.length == lastPlaceBallotCount; });
+                // Track at what point an option was removed from the running
+                removedOptions.map(function (d) { d.rank = options.length - removedOptions.length + 1; return d; });
                 orderedOptions.push.apply(orderedOptions, removedOptions);
 
                 options = options.filter(function (d) { return d.ballots.length > lastPlaceBallotCount; });
@@ -117,7 +119,7 @@
                     return item.Id == orderedResults[i].Id;
                 });
 
-                option.Rank = i + 1;
+                option.Rank = orderedResults[i].rank || 1;
 
                 self.resultOptions.push(option);
             }
