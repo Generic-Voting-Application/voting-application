@@ -168,21 +168,7 @@
             chart.yAxis(yAxis);
             chart.legend(new insight.Legend());
 
-
-            //Annotate the decision line
-            var series = new insight.MarkerSeries('marker', new insight.DataSet(orderedNames), xAxis, yAxis)
-            .keyFunction(function (d) {
-                return d;
-            })
-            .valueFunction(function (d) {
-                return 0.5 + orderedResults.length / 2;
-            })
-            .tooltipFunction(function () { return "50% Majority"; })
-            .widthFactor(1.1)
-            .thickness(2)
-            .title('Target');
-
-            chart.series([series]);
+            chart.series([]);
 
             var seriesIndex = 0;
 
@@ -207,6 +193,22 @@
                 newSeries.push(series);
                 chart.series(newSeries);
             });
+
+            //Annotate the decision line
+            var series = new insight.MarkerSeries('marker', new insight.DataSet(orderedNames), xAxis, yAxis)
+            .keyFunction(function (d) {
+                return d;
+            })
+            .valueFunction(function (d) {
+                return 0.5 + orderedResults.length / 2;
+            })
+            .widthFactor(1.1)
+            .thickness(2)
+            .title('Majority');
+
+            var newSeries = chart.series()
+            newSeries.push(series);
+            chart.series(newSeries);
 
             chart.draw();
         };

@@ -160,24 +160,23 @@ label {
 }
 
 /* InsightJS things */
-.series-0 {
-    fill: red;
-    fill-opacity: 0.3;
-    z-index: 1000;
-}
-
-.series-4 {
-    fill: #081d58;
+.markerclass {
+    fill: red !important;
+    fill-opacity: 0.3 !important;
 }
 
 .series-3 {
+    fill: #081d58;
+}
+
+.series-2 {
     fill: #034e7b;
 }
 
-.series-2 { 
+.series-1 { 
     fill: #0570b0;
 }
 
-.series-1 {
+.series-0 {
     fill: #74a9cf;
 }
