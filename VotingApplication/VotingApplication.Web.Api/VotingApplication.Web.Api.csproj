@@ -310,7 +310,6 @@
     <Content Include="Partials\VotingStrategies\RankedVote.html" />
     <Content Include="Partials\VotingStrategies\PointsVote.html" />
     <Content Include="Partials\VotingStrategies\BasicVote.html" />
-    <Content Include="Partials\VotingStrategies\RankedVoteResults.html" />
     <Content Include="Scripts\Create.js" />
     <Content Include="Scripts\Lib\bootstrap-switch.min.js" />
     <Content Include="Scripts\Lib\bootstrap.min.js" />
