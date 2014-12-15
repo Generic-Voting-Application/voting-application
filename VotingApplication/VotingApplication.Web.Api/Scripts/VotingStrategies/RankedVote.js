@@ -138,7 +138,7 @@
 
         var drawChart = function (data, orderedResults) {
             //Exit early if data has not changed
-            if (chart && JSON.stringify(data) == JSON.stringify(chart.series()[0].data.rawData()))
+            if (chart && JSON.stringify(data) == JSON.stringify(chart.series().slice(0, chart.series().length - 1).map(function(d) { return d.data.rawData() })))
                 return;
 
             // Hack to fix insight's lack of data reloading
