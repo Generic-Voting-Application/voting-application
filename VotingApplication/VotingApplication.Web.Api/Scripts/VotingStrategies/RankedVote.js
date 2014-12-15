@@ -36,6 +36,10 @@
             return a.PollValue - b.PollValue;
         }
 
+        var sortByBallotCount = function (a, b) {
+            return a.ballots.length - b.ballots.length;
+        }
+
         var countVotes = function (votes) {
             var options = [];
             var orderedOptions = [];
@@ -57,52 +61,45 @@
                 ballots[vote.UserId].push(vote);
             });
 
-            // Sort the votes on the ballots and assign each ballot to first choice
-            ballots.forEach(function (ballot) {
-                ballot.sort(sortByPollValue);
-                var firstChoiceId = ballot[0].OptionId
-                options.filter(function (option) { return option.Id == firstChoiceId })[0].ballots.push(ballot);
-            });
-
             // Start counting
-            var majorityReached = false;
             while (options.length > 1) {
 
-                // Sort the options based on number of ballots
-                options.sort(function (a, b) {
-                    var diff = a.ballots.length - b.ballots.length;
-                    if (diff == 0) {
-                        return a.Id - b.Id;
-                    } else {
-                        return diff;
+                // Clear out all ballots from previous round
+                options = options.map(function (d) {
+                    d.ballots = [];
+                    return d;
+                });
+
+                var availableOptions = options.map(function (d) { return d.Id; });
+
+                // Sort the votes on the ballots and assign each ballot to first choice
+                ballots.forEach(function (ballot) {
+                    ballot.sort(sortByPollValue);
+                    var availableChoices = ballot.filter(function (option) { return $.inArray(option.OptionId, availableOptions) != -1; })
+                    if (availableChoices.length > 0) {
+                        var firstChoiceId = availableChoices[0].OptionId
+                        var firstChoiceOption = options.filter(function (option) { return option.Id == firstChoiceId })[0];
+                        firstChoiceOption.ballots.push(ballot)
                     }
                 });
+
+                options.sort(sortByBallotCount);
+
+                console.log(options);
 
                 // End if we have a majority
                 if (options[options.length - 1].ballots.length > totalBallots / 2) {
                     break;
                 }
 
-                // Redistribute votes
-                var lastPlaceOption = options.shift();
-                var lastPlaceOptionId = lastPlaceOption.Id;
+                // Remove all last place options
+                var lastPlaceOption = options[0];
+                var lastPlaceBallotCount = lastPlaceOption.ballots.length;
 
-                lastPlaceOption.ballots.forEach(function (ballot) {
-                    while (ballot.length > 0) {
-                        var nextOptionChoiceId = ballot[0].OptionId;
-                        var nextOptionChoice = options.filter(function (option) {
-                            return option.Id == nextOptionChoiceId;
-                        })[0];
-                        if (nextOptionChoice) {
-                            nextOptionChoice.ballots.push(ballot);
-                            break;
-                        } else {
-                            ballot.shift();
-                        }
-                    }
-                });
+                var removedOptions = options.filter(function (d) { return d.ballots.length == lastPlaceBallotCount; });
+                orderedOptions.push.apply(orderedOptions, removedOptions);
 
-                orderedOptions.push(lastPlaceOption);
+                options = options.filter(function (d) { return d.ballots.length > lastPlaceBallotCount; });
             }
 
             orderedOptions.push.apply(orderedOptions, options);
