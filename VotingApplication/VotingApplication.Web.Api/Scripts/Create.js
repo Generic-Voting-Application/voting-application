@@ -1,4 +1,4 @@
-﻿require(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
+﻿require(['jquery', 'knockout', 'Common', 'jqueryUI'], function ($, ko, Common) {
     function HomeViewModel() {
         var self = this;
 
@@ -108,6 +108,18 @@
 
         $(document).ready(function () {
             self.populateTemplates();
+            $(document).tooltip
+
+            function showOrHideElement(show) {
+                $(".tip").toggle(show);
+            }
+
+            var hideElement = showOrHideElement.bind(null, false);
+            var showElement = showOrHideElement.bind(null, true);
+            var $hoverTarget = $("#strategy-info");
+            ko.utils.registerEventHandler($hoverTarget, "mouseover", showElement);
+            ko.utils.registerEventHandler($hoverTarget, "mouseout", hideElement);
+            hideElement();
         });
     }
 

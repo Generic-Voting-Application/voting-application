@@ -1,5 +1,6 @@
 ﻿@import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css";
 @import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css";
+@import "https://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css";
 @import "//cdnjs.cloudflare.com/ajax/libs/insightjs/1.2.0/insight.min.css";
 
 body {
@@ -30,15 +31,18 @@ input, select, textarea {
 
 label {
     margin-bottom: 0px;
-    width: 100%;
     padding-left: 12px;
 }
 
-    label.info-message {
-        font-size: small;
-        position: relative;
-        top: -15px;
-    }
+label.info-message {
+    font-size: small;
+    position: relative;
+    top: -15px;
+}
+
+.help-message {
+    padding-left: 5px;
+}
 
 .required-label {
     color: red;
@@ -158,3 +162,18 @@ label {
         height: 150px;
     }
 }
+
+/* tooltips */
+.tip {
+	background: #fff;
+	border: 1px solid #ccc;
+	padding: 10px 10px;
+	border-radius: 8px;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	position: absolute;
+    display: inline;
+    z-index: 1000;
+    left: 125px;
+    top: 550px;
+}
+
