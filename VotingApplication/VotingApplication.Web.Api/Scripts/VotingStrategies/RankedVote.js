@@ -6,6 +6,7 @@
         self.options = ko.observableArray(options);
         self.selectedOptions = ko.observableArray();
         self.resultOptions = ko.observableArray();
+        self.chartVisible = ko.observable(false);
 
         var resultsByRound = [];
         var orderedNames = [];
@@ -140,10 +141,11 @@
 
         var drawChart = function (data) {
             // Hack to fix insight's lack of data reloading
-            $('#results').html('<div id="chart-results" /><div id="chart-buttons" />');
+            $("#chart-results").html('');
+            $("#chart-buttons").html('');
 
             chart = new insight.Chart('', '#chart-results')
-            .width($("#results").width())
+            .width($("#chart-results").width())
             .height(orderedNames.length * 40 + 100);
 
             var xAxis = new insight.Axis('', insight.scales.ordinal)
@@ -233,8 +235,19 @@
             });
 
             //Exit early if data has not changed
-            if (chart && JSON.stringify(data) == JSON.stringify(chart.series().slice(0, chart.series().length - 1).map(function (d) { return d.data.rawData() })))
+            if (chart && JSON.stringify(resultsByRound) == JSON.stringify(chart.series().slice(0, chart.series().length - 1).map(function (d) { return d.data.rawData() })))
                 return;
+
+            // Fill in the table
+            self.resultOptions.removeAll();
+            for (var i = 0; i < orderedResults.length; i++) {
+
+                var option = ko.utils.arrayFirst(self.options(), function (item) {
+                    return item.Id == orderedResults[i].Id;
+                });
+                option.Rank = orderedResults[i].rank || 1;
+                self.resultOptions.push(option);
+            }
 
             drawChart(resultsByRound.slice(0));
         }
@@ -319,6 +332,13 @@
             });
         };
 
+        self.toggleChartVisible = function () {
+            self.chartVisible(!self.chartVisible());
+
+            //Redraw with all results
+            self.filterRounds(0);
+        }
+
         $(document).ready(function () {
             $(".sortable").sortable({
                 items: 'tbody > tr',
@@ -353,6 +373,17 @@
 
                 }
             });
+        });
+
+        $.ajax({
+            type: 'GET',
+            url: '/Partials/VotingStrategies/RankedVoteResults.html',
+            dataType: 'html',
+
+            success: function (data) {
+                $("#results").html(data);
+                ko.applyBindings(self, $('#results')[0]);
+            }
         });
     }
 

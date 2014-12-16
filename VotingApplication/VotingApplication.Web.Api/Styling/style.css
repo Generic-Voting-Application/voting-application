@@ -159,7 +159,7 @@ label {
     }
 }
 
-#chart-buttons {
+#chart-buttons, #chart-toggle {
     text-align:center;
 }
 
