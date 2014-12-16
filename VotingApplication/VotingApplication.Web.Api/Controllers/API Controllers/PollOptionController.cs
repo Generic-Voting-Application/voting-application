@@ -43,7 +43,34 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public virtual HttpResponseMessage Post(Guid pollId, Option option)
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
+            using (var context = _contextFactory.CreateContext())
+            {
+                if (option == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Option required"); 
+                }
+
+                Poll matchingPoll = context.Polls.Where(p => p.UUID == pollId).FirstOrDefault();
+                if (matchingPoll == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", pollId));
+                }
+
+                if (!matchingPoll.AllowOptionAdding)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, string.Format("Option adding not allowed for poll {0}", pollId));
+                }
+
+                if (option.Name == null || option.Name.Length == 0)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Cannot create an option without a name");
+                }
+
+                matchingPoll.Options.Add(option);
+                context.SaveChanges();
+
+                return this.Request.CreateResponse(HttpStatusCode.OK, option.Id);
+            }
         }
 
         public virtual HttpResponseMessage Post(Guid pollId, long optionId, Option option)
