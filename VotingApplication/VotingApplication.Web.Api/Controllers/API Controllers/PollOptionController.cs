@@ -56,7 +56,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", pollId));
                 }
 
-                if (!matchingPoll.AllowOptionAdding)
+                if (!matchingPoll.OptionAdding)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, string.Format("Option adding not allowed for poll {0}", pollId));
                 }
@@ -64,6 +64,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 if (option.Name == null || option.Name.Length == 0)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Cannot create an option without a name");
+                }
+
+                if(matchingPoll.Options == null)
+                {
+                    matchingPoll.Options = new List<Option>();
                 }
 
                 matchingPoll.Options.Add(option);

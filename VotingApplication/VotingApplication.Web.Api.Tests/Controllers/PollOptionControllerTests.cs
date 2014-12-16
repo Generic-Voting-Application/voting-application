@@ -51,8 +51,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             dummyPolls.Add(_mainPoll);
             dummyPolls.Add(_emptyPoll);
 
-            _mainPoll.AllowOptionAdding = false;
-            _emptyPoll.AllowOptionAdding = true;
+            _mainPoll.OptionAdding = false;
+            _emptyPoll.OptionAdding = true;
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();

@@ -40,6 +40,6 @@ namespace VotingApplication.Data.Model
         public bool Expires { get; set; }
         public DateTimeOffset ExpiryDate { get; set; }
 
-        public bool AllowOptionAdding { get; set; }
+        public bool OptionAdding { get; set; }
     }
 }
