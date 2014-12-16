@@ -1,9 +1,10 @@
-﻿require(['jquery', 'knockout', 'Common', 'jqueryUI'], function ($, ko, Common) {
+﻿require(['jquery', 'knockout', 'datetimepicker', 'moment', 'Common', 'jqueryUI'], function ($, ko, datetimepicker, moment, Common) {
     function HomeViewModel() {
         var self = this;
 
         self.templates = ko.observableArray();
         self.selectedStrategy = ko.observable();
+        self.expires = ko.observable(false);
 
         self.createPoll = function () {
             //Clear out previous error messages
@@ -32,6 +33,13 @@
             var inviteOnly = $('#invite-only').is(':checked');
             var anonymousVoting = $('#anonymous-voting').is(':checked');
             var requireAuth = $('#require-auth').is(':checked');
+            var expiry = $('#expiry').is(':checked');
+            var expiryDate = new Date($('#expiry-date').val());
+
+            if (expiryDate == 'Invalid Date') {
+                expiryDate = new Date();
+                expiryDate.setMinutes(expiryDate.getMinutes() + 30);
+            }
             
             $.ajax({
                 type: 'POST',
@@ -49,7 +57,9 @@
                     MaxPerVote: maxPerVote,
                     InviteOnly: inviteOnly,
                     AnonymousVoting: anonymousVoting,
-                    RequireAuth: requireAuth
+                    RequireAuth: requireAuth,
+                    Expires: expiry,
+                    ExpiryDate: expiryDate
                 }),
 
                 success: function (data) {
@@ -110,6 +120,10 @@
 
         $(document).ready(function () {
             self.populateTemplates();
+
+            var defaultExpiryDate = moment().add(30, 'minutes');
+            $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate });
+
             $(document).tooltip
 
             function showOrHideElement(show) {
