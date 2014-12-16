@@ -1,9 +1,10 @@
-﻿require(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
+﻿require(['jquery', 'knockout', 'datetimepicker', 'moment', 'Common', 'jqueryUI'], function ($, ko, datetimepicker, moment, Common) {
     function HomeViewModel() {
         var self = this;
 
         self.templates = ko.observableArray();
         self.selectedStrategy = ko.observable();
+        self.expires = ko.observable(false);
 
         self.createPoll = function () {
             //Clear out previous error messages
@@ -31,6 +32,13 @@
             var maxPerVote = $("#max-per-vote").val() || 3;
             var inviteOnly = $('#invite-only').is(':checked');
             var anonymousVoting = $('#anonymous-voting').is(':checked');
+            var expiry = $('#expiry').is(':checked');
+            var expiryDate = new Date($('#expiry-date').val());
+
+            if (expiryDate == 'Invalid Date') {
+                expiryDate = new Date();
+                expiryDate.setMinutes(expiryDate.getMinutes() + 30);
+            }
             
             $.ajax({
                 type: 'POST',
@@ -47,7 +55,9 @@
                     MaxPoints: maxPoints,
                     MaxPerVote: maxPerVote,
                     InviteOnly: inviteOnly,
-                    AnonymousVoting: anonymousVoting
+                    AnonymousVoting: anonymousVoting,
+                    Expires: expiry,
+                    ExpiryDate: expiryDate
                 }),
 
                 success: function (data) {
@@ -108,6 +118,22 @@
 
         $(document).ready(function () {
             self.populateTemplates();
+
+            var defaultExpiryDate = moment().add(30, 'minutes');
+            $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate });
+
+            $(document).tooltip
+
+            function showOrHideElement(show) {
+                $(".tip").toggle(show);
+            }
+
+            var hideElement = showOrHideElement.bind(null, false);
+            var showElement = showOrHideElement.bind(null, true);
+            var $hoverTarget = $("#strategy-info");
+            ko.utils.registerEventHandler($hoverTarget, "mouseover", showElement);
+            ko.utils.registerEventHandler($hoverTarget, "mouseout", hideElement);
+            hideElement();
         });
     }
 
