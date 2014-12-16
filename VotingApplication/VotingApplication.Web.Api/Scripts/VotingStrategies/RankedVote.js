@@ -8,7 +8,9 @@
         self.resultOptions = ko.observableArray();
 
         var resultsByRound = [];
+        var orderedNames = [];
         var chart;
+        var roundIndex = 0;
 
         var selectOption = function (option) {
             var $option = $('#optionTable > tbody > tr').filter(function () {
@@ -136,22 +138,13 @@
             return orderedOptions;
         }
 
-        var drawChart = function (data, orderedResults) {
-            //Exit early if data has not changed
-            if (chart && JSON.stringify(data) == JSON.stringify(chart.series().slice(0, chart.series().length - 1).map(function(d) { return d.data.rawData() })))
-                return;
-
+        var drawChart = function (data) {
             // Hack to fix insight's lack of data reloading
-            $('#results').html('');
+            $('#results').html('<div id="chart-results" /><div id="chart-buttons" />');
 
-            chart = new insight.Chart('', '#results')
+            chart = new insight.Chart('', '#chart-results')
             .width($("#results").width())
-            .height(orderedResults.length * 40 + 100);
-
-            var orderedNames = orderedResults.map(function (d) {
-                var matchingOption = $.grep(self.options(), function (opt) { return opt.Id == d.Id })[0];
-                return matchingOption.Name;
-            });
+            .height(orderedNames.length * 40 + 100);
 
             var xAxis = new insight.Axis('', insight.scales.ordinal)
                 .isOrdered(true)
@@ -163,15 +156,33 @@
                 .tickLabelRotation(45);
             var yAxis = new insight.Axis('Votes', insight.scales.linear)
                 .tickFrequency(1)
-                .axisRange(-0.1, orderedResults.length);
+                .axisRange(-0.1, orderedNames.length);
             chart.xAxis(xAxis);
             chart.yAxis(yAxis);
             chart.legend(new insight.Legend());
 
             chart.series([]);
 
-            var seriesIndex = 0;
+            var seriesIndex = roundIndex;
 
+            //Add a button to display individual rounds
+            var button = $("#chart-buttons").append('<button class="btn btn-primary" onclick="self.filterRounds(0)">All Rounds</button>');
+            
+            for (var i = 1; i <= data.length; i++)
+            {
+                $("#chart-buttons").append('<button class="btn btn-primary" onclick="self.filterRounds(' + i + ')">Round ' + i + '</button>');
+            }
+
+            //Disable the currently selected button
+            var currentRoundButton = $("#chart-buttons").children()[roundIndex];
+            $(currentRoundButton).attr('disabled', 'disabled');
+
+            //Filter to a specific round
+            if (roundIndex > 0) {
+                data = data.slice(roundIndex - 1, roundIndex);
+                seriesIndex = roundIndex - 1;
+            }
+           
             //Map out each round
             data.forEach(function (roundData) {
 
@@ -200,7 +211,7 @@
                 return d;
             })
             .valueFunction(function (d) {
-                return 0.5 + orderedResults.length / 2;
+                return 0.5 + orderedNames.length / 2;
             })
             .widthFactor(1.1)
             .thickness(2)
@@ -215,10 +226,23 @@
 
         var displayResults = function (votes) {
             var orderedResults = countVotes(votes);
-            drawChart(resultsByRound, orderedResults);
+
+            orderedNames = orderedResults.map(function (d) {
+                var matchingOption = $.grep(self.options(), function (opt) { return opt.Id == d.Id })[0];
+                return matchingOption.Name;
+            });
+
+            //Exit early if data has not changed
+            if (chart && JSON.stringify(data) == JSON.stringify(chart.series().slice(0, chart.series().length - 1).map(function (d) { return d.data.rawData() })))
+                return;
+
+            drawChart(resultsByRound.slice(0));
         }
 
-
+        self.filterRounds = function (filterIndex) {
+            roundIndex = filterIndex;
+            drawChart(resultsByRound);
+        }
 
         self.doVote = function (data, event) {
             var userId = Common.currentUserId();
