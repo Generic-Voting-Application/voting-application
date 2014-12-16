@@ -9,6 +9,8 @@
         self.maxPerVote = ko.observable(pollData.MaxPerVote);
         self.maxPoints = ko.observable(pollData.MaxPoints);
 
+        var chart;
+
         self.pointsRemaining = ko.computed(function () {
             var total = 0;
             ko.utils.arrayForEach(self.pointsArray(), function (item) {
@@ -68,11 +70,15 @@
         };
 
         var drawChart = function (data) {
+            //Exit early if data has not changed
+            if (chart && JSON.stringify(data) == JSON.stringify(chart.series()[0].data.rawData()))
+                return;
+
             // Hack to fix insight's lack of data reloading
             $('#results').html('');
             var voteData = new insight.DataSet(data);
 
-            var chart = new insight.Chart('', '#results')
+            chart = new insight.Chart('', '#results')
             .width($("#results").width())
             .height(data.length * 50 + 100);
 

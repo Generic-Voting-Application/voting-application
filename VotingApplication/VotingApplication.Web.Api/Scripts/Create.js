@@ -1,4 +1,4 @@
-﻿require(['jquery', 'knockout', 'datetimepicker', 'moment', 'Common', ], function ($, ko, datetimepicker, moment, Common) {
+﻿require(['jquery', 'knockout', 'datetimepicker', 'moment', 'Common', 'jqueryUI'], function ($, ko, datetimepicker, moment, Common) {
     function HomeViewModel() {
         var self = this;
 
@@ -118,9 +118,22 @@
 
         $(document).ready(function () {
             self.populateTemplates();
-            var defaultExpiryDate = moment().add(30, 'minutes');
 
+            var defaultExpiryDate = moment().add(30, 'minutes');
             $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate });
+
+            $(document).tooltip
+
+            function showOrHideElement(show) {
+                $(".tip").toggle(show);
+            }
+
+            var hideElement = showOrHideElement.bind(null, false);
+            var showElement = showOrHideElement.bind(null, true);
+            var $hoverTarget = $("#strategy-info");
+            ko.utils.registerEventHandler($hoverTarget, "mouseover", showElement);
+            ko.utils.registerEventHandler($hoverTarget, "mouseout", hideElement);
+            hideElement();
         });
     }
 

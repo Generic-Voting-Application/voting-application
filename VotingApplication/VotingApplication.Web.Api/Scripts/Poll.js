@@ -26,6 +26,26 @@
             }
         });
 
+        // Begin Facebook boilerplate
+
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '333351380206896',
+                xfbml: true,
+                version: 'v2.2'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        // End Facebook boilerplate
+
         var getPollDetails = function (pollId, callback) {
             $.ajax({
                 type: 'GET',
@@ -78,6 +98,11 @@
         var votingStrategyFunc = function (strategy, pollData) {
             function StrategyViewModel() {
                 votingStrategy = new strategy(pollData.Options, pollData);
+
+                //Refresh results every 10 seconds
+                var allResults = function() { votingStrategy.getResults(self.pollId) };
+                setInterval(allResults, 10000);
+
                 return votingStrategy;
             }
 
@@ -159,6 +184,20 @@
                     self.submitLogin();
                 });
             });
+        }
+
+        self.facebookLogin = function (response) {
+            if (response.status != 'connected') {
+                return;
+            }
+
+            FB.api('/me', function (content) {
+                var username = content.first_name + " " + content.last_name;
+
+                //Hijack the regular login
+                $("#loginUsername").val(username);
+                self.submitLogin();
+            })
         }
 
         self.submitLogin = function (data, event) {
@@ -247,8 +286,14 @@
             };
 
             // Attach a click listener to a button to trigger the flow.
-            $('#signinButton')[0].addEventListener('click', function () {
+            $('#signinGoogleButton')[0].addEventListener('click', function () {
                 gapi.auth.signIn(additionalParams); // Will use page level configuration
+            });
+
+            $('#signinFacebookButton')[0].addEventListener('click', function () {
+                FB.login(function (response) {
+                    self.facebookLogin(response);
+                });
             });
         });
     }
