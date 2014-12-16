@@ -11,6 +11,7 @@
         self.chatMessages = ko.observableArray();
         self.lastMessageId = 0;
         self.userName = ko.observable(Common.currentUserName());
+        self.requireAuth = ko.observable();
 
         // Begin Facebook boilerplate
 
@@ -40,6 +41,7 @@
                 success: function (data) {
                     self.pollName(data.Name);
                     self.pollCreator(data.Creator);
+                    self.requireAuth(data.RequireAuth);
 
                     switch (data.VotingStrategy) {
                         case 'Basic':

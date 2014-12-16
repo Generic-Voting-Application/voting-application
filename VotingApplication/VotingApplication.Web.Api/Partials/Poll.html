@@ -19,7 +19,7 @@
                 <div class="accordion-body panel-body collapse row">
                     <div class="col-xs-1"></div>
 
-                    <div class="col-sm-4 centered form-group">
+                    <div class="col-sm-4 centered form-group" data-bind="visible: !requireAuth()">
                         <h4>Vote anonymously...</h4>
                         <form>
                             <label for="loginUsername" class="control-label">Name</label>
@@ -28,10 +28,11 @@
                             <button id="Name-loginSubmit" class="btn btn-primary" data-bind="click: $root.submitLogin">Submit</button>
                         </form>
                     </div>
-                    <div class="col-sm-1 divider"></div>
-                    <div class="col-sm-1"></div>
+                    <div class="col-sm-1 divider" data-bind="visible: !requireAuth()"></div>
+                    <div class="col-sm-1" data-bind="visible: !requireAuth()"></div>
                     <div class="col-sm-4 centered form-group">
-                        <h4>...or sign in</h4>
+                        <h4 data-bind="visible: !requireAuth()">...or sign in</h4>
+                        <h4 data-bind="visible: requireAuth()">Sign in</h4>
                         <br />
                         <button id="signinGoogleButton" class="signinButton"><img src="/img/sign-in-with-google.png" /></button>
                         <button id="signinFacebookButton" class="signinButton"><img src="/img/sign-in-with-facebook.png" /></button>
