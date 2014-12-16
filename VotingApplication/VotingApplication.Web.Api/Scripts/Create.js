@@ -32,6 +32,7 @@
             var maxPerVote = $("#max-per-vote").val() || 3;
             var inviteOnly = $('#invite-only').is(':checked');
             var anonymousVoting = $('#anonymous-voting').is(':checked');
+            var requireAuth = $('#require-auth').is(':checked');
             var expiry = $('#expiry').is(':checked');
             var expiryDate = new Date($('#expiry-date').val());
 
@@ -56,6 +57,7 @@
                     MaxPerVote: maxPerVote,
                     InviteOnly: inviteOnly,
                     AnonymousVoting: anonymousVoting,
+                    RequireAuth: requireAuth,
                     Expires: expiry,
                     ExpiryDate: expiryDate
                 }),

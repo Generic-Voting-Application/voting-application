@@ -12,6 +12,7 @@
         self.chatMessages = ko.observableArray();
         self.lastMessageId = 0;
         self.userName = ko.observable(Common.currentUserName());
+        self.requireAuth = ko.observable();
 
         self.pollExpires = ko.observable(false);
         self.pollExpiryDate = ko.observable();
@@ -54,6 +55,7 @@
                 success: function (data) {
                     self.pollName(data.Name);
                     self.pollCreator(data.Creator);
+                    self.requireAuth(data.RequireAuth);
                     self.pollExpires(data.Expires);
                     self.pollExpiryDate(new Date(data.ExpiryDate));
 
@@ -100,7 +102,7 @@
                 votingStrategy = new strategy(pollData.Options, pollData);
 
                 //Refresh results every 10 seconds
-                var allResults = function() { votingStrategy.getResults(self.pollId) };
+                var allResults = function () { votingStrategy.getResults(self.pollId) };
                 setInterval(allResults, 10000);
 
                 return votingStrategy;
@@ -163,11 +165,7 @@
             }
         }
 
-        self.showSection = function (data, event) {
-            showSection($(data).parent());
-        };
-
-        self.googleLogin = function (authResult) {
+        var googleLogin = function (authResult) {
             //Login failed
             if (!authResult['status']['signed_in']) {
                 return;
@@ -186,19 +184,31 @@
             });
         }
 
-        self.facebookLogin = function (response) {
-            if (response.status != 'connected') {
-                return;
-            }
+        self.facebookLogin = function (data, event) {
+            FB.login(function (response) {
+                if (response.status != 'connected') {
+                    return;
+                }
 
-            FB.api('/me', function (content) {
-                var username = content.first_name + " " + content.last_name;
+                FB.api('/me', function (content) {
+                    var username = content.first_name + " " + content.last_name;
 
-                //Hijack the regular login
-                $("#loginUsername").val(username);
-                self.submitLogin();
-            })
+                    //Hijack the regular login
+                    $("#loginUsername").val(username);
+                    self.submitLogin();
+                })
+            });
         }
+        
+        self.googleLogin = function (data, event) {
+            gapi.auth.signIn({
+                'callback': googleLogin
+            });
+        };
+
+        self.showSection = function (data, event) {
+            showSection($(data).parent());
+        };
 
         self.submitLogin = function (data, event) {
             var username = $("#loginUsername").val();
@@ -265,12 +275,12 @@
             getPollDetails(self.pollId, function () {
                 if (self.userId) {
                     $('#loginUsername').val(Common.currentUserName());
-                    if (!self.pollExpired()){
+                    if (!self.pollExpired()) {
                         showSection($('#voteSection'));
                     } else {
                         showSection($('#resultSection'));
                     }
-                    
+
                 } else {
                     showSection($('#loginSection'));
                 }
@@ -278,23 +288,6 @@
 
             getChatMessages();
             setInterval(getChatMessages, 3000);
-
-            // Additional params including the callback, the rest of the params will
-            // come from the page-level configuration.
-            var additionalParams = {
-                'callback': self.googleLogin
-            };
-
-            // Attach a click listener to a button to trigger the flow.
-            $('#signinGoogleButton')[0].addEventListener('click', function () {
-                gapi.auth.signIn(additionalParams); // Will use page level configuration
-            });
-
-            $('#signinFacebookButton')[0].addEventListener('click', function () {
-                FB.login(function (response) {
-                    self.facebookLogin(response);
-                });
-            });
         });
     }
 
