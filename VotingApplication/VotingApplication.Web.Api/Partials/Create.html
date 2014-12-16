@@ -45,7 +45,12 @@
         </div>
 
         <div id="strategy-group" class="form-group">
-            <label class="control-label" for="voting-strategy">Vote type<span class="required-label">*</span></label>
+            <label class="control-label" for="voting-strategy">Vote type<span class="required-label">*</span></label><a href="/info" id="strategy-info" class="help-message">[?]</a>
+            <div class="tip" data-bind="hoverVisible:true, hoverTargetId: 'strategy-info'">
+                <p><b>Single Vote</b>:<br />Pick one option</p>
+                <p><b>Ranked Vote</b>:<br />Order options by preference</p>
+                    <b>Points-weighted Vote</b>:<br />Distribute points between options
+            </div>
             <select class="form-control" id="voting-strategy" data-bind="value: selectedStrategy">
                 <option value="Basic">Single Vote</option>
                 <option value="Ranked">Ranked Vote</option>
