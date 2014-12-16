@@ -144,6 +144,9 @@
             $("#chart-results").html('');
             $("#chart-buttons").html('');
 
+            if (!self.chartVisible())
+                return;
+
             chart = new insight.Chart('', '#chart-results')
             .width($("#chart-results").width())
             .height(orderedNames.length * 40 + 100);
