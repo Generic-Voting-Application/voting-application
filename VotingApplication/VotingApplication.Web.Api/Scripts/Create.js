@@ -1,4 +1,4 @@
-﻿require(['jquery', 'knockout', 'datetimepicker', 'Common', ], function ($, ko, datetimepicker, Common) {
+﻿require(['jquery', 'knockout', 'datetimepicker', 'moment', 'Common', ], function ($, ko, datetimepicker, moment, Common) {
     function HomeViewModel() {
         var self = this;
 
@@ -118,7 +118,9 @@
 
         $(document).ready(function () {
             self.populateTemplates();
-            $('#expiry-date').datetimepicker();
+            var defaultExpiryDate = moment().add(30, 'minutes');
+
+            $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate });
         });
     }
 
