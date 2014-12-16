@@ -25,6 +25,7 @@
                 return null;
             }
         });
+        self.optionAdding = ko.observable(false);
 
         // Begin Facebook boilerplate
 
@@ -56,6 +57,7 @@
                     self.pollCreator(data.Creator);
                     self.pollExpires(data.Expires);
                     self.pollExpiryDate(new Date(data.ExpiryDate));
+                    self.optionAdding(data.OptionAdding);
 
                     if (data.Expires) {
                         setInterval(function () {
@@ -158,8 +160,6 @@
                         }
                     }
                 });
-
-
             }
         }
 
@@ -246,6 +246,38 @@
 
         }
 
+        self.addOption = function () {
+            //Don't submit without an entry in the name field
+            if ($("#newName").val() === "") {
+                return;
+            }
+
+            var newName = $("#newName").val();
+            var newInfo = $("#newInfo").val();
+            var newDescription = $("#newDescription").val();
+
+            //Reset before posting, to prevent double posts.
+            $("#newName").val("");
+            $("#newDescription").val("");
+            $("#newInfo").val("");
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/poll/' + self.pollId + '/option',
+                contentType: 'application/json',
+
+                data: JSON.stringify({
+                    Name: newName,
+                    Description: newDescription,
+                    Info: newInfo
+                }),
+
+                success: function () {
+                    votingStrategy.refreshOptions(self.pollId);
+                }
+            });
+        };
+
         $('#voteSection .accordion-body').on('show.bs.collapse', function () {
             if (votingStrategy) {
                 votingStrategy.getVotes(self.pollId, self.userId);
@@ -295,6 +327,8 @@
                     self.facebookLogin(response);
                 });
             });
+
+            $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
         });
     }
 

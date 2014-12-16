@@ -10,7 +10,7 @@
                 <small>by <span data-bind="text: $root.pollCreator"></span></small>
             </h1>
         </div>
-        <div class="accordion" id="accordion"> 
+        <div class="accordion" id="accordion">
             <!--Login Section-->
             <div id="loginSection" class="accordion-group panel panel-default">
                 <div class="accordion-heading panel-heading clickable" data-bind="click: $root.showSection.bind($data, $element)">
@@ -46,7 +46,36 @@
                 </div>
                 <div class="accordion-body panel-body collapse row">
                     <div class="col-md-1"></div>
-                    <div class="col-md-10 centered" id="votingArea">
+                    <div class="col-md-10 centered">
+                        <div id="votingArea"></div>
+                        <div id="add-option" data-bind="visible: optionAdding">
+                            <h3>Add an option</h3>
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th class="hidden-xs hidden-sm">More info</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr id="newOptionRow">
+                                        <td>
+                                            <input class="form-control input-block" id="newName" placeholder="Name" />
+                                        </td>
+                                        <td>
+                                            <input class="form-control input-block" id="newDescription" placeholder="Description" />
+                                        </td>
+                                        <td class="hidden-xs hidden-sm">
+                                            <input class="form-control input-block" id="newInfo" placeholder="More Info" />
+                                        </td>
+                                        <td>
+                                            <button type="submit" class="btn btn-primary" data-bind="click: $root.addOption.bind()">Add</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="col-md-1"></div>
                 </div>

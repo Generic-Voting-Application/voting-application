@@ -153,6 +153,18 @@
                 }
             });
         };
+
+        self.refreshOptions = function (pollId) {
+            $.ajax({
+                type: 'GET',
+                url: "/api/poll/" + pollId + "/option",
+
+                success: function (data) {
+                    self.options.removeAll();
+                    self.options(data);
+                }
+            });
+        }
     }
 
 });
