@@ -37,6 +37,7 @@ namespace VotingApplication.Data.Model
 
         public bool AnonymousVoting { get; set; }
 
+        public bool RequireAuth { get; set; }
         public bool Expires { get; set; }
         public DateTimeOffset ExpiryDate { get; set; }
 
