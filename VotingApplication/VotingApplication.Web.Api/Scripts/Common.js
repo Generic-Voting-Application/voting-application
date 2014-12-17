@@ -81,6 +81,10 @@
         localStorage["user"] = JSON.stringify({ id: userData.UserId, userName: userName, expires: expiryTime, token: userData.TokenGuid });
     };
 
+    Common.logoutUser = function () {
+        localStorage.removeItem("user");
+    }
+
     Common.keyIsEnter = function (key, callback) {
         if (key && key.keyCode == 13) {
             callback();

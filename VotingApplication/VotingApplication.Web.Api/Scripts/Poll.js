@@ -242,6 +242,12 @@
             });
         };
 
+        self.logout = function () {
+            Common.logoutUser();
+            self.userName(undefined);
+            self.userId = undefined;
+        }
+
         self.sendChatMessage = function (data, event) {
             if (self.userId && self.pollId) {
                 var url = 'api/poll/' + self.pollId + '/chat';
