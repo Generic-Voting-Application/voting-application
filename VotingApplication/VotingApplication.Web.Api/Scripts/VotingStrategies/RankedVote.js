@@ -1,11 +1,12 @@
 ﻿define(['jquery', 'knockout', 'jqueryUI', 'Common', 'jqueryTouch'], function ($, ko, jqueryUI, Common) {
 
-    return function RankedVote(options) {
+    return function RankedVote(options, pollData) {
 
         self = this;
         self.options = ko.observableArray(options);
         self.selectedOptions = ko.observableArray();
         self.resultOptions = ko.observableArray();
+        self.optionAdding = ko.observable(pollData.OptionAdding);
 
         var selectOption = function (option) {
             var $option = $('#optionTable > tbody > tr').filter(function () {
@@ -34,6 +35,27 @@
         
         var sortByPollValue = function (a, b) {
             return a.PollValue - b.PollValue;
+        }
+
+        var refreshOptions = function () {
+            $.ajax({
+                type: 'GET',
+                url: "/api/poll/" + pollData.UUID + "/option",
+
+                success: function (data) {
+
+                    data.forEach(function (dataOption) {
+                        if (self.options().filter(function (option) { return option.Id == dataOption.Id }).length > 0) {
+                            return;
+                        }
+                        if (self.selectedOptions().filter(function (option) { return option.Id == dataOption.Id }).length > 0) {
+                            return;
+                        }
+
+                        self.options.push(dataOption);
+                    });
+                }
+            });
         }
 
         var countVotes = function (votes) {
@@ -199,21 +221,43 @@
             });
         };
 
-        self.refreshOptions = function (pollId) {
-            $.ajax({
-                type: 'GET',
-                url: "/api/poll/" + pollId + "/option",
+        self.addOption = function () {
+            //Don't submit without an entry in the name field
+            if ($("#newName").val() === "") {
+                return;
+            }
 
-                success: function (data) {
-                    self.options.removeAll();
-                    self.options(data);
+            var newName = $("#newName").val();
+            var newInfo = $("#newInfo").val();
+            var newDescription = $("#newDescription").val();
+
+            //Reset before posting, to prevent double posts.
+            $("#newName").val("");
+            $("#newDescription").val("");
+            $("#newInfo").val("");
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/poll/' + pollData.UUID + '/option',
+                contentType: 'application/json',
+
+                data: JSON.stringify({
+                    Name: newName,
+                    Description: newDescription,
+                    Info: newInfo
+                }),
+
+                success: function () {
+                    refreshOptions();
                 }
             });
-        }
+        };
+
+        $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
 
         $(document).ready(function () {
             $(".sortable").sortable({
-                items: 'tbody > tr',
+                items: 'tbody > tr:not(#newOptionRow)',
                 connectWith: '.sortable',
                 axis: 'y',
                 dropOnEmpty: true,
