@@ -120,7 +120,9 @@
                     success: function (returnData) {
                         var currentRow = event.currentTarget.parentElement.parentElement;
                         $('#resultSection > div')[0].click();
-                    }
+                    },
+
+                    error: Common.handleError
                 });
             }
         };
@@ -138,7 +140,9 @@
                     else {
                         clearOptionHighlighting();
                     }
-                }
+                },
+
+                error: Common.handleError
             });
         };
 
@@ -150,7 +154,9 @@
                 success: function (data) {
                     var groupedVotes = countVotes(data);
                     drawChart(groupedVotes);
-                }
+                },
+
+                error: Common.handleError
             });
         };
     }
