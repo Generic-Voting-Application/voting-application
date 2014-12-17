@@ -51,11 +51,11 @@ namespace VotingApplication.Web.Api.Controllers
             {
                 if (newUser.Name == null || newUser.Name.Equals(""))
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Must provide a Username");
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Username must not be empty");
                 }
                 else if (new Regex(@"[^\w| ]").IsMatch(newUser.Name))
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Unacceptable Username");
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Username must be alpha-numeric");
                 }
 
                 List<User> existingUsers = context.Users.Where(u => u.Name == newUser.Name).ToList<User>();

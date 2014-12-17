@@ -76,7 +76,9 @@
                             loadStrategy('/Partials/VotingStrategies/RankedVote.html', 'VotingStrategies/RankedVote', data, callback);
                             break;
                     }
-                }
+                },
+
+                error: Common.handleError
             });
         };
 
@@ -93,7 +95,9 @@
                         votingStrategyFunc(strategy, pollData);
                         callback();
                     });
-                }
+                },
+
+                error: Common.handleError
             });
         };
 
@@ -225,13 +229,12 @@
                     showSection($('#voteSection'));
                 },
 
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: [Common.handleError, function (jqXHR, textStatus, errorThrown) {
                     if (jqXHR.status == 400) {
                         $('#loginSection').addClass("has-error");
                         $('#usernameWarnMessage').show();
-
                     }
-                }
+                }]
             });
         };
 
@@ -248,7 +251,9 @@
                     data: JSON.stringify({
                         User: { Id: self.userId },
                         Message: chatMessage
-                    })
+                    }),
+
+                    error: Common.handleError
                 });
             }
 

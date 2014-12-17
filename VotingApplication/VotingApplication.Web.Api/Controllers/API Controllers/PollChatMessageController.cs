@@ -35,7 +35,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Poll matchingPoll = context.Polls.Where(p => p.UUID == pollId).Include(p => p.ChatMessages.Select(m => m.User)).FirstOrDefault();
                 if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", pollId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
                 }
 
                 List<ChatMessage> messages = matchingPoll.ChatMessages ??  new List<ChatMessage>();
@@ -62,7 +62,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 if (newMessage == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid message");
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Message must not be empty");
                 }
 
                 if(newMessage.User == null || newMessage.User.Id == 0)
@@ -78,13 +78,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 User matchingUser = context.Users.Where(u => u.Id == newMessage.User.Id).FirstOrDefault();
                 if (matchingUser == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("User {0} does not exist", newMessage.User.Id));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("User {0} not found", newMessage.User.Id));
                 }
 
                 Poll matchingPoll = context.Polls.Where(p => p.UUID == pollId).FirstOrDefault();
                 if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", pollId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
                 }
 
                 newMessage.User = matchingUser;

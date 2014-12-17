@@ -30,7 +30,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Template matchingTemplate = context.Templates.Where(os => os.Id == id).Include(s => s.Options).FirstOrDefault();
                 if (matchingTemplate == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Template {0} does not exist", id));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Template {0} not found", id));
                 }
 
                 return this.Request.CreateResponse(HttpStatusCode.OK, matchingTemplate);
@@ -56,7 +56,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 if (newTemplate.Name == null || newTemplate.Name.Length == 0)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Template does not have a name");
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Template name must not be empty");
                 }
 
                 if (newTemplate.Options == null)

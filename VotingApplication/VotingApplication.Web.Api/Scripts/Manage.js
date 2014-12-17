@@ -1,4 +1,4 @@
-﻿require(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
+﻿require(['jquery', 'knockout', 'bootstrap', 'Common'], function ($, ko, bootstrap, Common) {
     function AdminViewModel() {
         var self = this;
         var manageId = 0;
@@ -16,7 +16,9 @@
 
                 success: function (data) {
                     self.options(data.Options);
-                }
+                },
+
+                error: Common.handleError
             });
         };
 
@@ -41,7 +43,9 @@
                     $("#reset-votes").attr('disabled', 'disabled');
                     $("#reset-votes").text("Votes were reset");
                     populateVotes();
-                }
+                },
+
+                error: Common.handleError
             });
         };
 
@@ -73,7 +77,9 @@
 
                 success: function () {
                     getPollDetails();
-                }
+                },
+
+                error: Common.handleError
             });
         };
 
@@ -85,7 +91,9 @@
 
                 success: function () {
                     populateVotes();
-                }
+                },
+
+                error: Common.handleError
             });
         };
 
@@ -98,7 +106,9 @@
                 success: function () {
                     getPollDetails();
                     populateVotes();
-                }
+                },
+
+                error: Common.handleError
             });
         };
 

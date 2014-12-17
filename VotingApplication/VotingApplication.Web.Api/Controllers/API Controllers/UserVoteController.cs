@@ -70,30 +70,30 @@ namespace VotingApplication.Web.Api.Controllers
                 {
                     if (vote.OptionId == 0)
                     {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote does not have an option");
+                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote must specify an option");
                     }
 
                     if (vote.PollId == Guid.Empty)
                     {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote does not have a poll");
+                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote must specify a poll");
                     }
 
                     IEnumerable<User> users = context.Users.Where(u => u.Id == userId);
                     if (users.Count() == 0)
                     {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("User {0} does not exist", userId));
+                        return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("User {0} not found", userId));
                     }
 
                     IEnumerable<Option> options = context.Options.Where(o => o.Id == vote.OptionId);
                     if (options.Count() == 0)
                     {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Option {0} does not exist", vote.OptionId));
+                        return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Option {0} not found", vote.OptionId));
                     }
 
                     IEnumerable<Poll> polls = context.Polls.Where(p => p.UUID == vote.PollId).Include(p => p.Tokens).Include(p => p.Options);
                     if (polls.Count() == 0)
                     {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Poll {0} does not exist", vote.PollId));
+                        return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Poll {0} not found", vote.PollId));
                     }
 
                     Poll poll = polls.FirstOrDefault();
@@ -107,7 +107,7 @@ namespace VotingApplication.Web.Api.Controllers
                     Option option = options.FirstOrDefault();
                     if(poll.Options == null || poll.Options.Count == 0 || !poll.Options.Contains(option))
                     {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, String.Format("Option not valid for poll {0}", vote.PollId));
+                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, String.Format("Option choice not valid for poll {0}", vote.PollId));
                     }
 
                     Boolean isTokenPoll = poll.InviteOnly;
@@ -117,7 +117,7 @@ namespace VotingApplication.Web.Api.Controllers
                         // Validate tokens if required
                         if (vote.Token == null || vote.Token.TokenGuid == Guid.Empty)
                         {
-                            return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, "Token required for this poll");
+                            return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("A valid token is required for poll {0}", vote.PollId));
                         }
                         else if (poll.Tokens == null || !poll.Tokens.Any(t => t.TokenGuid == vote.Token.TokenGuid))
                         {

@@ -216,7 +216,9 @@
 
                     success: function (returnData) {
                         $('#resultSection > div')[0].click();
-                    }
+                    },
+
+                    error: Common.handleError
                 });
             }
         };
@@ -256,7 +258,9 @@
                 success: function (data) {
                     var groupedVotes = countVotes(data);
                     drawChart(groupedVotes);
-                }
+                },
+
+                error: Common.handleError
             });
         };
 

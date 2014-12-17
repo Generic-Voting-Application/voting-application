@@ -330,7 +330,9 @@
 
                     success: function (returnData) {
                         $('#resultSection > div')[0].click();
-                    }
+                    },
+
+                    error: Common.handleError
                 });
             }
         };
@@ -346,7 +348,9 @@
                 success: function (data) {
                     data.sort(sortByPollValue);
                     selectPickedOptions(data);
-                }
+                },
+
+                error: Common.handleError
             });
         };
 
@@ -358,7 +362,9 @@
 
                 success: function (data) {
                     displayResults(data);
-                }
+                },
+
+                error: Common.handleError
             });
         };
 
@@ -446,7 +452,9 @@
             success: function (data) {
                 $("#results").html(data);
                 ko.applyBindings(self, $('#results')[0]);
-            }
+            },
+
+            error: Common.handleError
         });
     }
 
