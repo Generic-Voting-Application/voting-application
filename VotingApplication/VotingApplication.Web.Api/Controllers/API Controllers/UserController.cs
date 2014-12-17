@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -58,7 +59,7 @@ namespace VotingApplication.Web.Api.Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Unacceptable Username");
                 }
 
-                Poll matchingPoll = context.Polls.Where(p => p.UUID == newUser.PollId).FirstOrDefault();
+                Poll matchingPoll = context.Polls.Where(p => p.UUID == newUser.PollId).Include(p => p.Tokens).FirstOrDefault();
                 if (matchingPoll == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User missing a poll");
@@ -74,6 +75,7 @@ namespace VotingApplication.Web.Api.Controllers
                     else
                     {
                         matchingToken = new Token() { TokenGuid = Guid.NewGuid(), PollId = matchingPoll.UUID };
+                        matchingPoll.Tokens.Add(matchingToken);
                         context.Tokens.Add(matchingToken);
                     }
                 }
