@@ -8,6 +8,7 @@
         self.pointsArray = ko.observableArray();
         self.maxPerVote = ko.observable(pollData.MaxPerVote);
         self.maxPoints = ko.observable(pollData.MaxPoints);
+        self.optionAdding = ko.observable(pollData.OptionAdding);
 
         var chart;
 
@@ -113,20 +114,23 @@
             chart.draw();
         };
 
-        self.decreaseVote = function (data, event) {
-            var pointsIndex = self.options().indexOf(data);
-            self.pointsArray()[pointsIndex]--;
-            self.pointsArray.valueHasMutated();
+        var refreshOptions = function () {
+            $.ajax({
+                type: 'GET',
+                url: "/api/poll/" + pollData.UUID + "/option",
 
-            updateButtons(event.target.parentElement);
-        }
+                success: function (data) {
+                    var newOptionCount = data.length - self.options().length;
+                    self.options.removeAll();
+                    self.options(data);
 
-        self.increaseVote = function (data, event) {
-            var pointsIndex = self.options().indexOf(data);
-            self.pointsArray()[pointsIndex]++;
-            self.pointsArray.valueHasMutated();
+                    for (var i = 0; i < newOptionCount; i++){
+                        self.pointsArray.push(0);
+                    }
 
-            updateButtons(event.target.parentElement);
+                    updateAllButtons();
+                }
+            });
         }
 
         var updateButtons = function (buttonGroup) {
@@ -163,6 +167,22 @@
                     }
                 }
             }
+        }
+
+        self.decreaseVote = function (data, event) {
+            var pointsIndex = self.options().indexOf(data);
+            self.pointsArray()[pointsIndex]--;
+            self.pointsArray.valueHasMutated();
+
+            updateButtons(event.target.parentElement);
+        }
+
+        self.increaseVote = function (data, event) {
+            var pointsIndex = self.options().indexOf(data);
+            self.pointsArray()[pointsIndex]++;
+            self.pointsArray.valueHasMutated();
+
+            updateButtons(event.target.parentElement);
         }
 
         self.doVote = function (data, event) {
@@ -251,6 +271,40 @@
                 }
             });
         }
+
+        self.addOption = function () {
+            //Don't submit without an entry in the name field
+            if ($("#newName").val() === "") {
+                return;
+            }
+
+            var newName = $("#newName").val();
+            var newInfo = $("#newInfo").val();
+            var newDescription = $("#newDescription").val();
+
+            //Reset before posting, to prevent double posts.
+            $("#newName").val("");
+            $("#newDescription").val("");
+            $("#newInfo").val("");
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/poll/' + pollData.UUID + '/option',
+                contentType: 'application/json',
+
+                data: JSON.stringify({
+                    Name: newName,
+                    Description: newDescription,
+                    Info: newInfo
+                }),
+
+                success: function () {
+                    refreshOptions();
+                }
+            });
+        };
+
+        $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
 
         resetVote();
     }
