@@ -202,7 +202,11 @@
                 })
                 .title('Round ' + seriesIndex)
                 .tooltipFunction(function (d) {
-                    return d.Voters.toString().replace(/,/g, "<br />");
+                    if (d.Voters.length > 0) {
+                        return d.Voters.toString().replace(/,/g, "<br />");
+                    }
+                    else
+                        return "Option eliminated";
                 });
 
                 var newSeries = chart.series()
@@ -217,6 +221,9 @@
             })
             .valueFunction(function (d) {
                 return 0.5 + orderedNames.length / 2;
+            })
+            .tooltipFunction(function (d) {
+                return "50% Majority";
             })
             .widthFactor(1.1)
             .thickness(2)
