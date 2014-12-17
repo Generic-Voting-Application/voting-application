@@ -52,11 +52,11 @@ namespace VotingApplication.Web.Api.Controllers
             {
                 if (newUser.Name == null || newUser.Name.Equals(""))
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Must provide a Username");
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Username must not be empty");
                 }
                 else if (new Regex(@"[^\w| ]").IsMatch(newUser.Name))
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Unacceptable Username");
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Username must be alpha-numeric");
                 }
 
                 Poll matchingPoll = context.Polls.Where(p => p.UUID == newUser.PollId).Include(p => p.Tokens).FirstOrDefault();

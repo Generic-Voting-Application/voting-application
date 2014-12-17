@@ -161,7 +161,7 @@ namespace VotingApplication.Web.Api.Tests
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Cannot create an option with a non-empty name", error.Message);
+            Assert.AreEqual("Option name must not be blank", error.Message);
         }
 
 

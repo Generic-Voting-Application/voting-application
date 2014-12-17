@@ -27,7 +27,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Poll matchingPoll = context.Polls.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
                 if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", manageId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not found", manageId));
                 }
 
                 return this.Request.CreateResponse(HttpStatusCode.OK, matchingPoll);

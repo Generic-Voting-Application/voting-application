@@ -91,5 +91,25 @@
         }
     };
 
+    Common.handleError = function (error) {
+
+        var friendlyText;
+
+        switch (error.status) {
+            case 404:
+                friendlyText = 'Double check the poll ID and ensure that you have logged in correctly'
+                break;
+        }
+
+        var newError = '<div class="alert alert-danger">' +
+        '<a href="#" class="close" data-dismiss="alert">&times;</a>' +
+        '<strong>' + error.statusText + ' </strong>' +
+        JSON.parse(error.responseText).Message +
+        (friendlyText ? '<br/>' + friendlyText : '') +
+        '</div>';
+
+        $('#errorArea').append(newError);
+    }
+
     return Common;
 });

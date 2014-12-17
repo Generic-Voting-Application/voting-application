@@ -34,9 +34,10 @@
             var anonymousVoting = $('#anonymous-voting').is(':checked');
             var requireAuth = $('#require-auth').is(':checked');
             var expiry = $('#expiry').is(':checked');
-            var expiryDate = new Date($('#expiry-date').val());
+            var expiryDate = expiry ? new Date($('#expiry-date').val()) : null;
+            var optionAdding = $('#option-adding').is(':checked');
 
-            if (expiryDate == 'Invalid Date') {
+            if (expiryDate == 'Invalid Date' && expiry) {
                 expiryDate = new Date();
                 expiryDate.setMinutes(expiryDate.getMinutes() + 30);
             }
@@ -59,7 +60,8 @@
                     AnonymousVoting: anonymousVoting,
                     RequireAuth: requireAuth,
                     Expires: expiry,
-                    ExpiryDate: expiryDate
+                    ExpiryDate: expiryDate,
+                    OptionAdding: optionAdding
                 }),
 
                 success: function (data) {

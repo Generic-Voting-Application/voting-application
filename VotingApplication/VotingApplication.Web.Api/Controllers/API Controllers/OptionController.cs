@@ -57,7 +57,7 @@ namespace VotingApplication.Web.Api.Controllers
             {
                 if (newOption.Name == null || newOption.Name.Length == 0)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Cannot create an option with a non-empty name");
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Option name must not be blank");
                 }
 
                 context.Options.Add(newOption);

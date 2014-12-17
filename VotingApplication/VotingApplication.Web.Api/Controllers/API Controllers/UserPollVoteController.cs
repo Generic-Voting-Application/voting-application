@@ -23,13 +23,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 User matchingUser = context.Users.Where(u => u.Id == userId).FirstOrDefault();
                 if (matchingUser == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("User {0} does not exist", userId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("User {0} not found", userId));
                 }
 
                 Poll matchingPoll = context.Polls.Where(s => s.UUID == pollId).FirstOrDefault();
                 if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", pollId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
                 }
 
                 IEnumerable<Vote> allVotesForUserInPoll = context.Votes.Where(v => v.UserId == userId && v.PollId == pollId);
@@ -51,7 +51,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Vote matchingVote = votesForUserPoll.Where(v => v.Id == voteId).FirstOrDefault();
                 if (matchingVote == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Vote {0} does not exist", voteId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Vote {0} not found", voteId));
                 }
 
                 return this.Request.CreateResponse(HttpStatusCode.OK, matchingVote);

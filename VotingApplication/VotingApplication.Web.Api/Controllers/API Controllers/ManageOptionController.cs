@@ -24,7 +24,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Poll matchingPoll = context.Polls.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
                 if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", manageId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
                 return this.Request.CreateResponse(HttpStatusCode.OK, matchingPoll.Options);
@@ -46,14 +46,14 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 if (option.Name == null || option.Name == "")
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Cannot create an option with a non-empty name");
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Option name must not be empty");
 
                 }
 
                 Poll matchingPoll = context.Polls.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
                 if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", manageId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
                 if (option.Polls == null)
@@ -106,7 +106,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Poll matchingPoll = context.Polls.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
                 if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", manageId));
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
                 Option matchingOption = matchingPoll.Options.Where(o => o.Id == optionId).FirstOrDefault();

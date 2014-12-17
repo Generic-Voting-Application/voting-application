@@ -1,7 +1,7 @@
 ﻿@import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css";
 @import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css";
 @import "https://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css";
-@import "//cdnjs.cloudflare.com/ajax/libs/insightjs/1.2.0/insight.min.css";
+@import "//cdnjs.cloudflare.com/ajax/libs/insightjs/1.3.0/insight.min.css";
 @import "Lib/bootstrap-datetimepicker.min.css";
 
 body {
@@ -168,6 +168,32 @@ label.info-message {
     float: right;
 }
 
+#chart-buttons, #chart-toggle {
+    text-align:center;
+}
+
+/* InsightJS things */
+.markerclass {
+    fill: red !important;
+    fill-opacity: 0.3 !important;
+}
+
+.series-3 {
+    fill: #081d58;
+}
+
+.series-2 {
+    fill: #034e7b;
+}
+
+.series-1 { 
+    fill: #0570b0;
+}
+
+.series-0 {
+    fill: #74a9cf;
+}
+
 /* tooltips */
 .tip {
 	background: #fff;
@@ -181,4 +207,3 @@ label.info-message {
     left: 125px;
     top: 550px;
 }
-

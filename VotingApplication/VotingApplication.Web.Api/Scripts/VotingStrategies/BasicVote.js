@@ -5,6 +5,7 @@
 
         self = this;
         self.options = ko.observableArray(options);
+        self.optionAdding = ko.observable(pollData.OptionAdding);
         var chart;
 
         var anonymousPoll = pollData.AnonymousVoting;
@@ -99,6 +100,18 @@
             chart.draw();
         };
 
+        var refreshOptions = function () {
+            $.ajax({
+                type: 'GET',
+                url: "/api/poll/" + pollData.UUID + "/option",
+
+                success: function (data) {
+                    self.options.removeAll();
+                    self.options(data);
+                }
+            });
+        }
+
         self.doVote = function (data, event) {
             var userId = Common.currentUserId();
             var pollId = Common.getPollId();
@@ -120,7 +133,9 @@
                     success: function (returnData) {
                         var currentRow = event.currentTarget.parentElement.parentElement;
                         $('#resultSection > div')[0].click();
-                    }
+                    },
+
+                    error: Common.handleError
                 });
             }
         };
@@ -138,7 +153,9 @@
                     else {
                         clearOptionHighlighting();
                     }
-                }
+                },
+
+                error: Common.handleError
             });
         };
 
@@ -150,9 +167,45 @@
                 success: function (data) {
                     var groupedVotes = countVotes(data);
                     drawChart(groupedVotes);
+                },
+
+                error: Common.handleError
+            });
+        };
+
+        self.addOption = function () {
+            //Don't submit without an entry in the name field
+            if ($("#newName").val() === "") {
+                return;
+            }
+
+            var newName = $("#newName").val();
+            var newInfo = $("#newInfo").val();
+            var newDescription = $("#newDescription").val();
+
+            //Reset before posting, to prevent double posts.
+            $("#newName").val("");
+            $("#newDescription").val("");
+            $("#newInfo").val("");
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/poll/' + pollData.UUID + '/option',
+                contentType: 'application/json',
+
+                data: JSON.stringify({
+                    Name: newName,
+                    Description: newDescription,
+                    Info: newInfo
+                }),
+
+                success: function () {
+                    refreshOptions();
                 }
             });
         };
+
+        $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
     }
 
 });

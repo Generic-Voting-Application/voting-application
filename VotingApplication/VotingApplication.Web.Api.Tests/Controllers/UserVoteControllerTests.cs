@@ -265,7 +265,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("User 9 does not exist", error.Message);
+            Assert.AreEqual("User 9 not found", error.Message);
         }
 
         [TestMethod]
@@ -277,7 +277,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Option 7 does not exist", error.Message);
+            Assert.AreEqual("Option 7 not found", error.Message);
         }
 
         [TestMethod]
@@ -289,7 +289,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Vote does not have a poll", error.Message);
+            Assert.AreEqual("Vote must specify a poll", error.Message);
         }
 
         [TestMethod]
@@ -302,7 +302,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll " + newGuid + " does not exist", error.Message);
+            Assert.AreEqual("Poll " + newGuid + " not found", error.Message);
         }
 
         [TestMethod]
@@ -314,7 +314,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Vote does not have an option", error.Message);
+            Assert.AreEqual("Vote must specify an option", error.Message);
         }
 
         [TestMethod]
@@ -424,7 +424,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Token required for this poll", error.Message);
+            Assert.AreEqual(String.Format("A valid token is required for poll {0}", _tokenUUID), error.Message);
         }
 
         [TestMethod]
@@ -484,7 +484,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual(String.Format("Option not valid for poll {0}", _mainUUID), error.Message);
+            Assert.AreEqual(String.Format("Option choice not valid for poll {0}", _mainUUID), error.Message);
         }
 
         [TestMethod]

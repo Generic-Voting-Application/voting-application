@@ -1,18 +1,21 @@
-﻿<table id="resultTable" class="table table-hover">
+﻿<div id="chart-toggle"><button class="btn btn-primary" data-bind="click: toggleChartVisible">Toggle Chart</button></div>
+<div id="chart-block" data-bind="visible:chartVisible">
+    <div id="chart-results"></div>
+    <div id="chart-buttons"></div>
+    <br />
+</div>
+<table id="resultTable" class="table table-hover">
     <thead>
         <tr>
             <th>Rank</th>
             <th>Option</th>
-            <th>Description</th>
-            <th class="hidden-xs hidden-sm">More info</th>
         </tr>
     </thead>
     <tbody data-bind="foreach: resultOptions">
         <tr data-bind="attr: {'data-id': Id}, css: {'success' : ($index() == 0) }">
             <td data-bind="text: Rank"></td>
             <td data-bind="text: Name"></td>
-            <td data-bind="text: Description"></td>
-            <td class="hidden-xs hidden-sm" data-bind="text: Info"></td>
         </tr>
     </tbody>
 </table>
+
