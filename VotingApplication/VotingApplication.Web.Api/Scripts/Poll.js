@@ -212,18 +212,23 @@
 
         self.submitLogin = function (data, event) {
             var username = $("#loginUsername").val();
+            var pollId = Common.getPollId();
+            var tokenId = Common.getToken();
+
             $.ajax({
                 type: 'PUT',
                 url: '/api/user',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    Name: username
+                    Name: username,
+                    PollId: pollId,
+                    TokenId: tokenId
                 }),
 
                 success: function (data) {
                     Common.loginUser(data, username);
                     self.userName(username);
-                    self.userId = data;
+                    self.userId = Common.currentUserId();
                     showSection($('#voteSection'));
                 },
 
