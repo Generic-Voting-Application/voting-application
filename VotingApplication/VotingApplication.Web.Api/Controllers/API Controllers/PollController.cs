@@ -97,18 +97,18 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     }
                 }
 
+                newPoll.UUID = Guid.NewGuid();
+                newPoll.ManageID = Guid.NewGuid();
+
                 // Create a list of tokens for each invite
                 if (newPoll.InviteOnly)
                 {
                     newPoll.Tokens = new List<Token>();
                     foreach (string email in newPoll.Invites)
                     {
-                        newPoll.Tokens.Add(new Token { TokenGuid = Guid.NewGuid() });
+                        newPoll.Tokens.Add(new Token { TokenGuid = Guid.NewGuid(), PollId = newPoll.UUID });
                     }
                 }
-
-                newPoll.UUID = Guid.NewGuid();
-                newPoll.ManageID = Guid.NewGuid();
 
                 // Do the long-running SendEmail task in a different thread, so we can return early
                 Thread newThread = new Thread(new ThreadStart(() => SendEmails(newPoll)));
