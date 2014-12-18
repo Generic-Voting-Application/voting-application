@@ -258,7 +258,7 @@
                 return d;
             })
             .valueFunction(function (d) {
-                return 0.25 + voterCount / 2;
+                return voterCount / 2;
             })
             .tooltipFunction(function (d) {
                 return "50% Majority";
