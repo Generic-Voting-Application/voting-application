@@ -10,7 +10,7 @@
                 <th class="col-md-3 hidden-xs hidden-sm">More info</th>
             </tr>
         </thead>
-        <tbody data-bind="foreach: options">
+        <tbody id="optionTable-tbody" data-bind="foreach: options">
             <tr class="clickable" data-bind="attr: {'data-id': Id}">
                 <td class="col-md-3" data-bind="text: Name"></td>
                 <td class="col-md-6" data-bind="text: Description"></td>
