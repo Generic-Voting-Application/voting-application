@@ -40,15 +40,19 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 matchingPoll.ManageID = Guid.Empty;
 
                 // Hide UUIDs of any other polls that are linked through options
-                if(matchingPoll.Options != null)
+                if (matchingPoll.Options != null)
                 {
                     foreach (Option matchingPollOptions in matchingPoll.Options)
                     {
-                        foreach (Poll poll in matchingPollOptions.Polls)
+                        if (matchingPollOptions.Polls != null)
                         {
-                            poll.UUID = Guid.Empty;
-                            poll.ManageID = Guid.Empty;
+                            foreach (Poll poll in matchingPollOptions.Polls)
+                            {
+                                poll.UUID = Guid.Empty;
+                                poll.ManageID = Guid.Empty;
+                            }
                         }
+
                     }
                 }
 
@@ -94,10 +98,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 }
 
                 // Create a list of tokens for each invite
-                if(newPoll.InviteOnly)
+                if (newPoll.InviteOnly)
                 {
                     newPoll.Tokens = new List<Token>();
-                    foreach(string email in newPoll.Invites)
+                    foreach (string email in newPoll.Invites)
                     {
                         newPoll.Tokens.Add(new Token { TokenGuid = Guid.NewGuid() });
                     }
@@ -125,7 +129,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             Queue<Token> tokens = poll.InviteOnly ? new Queue<Token>(poll.Tokens) : null;
 
             SendCreateEmail(poll);
-            foreach(string invitation in invitations)
+            foreach (string invitation in invitations)
             {
                 SendVoteEmail(invitation, poll, poll.InviteOnly ? tokens.Dequeue() : new Token { TokenGuid = Guid.Empty });
             }
