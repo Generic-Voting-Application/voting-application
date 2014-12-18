@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -51,22 +52,47 @@ namespace VotingApplication.Web.Api.Controllers
             {
                 if (newUser.Name == null || newUser.Name.Equals(""))
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Must provide a Username");
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Username must not be empty");
                 }
                 else if (new Regex(@"[^\w| ]").IsMatch(newUser.Name))
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Unacceptable Username");
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Username must be alpha-numeric");
                 }
 
-                List<User> existingUsers = context.Users.Where(u => u.Name == newUser.Name).ToList<User>();
-                if (existingUsers.Count() != 0)
+                Poll matchingPoll = context.Polls.Where(p => p.UUID == newUser.PollId).Include(p => p.Tokens).FirstOrDefault();
+                if (matchingPoll == null)
                 {
-                    return this.Request.CreateResponse(HttpStatusCode.OK, existingUsers.FirstOrDefault().Id);
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User missing a poll");
                 }
 
-                context.Users.Add(newUser);
-                context.SaveChanges();
-                return this.Request.CreateResponse(HttpStatusCode.OK, newUser.Id);
+                Token matchingToken = context.Tokens.Where(t => t.TokenGuid == newUser.TokenId && t.PollId == matchingPoll.UUID).FirstOrDefault();
+                if (matchingToken == null || newUser.TokenId == Guid.Empty)
+                {
+                    if (matchingPoll.InviteOnly || newUser.TokenId != Guid.Empty)
+                    {
+                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User missing a valid token for this poll");
+                    }
+                    else
+                    {
+                        matchingToken = new Token() { TokenGuid = Guid.NewGuid(), PollId = matchingPoll.UUID };
+                        matchingPoll.Tokens.Add(matchingToken);
+                        context.Tokens.Add(matchingToken);
+                    }
+                }
+
+                List<User> existingUsers = context.Users.Where(u => u.TokenId == matchingToken.TokenGuid).ToList<User>();
+                if (existingUsers.Count() == 0)
+                {
+                    //Save once to generate user ID
+                    context.Users.Add(newUser);
+                    context.SaveChanges();
+
+                    //Save again to store Id
+                    matchingToken.UserId = newUser.Id;
+                    context.SaveChanges();
+                }
+
+                return this.Request.CreateResponse(HttpStatusCode.OK, matchingToken);
             }
         }
 

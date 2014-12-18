@@ -15,4 +15,18 @@
             <td><button class="btn btn-primary" data-bind="click: $root.doVote">Vote</button></td>
         </tr>
     </tbody>
+    <tr id="newOptionRow" data-bind="visible: optionAdding">
+        <td>
+            <input class="form-control input-block" id="newName" placeholder="Name" />
+        </td>
+        <td>
+            <input class="form-control input-block" id="newDescription" placeholder="Description" />
+        </td>
+        <td class="hidden-xs hidden-sm">
+            <input class="form-control input-block" id="newInfo" placeholder="More Info" />
+        </td>
+        <td>
+            <button type="submit" class="btn btn-primary" data-bind="click: $root.addOption.bind()">Add</button>
+        </td>
+    </tr>
 </table>

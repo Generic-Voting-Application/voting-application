@@ -104,7 +104,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll " + newGuid + " does not exist", error.Message);
+            Assert.AreEqual("Poll " + newGuid + " not found", error.Message);
         }
 
         [TestMethod]
@@ -225,7 +225,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll " + newGuid + " does not exist", error.Message);
+            Assert.AreEqual("Poll " + newGuid + " not found", error.Message);
         }
 
         [TestMethod]
@@ -297,7 +297,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll " + newGuid + " does not exist", error.Message);
+            Assert.AreEqual("Poll " + newGuid + " not found", error.Message);
         }
 
         [TestMethod]

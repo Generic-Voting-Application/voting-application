@@ -106,7 +106,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Template 99 does not exist", error.Message);
+            Assert.AreEqual("Template 99 not found", error.Message);
         }
 
         #endregion
@@ -132,7 +132,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Template does not have a name", error.Message);
+            Assert.AreEqual("Template name must not be empty", error.Message);
         }
 
         [TestMethod]
@@ -144,7 +144,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Template does not have a name", error.Message);
+            Assert.AreEqual("Template name must not be empty", error.Message);
         }
 
         [TestMethod]

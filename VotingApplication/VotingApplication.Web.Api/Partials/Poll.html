@@ -10,42 +10,59 @@
                 <small>by <span data-bind="text: $root.pollCreator"></span></small>
             </h1>
         </div>
-        <div class="accordion" id="accordion"> 
+        <div id="errorArea"></div>
+        <div class="accordion" id="accordion">
             <!--Login Section-->
             <div id="loginSection" class="accordion-group panel panel-default">
                 <div class="accordion-heading panel-heading clickable" data-bind="click: $root.showSection.bind($data, $element)">
-                    <h4>Login</h4><span data-bind="text: '(Logged in as: '+userName()+')', visible: userName() "></span>
+                    <button id="logout-button" class="btn btn-danger" data-bind="click: logout">Logout</button>
+                    <h4>Login</h4> <span data-bind="text: '(Logged in as: '+userName()+')', visible: userName() "></span>
                 </div>
                 <div class="accordion-body panel-body collapse row">
-                    <div class="col-xs-1"></div>
+                    <div data-bind="visible: !requireAuth()" class="row">
+                        <div class="col-xs-1"></div>
 
-                    <div class="col-sm-4 centered form-group">
-                        <h4>Vote anonymously...</h4>
-                        <form>
-                            <label for="loginUsername" class="control-label">Name</label>
-                            <input id="loginUsername" class="form-control" autofocus placeholder="E.g. Your Name" />
-                            <label class="control-label info-message" id="usernameWarnMessage" hidden> Username must be alpha-numeric</label>
-                            <button id="Name-loginSubmit" class="btn btn-primary" data-bind="click: $root.submitLogin">Submit</button>
-                        </form>
+                        <div class="col-sm-4 centered form-group" data-bind="visible: !requireAuth()">
+                            <h4>Vote anonymously...</h4>
+                            <form>
+                                <label for="loginUsername" class="control-label">Name</label>
+                                <input id="loginUsername" class="form-control" autofocus placeholder="E.g. Your Name" />
+                                <label class="control-label info-message" id="usernameWarnMessage" hidden> Username must be alpha-numeric</label>
+                                <button id="Name-loginSubmit" class="btn btn-primary" data-bind="click: $root.submitLogin">Submit</button>
+                            </form>
+                        </div>
+
+                        <div class="col-sm-1 divider"></div>
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4 centered form-group">
+                            <h4>...or sign in</h4>
+                            <br />
+                            <button id="signinGoogleButton" class="signinButton"><img src="/img/sign-in-with-google.png" data-bind="click: googleLogin" /></button>
+                            <button id="signinFacebookButton" class="signinButton"><img src="/img/sign-in-with-facebook.png" data-bind="click: facebookLogin" /></button>
+                        </div>
+                        <div class="col-xs-1"></div>
                     </div>
-                    <div class="col-sm-1 divider"></div>
-                    <div class="col-sm-1"></div>
-                    <div class="col-sm-4 centered form-group">
-                        <h4>...or sign in</h4>
-                        <br />
-                        <button id="signinButton"><img src="/img/sign-in-with-google.png" /></button>
+                    <div data-bind="visible: requireAuth()">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-4 text-center">
+                            <button id="signinGoogleButton" class="signinButton"><img src="/img/sign-in-with-google.png" data-bind="click: googleLogin" /></button>
+                        </div>
+                        <div class="col-sm-4 text-center">
+                            <button id="signinFacebookButton" class="signinButton"><img src="/img/sign-in-with-facebook.png" data-bind="click: facebookLogin" /></button>
+                        </div>
+                        <div class="col-sm-2"></div>
                     </div>
-                    <div class="col-xs-1"></div>
                 </div>
             </div>
             <!--Voting Section-->
-            <div id="voteSection" class="accordion-group panel panel-default">
-                <div class="accordion-heading panel-heading clickable" data-bind="click: $root.showSection.bind($data, $element)">
-                    <h4>Vote</h4>
+            <div id="voteSection" class="accordion-group panel panel-default" data-bind="css: { 'panel-warning' : pollExpired }">
+                <div class="accordion-heading panel-heading clickable" data-bind="click: function() { if(!$root.pollExpires()) {$root.showSection($element)} }">
+                    <h4>Vote</h4><span data-bind="text: pollExpired() ? 'Poll closed' : ('Poll closes in ' + pollExpiryOffset()), visible: pollExpires()"></span>
                 </div>
                 <div class="accordion-body panel-body collapse row">
                     <div class="col-md-1"></div>
-                    <div class="col-md-10 centered" id="votingArea">
+                    <div class="col-md-10 centered">
+                        <div id="votingArea"></div>
                     </div>
                     <div class="col-md-1"></div>
                 </div>
