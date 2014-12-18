@@ -13,6 +13,7 @@ namespace VotingApplication.Data.Context
         IDbSet<Vote> Votes { get; set; }
         IDbSet<Poll> Polls { get; set; }
         IDbSet<Template> Templates { get; set; }
+        IDbSet<Token> Tokens { get; set; }
 
         int SaveChanges();
     }

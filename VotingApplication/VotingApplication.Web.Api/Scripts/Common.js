@@ -47,47 +47,43 @@
 
     Common.getToken = function () {
         var windowArgs = Common.getJsonFromUrl();
-        var token = windowArgs['token'];
+        var token = windowArgs['token'] || Common.sessionItem("token");
         return token;
     }
 
     Common.currentUserId = function () {
-        var localUserJSON = localStorage["user"];
-
-        if (localUserJSON) {
-            var localUser = $.parseJSON(localUserJSON);
-            if (localUser.expires < Date.now()) {
-                localStorage.removeItem("user");
-            }
-            else {
-                return localUser.id;
-            }
-        }
-
-        return undefined;
+        return Common.sessionItem("id");
     };
 
     Common.currentUserName = function () {
-        var localUserJSON = localStorage["user"];
+        return Common.sessionItem("userName");
+    };
+
+    Common.sessionItem = function (sessionKey) {
+        var localUserJSON = localStorage["user_" + Common.getPollId()];
 
         if (localUserJSON) {
             var localUser = $.parseJSON(localUserJSON);
             if (localUser.expires < Date.now()) {
-                localStorage.removeItem("user");
+                localStorage.removeItem("user_" + Common.getPollId());
             }
             else {
-                return localUser.userName;
+                return localUser[sessionKey];
             }
         }
 
         return undefined;
-    };
+    }
 
-    Common.loginUser = function (userId, userName) {
+    Common.loginUser = function (userData, userName) {
         //Expire in 6 hours
         var expiryTime = Date.now() + (6 * 60 * 60 * 1000);
-        localStorage["user"] = JSON.stringify({ id: userId, 'userName': userName, expires: expiryTime });
+        localStorage["user_" + Common.getPollId()] = JSON.stringify({ id: userData.UserId, userName: userName, expires: expiryTime, token: userData.TokenGuid });
     };
+
+    Common.logoutUser = function () {
+        localStorage.removeItem("user_" + Common.getPollId());
+    }
 
     Common.keyIsEnter = function (key, callback) {
         if (key && key.keyCode == 13) {

@@ -24,12 +24,39 @@ namespace VotingApplication.Web.Api.Tests
         private User _billUser;
         private InMemoryDbSet<User> dummyUsers;
 
+        private Guid _closedPollUUID;
+        private Guid _closedTokenUUID;
+        private Guid _openPollUUID;
+        private Guid _openTokenUUID; 
+        private Guid _otherTokenUUID;
+
         [TestInitialize]
         public void setup()
         {
-            _bobUser = new User { Id = 1, Name = "Bob" };
-            _joeUser = new User { Id = 2, Name = "Joe" };
-            _billUser = new User { Name = "Bill" };
+            _openTokenUUID = Guid.NewGuid();
+            _closedTokenUUID = Guid.NewGuid();
+            _otherTokenUUID = Guid.NewGuid();
+
+            _closedPollUUID = Guid.NewGuid();
+            _openPollUUID = Guid.NewGuid();
+
+            Poll closedPoll = new Poll() { UUID = _closedPollUUID, Tokens = new List<Token>() { new Token() { TokenGuid = _closedTokenUUID } }, InviteOnly = true };
+            Poll openPoll = new Poll() { UUID = _openPollUUID, Tokens = new List<Token>() { new Token() { TokenGuid = _openTokenUUID } }, InviteOnly = false };
+            InMemoryDbSet<Poll> dummyPolls = new InMemoryDbSet<Poll>(true);
+            dummyPolls.Add(closedPoll);
+            dummyPolls.Add(openPoll);
+
+            Token openToken = new Token() { TokenGuid = _openTokenUUID, PollId = _openPollUUID, UserId = 1 };
+            Token closedToken = new Token() { TokenGuid = _closedTokenUUID, PollId = _closedPollUUID };
+            Token otherToken = new Token() { TokenGuid = _otherTokenUUID, PollId = Guid.NewGuid() };
+            InMemoryDbSet<Token> dummyTokens = new InMemoryDbSet<Token>(true);
+            dummyTokens.Add(openToken);
+            dummyTokens.Add(closedToken);
+            dummyTokens.Add(otherToken);
+
+            _bobUser = new User { Id = 1, Name = "Bob", PollId = _openPollUUID, TokenId = _openTokenUUID };
+            _joeUser = new User { Id = 2, Name = "Joe", PollId = _openPollUUID };
+            _billUser = new User { Name = "Bill", PollId = _openPollUUID };
             dummyUsers = new InMemoryDbSet<User>(true);
             dummyUsers.Add(_bobUser);
             dummyUsers.Add(_joeUser);
@@ -38,6 +65,8 @@ namespace VotingApplication.Web.Api.Tests
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
             mockContext.Setup(a => a.Users).Returns(dummyUsers);
+            mockContext.Setup(a => a.Polls).Returns(dummyPolls);
+            mockContext.Setup(a => a.Tokens).Returns(dummyTokens);
             mockContext.Setup(a => a.SaveChanges()).Callback(this.SaveChanges);
 
             _controller = new UserController(mockContextFactory.Object);
@@ -204,37 +233,25 @@ namespace VotingApplication.Web.Api.Tests
             Assert.AreEqual(3, dummyUsers.Local[2].Id);
         }
 
-
-        [TestMethod]
-        public void PutNewUserReturnsNewUserId()
-        {
-            // Act
-            var response = _controller.Put(_billUser);
-            long responseUserId = (long)((ObjectContent)response.Content).Value;
-
-            // Assert
-            Assert.AreEqual(3, responseUserId);
-        }
-
         [TestMethod]
         public void PutNewUserWithExistingUsernameIsAllowed()
         {
             // Act
-            var response = _controller.Put(new User() { Name = "Bob" });
+            var response = _controller.Put(new User() { Name = "Bob", PollId = _openPollUUID });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         [TestMethod]
-        public void PutNewUserWithExistingUsernameReturnsExistingUserId()
+        public void PutNewUserWithExistingTokenReturnsExistingUserToken()
         {
             // Act
-            var response = _controller.Put(new User() { Name = "Bob" });
-            long responseUserId = (long)((ObjectContent)response.Content).Value;
+            var response = _controller.Put(new User() { Name = "Bob", PollId = _openPollUUID, TokenId = _openTokenUUID });
 
             // Assert
-            Assert.AreEqual(1, responseUserId);
+            Token responseToken = ((ObjectContent)response.Content).Value as Token;
+            Assert.AreEqual(1, responseToken.UserId);
         }
 
         [TestMethod]
@@ -278,6 +295,7 @@ namespace VotingApplication.Web.Api.Tests
             // Act
             var response = _controller.Put(new User());
 
+            // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
@@ -300,6 +318,7 @@ namespace VotingApplication.Web.Api.Tests
             // Act
             var response = _controller.Put(new User() { Name = "<span>" });
 
+            // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
@@ -314,6 +333,113 @@ namespace VotingApplication.Web.Api.Tests
             expectedList.Add(_bobUser);
             expectedList.Add(_joeUser);
             CollectionAssert.AreEquivalent(expectedList, dummyUsers.Local);
+        }
+
+        [TestMethod]
+        public void PutUserInClosedPollRejectsMissingToken()
+        {
+            // Act
+            var response = _controller.Put(new User() { Name = "Name", PollId = _closedPollUUID });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("User missing a valid token for this poll", error.Message);
+        }
+
+        [TestMethod]
+        public void PutUserInClosedPollRejectsMissingPollId()
+        {
+            // Act
+            var response = _controller.Put(new User() { Name = "Name", TokenId = _closedTokenUUID });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("User missing a poll", error.Message);
+        }
+
+        [TestMethod]
+        public void PutUserInClosedPollRejectsTokenPollMismatch()
+        {
+            // Act
+            var response = _controller.Put(new User() { Name = "Name", TokenId = _otherTokenUUID, PollId = _closedPollUUID });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("User missing a valid token for this poll", error.Message);
+        }
+
+        [TestMethod]
+        public void PutUserInClosedPollAcceptsMatchingTokenForPoll()
+        {
+            // Act
+            var response = _controller.Put(new User() { Name = "Name", TokenId = _closedTokenUUID, PollId = _closedPollUUID });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PutUserInOpenPollRejectsMissingPollId()
+        {
+            // Act
+            var response = _controller.Put(new User() { Name = "Name", TokenId = _openTokenUUID });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("User missing a poll", error.Message);
+        }
+
+        [TestMethod]
+        public void PutUserInOpenPollAcceptsMissingToken()
+        {
+            // Act
+            var response = _controller.Put(new User() { Name = "Name", PollId = _openPollUUID });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PutUserInOpenPollGeneratesNewTokenForMissingToken()
+        {
+            // Act
+            var response = _controller.Put(new User() { Name = "Name", PollId = _openPollUUID });
+
+            // Assert
+            Token responseToken = ((ObjectContent)response.Content).Value as Token;
+            Assert.AreNotEqual(Guid.Empty, responseToken.TokenGuid);
+            Assert.AreNotEqual(_closedTokenUUID, responseToken.TokenGuid);
+            Assert.AreNotEqual(_openTokenUUID, responseToken.TokenGuid);
+            Assert.AreNotEqual(_otherTokenUUID, responseToken.TokenGuid);
+        }
+
+        [TestMethod]
+        public void PutUserInOpenPollPopulatesTokenWithUserIdAndPollId()
+        {
+            // Act
+            User newUser = new User() { Name = "Name", PollId = _openPollUUID };
+            var response = _controller.Put(newUser);
+
+            // Assert
+            Token responseToken = ((ObjectContent)response.Content).Value as Token;
+            Assert.AreEqual(newUser.Id, responseToken.UserId);
+            Assert.AreEqual(_openPollUUID, responseToken.PollId);
+        }
+
+        [TestMethod]
+        public void PutUserInOpenPollRejectsPollTokenMismatch()
+        {
+            // Act
+            var response = _controller.Put(new User() { Name = "Name", TokenId = _otherTokenUUID, PollId = _openPollUUID });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("User missing a valid token for this poll", error.Message);
         }
 
         #endregion

@@ -27,6 +27,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Guid _timedUUID;
         private Token _validToken;
 
+        private Token _bobToken;
+        private Token _joeToken;
+        private Token _otherToken;
+
         [TestInitialize]
         public void setup()
         {
@@ -37,31 +41,21 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _timedUUID = Guid.NewGuid();
             _validToken = new Token { TokenGuid = Guid.NewGuid() };
 
-            Poll mainPoll = new Poll() { UUID = _mainUUID };
-            Poll otherPoll = new Poll() { UUID = _otherUUID };
-            Poll pointsPoll = new Poll() { UUID = _pointsUUID };
-            Poll tokenPoll = new Poll() { UUID = _tokenUUID };
-            Poll timedPoll = new Poll() { UUID = _timedUUID };
-
-            pointsPoll.VotingStrategy = "Points";
-            pointsPoll.MaxPerVote = 5;
-            pointsPoll.MaxPoints = 3;
-
-            tokenPoll.Tokens = new List<Token>();
-            tokenPoll.Tokens.Add(_validToken);
-            tokenPoll.InviteOnly = true;
-
-            timedPoll.Expires = true;
-            timedPoll.ExpiryDate = DateTime.Now.AddMinutes(-30);
-
-            mainPoll.Expires = true;
-            mainPoll.ExpiryDate = DateTime.Now.AddMinutes(30);
+            _bobToken = new Token { TokenGuid = Guid.NewGuid(), UserId = 1 };
+            _joeToken = new Token { TokenGuid = Guid.NewGuid(), UserId = 2 };
+            _otherToken = new Token { TokenGuid = Guid.NewGuid() };
+            
+            Poll mainPoll = new Poll() { UUID = _mainUUID, Expires = true, ExpiryDate = DateTime.Now.AddMinutes(30), Tokens = new List<Token>() { _bobToken, _joeToken, _otherToken } };
+            Poll otherPoll = new Poll() { UUID = _otherUUID, Tokens = new List<Token>() { _otherToken } };
+            Poll pointsPoll = new Poll() { UUID = _pointsUUID, VotingStrategy = "Points", MaxPerVote = 5, MaxPoints = 3, Tokens = new List<Token>() { _otherToken } };
+            Poll tokenPoll = new Poll() { UUID = _tokenUUID, Tokens = new List<Token>() { _validToken }, InviteOnly = true };
+            Poll timedPoll = new Poll() { UUID = _timedUUID, Expires = true, ExpiryDate = DateTime.Now.AddMinutes(-30) };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
             Option pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
             Option otherOption = new Option { Id = 3, Name = "Other" };
-            User bobUser = new User { Id = 1, Name = "Bob" };
-            User joeUser = new User { Id = 2, Name = "Joe" };
+            User bobUser = new User { Id = 1, Name = "Bob", TokenId = _bobToken.TokenGuid };
+            User joeUser = new User { Id = 2, Name = "Joe", TokenId = _joeToken.TokenGuid };
             User billUser = new User { Id = 3, Name = "Bill" };
 
             InMemoryDbSet<User> dummyUsers = new InMemoryDbSet<User>(true);
@@ -73,25 +67,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             dummyOptions.Add(pizzaOption);
             dummyOptions.Add(otherOption);
 
-            mainPoll.Options = new List<Option>();
-            mainPoll.Options.Add(burgerOption);
-            mainPoll.Options.Add(pizzaOption);
-
-            otherPoll.Options = new List<Option>();
-            otherPoll.Options.Add(burgerOption);
-            otherPoll.Options.Add(pizzaOption);
-
-            pointsPoll.Options = new List<Option>();
-            pointsPoll.Options.Add(burgerOption);
-            pointsPoll.Options.Add(pizzaOption);
-
-            tokenPoll.Options = new List<Option>();
-            tokenPoll.Options.Add(burgerOption);
-            tokenPoll.Options.Add(pizzaOption);
-
-            timedPoll.Options = new List<Option>();
-            timedPoll.Options.Add(burgerOption);
-            timedPoll.Options.Add(pizzaOption);
+            mainPoll.Options = new List<Option>() { burgerOption, pizzaOption };
+            otherPoll.Options = new List<Option>() { burgerOption, pizzaOption };
+            pointsPoll.Options = new List<Option>() { burgerOption, pizzaOption };
+            tokenPoll.Options = new List<Option>() { burgerOption, pizzaOption };
+            timedPoll.Options = new List<Option>() { burgerOption, pizzaOption };
 
             dummyPolls.Add(mainPoll);
             dummyPolls.Add(otherPoll);
@@ -99,16 +79,13 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             dummyPolls.Add(tokenPoll);
             dummyPolls.Add(timedPoll);
 
-            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = _mainUUID };
+            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = _mainUUID, Token = _bobToken };
             dummyUsers.Add(bobUser);
             _dummyVotes.Add(_bobVote);
 
-            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, PollId = _mainUUID };
+            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, PollId = _mainUUID, Token = _joeToken };
             dummyUsers.Add(joeUser);
             _dummyVotes.Add(_joeVote);
-
-            _otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, PollId = _otherUUID };
-            _dummyVotes.Add(_otherVote);
 
             dummyUsers.Add(billUser);
 
@@ -156,7 +133,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             List<Vote> expectedVotes = new List<Vote>();
             expectedVotes.Add(_bobVote);
-            expectedVotes.Add(_otherVote);
             CollectionAssert.AreEquivalent(expectedVotes, responseVotes);
         }
 
@@ -345,7 +321,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithNewVoteIfNoneExistsIsAllowed()
         {
             // Act
-            var response = _controller.Put(3, new List<Vote>() { new Vote() { OptionId = 1, PollId = _mainUUID } });
+            var response = _controller.Put(3, new List<Vote>() { new Vote() { OptionId = 1, PollId = _mainUUID, Token = _otherToken } });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -355,25 +331,24 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutAddsANewVoteIfNoneExistsAndReturnsVoteId()
         {
             // Act
-            var response = _controller.Put(3, new List<Vote>() { new Vote() { OptionId = 1, PollId = _mainUUID } });
+            var response = _controller.Put(3, new List<Vote>() { new Vote() { OptionId = 1, PollId = _mainUUID, Token = _otherToken } });
 
             // Assert
             List<long> responseVoteIds = ((ObjectContent)response.Content).Value as List<long>;
-            CollectionAssert.AreEquivalent(new List<long>() {4}, responseVoteIds);
+            CollectionAssert.AreEquivalent(new List<long>() {3}, responseVoteIds);
         }
 
         [TestMethod]
         public void PutAddsANewVoteIfNoneExists()
         {
             // Act
-            var newVote = new Vote() { OptionId = 1, PollId = _mainUUID };
+            var newVote = new Vote() { OptionId = 1, PollId = _mainUUID, Token = _otherToken };
             var response = _controller.Put(3, new List<Vote>(){ newVote });
 
             // Assert
             List<Vote> expectedVotes = new List<Vote>();
             expectedVotes.Add(_bobVote);
             expectedVotes.Add(_joeVote);
-            expectedVotes.Add(_otherVote);
             expectedVotes.Add(newVote);
             CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
         }
@@ -382,7 +357,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutReplacesCurrentVote()
         {
             // Act
-            var newVote = new Vote() { OptionId = 2, PollId = _mainUUID };
+            var newVote = new Vote() { OptionId = 2, PollId = _mainUUID, Token = _bobToken };
             var response = _controller.Put(1, new List<Vote>(){ newVote });
 
             // Assert
@@ -393,7 +368,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithPollReplacesInThatPoll()
         {
             // Act
-            var newVote = new Vote() { OptionId = 2, PollId = _otherUUID };
+            var newVote = new Vote() { OptionId = 2, PollId = _otherUUID, Token = _otherToken };
             _controller.Put(1, new List<Vote>(){ newVote });
 
             // Assert
@@ -404,7 +379,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithoutValueDefaultsToOne()
         {
             // Act
-            var newVote = new Vote() { OptionId = 1, PollId = _mainUUID };
+            var newVote = new Vote() { OptionId = 1, PollId = _mainUUID, Token = _otherToken };
             _controller.Put(1, new List<Vote>(){ newVote });
 
             // Assert
@@ -426,7 +401,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithInvalidValueNotAllowed()
         {
             // Arrange
-            var newVote = new Vote() { OptionId = 1, PollId = _pointsUUID, PollValue = 99 };
+            var newVote = new Vote() { OptionId = 1, PollId = _pointsUUID, PollValue = 99, Token = _otherToken };
 
             // Act
             var response = _controller.Put(1, new List<Vote>() { newVote });
@@ -465,7 +440,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual(String.Format("Invalid token: {0}", invalidToken), error.Message);
+            Assert.AreEqual(String.Format("Invalid token: {0}", invalidToken.TokenGuid), error.Message);
         }
 
         [TestMethod]
@@ -496,7 +471,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             List<Vote> expectedVotes = new List<Vote>();
             expectedVotes.Add(_bobVote);
             expectedVotes.Add(_joeVote);
-            expectedVotes.Add(_otherVote);
             expectedVotes.Add(newVote);
             CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
         }
