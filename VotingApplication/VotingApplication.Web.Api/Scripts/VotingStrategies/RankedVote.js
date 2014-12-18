@@ -136,6 +136,12 @@
 
                 // End if we have a majority
                 if (options[options.length - 1].ballots.length > totalBallots / 2) {
+
+                    //Mark all other remaining results as having lost
+                    for (var i = 0; i < options.length - 1; i++) {
+                        options[i].rank = 2;
+                    }
+
                     resultsByRound.push(roundOptions);
                     break;
                 }
@@ -150,7 +156,10 @@
 
                 var removedOptions = options.filter(function (d) { return d.ballots.length == lastPlaceBallotCount; });
                 // Track at what point an option was removed from the running
-                removedOptions.map(function (d) { d.rank = options.length - removedOptions.length + 1; return d; });
+                removedOptions.map(function (d) {
+                    d.rank = options.length - removedOptions.length + 1;
+                    return d;
+                });
                 orderedOptions.push.apply(orderedOptions, removedOptions);
 
                 options = options.filter(function (d) { return d.ballots.length > lastPlaceBallotCount; });
