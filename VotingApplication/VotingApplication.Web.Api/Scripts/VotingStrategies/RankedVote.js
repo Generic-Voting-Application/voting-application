@@ -167,7 +167,7 @@
             $("#chart-results").html('');
             $("#chart-buttons").html('');
 
-            if (!self.chartVisible())
+            if (!self.chartVisible() || data.length == 0)
                 return;
 
             //Get voter count
