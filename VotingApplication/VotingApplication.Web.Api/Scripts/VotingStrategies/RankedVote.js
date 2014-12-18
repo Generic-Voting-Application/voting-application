@@ -15,7 +15,7 @@
         var roundIndex = 0;
 
         var selectOption = function (option) {
-            var $option = $('#optionTable > tbody > tr').filter(function () {
+            var $option = $('#optionTable-tbody > tr').filter(function () {
                 return $(this).attr('data-id') == option.Id;
             });
 
@@ -36,7 +36,7 @@
         }
 
         var resetOptions = function () {
-            $('#optionTable > tbody').append($('#selectionTable > tbody').remove('tr').children());
+            $('#optionTable-tbody').append($('#selectionTable > tbody').remove('tr').children());
         }
         
         var sortByPollValue = function (a, b) {
