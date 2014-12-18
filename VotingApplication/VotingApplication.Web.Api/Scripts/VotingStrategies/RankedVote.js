@@ -134,13 +134,14 @@
                     });
                 })
 
-                if (options[0].ballots.length > 0) {
-                    resultsByRound.push(roundOptions);
-                }
-
                 // End if we have a majority
                 if (options[options.length - 1].ballots.length > totalBallots / 2) {
+                    resultsByRound.push(roundOptions);
                     break;
+                }
+
+                if (options[0].ballots.length > 0) {
+                    resultsByRound.push(roundOptions);
                 }
 
                 // Remove all last place options
@@ -169,9 +170,15 @@
             if (!self.chartVisible())
                 return;
 
+            //Get voter count
+            var voterCount = 0;
+            data[0].forEach(function (d) {
+                voterCount += d.Voters.length;
+            });
+
             chart = new insight.Chart('', '#chart-results')
             .width($("#chart-results").width())
-            .height(orderedNames.length * 40 + 100);
+            .height($("#chart-results").width());
 
             var xAxis = new insight.Axis('', insight.scales.ordinal)
                 .isOrdered(true)
@@ -183,7 +190,7 @@
                 .tickLabelRotation(45);
             var yAxis = new insight.Axis('Votes', insight.scales.linear)
                 .tickFrequency(1)
-                .axisRange(-0.1, orderedNames.length);
+                .axisRange(-0.1, voterCount);
             chart.xAxis(xAxis);
             chart.yAxis(yAxis);
             chart.legend(new insight.Legend());
@@ -242,7 +249,7 @@
                 return d;
             })
             .valueFunction(function (d) {
-                return 0.5 + orderedNames.length / 2;
+                return 0.25 + voterCount / 2;
             })
             .tooltipFunction(function (d) {
                 return "50% Majority";
