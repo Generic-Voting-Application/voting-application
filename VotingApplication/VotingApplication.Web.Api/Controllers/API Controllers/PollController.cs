@@ -39,6 +39,23 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 // Hide the manageID to prevent a GET on the poll ID from giving Poll Creator access
                 matchingPoll.ManageID = Guid.Empty;
 
+                // Hide UUIDs of any other polls that are linked through options
+                if (matchingPoll.Options != null)
+                {
+                    foreach (Option matchingPollOptions in matchingPoll.Options)
+                    {
+                        if (matchingPollOptions.Polls != null)
+                        {
+                            foreach (Poll poll in matchingPollOptions.Polls)
+                            {
+                                poll.UUID = Guid.Empty;
+                                poll.ManageID = Guid.Empty;
+                            }
+                        }
+
+                    }
+                }
+
                 // Similarly with tokens
                 matchingPoll.Tokens = new List<Token>();
 
@@ -81,10 +98,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 }
 
                 // Create a list of tokens for each invite
-                if(newPoll.InviteOnly)
+                if (newPoll.InviteOnly)
                 {
                     newPoll.Tokens = new List<Token>();
-                    foreach(string email in newPoll.Invites)
+                    foreach (string email in newPoll.Invites)
                     {
                         newPoll.Tokens.Add(new Token { TokenGuid = Guid.NewGuid() });
                     }
@@ -112,7 +129,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             Queue<Token> tokens = poll.InviteOnly ? new Queue<Token>(poll.Tokens) : null;
 
             SendCreateEmail(poll);
-            foreach(string invitation in invitations)
+            foreach (string invitation in invitations)
             {
                 SendVoteEmail(invitation, poll, poll.InviteOnly ? tokens.Dequeue() : new Token { TokenGuid = Guid.Empty });
             }

@@ -56,7 +56,7 @@
             </div>
             <!--Voting Section-->
             <div id="voteSection" class="accordion-group panel panel-default" data-bind="css: { 'panel-warning' : pollExpired }">
-                <div class="accordion-heading panel-heading clickable" data-bind="click: function() { if(!$root.pollExpires()) {$root.showSection($element)} }">
+                <div class="accordion-heading panel-heading clickable" data-bind="click: function() { if(!$root.pollExpired()) {$root.showSection($element)} }">
                     <h4>Vote</h4><span data-bind="text: pollExpired() ? 'Poll closed' : ('Poll closes in ' + pollExpiryOffset()), visible: pollExpires()"></span>
                 </div>
                 <div class="accordion-body panel-body collapse row">
