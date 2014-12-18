@@ -27,7 +27,7 @@
 
         var resetVote = function () {
             //Populate with an array of options.length number of 0-values
-            self.pointsArray(Array.apply(null, Array(options.length)).map(Boolean).map(Number));
+            self.pointsArray(Array.apply(null, Array(self.options().length)).map(Boolean).map(Number));
             updateAllButtons();
         };
 
@@ -263,18 +263,6 @@
                 error: Common.handleError
             });
         };
-
-        self.refreshOptions = function (pollId) {
-            $.ajax({
-                type: 'GET',
-                url: "/api/poll/" + pollId + "/option",
-
-                success: function (data) {
-                    self.options.removeAll();
-                    self.options(data);
-                }
-            });
-        }
 
         self.addOption = function () {
             //Don't submit without an entry in the name field
