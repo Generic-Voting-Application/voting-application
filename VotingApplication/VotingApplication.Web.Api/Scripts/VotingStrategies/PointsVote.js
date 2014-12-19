@@ -293,7 +293,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/api/poll/' + pollData.UUID + '/option',
+                url: '/api/poll/' + Common.getPollId() + '/option',
                 contentType: 'application/json',
 
                 data: JSON.stringify({
