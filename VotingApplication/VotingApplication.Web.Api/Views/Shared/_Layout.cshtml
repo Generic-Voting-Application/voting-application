@@ -34,7 +34,10 @@
             <p>&copy; @DateTime.Now.Year - Generic Voting Application | Report a bug <a href="https://github.com/Generic-Voting-Application/voting-application/issues">here</a></p>
         </footer>
     </div>
+
+    <script type="text/javascript">
+        window._gvaRequireFile = '@ViewBag.Script';
+    </script>
     <script data-main="/Scripts/main.js" src="/Scripts/Lib/require.js"></script>
-    <script type="text/javascript" async defer>require(['@ViewBag.Script'])</script>
 </body>
 </html>
