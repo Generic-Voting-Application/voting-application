@@ -342,7 +342,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             List<long> responseVoteIds = ((ObjectContent)response.Content).Value as List<long>;
-            Assert.AreEqual(1, responseVoteIds.Count);
+            CollectionAssert.AreEquivalent(new List<long>() { 3 }, responseVoteIds);
         }
 
         [TestMethod]
