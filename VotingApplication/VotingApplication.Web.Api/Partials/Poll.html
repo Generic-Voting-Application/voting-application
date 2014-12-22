@@ -15,7 +15,7 @@
             <!--Login Section-->
             <div id="loginSection" class="accordion-group panel panel-default">
                 <div class="accordion-heading panel-heading clickable" data-bind="click: $root.showSection.bind($data, $element)">
-                    <button id="logout-button" class="btn btn-danger" data-bind="click: logout">Logout</button>
+                    <button id="logout-button" class="btn btn-danger" data-bind="click: logout, visible: userName()">Logout</button>
                     <h4>Login</h4> <span data-bind="text: '(Logged in as: '+userName()+')', visible: userName() "></span>
                 </div>
                 <div class="accordion-body panel-body collapse row">
