@@ -91,8 +91,8 @@
             <div class="panel-footer">
                 <form>
                     <div class="input-append form-group">
-                        <input class="form-control" type='text' id="chatTextInput" placeholder="Message" />
-                        <button class="btn btn-primary" data-bind="click: $root.sendChatMessage">Send</button>
+                        <input class="form-control" type='text' id="chatTextInput" placeholder="Message" data-bind="enable: userName()"/>
+                        <button class="btn btn-primary" data-bind="click: $root.sendChatMessage, enable: userName()">Send</button>
                     </div>
                 </form>
             </div>
