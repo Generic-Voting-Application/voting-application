@@ -81,14 +81,14 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                IEnumerable<User> users = context.Users.Where(u => u.Id == userId);
+                IEnumerable<User> users = context.Users.Where(u => u.Id == userId).Include(u => u.Token);
                 if (users.Count() == 0)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("User {0} not found", userId));
                 }
 
                 User user = users.FirstOrDefault();
-                Guid userTokenId = user.TokenId;
+                Guid userTokenId = user.Token.TokenGuid;
 
                 // Clear out existing votes for this user in this poll
                 List<Vote> contextVotes = context.Votes.Where(v => v.Token != null && v.Token.TokenGuid == userTokenId && v.PollId == pollId).ToList<Vote>();
@@ -167,6 +167,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     context.SaveChanges();
                     voteIds.Add(vote.Id);
                 }
+
+                context.SaveChanges();
 
                 return this.Request.CreateResponse(HttpStatusCode.OK, voteIds);
             }

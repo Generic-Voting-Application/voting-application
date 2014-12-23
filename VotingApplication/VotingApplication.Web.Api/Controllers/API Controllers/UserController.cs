@@ -65,10 +65,16 @@ namespace VotingApplication.Web.Api.Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User missing a poll");
                 }
 
-                Token matchingToken = context.Tokens.Where(t => t.TokenGuid == newUser.TokenId && t.PollId == matchingPoll.UUID).FirstOrDefault();
-                if (matchingToken == null || newUser.TokenId == Guid.Empty)
+                Token matchingToken = null;
+                if(newUser.Token != null)
                 {
-                    if (matchingPoll.InviteOnly || newUser.TokenId != Guid.Empty)
+                    matchingToken = context.Users.Where(u => u.Token != null && u.Token.TokenGuid == newUser.Token.TokenGuid && u.Token.PollId == matchingPoll.UUID).FirstOrDefault().Token;
+                }
+                
+                //Token matchingToken = context.Tokens.Where(t => newUser.Token != null && t.TokenGuid == newUser.Token.TokenGuid && t.PollId == matchingPoll.UUID).FirstOrDefault();
+                if (matchingToken == null || newUser.Token == null || newUser.Token.TokenGuid == Guid.Empty)
+                {
+                    if (matchingPoll.InviteOnly && (newUser.Token == null || newUser.Token.TokenGuid != Guid.Empty))
                     {
                         return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User missing a valid token for this poll");
                     }
@@ -80,14 +86,15 @@ namespace VotingApplication.Web.Api.Controllers
                     }
                 }
 
-                List<User> existingUsers = context.Users.Where(u => u.TokenId == matchingToken.TokenGuid).ToList<User>();
+                List<User> existingUsers = context.Users.Where(u => u.Token.TokenGuid == matchingToken.TokenGuid).ToList<User>();
                 if (existingUsers.Count() == 0)
                 {
                     //Save once to generate user ID
+                    newUser.Token = matchingToken;
                     context.Users.Add(newUser);
                     context.SaveChanges();
 
-                    //Save again to store Id
+                    // TODO: There needs to be a better way of sending the user this information
                     matchingToken.UserId = newUser.Id;
                     context.SaveChanges();
                 }

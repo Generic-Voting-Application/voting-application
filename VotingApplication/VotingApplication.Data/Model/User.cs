@@ -8,7 +8,6 @@ namespace VotingApplication.Data.Model
         public long Id { get; set; }
         public string Name { get; set; }
 
-        public Guid TokenId { get; set; }
         public Token Token { get; set; }
 
         public Guid PollId { get; set; }
