@@ -172,7 +172,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             Uri requestURI;
-            Uri.TryCreate("http://localhost/?lastPoll=" + DateTime.MaxValue.ToFileTimeUtc(), UriKind.Absolute, out requestURI);
+            Uri.TryCreate("http://localhost/?lastPoll=2145916800000", UriKind.Absolute, out requestURI);
             _controller.Request.RequestUri = requestURI;
             var response = _controller.Get(_mainUUID);
 
@@ -185,7 +185,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             Uri requestURI;
-            Uri.TryCreate("http://localhost/?lastPoll=" + DateTime.MaxValue.ToFileTimeUtc(), UriKind.Absolute, out requestURI);
+            Uri.TryCreate("http://localhost/?lastPoll=2145916800000", UriKind.Absolute, out requestURI);
             _controller.Request.RequestUri = requestURI;
             var response = _controller.Get(_mainUUID);
 
