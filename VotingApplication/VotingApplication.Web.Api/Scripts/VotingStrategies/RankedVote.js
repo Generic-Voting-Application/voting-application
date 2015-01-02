@@ -13,7 +13,6 @@
         var orderedNames = [];
         var chart;
         var roundIndex = 0;
-        var lastResultsRequest = 0;
 
         var selectOption = function (option) {
             var $option = $('#optionTable-tbody > tr').filter(function () {
@@ -371,22 +370,9 @@
             });
         };
 
-        self.getResults = function (pollId) {
-
-            $.ajax({
-                type: 'GET',
-                url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastResultsRequest,
-
-                statusCode: {
-                    200: function (data) {
-                        lastResultsRequest = Date.now();
-                        displayResults(data);
-                    }
-                },
-
-                error: Common.handleError
-            });
-        };
+        self.displayResults = function (data) {
+            displayResults(data);
+        }
 
         self.addOption = function () {
             //Don't submit without an entry in the name field

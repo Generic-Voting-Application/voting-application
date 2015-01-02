@@ -7,7 +7,6 @@
         self.options = ko.observableArray(options);
         self.optionAdding = ko.observable(pollData.OptionAdding);
         var chart;
-        var lastResultsRequest = 0;
 
         var anonymousPoll = pollData.AnonymousVoting;
 
@@ -160,22 +159,10 @@
             });
         };
 
-        self.getResults = function (pollId) {
-            $.ajax({
-                type: 'GET',
-                url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastResultsRequest,
- 
-                statusCode: { 
-                    200: function (data) {
-                        var groupedVotes = countVotes(data);
-                        lastResultsRequest = Date.now();
-                        drawChart(groupedVotes);
-                    }
-                },
-
-                error: Common.handleError
-            });
-        };
+        self.displayResults = function (data) {
+            var groupedVotes = countVotes(data);
+            drawChart(groupedVotes);
+        }
 
         self.addOption = function () {
             //Don't submit without an entry in the name field
