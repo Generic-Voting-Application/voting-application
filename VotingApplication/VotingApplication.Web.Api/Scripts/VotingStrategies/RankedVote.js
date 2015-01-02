@@ -13,6 +13,7 @@
         var orderedNames = [];
         var chart;
         var roundIndex = 0;
+        var lastResultsRequest = 0;
 
         var selectOption = function (option) {
             var $option = $('#optionTable-tbody > tr').filter(function () {
@@ -374,10 +375,13 @@
 
             $.ajax({
                 type: 'GET',
-                url: '/api/poll/' + pollId + '/vote',
+                url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastResultsRequest,
 
-                success: function (data) {
-                    displayResults(data);
+                statusCode: {
+                    200: function (data) {
+                        lastResultsRequest = Date.now();
+                        displayResults(data);
+                    }
                 },
 
                 error: Common.handleError

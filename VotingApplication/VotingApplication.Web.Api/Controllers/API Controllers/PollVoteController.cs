@@ -36,7 +36,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                     if (lastPolledDate != null)
                     {
-                        clientLastUpdated = DateTime.FromFileTimeUtc(long.Parse(lastPolledDate));
+                        clientLastUpdated = UnixTimeToDateTime(long.Parse(lastPolledDate));
                     }
 
                     if (poll.LastUpdated.CompareTo(clientLastUpdated) < 0)
@@ -67,6 +67,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         public virtual HttpResponseMessage Get(Guid pollId, long voteId)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET by id on this controller");
+        }
+
+        private static DateTime UnixTimeToDateTime(double unixTimestamp)
+        {
+            DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            dateTime = dateTime.AddMilliseconds(unixTimestamp);
+            return dateTime;
         }
 
         #endregion

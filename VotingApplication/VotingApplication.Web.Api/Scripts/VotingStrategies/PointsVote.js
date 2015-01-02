@@ -11,6 +11,7 @@
         self.optionAdding = ko.observable(pollData.OptionAdding);
 
         var chart;
+        var lastResultsRequest = 0;
 
         self.pointsRemaining = ko.computed(function () {
             var total = 0;
@@ -253,11 +254,14 @@
         self.getResults = function (pollId) {
             $.ajax({
                 type: 'GET',
-                url: '/api/poll/' + pollId + '/vote',
+                url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastResultsRequest,
 
-                success: function (data) {
-                    var groupedVotes = countVotes(data);
-                    drawChart(groupedVotes);
+                statusCode: {
+                    200: function (data) {
+                        var groupedVotes = countVotes(data);
+                        lastResultsRequest = Date.now();
+                        drawChart(groupedVotes);
+                    }
                 },
 
                 error: Common.handleError
