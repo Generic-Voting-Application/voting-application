@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
-using VotingApplication.Web.Api.Filters;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -25,6 +26,23 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 if (poll == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
+                }
+
+                DateTime clientLastUpdated = DateTime.MinValue;
+                if (this.Request.RequestUri != null && this.Request.RequestUri.Query != null)
+                {
+                    NameValueCollection queryMap = HttpUtility.ParseQueryString(this.Request.RequestUri.Query);
+                    string lastPolledDate = queryMap["lastPoll"];
+
+                    if (lastPolledDate != null)
+                    {
+                        clientLastUpdated = DateTime.FromFileTimeUtc(long.Parse(lastPolledDate));
+                    }
+
+                    if (poll.LastUpdated.CompareTo(clientLastUpdated) < 0)
+                    {
+                        return this.Request.CreateResponse(HttpStatusCode.NotModified);
+                    }
                 }
 
                 List<Vote> pollVotes;
