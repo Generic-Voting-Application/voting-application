@@ -137,6 +137,8 @@ namespace VotingApplication.Web.Api.Controllers
                     }
 
                     vote.UserId = userId;
+
+                    poll.LastUpdated = DateTime.UtcNow;
                 }
 
                 foreach (Vote vote in votes)
