@@ -41,8 +41,8 @@ namespace VotingApplication.Web.Api.Controllers
                     return this.Request.CreateResponse(HttpStatusCode.OK, userForId);
                 }
             }
-        } 
-        #endregion 
+        }
+        #endregion
 
         #region Put
 
@@ -67,27 +67,38 @@ namespace VotingApplication.Web.Api.Controllers
 
                 // Search for Tokens that match what the user has given
                 Token matchingToken = null;
-                if(newUser.Token != null)
+                if (newUser.Token != null)
                 {
                     User matchingUser = context.Users.Where(u => u.Token != null
                         && u.Token.TokenGuid == newUser.Token.TokenGuid
                         && u.PollId == matchingPoll.UUID).FirstOrDefault();
-                    if (matchingUser != null){
+                    if (matchingUser != null)
+                    {
                         matchingToken = matchingUser.Token;
                         matchingToken.UserId = matchingUser.Id;
                     }
                 }
-                
-                // If no matching token is found or none was given, check if the poll is closed
-                if (matchingToken == null || newUser.Token == null || newUser.Token.TokenGuid == Guid.Empty)
+
+                // If no matching token is found, check if the poll is closed
+                if (matchingToken == null)
                 {
-                    if (matchingPoll.InviteOnly && (newUser.Token == null || newUser.Token.TokenGuid != Guid.Empty))
+                    if (matchingPoll.InviteOnly)
                     {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User missing a valid token for this poll");
+                        // If so, check that the token supplied (if any) is a valid token for the poll
+                        if (newUser.Token == null || !matchingPoll.Tokens.Any(t => t.TokenGuid == newUser.Token.TokenGuid))
+                        {
+                            // If not, throw an error
+                            return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User missing a valid token for this poll");
+                        }
+                        else
+                        {
+                            // If there is a token, link it up
+                            matchingToken = matchingPoll.Tokens.Find(t => t.TokenGuid == newUser.Token.TokenGuid);
+                        }
                     }
-                    else
+                    else if (matchingPoll.UUID != Guid.Empty)
                     {
-                        // If a valid token is not required, create one for the user so they can use it next time
+                        // If the poll is open, create a token for the user so they can use it next time
                         matchingToken = new Token() { TokenGuid = Guid.NewGuid(), PollId = matchingPoll.UUID };
                         matchingPoll.Tokens.Add(matchingToken);
                         context.Tokens.Add(matchingToken);

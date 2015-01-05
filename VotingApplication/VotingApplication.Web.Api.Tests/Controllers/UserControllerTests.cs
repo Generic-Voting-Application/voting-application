@@ -429,19 +429,6 @@ namespace VotingApplication.Web.Api.Tests
             Assert.AreEqual(newUser.Id, responseToken.UserId);
             Assert.AreEqual(_openPollUUID, responseToken.PollId);
         }
-
-        [TestMethod]
-        public void PutUserInOpenPollRejectsPollTokenMismatch()
-        {
-            // Act
-            var response = _controller.Put(new User() { Name = "Name", Token = new Token() { TokenGuid = _otherTokenUUID }, PollId = _openPollUUID });
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("User missing a valid token for this poll", error.Message);
-        }
-
         #endregion
 
         #region DELETE
