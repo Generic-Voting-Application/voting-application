@@ -1,4 +1,4 @@
-﻿require(['jquery', 'knockout', 'bootstrap', 'insight', 'countdown', 'Common', 'platform'], function ($, ko, bs, insight, countdown, Common) {
+﻿require(['jquery', 'knockout', 'bootstrap', 'insight', 'countdown', 'moment', 'Common', 'platform'], function ($, ko, bs, insight, countdown, moment, Common) {
     function VoteViewModel() {
         var self = this;
 
@@ -159,6 +159,8 @@
                             }
 
                             data.forEach(function (message) {
+                                var timestampMessage = message;
+                                timestampMessage.Timestamp = new moment(message.Timestamp).format('H:mm');
                                 self.chatMessages.push(message);
                             });
                             scrollChatWindow();

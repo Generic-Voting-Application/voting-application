@@ -56,8 +56,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
             Option pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
             Option otherOption = new Option { Id = 3, Name = "Other" };
-            User bobUser = new User { Id = 1, Name = "Bob", TokenId = _bobToken.TokenGuid };
-            User joeUser = new User { Id = 2, Name = "Joe", TokenId = _joeToken.TokenGuid };
+            User bobUser = new User { Id = 1, Name = "Bob", Token = _bobToken };
+            User joeUser = new User { Id = 2, Name = "Joe", Token = _joeToken };
             User billUser = new User { Id = 3, Name = "Bill" };
 
             InMemoryDbSet<User> dummyUsers = new InMemoryDbSet<User>(true);
@@ -208,54 +208,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         #endregion
 
-        #region POST
-
-        [TestMethod]
-        public void PostIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Post(new List<object>());
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void PostByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Post(1, new Vote());
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        #endregion
-
-        #region DELETE
-
-        [TestMethod]
-        public void DeleteIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Delete();
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void DeleteByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Delete(1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        #endregion
-
         #region PUT
 
         [TestMethod]
@@ -286,7 +238,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutMissingPollIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, new List<Vote>(){ new Vote() { OptionId = 1 }});
+            var response = _controller.Put(1, new List<Vote>() { new Vote() { OptionId = 1 } });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -311,7 +263,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutMissingOptionIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, new List<Vote>(){ new Vote() });
+            var response = _controller.Put(1, new List<Vote>() { new Vote() });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -337,7 +289,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             List<long> responseVoteIds = ((ObjectContent)response.Content).Value as List<long>;
-            CollectionAssert.AreEquivalent(new List<long>() {3}, responseVoteIds);
+            CollectionAssert.AreEquivalent(new List<long>() { 3 }, responseVoteIds);
         }
 
         [TestMethod]
@@ -345,7 +297,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             var newVote = new Vote() { OptionId = 1, PollId = _mainUUID, Token = _otherToken };
-            var response = _controller.Put(3, new List<Vote>(){ newVote });
+            var response = _controller.Put(3, new List<Vote>() { newVote });
 
             // Assert
             List<Vote> expectedVotes = new List<Vote>();
@@ -360,7 +312,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             var newVote = new Vote() { OptionId = 2, PollId = _mainUUID, Token = _bobToken };
-            var response = _controller.Put(1, new List<Vote>(){ newVote });
+            var response = _controller.Put(1, new List<Vote>() { newVote });
 
             // Assert
             Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[0].OptionId);
@@ -371,7 +323,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             var newVote = new Vote() { OptionId = 2, PollId = _otherUUID, Token = _otherToken };
-            _controller.Put(1, new List<Vote>(){ newVote });
+            _controller.Put(1, new List<Vote>() { newVote });
 
             // Assert
             Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[2].OptionId);
@@ -382,7 +334,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             var newVote = new Vote() { OptionId = 1, PollId = _mainUUID, Token = _otherToken };
-            _controller.Put(1, new List<Vote>(){ newVote });
+            _controller.Put(1, new List<Vote>() { newVote });
 
             // Assert
             Assert.AreEqual(newVote.PollValue, 1);
@@ -393,7 +345,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             var newVote = new Vote() { OptionId = 1, PollId = _mainUUID, PollValue = 35 };
-            _controller.Put(1, new List<Vote>(){ newVote });
+            _controller.Put(1, new List<Vote>() { newVote });
 
             // Assert
             Assert.AreEqual(newVote.PollValue, 35);
@@ -418,7 +370,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithNoTokenOnTokenPollNotAllowed()
         {
             // Arrange
-            var newVote = new Vote() { OptionId = 1, PollId = _tokenUUID};
+            var newVote = new Vote() { OptionId = 1, PollId = _tokenUUID };
 
             // Act
             var response = _controller.Put(1, new List<Vote>() { newVote });
@@ -481,7 +433,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutInvalidOptionIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, new List<Vote>() { new Vote { OptionId = 3, PollId = _mainUUID} });
+            var response = _controller.Put(1, new List<Vote>() { new Vote { OptionId = 3, PollId = _mainUUID } });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -514,6 +466,54 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.IsTrue(_mainPoll.LastUpdated.CompareTo(DateTime.Now) <= 0);
             Assert.IsTrue(_mainPoll.LastUpdated.CompareTo(DateTime.Now.AddSeconds(-2)) > 0);
+        }
+
+        #endregion
+
+        #region POST
+
+        [TestMethod]
+        public void PostIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Post(new List<object>());
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PostByIdIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Post(1, new Vote());
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        #endregion
+
+        #region DELETE
+
+        [TestMethod]
+        public void DeleteIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Delete();
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void DeleteByIdIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Delete(1);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
         }
 
         #endregion

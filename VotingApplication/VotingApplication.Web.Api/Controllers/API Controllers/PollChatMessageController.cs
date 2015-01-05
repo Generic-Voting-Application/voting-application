@@ -92,6 +92,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 {
                     matchingPoll.ChatMessages = new List<ChatMessage>();
                 }
+                newMessage.Timestamp = DateTime.Now;
                 matchingPoll.ChatMessages.Add(newMessage);
                 context.SaveChanges();
 

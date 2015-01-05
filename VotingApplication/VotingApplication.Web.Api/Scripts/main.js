@@ -40,3 +40,5 @@
         }
     }
 });
+
+if (window._gvaRequireFile) require([window._gvaRequireFile]);
