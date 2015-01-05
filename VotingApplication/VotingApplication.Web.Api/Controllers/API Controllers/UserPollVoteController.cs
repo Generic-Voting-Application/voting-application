@@ -88,7 +88,16 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 }
 
                 User user = users.FirstOrDefault();
-                Guid userTokenId = user.Token.TokenGuid;
+
+                Guid userTokenId;
+                if(user.Token == null)
+                {
+                    userTokenId = Guid.Empty;
+                }
+                else
+                {
+                    userTokenId = user.Token.TokenGuid;
+                }
 
                 // Clear out existing votes for this user in this poll
                 List<Vote> contextVotes = context.Votes.Where(v => v.Token != null && v.Token.TokenGuid == userTokenId && v.PollId == pollId).ToList<Vote>();

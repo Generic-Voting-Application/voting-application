@@ -65,13 +65,20 @@ namespace VotingApplication.Web.Api.Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User missing a poll");
                 }
 
+                // Search for Tokens that match what the user has given
                 Token matchingToken = null;
                 if(newUser.Token != null)
                 {
-                    matchingToken = context.Users.Where(u => u.Token != null && u.Token.TokenGuid == newUser.Token.TokenGuid && u.Token.PollId == matchingPoll.UUID).FirstOrDefault().Token;
+                    User matchingUser = context.Users.Where(u => u.Token != null
+                        && u.Token.TokenGuid == newUser.Token.TokenGuid
+                        && u.PollId == matchingPoll.UUID).FirstOrDefault();
+                    if (matchingUser != null){
+                        matchingToken = matchingUser.Token;
+                        matchingToken.UserId = matchingUser.Id;
+                    }
                 }
                 
-                //Token matchingToken = context.Tokens.Where(t => newUser.Token != null && t.TokenGuid == newUser.Token.TokenGuid && t.PollId == matchingPoll.UUID).FirstOrDefault();
+                // If no matching token is found or none was given, check if the poll is closed
                 if (matchingToken == null || newUser.Token == null || newUser.Token.TokenGuid == Guid.Empty)
                 {
                     if (matchingPoll.InviteOnly && (newUser.Token == null || newUser.Token.TokenGuid != Guid.Empty))
@@ -80,16 +87,17 @@ namespace VotingApplication.Web.Api.Controllers
                     }
                     else
                     {
+                        // If a valid token is not required, create one for the user so they can use it next time
                         matchingToken = new Token() { TokenGuid = Guid.NewGuid(), PollId = matchingPoll.UUID };
                         matchingPoll.Tokens.Add(matchingToken);
                         context.Tokens.Add(matchingToken);
                     }
                 }
 
-                List<User> existingUsers = context.Users.Where(u => u.Token.TokenGuid == matchingToken.TokenGuid).ToList<User>();
+                List<User> existingUsers = context.Users.Where(u => u.Token != null && u.Token.TokenGuid == matchingToken.TokenGuid).ToList<User>();
                 if (existingUsers.Count() == 0)
                 {
-                    //Save once to generate user ID
+                    // Save once to generate user ID
                     newUser.Token = matchingToken;
                     context.Users.Add(newUser);
                     context.SaveChanges();

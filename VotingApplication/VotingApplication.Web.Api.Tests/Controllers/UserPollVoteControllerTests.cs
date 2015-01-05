@@ -57,9 +57,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
             Option pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
             Option otherOption = new Option { Id = 3, Name = "Other" };
-            User bobUser = new User { Id = 1, Name = "Bob", TokenId = _bobToken.TokenGuid };
-            User joeUser = new User { Id = 2, Name = "Joe", TokenId = _joeToken.TokenGuid };
-            User billUser = new User { Id = 3, Name = "Bill" };
+            User bobUser = new User { Id = 1, Name = "Bob", Token = _bobToken };
+            User joeUser = new User { Id = 2, Name = "Joe", Token = _joeToken };
+            User billUser = new User { Id = 3, Name = "Bill", Token = null };
 
             InMemoryDbSet<User> dummyUsers = new InMemoryDbSet<User>(true);
             _dummyVotes = new InMemoryDbSet<Vote>(true);
