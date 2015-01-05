@@ -14,7 +14,7 @@
         <div class="accordion" id="accordion">
             <!--Login Section-->
             <div id="loginSection" class="accordion-group panel panel-default">
-                <div class="accordion-heading panel-heading">
+                <div class="accordion-heading panel-heading clickable" data-bind="click: function(){if(!userName()) $root.showSection($element)}">
                     <button id="logout-button" class="btn btn-danger" data-bind="click: logout, visible: userName(), click: function() {$root.logout(); $root.showSection($element.parentElement)}">Logout</button>
                     <h4>Login</h4> <span data-bind="text: '(Logged in as: '+userName()+')', visible: userName() "></span>
                 </div>
@@ -69,7 +69,7 @@
             </div>
             <!--Results Section-->
             <div id="resultSection" class="accordion-group panel panel-default">
-                <div class="accordion-heading panel-heading clickable" data-bind="click: function(){if(userName()) $root.showSection($element)}">
+                <div class="accordion-heading panel-heading clickable" data-bind="click: function(){ $root.showSection($element) }">
                     <h4>Results</h4>
                 </div>
                 <div class="accordion-body panel-body collapse row">
