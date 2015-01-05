@@ -105,8 +105,8 @@ namespace VotingApplication.Web.Api.Controllers
                     }
                 }
 
-                List<User> existingUsers = context.Users.Where(u => u.Token != null && u.Token.TokenGuid == matchingToken.TokenGuid).ToList<User>();
-                if (existingUsers.Count() == 0)
+                User existingUser = context.Users.Where(u => u.Token != null && newUser.Token != null && u.Token.TokenGuid == newUser.Token.TokenGuid).FirstOrDefault();
+                if (existingUser == null)
                 {
                     // Save once to generate user ID
                     newUser.Token = matchingToken;
@@ -114,8 +114,13 @@ namespace VotingApplication.Web.Api.Controllers
                     context.SaveChanges();
 
                     matchingToken.UserId = newUser.Id;
-                    context.SaveChanges();
                 }
+                else
+                {
+                    existingUser.Name = newUser.Name;
+                }
+
+                context.SaveChanges();
 
                 return this.Request.CreateResponse(HttpStatusCode.OK, matchingToken);
             }

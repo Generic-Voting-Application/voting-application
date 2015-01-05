@@ -31,6 +31,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Token _joeToken;
         private Token _otherToken;
 
+        private Poll _mainPoll;
+
         [TestInitialize]
         public void setup()
         {
@@ -45,7 +47,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _joeToken = new Token { TokenGuid = Guid.NewGuid(), UserId = 2 };
             _otherToken = new Token { TokenGuid = Guid.NewGuid() };
             
-            Poll mainPoll = new Poll() { UUID = _mainUUID, Expires = true, ExpiryDate = DateTime.Now.AddMinutes(30), Tokens = new List<Token>() { _bobToken, _joeToken, _otherToken } };
+            _mainPoll = new Poll() { UUID = _mainUUID, Expires = true, ExpiryDate = DateTime.Now.AddMinutes(30), Tokens = new List<Token>() { _bobToken, _joeToken, _otherToken }, LastUpdated = DateTime.MinValue };
             Poll otherPoll = new Poll() { UUID = _otherUUID, Tokens = new List<Token>() { _otherToken } };
             Poll pointsPoll = new Poll() { UUID = _pointsUUID, VotingStrategy = "Points", MaxPerVote = 5, MaxPoints = 3, Tokens = new List<Token>() { _otherToken } };
             Poll tokenPoll = new Poll() { UUID = _tokenUUID, Tokens = new List<Token>() { _validToken }, InviteOnly = true };
@@ -67,13 +69,13 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             dummyOptions.Add(pizzaOption);
             dummyOptions.Add(otherOption);
 
-            mainPoll.Options = new List<Option>() { burgerOption, pizzaOption };
+            _mainPoll.Options = new List<Option>() { burgerOption, pizzaOption };
             otherPoll.Options = new List<Option>() { burgerOption, pizzaOption };
             pointsPoll.Options = new List<Option>() { burgerOption, pizzaOption };
             tokenPoll.Options = new List<Option>() { burgerOption, pizzaOption };
             timedPoll.Options = new List<Option>() { burgerOption, pizzaOption };
 
-            dummyPolls.Add(mainPoll);
+            dummyPolls.Add(_mainPoll);
             dummyPolls.Add(otherPoll);
             dummyPolls.Add(pointsPoll);
             dummyPolls.Add(tokenPoll);
@@ -209,13 +211,261 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region PUT
 
         [TestMethod]
-        public void PutIsNotAllowed()
+        public void PutNonexistentUserIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, new List<Vote>());
+            var response = _controller.Put(9, new List<Vote>() { new Vote() { OptionId = 1, PollId = _mainUUID } });
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("User 9 not found", error.Message);
+        }
+
+        [TestMethod]
+        public void PutNonexistentOptionIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(1, new List<Vote>() { new Vote() { OptionId = 7, PollId = _mainUUID } });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Option 7 not found", error.Message);
+        }
+
+        [TestMethod]
+        public void PutMissingPollIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(1, new List<Vote>() { new Vote() { OptionId = 1 } });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Vote must specify a poll", error.Message);
+        }
+
+        [TestMethod]
+        public void PutNonexistentPollIsNotAllowed()
+        {
+            // Act
+            Guid newGuid = Guid.NewGuid();
+            var response = _controller.Put(1, new List<Vote>() { new Vote() { OptionId = 1, PollId = newGuid } });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Poll " + newGuid + " not found", error.Message);
+        }
+
+        [TestMethod]
+        public void PutMissingOptionIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(1, new List<Vote>() { new Vote() });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Vote must specify an option", error.Message);
+        }
+
+        [TestMethod]
+        public void PutWithNewVoteIfNoneExistsIsAllowed()
+        {
+            // Act
+            var response = _controller.Put(3, new List<Vote>() { new Vote() { OptionId = 1, PollId = _mainUUID, Token = _otherToken } });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void PutAddsANewVoteIfNoneExistsAndReturnsVoteId()
+        {
+            // Act
+            var response = _controller.Put(3, new List<Vote>() { new Vote() { OptionId = 1, PollId = _mainUUID, Token = _otherToken } });
+
+            // Assert
+            List<long> responseVoteIds = ((ObjectContent)response.Content).Value as List<long>;
+            CollectionAssert.AreEquivalent(new List<long>() { 3 }, responseVoteIds);
+        }
+
+        [TestMethod]
+        public void PutAddsANewVoteIfNoneExists()
+        {
+            // Act
+            var newVote = new Vote() { OptionId = 1, PollId = _mainUUID, Token = _otherToken };
+            var response = _controller.Put(3, new List<Vote>() { newVote });
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(_bobVote);
+            expectedVotes.Add(_joeVote);
+            expectedVotes.Add(newVote);
+            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
+        }
+
+        [TestMethod]
+        public void PutReplacesCurrentVote()
+        {
+            // Act
+            var newVote = new Vote() { OptionId = 2, PollId = _mainUUID, Token = _bobToken };
+            var response = _controller.Put(1, new List<Vote>() { newVote });
+
+            // Assert
+            Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[0].OptionId);
+        }
+
+        [TestMethod]
+        public void PutWithPollReplacesInThatPoll()
+        {
+            // Act
+            var newVote = new Vote() { OptionId = 2, PollId = _otherUUID, Token = _otherToken };
+            _controller.Put(1, new List<Vote>() { newVote });
+
+            // Assert
+            Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[2].OptionId);
+        }
+
+        [TestMethod]
+        public void PutWithoutValueDefaultsToOne()
+        {
+            // Act
+            var newVote = new Vote() { OptionId = 1, PollId = _mainUUID, Token = _otherToken };
+            _controller.Put(1, new List<Vote>() { newVote });
+
+            // Assert
+            Assert.AreEqual(newVote.PollValue, 1);
+        }
+
+        [TestMethod]
+        public void PutWithValueRetainsTheValue()
+        {
+            // Act
+            var newVote = new Vote() { OptionId = 1, PollId = _mainUUID, PollValue = 35 };
+            _controller.Put(1, new List<Vote>() { newVote });
+
+            // Assert
+            Assert.AreEqual(newVote.PollValue, 35);
+        }
+
+        [TestMethod]
+        public void PutWithInvalidValueNotAllowed()
+        {
+            // Arrange
+            var newVote = new Vote() { OptionId = 1, PollId = _pointsUUID, PollValue = 99, Token = _otherToken };
+
+            // Act
+            var response = _controller.Put(1, new List<Vote>() { newVote });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual("Invalid vote value: 99", error.Message);
+        }
+
+        [TestMethod]
+        public void PutWithNoTokenOnTokenPollNotAllowed()
+        {
+            // Arrange
+            var newVote = new Vote() { OptionId = 1, PollId = _tokenUUID };
+
+            // Act
+            var response = _controller.Put(1, new List<Vote>() { newVote });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual(String.Format("A valid token is required for poll {0}", _tokenUUID), error.Message);
+        }
+
+        [TestMethod]
+        public void PutWithInvalidTokenOnTokenPollNotAllowed()
+        {
+            // Arrange
+            Token invalidToken = new Token { TokenGuid = Guid.NewGuid() };
+            var newVote = new Vote() { OptionId = 1, PollId = _tokenUUID, Token = invalidToken };
+
+            // Act
+            var response = _controller.Put(1, new List<Vote>() { newVote });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual(String.Format("Invalid token: {0}", invalidToken.TokenGuid), error.Message);
+        }
+
+        [TestMethod]
+        public void PutWithValidTokenOnTokenPollAllowed()
+        {
+            // Arrange
+            var newVote = new Vote() { OptionId = 1, PollId = _tokenUUID, Token = _validToken };
+
+            // Act
+            _controller.Put(1, new List<Vote>() { newVote });
+
+            // Assert
+            Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[0].OptionId);
+        }
+
+
+        [TestMethod]
+        public void PutWithOnTokenPollClearsExistingVotesWithSameToken()
+        {
+            // Arrange
+            _dummyVotes.Add(new Vote() { Id = 4, OptionId = 1, UserId = 1, PollId = _tokenUUID, Token = _validToken });
+            var newVote = new Vote() { OptionId = 1, PollId = _tokenUUID, Token = _validToken };
+
+            // Act
+            _controller.Put(2, new List<Vote>() { newVote });
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(_bobVote);
+            expectedVotes.Add(_joeVote);
+            expectedVotes.Add(newVote);
+            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
+        }
+
+        [TestMethod]
+        public void PutInvalidOptionIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(1, new List<Vote>() { new Vote { OptionId = 3, PollId = _mainUUID } });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual(String.Format("Option choice not valid for poll {0}", _mainUUID), error.Message);
+        }
+
+        [TestMethod]
+        public void PutOnAnExpiredPollNotAllowed()
+        {
+            // Arrange
+            var newVote = new Vote() { OptionId = 1, PollId = _timedUUID };
+
+            // Act
+            var response = _controller.Put(1, new List<Vote>() { newVote });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
+            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
+            Assert.AreEqual(String.Format("Poll {0} has expired", _timedUUID), error.Message);
+        }
+
+        [TestMethod]
+        public void PutUpdatesPollLastUpdatedTimestamp()
+        {
+            // Act
+            var newVote = new Vote() { OptionId = 1, PollId = _mainUUID, Token = _bobToken };
+            var response = _controller.Put(1, new List<Vote>() { newVote });
+
+            // Assert
+            Assert.IsTrue(_mainPoll.LastUpdated.CompareTo(DateTime.Now) <= 0);
+            Assert.IsTrue(_mainPoll.LastUpdated.CompareTo(DateTime.Now.AddSeconds(-2)) > 0);
         }
 
         #endregion
@@ -266,6 +516,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
         }
 
-        #endregion        
+        #endregion
     }
 }
