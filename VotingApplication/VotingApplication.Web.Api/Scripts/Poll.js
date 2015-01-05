@@ -48,6 +48,13 @@
 
         // End Facebook boilerplate
 
+        var updatePollExpiryTime = function(){
+            self.pollExpiryDate.notifySubscribers();
+            if (self.pollExpired() && self.userName()) {
+                showSection($('#resultSection'));
+            }
+        }
+
         var getPollDetails = function (pollId, callback) {
             $.ajax({
                 type: 'GET',
@@ -61,9 +68,7 @@
                     self.pollExpiryDate(new Date(data.ExpiryDate));
 
                     if (data.Expires) {
-                        setInterval(function () {
-                            self.pollExpiryDate.notifySubscribers();
-                        }, 1000);
+                        setInterval(updatePollExpiryTime, 1000);
                     }
 
                     switch (data.VotingStrategy) {
