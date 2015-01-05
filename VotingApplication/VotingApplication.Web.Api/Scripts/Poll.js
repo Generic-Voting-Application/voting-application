@@ -232,7 +232,11 @@
                     Common.loginUser(data, username);
                     self.userName(username);
                     self.userId = Common.currentUserId();
-                    showSection($('#voteSection'));
+                    if (!self.pollExpired()) {
+                        showSection($('#voteSection'));
+                    } else {
+                        showSection($('#resultSection'));
+                    }
                 },
 
                 error: [Common.handleError, function (jqXHR, textStatus, errorThrown) {
