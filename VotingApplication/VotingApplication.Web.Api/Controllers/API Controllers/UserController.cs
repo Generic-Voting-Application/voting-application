@@ -113,7 +113,6 @@ namespace VotingApplication.Web.Api.Controllers
                     context.Users.Add(newUser);
                     context.SaveChanges();
 
-                    // TODO: There needs to be a better way of sending the user this information
                     matchingToken.UserId = newUser.Id;
                     context.SaveChanges();
                 }
