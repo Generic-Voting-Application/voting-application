@@ -42,7 +42,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _emptyUUID = Guid.NewGuid();
             _anonymousUUID = Guid.NewGuid();
 
-            Poll mainPoll = new Poll() { UUID = _mainUUID };
+            Poll mainPoll = new Poll() { UUID = _mainUUID, LastUpdated = DateTime.Today };
             Poll otherPoll = new Poll() { UUID = _otherUUID };
             Poll emptyPoll = new Poll() { UUID = _emptyUUID };
             Poll anonymousPoll = new Poll() { UUID = _anonymousUUID };
@@ -139,16 +139,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void GetByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Get(_mainUUID, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        [TestMethod]
         public void GetOnAnonPollDoesNotReturnUsernames()
         {
             // Act
@@ -158,6 +148,59 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             List<Vote> responseVotes = ((ObjectContent)response.Content).Value as List<Vote>;
             Assert.AreEqual(1, responseVotes.Count);
             Assert.IsNull(responseVotes[0].User);
+        }
+
+        [TestMethod]
+        public void GetWithLowTimestampReturnsResults()
+        {
+            // Act
+            Uri requestURI;
+            Uri.TryCreate("http://localhost/?lastPoll=0", UriKind.Absolute, out requestURI);
+            _controller.Request.RequestUri = requestURI;
+            var response = _controller.Get(_mainUUID);
+
+            // Assert
+            List<Vote> expectedVotes = new List<Vote>();
+            expectedVotes.Add(_bobVote);
+            expectedVotes.Add(_joeVote);
+            List<Vote> responseVotes = ((ObjectContent)response.Content).Value as List<Vote>;
+            CollectionAssert.AreEquivalent(expectedVotes, responseVotes);
+        }
+
+        [TestMethod]
+        public void GetWithHighTimestampReturnsNotModified()
+        {
+            // Act
+            Uri requestURI;
+            Uri.TryCreate("http://localhost/?lastPoll=2145916800000", UriKind.Absolute, out requestURI);
+            _controller.Request.RequestUri = requestURI;
+            var response = _controller.Get(_mainUUID);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotModified, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void GetWithHighTimestampReturnsNoResults()
+        {
+            // Act
+            Uri requestURI;
+            Uri.TryCreate("http://localhost/?lastPoll=2145916800000", UriKind.Absolute, out requestURI);
+            _controller.Request.RequestUri = requestURI;
+            var response = _controller.Get(_mainUUID);
+
+            // Assert
+            Assert.IsNull(response.Content);
+        }
+
+        [TestMethod]
+        public void GetByIdIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Get(_mainUUID, 1);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
         }
 
         #endregion

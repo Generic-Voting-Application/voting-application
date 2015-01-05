@@ -5,6 +5,7 @@
         var votingStrategy;
         var lockCollapse = false;
         var selectedPanel = null;
+        var lastResultsRequest = 0;
 
         self.pollName = ko.observable("Poll Name");
         self.pollCreator = ko.observable("Poll Creator");
@@ -106,7 +107,7 @@
                 votingStrategy = new strategy(pollData.Options, pollData);
 
                 //Refresh results every 10 seconds
-                var allResults = function () { votingStrategy.getResults(self.pollId) };
+                var allResults = function () { self.getResults(self.pollId) };
                 setInterval(allResults, 10000);
 
                 return votingStrategy;
@@ -270,6 +271,23 @@
 
         }
 
+        self.getResults = function (pollId) {
+
+            $.ajax({
+                type: 'GET',
+                url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastResultsRequest,
+
+                statusCode: {
+                    200: function (data) {
+                        lastResultsRequest = Date.now();
+                        votingStrategy.displayResults(data);
+                    }
+                },
+
+                error: Common.handleError
+            });
+        };
+
         $('#voteSection .accordion-body').on('show.bs.collapse', function () {
             if (votingStrategy) {
                 votingStrategy.getVotes(self.pollId, self.userId);
@@ -278,7 +296,7 @@
 
         $('#resultSection .accordion-body').on('show.bs.collapse', function () {
             if (votingStrategy) {
-                votingStrategy.getResults(self.pollId);
+                self.getResults(self.pollId);
             }
         });
 

@@ -370,19 +370,9 @@
             });
         };
 
-        self.getResults = function (pollId) {
-
-            $.ajax({
-                type: 'GET',
-                url: '/api/poll/' + pollId + '/vote',
-
-                success: function (data) {
-                    displayResults(data);
-                },
-
-                error: Common.handleError
-            });
-        };
+        self.displayResults = function (data) {
+            displayResults(data);
+        }
 
         self.addOption = function () {
             //Don't submit without an entry in the name field

@@ -31,6 +31,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Token _joeToken;
         private Token _otherToken;
 
+        private Poll _mainPoll;
+
         [TestInitialize]
         public void setup()
         {
@@ -45,7 +47,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _joeToken = new Token { TokenGuid = Guid.NewGuid(), UserId = 2 };
             _otherToken = new Token { TokenGuid = Guid.NewGuid() };
             
-            Poll mainPoll = new Poll() { UUID = _mainUUID, Expires = true, ExpiryDate = DateTime.Now.AddMinutes(30), Tokens = new List<Token>() { _bobToken, _joeToken, _otherToken } };
+            _mainPoll = new Poll() { UUID = _mainUUID, Expires = true, ExpiryDate = DateTime.Now.AddMinutes(30), Tokens = new List<Token>() { _bobToken, _joeToken, _otherToken }, LastUpdated = DateTime.MinValue };
             Poll otherPoll = new Poll() { UUID = _otherUUID, Tokens = new List<Token>() { _otherToken } };
             Poll pointsPoll = new Poll() { UUID = _pointsUUID, VotingStrategy = "Points", MaxPerVote = 5, MaxPoints = 3, Tokens = new List<Token>() { _otherToken } };
             Poll tokenPoll = new Poll() { UUID = _tokenUUID, Tokens = new List<Token>() { _validToken }, InviteOnly = true };
@@ -67,13 +69,13 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             dummyOptions.Add(pizzaOption);
             dummyOptions.Add(otherOption);
 
-            mainPoll.Options = new List<Option>() { burgerOption, pizzaOption };
+            _mainPoll.Options = new List<Option>() { burgerOption, pizzaOption };
             otherPoll.Options = new List<Option>() { burgerOption, pizzaOption };
             pointsPoll.Options = new List<Option>() { burgerOption, pizzaOption };
             tokenPoll.Options = new List<Option>() { burgerOption, pizzaOption };
             timedPoll.Options = new List<Option>() { burgerOption, pizzaOption };
 
-            dummyPolls.Add(mainPoll);
+            dummyPolls.Add(_mainPoll);
             dummyPolls.Add(otherPoll);
             dummyPolls.Add(pointsPoll);
             dummyPolls.Add(tokenPoll);
@@ -500,6 +502,18 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
             Assert.AreEqual(String.Format("Poll {0} has expired", _timedUUID), error.Message);
+        }
+
+        [TestMethod]
+        public void PutUpdatesPollLastUpdatedTimestamp()
+        {
+            // Act
+            var newVote = new Vote() { OptionId = 1, PollId = _mainUUID, Token = _bobToken };
+            var response = _controller.Put(1, new List<Vote>() { newVote });
+
+            // Assert
+            Assert.IsTrue(_mainPoll.LastUpdated.CompareTo(DateTime.Now) <= 0);
+            Assert.IsTrue(_mainPoll.LastUpdated.CompareTo(DateTime.Now.AddSeconds(-2)) > 0);
         }
 
         #endregion

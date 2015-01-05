@@ -250,19 +250,10 @@
             });
         };
 
-        self.getResults = function (pollId) {
-            $.ajax({
-                type: 'GET',
-                url: '/api/poll/' + pollId + '/vote',
-
-                success: function (data) {
-                    var groupedVotes = countVotes(data);
-                    drawChart(groupedVotes);
-                },
-
-                error: Common.handleError
-            });
-        };
+        self.displayResults = function(data) {
+            var groupedVotes = countVotes(data);
+            drawChart(groupedVotes);
+        }
 
         self.addOption = function () {
             //Don't submit without an entry in the name field
