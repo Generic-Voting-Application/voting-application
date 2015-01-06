@@ -103,7 +103,6 @@ namespace VotingApplication.Web.Api.Controllers
                         matchingPoll.Tokens.Add(matchingToken);
                     }
                 }
-
                 User existingUser = null;
 
                 if (newUser.Token != null)
@@ -124,6 +123,7 @@ namespace VotingApplication.Web.Api.Controllers
                 {
                     existingUser.Name = newUser.Name;
                 }
+
 
                 context.SaveChanges();
 
