@@ -232,7 +232,9 @@
                 data: JSON.stringify({
                     Name: username,
                     PollId: pollId,
-                    TokenId: tokenId
+                    Token: {
+                        TokenGuid: tokenId
+                    }
                 }),
 
                 success: function (data) {
