@@ -197,6 +197,7 @@
                     return finalAIndex - finalBIndex;
                 })
                 .tickLabelRotation(45);
+
             var yAxis = new insight.Axis('Votes', insight.scales.linear)
                 .tickFrequency(1)
                 .axisRange(-0.1, voterCount);
@@ -225,7 +226,27 @@
                 data = data.slice(roundIndex - 1, roundIndex);
                 seriesIndex = roundIndex - 1;
             }
-           
+
+            //Annotate the decision line
+            var series = new insight.MarkerSeries('marker', new insight.DataSet(data[0]), xAxis, yAxis)
+            .keyFunction(function (d) {
+                return d.Name;
+            })
+            .valueFunction(function (d) {
+                return voterCount / 2;
+            })
+            .tooltipFunction(function (d) {
+                return "50% Majority";
+            })
+            .widthFactor(1.1)
+            .thickness(2)
+            .title('Majority');
+
+            var newSeries = chart.series()
+            newSeries.push(series);
+            chart.series(newSeries);
+
+
             //Map out each round
             data.forEach(function (roundData) {
 
@@ -251,25 +272,6 @@
                 newSeries.push(series);
                 chart.series(newSeries);
             });
-
-            //Annotate the decision line
-            var series = new insight.MarkerSeries('marker', new insight.DataSet(orderedNames), xAxis, yAxis)
-            .keyFunction(function (d) {
-                return d;
-            })
-            .valueFunction(function (d) {
-                return voterCount / 2;
-            })
-            .tooltipFunction(function (d) {
-                return "50% Majority";
-            })
-            .widthFactor(1.1)
-            .thickness(2)
-            .title('Majority');
-
-            var newSeries = chart.series()
-            newSeries.push(series);
-            chart.series(newSeries);
 
             chart.draw();
         };

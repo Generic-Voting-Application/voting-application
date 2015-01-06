@@ -173,24 +173,24 @@ label.info-message {
 }
 
 /* InsightJS things */
-.markerclass {
-    fill: red !important;
-    fill-opacity: 0.3 !important;
+.markerclass, .series-0 {
+    fill: red;
+    fill-opacity: 0.3;
 }
 
-.series-3 {
+.series-4 {
     fill: #081d58;
 }
 
-.series-2 {
+.series-3 {
     fill: #034e7b;
 }
 
-.series-1 { 
+.series-2 { 
     fill: #0570b0;
 }
 
-.series-0 {
+.series-1 {
     fill: #74a9cf;
 }
 
