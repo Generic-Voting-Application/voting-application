@@ -301,7 +301,6 @@
         self.clearVote = function () {
             var userId = Common.currentUserId();
             var pollId = Common.getPollId();
-            var token = Common.getToken();
 
             var voteData = JSON.stringify([]);
 
