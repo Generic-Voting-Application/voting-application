@@ -31,10 +31,13 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Generic Voting Application</p>
+            <p>&copy; @DateTime.Now.Year - Generic Voting Application | <a href="https://github.com/Generic-Voting-Application/voting-application/issues">Report a bug</a> | <a href="mailto:generic.voting@gmail.com">Email us your suggestions</a></p>
         </footer>
     </div>
+
+    <script type="text/javascript">
+        window._gvaRequireFile = '@ViewBag.Script';
+    </script>
     <script data-main="/Scripts/main.js" src="/Scripts/Lib/require.js"></script>
-    <script type="text/javascript" async defer>require(['@ViewBag.Script'])</script>
 </body>
 </html>

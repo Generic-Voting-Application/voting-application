@@ -93,12 +93,18 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     }
                     else
                     {
-                        newPoll.Options = new List<Option>();
+                        newPoll.Options = new List<Option>(); 
                     }
+                }
+                
+                if(newPoll.Expires && newPoll.ExpiryDate < DateTime.Now)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Expiry date of poll is in the past");
                 }
 
                 newPoll.UUID = Guid.NewGuid();
                 newPoll.ManageID = Guid.NewGuid();
+                newPoll.LastUpdated = DateTime.Now;
 
                 // Create a list of tokens for each invite
                 if (newPoll.InviteOnly)

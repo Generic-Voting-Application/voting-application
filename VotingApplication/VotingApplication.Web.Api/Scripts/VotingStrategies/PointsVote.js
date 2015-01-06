@@ -210,7 +210,7 @@
             if (userId && pollId) {
                 $.ajax({
                     type: 'PUT',
-                    url: '/api/user/' + userId + '/vote',
+                    url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
                     contentType: 'application/json',
                     data: JSON.stringify(votesData),
 

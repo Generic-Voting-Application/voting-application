@@ -124,7 +124,7 @@
             self.populateTemplates();
 
             var defaultExpiryDate = moment().add(30, 'minutes');
-            $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate });
+            $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate, minDate: moment()});
 
             $(document).tooltip
 
