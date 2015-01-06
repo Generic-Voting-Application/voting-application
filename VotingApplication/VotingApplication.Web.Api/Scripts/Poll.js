@@ -149,7 +149,7 @@
         var getChatMessages = function () {
             if (self.pollId) {
                 var timestamp = Math.floor((new Date).getTime() / 1000);
-                var url = 'api/poll/' + self.pollId + '/chat?$orderby=Id&$filter=Id gt ' + self.lastMessageId;
+                var url = '/api/poll/' + self.pollId + '/chat?$orderby=Id&$filter=Id gt ' + self.lastMessageId;
 
                 $.ajax({
                     type: 'GET',
@@ -263,7 +263,7 @@
 
         self.sendChatMessage = function (data, event) {
             if (self.userId && self.pollId) {
-                var url = 'api/poll/' + self.pollId + '/chat';
+                var url = '/api/poll/' + self.pollId + '/chat';
                 var chatMessage = $('#chatTextInput').val();
                 $('#chatTextInput').val('');
 

@@ -1,13 +1,12 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace VotingApplication.Web.Api.Controllers
 {
-    public class AdminController : Controller
+    public class ManageController : Controller
     {
         public ActionResult Index()
         {
-            ViewBag.Title = "Admin Panel";
+            ViewBag.Title = "Manage your poll";
 
             return View();
         }

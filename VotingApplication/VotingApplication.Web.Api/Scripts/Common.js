@@ -23,32 +23,16 @@
 
     }
 
-    Common.getJsonFromUrl = function () {
-        var query = location.search.substr(1);
-        var result = {};
-        query.split("&").forEach(function (part) {
-            var item = part.split("=");
-            result[item[0]] = decodeURIComponent(item[1]);
-        });
-        return result;
-    };
-
     Common.getPollId = function () {
-        var windowArgs = Common.getJsonFromUrl();
-        var pollId = windowArgs['poll'];
-        return pollId;
+        return routeId;
     };
 
     Common.getManageId = function () {
-        var windowArgs = Common.getJsonFromUrl();
-        var manageId = windowArgs['manage'];
-        return manageId;
+        return routeId;
     };
 
     Common.getToken = function () {
-        var windowArgs = Common.getJsonFromUrl();
-        var token = windowArgs['token'] || Common.sessionItem("token");
-        return token;
+        return routeToken || Common.sessionItem("token");
     }
 
     Common.currentUserId = function () {
