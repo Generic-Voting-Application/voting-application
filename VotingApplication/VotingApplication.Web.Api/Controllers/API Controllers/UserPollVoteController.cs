@@ -87,6 +87,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("User {0} not found", userId));
                 }
 
+                Poll poll = context.Polls.Where(p => p.UUID == pollId).Include(p => p.Tokens).Include(p => p.Options).FirstOrDefault();
+                if (poll == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Poll {0} not found", pollId));
+                }
+
                 User user = users.FirstOrDefault();
 
                 Guid userTokenId;
@@ -116,39 +122,28 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                         return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote must specify an option");
                     }
 
-                    if (vote.PollId == Guid.Empty)
-                    {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote must specify a poll");
-                    }
-
                     IEnumerable<Option> options = context.Options.Where(o => o.Id == vote.OptionId);
                     if (options.Count() == 0)
                     {
                         return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Option {0} not found", vote.OptionId));
                     }
 
-                    Poll poll = context.Polls.Where(p => p.UUID == pollId).Include(p => p.Tokens).Include(p => p.Options).FirstOrDefault();
-                    if (poll == null)
-                    {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Poll {0} not found", vote.PollId));
-                    }
-
                     if (poll.Expires && poll.ExpiryDate < DateTime.Now)
                     {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", vote.PollId));
+                        return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", pollId));
                     }
 
                     // Check that the option is valid for the poll
                     Option option = options.FirstOrDefault();
                     if (poll.Options == null || poll.Options.Count == 0 || !poll.Options.Contains(option))
                     {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, String.Format("Option choice not valid for poll {0}", vote.PollId));
+                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, String.Format("Option choice not valid for poll {0}", pollId));
                     }
 
                     // Validate tokens if required
                     if (vote.Token == null || vote.Token.TokenGuid == Guid.Empty)
                     {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("A valid token is required for poll {0}", vote.PollId));
+                        return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("A valid token is required for poll {0}", pollId));
                     }
                     else if (poll.Tokens == null || !poll.Tokens.Any(t => t.TokenGuid == vote.Token.TokenGuid))
                     {
@@ -176,6 +171,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     context.SaveChanges();
                     voteIds.Add(vote.Id);
                 }
+
+                poll.LastUpdated = DateTime.UtcNow;
 
                 context.SaveChanges();
 

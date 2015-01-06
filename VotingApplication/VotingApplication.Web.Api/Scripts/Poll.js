@@ -314,6 +314,7 @@
 
                     success: function (returnData) {
                         lastResultsRequest = 0;
+
                         $('#resultSection > div')[0].click();
                     },
 
