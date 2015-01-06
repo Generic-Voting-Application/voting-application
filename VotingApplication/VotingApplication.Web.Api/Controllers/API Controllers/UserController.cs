@@ -105,7 +105,7 @@ namespace VotingApplication.Web.Api.Controllers
                     }
                 }
 
-                User existingUser = context.Users.Where(u => u.Token != null && newUser.Token != null && u.Token.TokenGuid == newUser.Token.TokenGuid).FirstOrDefault();
+                User existingUser = context.Users.Where(u => u.Token != null && u.Token.TokenGuid == newUser.Token.TokenGuid).FirstOrDefault();
                 if (existingUser == null)
                 {
                     // Save once to generate user ID

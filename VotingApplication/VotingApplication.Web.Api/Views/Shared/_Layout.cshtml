@@ -35,9 +35,7 @@
         </footer>
     </div>
 
-    <script type="text/javascript">
-        window._gvaRequireFile = '@ViewBag.Script';
-    </script>
     <script data-main="/Scripts/main.js" src="/Scripts/Lib/require.js"></script>
+    @RenderSection("scripts", false)
 </body>
 </html>
