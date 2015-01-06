@@ -101,11 +101,16 @@ namespace VotingApplication.Web.Api.Controllers
                         // If the poll is open, create a token for the user so they can use it next time
                         matchingToken = new Token() { TokenGuid = Guid.NewGuid(), PollId = matchingPoll.UUID };
                         matchingPoll.Tokens.Add(matchingToken);
-                        context.Tokens.Add(matchingToken);
                     }
                 }
 
-                User existingUser = context.Users.Where(u => u.Token != null && newUser.Token != null && u.Token.TokenGuid == newUser.Token.TokenGuid).FirstOrDefault();
+                User existingUser = null;
+
+                if (newUser.Token != null)
+                {
+                    existingUser = context.Users.Where(u => u.Token != null && u.Token.TokenGuid == newUser.Token.TokenGuid).FirstOrDefault();
+                }
+
                 if (existingUser == null)
                 {
                     // Save once to generate user ID
