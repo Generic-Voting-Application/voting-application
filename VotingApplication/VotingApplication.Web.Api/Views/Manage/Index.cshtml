@@ -7,6 +7,9 @@
     </div>
     <div id="errorArea"></div>
     <div class="text-center">
+        <a data-bind="attr: { href: '/Poll/' + pollId() }">Poll Link</a>
+    </div>
+    <div class="text-center">
         <button class="btn btn-primary" id="reset-votes" data-bind="click: $root.resetVotes">Reset Vote</button>
     </div>
     <div class="col-md-1"></div>

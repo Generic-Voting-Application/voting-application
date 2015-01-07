@@ -6,6 +6,7 @@
         self.votes = ko.observableArray();
         self.options = ko.observableArray();
         self.votingStrategy = ko.observable(false);
+        self.pollId = ko.observable();
 
         self.selectedDeleteOptionId = null;
 
@@ -16,6 +17,7 @@
 
                 success: function (data) {
                     self.options(data.Options);
+                    self.pollId(data.UUID);
                 },
 
                 error: Common.handleError
