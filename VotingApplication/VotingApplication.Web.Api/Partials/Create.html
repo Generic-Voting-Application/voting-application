@@ -1,102 +1,109 @@
-﻿<div class="col-md-4 col-sm-2"></div>
-<div class="col-md-4 col-sm-8">
+﻿<div class="col-sm-2"></div>
+<div class="col-sm-8">
     <div class="page-header">
         <h2>Create a Poll</h2>
     </div>
     <form id="poll-create-form">
-        <div id="poll-name-group" class="form-group">
-            <label class="control-label" for="poll-name">Poll Name<span class="required-label">*</span></label>
-            <input class="form-control" id="poll-name" placeholder="E.g. 2015 Elections" required />
-        </div>
-
-        <div id="strategy-group" class="form-group">
-            <label class="control-label" for="voting-strategy">Poll type<span class="required-label">*</span></label><a href="/info" id="strategy-info" class="help-message">[?]</a>
-            <div class="tip" data-bind="hoverVisible:true, hoverTargetId: 'strategy-info'">
-                <p><b>Single Vote</b>:<br />Pick one option</p>
-                <p><b>Ranked Vote</b>:<br />Order options by preference</p>
-                <b>Points-weighted Vote</b>:<br />Distribute points between options
-            </div>
-            <select class="form-control" id="voting-strategy" data-bind="value: selectedStrategy">
-                <option value="Basic">Single Vote</option>
-                <option value="Ranked">Ranked Vote</option>
-                <option value="Points">Points-weighted Vote</option>
-            </select>
-        </div>
-
-        <div id="poll-creator-group" class="form-group">
-            <label class="control-label" for="poll-creator">Creator Name<span class="required-label">*</span></label>
-            <input class="form-control" id="poll-creator" placeholder="E.g. John Smith" required />
-        </div>
-
-        <div id="email-group" class="form-group">
-            <label class="control-label" for="email">Creator Email</label>
-            <input class="form-control" type="email" id="email" placeholder="E.g. email@example.com" pattern="[\w._%+-]+@\w+(\.\w+)+">
-        </div>
-
-        <div class="accordion">
-            <div id="advancedOptions" class="accordion-group panel panel-default">
-                <div class="accordion-heading panel-heading clickable" data-bind="click: $root.toggleSection($element)">
-                    <b>Advanced Options</b> <span><b data-bind="text: expandSymbol"></b></span>
+        <div class="row">
+            <div class="col-md-5">
+                <div id="poll-name-group" class="form-group">
+                    <label class="control-label" for="poll-name">Poll Name<span class="required-label">*</span></label>
+                    <input class="form-control" id="poll-name" placeholder="E.g. 2015 Elections" required />
                 </div>
-                <div class="accordion-body panel-body collapse row in">
 
-                    <div id="invite-group" class="form-group">
-                        <label class="control-label checkbox-label" for="invite-only">Invite only</label>
-                        <input class="checkbox-inline" type="checkbox" id="invite-only" data-bind="checked: usesInvitations">
+                <div id="strategy-group" class="form-group">
+                    <label class="control-label" for="voting-strategy">Poll type<span class="required-label">*</span></label><a href="/info" id="strategy-info" class="help-message">[?]</a>
+                    <div class="tip" data-bind="hoverVisible:true, hoverTargetId: 'strategy-info'">
+                        <p><b>Single Vote</b>:<br />Pick one option</p>
+                        <p><b>Ranked Vote</b>:<br />Order options by preference</p>
+                        <b>Points-weighted Vote</b>:<br />Distribute points between options
                     </div>
+                    <select class="form-control" id="voting-strategy" data-bind="value: selectedStrategy">
+                        <option value="Basic">Single Vote</option>
+                        <option value="Ranked">Ranked Vote</option>
+                        <option value="Points">Points-weighted Vote</option>
+                    </select>
+                </div>
+
+                <div id="poll-creator-group" class="form-group">
+                    <label class="control-label" for="poll-creator">Creator Name<span class="required-label">*</span></label>
+                    <input class="form-control" id="poll-creator" placeholder="E.g. John Smith" required />
+                </div>
+
+                <div id="email-group" class="form-group">
+                    <label class="control-label" for="email">Creator Email</label>
+                    <input class="form-control" type="email" id="email" placeholder="E.g. email@example.com" pattern="[\w._%+-]+@\w+(\.\w+)+">
+                </div>
+
+                <button id="poll-create-btn" class="btn btn-primary" type="submit" data-bind="click: $root.createPoll.bind()">Create Poll</button>
+
+            </div>
+            <div class="col-md-7">
+                <div class="accordion">
+                    <div id="advancedOptions" class="accordion-group panel panel-default">
+                        <div class="accordion-heading panel-heading clickable">
+                            <b>Advanced Options</b>
+                        </div>
+                        <div class="accordion-body panel-body row">
+
+                            <div id="invite-group" class="form-group">
+                                <label class="control-label checkbox-label" for="invite-only">Invite only</label>
+                        <input class="checkbox-inline" type="checkbox" id="invite-only" data-bind="checked: usesInvitations">
+                            </div>
 
                     <div id="invites-group" class="form-group" data-bind="visible: usesInvitations">
-                        <label class=" control-label" for="invites">Invitations (one per line)</label>
-                        <textarea cols=40 rows=3 class="form-control" id="invites" placeholder="E.g. email@example.com" />
-                    </div>
+                                <label class=" control-label" for="invites">Invitations (one per line)</label>
+                                <textarea cols=40 rows=3 class="form-control" id="invites" placeholder="E.g. email@example.com" />
+                            </div>
 
-                    <div id="anonymous-voting-group" class="form-group">
-                        <label class="control-label checkbox-label" for="anonymous-voting">Anonymous Voting</label>
-                        <input class="checkbox-inline" type="checkbox" id="anonymous-voting">
-                    </div>
+                            <div id="anonymous-voting-group" class="form-group">
+                                <label class="control-label checkbox-label" for="anonymous-voting">Anonymous Voting</label>
+                                <input class="checkbox-inline" type="checkbox" id="anonymous-voting">
+                            </div>
 
-                    <div id="require-auth-group" class="form-group">
-                        <label class="control-label checkbox-label" for="require-auth">Require Authentication</label>
-                        <input class="checkbox-inline" type="checkbox" id="require-auth">
-                    </div>
+                            <div id="require-auth-group" class="form-group">
+                                <label class="control-label checkbox-label" for="require-auth">Require Authentication</label>
+                                <input class="checkbox-inline" type="checkbox" id="require-auth">
+                            </div>
 
-                    <div id="expiry-voting-group" class="form-group">
-                        <label class="control-label checkbox-label" for="expiry">Time limit</label>
-                        <input class="checkbox-inline" type="checkbox" id="expiry" data-bind="checked: expires">
-                    </div>
+                            <div id="expiry-voting-group" class="form-group">
+                                <label class="control-label checkbox-label" for="expiry">Time limit</label>
+                                <input class="checkbox-inline" type="checkbox" id="expiry" data-bind="checked: expires">
+                            </div>
 
-                    <div id="expiry-date-group" class="form-group" data-bind="visible: expires">
-                        <label class="control-label" for="expiry-date">Expiry Date</label>
-                        <input class="form-control" id="expiry-date" placeholder="E.g. 01/04/2015 3:14">
-                    </div>
+                            <div id="expiry-date-group" class="form-group" data-bind="visible: expires">
+                                <label class="control-label" for="expiry-date">Expiry Date</label>
+                                <input class="form-control" id="expiry-date" placeholder="E.g. 01/04/2015 3:14">
+                            </div>
 
-                    <div id="option-adding-group" class="form-group">
-                        <label class="control-label checkbox-label" for="option-adding">Allow users to add options</label>
-                        <input class="checkbox-inline" type="checkbox" id="option-adding">
-                    </div>
+                            <div id="option-adding-group" class="form-group">
+                                <label class="control-label checkbox-label" for="option-adding">Allow users to add options</label>
+                                <input class="checkbox-inline" type="checkbox" id="option-adding">
+                            </div>
 
-                    <div id="template-group" class="form-group">
-                        <label class="control-label" for="template">Poll Template</label>
-                        <select class="form-control select-placeholder" id="template" data-bind="options:templates, optionsText:'Name', optionsValue:'Id', optionsCaption:'Select a template..'"></select>
-                    </div>
+                            <div id="template-group" class="form-group">
+                                <label class="control-label" for="template">Poll Template</label>
+                                <select class="form-control select-placeholder" id="template" data-bind="options:templates, optionsText:'Name', optionsValue:'Id', optionsCaption:'Select a template..'"></select>
+                            </div>
 
-                    <div id="max-points-group" data-bind="visible: selectedStrategy() == 'Points'" class="form-group">
-                        <label class="control-label" for="max-points">Max points</label>
-                        <input class="form-control" id="max-points" placeholder="7" />
-                    </div>
+                            <div id="max-points-group" data-bind="visible: selectedStrategy() == 'Points'" class="form-group">
+                                <label class="control-label" for="max-points">Max points</label>
+                                <input class="form-control" id="max-points" placeholder="7" />
+                            </div>
 
-                    <div id="points-per-vote-group" data-bind="visible: selectedStrategy() == 'Points'" class="form-group">
-                        <label class="control-label" for="max-per-vote">Max points per vote</label>
-                        <input class="form-control" id="max-per-vote" placeholder="3" />
-                    </div>
+                            <div id="points-per-vote-group" data-bind="visible: selectedStrategy() == 'Points'" class="form-group">
+                                <label class="control-label" for="max-per-vote">Max points per vote</label>
+                                <input class="form-control" id="max-per-vote" placeholder="3" />
+                            </div>
 
+                        </div>
+                    </div>
                 </div>
+
+                <br />
+
             </div>
         </div>
-
-        <br />
-
-        <button id="poll-create-btn" class="btn btn-primary" type="submit" data-bind="click: $root.createPoll.bind()">Create Poll</button>
     </form>
 </div>
-<div class="col-md-4 col-sm-2"></div>
+<div class="col-sm-2"></div>

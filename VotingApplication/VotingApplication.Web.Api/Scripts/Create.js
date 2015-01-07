@@ -6,7 +6,6 @@
         self.selectedStrategy = ko.observable();
         self.expires = ko.observable(false);
         self.usesInvitations = ko.observable(false);
-        self.expandSymbol = ko.observable('+');
 
         self.createPoll = function () {
             //Clear out previous error messages
@@ -70,21 +69,6 @@
                     self.pollCreated(data.UUID, data.ManageID);
                 }
             });
-        };
-
-        var toggleSection = function (element) {
-            if (element.isCollapsed()) {
-                element.collapseSection('show');
-                self.expandSymbol('-');
-            }
-            else {
-                element.collapseSection('hide');
-                self.expandSymbol('+');
-            }
-        };
-
-        self.toggleSection = function (data, event) {
-            toggleSection($(data).parent());
         };
 
         self.pollCreated = function (PollId, ManageId) {

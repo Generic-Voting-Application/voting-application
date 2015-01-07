@@ -141,11 +141,14 @@ label.info-message {
     background-color: #fff;
 }
 
-#advancedOptions > .accordion-body {
-    margin: 0px 0px;
+#advancedOptions{
     border-width: 1px;
     border-style: solid;
     border-color: #ddd;
+}
+
+#advancedOptions > .accordion-body {
+    margin: 0px 0px;
 }
 
 #chat-panel {
@@ -217,9 +220,6 @@ label.info-message {
 	padding: 10px 10px;
 	border-radius: 8px;
 	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-	position: absolute;
-    display: inline;
-    z-index: 1000;
-    left: 125px;
-    top: 110px;
+	position: relative;
+    display: inline-block;
 }
