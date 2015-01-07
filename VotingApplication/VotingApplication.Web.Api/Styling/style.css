@@ -15,7 +15,7 @@ body {
     padding-right: 15px;
 }
 
-h2 {
+.centered {
     text-align: center;
 }
 
@@ -28,6 +28,7 @@ input, select, textarea {
     width: 100%;
     border-width: 1px;
     max-width: 100%;
+    margin-top: 0px !important;
 }
 
 label {
@@ -98,11 +99,6 @@ label.info-message {
 
 .progress-bar {
     min-width: 30px;
-}
-
-.checkbox-label {
-    float:left;
-    width:90%;
 }
 
 .checkbox-inline {
@@ -221,5 +217,5 @@ label.info-message {
 	border-radius: 8px;
 	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 	position: relative;
-    display: inline-block;
+    display: block;
 }

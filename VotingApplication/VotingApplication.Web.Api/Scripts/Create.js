@@ -121,24 +121,34 @@
             });
         };
 
+        var setupTooltips = function() {
+            $(document).tooltip
+
+            function showOrHideElement(show, element) {
+                element.next(".tip").toggle(show);
+            }
+
+            var tooltipTargets = $(".help-message");
+
+            for (var i = 0; i < tooltipTargets.length; i++)
+            {
+                var $hoverTarget = $(tooltipTargets[i]);
+
+                var hideElement = showOrHideElement.bind(null, false, $hoverTarget);
+                var showElement = showOrHideElement.bind(null, true, $hoverTarget);
+                ko.utils.registerEventHandler($hoverTarget, "mouseover", showElement);
+                ko.utils.registerEventHandler($hoverTarget, "mouseout", hideElement);
+                hideElement();
+            }
+        }
+
         $(document).ready(function () {
             self.populateTemplates();
 
             var defaultExpiryDate = moment().add(30, 'minutes');
             $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate, minDate: moment()});
 
-            $(document).tooltip
-
-            function showOrHideElement(show) {
-                $(".tip").toggle(show);
-            }
-
-            var hideElement = showOrHideElement.bind(null, false);
-            var showElement = showOrHideElement.bind(null, true);
-            var $hoverTarget = $("#strategy-info");
-            ko.utils.registerEventHandler($hoverTarget, "mouseover", showElement);
-            ko.utils.registerEventHandler($hoverTarget, "mouseout", hideElement);
-            hideElement();
+            setupTooltips();
         });
     }
 
