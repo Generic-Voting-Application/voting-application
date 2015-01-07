@@ -91,5 +91,9 @@
 
 @section scripts
 {
-    <script type="text/javascript">require(["/Scripts/Create.js"]);</script>
+    <script type="text/javascript">
+        require(["/Scripts/Create.js"], function (CreateViewModel) {
+            new CreateViewModel();
+        });
+    </script>
 }

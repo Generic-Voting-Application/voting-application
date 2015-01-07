@@ -23,33 +23,21 @@
 
     }
 
-    Common.getPollId = function () {
-        return routeId;
+    Common.currentUserId = function (pollId) {
+        return Common.sessionItem("id", pollId);
     };
 
-    Common.getManageId = function () {
-        return routeId;
+    Common.currentUserName = function (pollId) {
+        return Common.sessionItem("userName", pollId);
     };
 
-    Common.getToken = function () {
-        return routeToken || Common.sessionItem("token");
-    }
-
-    Common.currentUserId = function () {
-        return Common.sessionItem("id");
-    };
-
-    Common.currentUserName = function () {
-        return Common.sessionItem("userName");
-    };
-
-    Common.sessionItem = function (sessionKey) {
-        var localUserJSON = localStorage["user_" + Common.getPollId()];
+    Common.sessionItem = function (sessionKey, pollId) {
+        var localUserJSON = localStorage["user_" + pollId];
 
         if (localUserJSON) {
             var localUser = $.parseJSON(localUserJSON);
             if (localUser.expires < Date.now()) {
-                localStorage.removeItem("user_" + Common.getPollId());
+                localStorage.removeItem("user_" + pollId);
             }
             else {
                 return localUser[sessionKey];
@@ -59,14 +47,14 @@
         return undefined;
     }
 
-    Common.loginUser = function (userData, userName) {
+    Common.loginUser = function (userData, userName, pollId) {
         //Expire in 6 hours
         var expiryTime = Date.now() + (6 * 60 * 60 * 1000);
-        localStorage["user_" + Common.getPollId()] = JSON.stringify({ id: userData.UserId, userName: userName, expires: expiryTime, token: userData.TokenGuid });
+        localStorage["user_" + pollId] = JSON.stringify({ id: userData.UserId, userName: userName, expires: expiryTime, token: userData.TokenGuid });
     };
 
-    Common.logoutUser = function () {
-        localStorage.removeItem("user_" + Common.getPollId());
+    Common.logoutUser = function (pollId) {
+        localStorage.removeItem("user_" + pollId);
     }
 
     Common.keyIsEnter = function (key, callback) {

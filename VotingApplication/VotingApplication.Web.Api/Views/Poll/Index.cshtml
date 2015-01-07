@@ -1,4 +1,6 @@
-﻿<meta name="google-signin-clientid" content="411410182235-0p8378ip8snlvbut4grq5ar61r8p60c2.apps.googleusercontent.com" />
+﻿@model PollModel
+
+<meta name="google-signin-clientid" content="411410182235-0p8378ip8snlvbut4grq5ar61r8p60c2.apps.googleusercontent.com" />
 <meta name="google-signin-scope" content="profile" />
 <meta name="google-signin-cookiepolicy" content="single_host_origin" />
 
@@ -104,8 +106,8 @@
 @section scripts
 {
     <script type="text/javascript">
-        require(["/Scripts/Poll.js"]);
-        routeId = '@ViewContext.RouteData.Values["id"]';
-        routeToken = '@ViewContext.RouteData.Values["token"]';
+    require(["/Scripts/Poll.js"], function (PollViewModel) {
+        new PollViewModel('@Model.Id', '@Model.Token');
+    });
     </script>
 }

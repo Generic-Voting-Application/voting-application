@@ -1,5 +1,5 @@
-﻿require(['jquery', 'knockout', 'bootstrap', 'insight', 'countdown', 'moment', 'Common', 'platform'], function ($, ko, bs, insight, countdown, moment, Common) {
-    function VoteViewModel() {
+﻿define(['jquery', 'knockout', 'bootstrap', 'insight', 'countdown', 'moment', 'Common', 'platform'], function ($, ko, bs, insight, countdown, moment, Common) {
+    return function VoteViewModel(pollId, token) {
         var self = this;
 
         var votingStrategy;
@@ -7,12 +7,13 @@
         var selectedPanel = null;
         var lastResultsRequest = 0;
 
+        self.pollId = pollId;
         self.pollName = ko.observable("Poll Name");
         self.pollCreator = ko.observable("Poll Creator");
         self.options = ko.observableArray();
         self.chatMessages = ko.observableArray();
         self.lastMessageId = 0;
-        self.userName = ko.observable(Common.currentUserName());
+        self.userName = ko.observable(Common.currentUserName(pollId));
         self.requireAuth = ko.observable();
 
         self.pollExpires = ko.observable(false);
@@ -112,7 +113,7 @@
                 votingStrategy = new strategy(pollData.Options, pollData);
 
                 //Refresh results every 10 seconds
-                var allResults = function () { self.getResults(self.pollId) };
+                var allResults = function () { self.getResults(pollId) };
                 setInterval(allResults, 10000);
 
                 return votingStrategy;
@@ -147,9 +148,9 @@
         };
 
         var getChatMessages = function () {
-            if (self.pollId) {
+            if (pollId) {
                 var timestamp = Math.floor((new Date).getTime() / 1000);
-                var url = '/api/poll/' + self.pollId + '/chat?$orderby=Id&$filter=Id gt ' + self.lastMessageId;
+                var url = '/api/poll/' + pollId + '/chat?$orderby=Id&$filter=Id gt ' + self.lastMessageId;
 
                 $.ajax({
                     type: 'GET',
@@ -222,8 +223,6 @@
 
         self.submitLogin = function (data, event) {
             var username = $("#loginUsername").val();
-            var pollId = Common.getPollId();
-            var tokenId = Common.getToken();
 
             $.ajax({
                 type: 'PUT',
@@ -233,14 +232,14 @@
                     Name: username,
                     PollId: pollId,
                     Token: {
-                        TokenGuid: tokenId
+                        TokenGuid: token || Common.sessionItem("token", pollId)
                     }
                 }),
 
                 success: function (data) {
-                    Common.loginUser(data, username);
+                    Common.loginUser(data, username, pollId);
                     self.userName(username);
-                    self.userId = Common.currentUserId();
+                    self.userId = Common.currentUserId(pollId);
                     if (!self.pollExpired()) {
                         showSection($('#voteSection'));
                     } else {
@@ -258,14 +257,14 @@
         };
 
         self.logout = function () {
-            Common.logoutUser();
+            Common.logoutUser(pollId);
             self.userName(undefined);
             self.userId = undefined;
         }
 
         self.sendChatMessage = function (data, event) {
-            if (self.userId && self.pollId) {
-                var url = '/api/poll/' + self.pollId + '/chat';
+            if (self.userId && pollId) {
+                var url = '/api/poll/' + pollId + '/chat';
                 var chatMessage = $('#chatTextInput').val();
                 $('#chatTextInput').val('');
 
@@ -301,8 +300,7 @@
         };
 
         self.clearVote = function () {
-            var userId = Common.currentUserId();
-            var pollId = Common.getPollId();
+            var userId = Common.currentUserId(pollId);
 
             var voteData = JSON.stringify([]);
 
@@ -326,23 +324,22 @@
 
         $('#voteSection .accordion-body').on('show.bs.collapse', function () {
             if (votingStrategy) {
-                votingStrategy.getVotes(self.pollId, self.userId);
+                votingStrategy.getVotes(pollId, self.userId);
             }
         });
 
         $('#resultSection .accordion-body').on('show.bs.collapse', function () {
             if (votingStrategy) {
-                self.getResults(self.pollId);
+                self.getResults(pollId);
             }
         });
 
         $(document).ready(function () {
-            self.pollId = Common.getPollId();
-            self.userId = Common.currentUserId();
+            self.userId = Common.currentUserId(pollId);
 
-            getPollDetails(self.pollId, function () {
+            getPollDetails(pollId, function () {
                 if (self.userId) {
-                    $('#loginUsername').val(Common.currentUserName());
+                    $('#loginUsername').val(Common.currentUserName(pollId));
                     if (!self.pollExpired()) {
                         showSection($('#voteSection'));
                     } else {
@@ -357,7 +354,7 @@
             getChatMessages();
             setInterval(getChatMessages, 3000);
         });
-    }
 
-    ko.applyBindings(new VoteViewModel());
+        ko.applyBindings(this);
+    }
 });

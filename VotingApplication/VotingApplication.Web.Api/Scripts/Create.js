@@ -1,5 +1,5 @@
-﻿require(['jquery', 'knockout', 'datetimepicker', 'moment', 'Common', 'jqueryUI'], function ($, ko, datetimepicker, moment, Common) {
-    function HomeViewModel() {
+﻿define(['jquery', 'knockout', 'datetimepicker', 'moment', 'Common', 'jqueryUI'], function ($, ko, datetimepicker, moment, Common) {
+    return function CreateViewModel() {
         var self = this;
 
         self.templates = ko.observableArray();
@@ -117,7 +117,7 @@
             ko.utils.registerEventHandler($hoverTarget, "mouseout", hideElement);
             hideElement();
         });
-    }
 
-    ko.applyBindings(new HomeViewModel());
+        ko.applyBindings(this);
+    }
 });
