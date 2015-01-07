@@ -286,8 +286,10 @@
     <Compile Include="Controllers\API Controllers\PollVoteController.cs" />
     <Compile Include="Controllers\API Controllers\UserPollVoteController.cs" />
     <Compile Include="Controllers\Web Controllers\AdminController.cs" />
+    <Compile Include="Controllers\Web Controllers\ManageController.cs" />
+    <Compile Include="Controllers\Web Controllers\PollController.cs" />
     <Compile Include="Controllers\Web Controllers\InfoController.cs" />
-    <Compile Include="Controllers\Web Controllers\HomeController.cs" />
+    <Compile Include="Controllers\Web Controllers\CreateController.cs" />
     <Compile Include="Controllers\API Controllers\OptionController.cs" />
     <Compile Include="Controllers\API Controllers\UserController.cs" />
     <Compile Include="Controllers\API Controllers\UserVoteController.cs" />
@@ -324,7 +326,7 @@
     <Content Include="Scripts\Lib\jquery.ui.touch-punch.min.js" />
     <Content Include="Scripts\Lib\knockout-3.2.0.js" />
     <Content Include="Scripts\Lib\moment.js" />
-    <Content Include="Scripts\Main.js" />
+    <Content Include="Scripts\Config.js" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -364,9 +366,6 @@
     <Content Include="Scripts\SocketClient.js" />
     <Content Include="Scripts\Admin.js" />
     <Content Include="Scripts\Common.js" />
-    <Content Include="Scripts\Home.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Partials\Create.html" />
     <Content Include="Partials\Manage.html" />
     <Content Include="Partials\Poll.html" />
@@ -385,12 +384,14 @@
     <Content Include="Styling\style.css" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Create\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Info\Index.cshtml" />
     <Content Include="Scripts\Lib\bootstrap-datetimepicker.min.js" />
+    <Content Include="Views\Manage\Index.cshtml" />
+    <Content Include="Views\Poll\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VotingApplication.Data\VotingApplication.Data.csproj">

@@ -288,18 +288,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PutMissingPollIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Put(1, Guid.Empty, new List<Vote>() { new Vote() { OptionId = 1 } });
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Vote must specify a poll", error.Message);
-        }
-
-        [TestMethod]
         public void PutNonexistentPollIsNotAllowed()
         {
             // Act
