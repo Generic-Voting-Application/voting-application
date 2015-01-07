@@ -132,6 +132,22 @@ label.info-message {
     border-style: solid;
 }
 
+.accordion-heading > span {
+    float: right;
+}
+
+#advancedOptions > .accordion-heading {
+    background-image: none;
+    background-color: #fff;
+}
+
+#advancedOptions > .accordion-body {
+    margin: 0px 0px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #ddd;
+}
+
 #chat-panel {
     margin-top:20px;
 }
@@ -205,5 +221,5 @@ label.info-message {
     display: inline;
     z-index: 1000;
     left: 125px;
-    top: 550px;
+    top: 110px;
 }
