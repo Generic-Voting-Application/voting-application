@@ -147,6 +147,12 @@ label.info-message {
     margin: 0px 0px;
 }
 
+#tabBar {
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 #chat-panel {
     margin-top:20px;
 }

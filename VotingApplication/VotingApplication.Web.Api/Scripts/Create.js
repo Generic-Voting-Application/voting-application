@@ -7,6 +7,10 @@
         self.expires = ko.observable(false);
         self.usesInvitations = ko.observable(false);
 
+        self.pollName = ko.observable("");
+        self.creatorName = ko.observable("");
+        self.creatorEmail = ko.observable("");
+
         self.createPoll = function () {
             //Clear out previous error messages
             $('text').remove('.error-message');
@@ -23,9 +27,6 @@
             $("#poll-create-btn").attr('disabled', 'disabled');
             $("#poll-create-btn").text('Creating...');
 
-            var creatorName = $("#poll-creator").val();
-            var pollName = $("#poll-name").val();
-            var email = $("#email").val();
             var templateId = $("#template").val();
             var invites = $("#invites").val();
             var strategy = $("#voting-strategy").val();
@@ -49,9 +50,9 @@
                 contentType: 'application/json',
 
                 data: JSON.stringify({
-                    Name: pollName,
-                    Creator: creatorName,
-                    Email: email,
+                    Name: self.pollName(),
+                    Creator: self.creatorName(),
+                    Email: self.creatorEmail(),
                     Invites: invites.split('\n'),
                     templateId: templateId,
                     VotingStrategy: strategy,
@@ -147,6 +148,9 @@
 
             var defaultExpiryDate = moment().add(30, 'minutes');
             $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate, minDate: moment()});
+
+            // Select first tab
+            $('#tabBar li a:first').tab('show')
 
             setupTooltips();
         });
