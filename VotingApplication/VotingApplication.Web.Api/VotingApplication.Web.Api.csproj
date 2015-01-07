@@ -308,7 +308,6 @@
     <Content Include="img\poll.jpg" />
     <Content Include="img\sign-in-with-facebook.png" />
     <Content Include="img\sign-in-with-google.png" />
-    <Content Include="Partials\CheckEmail.html" />
     <Content Include="Partials\VotingStrategies\RankedVote.html" />
     <Content Include="Partials\VotingStrategies\PointsVote.html" />
     <Content Include="Partials\VotingStrategies\BasicVote.html" />
@@ -366,9 +365,6 @@
     <Content Include="Scripts\SocketClient.js" />
     <Content Include="Scripts\Admin.js" />
     <Content Include="Scripts\Common.js" />
-    <Content Include="Partials\Create.html" />
-    <Content Include="Partials\Manage.html" />
-    <Content Include="Partials\Poll.html" />
     <Content Include="Scripts\VotingStrategies\RankedVote.js" />
     <Content Include="Scripts\VotingStrategies\PointsVote.js" />
     <Content Include="Scripts\VotingStrategies\BasicVote.js" />

@@ -65,7 +65,7 @@
                 }),
 
                 success: function (data) {
-                    window.location.href = "/Manage/" + data.ManageID;
+                    window.location.href = "/Manage/Index/" + data.ManageID;
                 }
             });
         };
