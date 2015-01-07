@@ -27,6 +27,11 @@
 
                         <div id="email-group" class="form-group">
                             <label class="control-label" for="email">Creator Email</label>
+                            <a id="email-info" class="help-message">[?]</a>
+                            <div class="tip" data-bind="hoverTargetId: email-info">
+                                <p>Only used to email you the details of your poll.</p>
+                                This will never be used for marketing purposes.
+                            </div>
                             <input class="form-control" type="email" id="email" placeholder="E.g. email@example.com" pattern="[\w._%+-]+@\w+(\.\w+)+" data-bind="value: creatorEmail">
                         </div>
                     </div>
@@ -48,6 +53,11 @@
 
                         <div id="email-group" class="form-group">
                             <label class="control-label" for="email-advanced">Creator Email</label>
+                            <a id="email-info" class="help-message">[?]</a>
+                            <div class="tip" data-bind="hoverTargetId: email-info">
+                                <p>Only used to email you the details of your poll.</p>
+                                This will never be used for marketing purposes.
+                            </div>
                             <input class="form-control" type="email" id="email-advanced" placeholder="E.g. email@example.com" pattern="[\w._%+-]+@\w+(\.\w+)+" data-bind="value: creatorEmail">
                         </div>
 
@@ -83,7 +93,7 @@
                             <label class="control-label" for="template">Poll Template</label>
                             <a id="template-info" class="help-message">[?]</a>
                             <div class="tip" data-bind="hoverTargetId: template-info">
-                                Sets up the poll with a preset list of options.
+                                <p>Sets up the poll with a preset list of options.</p>
                                 Options can still be added or removed from the Poll Management page.
                             </div>
                             <select class="form-control select-placeholder" id="template" data-bind="options:templates, optionsText:'Name', optionsValue:'Id', optionsCaption:'Select a template..'"></select>
@@ -94,7 +104,7 @@
                             <input class="checkbox-inline" type="checkbox" id="invite-only" data-bind="checked: usesInvitations">
                             <a id="invite-info" class="help-message">[?]</a>
                             <div class="tip" data-bind="hoverTargetId: invite-info">
-                                If you know each voter by email, this provides extra security.
+                                <p>If you know each voter by email, this provides extra security.</p>
                                 Voters are issued a token to vote with.
                             </div>
                         </div>
@@ -109,7 +119,7 @@
                             <input class="checkbox-inline" type="checkbox" id="anonymous-voting">
                             <a id="anonymous-info" class="help-message">[?]</a>
                             <div class="tip" data-bind="hoverTargetId: anonymous-info">
-                                Whether poll results should display the voter name, or "Anonymous Voter".
+                                <p>Whether poll results should display the voter name, or "Anonymous Voter".</p>
                                 Votes on the Poll Management page will still display names regardless.
                             </div>
                         </div>
@@ -119,7 +129,7 @@
                             <input class="checkbox-inline" type="checkbox" id="require-auth">
                             <a id="auth-info" class="help-message">[?]</a>
                             <div class="tip" data-bind="hoverTargetId: auth-info">
-                                If checked, users will be required to login with Facebook or Google+.
+                                <p>If checked, users will be required to login with Facebook or Google+.</p>
                                 If not checked, users will also have the option to choose their own display name.
                             </div>
                         </div>
@@ -143,7 +153,7 @@
                             <input class="checkbox-inline" type="checkbox" id="option-adding">
                             <a id="add-options-info" class="help-message">[?]</a>
                             <div class="tip" data-bind="hoverTargetId: add-options-info">
-                                If checked, users will be able to submit their own options from the poll page.
+                                <p>If checked, users will be able to submit their own options from the poll page.</p>
                                 You will still be able to add and remove options from the Poll Management page.
                             </div>
                         </div>
