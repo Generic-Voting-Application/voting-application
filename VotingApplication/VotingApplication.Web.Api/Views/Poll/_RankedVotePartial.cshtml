@@ -28,7 +28,7 @@
                 <input class="form-control input-block" id="newInfo" placeholder="More Info" />
             </td>
             <td>
-                <button type="submit" class="btn btn-primary" data-bind="click: $root.addOption.bind()">Add</button>
+                <button type="submit" class="btn btn-primary" data-bind="click: addOption.bind()">Add</button>
             </td>
         </tr>
     </table>
@@ -40,7 +40,7 @@
     </div>
     <table id="selectionTable" class="table table-hover sortable selection-content">
         <thead>
-            <tr data-bind="visible: $root.selectedOptions().length == 0">
+            <tr data-bind="visible: selectedOptions().length == 0">
                 <th colspan="3">Drag options here in preference order</th>
             </tr>
             <tr>
@@ -53,4 +53,4 @@
         </tbody>
     </table>
 </div>
-<button class="btn btn-primary" data-bind="click: $root.doVote, enable: $root.selectedOptions().length > 0">Submit Vote</button>
+<button class="btn btn-primary" data-bind="click: doVote, enable: selectedOptions().length > 0">Submit Vote</button>

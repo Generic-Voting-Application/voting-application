@@ -12,7 +12,7 @@
             <td data-bind="text: Name"></td>
             <td data-bind="text: Description"></td>
             <td class="hidden-xs hidden-sm" data-bind="text: Info"></td>
-            <td><button class="btn btn-primary" data-bind="click: $root.doVote">Vote</button></td>
+            <td><button class="btn btn-primary" data-bind="click: $parent.doVote">Vote</button></td>
         </tr>
     </tbody>
     <tr id="newOptionRow" data-bind="visible: optionAdding">
@@ -26,7 +26,7 @@
             <input class="form-control input-block" id="newInfo" placeholder="More Info" />
         </td>
         <td>
-            <button type="submit" class="btn btn-primary" data-bind="click: $root.addOption.bind()">Add</button>
+            <button type="submit" class="btn btn-primary" data-bind="click: addOption.bind()">Add</button>
         </td>
     </tr>
 </table>

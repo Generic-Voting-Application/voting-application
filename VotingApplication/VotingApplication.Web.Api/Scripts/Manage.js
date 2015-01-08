@@ -1,11 +1,11 @@
-﻿require(['jquery', 'knockout', 'bootstrap', 'Common'], function ($, ko, bootstrap, Common) {
-    function AdminViewModel() {
+﻿define(['jquery', 'knockout', 'bootstrap', 'Common'], function ($, ko, bootstrap, Common) {
+    return function ManageViewModel(manageId) {
         var self = this;
-        var manageId = 0;
 
         self.votes = ko.observableArray();
         self.options = ko.observableArray();
         self.votingStrategy = ko.observable(false);
+        self.pollId = ko.observable();
 
         self.selectedDeleteOptionId = null;
 
@@ -16,6 +16,7 @@
 
                 success: function (data) {
                     self.options(data.Options);
+                    self.pollId(data.UUID);
                 },
 
                 error: Common.handleError
@@ -117,15 +118,13 @@
         }
 
         $(document).ready(function () {
-            manageId = Common.getManageId();
-
             getPollDetails();
             populateVotes();
-            
+
             //Add option on pressing return key
             $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
         });
-    }
 
-    ko.applyBindings(new AdminViewModel());
+        ko.applyBindings(this);
+    }
 });

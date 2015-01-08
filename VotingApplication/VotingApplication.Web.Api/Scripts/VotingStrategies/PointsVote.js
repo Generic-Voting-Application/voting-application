@@ -1,14 +1,13 @@
 ﻿define(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
 
-
-    return function PointsVote(options, pollData) {
+    return function PointsVote(pollId, token) {
 
         self = this;
-        self.options = ko.observableArray(options);
+        self.options = ko.observableArray();
+        self.maxPerVote = ko.observable();
+        self.maxPoints = ko.observable();
+        self.optionAdding = ko.observable();
         self.pointsArray = ko.observableArray();
-        self.maxPerVote = ko.observable(pollData.MaxPerVote);
-        self.maxPoints = ko.observable(pollData.MaxPoints);
-        self.optionAdding = ko.observable(pollData.OptionAdding);
 
         var chart;
 
@@ -76,11 +75,11 @@
                 return;
 
             // Hack to fix insight's lack of data reloading
-            $('#results').html('');
+            $('#chart-results').html('');
             var voteData = new insight.DataSet(data);
 
-            chart = new insight.Chart('', '#results')
-            .width($("#results").width())
+            chart = new insight.Chart('', '#chart-results')
+            .width($("#chart-results").width())
             .height(data.length * 50 + 100);
 
             var xAxis = new insight.Axis('Votes', insight.scales.linear)
@@ -186,9 +185,7 @@
         }
 
         self.doVote = function (data, event) {
-            var userId = Common.currentUserId();
-            var pollId = Common.getPollId();
-            var token = Common.getToken();
+            var userId = Common.currentUserId(pollId);
 
             var votesData = [];
 
@@ -201,7 +198,7 @@
                     OptionId: self.options()[i].Id,
                     PollId: pollId,
                     PollValue: self.pointsArray()[i],
-                    Token: { TokenGuid: token }
+                    Token: { TokenGuid: token || Common.sessionItem("token", pollId) }
                 };
 
                 votesData.push(vote);
@@ -289,7 +286,17 @@
 
         $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
 
-        resetVote();
+        self.initialise = function (pollData) {
+
+            self.options(pollData.Options);
+            self.maxPerVote(pollData.MaxPerVote);
+            self.maxPoints(pollData.MaxPoints);
+            self.optionAdding(pollData.OptionAdding);
+
+            resetVote();
+        }
+
+        
     }
 
 });

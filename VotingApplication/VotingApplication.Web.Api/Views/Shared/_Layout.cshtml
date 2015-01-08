@@ -29,15 +29,17 @@
     </nav>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Generic Voting Application | <a href="https://github.com/Generic-Voting-Application/voting-application/issues">Report a bug</a> | <a href="mailto:generic.voting@gmail.com">Email us your suggestions</a></p>
-        </footer>
     </div>
+    
+    <footer>
+        <div class="container">
+            <hr />
+            <p>&copy; @DateTime.Now.Year - Generic Voting Application | <a href="https://github.com/Generic-Voting-Application/voting-application/issues">Report a bug</a> | <a href="mailto:generic.voting@gmail.com">Email us your suggestions</a></p>
+        </div>
+    </footer>
 
-    <script type="text/javascript">
-        window._gvaRequireFile = '@ViewBag.Script';
-    </script>
-    <script data-main="/Scripts/main.js" src="/Scripts/Lib/require.js"></script>
+    <script src="/Scripts/Lib/require.js"></script>
+    <script src="/Scripts/config.js"></script>
+    @RenderSection("scripts", false)
 </body>
 </html>

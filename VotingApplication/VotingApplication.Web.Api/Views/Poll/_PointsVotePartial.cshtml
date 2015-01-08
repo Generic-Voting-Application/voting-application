@@ -2,7 +2,7 @@
     Points remaining:
 </label>
 <div class="progress" id="progress-bar">
-    <div data-bind="text: $root.pointsRemaining(), style: { width: $root.percentRemaining() + '%'}"  class="progress-bar" role="progressbar"></div>
+    <div data-bind="text: pointsRemaining(), style: { width: percentRemaining() + '%'}"  class="progress-bar" role="progressbar"></div>
 </div>
 
 <table id="optionTable" class="table table-hover">
@@ -22,7 +22,7 @@
             <td>
                 <span class="btn-group">
                     <button class="btn btn-primary pull-left" data-bind="click: $parent.decreaseVote">-</button>
-                    <label class="points-label" data-bind="text: $root.pointsArray()[$index()] + '/' + $root.maxPerVote()"></label>
+                    <label class="points-label" data-bind="text: $parent.pointsArray()[$index()] + '/' + $parent.maxPerVote()"></label>
                     <button class="btn btn-primary pull-right" data-bind="click: $parent.increaseVote">+</button>
                 </span>
             </td>
@@ -39,7 +39,7 @@
             <input class="form-control input-block" id="newInfo" placeholder="More Info" />
         </td>
         <td>
-            <button type="submit" class="btn btn-primary" data-bind="click: $root.addOption.bind()">Add</button>
+            <button type="submit" class="btn btn-primary" data-bind="click: addOption.bind()">Add</button>
         </td>
     </tr>
     <tr>

@@ -1,18 +1,21 @@
-﻿require(['jquery', 'knockout', 'bootstrap', 'insight', 'countdown', 'moment', 'Common', 'platform'], function ($, ko, bs, insight, countdown, moment, Common) {
-    function VoteViewModel() {
+﻿define(['jquery', 'knockout', 'bootstrap', 'insight', 'countdown', 'moment', 'Common', 'platform'], function ($, ko, bs, insight, countdown, moment, Common) {
+    return function VoteViewModel(pollId, token, VotingStrategyViewModel) {
         var self = this;
 
-        var votingStrategy;
         var lockCollapse = false;
         var selectedPanel = null;
         var lastResultsRequest = 0;
 
+        token = token || Common.sessionItem("token", pollId);
+
+        self.votingStrategy = null;
+
+        self.pollId = pollId;
         self.pollName = ko.observable("Poll Name");
         self.pollCreator = ko.observable("Poll Creator");
-        self.options = ko.observableArray();
         self.chatMessages = ko.observableArray();
         self.lastMessageId = 0;
-        self.userName = ko.observable(Common.currentUserName());
+        self.userName = ko.observable(Common.currentUserName(pollId));
         self.requireAuth = ko.observable();
 
         self.pollExpires = ko.observable(false);
@@ -48,7 +51,7 @@
 
         // End Facebook boilerplate
 
-        var updatePollExpiryTime = function(){
+        var updatePollExpiryTime = function () {
             self.pollExpiryDate.notifySubscribers();
             if (self.pollExpired() && self.userName()) {
                 showSection($('#resultSection'));
@@ -61,6 +64,8 @@
                 url: "/api/poll/" + pollId,
 
                 success: function (data) {
+                    self.votingStrategy.initialise(data);
+
                     self.pollName(data.Name);
                     self.pollCreator(data.Creator);
                     self.requireAuth(data.RequireAuth);
@@ -71,54 +76,11 @@
                         setInterval(updatePollExpiryTime, 1000);
                     }
 
-                    switch (data.VotingStrategy) {
-                        case 'Basic':
-                            loadStrategy('/Partials/VotingStrategies/BasicVote.html', '/Scripts/VotingStrategies/BasicVote.js', data, callback);
-                            break;
-                        case 'Points':
-                            loadStrategy('/Partials/VotingStrategies/PointsVote.html', '/Scripts/VotingStrategies/PointsVote.js', data, callback);
-                            break;
-                        case 'Ranked':
-                            loadStrategy('/Partials/VotingStrategies/RankedVote.html', 'VotingStrategies/RankedVote', data, callback);
-                            break;
-                    }
+                    callback();
                 },
 
                 error: Common.handleError
             });
-        };
-
-        var loadStrategy = function (htmlFile, votingStrategy, pollData, callback) {
-            // Load partial HTML
-            $.ajax({
-                type: 'GET',
-                url: htmlFile,
-                dataType: 'html',
-
-                success: function (data) {
-                    $("#votingArea").append(data);
-                    require([votingStrategy], function (strategy) {
-                        votingStrategyFunc(strategy, pollData);
-                        callback();
-                    });
-                },
-
-                error: Common.handleError
-            });
-        };
-
-        var votingStrategyFunc = function (strategy, pollData) {
-            function StrategyViewModel() {
-                votingStrategy = new strategy(pollData.Options, pollData);
-
-                //Refresh results every 10 seconds
-                var allResults = function () { self.getResults(self.pollId) };
-                setInterval(allResults, 10000);
-
-                return votingStrategy;
-            }
-
-            ko.applyBindings(new StrategyViewModel(), $('#votingArea')[0]);
         };
 
         var showSection = function (element) {
@@ -147,9 +109,9 @@
         };
 
         var getChatMessages = function () {
-            if (self.pollId) {
+            if (pollId) {
                 var timestamp = Math.floor((new Date).getTime() / 1000);
-                var url = 'api/poll/' + self.pollId + '/chat?$orderby=Id&$filter=Id gt ' + self.lastMessageId;
+                var url = '/api/poll/' + pollId + '/chat?$orderby=Id&$filter=Id gt ' + self.lastMessageId;
 
                 $.ajax({
                     type: 'GET',
@@ -209,7 +171,7 @@
                 })
             });
         }
-        
+
         self.googleLogin = function (data, event) {
             gapi.auth.signIn({
                 'callback': googleLogin
@@ -222,8 +184,6 @@
 
         self.submitLogin = function (data, event) {
             var username = $("#loginUsername").val();
-            var pollId = Common.getPollId();
-            var tokenId = Common.getToken();
 
             $.ajax({
                 type: 'PUT',
@@ -233,14 +193,14 @@
                     Name: username,
                     PollId: pollId,
                     Token: {
-                        TokenGuid: tokenId
+                        TokenGuid: token
                     }
                 }),
 
                 success: function (data) {
-                    Common.loginUser(data, username);
+                    Common.loginUser(data, username, pollId);
                     self.userName(username);
-                    self.userId = Common.currentUserId();
+                    self.userId = Common.currentUserId(pollId);
                     if (!self.pollExpired()) {
                         showSection($('#voteSection'));
                     } else {
@@ -258,14 +218,14 @@
         };
 
         self.logout = function () {
-            Common.logoutUser();
+            Common.logoutUser(pollId);
             self.userName(undefined);
             self.userId = undefined;
         }
 
         self.sendChatMessage = function (data, event) {
-            if (self.userId && self.pollId) {
-                var url = 'api/poll/' + self.pollId + '/chat';
+            if (self.userId && pollId) {
+                var url = '/api/poll/' + pollId + '/chat';
                 var chatMessage = $('#chatTextInput').val();
                 $('#chatTextInput').val('');
 
@@ -291,8 +251,10 @@
 
                 statusCode: {
                     200: function (data) {
-                        lastResultsRequest = Date.now();
-                        votingStrategy.displayResults(data);
+                        if (self.votingStrategy) {
+                            lastResultsRequest = Date.now();
+                            self.votingStrategy.displayResults(data);
+                        }
                     }
                 },
 
@@ -301,8 +263,7 @@
         };
 
         self.clearVote = function () {
-            var userId = Common.currentUserId();
-            var pollId = Common.getPollId();
+            var userId = Common.currentUserId(pollId);
 
             var voteData = JSON.stringify([]);
 
@@ -325,24 +286,23 @@
         }
 
         $('#voteSection .accordion-body').on('show.bs.collapse', function () {
-            if (votingStrategy) {
-                votingStrategy.getVotes(self.pollId, self.userId);
+            if (self.votingStrategy) {
+                self.votingStrategy.getVotes(pollId, self.userId);
             }
         });
 
         $('#resultSection .accordion-body').on('show.bs.collapse', function () {
-            if (votingStrategy) {
-                self.getResults(self.pollId);
+            if (self.votingStrategy) {
+                self.getResults(pollId);
             }
         });
 
         $(document).ready(function () {
-            self.pollId = Common.getPollId();
-            self.userId = Common.currentUserId();
+            self.userId = Common.currentUserId(pollId);
 
-            getPollDetails(self.pollId, function () {
+            getPollDetails(pollId, function () {
                 if (self.userId) {
-                    $('#loginUsername').val(Common.currentUserName());
+                    $('#loginUsername').val(Common.currentUserName(pollId));
                     if (!self.pollExpired()) {
                         showSection($('#voteSection'));
                     } else {
@@ -356,8 +316,15 @@
 
             getChatMessages();
             setInterval(getChatMessages, 3000);
+            setInterval(function () {
+                self.getResults(pollId);
+            }, 10000);
         });
-    }
 
-    ko.applyBindings(new VoteViewModel());
+        if (VotingStrategyViewModel) {
+            self.votingStrategy = new VotingStrategyViewModel(pollId, token);
+        }
+
+        ko.applyBindings(this);
+    }
 });
