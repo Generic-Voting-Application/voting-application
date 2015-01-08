@@ -18,7 +18,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private UserVoteController _controller;
         private Vote _bobVote;
         private Vote _joeVote;
-        private Vote _otherVote;
         private InMemoryDbSet<Vote> _dummyVotes;
         private Guid _mainUUID;
         private Guid _otherUUID;

@@ -98,17 +98,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostCreatesNewTokensForInviteOnlyPoll()
-        {
-            // Act
-            var invitations = new List<string>() { "a@b.c", "d@e.f" };
-            _controller.Post(_inviteOnlyUUID, invitations);
-
-            // Assert
-            Assert.AreEqual(2, _inviteOnlyPoll.Tokens.Count);
-        }
-
-        [TestMethod]
         public void PostDoesNotCreatesNewTokensForOpenPoll()
         {
             // Act
@@ -119,14 +108,25 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostDoesNotCreatesNewTokensForMalformedEmailsInInviteOnlyPoll()
+        public void PostCreatesNewTokensForInviteOnlyPoll()
         {
             // Act
-            var invitations = new List<string>() { "a@b.c", "d@e.f", @"notAnEmail", "also@notAnEmail", @"neither@is.this.", @"    but@this.is  " };
+            var invitations = new List<string>() { "a@b.c", "d@e.f", @"    is@an.email  " };
             _controller.Post(_inviteOnlyUUID, invitations);
 
             // Assert
             Assert.AreEqual(3, _inviteOnlyPoll.Tokens.Count);
+        }
+
+        [TestMethod]
+        public void PostDoesNotCreatesNewTokensForMalformedEmailsInInviteOnlyPoll()
+        {
+            // Act
+            var invitations = new List<string>() { @"notAnEmail", "also@notAnEmail", @"neither@is.this." };
+            _controller.Post(_inviteOnlyUUID, invitations);
+
+            // Assert
+            Assert.AreEqual(0, _inviteOnlyPoll.Tokens.Count);
         }
 
         [TestMethod]
