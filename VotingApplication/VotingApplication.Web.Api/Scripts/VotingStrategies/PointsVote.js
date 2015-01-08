@@ -75,11 +75,11 @@
                 return;
 
             // Hack to fix insight's lack of data reloading
-            $('#results').html('');
+            $('#chart-results').html('');
             var voteData = new insight.DataSet(data);
 
-            chart = new insight.Chart('', '#results')
-            .width($("#results").width())
+            chart = new insight.Chart('', '#chart-results')
+            .width($("#chart-results").width())
             .height(data.length * 50 + 100);
 
             var xAxis = new insight.Axis('Votes', insight.scales.linear)

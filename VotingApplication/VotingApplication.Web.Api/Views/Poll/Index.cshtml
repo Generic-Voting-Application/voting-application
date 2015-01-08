@@ -76,8 +76,8 @@
                 </div>
                 <div class="accordion-body panel-body collapse row">
                     <div class="col-md-1"></div>
-                    <div class="col-md-10 centered">
-                        @*<div id="results"></div>*@
+                    <div class="col-md-10 centered" data-bind="with: votingStrategy">
+                        @{ if (Model.VotingStrategy != String.Empty) { Html.RenderPartial("_" + Model.VotingStrategy + "ResultsPartial"); } }
                     </div>
                     <div class="col-md-1"></div>
                 </div>

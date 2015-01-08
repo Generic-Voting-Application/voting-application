@@ -454,19 +454,6 @@
 
                 }
             });
-
-            $.ajax({
-                type: 'GET',
-                url: '/Partials/VotingStrategies/RankedVoteResults.html',
-                dataType: 'html',
-
-                success: function (data) {
-                    $("#results").html(data);
-                    ko.applyBindings(self, $('#results')[0]);
-                },
-
-                error: Common.handleError
-            });
         } 
     }
 });

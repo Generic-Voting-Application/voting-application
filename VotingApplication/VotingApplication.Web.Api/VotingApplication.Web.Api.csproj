@@ -310,9 +310,6 @@
     <Content Include="img\poll.jpg" />
     <Content Include="img\sign-in-with-facebook.png" />
     <Content Include="img\sign-in-with-google.png" />
-    <Content Include="Partials\VotingStrategies\RankedVote.html" />
-    <Content Include="Partials\VotingStrategies\PointsVote.html" />
-    <Content Include="Partials\VotingStrategies\BasicVote.html" />
     <Content Include="Partials\VotingStrategies\RankedVoteResults.html" />
     <Content Include="Scripts\Create.js" />
     <Content Include="Scripts\Lib\bootstrap-switch.min.js" />
@@ -373,7 +370,10 @@
     <Content Include="Styling\Lib\bootstrap-datetimepicker.min.css" />
     <None Include="Views\Poll\_BasicVotePartial.cshtml" />
     <None Include="Views\Poll\_PointsVotePartial.cshtml" />
+    <Content Include="Views\Poll\_PointsResultsPartial.cshtml" />
+    <Content Include="Views\Poll\_BasicResultsPartial.cshtml" />
     <None Include="Views\Poll\_RankedVotePartial.cshtml" />
+    <None Include="Views\Poll\_RankedResultsPartial.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
