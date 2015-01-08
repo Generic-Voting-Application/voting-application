@@ -330,7 +330,7 @@
                         OptionId: selection.Id,
                         PollId: pollId,
                         PollValue: rank,
-                        Token: { TokenGuid: token }
+                        Token: { TokenGuid: token || Common.sessionItem("token", pollId); }
                     });
                 });
 
