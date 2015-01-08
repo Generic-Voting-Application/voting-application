@@ -23,49 +23,21 @@
 
     }
 
-    Common.getJsonFromUrl = function () {
-        var query = location.search.substr(1);
-        var result = {};
-        query.split("&").forEach(function (part) {
-            var item = part.split("=");
-            result[item[0]] = decodeURIComponent(item[1]);
-        });
-        return result;
+    Common.currentUserId = function (pollId) {
+        return Common.sessionItem("id", pollId);
     };
 
-    Common.getPollId = function () {
-        var windowArgs = Common.getJsonFromUrl();
-        var pollId = windowArgs['poll'];
-        return pollId;
+    Common.currentUserName = function (pollId) {
+        return Common.sessionItem("userName", pollId);
     };
 
-    Common.getManageId = function () {
-        var windowArgs = Common.getJsonFromUrl();
-        var manageId = windowArgs['manage'];
-        return manageId;
-    };
-
-    Common.getToken = function () {
-        var windowArgs = Common.getJsonFromUrl();
-        var token = windowArgs['token'] || Common.sessionItem("token");
-        return token;
-    }
-
-    Common.currentUserId = function () {
-        return Common.sessionItem("id");
-    };
-
-    Common.currentUserName = function () {
-        return Common.sessionItem("userName");
-    };
-
-    Common.sessionItem = function (sessionKey) {
-        var localUserJSON = localStorage["user_" + Common.getPollId()];
+    Common.sessionItem = function (sessionKey, pollId) {
+        var localUserJSON = localStorage["user_" + pollId];
 
         if (localUserJSON) {
             var localUser = $.parseJSON(localUserJSON);
             if (localUser.expires < Date.now()) {
-                localStorage.removeItem("user_" + Common.getPollId());
+                localStorage.removeItem("user_" + pollId);
             }
             else {
                 return localUser[sessionKey];
@@ -75,14 +47,14 @@
         return undefined;
     }
 
-    Common.loginUser = function (userData, userName) {
+    Common.loginUser = function (userData, userName, pollId) {
         //Expire in 6 hours
         var expiryTime = Date.now() + (6 * 60 * 60 * 1000);
-        localStorage["user_" + Common.getPollId()] = JSON.stringify({ id: userData.UserId, userName: userName, expires: expiryTime, token: userData.TokenGuid });
+        localStorage["user_" + pollId] = JSON.stringify({ id: userData.UserId, userName: userName, expires: expiryTime, token: userData.TokenGuid });
     };
 
-    Common.logoutUser = function () {
-        localStorage.removeItem("user_" + Common.getPollId());
+    Common.logoutUser = function (pollId) {
+        localStorage.removeItem("user_" + pollId);
     }
 
     Common.keyIsEnter = function (key, callback) {

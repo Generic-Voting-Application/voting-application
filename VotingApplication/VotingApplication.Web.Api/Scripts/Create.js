@@ -1,5 +1,5 @@
-﻿require(['jquery', 'knockout', 'datetimepicker', 'moment', 'Common', 'jqueryUI'], function ($, ko, datetimepicker, moment, Common) {
-    function HomeViewModel() {
+﻿define(['jquery', 'knockout', 'datetimepicker', 'moment', 'Common', 'jqueryUI'], function ($, ko, datetimepicker, moment, Common) {
+    return function CreateViewModel() {
         var self = this;
 
         self.templates = ko.observableArray();
@@ -41,7 +41,7 @@
                 expiryDate = new Date();
                 expiryDate.setMinutes(expiryDate.getMinutes() + 30);
             }
-            
+
             $.ajax({
                 type: 'POST',
                 url: '/api/poll',
@@ -64,29 +64,7 @@
                 }),
 
                 success: function (data) {
-                    self.pollCreated(data.UUID, data.ManageID);
-                }
-            });
-        };
-
-        self.pollCreated = function (PollId, ManageId) {
-
-            // Simulate a page change and make the back button simply refresh the page.
-            history.pushState({}, "");
-            window.addEventListener("popstate", function (e) {
-                history.go(0);
-            });
-
-            // Load partial HTML
-            $.ajax({
-                type: 'GET',
-                url: '/Partials/CheckEmail.html',
-                dataType: 'html',
-
-                success: function (data) {
-                    $("#content").html(data);
-                    $("#poll-id").attr("href", "/?poll=" + PollId);
-                    $("#manage-id").attr("href", "/?manage=" + ManageId);
+                    window.location.href = "/Manage/Index/" + data.ManageID;
                 }
             });
         };
@@ -144,14 +122,14 @@
             self.populateTemplates();
 
             var defaultExpiryDate = moment().add(30, 'minutes');
-            $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate, minDate: moment()});
+            $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate, minDate: moment() });
 
             // Select first tab
             $('#tabBar li a:first').tab('show')
 
             setupTooltips();
         });
-    }
 
-    ko.applyBindings(new HomeViewModel());
+        ko.applyBindings(this);
+    }
 });

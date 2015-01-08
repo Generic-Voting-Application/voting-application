@@ -32,7 +32,7 @@
                                 <p>Only used to email you the details of your poll.</p>
                                 This will never be used for marketing purposes.
                             </div>
-                            <input class="form-control" type="email" id="email" placeholder="E.g. email@example.com" pattern="[\w._%+-]+@\w+(\.\w+)+" data-bind="value: creatorEmail">
+                            <input class="form-control" type="email" id="email" placeholder="E.g. email@example.com" pattern="[\w._%+-]+@("@")\w+(\.\w+)+" data-bind="value: creatorEmail">
                         </div>
                     </div>
                     <div class="col-sm-4"></div>
@@ -58,7 +58,7 @@
                                 <p>Only used to email you the details of your poll.</p>
                                 This will never be used for marketing purposes.
                             </div>
-                            <input class="form-control" type="email" id="email-advanced" placeholder="E.g. email@example.com" pattern="[\w._%+-]+@\w+(\.\w+)+" data-bind="value: creatorEmail">
+                            <input class="form-control" type="email" id="email-advanced" placeholder="E.g. email@example.com" pattern="[\w._%+-]+@("@")\w+(\.\w+)+" data-bind="value: creatorEmail">
                         </div>
 
                         <div id="strategy-group" class="form-group">
@@ -162,3 +162,12 @@
     </form>
 </div>
 <div class="col-sm-2"></div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        require(["/Scripts/Create.js"], function (CreateViewModel) {
+            new CreateViewModel();
+        });
+    </script>
+}

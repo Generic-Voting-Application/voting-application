@@ -1,12 +1,13 @@
 ﻿define(['jquery', 'knockout', 'jqueryUI', 'Common', 'jqueryTouch'], function ($, ko, jqueryUI, Common) {
 
-    return function RankedVote(options, pollData) {
+    return function RankedVote(pollId, token) {
 
         self = this;
-        self.options = ko.observableArray(options);
+        self.options = ko.observableArray();
+        self.optionAdding = ko.observable();
         self.selectedOptions = ko.observableArray();
         self.resultOptions = ko.observableArray();
-        self.optionAdding = ko.observable(pollData.OptionAdding);
+
         self.chartVisible = ko.observable(false);
 
         var resultsByRound = [];
@@ -307,9 +308,7 @@
         }
 
         self.doVote = function (data, event) {
-            var userId = Common.currentUserId();
-            var pollId = Common.getPollId();
-            var token = Common.getToken();
+            var userId = Common.currentUserId(pollId);
 
             if (userId && pollId) {
 
@@ -330,7 +329,7 @@
                         OptionId: selection.Id,
                         PollId: pollId,
                         PollValue: rank,
-                        Token: { TokenGuid: token }
+                        Token: { TokenGuid: token || Common.sessionItem("token", pollId) }
                     });
                 });
 
@@ -415,7 +414,12 @@
             self.filterRounds(0);
         }
 
-        $(document).ready(function () {
+
+        self.initialise = function (pollData) {
+
+            self.options(pollData.Options);
+            self.optionAdding(pollData.OptionAdding);
+
             $(".sortable").sortable({
                 items: 'tbody > tr:not(#newOptionRow)',
                 connectWith: '.sortable',
@@ -449,20 +453,6 @@
 
                 }
             });
-        });
-
-        $.ajax({
-            type: 'GET',
-            url: '/Partials/VotingStrategies/RankedVoteResults.html',
-            dataType: 'html',
-
-            success: function (data) {
-                $("#results").html(data);
-                ko.applyBindings(self, $('#results')[0]);
-            },
-
-            error: Common.handleError
-        });
+        } 
     }
-
 });
