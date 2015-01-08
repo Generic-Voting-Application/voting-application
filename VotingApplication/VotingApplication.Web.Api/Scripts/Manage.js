@@ -116,12 +116,31 @@
 
         }
 
+        self.sendInvites = function () {
+            var invites = $("#invites").val().split('\n');
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/manage/' + manageId + '/invitation',
+                contentType: 'application/json',
+
+                data: JSON.stringify({ Invitation: invites }),
+
+                success: function () {
+                    $("#invites").val("");
+                }
+            });
+        }
+
         $(document).ready(function () {
             manageId = Common.getManageId();
 
             getPollDetails();
             populateVotes();
-            
+
+            // Select first tab
+            $('#tabBar li a:first').tab('show')
+
             //Add option on pressing return key
             $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
         });

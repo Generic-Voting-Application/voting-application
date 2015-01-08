@@ -101,17 +101,12 @@
 
                         <div id="invite-group" class="form-group">
                             <label class="control-label" for="invite-only">Invite only</label>
-                            <input class="checkbox-inline" type="checkbox" id="invite-only" data-bind="checked: usesInvitations">
+                            <input class="checkbox-inline" type="checkbox" id="invite-only">
                             <a id="invite-info" class="help-message">[?]</a>
                             <div class="tip" data-bind="hoverTargetId: invite-info">
                                 <p>If you know each voter by email, this provides extra security.</p>
                                 Voters are issued a token to vote with.
                             </div>
-                        </div>
-
-                        <div id="invites-group" class="form-group" data-bind="visible: usesInvitations">
-                            <label class=" control-label" for="invites">Invitations (one per line)</label>
-                            <textarea cols=40 rows=3 class="form-control" id="invites" placeholder="E.g. email@example.com" />
                         </div>
 
                         <div id="anonymous-voting-group" class="form-group">
