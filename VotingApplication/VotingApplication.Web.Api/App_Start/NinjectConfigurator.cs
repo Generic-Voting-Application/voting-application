@@ -1,6 +1,7 @@
 ﻿using Ninject;
 using System.Web.Http;
 using VotingApplication.Data.Context;
+using VotingApplication.Web.Api.Controllers.API_Controllers;
 using VotingApplication.Web.Common;
 
 namespace VotingApplication.Web.Api.App_Start
@@ -23,6 +24,7 @@ namespace VotingApplication.Web.Api.App_Start
             //Do Bindings here
             container.Bind<IContextFactory>().To<ContextFactory>();
             container.Bind<IVotingContext>().To<VotingContext>();
+            container.Bind<IMailSender>().To<MailSender>();
         }
     }
 }

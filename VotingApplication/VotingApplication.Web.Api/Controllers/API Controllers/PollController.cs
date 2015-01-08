@@ -16,8 +16,16 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
     public class PollController : WebApiController
     {
-        public PollController() : base() { }
-        public PollController(IContextFactory contextFactory) : base(contextFactory) { }
+        private IMailSender _mailSender;
+
+        public PollController() : base()
+        {
+            _mailSender = new MailSender();
+        }
+        public PollController(IContextFactory contextFactory, IMailSender mailSender) : base(contextFactory)
+        {
+            _mailSender = mailSender;
+        }
 
         #region Get
 
@@ -105,19 +113,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 newPoll.UUID = Guid.NewGuid();
                 newPoll.ManageID = Guid.NewGuid();
                 newPoll.LastUpdated = DateTime.Now;
+                newPoll.Tokens = new List<Token>();
 
-                // Create a list of tokens for each invite
-                if (newPoll.InviteOnly)
-                {
-                    newPoll.Tokens = new List<Token>();
-                    foreach (string email in newPoll.Invites)
-                    {
-                        newPoll.Tokens.Add(new Token { TokenGuid = Guid.NewGuid(), PollId = newPoll.UUID });
-                    }
-                }
-
-                // Do the long-running SendEmail task in a different thread, so we can return early
-                Thread newThread = new Thread(new ThreadStart(() => SendEmails(newPoll)));
+                // Do the long-running SendCreateEmail task in a different thread, so we can return early
+                Thread newThread = new Thread(new ThreadStart(() => SendCreateEmail(newPoll)));
                 newThread.Start();
 
                 context.Polls.Add(newPoll);
@@ -126,18 +125,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Poll returnData = new Poll() { UUID = newPoll.UUID, ManageID = newPoll.ManageID };
 
                 return this.Request.CreateResponse(HttpStatusCode.OK, returnData);
-            }
-        }
-
-        private void SendEmails(Poll poll)
-        {
-            List<string> invitations = poll.Invites ?? new List<string>();
-            Queue<Token> tokens = poll.InviteOnly ? new Queue<Token>(poll.Tokens) : null;
-
-            SendCreateEmail(poll);
-            foreach (string invitation in invitations)
-            {
-                SendVoteEmail(invitation, poll, poll.InviteOnly ? tokens.Dequeue() : new Token { TokenGuid = Guid.Empty });
             }
         }
 
@@ -155,24 +142,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                  "You can administer your poll at "+ hostUri + "?manage=" + poll.ManageID,
                  "(Don't share this link around!)"});
 
-            MailSender.SendMail(poll.Email, "Your poll is ready!", message);
-        }
-
-        private void SendVoteEmail(string targetEmailAddress, Poll poll, Token token)
-        {
-            String hostUri = WebConfigurationManager.AppSettings["HostURI"];
-            if (hostUri == String.Empty)
-            {
-                return;
-            }
-
-            string tokenString = (poll.InviteOnly && token != null && token.TokenGuid != Guid.Empty) ? "&token=" + token.TokenGuid : "";
-
-            string message = String.Join("\n\n", new List<string>()
-                {"You've been invited by " + poll.Creator + " to vote on " + poll.Name,
-                 "Have your say at: " + hostUri + "?poll=" + poll.UUID + tokenString});
-
-            MailSender.SendMail(targetEmailAddress, "Have your say!", message);
+            _mailSender.SendMail(poll.Email, "Your poll is ready!", message);
         }
 
         public virtual HttpResponseMessage Post(Guid id, Poll newPoll)

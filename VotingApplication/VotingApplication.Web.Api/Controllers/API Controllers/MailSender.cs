@@ -10,11 +10,11 @@ using System.Web.Configuration;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
-    public static class MailSender
+    public class MailSender : IMailSender
     {
-        private static NetworkCredential credentials;
+        private NetworkCredential credentials;
 
-        static MailSender()
+        public MailSender()
         {
             string hostEmail = WebConfigurationManager.AppSettings["HostLogin"];
             string hostPassword = WebConfigurationManager.AppSettings["HostPassword"];
@@ -27,7 +27,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             credentials = new NetworkCredential(hostEmail, hostPassword);
         }
 
-        public static void SendMail(string to, string subject, string message)
+        public void SendMail(string to, string subject, string message)
         {
             if (to == null || to.Length == 0)
             {

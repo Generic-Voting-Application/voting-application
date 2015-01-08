@@ -117,14 +117,14 @@
         }
 
         self.sendInvites = function () {
-            var invites = $("#invites").val().split('\n');
+            var invites = $("#invitation-text").val().split('\n');
 
             $.ajax({
                 type: 'POST',
                 url: '/api/manage/' + manageId + '/invitation',
                 contentType: 'application/json',
 
-                data: JSON.stringify({ Invitation: invites }),
+                data: JSON.stringify(invites),
 
                 success: function () {
                     $("#invites").val("");

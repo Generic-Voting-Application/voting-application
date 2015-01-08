@@ -78,10 +78,12 @@
         <div class="tab-pane fade" id="invites">
             <div class="col-md-2"></div>
             <div class="col-md-8">
-                <div id="invites-group" class="form-group centered" data-bind="visible: usesInvitations">
+                <div id="invites-group" class="form-group">
                     <label class=" control-label" for="invites">Invitations (one per line)</label>
-                    <textarea cols=40 rows=3 class="form-control" id="invites" placeholder="E.g. email@example.com" />
-                    <button class="btn btn-primary">Send Invitations</button>
+                    <textarea cols=40 rows=3 class="form-control" id="invitation-text" placeholder="E.g. email@example.com" />
+                    <div class="centered">
+                        <button class="btn btn-primary" type="submit" data-bind="click: $root.sendInvites.bind()">Send Invitations</button>
+                    </div>
                 </div>
             </div>
             <div class="col-md-2"></div>
