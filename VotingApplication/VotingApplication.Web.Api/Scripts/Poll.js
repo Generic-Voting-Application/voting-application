@@ -232,7 +232,9 @@
                 data: JSON.stringify({
                     Name: username,
                     PollId: pollId,
-                    TokenId: tokenId
+                    Token: {
+                        TokenGuid: tokenId
+                    }
                 }),
 
                 success: function (data) {
@@ -283,7 +285,6 @@
         }
 
         self.getResults = function (pollId) {
-
             $.ajax({
                 type: 'GET',
                 url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastResultsRequest,
@@ -298,6 +299,30 @@
                 error: Common.handleError
             });
         };
+
+        self.clearVote = function () {
+            var userId = Common.currentUserId();
+            var pollId = Common.getPollId();
+
+            var voteData = JSON.stringify([]);
+
+            if (userId && pollId) {
+                $.ajax({
+                    type: 'PUT',
+                    url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
+                    contentType: 'application/json',
+                    data: voteData,
+
+                    success: function (returnData) {
+                        lastResultsRequest = 0;
+
+                        $('#resultSection > div')[0].click();
+                    },
+
+                    error: Common.handleError
+                });
+            }
+        }
 
         $('#voteSection .accordion-body').on('show.bs.collapse', function () {
             if (votingStrategy) {
