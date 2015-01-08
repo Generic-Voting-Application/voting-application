@@ -9,7 +9,7 @@
         <select id="poll-select" data-bind="options: polls, optionsText: 'Name', optionsValue: 'UUID'"></select>
         <br />
         <br />
-        <button type="submit" class="btn btn-primary" data-bind="click: $root.submitPoll.bind()">Go</button>
+        <button type="submit" class="btn btn-primary" data-bind="click: submitPoll.bind()">Go</button>
     </div>
     <div class="col-xs-5"></div>
 </div>
@@ -17,7 +17,7 @@
     <div class="row">
         <div class="col-xs-5"></div>
         <div class="col-xs-2">
-            <button class="btn btn-primary" id="reset-votes" data-bind="click: $root.resetVotes">Reset Vote</button>
+            <button class="btn btn-primary" id="reset-votes" data-bind="click: resetVotes">Reset Vote</button>
         </div>
         <div class="col-xs-5"></div>
     </div>
@@ -56,7 +56,7 @@
                     <td data-bind="text: Name"></td>
                     <td data-bind="text: Description"></td>
                     <td data-bind="text: Info"></td>
-                    <td><button class="btn btn-danger" data-bind="click: $root.deleteOption.bind()" data-toggle="modal" data-target="#deleteOptionModal">Delete</button></td>
+                    <td><button class="btn btn-danger" data-bind="click: $parent.deleteOption.bind()" data-toggle="modal" data-target="#deleteOptionModal">Delete</button></td>
                 </tr>
             </table>
         </div>
@@ -69,7 +69,7 @@
                         <label for="template-name">Template Name</label>
                         <input id="template-name" placeholder="Name" data-bind="value: templateName" />
                     </p>
-                    <button class="btn btn-primary" id="save-options-as" data-bind="click: $root.createTemplate">Save as new Template</button>
+                    <button class="btn btn-primary" id="save-options-as" data-bind="click: createTemplate">Save as new Template</button>
                 </form>
             </div>
             <div class="col-xs-5"></div>

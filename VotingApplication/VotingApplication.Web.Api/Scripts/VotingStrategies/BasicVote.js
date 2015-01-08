@@ -1,14 +1,12 @@
 ﻿define(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
-
-
-    return function BasicVote(options, pollData) {
+    return function BasicVote(pollId, token) {
 
         self = this;
-        self.options = ko.observableArray(options);
-        self.optionAdding = ko.observable(pollData.OptionAdding);
-        var chart;
+        self.options = ko.observableArray();
+        self.optionAdding = ko.observable();
 
-        var anonymousPoll = pollData.AnonymousVoting;
+        var chart;
+        var anonymousPoll = true;
 
         var highlightOption = function (optionId) {
 
@@ -113,9 +111,7 @@
         }
 
         self.doVote = function (data, event) {
-            var userId = Common.currentUserId();
-            var pollId = Common.getPollId();
-            var token = Common.getToken();
+            var userId = Common.currentUserId(pollId);
 
             var voteData = JSON.stringify([{
                 OptionId: data.Id,
@@ -197,6 +193,13 @@
         };
 
         $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
+
+        self.initialise = function (pollData) {
+
+            self.options(pollData.Options);
+            self.optionAdding(pollData.OptionAdding);
+
+        }
     }
 
 });

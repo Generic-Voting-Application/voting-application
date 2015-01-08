@@ -11,7 +11,7 @@
         <a data-bind="attr: { href: '/Poll/Index/' + pollId() }">Poll Link</a>
     </div>
     <div class="text-center">
-        <button class="btn btn-primary" id="reset-votes" data-bind="click: $root.resetVotes">Reset Vote</button>
+        <button class="btn btn-primary" id="reset-votes" data-bind="click: resetVotes">Reset Vote</button>
     </div>
     <div class="col-md-1"></div>
     <div class="col-md-10 centered">
@@ -47,7 +47,7 @@
                     <td data-bind="text: Name"></td>
                     <td data-bind="text: Description"></td>
                     <td class="hidden-xs hidden-sm" data-bind="text: Info"></td>
-                    <td><button class="btn btn-danger" data-bind="click: $root.deleteOption.bind()" data-toggle="modal" data-target="#deleteOptionModal">Delete</button></td>
+                    <td><button class="btn btn-danger" data-bind="click: $parent.deleteOption.bind()" data-toggle="modal" data-target="#deleteOptionModal">Delete</button></td>
                 </tr>
             </tbody>
             <tr id="newOptionRow">
@@ -61,7 +61,7 @@
                     <input class="form-control input-block" id="newInfo" placeholder="More Info" />
                 </td>
                 <td>
-                    <button type="submit" class="btn btn-primary" data-bind="click: $root.addOption.bind()">Add</button>
+                    <button type="submit" class="btn btn-primary" data-bind="click: addOption.bind()">Add</button>
                 </td>
             </tr>
         </table>

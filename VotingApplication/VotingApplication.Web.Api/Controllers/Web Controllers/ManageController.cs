@@ -5,11 +5,11 @@ namespace VotingApplication.Web.Api.Controllers
 {
     public class ManageController : Controller
     {
-        public ActionResult Index(ManageModel model)
+        public ActionResult Index(string id)
         {
             ViewBag.Title = "Manage your poll";
 
-            return View(model);
+            return View(new ManageModel { Id = id });
         }
     }
 }

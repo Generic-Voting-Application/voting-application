@@ -1,14 +1,13 @@
 ﻿define(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
 
-
-    return function PointsVote(options, pollData) {
+    return function PointsVote(pollId, token) {
 
         self = this;
-        self.options = ko.observableArray(options);
+        self.options = ko.observableArray();
+        self.maxPerVote = ko.observable();
+        self.maxPoints = ko.observable();
+        self.optionAdding = ko.observable();
         self.pointsArray = ko.observableArray();
-        self.maxPerVote = ko.observable(pollData.MaxPerVote);
-        self.maxPoints = ko.observable(pollData.MaxPoints);
-        self.optionAdding = ko.observable(pollData.OptionAdding);
 
         var chart;
 
@@ -186,9 +185,7 @@
         }
 
         self.doVote = function (data, event) {
-            var userId = Common.currentUserId();
-            var pollId = Common.getPollId();
-            var token = Common.getToken();
+            var userId = Common.currentUserId(pollId);
 
             var votesData = [];
 
@@ -289,7 +286,17 @@
 
         $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
 
-        resetVote();
+        self.initialise = function (pollData) {
+
+            self.options(pollData.Options);
+            self.maxPerVote(pollData.MaxPerVote);
+            self.maxPoints(pollData.MaxPoints);
+            self.optionAdding(pollData.OptionAdding);
+
+            resetVote();
+        }
+
+        
     }
 
 });

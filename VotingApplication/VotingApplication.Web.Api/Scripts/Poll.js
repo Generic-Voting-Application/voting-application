@@ -1,16 +1,18 @@
 ﻿define(['jquery', 'knockout', 'bootstrap', 'insight', 'countdown', 'moment', 'Common', 'platform'], function ($, ko, bs, insight, countdown, moment, Common) {
-    return function VoteViewModel(pollId, token) {
+    return function VoteViewModel(pollId, token, VotingStrategyViewModel) {
         var self = this;
 
-        var votingStrategy;
         var lockCollapse = false;
         var selectedPanel = null;
         var lastResultsRequest = 0;
 
+        token = token || Common.sessionItem("token", pollId);
+
+        self.votingStrategy = null;
+
         self.pollId = pollId;
         self.pollName = ko.observable("Poll Name");
         self.pollCreator = ko.observable("Poll Creator");
-        self.options = ko.observableArray();
         self.chatMessages = ko.observableArray();
         self.lastMessageId = 0;
         self.userName = ko.observable(Common.currentUserName(pollId));
@@ -49,7 +51,7 @@
 
         // End Facebook boilerplate
 
-        var updatePollExpiryTime = function(){
+        var updatePollExpiryTime = function () {
             self.pollExpiryDate.notifySubscribers();
             if (self.pollExpired() && self.userName()) {
                 showSection($('#resultSection'));
@@ -62,6 +64,8 @@
                 url: "/api/poll/" + pollId,
 
                 success: function (data) {
+                    self.votingStrategy.initialise(data);
+
                     self.pollName(data.Name);
                     self.pollCreator(data.Creator);
                     self.requireAuth(data.RequireAuth);
@@ -72,54 +76,11 @@
                         setInterval(updatePollExpiryTime, 1000);
                     }
 
-                    switch (data.VotingStrategy) {
-                        case 'Basic':
-                            loadStrategy('/Partials/VotingStrategies/BasicVote.html', '/Scripts/VotingStrategies/BasicVote.js', data, callback);
-                            break;
-                        case 'Points':
-                            loadStrategy('/Partials/VotingStrategies/PointsVote.html', '/Scripts/VotingStrategies/PointsVote.js', data, callback);
-                            break;
-                        case 'Ranked':
-                            loadStrategy('/Partials/VotingStrategies/RankedVote.html', 'VotingStrategies/RankedVote', data, callback);
-                            break;
-                    }
+                    callback();
                 },
 
                 error: Common.handleError
             });
-        };
-
-        var loadStrategy = function (htmlFile, votingStrategy, pollData, callback) {
-            // Load partial HTML
-            $.ajax({
-                type: 'GET',
-                url: htmlFile,
-                dataType: 'html',
-
-                success: function (data) {
-                    $("#votingArea").append(data);
-                    require([votingStrategy], function (strategy) {
-                        votingStrategyFunc(strategy, pollData);
-                        callback();
-                    });
-                },
-
-                error: Common.handleError
-            });
-        };
-
-        var votingStrategyFunc = function (strategy, pollData) {
-            function StrategyViewModel() {
-                votingStrategy = new strategy(pollData.Options, pollData);
-
-                //Refresh results every 10 seconds
-                var allResults = function () { self.getResults(pollId) };
-                setInterval(allResults, 10000);
-
-                return votingStrategy;
-            }
-
-            ko.applyBindings(new StrategyViewModel(), $('#votingArea')[0]);
         };
 
         var showSection = function (element) {
@@ -210,7 +171,7 @@
                 })
             });
         }
-        
+
         self.googleLogin = function (data, event) {
             gapi.auth.signIn({
                 'callback': googleLogin
@@ -291,7 +252,9 @@
                 statusCode: {
                     200: function (data) {
                         lastResultsRequest = Date.now();
-                        votingStrategy.displayResults(data);
+                        if (self.votingStrategy) {
+                            self.votingStrategy.displayResults(data);
+                        }
                     }
                 },
 
@@ -323,13 +286,13 @@
         }
 
         $('#voteSection .accordion-body').on('show.bs.collapse', function () {
-            if (votingStrategy) {
-                votingStrategy.getVotes(pollId, self.userId);
+            if (self.votingStrategy) {
+                self.votingStrategy.getVotes(pollId, self.userId);
             }
         });
 
         $('#resultSection .accordion-body').on('show.bs.collapse', function () {
-            if (votingStrategy) {
+            if (self.votingStrategy) {
                 self.getResults(pollId);
             }
         });
@@ -354,6 +317,10 @@
             getChatMessages();
             setInterval(getChatMessages, 3000);
         });
+
+        if (VotingStrategyViewModel) {
+            self.votingStrategy = new VotingStrategyViewModel(pollId, token);
+        }
 
         ko.applyBindings(this);
     }
