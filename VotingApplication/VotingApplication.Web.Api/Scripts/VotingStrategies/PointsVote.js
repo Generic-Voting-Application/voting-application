@@ -198,7 +198,7 @@
                     OptionId: self.options()[i].Id,
                     PollId: pollId,
                     PollValue: self.pointsArray()[i],
-                    Token: { TokenGuid: token || Common.sessionItem("token", pollId); }
+                    Token: { TokenGuid: token || Common.sessionItem("token", pollId) }
                 };
 
                 votesData.push(vote);
