@@ -193,7 +193,7 @@
                     Name: username,
                     PollId: pollId,
                     Token: {
-                        TokenGuid: token || Common.sessionItem("token", pollId)
+                        TokenGuid: token
                     }
                 }),
 
@@ -251,8 +251,8 @@
 
                 statusCode: {
                     200: function (data) {
-                        lastResultsRequest = Date.now();
                         if (self.votingStrategy) {
+                            lastResultsRequest = Date.now();
                             self.votingStrategy.displayResults(data);
                         }
                     }
@@ -316,6 +316,9 @@
 
             getChatMessages();
             setInterval(getChatMessages, 3000);
+            setInterval(function () {
+                self.getResults(pollId);
+            }, 10000);
         });
 
         if (VotingStrategyViewModel) {
