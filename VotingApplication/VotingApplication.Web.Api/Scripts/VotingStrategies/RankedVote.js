@@ -47,7 +47,7 @@
         var refreshOptions = function () {
             $.ajax({
                 type: 'GET',
-                url: "/api/poll/" + pollData.UUID + "/option",
+                url: "/api/poll/" + pollId + "/option",
 
                 success: function (data) {
 
@@ -391,7 +391,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/api/poll/' + Common.getPollId() + '/option',
+                url: '/api/poll/' + pollId + '/option',
                 contentType: 'application/json',
 
                 data: JSON.stringify({

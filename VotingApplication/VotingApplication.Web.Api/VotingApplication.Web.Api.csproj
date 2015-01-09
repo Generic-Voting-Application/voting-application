@@ -281,8 +281,10 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\API Controllers\AccountController.cs" />
+    <Compile Include="Controllers\API Controllers\IMailSender.cs" />
     <Compile Include="Controllers\API Controllers\MailSender.cs" />
     <Compile Include="Controllers\API Controllers\ManageController.cs" />
+    <Compile Include="Controllers\API Controllers\ManageInvitationController.cs" />
     <Compile Include="Controllers\API Controllers\ManageOptionController.cs" />
     <Compile Include="Controllers\API Controllers\ManageVoteController.cs" />
     <Compile Include="Controllers\API Controllers\PollChatMessageController.cs" />
@@ -316,7 +318,6 @@
     <Content Include="img\poll.jpg" />
     <Content Include="img\sign-in-with-facebook.png" />
     <Content Include="img\sign-in-with-google.png" />
-    <Content Include="Partials\VotingStrategies\RankedVoteResults.html" />
     <Content Include="Scripts\Create.js" />
     <Content Include="Scripts\Lib\bootstrap-switch.min.js" />
     <Content Include="Scripts\Lib\bootstrap.min.js" />

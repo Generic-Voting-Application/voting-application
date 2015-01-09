@@ -6,6 +6,10 @@
         self.selectedStrategy = ko.observable();
         self.expires = ko.observable(false);
 
+        self.pollName = ko.observable("");
+        self.creatorName = ko.observable("");
+        self.creatorEmail = ko.observable("");
+
         self.createPoll = function () {
             //Clear out previous error messages
             $('text').remove('.error-message');
@@ -22,11 +26,7 @@
             $("#poll-create-btn").attr('disabled', 'disabled');
             $("#poll-create-btn").text('Creating...');
 
-            var creatorName = $("#poll-creator").val();
-            var pollName = $("#poll-name").val();
-            var email = $("#email").val();
             var templateId = $("#template").val();
-            var invites = $("#invites").val();
             var strategy = $("#voting-strategy").val();
             var maxPoints = $("#max-points").val() || 7;
             var maxPerVote = $("#max-per-vote").val() || 3;
@@ -48,10 +48,9 @@
                 contentType: 'application/json',
 
                 data: JSON.stringify({
-                    Name: pollName,
-                    Creator: creatorName,
-                    Email: email,
-                    Invites: invites.split('\n'),
+                    Name: self.pollName(),
+                    Creator: self.creatorName(),
+                    Email: self.creatorEmail(),
                     templateId: templateId,
                     VotingStrategy: strategy,
                     MaxPoints: maxPoints,
@@ -98,24 +97,37 @@
             });
         };
 
+        var setupTooltips = function() {
+            $(document).tooltip
+
+            function showOrHideElement(show, element) {
+                element.next(".tip").toggle(show);
+            }
+
+            var tooltipTargets = $(".help-message");
+
+            for (var i = 0; i < tooltipTargets.length; i++)
+            {
+                var $hoverTarget = $(tooltipTargets[i]);
+
+                var hideElement = showOrHideElement.bind(null, false, $hoverTarget);
+                var showElement = showOrHideElement.bind(null, true, $hoverTarget);
+                ko.utils.registerEventHandler($hoverTarget, "mouseover", showElement);
+                ko.utils.registerEventHandler($hoverTarget, "mouseout", hideElement);
+                hideElement();
+            }
+        }
+
         $(document).ready(function () {
             self.populateTemplates();
 
             var defaultExpiryDate = moment().add(30, 'minutes');
             $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate, minDate: moment() });
 
-            $(document).tooltip
+            // Select first tab
+            $('#tabBar li a:first').tab('show')
 
-            function showOrHideElement(show) {
-                $(".tip").toggle(show);
-            }
-
-            var hideElement = showOrHideElement.bind(null, false);
-            var showElement = showOrHideElement.bind(null, true);
-            var $hoverTarget = $("#strategy-info");
-            ko.utils.registerEventHandler($hoverTarget, "mouseover", showElement);
-            ko.utils.registerEventHandler($hoverTarget, "mouseout", hideElement);
-            hideElement();
+            setupTooltips();
         });
 
         ko.applyBindings(this);

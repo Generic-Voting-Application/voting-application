@@ -78,6 +78,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ManageInvitationControllerTests.cs" />
     <Compile Include="Controllers\ManageOptionControllerTests.cs" />
     <Compile Include="Controllers\ManageVoteControllerTests.cs" />
     <Compile Include="Controllers\OptionControllerTests.cs" />

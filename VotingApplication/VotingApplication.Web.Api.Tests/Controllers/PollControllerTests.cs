@@ -50,7 +50,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Templates).Returns(dummyTemplates);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
-            _controller = new PollController(mockContextFactory.Object);
+            var mockMailSender = new Mock<IMailSender>();
+
+            _controller = new PollController(mockContextFactory.Object, mockMailSender.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }

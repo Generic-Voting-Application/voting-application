@@ -117,9 +117,28 @@
 
         }
 
+        self.sendInvites = function () {
+            var invites = $("#invitation-text").val().split('\n');
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/manage/' + manageId + '/invitation',
+                contentType: 'application/json',
+
+                data: JSON.stringify(invites),
+
+                success: function () {
+                    $("#invites").val("");
+                }
+            });
+        }
+
         $(document).ready(function () {
             getPollDetails();
             populateVotes();
+
+            // Select first tab
+            $('#tabBar li a:first').tab('show')
 
             //Add option on pressing return key
             $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
