@@ -59,7 +59,7 @@
                         <td data-bind="text: Name"></td>
                         <td data-bind="text: Description"></td>
                         <td class="hidden-xs hidden-sm" data-bind="text: Info"></td>
-                        <td><button class="btn btn-danger" data-bind="click: deleteOption.bind()" data-toggle="modal" data-target="#deleteOptionModal">Delete</button></td>
+                        <td><button class="btn btn-danger" data-bind="click: $parent.deleteOption.bind()" data-toggle="modal" data-target="#deleteOptionModal">Delete</button></td>
                     </tr>
                 </tbody>
                 <tr id="newOptionRow">
