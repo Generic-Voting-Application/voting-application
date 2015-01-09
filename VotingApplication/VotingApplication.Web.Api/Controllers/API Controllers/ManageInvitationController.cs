@@ -85,13 +85,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 if (poll.InviteOnly)
                 {
                     Token token = new Token() { PollId = poll.UUID, TokenGuid = Guid.NewGuid() };
-                    tokenString = "&token=" + token.TokenGuid;
+                    tokenString = "/" + token.TokenGuid;
                     poll.Tokens.Add(token);
                 }
 
                 string message = String.Join("\n\n", new List<string>()
                 {"You've been invited by " + poll.Creator + " to vote on " + poll.Name,
-                 "Have your say at: " + hostUri + "?poll=" + poll.UUID + tokenString});
+                 "Have your say at: " + hostUri + "/Poll/Index/" + poll.UUID + tokenString});
 
                 Thread newThread = new Thread(new ThreadStart(() => _mailSender.SendMail(emailAddress, "Have your say!", message)));
                 newThread.Start();

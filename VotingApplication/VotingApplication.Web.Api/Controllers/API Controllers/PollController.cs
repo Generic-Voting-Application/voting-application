@@ -138,8 +138,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             string message = String.Join("\n\n", new List<string>()
                 {"Your poll is now created and ready to go!",
-                 "You can invite people to vote by giving them this link: " + hostUri + "?poll=" + poll.UUID,
-                 "You can administer your poll at "+ hostUri + "?manage=" + poll.ManageID,
+                 "You can invite people to vote by giving them this link: " + hostUri + "/Poll/Index/" + poll.UUID,
+                 "You can administer your poll at "+ hostUri + "/Manage/Index/" + poll.ManageID,
                  "(Don't share this link around!)"});
 
             _mailSender.SendMail(poll.Email, "Your poll is ready!", message);
