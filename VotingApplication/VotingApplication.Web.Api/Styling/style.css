@@ -164,6 +164,14 @@ label.info-message {
     width:200px;
 }
 
+.affirmative {
+    color: green;
+}
+
+.negative {
+    color: red;
+}
+
 @media (min-width: 768px) {
     .divider {
         border-right: 1px solid #ccc;
