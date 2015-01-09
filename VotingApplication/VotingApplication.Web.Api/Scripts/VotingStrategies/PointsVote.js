@@ -82,8 +82,7 @@
             .width($("#chart-results").width())
             .height(data.length * 50 + 100);
 
-            var xAxis = new insight.Axis('Votes', insight.scales.linear)
-                .tickFrequency(1);
+            var xAxis = new insight.Axis('Votes', insight.scales.linear);
             var yAxis = new insight.Axis('', insight.scales.ordinal)
                 .isOrdered(true);
             chart.xAxis(xAxis);
