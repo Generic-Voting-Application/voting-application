@@ -128,25 +128,6 @@ label.info-message {
     border-style: solid;
 }
 
-.accordion-heading > span {
-    float: right;
-}
-
-#advancedOptions > .accordion-heading {
-    background-image: none;
-    background-color: #fff;
-}
-
-#advancedOptions{
-    border-width: 1px;
-    border-style: solid;
-    border-color: #ddd;
-}
-
-#advancedOptions > .accordion-body {
-    margin: 0px 0px;
-}
-
 #tabBar {
     width: 400px;
     margin-left: auto;
