@@ -23,6 +23,11 @@ h4 {
     font-weight: bold;
 }
 
+.warning {
+    color: red;
+    font-weight: bold
+}
+
 input, select, textarea {
     margin-bottom: 15px;
     width: 100%;

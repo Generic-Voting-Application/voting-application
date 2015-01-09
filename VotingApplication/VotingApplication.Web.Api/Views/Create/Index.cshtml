@@ -66,7 +66,11 @@
                             <a href="/info" id="strategy-info" class="help-message">[?]</a>
                             <div class="tip" data-bind="hoverTargetId:strategy-info">
                                 <p><b>Single Vote</b>:<br />Pick one option</p>
-                                <p><b>Ranked Vote</b>:<br />Order options by preference</p>
+                                <p>
+                                    <b>Ranked Vote</b>:
+                                    <br />Order options by preference<br/>
+                                    <span class="warning">Not recommended in small votes</span>
+                                </p>
                                 <b>Points-weighted Vote</b>:<br />Distribute points between options
                             </div>
                             <select class="form-control" id="voting-strategy" data-bind="value: selectedStrategy">
@@ -105,7 +109,7 @@
                             <a id="invite-info" class="help-message">[?]</a>
                             <div class="tip" data-bind="hoverTargetId: invite-info">
                                 <p>If you know each voter by email, this provides extra security.</p>
-                                Voters are issued a token to vote with.
+                                Voters who were not invited will not be allowed to vote, and invited voters will not be able to cheat to get more votes.
                             </div>
                         </div>
 
@@ -134,7 +138,7 @@
                             <input class="checkbox-inline" type="checkbox" id="expiry" data-bind="checked: expires">
                             <a id="timelimit-info" class="help-message">[?]</a>
                             <div class="tip" data-bind="hoverTargetId: timelimit-info">
-                                If checked, any votes after the expiry date are rejected.
+                                If checked, the poll will close after the selected time and voters will be unable to continue voting.
                             </div>
                         </div>
 
