@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'bootstrap', 'insight', 'countdown', 'moment', 'Common', 'platform'], function ($, ko, bs, insight, countdown, moment, Common) {
+﻿define('Poll', ['jquery', 'knockout', 'bootstrap', 'insight', 'countdown', 'moment', 'Common', 'platform'], function ($, ko, bs, insight, countdown, moment, Common) {
     return function VoteViewModel(pollId, token, VotingStrategyViewModel) {
         var self = this;
 

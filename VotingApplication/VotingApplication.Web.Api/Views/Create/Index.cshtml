@@ -1,4 +1,7 @@
-﻿<div class="col-md-4 col-sm-2"></div>
+﻿@{
+    ViewBag.ScriptName = "Create";
+}
+<div class="col-md-4 col-sm-2"></div>
 <div class="col-md-4 col-sm-8">
     <div class="page-header">
         <h2>Create a Poll</h2>
@@ -92,7 +95,7 @@
 @section scripts
 {
     <script type="text/javascript">
-        require(["/Scripts/Create.js"], function (CreateViewModel) {
+        require(["Create"], function (CreateViewModel) {
             new CreateViewModel();
         });
     </script>

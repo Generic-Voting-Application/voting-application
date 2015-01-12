@@ -1,5 +1,7 @@
 ﻿@model PollModel
-
+@{
+    ViewBag.ScriptName = "Poll";
+}
 <meta name="google-signin-clientid" content="411410182235-0p8378ip8snlvbut4grq5ar61r8p60c2.apps.googleusercontent.com" />
 <meta name="google-signin-scope" content="profile" />
 <meta name="google-signin-cookiepolicy" content="single_host_origin" />
@@ -105,7 +107,7 @@
 @section scripts
 {
     <script type="text/javascript">
-        require(["/Scripts/Poll.js", '@(Model.VotingStrategy != String.Empty ? "/Scripts/VotingStrategies/" + @Model.VotingStrategy + "Vote.js" : "")'], function (PollViewModel, VotingStrategyViewModel) {
+        require(["Poll", '@(Model.VotingStrategy + "Vote")'], function (PollViewModel, VotingStrategyViewModel) {
             new PollViewModel('@Model.Id', '@Model.Token', VotingStrategyViewModel);
         });
     </script>

@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'bootstrap', 'Common'], function ($, ko, bootstrap, Common) {
+﻿define('Manage', ['jquery', 'knockout', 'bootstrap', 'Common'], function ($, ko, bootstrap, Common) {
     return function ManageViewModel(manageId) {
         var self = this;
 
