@@ -406,7 +406,6 @@
             });
         };
 
-        $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
         self.toggleChartVisible = function () {
             self.chartVisible(!self.chartVisible());
 
