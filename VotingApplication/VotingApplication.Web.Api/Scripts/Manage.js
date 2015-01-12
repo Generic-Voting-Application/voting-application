@@ -139,13 +139,11 @@
             self.getPollDetails();
             self.populateVotes();
 
-            // Select first tab
-            $('#tabBar li a:first').tab('show')
-
-            //Add option on pressing return key
-            $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
-
             ko.applyBindings(this);
+
+            $(document).ready(function () {
+                $('#tabBar li a:first').tab('show');
+            });
         };
     };
 });
