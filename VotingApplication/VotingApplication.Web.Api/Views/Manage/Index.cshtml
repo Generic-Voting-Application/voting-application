@@ -99,7 +99,7 @@
 {
     <script type="text/javascript">
         require(["/Scripts/Manage.js"], function (ManageViewModel) {
-            new ManageViewModel('@Model.Id');
+            new ManageViewModel('@Model.Id').initialise();
         });
     </script>
 }
