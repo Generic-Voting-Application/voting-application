@@ -9,7 +9,9 @@
 
         self.selectedDeleteOptionId = null;
 
-        var getPollDetails = function () {
+        self.invitationText = ko.observable("");
+
+        self.getPollDetails = function () {
             $.ajax({
                 type: 'GET',
                 url: '/api/manage/' + manageId,
@@ -23,7 +25,7 @@
             });
         };
 
-        var populateVotes = function () {
+        self.populateVotes = function () {
             $.ajax({
                 type: 'GET',
                 url: "/api/manage/" + manageId + "/vote",
@@ -43,7 +45,7 @@
                 success: function () {
                     $("#reset-votes").attr('disabled', 'disabled');
                     $("#reset-votes").text("Votes were reset");
-                    populateVotes();
+                    self.populateVotes();
                 },
 
                 error: Common.handleError
@@ -77,7 +79,7 @@
                 }),
 
                 success: function () {
-                    getPollDetails();
+                    self.getPollDetails();
                 },
 
                 error: Common.handleError
@@ -91,7 +93,7 @@
                 contentType: 'application/json',
 
                 success: function () {
-                    populateVotes();
+                    self.populateVotes();
                 },
 
                 error: Common.handleError
@@ -105,8 +107,8 @@
                 contentType: 'application/json',
 
                 success: function () {
-                    getPollDetails();
-                    populateVotes();
+                    self.getPollDetails();
+                    self.populateVotes();
                 },
 
                 error: Common.handleError
@@ -115,10 +117,10 @@
 
         self.updatePoll = function () {
 
-        }
+        };
 
         self.sendInvites = function () {
-            var invites = $("#invitation-text").val().split('\n');
+            var invites = self.invitationText().split('\n');
 
             $.ajax({
                 type: 'POST',
@@ -128,22 +130,16 @@
                 data: JSON.stringify(invites),
 
                 success: function () {
-                    $("#invites").val("");
+                    self.invitationText("");
                 }
             });
         }
 
-        $(document).ready(function () {
-            getPollDetails();
-            populateVotes();
+        self.initialise = function () {
+            self.getPollDetails();
+            self.populateVotes();
 
-            // Select first tab
-            $('#tabBar li a:first').tab('show')
-
-            //Add option on pressing return key
-            $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
-        });
-
-        ko.applyBindings(this);
-    }
+            ko.applyBindings(this);
+        };
+    };
 });
