@@ -46,14 +46,8 @@
         {
             @:<script src="/Scripts/Min/@(ViewBag.ScriptName).js"></script>
         }
-        else
-        {
-            @:<script src="/Scripts/@(ViewBag.ScriptName).js"></script>
-        }
     }
 
     @RenderSection("scripts", false)
-
-    
 </body>
 </html>
