@@ -147,7 +147,7 @@
 
                         <div id="expiry-date-group" class="form-group" data-bind="visible: expires">
                             <label class="control-label" for="expiry-date">Expiry Date</label>
-                            <input class="form-control" id="expiry-date" placeholder="E.g. 01/04/2015 3:14">
+                            <input class="form-control" id="expiry-date" placeholder="E.g. 01/04/2015 3:14" data-bind="datetimepicker: { default: '30 minutes', min: '0' }">
                         </div>
 
                         <div id="option-adding-group" class="form-group">
@@ -174,7 +174,7 @@
 {
     <script type="text/javascript">
         require(["Create"], function (CreateViewModel) {
-            new CreateViewModel();
+            new CreateViewModel().initialise();
         });
     </script>
 }
