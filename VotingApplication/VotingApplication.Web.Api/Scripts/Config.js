@@ -2,7 +2,7 @@
     baseUrl: '/Scripts',
     paths: {
         'jquery': 'Lib/jquery-2.1.1.min',
-        'knockout': 'Lib/knockout-3.2.0',
+        'knockout': 'Lib/knockout-3.2.0.min',
         'bootstrap': 'Lib/bootstrap.min',
         'insight': 'Lib/insight.min',
         'd3': 'Lib/d3.min',
@@ -11,7 +11,7 @@
         'jqueryUI': 'Lib/jquery-ui.min',
         'jqueryTouch': 'Lib/jquery.ui.touch-punch.min',
         'platform': 'https://apis.google.com/js/client:platform',
-        'moment': 'Lib/moment',
+        'moment': 'Lib/moment.min',
         'datetimepicker': 'Lib/bootstrap-datetimepicker.min',
         'countdown': 'Lib/countdown.min'
     },

@@ -316,7 +316,6 @@
     <Content Include="img\poll.jpg" />
     <Content Include="img\sign-in-with-facebook.png" />
     <Content Include="img\sign-in-with-google.png" />
-    <Content Include="Partials\VotingStrategies\RankedVoteResults.html" />
     <Content Include="Scripts\Create.js" />
     <Content Include="Scripts\Lib\bootstrap-switch.min.js" />
     <Content Include="Scripts\Lib\bootstrap.min.js" />
@@ -328,8 +327,8 @@
     <Content Include="Scripts\Lib\jquery-sortable-min.js" />
     <Content Include="Scripts\Lib\jquery-ui.min.js" />
     <Content Include="Scripts\Lib\jquery.ui.touch-punch.min.js" />
-    <Content Include="Scripts\Lib\knockout-3.2.0.js" />
-    <Content Include="Scripts\Lib\moment.js" />
+    <Content Include="Scripts\Lib\knockout-3.2.0.min.js" />
+    <Content Include="Scripts\Lib\moment.min.js" />
     <Content Include="Scripts\Config.js" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
