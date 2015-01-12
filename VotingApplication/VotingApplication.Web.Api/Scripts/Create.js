@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'datetimepicker', 'moment', 'Common', 'jqueryUI'], function ($, ko, datetimepicker, moment, Common) {
+﻿define(['jquery', 'knockout', 'KnockoutExtensions'], function ($, ko) {
     return function CreateViewModel() {
         var self = this;
 
@@ -118,15 +118,11 @@
             }
         }
 
-        $(document).ready(function () {
+        self.initialise = function () {
             self.populateTemplates();
-
-            var defaultExpiryDate = moment().add(30, 'minutes');
-            $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate, minDate: moment() });
-
             setupTooltips();
-        });
 
-        ko.applyBindings(this);
+            ko.applyBindings(this);
+        };
     }
 });

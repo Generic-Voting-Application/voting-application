@@ -319,6 +319,7 @@
     <Content Include="img\sign-in-with-facebook.png" />
     <Content Include="img\sign-in-with-google.png" />
     <Content Include="Scripts\Create.js" />
+    <Content Include="Scripts\KnockoutExtensions.js" />
     <Content Include="Scripts\Lib\bootstrap-switch.min.js" />
     <Content Include="Scripts\Lib\bootstrap.min.js" />
     <Content Include="Scripts\Lib\countdown.min.js" />
