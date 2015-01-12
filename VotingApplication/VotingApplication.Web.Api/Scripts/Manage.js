@@ -9,6 +9,8 @@
 
         self.selectedDeleteOptionId = null;
 
+        self.invitationText = ko.observable("");
+
         self.getPollDetails = function () {
             $.ajax({
                 type: 'GET',
@@ -118,7 +120,7 @@
         };
 
         self.sendInvites = function () {
-            var invites = $("#invitation-text").val().split('\n');
+            var invites = self.invitationText().split('\n');
 
             $.ajax({
                 type: 'POST',
@@ -128,7 +130,7 @@
                 data: JSON.stringify(invites),
 
                 success: function () {
-                    $("#invites").val("");
+                    self.invitationText("");
                 }
             });
         }

@@ -199,6 +199,30 @@
         });
 
 
+        it("sendInvites splits email addresses and requests send email", function (done) {
+            // arrange
+            target.invitationText("one\ntwo\nthree");
+
+            var sentAddresses = null;
+            mockjax({
+                type: "POST", url: "/api/manage/101/invitation",
+                response: function (request) {
+                    sentAddresses = JSON.parse(request.data);
+                    return "";
+                }
+            });
+
+            // act
+            target.sendInvites();
+
+            // assert
+            setTimeout(function () {
+                expect(sentAddresses.join()).toBe("one,two,three");
+                expect(target.invitationText()).toBe("");
+                done();
+            }, 10);
+        });
+
     });
 });
 
