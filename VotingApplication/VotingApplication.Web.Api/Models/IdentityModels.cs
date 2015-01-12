@@ -21,7 +21,7 @@ namespace VotingApplication.Web.Api.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("VotingContext", throwIfV1Schema: false)
         {
         }
         

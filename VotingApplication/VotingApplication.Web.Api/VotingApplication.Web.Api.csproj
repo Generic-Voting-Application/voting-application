@@ -304,6 +304,7 @@
     <Compile Include="Controllers\API Controllers\UserVoteController.cs" />
     <Compile Include="Controllers\API Controllers\VoteController.cs" />
     <Compile Include="Controllers\API Controllers\WebApiController.cs" />
+    <Compile Include="Controllers\Web Controllers\SignInController.cs" />
     <Compile Include="Filters\BasicAuthenticator.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -369,6 +370,7 @@
     <Content Include="Scripts\Lib\require.js" />
     <Content Include="Scripts\Manage.js" />
     <Content Include="Scripts\Poll.js" />
+    <Content Include="Scripts\Signin.js" />
     <Content Include="Scripts\SocketClient.js" />
     <Content Include="Scripts\Admin.js" />
     <Content Include="Scripts\Common.js" />
@@ -402,6 +404,7 @@
     <Content Include="Scripts\Lib\bootstrap-datetimepicker.min.js" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Poll\Index.cshtml" />
+    <Content Include="Views\SignIn\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VotingApplication.Data\VotingApplication.Data.csproj">
