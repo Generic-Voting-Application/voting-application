@@ -1,96 +1,174 @@
 ﻿@{
     ViewBag.ScriptName = "Create";
 }
-<div class="col-md-4 col-sm-2"></div>
-<div class="col-md-4 col-sm-8">
+<div class="col-sm-2"></div>
+<div class="col-sm-8">
     <div class="page-header">
-        <h2>Create a Poll</h2>
+        <h2 class="centered">Create a Poll</h2>
     </div>
     <form id="poll-create-form">
-        <div id="poll-name-group" class="form-group">
-            <label class="control-label" for="poll-name">Poll Name<span class="required-label">*</span></label>
-            <input class="form-control" id="poll-name" placeholder="E.g. 2015 Elections" required />
-        </div>
+        <ul id="tabBar" class="nav nav-tabs">
+            <li><a href="#basic" data-toggle="tab">Basic Poll</a></li>
+            <li><a href="#advanced" data-toggle="tab">Advanced Poll</a></li>
+        </ul>
+        <br />
+        <div id="tabContent" class="tab-content">
+            <div class="tab-pane fade in active" id="basic">
+                <div class="row">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4">
 
-        <div id="poll-creator-group" class="form-group">
-            <label class="control-label" for="poll-creator">Creator Name<span class="required-label">*</span></label>
-            <input class="form-control" id="poll-creator" placeholder="E.g. John Smith" required />
-        </div>
+                        <div id="poll-name-group" class="form-group">
+                            <label class="control-label" for="poll-name">Poll Name<span class="required-label">*</span></label>
+                            <input class="form-control" id="poll-name" placeholder="E.g. 2015 Elections" required data-bind="value: pollName" />
+                        </div>
 
-        <div id="email-group" class="form-group">
-            <label class="control-label" for="email">Creator Email</label>
-            <input class="form-control" type="email" id="email" placeholder="E.g. email@example.com" pattern='[\w._%+-]+@("@")\w+(\.\w+)+' />
-        </div>
+                        <div id="poll-creator-group" class="form-group">
+                            <label class="control-label" for="poll-creator">Creator Name<span class="required-label">*</span></label>
+                            <input class="form-control" id="poll-creator" placeholder="E.g. John Smith" required data-bind="value: creatorName" />
+                        </div>
 
-        <div id="invites-group" class="form-group">
-            <label class="control-label" for="invites">Invitations (one per line)</label>
-            <textarea cols=40 rows=3 class="form-control" id="invites" placeholder="E.g. email@example.com"></textarea>
-        </div>
-
-        <div id="invite-group" class="form-group">
-            <label class="control-label checkbox-label" for="invite-only">Invite only</label>
-            <input class="checkbox-inline" type="checkbox" id="invite-only" />
-        </div>
-
-        <div id="anonymous-voting-group" class="form-group">
-            <label class="control-label checkbox-label" for="anonymous-voting">Anonymous Voting</label>
-            <input class="checkbox-inline" type="checkbox" id="anonymous-voting" />
-        </div>
-
-        <div id="require-auth-group" class="form-group">
-            <label class="control-label checkbox-label" for="require-auth">Require Authentication</label>
-            <input class="checkbox-inline" type="checkbox" id="require-auth" />
-        </div>
-
-        <div id="expiry-voting-group" class="form-group">
-            <label class="control-label checkbox-label" for="expiry">Time limit</label>
-            <input class="checkbox-inline" type="checkbox" id="expiry" data-bind="checked: expires" />
-        </div>
-
-        <div id="expiry-date-group" class="form-group" data-bind="visible: expires">
-            <label class="control-label" for="expiry-date">Expiry Date</label>
-            <input class="form-control" id="expiry-date" placeholder="E.g. 01/04/2015 3:14" />
-        </div>
-
-        <div id="option-adding-group" class="form-group">
-            <label class="control-label checkbox-label" for="option-adding">Allow users to add options</label>
-            <input class="checkbox-inline" type="checkbox" id="option-adding" />
-        </div>
-
-        <div id="template-group" class="form-group">
-            <label class="control-label" for="template">Poll Template</label>
-            <select class="form-control select-placeholder" id="template" data-bind="options:templates, optionsText:'Name', optionsValue:'Id', optionsCaption:'Select a template..'"></select>
-        </div>
-
-        <div id="strategy-group" class="form-group">
-            <label class="control-label" for="voting-strategy">Vote type<span class="required-label">*</span></label><a href="/info" id="strategy-info" class="help-message">[?]</a>
-            <div class="tip" data-bind="hoverVisible:true, hoverTargetId: 'strategy-info'">
-                <p><b>Single Vote</b>:<br />Pick one option</p>
-                <p><b>Ranked Vote</b>:<br />Order options by preference</p>
-                <b>Points-weighted Vote</b>:<br />Distribute points between options
+                        <div id="email-group" class="form-group">
+                            <label class="control-label" for="email">Creator Email</label>
+                            <a id="email-info" class="help-message">[?]</a>
+                            <div class="tip" data-bind="hoverTargetId: email-info">
+                                <p>Only used to email you the details of your poll.</p>
+                                This will never be used for marketing purposes.
+                            </div>
+                            <input class="form-control" type="email" id="email" placeholder="E.g. email@example.com" pattern="[\w._%+-]+@("@")\w+(\.\w+)+" data-bind="value: creatorEmail">
+                        </div>
+                    </div>
+                    <div class="col-sm-4"></div>
+                </div>
             </div>
-            <select class="form-control" id="voting-strategy" data-bind="value: selectedStrategy">
-                <option value="Basic">Single Vote</option>
-                <option value="Ranked">Ranked Vote</option>
-                <option value="Points">Points-weighted Vote</option>
-            </select>
-        </div>
+            <div class="tab-pane fade" id="advanced">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div id="poll-name-group" class="form-group">
+                            <label class="control-label" for="poll-name-advanced">Poll Name<span class="required-label">*</span></label>
+                            <input class="form-control" id="poll-name-advanced" placeholder="E.g. 2015 Elections" required data-bind="value: pollName" />
+                        </div>
 
-        <div id="max-points-group" data-bind="visible: selectedStrategy() == 'Points'" class="form-group">
-            <label class="control-label" for="max-points">Max points</label>
-            <input class="form-control" id="max-points" placeholder="7" />
-        </div>
+                        <div id="poll-creator-group" class="form-group">
+                            <label class="control-label" for="poll-creator-advanced">Creator Name<span class="required-label">*</span></label>
+                            <input class="form-control" id="poll-creator-advanced" placeholder="E.g. John Smith" required data-bind="value: creatorName" />
+                        </div>
 
-        <div id="points-per-vote-group" data-bind="visible: selectedStrategy() == 'Points'" class="form-group">
-            <label class="control-label" for="max-per-vote">Max points per vote</label>
-            <input class="form-control" id="max-per-vote" placeholder="3" />
-        </div>
+                        <div id="email-group" class="form-group">
+                            <label class="control-label" for="email-advanced">Creator Email</label>
+                            <a id="email-info" class="help-message">[?]</a>
+                            <div class="tip" data-bind="hoverTargetId: email-info">
+                                <p>Only used to email you the details of your poll.</p>
+                                This will never be used for marketing purposes.
+                            </div>
+                            <input class="form-control" type="email" id="email-advanced" placeholder="E.g. email@example.com" pattern="[\w._%+-]+@("@")\w+(\.\w+)+" data-bind="value: creatorEmail">
+                        </div>
 
-        <button id="poll-create-btn" class="btn btn-primary" type="submit" data-bind="click: createPoll.bind()">Create Poll</button>
+                        <div id="strategy-group" class="form-group">
+                            <label class="control-label" for="voting-strategy">Poll type</label>
+                            <a href="/info" id="strategy-info" class="help-message">[?]</a>
+                            <div class="tip" data-bind="hoverTargetId:strategy-info">
+                                <p><b>Single Vote</b>:<br />Pick one option</p>
+                                <p>
+                                    <b>Ranked Vote</b>:
+                                    <br />Order options by preference<br/>
+                                    <span class="warning">Not recommended in small votes</span>
+                                </p>
+                                <b>Points-weighted Vote</b>:<br />Distribute points between options
+                            </div>
+                            <select class="form-control" id="voting-strategy" data-bind="value: selectedStrategy">
+                                <option value="Basic">Single Vote</option>
+                                <option value="Ranked">Ranked Vote</option>
+                                <option value="Points">Points-weighted Vote</option>
+                            </select>
+                        </div>
+
+                        <div id="max-points-group" data-bind="visible: selectedStrategy() == 'Points'" class="form-group">
+                            <label class="control-label" for="max-points">Max points</label>
+                            <input class="form-control" id="max-points" placeholder="7" />
+                        </div>
+
+                        <div id="points-per-vote-group" data-bind="visible: selectedStrategy() == 'Points'" class="form-group">
+                            <label class="control-label" for="max-per-vote">Max points per vote</label>
+                            <input class="form-control" id="max-per-vote" placeholder="3" />
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-6">
+
+                        <div id="template-group" class="form-group">
+                            <label class="control-label" for="template">Poll Template</label>
+                            <a id="template-info" class="help-message">[?]</a>
+                            <div class="tip" data-bind="hoverTargetId: template-info">
+                                <p>Sets up the poll with a preset list of options.</p>
+                                Options can still be added or removed from the Poll Management page.
+                            </div>
+                            <select class="form-control select-placeholder" id="template" data-bind="options:templates, optionsText:'Name', optionsValue:'Id', optionsCaption:'Select a template..'"></select>
+                        </div>
+
+                        <div id="invite-group" class="form-group">
+                            <label class="control-label" for="invite-only">Invite only</label>
+                            <input class="checkbox-inline" type="checkbox" id="invite-only">
+                            <a id="invite-info" class="help-message">[?]</a>
+                            <div class="tip" data-bind="hoverTargetId: invite-info">
+                                <p>If you know each voter by email, this provides extra security.</p>
+                                Voters who were not invited will not be allowed to vote, and invited voters will not be able to cheat to get more votes.
+                            </div>
+                        </div>
+
+                        <div id="anonymous-voting-group" class="form-group">
+                            <label class="control-label" for="anonymous-voting">Vote Anonymously</label>
+                            <input class="checkbox-inline" type="checkbox" id="anonymous-voting">
+                            <a id="anonymous-info" class="help-message">[?]</a>
+                            <div class="tip" data-bind="hoverTargetId: anonymous-info">
+                                <p>Whether poll results should display the voter name, or "Anonymous Voter".</p>
+                                Votes on the Poll Management page will still display names regardless.
+                            </div>
+                        </div>
+
+                        <div id="require-auth-group" class="form-group">
+                            <label class="control-label" for="require-auth">Require Social Media Login</label>
+                            <input class="checkbox-inline" type="checkbox" id="require-auth">
+                            <a id="auth-info" class="help-message">[?]</a>
+                            <div class="tip" data-bind="hoverTargetId: auth-info">
+                                <p>If checked, users will be required to login with Facebook or Google+.</p>
+                                If not checked, users will also have the option to choose their own display name.
+                            </div>
+                        </div>
+
+                        <div id="expiry-voting-group" class="form-group">
+                            <label class="control-label checkbox-label" for="expiry">Time limit</label>
+                            <input class="checkbox-inline" type="checkbox" id="expiry" data-bind="checked: expires">
+                            <a id="timelimit-info" class="help-message">[?]</a>
+                            <div class="tip" data-bind="hoverTargetId: timelimit-info">
+                                If checked, the poll will close after the selected time and voters will be unable to continue voting.
+                            </div>
+                        </div>
+
+                        <div id="expiry-date-group" class="form-group" data-bind="visible: expires">
+                            <label class="control-label" for="expiry-date">Expiry Date</label>
+                            <input class="form-control" id="expiry-date" placeholder="E.g. 01/04/2015 3:14">
+                        </div>
+
+                        <div id="option-adding-group" class="form-group">
+                            <label class="control-label checkbox-label" for="option-adding">Allow users to add options</label>
+                            <input class="checkbox-inline" type="checkbox" id="option-adding">
+                            <a id="add-options-info" class="help-message">[?]</a>
+                            <div class="tip" data-bind="hoverTargetId: add-options-info">
+                                <p>If checked, users will be able to submit their own options from the poll page.</p>
+                                You will still be able to add and remove options from the Poll Management page.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="centered">
+                <button id="poll-create-btn" class="btn btn-primary" type="submit" data-bind="click: $root.createPoll.bind()">Create Poll</button>
+            </div>
+        </div>
     </form>
 </div>
-<div class="col-md-4 col-sm-2"></div>
-
+<div class="col-sm-2"></div>
 
 @section scripts
 {
