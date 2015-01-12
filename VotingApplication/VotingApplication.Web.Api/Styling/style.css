@@ -153,6 +153,10 @@ label.info-message {
     padding-bottom: 15px;
 }
 
+.nav-tabs .active, .tab-pane.active {
+    opacity: 1;
+}
+
 .signinButton {
     padding: 0px;
     margin: 0px;

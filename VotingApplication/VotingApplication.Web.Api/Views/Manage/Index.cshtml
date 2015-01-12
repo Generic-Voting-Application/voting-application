@@ -11,13 +11,13 @@
         <a data-bind="attr: { href: '/Poll/Index/' + pollId() }">Poll Link</a>
     </div>
     <ul id="tabBar" class="nav nav-tabs">
-        <li><a href="#options" data-toggle="tab">Poll Options</a></li>
+        <li class="active"><a href="#options" data-toggle="tab">Poll Options</a></li>
         <li><a href="#invites" data-toggle="tab">Invitations</a></li>
         <li><a href="#votes" data-toggle="tab">Votes</a></li>
     </ul>
     <br />
     <div id="tabContent" class="tab-content">
-        <div class="tab-pane fade in active" id="votes">
+        <div class="tab-pane fade in" id="votes">
             <div class="text-center">
                 <button class="btn btn-primary" id="reset-votes" data-bind="click: resetVotes">Reset Vote</button>
             </div>
@@ -44,7 +44,7 @@
             </div>
             <div class="col-md-1"></div>
         </div>
-        <div class="tab-pane fade" id="options">
+        <div class="tab-pane fade in active" id="options">
             <form>
                 <table class="table table-hover">
                     <thead>
@@ -80,7 +80,7 @@
                 </table>
             </form>
         </div>
-        <div class="tab-pane fade" id="invites">
+        <div class="tab-pane fade in" id="invites">
             <div class="col-md-2"></div>
             <div class="col-md-8">
                 <div id="invites-group" class="form-group">

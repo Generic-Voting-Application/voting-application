@@ -124,9 +124,6 @@
             var defaultExpiryDate = moment().add(30, 'minutes');
             $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate, minDate: moment() });
 
-            // Select first tab
-            $('#tabBar li a:first').tab('show')
-
             setupTooltips();
         });
 

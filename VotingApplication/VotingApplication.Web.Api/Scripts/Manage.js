@@ -140,10 +140,6 @@
             self.populateVotes();
 
             ko.applyBindings(this);
-
-            $(document).ready(function () {
-                $('#tabBar li a:first').tab('show');
-            });
         };
     };
 });
