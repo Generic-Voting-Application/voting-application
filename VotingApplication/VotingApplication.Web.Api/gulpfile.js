@@ -6,13 +6,6 @@ var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var rjs = require('gulp-requirejs');
 
-// Lint Task
-// gulp.task('lint', function() {
-//     return gulp.src('Scripts/**/*.js')
-//         .pipe(jshint())
-//         .pipe(jshint.reporter('default'));
-// });
-
 gulp.task('requirejsBuildCreate', function() {
     rjs({
         baseUrl: './Scripts/',
@@ -48,4 +41,4 @@ gulp.task('requirejsBuildPoll', function() {
 });
 
 // Deploy
-gulp.task('Deploy', [/*'lint',*/ 'requirejsBuildCreate', 'requirejsBuildManage', 'requirejsBuildPoll']);
+gulp.task('Deploy', ['requirejsBuildCreate', 'requirejsBuildManage', 'requirejsBuildPoll']);
