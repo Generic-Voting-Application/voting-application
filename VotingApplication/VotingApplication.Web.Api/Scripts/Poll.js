@@ -194,7 +194,8 @@
             self.userId = undefined;
         }
 
-        self.receivedChatMessage = function (name, message, timeStamp) {
+        chatClient.joinPoll(pollId);
+        chatClient.onMessage = function (name, message, timeStamp) {
             self.chatMessages.push({
                 User: { Name: name },
                 Message: message,
@@ -210,8 +211,6 @@
                 chatClient.sendMessage(pollId, self.userName(), chatMessage);
             }
         };
-        chatClient.joinPoll(pollId);
-        chatClient.onMessage = self.receivedChatMessage;
 
         self.getResults = function (pollId) {
             $.ajax({
