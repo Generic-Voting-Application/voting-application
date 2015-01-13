@@ -3,41 +3,34 @@
         var self = this;
 
         self.templates = ko.observableArray();
-        self.selectedStrategy = ko.observable();
-        self.expires = ko.observable(false);
 
+        // Basic Poll options
         self.pollName = ko.observable("");
         self.creatorName = ko.observable("");
         self.creatorEmail = ko.observable("");
 
+        // Advanced Poll options
+        self.templateId = ko.observable("");
+        self.strategy = ko.observable("");
+        self.maxPoints = ko.observable(7);
+        self.maxPerVote = ko.observable(3);
+        self.inviteOnly = ko.observable(false);
+        self.anonymousVoting = ko.observable(false);
+        self.requireAuth = ko.observable(false);
+        self.expiry = ko.observable(false);
+        self.expiryDate = ko.observable("");
+        self.optionAdding = ko.observable(false);
+
+        self.creatingPoll = ko.observable(false);
+
         self.createPoll = function () {
-            //Clear out previous error messages
-            $('text').remove('.error-message');
+            if (!self.validateForm()) return;
 
-            var inputs = $("#poll-create-form div");
-            for (var i = 0; i < inputs.length; i++) {
-                self.validateField(inputs[i]);
-            }
+            self.creatingPoll(true);
 
-            if (!$("#poll-create-form")[0].checkValidity()) {
-                return;
-            }
-
-            $("#poll-create-btn").attr('disabled', 'disabled');
-            $("#poll-create-btn").text('Creating...');
-
-            var templateId = $("#template").val();
-            var strategy = $("#voting-strategy").val();
-            var maxPoints = $("#max-points").val() || 7;
-            var maxPerVote = $("#max-per-vote").val() || 3;
-            var inviteOnly = $('#invite-only').is(':checked');
-            var anonymousVoting = $('#anonymous-voting').is(':checked');
-            var requireAuth = $('#require-auth').is(':checked');
-            var expiry = $('#expiry').is(':checked');
-            var expiryDate = expiry ? new Date($('#expiry-date').val()) : null;
-            var optionAdding = $('#option-adding').is(':checked');
-
-            if (expiryDate == 'Invalid Date' && expiry) {
+            var expiryDate = self.expiry() ? new Date(self.expiryDate()) : null;
+            if (expiryDate === 'Invalid Date' && self.expiry()) {
+                // Default to a valid date
                 expiryDate = new Date();
                 expiryDate.setMinutes(expiryDate.getMinutes() + 30);
             }
@@ -51,16 +44,16 @@
                     Name: self.pollName(),
                     Creator: self.creatorName(),
                     Email: self.creatorEmail(),
-                    templateId: templateId,
-                    VotingStrategy: strategy,
-                    MaxPoints: maxPoints,
-                    MaxPerVote: maxPerVote,
-                    InviteOnly: inviteOnly,
-                    AnonymousVoting: anonymousVoting,
-                    RequireAuth: requireAuth,
-                    Expires: expiry,
+                    templateId: self.templateId(),
+                    VotingStrategy: self.strategy(),
+                    MaxPoints: self.maxPoints(),
+                    MaxPerVote: self.maxPerVote(),
+                    InviteOnly: self.inviteOnly(),
+                    AnonymousVoting: self.anonymousVoting(),
+                    RequireAuth: self.requireAuth(),
+                    Expires: self.expiry(),
                     ExpiryDate: expiryDate,
-                    OptionAdding: optionAdding
+                    OptionAdding: self.optionAdding()
                 }),
 
                 success: function (data) {
@@ -69,7 +62,30 @@
             });
         };
 
-        self.validateField = function (field) {
+        self.populateTemplates = function () {
+            $.ajax({
+                type: 'GET',
+                url: '/api/template',
+
+                success: function (data) {
+                    self.templates(data);
+                }
+            });
+        };
+
+        self.validateForm = function () {
+            //Clear out previous error messages
+            $('text').remove('.error-message');
+
+            var inputs = $("#poll-create-form .form-group");
+            for (var i = 0; i < inputs.length; i++) {
+                validateField(inputs[i]);
+            }
+
+            return $("#poll-create-form")[0].checkValidity();
+        };
+
+        var validateField = function (field) {
             var inputField = $(field).find('input')[0];
 
             if (!inputField) {
@@ -84,17 +100,6 @@
             else {
                 $(inputField).removeClass('error');
             }
-        };
-
-        self.populateTemplates = function () {
-            $.ajax({
-                type: 'GET',
-                url: '/api/template',
-
-                success: function (data) {
-                    self.templates(data);
-                }
-            });
         };
 
         var setupTooltips = function() {
