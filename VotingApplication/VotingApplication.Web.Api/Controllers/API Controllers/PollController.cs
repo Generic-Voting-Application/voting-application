@@ -37,18 +37,22 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         public virtual HttpResponseMessage Get(Guid id)
         {
             #region DB Get
+
             Poll poll;
             using (var context = _contextFactory.CreateContext())
             {
                 poll = context.Polls.Where(s => s.UUID == id).Include(s => s.Options).FirstOrDefault();
             }
+
             #endregion
 
             #region Validation
+
             if (poll == null)
             {
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", id));
             }
+
             #endregion
 
             #region Response

@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -22,16 +23,31 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public virtual HttpResponseMessage Get(Guid manageId)
         {
+            #region DB Get
+            Poll poll;
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
-                if (matchingPoll == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not found", manageId));
-                }
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, matchingPoll);
+                poll = context.Polls.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
             }
+            #endregion
+
+            #region Validation
+            if (poll == null)
+            {
+                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll for {0} not found", manageId));
+            }
+            #endregion
+
+            #region Response
+
+            ManagePollRequestResponseModel response = new ManagePollRequestResponseModel();
+
+            response.UUID = poll.UUID;
+            response.Options = poll.Options;
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, response);
+
+            #endregion
         }
 
 

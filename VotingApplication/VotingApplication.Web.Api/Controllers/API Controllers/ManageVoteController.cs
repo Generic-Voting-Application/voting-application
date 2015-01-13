@@ -21,13 +21,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(s => s.ManageID == manageId).FirstOrDefault();
-                if (matchingPoll == null)
+                Poll poll = context.Polls.Where(s => s.ManageID == manageId).FirstOrDefault();
+                if (poll == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
-                List<Vote> votes = context.Votes.Where(v => v.PollId == matchingPoll.UUID)
+                List<Vote> votes = context.Votes.Where(v => v.PollId == poll.UUID)
                     .Include(v => v.Option).Include(v => v.User)
                     .ToList();
 
