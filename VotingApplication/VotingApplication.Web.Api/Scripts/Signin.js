@@ -2,6 +2,9 @@
     return function SigninViewModel() {
         var self = this;
 
+        self.username = ko.observable("");
+        self.password = ko.observable("");
+
         self.newUsername = ko.observable("");
         self.newPassword = ko.observable("");
         self.confirmPassword = ko.observable("");
@@ -42,16 +45,48 @@
             $.ajax({
                 type: 'POST',
                 url: '/api/Account/Register',
-                contentType: 'application/json; charser=utf-8',
+                contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(data),
 
                 success: function (data) {
+                    // Registration doesn't auto-signin, we need to manually do this too
+                    doSignin(self.newUsername(), self.newPassword());
                 },
 
                 error: function (data) {
                     $("#duplicate-username").show();
                 }
             });
+        }
+
+        var doSignin = function (username, password) {
+
+            var data = {
+                grant_type: 'password',
+                username: username,
+                password: password
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/Token',
+                contentType: 'application/x-www-form-url-encoded; charset=utf-8',
+                data: data,
+
+                success: function (data) {
+                    $("#bad-credentials").hide();
+                    sessionStorage.setItem('creator_token', data.access_token);
+                    window.location.href = "/Create/Index";
+                },
+
+                error: function (data) {
+                    $("#bad-credentials").show();
+                }
+            });
+        }
+
+        self.signin = function () {
+            doSignin(self.username(), self.password());
         }
 
         ko.applyBindings(this);

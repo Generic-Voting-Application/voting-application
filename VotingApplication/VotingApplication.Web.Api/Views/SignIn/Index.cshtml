@@ -7,17 +7,20 @@
     <div class="col-md-2"></div>
     <div class="col-md-3">
         <h3 class="centered">Sign In</h3>
-        <div id="poll-creator-group" class="form-group">
-            <label class="control-label" for="username">Username</label>
-            <input class="form-control" id="username" />
-        </div>
-        <div id="poll-creator-group" class="form-group">
-            <label class="control-label" for="password">Password</label>
-            <input type="password" class="form-control" id="password" />
-        </div>
-        <div class="centered">
-            <button class="btn btn-primary" type="submit">Sign In</button>
-        </div>
+        <form>
+            <div id="poll-creator-group" class="form-group">
+                <label class="control-label" for="username">Email</label>
+                <input class="form-control" id="username" placeholder="E.g. email@example.com" data-bind="value: username" />
+            </div>
+            <span class="error-message" id="bad-credentials" hidden>Email or password is incorrect</span>
+            <div id="poll-creator-group" class="form-group">
+                <label class="control-label" for="password">Password</label>
+                <input type="password" class="form-control" id="password" data-bind="value: password" />
+            </div>
+            <div class="centered">
+                <button class="btn btn-primary" type="submit" data-bind="click: signin.bind()">Sign In</button>
+            </div>
+        </form>
     </div>
     <div class="col-md-2"></div>
     <div class="col-md-3">
@@ -26,7 +29,7 @@
             <div id="poll-creator-group" class="form-group">
                 <label class="control-label" for="new-username">Email</label>
                 <br />
-                <input class="form-control" id="new-username" data-bind="value: newUsername" />
+                <input class="form-control" id="new-username" placeholder="E.g. email@example.com" data-bind="value: newUsername" />
             </div>
             <span class="error-message" id="invalid-username" hidden>Must be a valid email</span>
             <span class="error-message" id="duplicate-username" hidden>Email is already in use</span>
