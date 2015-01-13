@@ -11,6 +11,7 @@ using System.Net.Mail;
 using System.Web.Configuration;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Web.Http;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -29,9 +30,15 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region Get
 
+        [Authorize]
         public override HttpResponseMessage Get()
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET on this controller");
+            using (var context = _contextFactory.CreateContext())
+            {
+                var username = this.User.Identity.Name;
+                List<Poll> matchingPolls = context.Polls.Where(p => p.CreatorIdentity == username).ToList<Poll>();
+                return this.Request.CreateResponse(HttpStatusCode.OK, matchingPolls);
+            }
         }
 
         public virtual HttpResponseMessage Get(Guid id)
@@ -108,6 +115,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 if(newPoll.Expires && newPoll.ExpiryDate < DateTime.Now)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Expiry date of poll is in the past");
+                }
+
+                if (this.User.Identity.Name != null)
+                {
+                    newPoll.CreatorIdentity = this.User.Identity.Name;
                 }
 
                 newPoll.UUID = Guid.NewGuid();

@@ -36,7 +36,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _mainPoll = new Poll() { UUID = UUIDs[0], ManageID = Guid.NewGuid() };
             _otherPoll = new Poll() { UUID = UUIDs[1], ManageID = Guid.NewGuid() };
             _templateUUID = Guid.NewGuid();
-            _templatePoll = new Poll() { UUID = _templateUUID, ManageID = Guid.NewGuid(), Options = new List<Option>() { _redOption } };
+            _templatePoll = new Poll() { UUID = _templateUUID, ManageID = Guid.NewGuid(), Options = new List<Option>() { _redOption }, CreatorIdentity = "a@b.c" };
 
             _dummyPolls = new InMemoryDbSet<Poll>(true);
             _dummyPolls.Add(_mainPoll);
@@ -67,15 +67,48 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region GET
 
         [TestMethod]
-        public void GetIsNotAllowed()
+        public void GetIsAllowed()
         {
             // Act
             var response = _controller.Get();
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
-        
+
+        [TestMethod]
+        public void GetWithAUserFetchesAllPollsByThatUser()
+        {
+            // Arrange
+            var identity = new System.Security.Principal.GenericIdentity("a@b.c");
+            var user = new System.Security.Principal.GenericPrincipal(identity, new string[0]);
+            _controller.User = user;
+
+            // Act
+            var response = _controller.Get();
+
+            // Assert
+            List<Poll> expectedPolls = new List<Poll>() { _templatePoll };
+            List<Poll> responsePolls = ((ObjectContent)response.Content).Value as List<Poll>;
+            CollectionAssert.AreEquivalent(expectedPolls, responsePolls);
+        }
+
+        [TestMethod]
+        public void GetWithANewUserFetchesEmptyPollList()
+        {
+            // Arrange
+            var identity = new System.Security.Principal.GenericIdentity("newUser@b.c");
+            var user = new System.Security.Principal.GenericPrincipal(identity, new string[0]);
+            _controller.User = user;
+
+            // Act
+            var response = _controller.Get();
+
+            // Assert
+            List<Poll> responsePolls = ((ObjectContent)response.Content).Value as List<Poll>;
+            CollectionAssert.AreEquivalent(new List<Poll>(), responsePolls);
+        }
+
         [TestMethod]
         public void GetByIdIsAllowed()
         {
@@ -237,6 +270,22 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             Assert.AreNotEqual(Guid.Empty, newPoll.UUID);
+        }
+
+        [TestMethod]
+        public void PostWithAuthorizationSetsUsernameOfPollOwner()
+        {
+            // Arrange
+            var identity = new System.Security.Principal.GenericIdentity("newUser@b.c");
+            var user = new System.Security.Principal.GenericPrincipal(identity, new string[0]);
+            _controller.User = user;
+
+            // Act
+            Poll newPoll = new Poll() { Name = "New Poll" };
+            _controller.Post(newPoll);
+
+            // Assert
+            Assert.AreEqual("newUser@b.c", newPoll.CreatorIdentity);
         }
 
         [TestMethod]

@@ -24,6 +24,8 @@ namespace VotingApplication.Data.Model
         [NotMapped]
         public List<string> Invites { get; set; }
 
+        public string CreatorIdentity { get; set; }
+
         public Guid TemplateId { get; set; }
         public List<Option> Options { get; set; }
 
