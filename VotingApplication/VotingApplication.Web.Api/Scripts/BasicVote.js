@@ -192,8 +192,6 @@
             });
         };
 
-        $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
-
         self.initialise = function (pollData) {
 
             self.options(pollData.Options);
