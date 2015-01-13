@@ -185,3 +185,6 @@ FakesAssemblies/
 
 .nuget
 Packages.dgml
+
+# Minified scripts
+VotingApplication/VotingApplication.Web.Api/Scripts/Min/

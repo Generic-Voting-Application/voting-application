@@ -1,4 +1,7 @@
 ﻿@model ManageModel
+@{
+    ViewBag.ScriptName = "Manage";
+}
 <div class="col-md-2"></div>
 <div class="col-md-8">
     <div class="page-header">
@@ -100,7 +103,7 @@
 @section scripts
 {
     <script type="text/javascript">
-        require(["/Scripts/Manage.js"], function (ManageViewModel) {
+        require(["Manage"], function (ManageViewModel) {
             new ManageViewModel('@Model.Id').initialise();
         });
     </script>
