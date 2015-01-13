@@ -25,6 +25,9 @@
 
             // Initialise the jQueryUI control
             $(element).datetimepicker(pickerSettings);
+
+            // Trigger knockout to update the bound variable with the default value
+            ko.utils.triggerEvent(element, "change");
         }
     };
 

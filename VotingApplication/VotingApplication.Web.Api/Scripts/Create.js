@@ -25,16 +25,8 @@
 
         self.createPoll = function () {
             if (!self.validateForm()) return;
-
             self.creatingPoll(true);
-
-            var expiryDate = self.expiry() ? new Date(self.expiryDate()) : null;
-            if (expiryDate === 'Invalid Date' && self.expiry()) {
-                // Default to a valid date
-                expiryDate = new Date();
-                expiryDate.setMinutes(expiryDate.getMinutes() + 30);
-            }
-
+            
             $.ajax({
                 type: 'POST',
                 url: '/api/poll',
@@ -52,7 +44,7 @@
                     AnonymousVoting: self.anonymousVoting(),
                     RequireAuth: self.requireAuth(),
                     Expires: self.expiry(),
-                    ExpiryDate: expiryDate,
+                    ExpiryDate: new Date(self.expiryDate()),
                     OptionAdding: self.optionAdding()
                 }),
 
@@ -92,19 +84,31 @@
         };
 
         var validateField = function (field) {
-            var inputField = $(field).find('input')[0];
+            if ($(field).is(':visible')) {
+                var $inputField = $(field).find('input');
+                var inputField = $inputField[0];
 
-            if (!inputField) {
-                return;
-            }
+                if (!inputField) {
+                    return;
+                }
 
-            if (!inputField.checkValidity()) {
-                $(inputField).addClass('error');
-                var errorMessage = inputField.validationMessage;
-                $(field).append('<text class="error-message">' + errorMessage + '</text>');
-            }
-            else {
-                $(inputField).removeClass('error');
+                if ($inputField.attr('date') !== undefined) {
+                    // Validation of date fields
+                    if (isNaN(Date.parse(self.expiryDate()))) {
+                        inputField.setCustomValidity("Please enter a valid date");
+                    } else {
+                        inputField.setCustomValidity("");
+                    }
+                }
+
+                if (!inputField.checkValidity()) {
+                    $inputField.addClass('error');
+                    var errorMessage = inputField.validationMessage;
+                    $(field).append('<text class="error-message">' + errorMessage + '</text>');
+                }
+                else {
+                    $inputField.removeClass('error');
+                }
             }
         };
 
