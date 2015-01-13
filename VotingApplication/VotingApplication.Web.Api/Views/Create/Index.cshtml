@@ -73,21 +73,21 @@
                                 </p>
                                 <b>Points-weighted Vote</b>:<br />Distribute points between options
                             </div>
-                            <select class="form-control" id="voting-strategy" data-bind="value: selectedStrategy">
+                            <select class="form-control" id="voting-strategy" data-bind="value: strategy">
                                 <option value="Basic">Single Vote</option>
                                 <option value="Ranked">Ranked Vote</option>
                                 <option value="Points">Points-weighted Vote</option>
                             </select>
                         </div>
 
-                        <div id="max-points-group" data-bind="visible: selectedStrategy() == 'Points'" class="form-group">
+                        <div id="max-points-group" data-bind="visible: strategy() == 'Points'" class="form-group">
                             <label class="control-label" for="max-points">Max points</label>
-                            <input class="form-control" id="max-points" placeholder="7" />
+                            <input class="form-control" id="max-points" placeholder="7" data-bind="value: maxPoints" />
                         </div>
 
-                        <div id="points-per-vote-group" data-bind="visible: selectedStrategy() == 'Points'" class="form-group">
+                        <div id="points-per-vote-group" data-bind="visible: strategy() == 'Points'" class="form-group">
                             <label class="control-label" for="max-per-vote">Max points per vote</label>
-                            <input class="form-control" id="max-per-vote" placeholder="3" />
+                            <input class="form-control" id="max-per-vote" placeholder="3" data-bind="value: maxPerVote" />
                         </div>
                     </div>
                     <div class="col-md-1"></div>
@@ -100,12 +100,12 @@
                                 <p>Sets up the poll with a preset list of options.</p>
                                 Options can still be added or removed from the Poll Management page.
                             </div>
-                            <select class="form-control select-placeholder" id="template" data-bind="options:templates, optionsText:'Name', optionsValue:'Id', optionsCaption:'Select a template..'"></select>
+                            <select class="form-control select-placeholder" id="template" data-bind="value: templateId, options:templates, optionsText:'Name', optionsValue:'Id', optionsCaption:'Select a template..'"></select>
                         </div>
 
                         <div id="invite-group" class="form-group">
                             <label class="control-label" for="invite-only">Invite only</label>
-                            <input class="checkbox-inline" type="checkbox" id="invite-only">
+                            <input class="checkbox-inline" type="checkbox" id="invite-only" data-bind="checked: inviteOnly">
                             <a id="invite-info" class="help-message">[?]</a>
                             <div class="tip" data-bind="hoverTargetId: invite-info">
                                 <p>If you know each voter by email, this provides extra security.</p>
@@ -115,7 +115,7 @@
 
                         <div id="anonymous-voting-group" class="form-group">
                             <label class="control-label" for="anonymous-voting">Vote Anonymously</label>
-                            <input class="checkbox-inline" type="checkbox" id="anonymous-voting">
+                            <input class="checkbox-inline" type="checkbox" id="anonymous-voting" data-bind="checked: anonymousVoting">
                             <a id="anonymous-info" class="help-message">[?]</a>
                             <div class="tip" data-bind="hoverTargetId: anonymous-info">
                                 <p>Whether poll results should display the voter name, or "Anonymous Voter".</p>
@@ -125,7 +125,7 @@
 
                         <div id="require-auth-group" class="form-group">
                             <label class="control-label" for="require-auth">Require Social Media Login</label>
-                            <input class="checkbox-inline" type="checkbox" id="require-auth">
+                            <input class="checkbox-inline" type="checkbox" id="require-auth" data-bind="value: requireAuth">
                             <a id="auth-info" class="help-message">[?]</a>
                             <div class="tip" data-bind="hoverTargetId: auth-info">
                                 <p>If checked, users will be required to login with Facebook or Google+.</p>
@@ -135,21 +135,21 @@
 
                         <div id="expiry-voting-group" class="form-group">
                             <label class="control-label checkbox-label" for="expiry">Time limit</label>
-                            <input class="checkbox-inline" type="checkbox" id="expiry" data-bind="checked: expires">
+                            <input class="checkbox-inline" type="checkbox" id="expiry" data-bind="checked: expiry">
                             <a id="timelimit-info" class="help-message">[?]</a>
                             <div class="tip" data-bind="hoverTargetId: timelimit-info">
                                 If checked, the poll will close after the selected time and voters will be unable to continue voting.
                             </div>
                         </div>
 
-                        <div id="expiry-date-group" class="form-group" data-bind="visible: expires">
+                        <div id="expiry-date-group" class="form-group" data-bind="visible: expiry">
                             <label class="control-label" for="expiry-date">Expiry Date</label>
-                            <input class="form-control" id="expiry-date" placeholder="E.g. 01/04/2015 3:14" data-bind="datetimepicker: { default: '30 minutes', min: '0' }">
+                            <input class="form-control" id="expiry-date" placeholder="E.g. 01/04/2015 3:14" data-bind="value: expiryDate, datetimepicker: { default: '30 minutes', min: '0' }">
                         </div>
 
                         <div id="option-adding-group" class="form-group">
                             <label class="control-label checkbox-label" for="option-adding">Allow users to add options</label>
-                            <input class="checkbox-inline" type="checkbox" id="option-adding">
+                            <input class="checkbox-inline" type="checkbox" id="option-adding" data-bind="checked: optionAdding">
                             <a id="add-options-info" class="help-message">[?]</a>
                             <div class="tip" data-bind="hoverTargetId: add-options-info">
                                 <p>If checked, users will be able to submit their own options from the poll page.</p>
@@ -160,7 +160,8 @@
                 </div>
             </div>
             <div class="centered">
-                <button id="poll-create-btn" class="btn btn-primary" type="submit" data-bind="click: $root.createPoll.bind()">Create Poll</button>
+                <button id="poll-create-btn" class="btn btn-primary" type="submit"
+                        data-bind="click: createPoll, disable: creatingPoll, text: creatingPoll() ? 'Creating...' : 'Create Poll'"></button>
             </div>
         </div>
     </form>
