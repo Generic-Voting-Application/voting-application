@@ -48,23 +48,23 @@
                 contentType: 'application/json',
 
                 data: JSON.stringify({
-                    Name: self.pollName(),
-                    Creator: self.creatorName(),
-                    Email: self.creatorEmail(),
-                    templateId: templateId,
-                    VotingStrategy: strategy,
-                    MaxPoints: maxPoints,
-                    MaxPerVote: maxPerVote,
-                    InviteOnly: inviteOnly,
-                    AnonymousVoting: anonymousVoting,
-                    RequireAuth: requireAuth,
-                    Expires: expiry,
-                    ExpiryDate: expiryDate,
-                    OptionAdding: optionAdding
+                    Name: self.pollName() || undefined,
+                    Creator: self.creatorName() || undefined,
+                    Email: self.creatorEmail() || undefined,
+                    TemplateId: templateId || undefined,
+                    VotingStrategy: strategy || undefined,
+                    MaxPoints: maxPoints || undefined,
+                    MaxPerVote: maxPerVote || undefined,
+                    InviteOnly: inviteOnly || undefined,
+                    AnonymousVoting: anonymousVoting || undefined,
+                    RequireAuth: requireAuth || undefined,
+                    Expires: expiry || undefined,
+                    ExpiryDate: expiryDate || undefined,
+                    OptionAdding: optionAdding || undefined
                 }),
 
                 success: function (data) {
-                    window.location.href = "/Manage/Index/" + data.ManageID;
+                    window.location.href = "/Manage/Index/" + data.ManageId;
                 }
             });
         };

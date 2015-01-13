@@ -1,16 +1,14 @@
-﻿using System.Data.Entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web;
+using System.Threading;
+using System.Web.Configuration;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
-using System.Net.Mail;
-using System.Web.Configuration;
-using System.Threading.Tasks;
-using System.Threading;
+using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -18,11 +16,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     {
         private IMailSender _mailSender;
 
-        public PollController() : base()
+        public PollController()
+            : base()
         {
             _mailSender = new MailSender();
         }
-        public PollController(IContextFactory contextFactory, IMailSender mailSender) : base(contextFactory)
+        public PollController(IContextFactory contextFactory, IMailSender mailSender)
+            : base(contextFactory)
         {
             _mailSender = mailSender;
         }
@@ -36,39 +36,41 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public virtual HttpResponseMessage Get(Guid id)
         {
+            #region DB Get
+            Poll poll;
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(s => s.UUID == id).Include(s => s.Options).FirstOrDefault();
-                if (matchingPoll == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", id));
-                }
-
-                // Hide the manageID to prevent a GET on the poll ID from giving Poll Creator access
-                matchingPoll.ManageID = Guid.Empty;
-
-                // Hide UUIDs of any other polls that are linked through options
-                if (matchingPoll.Options != null)
-                {
-                    foreach (Option matchingPollOptions in matchingPoll.Options)
-                    {
-                        if (matchingPollOptions.Polls != null)
-                        {
-                            foreach (Poll poll in matchingPollOptions.Polls)
-                            {
-                                poll.UUID = Guid.Empty;
-                                poll.ManageID = Guid.Empty;
-                            }
-                        }
-
-                    }
-                }
-
-                // Similarly with tokens
-                matchingPoll.Tokens = new List<Token>();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, matchingPoll);
+                poll = context.Polls.Where(s => s.UUID == id).Include(s => s.Options).FirstOrDefault();
             }
+            #endregion
+
+            #region Validation
+            if (poll == null)
+            {
+                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", id));
+            }
+            #endregion
+
+            #region Response
+
+            PollRequestResponseModel response = new PollRequestResponseModel();
+
+            response.Name = poll.Name;
+            response.Creator = poll.Creator;
+            response.VotingStrategy = poll.VotingStrategy;
+            response.MaxPoints = poll.MaxPoints;
+            response.MaxPerVote = poll.MaxPerVote;
+            response.InviteOnly = poll.InviteOnly;
+            response.AnonymousVoting = poll.AnonymousVoting;
+            response.RequireAuth = poll.RequireAuth;
+            response.Expires = poll.Expires;
+            response.ExpiryDate = poll.ExpiryDate;
+            response.OptionAdding = poll.OptionAdding;
+            response.Options = poll.Options;
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, poll);
+
+            #endregion
         }
 
         #endregion
@@ -84,51 +86,74 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region Post
 
-        public virtual HttpResponseMessage Post(Poll newPoll)
+        public virtual HttpResponseMessage Post(PollCreationRequestModel pollCreationRequest)
         {
+            #region Input Validation
+
+            if (pollCreationRequest == null)
+            {
+                return this.Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+
+            if (pollCreationRequest.Expires && pollCreationRequest.ExpiryDate < DateTime.Now)
+            {
+                ModelState.AddModelError("ExpiryDate", "Invalid or unspecified ExpiryDate");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return this.Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+
+            #endregion
+
+            #region DB Object Creation
+
+            Poll newPoll = new Poll();
+
+            newPoll.UUID = Guid.NewGuid();
+            newPoll.ManageID = Guid.NewGuid();
+            newPoll.Name = pollCreationRequest.Name;
+            newPoll.Creator = pollCreationRequest.Creator;
+            newPoll.VotingStrategy = pollCreationRequest.VotingStrategy;
+            newPoll.TemplateId = 0;
+            newPoll.Options = new List<Option>();
+            newPoll.MaxPoints = pollCreationRequest.MaxPoints;
+            newPoll.MaxPerVote = pollCreationRequest.MaxPerVote;
+            newPoll.InviteOnly = pollCreationRequest.InviteOnly;
+            newPoll.Tokens = new List<Token>();
+            newPoll.ChatMessages = new List<ChatMessage>();
+            newPoll.AnonymousVoting = pollCreationRequest.AnonymousVoting;
+            newPoll.RequireAuth = pollCreationRequest.RequireAuth;
+            newPoll.Expires = pollCreationRequest.Expires;
+            newPoll.ExpiryDate = pollCreationRequest.ExpiryDate;
+            newPoll.OptionAdding = pollCreationRequest.OptionAdding;
+            newPoll.LastUpdated = DateTime.Now;
+
             using (var context = _contextFactory.CreateContext())
             {
-                if (newPoll.Name == null || newPoll.Name.Length == 0)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Poll did not have a name");
-                }
-
-                if (newPoll.Options == null)
-                {
-                    if (newPoll.TemplateId != 0)
-                    {
-                        newPoll.Options = context.Templates.Where(os => os.Id == newPoll.TemplateId).Include(os => os.Options).FirstOrDefault().Options;
-                    }
-                    else
-                    {
-                        newPoll.Options = new List<Option>(); 
-                    }
-                }
-                
-                if(newPoll.Expires && newPoll.ExpiryDate < DateTime.Now)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Expiry date of poll is in the past");
-                }
-
-                newPoll.UUID = Guid.NewGuid();
-                newPoll.ManageID = Guid.NewGuid();
-                newPoll.LastUpdated = DateTime.Now;
-                newPoll.Tokens = new List<Token>();
-
-                // Do the long-running SendCreateEmail task in a different thread, so we can return early
-                Thread newThread = new Thread(new ThreadStart(() => SendCreateEmail(newPoll)));
-                newThread.Start();
-
                 context.Polls.Add(newPoll);
                 context.SaveChanges();
-
-                Poll returnData = new Poll() { UUID = newPoll.UUID, ManageID = newPoll.ManageID };
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, returnData);
             }
+
+            #endregion
+
+            Thread newThread = new Thread(new ThreadStart(() => SendCreateEmail(pollCreationRequest.Email, newPoll.UUID, newPoll.ManageID)));
+            newThread.Start();
+
+            #region Response
+
+            PollCreationResponseModel response = new PollCreationResponseModel();
+
+            response.UUID = newPoll.UUID;
+            response.ManageId = newPoll.ManageID;
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, response);
+
+            #endregion
         }
 
-        private void SendCreateEmail(Poll poll)
+        private void SendCreateEmail(string email, Guid UUID, Guid manageId)
         {
             String hostUri = WebConfigurationManager.AppSettings["HostURI"];
             if (hostUri == String.Empty)
@@ -138,49 +163,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             string message = String.Join("\n\n", new List<string>()
                 {"Your poll is now created and ready to go!",
-                 "You can invite people to vote by giving them this link: " + hostUri + "/Poll/Index/" + poll.UUID,
-                 "You can administer your poll at "+ hostUri + "/Manage/Index/" + poll.ManageID,
+                 "You can invite people to vote by giving them this link: " + hostUri + "/Poll/Index/" + UUID,
+                 "You can administer your poll at "+ hostUri + "/Manage/Index/" + manageId,
                  "(Don't share this link around!)"});
 
-            _mailSender.SendMail(poll.Email, "Your poll is ready!", message);
-        }
-
-        public virtual HttpResponseMessage Post(Guid id, Poll newPoll)
-        {
-            using (var context = _contextFactory.CreateContext())
-            {
-                if (newPoll == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Poll is null");
-                }
-
-                if (newPoll.Name == null || newPoll.Name.Length == 0)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Poll does not have a name");
-                }
-
-                if (newPoll.Options == null)
-                {
-                    List<Option> options = new List<Option>();
-                    if (newPoll.TemplateId != 0)
-                    {
-                        options = context.Templates.Where(os => os.Id == newPoll.TemplateId).Include(os => os.Options).FirstOrDefault().Options;
-                    }
-
-                    newPoll.Options = options;
-                }
-
-                Poll matchingPoll = context.Polls.Where(s => s.UUID == id).FirstOrDefault();
-                if (matchingPoll != null)
-                {
-                    context.Polls.Remove(matchingPoll);
-                }
-
-                context.Polls.Add(newPoll);
-                context.SaveChanges();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, newPoll.UUID);
-            }
+            _mailSender.SendMail(email, "Your poll is ready!", message);
         }
 
         #endregion

@@ -19,11 +19,6 @@ namespace VotingApplication.Data.Model
 
         public String VotingStrategy { get; set; }
 
-        [NotMapped]
-        public string Email { get; set; }
-        [NotMapped]
-        public List<string> Invites { get; set; }
-
         public long TemplateId { get; set; }
         public List<Option> Options { get; set; }
 
