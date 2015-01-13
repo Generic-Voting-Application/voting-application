@@ -2,6 +2,7 @@
     baseUrl: "../../votingapplication.web.api/scripts",
     paths: {
         'jquery': 'Lib/jquery-2.1.1.min',
+        'signalR': 'Lib/jquery.signalR-2.1.2.min',
         'knockout': 'Lib/knockout-3.2.0',
         'bootstrap': 'Lib/bootstrap.min',
         'insight': 'Lib/insight.min',
@@ -19,6 +20,10 @@
     shim: {
         'jquery': {
             exports: '$'
+        },
+        'signalR': {
+            deps: ['jquery'],
+            exports: '$.connection'
         },
         'knockout': {
             deps: ['jquery'],

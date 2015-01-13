@@ -13,6 +13,9 @@ namespace VotingApplication.Web.Api
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+
+            // Setup the SignalR connections
+            app.MapSignalR();
         }
     }
 }
