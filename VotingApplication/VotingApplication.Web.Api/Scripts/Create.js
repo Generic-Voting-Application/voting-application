@@ -1,4 +1,4 @@
-﻿define('Create', ['jquery', 'knockout', 'KnockoutExtensions'], function ($, ko) {
+﻿define('Create', ['jquery', 'knockout', 'Common', 'KnockoutExtensions'], function ($, ko, Common) {
     return function CreateViewModel() {
         var self = this;
 
@@ -44,7 +44,7 @@
                     Name: self.pollName(),
                     Creator: self.creatorName(),
                     Email: self.creatorEmail(),
-                    templateId: self.templateId(),
+                    TemplateId: self.templateId(),
                     VotingStrategy: self.strategy(),
                     MaxPoints: self.maxPoints(),
                     MaxPerVote: self.maxPerVote(),
@@ -57,9 +57,15 @@
                 }),
 
                 success: function (data) {
-                    window.location.href = "/Manage/Index/" + data.ManageID;
-                }
+                    self.navigateToManage(data.ManageID);
+                },
+
+                error: Common.handleError
             });
+        };
+
+        self.navigateToManage = function (manageId) {
+            window.location.href = "/Manage/Index/" + manageId;
         };
 
         self.populateTemplates = function () {
