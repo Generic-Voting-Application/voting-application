@@ -21,6 +21,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private PollController _controller;
         private Poll _mainPoll;
         private Poll _otherPoll;
+        private Poll _templatePoll;
+        private Guid _templateUUID;
         private Guid[] UUIDs;
         private Option _redOption;
         private InMemoryDbSet<Poll> _dummyPolls;
@@ -29,25 +31,22 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void setup()
         {
             _redOption = new Option() { Name = "Red" };
-            Template emptyTemplate = new Template() { Id = 1 };
-            Template redTemplate = new Template() { Id = 2, Options = new List<Option>() { _redOption } };
-            InMemoryDbSet<Template> dummyTemplates = new InMemoryDbSet<Template>(true);
-            dummyTemplates.Add(emptyTemplate);
-            dummyTemplates.Add(redTemplate);
 
-            UUIDs = new [] {Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()};
+            UUIDs = new [] {Guid.NewGuid(), Guid.NewGuid(), _templateUUID, Guid.NewGuid()};
             _mainPoll = new Poll() { UUID = UUIDs[0], ManageID = Guid.NewGuid() };
             _otherPoll = new Poll() { UUID = UUIDs[1], ManageID = Guid.NewGuid() };
+            _templateUUID = Guid.NewGuid();
+            _templatePoll = new Poll() { UUID = _templateUUID, ManageID = Guid.NewGuid(), Options = new List<Option>() { _redOption } };
 
             _dummyPolls = new InMemoryDbSet<Poll>(true);
             _dummyPolls.Add(_mainPoll);
             _dummyPolls.Add(_otherPoll);
+            _dummyPolls.Add(_templatePoll);
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
             mockContext.Setup(a => a.Polls).Returns(_dummyPolls);
-            mockContext.Setup(a => a.Templates).Returns(dummyTemplates);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
             var mockMailSender = new Mock<IMailSender>();
@@ -197,7 +196,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostPopulatesOptionsByTemplateId()
         {
             // Act
-            Poll newPoll = new Poll() { Name = "New Poll", TemplateId = 2 };
+            Poll newPoll = new Poll() { Name = "New Poll", TemplateId = _templateUUID };
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -283,7 +282,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Post(newPoll);
 
             // Assert
-            Assert.AreEqual(UUIDs[2], newPoll.UUID);
+            Assert.AreEqual(UUIDs[3], newPoll.UUID);
         }
 
         [TestMethod]
@@ -297,6 +296,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             List<Poll> expectedPolls = new List<Poll>();
             expectedPolls.Add(_mainPoll);
             expectedPolls.Add(_otherPoll);
+            expectedPolls.Add(_templatePoll);
             expectedPolls.Add(newPoll);
             CollectionAssert.AreEquivalent(expectedPolls, _dummyPolls.Local);
         }
@@ -348,7 +348,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostByIdPopulatesOptionsByTemplateId()
         {
             // Act
-            Poll newPoll = new Poll() { Name = "New Poll", TemplateId = 2 };
+            Poll newPoll = new Poll() { Name = "New Poll", TemplateId = _templateUUID };
             var response = _controller.Post(UUIDs[0], newPoll);
 
             // Assert
@@ -402,6 +402,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             List<Poll> expectedPolls = new List<Poll>();
             expectedPolls.Add(_mainPoll);
+            expectedPolls.Add(_templatePoll);
             expectedPolls.Add(newPoll);
             CollectionAssert.AreEquivalent(expectedPolls, _dummyPolls.Local);
         }
@@ -422,7 +423,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostByIdForNewIdReturnsIdTheNewId()
         {
             // Act
-            Guid newUUID = UUIDs[2];
+            Guid newUUID = UUIDs[3];
             Poll newPoll = new Poll() { Name = "New Poll" };
             var response = _controller.Post(newUUID, newPoll);
 
@@ -435,7 +436,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostByIdForNewIdSetsUUIDOnPoll()
         {
             // Act
-            Guid newUUID = UUIDs[2];
+            Guid newUUID = UUIDs[3];
             Poll newPoll = new Poll() { Name = "New Poll" };
             var response = _controller.Post(newUUID, newPoll);
 

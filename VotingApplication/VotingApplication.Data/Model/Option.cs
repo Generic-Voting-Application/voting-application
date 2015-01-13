@@ -12,7 +12,6 @@ namespace VotingApplication.Data.Model
         public string Description { get; set; }
         public string Info { get; set; }
 
-        public List<Template> Templates { get; set; }
         public List<Poll> Polls { get; set; }
     }
 }

@@ -95,9 +95,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (newPoll.Options == null)
                 {
-                    if (newPoll.TemplateId != 0)
+                    if (newPoll.TemplateId != Guid.Empty)
                     {
-                        newPoll.Options = context.Templates.Where(os => os.Id == newPoll.TemplateId).Include(os => os.Options).FirstOrDefault().Options;
+                        newPoll.Options = context.Polls.Where(p => p.UUID == newPoll.TemplateId).Include(p => p.Options).FirstOrDefault().Options;
                     }
                     else
                     {
@@ -162,9 +162,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 if (newPoll.Options == null)
                 {
                     List<Option> options = new List<Option>();
-                    if (newPoll.TemplateId != 0)
+                    if (newPoll.TemplateId != Guid.Empty)
                     {
-                        options = context.Templates.Where(os => os.Id == newPoll.TemplateId).Include(os => os.Options).FirstOrDefault().Options;
+                        options = context.Polls.Where(p => p.UUID == newPoll.TemplateId).Include(p => p.Options).FirstOrDefault().Options;
                     }
 
                     newPoll.Options = options;
