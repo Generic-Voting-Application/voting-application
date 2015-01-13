@@ -123,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="config.js" />
+    <Content Include="Scripts\Create.js" />
     <Content Include="Scripts\Manage.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

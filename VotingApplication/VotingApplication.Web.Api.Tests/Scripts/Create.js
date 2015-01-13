@@ -34,6 +34,7 @@
             // assert
             setTimeout(function () {
                 expect(target.validateForm).toHaveBeenCalled();
+                expect(target.creatingPoll()).toBe(false);
                 expect(posted).toBe(false);
                 expect(target.navigateToManage.calls.count()).toEqual(0);
                 done();
@@ -54,6 +55,7 @@
             // assert
             setTimeout(function () {
                 expect(target.validateForm).toHaveBeenCalled();
+                expect(target.creatingPoll()).toBe(true);
                 expect(target.navigateToManage).toHaveBeenCalledWith(303);
                 done();
             }, 10);
