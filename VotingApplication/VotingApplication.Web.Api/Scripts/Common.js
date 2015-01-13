@@ -1,4 +1,4 @@
-﻿define(['jquery'], function () {
+﻿define(['jquery', '/Scripts/Navbar.js'], function () {
 
     // Checks if elements are collapsed
     (function () {
