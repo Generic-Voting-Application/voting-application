@@ -57,12 +57,6 @@
         localStorage.removeItem("user_" + pollId);
     }
 
-    Common.keyIsEnter = function (key, callback) {
-        if (key && key.keyCode == 13) {
-            callback();
-        }
-    };
-
     Common.handleError = function (error) {
 
         var friendlyText;
