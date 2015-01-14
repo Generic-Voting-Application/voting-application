@@ -327,9 +327,8 @@
 
                     selectedOptionsArray.push({
                         OptionId: selection.Id,
-                        PollId: pollId,
                         VoteValue: rank,
-                        Token: { TokenGuid: token || Common.sessionItem("token", pollId) }
+                        TokenGuid: token || Common.sessionItem("token", pollId)
                     });
                 });
 

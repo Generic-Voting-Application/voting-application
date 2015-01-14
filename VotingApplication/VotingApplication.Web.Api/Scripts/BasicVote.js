@@ -111,8 +111,7 @@
 
             var voteData = JSON.stringify([{
                 OptionId: data.Id,
-                PollId: pollId,
-                Token: { TokenGuid: token || Common.sessionItem("token", pollId) }
+                TokenGuid: token || Common.sessionItem("token", pollId)
             }]);
 
             if (userId && pollId) {

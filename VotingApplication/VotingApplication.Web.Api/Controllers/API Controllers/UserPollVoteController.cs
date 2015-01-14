@@ -115,108 +115,105 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region PUT
 
-        public virtual HttpResponseMessage Put(long userId, Guid pollId, List<Vote> votes)
+        public virtual HttpResponseMessage Put(long userId, Guid pollId, List<VoteRequestModel> voteRequests)
         {
+            #region Input Validation
+
+            if (voteRequests == null)
+            {
+                return this.Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return this.Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+
             using (var context = _contextFactory.CreateContext())
             {
-                IEnumerable<User> users = context.Users.Where(u => u.Id == userId).Include(u => u.Token);
-                if (users.Count() == 0)
+                if (!context.Users.Any(u => u.Id == userId))
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("User {0} not found", userId));
                 }
 
-                Poll poll = context.Polls.Where(p => p.UUID == pollId).Include(p => p.Tokens).Include(p => p.Options).FirstOrDefault();
+                Poll poll = context.Polls.Where(p => p.UUID == pollId).Include(p => p.Tokens).Include(p => p.Options).SingleOrDefault();
                 if (poll == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Poll {0} not found", pollId));
                 }
 
-                User user = users.FirstOrDefault();
-
-                Guid userTokenId;
-                if (user.Token == null)
+                if (poll.Expires && poll.ExpiryDate < DateTime.Now)
                 {
-                    userTokenId = Guid.Empty;
-                }
-                else
-                {
-                    userTokenId = user.Token.TokenGuid;
+                    return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", pollId));
                 }
 
-                // Clear out existing votes for this user in this poll
-                List<Vote> contextVotes = context.Votes.Where(v => v.Token != null && v.Token.TokenGuid == userTokenId && v.PollId == pollId).ToList<Vote>();
+                foreach (VoteRequestModel voteRequest in voteRequests)
+                {
+                    if (!context.Options.Any(o => o.Id == voteRequest.OptionId))
+                    {
+                        ModelState.AddModelError("OptionId", String.Format("Option {0} not found", voteRequest.OptionId));
+                    }
 
-                foreach (Vote contextVote in contextVotes)
+                    if (!poll.Options.Any(o => o.Id == voteRequest.OptionId))
+                    {
+                        ModelState.AddModelError("OptionId", "Option choice not valid for this poll");
+                    }
+
+                    if (!poll.Tokens.Any(t => t.TokenGuid == voteRequest.TokenGuid))
+                    {
+                        ModelState.AddModelError("TokenGuid", String.Format("Token {0} not valid for this poll", voteRequest.TokenGuid));
+                    }
+
+                    if (poll.VotingStrategy == "Points" && (voteRequest.VoteValue > poll.MaxPerVote || voteRequest.VoteValue > poll.MaxPoints))
+                    {
+                        ModelState.AddModelError("VoteValue", String.Format("Invalid vote value: {0}", voteRequest.VoteValue));
+                    }
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return this.Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
+                }
+            }
+
+            #endregion
+
+            #region DB Object Creation
+
+            using (var context = _contextFactory.CreateContext())
+            {
+
+                // TODO: This needs to be changed
+                List<Vote> existingVotes = context.Votes.Where(v => v.UserId == userId && v.PollId == pollId).ToList<Vote>();
+
+                foreach (Vote contextVote in existingVotes)
                 {
                     context.Votes.Remove(contextVote);
                 }
 
-                List<long> voteIds = new List<long>();
-
-                foreach (Vote vote in votes)
+                foreach (VoteRequestModel voteRequest in voteRequests)
                 {
-                    if (vote.OptionId == 0)
-                    {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Vote must specify an option");
-                    }
+                    Vote newVote = new Vote();
+                    newVote.Option = context.Options.Single(o => o.Id == voteRequest.OptionId);
+                    newVote.Poll = context.Polls.Single(p => p.UUID == pollId);
+                    newVote.PollId = pollId;
+                    newVote.Token = new Token { PollId = pollId, UserId = userId, TokenGuid = voteRequest.TokenGuid };
+                    newVote.User = context.Users.Single(u => u.Id == userId);
+                    newVote.PollValue = voteRequest.VoteValue;
 
-                    IEnumerable<Option> options = context.Options.Where(o => o.Id == vote.OptionId);
-                    if (options.Count() == 0)
-                    {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Option {0} not found", vote.OptionId));
-                    }
-
-                    if (poll.Expires && poll.ExpiryDate < DateTime.Now)
-                    {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", pollId));
-                    }
-
-                    // Check that the option is valid for the poll
-                    Option option = options.FirstOrDefault();
-                    if (poll.Options == null || poll.Options.Count == 0 || !poll.Options.Contains(option))
-                    {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, String.Format("Option choice not valid for poll {0}", pollId));
-                    }
-
-                    // Validate tokens if required
-                    if (vote.Token == null || vote.Token.TokenGuid == Guid.Empty)
-                    {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("A valid token is required for poll {0}", pollId));
-                    }
-                    else if (poll.Tokens == null || !poll.Tokens.Any(t => t.TokenGuid == vote.Token.TokenGuid))
-                    {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("Invalid token: {0}", vote.Token.TokenGuid));
-                    }
-
-                    // Validate poll value
-                    if (vote.PollValue <= 0)
-                    {
-                        vote.PollValue = 1;
-                    }
-
-                    if (poll.VotingStrategy == "Points" && (vote.PollValue > poll.MaxPerVote || vote.PollValue > poll.MaxPoints))
-                    {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, String.Format("Invalid vote value: {0}", vote.PollValue));
-                    }
-
-                    vote.UserId = userId;
+                    context.Votes.Add(newVote);
                 }
-
-                foreach (Vote vote in votes)
-                {
-                    vote.PollId = pollId;
-                    context.Votes.Add(vote);
-                    context.SaveChanges();
-                    voteIds.Add(vote.Id);
-                }
-
-                poll.LastUpdated = DateTime.UtcNow;
 
                 context.SaveChanges();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, voteIds);
             }
 
+            #endregion
+
+            #region Response
+
+            return this.Request.CreateResponse(HttpStatusCode.OK);
+
+            #endregion
         }
 
         #endregion

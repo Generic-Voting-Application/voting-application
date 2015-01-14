@@ -191,9 +191,8 @@
 
                 var vote = {
                     OptionId: self.options()[i].Id,
-                    PollId: pollId,
                     VoteValue: self.pointsArray()[i],
-                    Token: { TokenGuid: token || Common.sessionItem("token", pollId) }
+                    TokenGuid: token || Common.sessionItem("token", pollId)
                 };
 
                 votesData.push(vote);
