@@ -218,7 +218,6 @@ define('Manage', ['jquery', 'knockout', 'bootstrap', 'Common'], function ($, ko,
 
         self.votes = ko.observableArray();
         self.options = ko.observableArray();
-        self.votingStrategy = ko.observable(false);
         self.pollId = ko.observable();
 
         self.selectedDeleteOptionId = null;

@@ -38,7 +38,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                             foreach (Poll poll in matchingPollOptions.Polls)
                             {
                                 poll.UUID = Guid.Empty;
-                                poll.ManageID = Guid.Empty;
+                                poll.ManageId = Guid.Empty;
                             }
                         }
 

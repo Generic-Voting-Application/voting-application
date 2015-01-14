@@ -116,7 +116,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             Poll newPoll = new Poll();
 
             newPoll.UUID = Guid.NewGuid();
-            newPoll.ManageID = Guid.NewGuid();
+            newPoll.ManageId = Guid.NewGuid();
             newPoll.Name = pollCreationRequest.Name;
             newPoll.Creator = pollCreationRequest.Creator;
             newPoll.VotingStrategy = pollCreationRequest.VotingStrategy;
@@ -142,7 +142,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             #endregion
 
-            Thread newThread = new Thread(new ThreadStart(() => SendCreateEmail(pollCreationRequest.Email, newPoll.UUID, newPoll.ManageID)));
+            Thread newThread = new Thread(new ThreadStart(() => SendCreateEmail(pollCreationRequest.Email, newPoll.UUID, newPoll.ManageId)));
             newThread.Start();
 
             #region Response
@@ -150,7 +150,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             PollCreationResponseModel response = new PollCreationResponseModel();
 
             response.UUID = newPoll.UUID;
-            response.ManageId = newPoll.ManageID;
+            response.ManageId = newPoll.ManageId;
 
             return this.Request.CreateResponse(HttpStatusCode.OK, response);
 

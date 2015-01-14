@@ -21,7 +21,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
+                Poll matchingPoll = context.Polls.Where(s => s.ManageId == manageId).Include(s => s.Options).FirstOrDefault();
                 if (matchingPoll == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
@@ -50,7 +50,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 }
 
-                Poll matchingPoll = context.Polls.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
+                Poll matchingPoll = context.Polls.Where(s => s.ManageId == manageId).Include(s => s.Options).FirstOrDefault();
                 if (matchingPoll == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
@@ -103,7 +103,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
+                Poll matchingPoll = context.Polls.Where(s => s.ManageId == manageId).Include(s => s.Options).FirstOrDefault();
                 if (matchingPoll == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));

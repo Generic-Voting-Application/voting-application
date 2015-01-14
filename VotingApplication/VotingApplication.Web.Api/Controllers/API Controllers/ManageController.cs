@@ -27,7 +27,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             Poll poll;
             using (var context = _contextFactory.CreateContext())
             {
-                poll = context.Polls.Where(s => s.ManageID == manageId).Include(s => s.Options).FirstOrDefault();
+                poll = context.Polls.Where(s => s.ManageId == manageId).Include(s => s.Options).FirstOrDefault();
             }
             #endregion
 

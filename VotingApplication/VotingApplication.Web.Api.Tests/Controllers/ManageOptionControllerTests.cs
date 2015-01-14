@@ -47,8 +47,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _dummyVotes.Add(_burgerVote);
 
             InMemoryDbSet<Poll> dummyPolls = new InMemoryDbSet<Poll>(true);
-            _mainPoll = new Poll() { UUID = mainUUID, ManageID = _manageMainUUID, Options = new List<Option>() { _burgerOption, _pizzaOption } };
-            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageID = _manageEmptyUUID, Options = new List<Option>() };
+            _mainPoll = new Poll() { UUID = mainUUID, ManageId = _manageMainUUID, Options = new List<Option>() { _burgerOption, _pizzaOption } };
+            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageId = _manageEmptyUUID, Options = new List<Option>() };
             dummyPolls.Add(_mainPoll);
             dummyPolls.Add(emptyPoll);
 

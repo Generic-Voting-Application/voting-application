@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Http;
-using FakeDbSet;
+﻿using FakeDbSet;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
@@ -43,9 +40,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _manageOtherUUID = Guid.NewGuid();
             _manageEmptyUUID = Guid.NewGuid();
 
-            Poll mainPoll = new Poll() { UUID = mainUUID, ManageID = _manageMainUUID };
-            Poll otherPoll = new Poll() { UUID = otherUUID, ManageID = _manageOtherUUID };
-            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageID = _manageEmptyUUID };
+            Poll mainPoll = new Poll() { UUID = mainUUID, ManageId = _manageMainUUID };
+            Poll otherPoll = new Poll() { UUID = otherUUID, ManageId = _manageOtherUUID };
+            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageId = _manageEmptyUUID };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
 
