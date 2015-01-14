@@ -3,6 +3,7 @@
     "TestHarnessReferenceMode": "AMD",
     "References": [
         { "path": "../votingapplication.web.api/scripts/lib/require.js" },
+        { "path": "../votingapplication.web.api/scripts/config.js" },
         { "path": "config.js" }
     ],
     "Tests": [
