@@ -70,12 +70,19 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 PollVoteRequestResponseModel responseVote = new PollVoteRequestResponseModel();
 
-                responseVote.OptionId = vote.Option.Id;
-                responseVote.OptionName = vote.Option.Name;
-                responseVote.VoterName = poll.AnonymousVoting ? "Anonymous User" : vote.User.Name;
+                if(vote.Option != null)
+                {
+                    responseVote.OptionId = vote.Option.Id;
+                    responseVote.OptionName = vote.Option.Name;
+                }
+
+                if(vote.User != null)
+                {
+                    responseVote.VoterName = poll.AnonymousVoting ? "Anonymous User" : vote.User.Name;
+                    responseVote.UserId = vote.User.Id;
+                }
+               
                 responseVote.VoteValue = vote.PollValue;
-                responseVote.UserId = vote.User.Id;
-                responseVote.UserName = vote.User.Name;
 
                 response.Add(responseVote);
             }

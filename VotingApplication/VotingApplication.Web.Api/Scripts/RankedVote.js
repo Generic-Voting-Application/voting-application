@@ -121,7 +121,7 @@
                     return {
                         Name: matchingOption.Name,
                         BallotCount: d.ballots.length,
-                        Voters: d.ballots.map(function (x) { return x[0].UserName + " (#" + (x.map(function (y) { return y.OptionId }).indexOf(matchingOption.Id) + 1) + ")"; })
+                        Voters: d.ballots.map(function (x) { return x[0].VoterName + " (#" + (x.map(function (y) { return y.OptionId }).indexOf(matchingOption.Id) + 1) + ")"; })
                     }
                 });
 
