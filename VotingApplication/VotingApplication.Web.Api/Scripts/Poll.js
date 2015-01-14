@@ -194,21 +194,27 @@
             self.userId = undefined;
         }
 
-        chatClient.joinPoll(pollId);
-        chatClient.onMessage = function (name, message, timeStamp) {
-            self.chatMessages.push({
-                User: { Name: name },
-                Message: message,
-                Timestamp: new moment(timeStamp).format('H:mm')
-            });
+        self.chatMessage = ko.observable("");
+
+        var receivedMessage = function (message) {
+            message.Timestamp = new moment(message.Timestamp).format('H:mm');
+            self.chatMessages.push(message);
+        };
+        chatClient.onMessage = function (message) {
+            receivedMessage(message);
             scrollChatWindow();
         };
+        chatClient.onMessages = function (messages) {
+            ko.utils.arrayForEach(messages, receivedMessage);
+            scrollChatWindow();
+        };
+
+        chatClient.joinPoll(pollId);
+
         self.sendChatMessage = function (data, event) {
             if (self.userId && pollId) {
-                var chatMessage = $('#chatTextInput').val();
-                $('#chatTextInput').val('');
-
-                chatClient.sendMessage(pollId, self.userName(), chatMessage);
+                chatClient.sendMessage(pollId, self.userId, self.chatMessage());
+                self.chatMessage("");
             }
         };
 

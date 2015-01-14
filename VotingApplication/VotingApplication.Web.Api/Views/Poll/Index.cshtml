@@ -93,8 +93,10 @@
             <div class="panel-footer">
                 <form>
                     <div class="input-append form-group">
-                        <input class="form-control" type='text' id="chatTextInput" placeholder="Message" data-bind="enable: userName()" />
-                        <button class="btn btn-primary" data-bind="click: sendChatMessage, enable: userName()">Send</button>
+                        <input class="form-control" type='text' id="chatTextInput" placeholder="Message"
+                               data-bind="enable: userName(), value: chatMessage, valueUpdate: 'afterkeydown'" />
+                        <button class="btn btn-primary" type="submit"
+                                data-bind="click: sendChatMessage, enable: userName() && chatMessage()">Send</button>
                     </div>
                 </form>
             </div>

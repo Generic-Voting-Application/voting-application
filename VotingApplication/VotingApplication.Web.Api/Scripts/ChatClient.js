@@ -5,8 +5,14 @@
         var self = this;
 
         // Broadcast message called when a new chat message is sent
-        chat.client.broadcastMessage = function (name, message, timeStamp) {
-            if (self.onMessage) self.onMessage(name, message, timeStamp);
+        chat.client.broadcastMessage = function (message) {
+            if (self.onMessage) self.onMessage(message);
+        };
+        chat.client.broadcastMessages = function (messages) {
+            if (self.onMessages) self.onMessages(messages);
+        };
+        chat.client.reportError = function (error) {
+            console.error(error);
         };
 
         // Start the connection
@@ -21,12 +27,17 @@
         };
 
         // Send a message to the server
-        self.sendMessage = function sendMessage(pollId, name, message) {
-            chat.server.sendMessage(pollId, name, message);
+        self.sendMessage = function sendMessage(pollId, userId, message) {
+            chat.server
+                .sendMessage(pollId, userId, message)
+                .fail(function (x) {
+                    console.error(x);
+                });
         };
 
-        // Callback function when receiving messages
+        // Callback functions when receiving messages
         self.onMessage = null;
+        self.onMessages = null;
     };
     return new ChatClient();
 });
