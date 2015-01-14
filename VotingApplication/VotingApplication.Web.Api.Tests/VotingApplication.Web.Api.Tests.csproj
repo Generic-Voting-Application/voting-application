@@ -104,7 +104,6 @@
     <Compile Include="Controllers\ManageOptionControllerTests.cs" />
     <Compile Include="Controllers\ManageVoteControllerTests.cs" />
     <Compile Include="Controllers\OptionControllerTests.cs" />
-    <Compile Include="Controllers\PollChatMessageControllerTests.cs" />
     <Compile Include="Controllers\TemplateControllerTests.cs" />
     <Compile Include="Controllers\PollControllerTests.cs" />
     <Compile Include="Controllers\PollOptionControllerTests.cs" />
