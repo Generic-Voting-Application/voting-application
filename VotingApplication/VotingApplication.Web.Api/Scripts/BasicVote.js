@@ -25,12 +25,8 @@
         var countVotes = function (votes) {
             var totalCounts = [];
             votes.forEach(function (vote) {
-                var optionName = vote.Option.Name;
-                var voter = "Anonymous User";
-
-                if (vote.User) {
-                    voter = vote.User.Name;
-                }
+                var optionName = vote.OptionName;
+                var voter = vote.VoterName;
 
                 // Find a vote with the same Option.Name, if it exists.
                 var existingOption = totalCounts.filter(function (vote) { return vote.Name == optionName; }).pop();

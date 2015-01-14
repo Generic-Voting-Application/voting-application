@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Web;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -20,48 +21,68 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public virtual HttpResponseMessage Get(Guid pollId)
         {
+            #region DBGet
+
+            Poll poll;
+            List<Vote> votes;
+
             using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = context.Polls.Where(s => s.UUID == pollId).FirstOrDefault();
-                if (poll == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
-                }
-
-                DateTime clientLastUpdated = DateTime.MinValue;
-                if (this.Request.RequestUri != null && this.Request.RequestUri.Query != null)
-                {
-                    NameValueCollection queryMap = HttpUtility.ParseQueryString(this.Request.RequestUri.Query);
-                    string lastPolledDate = queryMap["lastPoll"];
-
-                    if (lastPolledDate != null)
-                    {
-                        clientLastUpdated = UnixTimeToDateTime(long.Parse(lastPolledDate));
-                    }
-
-                    if (poll.LastUpdated.CompareTo(clientLastUpdated) < 0)
-                    {
-                        return this.Request.CreateResponse(HttpStatusCode.NotModified);
-                    }
-                }
-
-                List<Vote> pollVotes;
-
-                if (poll.AnonymousVoting)
-                {
-                    pollVotes = context.Votes.Where(v => v.PollId == pollId)
-                    .Include(v => v.Option).ToList();
-                }
-                else
-                {
-                    pollVotes = context.Votes.Where(v => v.PollId == pollId)
-                    .Include(v => v.Option).Include(v => v.User)
-                    .ToList();
-                }
-
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, pollVotes);
+                poll = context.Polls.Where(s => s.UUID == pollId).FirstOrDefault();
+                votes = context.Votes.Where(v => v.PollId == pollId)
+                .Include(v => v.Option).Include(v => v.User)
+                .ToList();
             }
+
+            #endregion
+
+            #region Validation
+
+            if (poll == null)
+            {
+                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
+            }
+
+            DateTime clientLastUpdated = DateTime.MinValue;
+            if (this.Request.RequestUri != null && this.Request.RequestUri.Query != null)
+            {
+                NameValueCollection queryMap = HttpUtility.ParseQueryString(this.Request.RequestUri.Query);
+                string lastPolledDate = queryMap["lastPoll"];
+
+                if (lastPolledDate != null)
+                {
+                    clientLastUpdated = UnixTimeToDateTime(long.Parse(lastPolledDate));
+                }
+
+                if (poll.LastUpdated.CompareTo(clientLastUpdated) < 0)
+                {
+                    return this.Request.CreateResponse(HttpStatusCode.NotModified);
+                }
+            }
+
+            #endregion
+
+            #region Response
+
+            List<PollVoteRequestResponseModel> response = new List<PollVoteRequestResponseModel>();
+
+            foreach(Vote vote in votes)
+            {
+                PollVoteRequestResponseModel responseVote = new PollVoteRequestResponseModel();
+
+                responseVote.OptionId = vote.Option.Id;
+                responseVote.OptionName = vote.Option.Name;
+                responseVote.VoterName = poll.AnonymousVoting ? "Anonymous User" : vote.User.Name;
+                responseVote.VoteValue = vote.PollValue;
+                responseVote.UserId = vote.User.Id;
+                responseVote.UserName = vote.User.Name;
+
+                response.Add(responseVote);
+            }
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, response);
+
+            #endregion
         }
 
         public virtual HttpResponseMessage Get(Guid pollId, long voteId)
