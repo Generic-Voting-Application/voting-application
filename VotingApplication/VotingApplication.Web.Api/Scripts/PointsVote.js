@@ -192,7 +192,7 @@
                 var vote = {
                     OptionId: self.options()[i].Id,
                     PollId: pollId,
-                    PollValue: self.pointsArray()[i],
+                    VoteValue: self.pointsArray()[i],
                     Token: { TokenGuid: token || Common.sessionItem("token", pollId) }
                 };
 
@@ -234,7 +234,7 @@
                         if (optionIndex == -1)
                             continue;
 
-                        self.pointsArray()[optionIndex] = data[i].PollValue;
+                        self.pointsArray()[optionIndex] = data[i].VoteValue;
                         self.pointsArray.valueHasMutated();
                     }
                     updateAllButtons();

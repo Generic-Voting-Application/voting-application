@@ -6,37 +6,73 @@ using System.Net;
 using System.Net.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
-
+using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
     public class UserPollVoteController : WebApiController
     {
-        public UserPollVoteController() : base() {}
+        public UserPollVoteController() : base() { }
         public UserPollVoteController(IContextFactory contextFactory) : base(contextFactory) { }
 
         #region GET
 
         public virtual HttpResponseMessage Get(long userId, Guid pollId)
         {
+
+            #region DBGet / Validation
+            List<Vote> votes;
+            Poll poll;
             using (var context = _contextFactory.CreateContext())
             {
-                User matchingUser = context.Users.Where(u => u.Id == userId).FirstOrDefault();
-                if (matchingUser == null)
+                User user = context.Users.Where(u => u.Id == userId).FirstOrDefault();
+                if (user == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("User {0} not found", userId));
                 }
 
-                Poll matchingPoll = context.Polls.Where(s => s.UUID == pollId).FirstOrDefault();
-                if (matchingPoll == null)
+                poll = context.Polls.Where(s => s.UUID == pollId).FirstOrDefault();
+                if (poll == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
                 }
 
-                IEnumerable<Vote> allVotesForUserInPoll = context.Votes.Where(v => v.UserId == userId && v.PollId == pollId);
-                return this.Request.CreateResponse(HttpStatusCode.OK, allVotesForUserInPoll.ToList());
+                votes = context.Votes.Where(v => v.UserId == userId && v.PollId == pollId).Include(v => v.Option).ToList();
             }
+            #endregion
+
+            #region Response
+
+            List<PollVoteRequestResponseModel> response = new List<PollVoteRequestResponseModel>();
+
+            foreach (Vote vote in votes)
+            {
+                PollVoteRequestResponseModel responseVote = new PollVoteRequestResponseModel();
+
+                if (vote.Option != null)
+                {
+                    responseVote.OptionId = vote.Option.Id;
+                    responseVote.OptionName = vote.Option.Name;
+                }
+
+                if (vote.User != null)
+                {
+                    responseVote.VoterName = poll.AnonymousVoting ? "Anonymous User" : vote.User.Name;
+                    responseVote.UserId = vote.User.Id;
+                }
+
+                responseVote.VoteValue = vote.PollValue;
+
+                response.Add(responseVote);
+            }
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, response);
+
+            #endregion
+
         }
+
+        /*
 
         public virtual HttpResponseMessage Get(long userId, Guid pollId, long voteId)
         {
@@ -59,6 +95,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
+        */
+
         #endregion
 
         #region POST
@@ -76,7 +114,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         #endregion
 
         #region PUT
-        
+
         public virtual HttpResponseMessage Put(long userId, Guid pollId, List<Vote> votes)
         {
             using (var context = _contextFactory.CreateContext())
@@ -96,7 +134,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 User user = users.FirstOrDefault();
 
                 Guid userTokenId;
-                if(user.Token == null)
+                if (user.Token == null)
                 {
                     userTokenId = Guid.Empty;
                 }
@@ -178,7 +216,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 return this.Request.CreateResponse(HttpStatusCode.OK, voteIds);
             }
-            
+
         }
 
         #endregion

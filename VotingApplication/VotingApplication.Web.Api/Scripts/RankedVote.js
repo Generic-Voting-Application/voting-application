@@ -40,8 +40,8 @@
             $('#optionTable-tbody').append($('#selectionTable > tbody').remove('tr').children());
         }
         
-        var sortByPollValue = function (a, b) {
-            return a.PollValue - b.PollValue;
+        var sortByVoteValue = function (a, b) {
+            return a.VoteValue - b.VoteValue;
         }
 
         var refreshOptions = function () {
@@ -104,7 +104,7 @@
 
                 // Sort the votes on the ballots and assign each ballot to first choice
                 ballots.forEach(function (ballot) {
-                    ballot.sort(sortByPollValue);
+                    ballot.sort(sortByVoteValue);
                     var availableChoices = ballot.filter(function (option) { return $.inArray(option.OptionId, availableOptions) != -1; })
                     if (availableChoices.length > 0) {
                         var firstChoiceId = availableChoices[0].OptionId
@@ -328,14 +328,14 @@
                     selectedOptionsArray.push({
                         OptionId: selection.Id,
                         PollId: pollId,
-                        PollValue: rank,
+                        VoteValue: rank,
                         Token: { TokenGuid: token || Common.sessionItem("token", pollId) }
                     });
                 });
 
                 // Offset by the first value to account for table headers and sort out 0 index
                 selectedOptionsArray.map(function (option) {
-                    option.PollValue -= minRank - 1;
+                    option.VoteValue -= minRank - 1;
                 });
 
                 $.ajax({
@@ -362,7 +362,7 @@
                 contentType: 'application/json',
 
                 success: function (data) {
-                    data.sort(sortByPollValue);
+                    data.sort(sortByVoteValue);
                     selectPickedOptions(data);
                 },
 
