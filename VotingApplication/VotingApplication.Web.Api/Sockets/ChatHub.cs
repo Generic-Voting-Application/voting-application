@@ -16,13 +16,26 @@ namespace VotingApplication.Web.Api.Sockets
         {
             _contextFactory = contextFactory;
         }
+        public virtual string ConnectionId
+        {
+            get { return Context.ConnectionId; }
+        } 
 
         public void JoinPoll(Guid pollId)
         {
-            Groups.Add(Context.ConnectionId, pollId.ToString());
+            // Join the group for future messages
+            Groups.Add(ConnectionId, pollId.ToString());
 
-            // Send caller the message log so far
-            SendChatLog(pollId);
+            try
+            {
+                // Send caller the message log so far
+                SendChatLog(pollId);
+            }
+            catch (InvalidOperationException e)
+            {
+                // Send the error to the caller
+                Clients.Caller.reportError(e.Message);
+            }
         }
 
         public void SendMessage(Guid pollId, long userId, string message)
@@ -47,12 +60,14 @@ namespace VotingApplication.Web.Api.Sockets
             using (var context = _contextFactory.CreateContext())
             {
                 Poll matchingPoll = context.Polls.Where(p => p.UUID == pollId).Include(p => p.ChatMessages.Select(m => m.User)).FirstOrDefault();
-                if (matchingPoll != null)
+                if (matchingPoll == null)
                 {
-                    var messages = matchingPoll.ChatMessages ?? new List<ChatMessage>();
-                    // Broadcast to original caller only
-                    Clients.Caller.broadcastMessages(messages);
+                    throw new InvalidOperationException(string.Format("Poll {0} not found", pollId));
                 }
+
+                var messages = matchingPoll.ChatMessages ?? new List<ChatMessage>();
+                // Broadcast to original caller only
+                Clients.Caller.broadcastMessages(messages);
             }
         }
 
