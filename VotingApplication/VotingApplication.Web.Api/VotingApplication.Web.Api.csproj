@@ -326,6 +326,7 @@
     <Content Include="Scripts\Create.js" />
     <Content Include="Scripts\Lib\jquery.signalR-2.1.2.js" />
     <Content Include="Scripts\Lib\jquery.signalR-2.1.2.min.js" />
+    <Content Include="Scripts\KnockoutExtensions.js" />
     <Content Include="Scripts\Lib\bootstrap-switch.min.js" />
     <Content Include="Scripts\Lib\bootstrap.min.js" />
     <Content Include="Scripts\Lib\countdown.min.js" />
@@ -336,8 +337,8 @@
     <Content Include="Scripts\Lib\jquery-sortable-min.js" />
     <Content Include="Scripts\Lib\jquery-ui.min.js" />
     <Content Include="Scripts\Lib\jquery.ui.touch-punch.min.js" />
-    <Content Include="Scripts\Lib\knockout-3.2.0.js" />
-    <Content Include="Scripts\Lib\moment.js" />
+    <Content Include="Scripts\Lib\knockout-3.2.0.min.js" />
+    <Content Include="Scripts\Lib\moment.min.js" />
     <Content Include="Scripts\Config.js" />
     <Compile Include="Sockets\ChatHub.cs" />
     <Compile Include="Startup.cs" />
@@ -379,9 +380,9 @@
     <Content Include="Scripts\ChatClient.js" />
     <Content Include="Scripts\Admin.js" />
     <Content Include="Scripts\Common.js" />
-    <Content Include="Scripts\VotingStrategies\RankedVote.js" />
-    <Content Include="Scripts\VotingStrategies\PointsVote.js" />
-    <Content Include="Scripts\VotingStrategies\BasicVote.js" />
+    <Content Include="Scripts\RankedVote.js" />
+    <Content Include="Scripts\PointsVote.js" />
+    <Content Include="Scripts\BasicVote.js" />
     <Content Include="Styling\Lib\bootstrap-datetimepicker.min.css" />
     <None Include="Views\Poll\_BasicVotePartial.cshtml" />
     <None Include="Views\Poll\_PointsVotePartial.cshtml" />
@@ -391,9 +392,6 @@
     <None Include="Views\Poll\_RankedResultsPartial.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
@@ -461,6 +459,13 @@
     <Error Condition="!Exists('..\packages\Microsoft.ApplicationInsights.0.10.0-build17704\tools\net40\Microsoft.ApplicationInsights.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." />
     <Error Condition="Exists('..\packages\Microsoft.ApplicationInsights.0.10.0-build17704\tools\net40\Microsoft.ApplicationInsights.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>npm install</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

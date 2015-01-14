@@ -1,47 +1,32 @@
-﻿define(['jquery', 'knockout', 'datetimepicker', 'moment', 'Common', 'jqueryUI'], function ($, ko, datetimepicker, moment, Common) {
+﻿define('Create', ['jquery', 'knockout', 'Common', 'KnockoutExtensions'], function ($, ko, Common) {
     return function CreateViewModel() {
         var self = this;
 
         self.templates = ko.observableArray();
-        self.selectedStrategy = ko.observable();
-        self.expires = ko.observable(false);
 
+        // Basic Poll options
         self.pollName = ko.observable("");
         self.creatorName = ko.observable("");
         self.creatorEmail = ko.observable("");
 
+        // Advanced Poll options
+        self.templateId = ko.observable("");
+        self.strategy = ko.observable("");
+        self.maxPoints = ko.observable(7);
+        self.maxPerVote = ko.observable(3);
+        self.inviteOnly = ko.observable(false);
+        self.anonymousVoting = ko.observable(false);
+        self.requireAuth = ko.observable(false);
+        self.expiry = ko.observable(false);
+        self.expiryDate = ko.observable("");
+        self.optionAdding = ko.observable(false);
+
+        self.creatingPoll = ko.observable(false);
+
         self.createPoll = function () {
-            //Clear out previous error messages
-            $('text').remove('.error-message');
-
-            var inputs = $("#poll-create-form div");
-            for (var i = 0; i < inputs.length; i++) {
-                self.validateField(inputs[i]);
-            }
-
-            if (!$("#poll-create-form")[0].checkValidity()) {
-                return;
-            }
-
-            $("#poll-create-btn").attr('disabled', 'disabled');
-            $("#poll-create-btn").text('Creating...');
-
-            var templateId = $("#template").val();
-            var strategy = $("#voting-strategy").val();
-            var maxPoints = $("#max-points").val() || 7;
-            var maxPerVote = $("#max-per-vote").val() || 3;
-            var inviteOnly = $('#invite-only').is(':checked');
-            var anonymousVoting = $('#anonymous-voting').is(':checked');
-            var requireAuth = $('#require-auth').is(':checked');
-            var expiry = $('#expiry').is(':checked');
-            var expiryDate = expiry ? new Date($('#expiry-date').val()) : null;
-            var optionAdding = $('#option-adding').is(':checked');
-
-            if (expiryDate == 'Invalid Date' && expiry) {
-                expiryDate = new Date();
-                expiryDate.setMinutes(expiryDate.getMinutes() + 30);
-            }
-
+            if (!self.validateForm()) return;
+            self.creatingPoll(true);
+            
             $.ajax({
                 type: 'POST',
                 url: '/api/poll',
@@ -51,39 +36,28 @@
                     Name: self.pollName(),
                     Creator: self.creatorName(),
                     Email: self.creatorEmail(),
-                    templateId: templateId,
-                    VotingStrategy: strategy,
-                    MaxPoints: maxPoints,
-                    MaxPerVote: maxPerVote,
-                    InviteOnly: inviteOnly,
-                    AnonymousVoting: anonymousVoting,
-                    RequireAuth: requireAuth,
-                    Expires: expiry,
-                    ExpiryDate: expiryDate,
-                    OptionAdding: optionAdding
+                    TemplateId: self.templateId(),
+                    VotingStrategy: self.strategy(),
+                    MaxPoints: self.maxPoints(),
+                    MaxPerVote: self.maxPerVote(),
+                    InviteOnly: self.inviteOnly(),
+                    AnonymousVoting: self.anonymousVoting(),
+                    RequireAuth: self.requireAuth(),
+                    Expires: self.expiry(),
+                    ExpiryDate: new Date(self.expiryDate()),
+                    OptionAdding: self.optionAdding()
                 }),
 
                 success: function (data) {
-                    window.location.href = "/Manage/Index/" + data.ManageID;
-                }
+                    self.navigateToManage(data.ManageID);
+                },
+
+                error: Common.handleError
             });
         };
 
-        self.validateField = function (field) {
-            var inputField = $(field).find('input')[0];
-
-            if (!inputField) {
-                return;
-            }
-
-            if (!inputField.checkValidity()) {
-                $(inputField).addClass('error');
-                var errorMessage = inputField.validationMessage;
-                $(field).append('<text class="error-message">' + errorMessage + '</text>');
-            }
-            else {
-                $(inputField).removeClass('error');
-            }
+        self.navigateToManage = function (manageId) {
+            window.location.href = "/Manage/Index/" + manageId;
         };
 
         self.populateTemplates = function () {
@@ -95,6 +69,47 @@
                     self.templates(data);
                 }
             });
+        };
+
+        self.validateForm = function () {
+            //Clear out previous error messages
+            $('text').remove('.error-message');
+
+            var inputs = $("#poll-create-form .form-group");
+            for (var i = 0; i < inputs.length; i++) {
+                validateField(inputs[i]);
+            }
+
+            return $("#poll-create-form")[0].checkValidity();
+        };
+
+        var validateField = function (field) {
+            if ($(field).is(':visible')) {
+                var $inputField = $(field).find('input');
+                var inputField = $inputField[0];
+
+                if (!inputField) {
+                    return;
+                }
+
+                if ($inputField.attr('date') !== undefined) {
+                    // Validation of date fields
+                    if (isNaN(Date.parse(self.expiryDate()))) {
+                        inputField.setCustomValidity("Please enter a valid date");
+                    } else {
+                        inputField.setCustomValidity("");
+                    }
+                }
+
+                if (!inputField.checkValidity()) {
+                    $inputField.addClass('error');
+                    var errorMessage = inputField.validationMessage;
+                    $(field).append('<text class="error-message">' + errorMessage + '</text>');
+                }
+                else {
+                    $inputField.removeClass('error');
+                }
+            }
         };
 
         var setupTooltips = function() {
@@ -118,15 +133,11 @@
             }
         }
 
-        $(document).ready(function () {
+        self.initialise = function () {
             self.populateTemplates();
-
-            var defaultExpiryDate = moment().add(30, 'minutes');
-            $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate, minDate: moment() });
-
             setupTooltips();
-        });
 
-        ko.applyBindings(this);
+            ko.applyBindings(this);
+        };
     }
 });
