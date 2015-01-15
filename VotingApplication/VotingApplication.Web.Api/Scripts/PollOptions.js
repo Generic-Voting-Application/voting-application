@@ -2,7 +2,7 @@
     return function PollOptions(pollId) {
         self = this;
         self.options = ko.observableArray();
-        self.optionAdding = ko.observable();
+        self.optionAdding = ko.observable(false);
 
         self.newName = ko.observable("");
         self.newInfo = ko.observable("");
@@ -24,7 +24,7 @@
                 }),
 
                 success: function () {
-                    refreshOptions();
+                    self.refreshOptions();
                 }
             });
 
@@ -38,13 +38,18 @@
             return option;
         };
 
-        var refreshOptions = function () {
+        self.refreshOptions = function () {
             $.ajax({
                 type: 'GET',
                 url: "/api/poll/" + pollId + "/option",
 
                 success: function (data) {
-                    self.options(data.map(mapOption));
+                    data.forEach(function (dataOption) {
+                        // Only append new options
+                        if (self.options().filter(function (o) { return o.Id === dataOption.Id; }).length === 0) {
+                            self.options.push(mapOption(dataOption));
+                        }
+                    });
                 }
             });
         }
