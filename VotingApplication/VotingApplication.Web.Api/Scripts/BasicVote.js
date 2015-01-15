@@ -1,25 +1,16 @@
-﻿define('BasicVote', ['jquery', 'knockout', 'Common'], function ($, ko, Common) {
+﻿define('BasicVote', ['jquery', 'knockout', 'Common', 'PollOptions'], function ($, ko, Common, PollOptions) {
     return function BasicVote(pollId, token) {
 
-        self = this;
-        self.options = ko.observableArray();
-        self.optionAdding = ko.observable();
+        var self = this;
+        self.pollOptions = new PollOptions(pollId);
 
         var chart;
         var anonymousPoll = true;
 
         var highlightOption = function (optionId) {
-
-            clearOptionHighlighting();
-
-            var $optionRows = $("#optionTable > tbody > tr");
-            $optionRows.filter(function () {
-                return $(this).attr('data-id') == optionId;
-            }).addClass("success");
-        };
-
-        var clearOptionHighlighting = function () {
-            $("#optionTable > tbody > tr").removeClass("success");
+            ko.utils.arrayForEach(self.pollOptions.options(), function (o) {
+                o.highlight(o.Id === optionId);
+            });
         };
 
         var countVotes = function (votes) {
@@ -97,19 +88,7 @@
 
             chart.draw();
         };
-
-        var refreshOptions = function () {
-            $.ajax({
-                type: 'GET',
-                url: "/api/poll/" + pollId + "/option",
-
-                success: function (data) {
-                    self.options.removeAll();
-                    self.options(data);
-                }
-            });
-        }
-
+        
         self.doVote = function (data, event) {
             var userId = Common.currentUserId(pollId);
 
@@ -147,7 +126,7 @@
                         highlightOption(data[0].OptionId);
                     }
                     else {
-                        clearOptionHighlighting();
+                        highlightOption(-1);
                     }
                 },
 
@@ -160,43 +139,8 @@
             drawChart(groupedVotes);
         }
 
-        self.addOption = function () {
-            //Don't submit without an entry in the name field
-            if ($("#newName").val() === "") {
-                return;
-            }
-
-            var newName = $("#newName").val();
-            var newInfo = $("#newInfo").val();
-            var newDescription = $("#newDescription").val();
-
-            //Reset before posting, to prevent double posts.
-            $("#newName").val("");
-            $("#newDescription").val("");
-            $("#newInfo").val("");
-
-            $.ajax({
-                type: 'POST',
-                url: '/api/poll/' + pollId + '/option',
-                contentType: 'application/json',
-
-                data: JSON.stringify({
-                    Name: newName,
-                    Description: newDescription,
-                    Info: newInfo
-                }),
-
-                success: function () {
-                    refreshOptions();
-                }
-            });
-        };
-
         self.initialise = function (pollData) {
-
-            self.options(pollData.Options);
-            self.optionAdding(pollData.OptionAdding);
-
+            self.pollOptions.initialise(pollData);
         }
     }
 
