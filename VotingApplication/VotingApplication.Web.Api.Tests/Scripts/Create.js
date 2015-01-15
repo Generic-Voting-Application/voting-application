@@ -129,25 +129,6 @@
                 done();
             }, 10);
         });
-
-
-        it("populateTemplates expect Get templates list", function (done) {
-            // arrange
-            mockjax({
-                type: "GET", url: "/api/template",
-                responseText: [ "one", "two" ]
-            });
-
-            // act
-            target.populateTemplates();
-
-            // assert
-            setTimeout(function () {
-                expect(target.templates().join()).toEqual("one,two");
-                done();
-            }, 10);
-        });
-
     });
 });
 
