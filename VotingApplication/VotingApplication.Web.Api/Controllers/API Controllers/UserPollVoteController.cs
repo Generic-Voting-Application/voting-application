@@ -21,6 +21,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
 
             #region DBGet / Validation
+
             List<Vote> votes;
             Poll poll;
             using (var context = _contextFactory.CreateContext())
@@ -39,15 +40,16 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 votes = context.Votes.Where(v => v.UserId == userId && v.PollId == pollId).Include(v => v.Option).ToList();
             }
+
             #endregion
 
             #region Response
 
-            List<PollVoteRequestResponseModel> response = new List<PollVoteRequestResponseModel>();
+            List<VoteRequestResponseModel> response = new List<VoteRequestResponseModel>();
 
             foreach (Vote vote in votes)
             {
-                PollVoteRequestResponseModel responseVote = new PollVoteRequestResponseModel();
+                VoteRequestResponseModel responseVote = new VoteRequestResponseModel();
 
                 if (vote.Option != null)
                 {
@@ -71,31 +73,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             #endregion
 
         }
-
-        /*
-
-        public virtual HttpResponseMessage Get(long userId, Guid pollId, long voteId)
-        {
-            using (var context = _contextFactory.CreateContext())
-            {
-                var userPollResponse = Get(userId, pollId);
-                List<Vote> votesForUserPoll = ((ObjectContent)userPollResponse.Content).Value as List<Vote>;
-                if (votesForUserPoll == null)
-                {
-                    return userPollResponse;
-                }
-
-                Vote matchingVote = votesForUserPoll.Where(v => v.Id == voteId).FirstOrDefault();
-                if (matchingVote == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Vote {0} not found", voteId));
-                }
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, matchingVote);
-            }
-        }
-
-        */
 
         #endregion
 

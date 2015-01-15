@@ -64,11 +64,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             #region Response
 
-            List<PollVoteRequestResponseModel> response = new List<PollVoteRequestResponseModel>();
+            List<VoteRequestResponseModel> response = new List<VoteRequestResponseModel>();
 
             foreach(Vote vote in votes)
             {
-                PollVoteRequestResponseModel responseVote = new PollVoteRequestResponseModel();
+                VoteRequestResponseModel responseVote = new VoteRequestResponseModel();
 
                 if(vote.Option != null)
                 {

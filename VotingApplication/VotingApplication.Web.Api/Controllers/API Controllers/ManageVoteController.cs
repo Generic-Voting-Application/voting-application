@@ -7,32 +7,64 @@ using System.Net.Http;
 using System.Web;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
     public class ManageVoteController : WebApiController
     {
-        public ManageVoteController() : base() {}
+        public ManageVoteController() : base() { }
         public ManageVoteController(IContextFactory contextFactory) : base(contextFactory) { }
 
         #region GET
 
         public virtual HttpResponseMessage Get(Guid manageId)
         {
+            #region DB Get / Validation
+
+            Poll poll;
+            List<Vote> votes;
             using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = context.Polls.Where(s => s.ManageId == manageId).FirstOrDefault();
+                poll = context.Polls.Where(s => s.ManageId == manageId).Include(s => s.Options).SingleOrDefault();
+
                 if (poll == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
-                List<Vote> votes = context.Votes.Where(v => v.PollId == poll.UUID)
-                    .Include(v => v.Option).Include(v => v.User)
-                    .ToList();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, votes);
+                votes = context.Votes.Where(v => v.PollId == poll.UUID).ToList();
             }
+
+            #endregion
+
+            #region Response
+
+            List<VoteRequestResponseModel> response = new List<VoteRequestResponseModel>();
+
+            foreach (Vote vote in votes)
+            {
+                VoteRequestResponseModel responseVote = new VoteRequestResponseModel();
+
+                if (vote.Option != null)
+                {
+                    responseVote.OptionId = vote.Option.Id;
+                    responseVote.OptionName = vote.Option.Name;
+                }
+
+                if (vote.User != null)
+                {
+                    responseVote.VoterName = vote.User.Name;
+                    responseVote.UserId = vote.User.Id;
+                }
+
+                responseVote.VoteValue = vote.PollValue;
+
+                response.Add(responseVote);
+            }
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, response);
+            #endregion
         }
 
         public virtual HttpResponseMessage Get(Guid manageId, long voteId)

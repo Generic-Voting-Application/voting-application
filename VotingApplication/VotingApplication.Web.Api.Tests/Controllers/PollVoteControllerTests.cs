@@ -120,7 +120,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_mainUUID);
 
             // Assert
-            List<PollVoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<PollVoteRequestResponseModel>;
+            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
             Assert.AreEqual(2, responseVotes.Count);
         }
 
@@ -131,8 +131,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_emptyUUID);
 
             // Assert
-            List<PollVoteRequestResponseModel> expectedVotes = new List<PollVoteRequestResponseModel>();
-            List<PollVoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<PollVoteRequestResponseModel>;
+            List<VoteRequestResponseModel> expectedVotes = new List<VoteRequestResponseModel>();
+            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
             CollectionAssert.AreEquivalent(expectedVotes, responseVotes);
         }
 
@@ -143,7 +143,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_anonymousUUID);
 
             // Assert
-            List<PollVoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<PollVoteRequestResponseModel>;
+            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
             Assert.AreEqual(1, responseVotes.Count);
             Assert.AreEqual("Anonymous User", responseVotes[0].VoterName);
         }
@@ -158,7 +158,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_mainUUID);
 
             // Assert
-            List<PollVoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<PollVoteRequestResponseModel>;
+            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
             Assert.AreEqual(2, responseVotes.Count);
         }
 

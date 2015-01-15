@@ -9,6 +9,7 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -111,11 +112,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_manageMainUUID);
 
             // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            expectedVotes.Add(_bobVote);
-            expectedVotes.Add(_joeVote);
-            List<Vote> responseVotes = ((ObjectContent)response.Content).Value as List<Vote>;
-            CollectionAssert.AreEquivalent(expectedVotes, responseVotes);
+            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            Assert.AreEqual(2, responseVotes.Count);
         }
 
         [TestMethod]
@@ -125,9 +123,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_manageEmptyUUID);
 
             // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            List<Vote> responseVotes = ((ObjectContent)response.Content).Value as List<Vote>;
-            CollectionAssert.AreEquivalent(expectedVotes, responseVotes);
+            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            Assert.AreEqual(0, responseVotes.Count);
         }
 
         [TestMethod]

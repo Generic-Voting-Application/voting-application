@@ -133,7 +133,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(1, _mainUUID);
 
             // Assert
-            List<PollVoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<PollVoteRequestResponseModel>;
+            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
             Assert.AreEqual(1, responseVotes.Count);
         }
 
@@ -169,94 +169,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(2, _otherUUID);
 
             // Assert
-            List<PollVoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<PollVoteRequestResponseModel>;
+            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
             Assert.AreEqual(0, responseVotes.Count);
         }
 
-
-        /*
-        [TestMethod]
-        public void GetByIdIsAllowed()
-        {
-            // Act
-            var response = _controller.Get(1, _mainUUID, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void GetByIdForNonexistentUserIsNotFound()
-        {
-            // Act
-            var response = _controller.Get(99, _mainUUID, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("User 99 not found", error.Message);
-        }
-
-        [TestMethod]
-        public void GetByIdForNonexistentPollIsNotFound()
-        {
-            // Act
-            Guid newGuid = Guid.NewGuid();
-            var response = _controller.Get(1, newGuid, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll " + newGuid + " not found", error.Message);
-        }
-
-        [TestMethod]
-        public void GetByIdForNonexistentVoteIsNotFound()
-        {
-            // Act
-            var response = _controller.Get(1, _mainUUID, 99);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Vote 99 not found", error.Message);
-        }
-
-        [TestMethod]
-        public void GetVoteForDifferentUserIsNotFound()
-        {
-            // Act
-            var response = _controller.Get(1, _mainUUID, 2); // Vote 2 belongs to User 2
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Vote 2 not found", error.Message);
-        }
-
-        [TestMethod]
-        public void GetVoteForDifferentPollIsNotFound()
-        {
-            // Act
-            var response = _controller.Get(1, _mainUUID, 3); // Vote 3 belongs to Poll 2
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Vote 3 not found", error.Message);
-        }
-
-        [TestMethod]
-        public void GetByIdFetchesIdForThatUserPoll()
-        {
-            // Act
-            var response = _controller.Get(1, _mainUUID, 1);
-
-            // Assert
-            var responseVote = ((ObjectContent)response.Content).Value as Vote;
-            Assert.AreEqual(_bobVote, responseVote);
-        }
-        */
         #endregion
 
         #region PUT

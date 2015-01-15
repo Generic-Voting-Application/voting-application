@@ -312,7 +312,7 @@
     <Compile Include="Models\DBViewModels\PollRequestResponseModel.cs" />
     <Compile Include="Models\DBViewModels\PollCreationRequestModel.cs" />
     <Compile Include="Models\DBViewModels\PollCreationResponseModel.cs" />
-    <Compile Include="Models\DBViewModels\PollVoteRequestResponseModel.cs" />
+    <Compile Include="Models\DBViewModels\VoteRequestResponseModel.cs" />
     <Compile Include="Models\DBViewModels\VoteRequestModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageModels.cs" />
