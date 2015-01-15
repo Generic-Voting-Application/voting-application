@@ -1,12 +1,12 @@
-﻿define('PointsVote', ['jquery', 'knockout', 'Common'], function ($, ko, Common) {
+﻿define('PointsVote', ['jquery', 'knockout', 'Common', 'PollOptions'], function ($, ko, Common, PollOptions) {
 
     return function PointsVote(pollId, token) {
 
-        self = this;
-        self.options = ko.observableArray();
+        var self = this;
+        self.pollOptions = new PollOptions(pollId);
+
         self.maxPerVote = ko.observable();
         self.maxPoints = ko.observable();
-        self.optionAdding = ko.observable();
         self.pointsArray = ko.observableArray();
 
         var chart;
@@ -26,7 +26,7 @@
 
         var resetVote = function () {
             //Populate with an array of options.length number of 0-values
-            self.pointsArray(Array.apply(null, Array(self.options().length)).map(Boolean).map(Number));
+            self.pointsArray(Array.apply(null, Array(self.pollOptions.options().length)).map(Boolean).map(Number));
             updateAllButtons();
         };
 
@@ -112,24 +112,14 @@
             chart.draw();
         };
 
-        var refreshOptions = function () {
-            $.ajax({
-                type: 'GET',
-                url: "/api/poll/" + pollId + "/option",
+        self.pollOptions.options.subscribe(function () {
+            var newOptionCount = self.pollOptions.options().length - self.pointsArray().length;
+            for (var i = 0; i < newOptionCount; i++) {
+                self.pointsArray.push(0);
+            }
 
-                success: function (data) {
-                    var newOptionCount = data.length - self.options().length;
-                    self.options.removeAll();
-                    self.options(data);
-
-                    for (var i = 0; i < newOptionCount; i++){
-                        self.pointsArray.push(0);
-                    }
-
-                    updateAllButtons();
-                }
-            });
-        }
+            updateAllButtons();
+        });
 
         var updateButtons = function (buttonGroup) {
             var index = $("#optionTable span").index(buttonGroup);
@@ -168,7 +158,7 @@
         }
 
         self.decreaseVote = function (data, event) {
-            var pointsIndex = self.options().indexOf(data);
+            var pointsIndex = self.pollOptions.options().indexOf(data);
             self.pointsArray()[pointsIndex]--;
             self.pointsArray.valueHasMutated();
 
@@ -176,7 +166,7 @@
         }
 
         self.increaseVote = function (data, event) {
-            var pointsIndex = self.options().indexOf(data);
+            var pointsIndex = self.pollOptions.options().indexOf(data);
             self.pointsArray()[pointsIndex]++;
             self.pointsArray.valueHasMutated();
 
@@ -188,13 +178,13 @@
 
             var votesData = [];
 
-            for (var i = 0; i < self.options().length; i++) {
+            for (var i = 0; i < self.pollOptions.options().length; i++) {
                 if (self.pointsArray()[i] == 0) {
                     continue;
                 }
 
                 var vote = {
-                    OptionId: self.options()[i].Id,
+                    OptionId: self.pollOptions.options()[i].Id,
                     PollId: pollId,
                     PollValue: self.pointsArray()[i],
                     Token: { TokenGuid: token || Common.sessionItem("token", pollId) }
@@ -227,13 +217,13 @@
 
                 success: function (data) {
                     resetVote();
-                    var allOptions = self.options();
+                    var allOptions = self.pollOptions.options();
                     for (var i = 0; i < data.length; i++) {
                         //Find index of previously voted option
                         var vote = allOptions.filter(function (d) {
                             return d.Id == data[i].OptionId;
                         })[0];
-                        var optionIndex = self.options().indexOf(vote);
+                        var optionIndex = self.pollOptions.options().indexOf(vote);
 
                         if (optionIndex == -1)
                             continue;
@@ -250,45 +240,12 @@
             var groupedVotes = countVotes(data);
             drawChart(groupedVotes);
         }
-
-        self.addOption = function () {
-            //Don't submit without an entry in the name field
-            if ($("#newName").val() === "") {
-                return;
-            }
-
-            var newName = $("#newName").val();
-            var newInfo = $("#newInfo").val();
-            var newDescription = $("#newDescription").val();
-
-            //Reset before posting, to prevent double posts.
-            $("#newName").val("");
-            $("#newDescription").val("");
-            $("#newInfo").val("");
-
-            $.ajax({
-                type: 'POST',
-                url: '/api/poll/' + pollId + '/option',
-                contentType: 'application/json',
-
-                data: JSON.stringify({
-                    Name: newName,
-                    Description: newDescription,
-                    Info: newInfo
-                }),
-
-                success: function () {
-                    refreshOptions();
-                }
-            });
-        };
-
+        
         self.initialise = function (pollData) {
+            self.pollOptions.initialise(pollData);
 
-            self.options(pollData.Options);
             self.maxPerVote(pollData.MaxPerVote);
             self.maxPoints(pollData.MaxPoints);
-            self.optionAdding(pollData.OptionAdding);
 
             resetVote();
         }
