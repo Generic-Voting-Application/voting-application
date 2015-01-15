@@ -1,4 +1,4 @@
-﻿define('PointsVote', ['jquery', 'knockout', 'Common', 'PollOptions'], function ($, ko, Common, PollOptions) {
+﻿define('PointsVote', ['jquery', 'knockout', 'Common', 'PollOptions', 'insight'], function ($, ko, Common, PollOptions, insight) {
 
     return function PointsVote(pollId, token) {
 
@@ -201,7 +201,7 @@
                     data: JSON.stringify(votesData),
 
                     success: function (returnData) {
-                        $('#resultSection > div')[0].click();
+                        if (self.onVoted) self.onVoted();
                     },
 
                     error: Common.handleError

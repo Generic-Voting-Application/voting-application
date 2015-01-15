@@ -1,4 +1,4 @@
-﻿define('BasicVote', ['jquery', 'knockout', 'Common', 'PollOptions'], function ($, ko, Common, PollOptions) {
+﻿define('BasicVote', ['jquery', 'knockout', 'Common', 'PollOptions', 'insight'], function ($, ko, Common, PollOptions, insight) {
     return function BasicVote(pollId, token) {
 
         var self = this;
@@ -24,7 +24,7 @@
                 }
 
                 // Find a vote with the same Option.Name, if it exists.
-                var existingOption = totalCounts.filter(function (vote) { return vote.Name == optionName; }).pop();
+                var existingOption = totalCounts.filter(function (vote) { return vote.Name === optionName; }).pop();
 
                 if (existingOption) {
                     existingOption.Count++;
@@ -41,9 +41,65 @@
             return totalCounts;
         };
 
-        var drawChart = function (data) {
+        self.onVoted = null;
+        self.doVote = function (data) {
+            var userId = Common.currentUserId(pollId);
+
+            var voteData = JSON.stringify([{
+                OptionId: data.Id,
+                PollId: pollId,
+                Token: { TokenGuid: token || Common.sessionItem("token", pollId) }
+            }]);
+
+            if (userId && pollId) {
+                $.ajax({
+                    type: 'PUT',
+                    url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
+                    contentType: 'application/json',
+                    data: voteData,
+
+                    success: function () {
+                        if (self.onVoted) self.onVoted();
+                    },
+
+                    error: Common.handleError
+                });
+            }
+        };
+
+        self.getVotes = function (pollId, userId) {
+            $.ajax({
+                type: 'GET',
+                url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
+                contentType: 'application/json',
+
+                success: function (data) {
+                    if (data[0]) {
+                        highlightOption(data[0].OptionId);
+                    }
+                    else {
+                        highlightOption(-1);
+                    }
+                },
+
+                error: Common.handleError
+            });
+        };
+
+        self.displayResults = function (data) {
+            var groupedVotes = countVotes(data);
+            self.drawChart(groupedVotes);
+        };
+
+        self.initialise = function (pollData) {
+            self.pollOptions.initialise(pollData);
+        };
+
+        // TODO: Extract chart code from viewModel class - ideally
+        // into a shared custom knockout binding to bind to data
+        self.drawChart = function (data) {
             //Exit early if data has not changed
-            if (chart && JSON.stringify(data) == JSON.stringify(chart.series()[0].data.rawData()))
+            if (chart && JSON.stringify(data) === JSON.stringify(chart.series()[0].data.rawData()))
                 return;
 
             // Hack to fix insight's lack of data reloading
@@ -88,60 +144,6 @@
 
             chart.draw();
         };
-        
-        self.doVote = function (data, event) {
-            var userId = Common.currentUserId(pollId);
-
-            var voteData = JSON.stringify([{
-                OptionId: data.Id,
-                PollId: pollId,
-                Token: { TokenGuid: token || Common.sessionItem("token", pollId) }
-            }]);
-
-            if (userId && pollId) {
-                $.ajax({
-                    type: 'PUT',
-                    url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
-                    contentType: 'application/json',
-                    data: voteData,
-
-                    success: function (returnData) {
-                        var currentRow = event.currentTarget.parentElement.parentElement;
-                        $('#resultSection > div')[0].click();
-                    },
-
-                    error: Common.handleError
-                });
-            }
-        };
-
-        self.getVotes = function (pollId, userId) {
-            $.ajax({
-                type: 'GET',
-                url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
-                contentType: 'application/json',
-
-                success: function (data) {
-                    if (data[0]) {
-                        highlightOption(data[0].OptionId);
-                    }
-                    else {
-                        highlightOption(-1);
-                    }
-                },
-
-                error: Common.handleError
-            });
-        };
-
-        self.displayResults = function (data) {
-            var groupedVotes = countVotes(data);
-            drawChart(groupedVotes);
-        }
-
-        self.initialise = function (pollData) {
-            self.pollOptions.initialise(pollData);
-        }
-    }
+    };
 
 });

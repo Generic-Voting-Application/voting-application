@@ -1,4 +1,4 @@
-﻿define('RankedVote', ['jquery', 'knockout', 'jqueryUI', 'Common', 'PollOptions', 'jqueryTouch'], function ($, ko, jqueryUI, Common, PollOptions) {
+﻿define('RankedVote', ['jquery', 'knockout', 'jqueryUI', 'Common', 'PollOptions', 'insight', 'jqueryTouch'], function ($, ko, jqueryUI, Common, PollOptions, insight) {
 
     return function RankedVote(pollId, token) {
 
@@ -324,7 +324,7 @@
                     data: JSON.stringify(selectedOptionsArray),
 
                     success: function (returnData) {
-                        $('#resultSection > div')[0].click();
+                        if (self.onVoted) self.onVoted();
                     },
 
                     error: Common.handleError
