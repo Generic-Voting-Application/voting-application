@@ -103,9 +103,6 @@
         };
 
         self.initialise = function () {
-            var defaultExpiryDate = moment().add(30, 'minutes');
-            $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate, minDate: moment() });
-
             Common.setupTooltips();
 
             ko.applyBindings(this);

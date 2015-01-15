@@ -9,13 +9,6 @@
         self.newPassword = ko.observable("");
         self.confirmPassword = ko.observable("");
 
-        var checkPasswordFormat = function (password) {
-            // Checks for password with uppercase, lowercase, digits and punctuation.
-            // AccountController fails the password if any of these are missing
-            var passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$&*]).*$/;
-            return passwordRegex.test(password);
-        }
-
         var checkEmailFormat = function (email) {
             var emailRegex = /[\w._%+-]+@\w+(\.\w+)+/;
             return emailRegex.test(email);
@@ -24,7 +17,6 @@
         self.register = function () {
             $("#invalid-username").toggle(!checkEmailFormat(self.newUsername()));
             $("#password-length").toggle(self.newPassword().length < 6);
-            $("#password-format").toggle(!checkPasswordFormat(self.newPassword()));
             $("#different-password").toggle(self.newPassword() != self.confirmPassword());
             $("#duplicate-username").hide();
 

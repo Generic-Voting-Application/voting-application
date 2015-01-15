@@ -1,19 +1,20 @@
 ﻿define('Navbar', ['jquery'], function ($) {
-    var self = this;
+    
+    var Navbar = function () {
+    }
+    Navbar.signedIn = function () {
+            return sessionStorage['creator_token'] != undefined
+        };
 
-    self.signedIn = function () {
-        return sessionStorage['creator_token'] != undefined
-    };
+    Navbar.signOut = function () {
+            sessionStorage.removeItem('creator_token');
 
-    self.signOut = function () {
-        sessionStorage.removeItem('creator_token');
-
-        // Hard reload to current page, preserving query parameters
-        window.location.href = window.location.href;
+            // Hard reload to current page, preserving query parameters
+            window.location.href = window.location.href;
     }
 
     $(document).ready(function () {
-        if (self.signedIn()) {
+        if (Navbar.signedIn()) {
             $("#navbar-signin").hide();
             $("#navbar-signout").show();
         }
@@ -22,6 +23,8 @@
             $("#navbar-signout").hide();
         }
         
-        $("#navbar-signout").click(self.signOut);
+        $("#navbar-signout").click(Navbar.signOut);
     });
+    
+    return Navbar;
 });

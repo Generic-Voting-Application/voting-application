@@ -1,4 +1,4 @@
-﻿define('Manage', ['jquery', 'knockout', 'bootstrap', 'Common'], function ($, ko, bootstrap, Common) {
+﻿define('Manage', ['jquery', 'knockout', 'bootstrap', 'Common', 'Navbar'], function ($, ko, bootstrap, Common, Navbar) {
     return function ManageViewModel(manageId) {
         var self = this;
 
@@ -196,7 +196,7 @@
         }
 
         self.isSignedIn = function () {
-            return signedIn();
+            return Navbar.signedIn();
         }
 
         self.initialise = function () {
