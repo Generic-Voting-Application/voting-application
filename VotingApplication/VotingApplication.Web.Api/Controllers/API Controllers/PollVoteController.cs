@@ -21,7 +21,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public virtual HttpResponseMessage Get(Guid pollId)
         {
-            #region DBGet
+            #region DBGet / Validation
 
             Poll poll;
             List<Vote> votes;
@@ -33,10 +33,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 .Include(v => v.Option).Include(v => v.User)
                 .ToList();
             }
-
-            #endregion
-
-            #region Validation
 
             if (poll == null)
             {

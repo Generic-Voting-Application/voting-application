@@ -21,17 +21,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public virtual HttpResponseMessage Get(Guid pollId)
         {
-            #region DB Get
+            #region DB Get / Validation
 
             Poll poll;
             using (var context = _contextFactory.CreateContext())
             {
                 poll = context.Polls.Where(s => s.UUID == pollId).Include(s => s.Options).SingleOrDefault();
             }
-
-            #endregion
-
-            #region Validation
 
             if (poll == null)
             {

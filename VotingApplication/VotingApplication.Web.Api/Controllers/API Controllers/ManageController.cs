@@ -23,15 +23,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public virtual HttpResponseMessage Get(Guid manageId)
         {
-            #region DB Get
+            #region DB Get / Validation
             Poll poll;
             using (var context = _contextFactory.CreateContext())
             {
                 poll = context.Polls.Where(s => s.ManageId == manageId).Include(s => s.Options).FirstOrDefault();
             }
-            #endregion
 
-            #region Validation
             if (poll == null)
             {
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll for {0} not found", manageId));
