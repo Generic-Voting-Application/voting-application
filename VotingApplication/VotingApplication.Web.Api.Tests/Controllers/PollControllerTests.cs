@@ -101,17 +101,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Assert.AreEqual("Poll " + newGuid + " not found", error.Message);
         }
 
-        [TestMethod]
-        public void GetByIdReturnsPollWithMatchingId()
-        {
-            // Act
-            var response = _controller.Get(UUIDs[1]);
-
-            // Assert
-            Poll responsePoll = ((ObjectContent)response.Content).Value as Poll;
-            Assert.AreEqual(_otherPoll, responsePoll);
-        }
-
         #endregion
 
         #region PUT

@@ -298,7 +298,6 @@
     <Compile Include="Controllers\Web Controllers\PollController.cs" />
     <Compile Include="Controllers\Web Controllers\InfoController.cs" />
     <Compile Include="Controllers\Web Controllers\CreateController.cs" />
-    <Compile Include="Controllers\API Controllers\OptionController.cs" />
     <Compile Include="Controllers\API Controllers\UserController.cs" />
     <Compile Include="Controllers\API Controllers\WebApiController.cs" />
     <Compile Include="Filters\BasicAuthenticator.cs" />
