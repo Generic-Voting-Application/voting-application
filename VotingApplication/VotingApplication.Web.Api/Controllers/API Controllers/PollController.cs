@@ -72,7 +72,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             response.OptionAdding = poll.OptionAdding;
             response.Options = poll.Options;
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, poll);
+            return this.Request.CreateResponse(HttpStatusCode.OK, response);
 
             #endregion
         }

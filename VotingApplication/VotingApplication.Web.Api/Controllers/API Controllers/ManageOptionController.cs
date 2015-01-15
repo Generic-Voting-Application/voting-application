@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Web;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -19,16 +20,43 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public virtual HttpResponseMessage Get(Guid manageId)
         {
+            #region DB Get
+
+            Poll poll;
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(s => s.ManageId == manageId).Include(s => s.Options).FirstOrDefault();
-                if (matchingPoll == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
-                }
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, matchingPoll.Options);
+                poll = context.Polls.Where(s => s.ManageId == manageId).Include(s => s.Options).SingleOrDefault();
             }
+
+            #endregion
+
+            #region Validation
+
+            if (poll == null)
+            {
+                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
+            }
+
+            #endregion
+
+            #region Response
+
+            List<OptionRequestResponseModel> response = new List<OptionRequestResponseModel>();
+
+            foreach (Option option in poll.Options)
+            {
+                OptionRequestResponseModel responseOption = new OptionRequestResponseModel();
+
+                responseOption.Name = option.Name;
+                responseOption.Info = option.Info;
+                responseOption.Description = option.Description;
+
+                response.Add(responseOption);
+            }
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, response);
+
+            #endregion
         }
 
         public virtual HttpResponseMessage Get(Guid manageId, long voteId)
@@ -40,35 +68,58 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region POST
 
-        public virtual HttpResponseMessage Post(Guid manageId, Option option)
+        public virtual HttpResponseMessage Post(Guid manageId, OptionCreationRequestModel optionCreationRequest)
         {
+            #region Input Validation
+
+            if (optionCreationRequest == null)
+            {
+                return this.Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+
             using (var context = _contextFactory.CreateContext())
             {
-                if (option.Name == null || option.Name == "")
+                Poll poll = context.Polls.Where(p => p.ManageId == manageId).FirstOrDefault();
+                if (poll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Option name must not be empty");
-
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", manageId));
                 }
-
-                Poll matchingPoll = context.Polls.Where(s => s.ManageId == manageId).Include(s => s.Options).FirstOrDefault();
-                if (matchingPoll == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
-                }
-
-                if (option.Polls == null)
-                {
-                    option.Polls = new List<Poll>();
-                }
-
-                matchingPoll.Options.Add(option);
-                option.Polls.Add(matchingPoll);
-
-                context.Options.Add(option);
-                context.SaveChanges();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, option.Id);
             }
+
+            if (!ModelState.IsValid)
+            {
+                return this.Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+
+            #endregion
+
+            #region DB Object Creation
+
+            Option newOption = new Option();
+
+            newOption.Name = optionCreationRequest.Name;
+            newOption.Info = optionCreationRequest.Info;
+            newOption.Description = optionCreationRequest.Description;
+
+            using (var context = _contextFactory.CreateContext())
+            {
+                Poll poll = context.Polls.Where(p => p.ManageId == manageId).Single();
+                if (poll.Options == null)
+                {
+                    poll.Options = new List<Option>();
+                }
+
+                poll.Options.Add(newOption);
+                context.SaveChanges();
+            }
+
+            #endregion
+
+            #region Response
+
+            return this.Request.CreateResponse(HttpStatusCode.OK);
+
+            #endregion
         }
 
         public virtual HttpResponseMessage Post(Guid manageId, long voteId, Option option)

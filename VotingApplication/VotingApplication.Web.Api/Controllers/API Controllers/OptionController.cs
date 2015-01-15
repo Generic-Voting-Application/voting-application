@@ -51,20 +51,9 @@ namespace VotingApplication.Web.Api.Controllers
 
         #region Post
 
-        public HttpResponseMessage Post(Option newOption)
+        public HttpResponseMessage Post()
         {
-            using (var context = _contextFactory.CreateContext())
-            {
-                if (newOption.Name == null || newOption.Name.Length == 0)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Option name must not be blank");
-                }
-
-                context.Options.Add(newOption);
-                context.SaveChanges();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, newOption.Id);
-            }
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
         }
 
 
