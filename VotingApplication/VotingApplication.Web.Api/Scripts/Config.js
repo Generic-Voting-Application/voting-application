@@ -2,6 +2,8 @@
     baseUrl: '/Scripts',
     paths: {
         'jquery': 'Lib/jquery-2.1.1.min',
+        'signalR': 'Lib/jquery.signalR-2.1.2.min',
+        'signalRHubs': '../signalr/hubs?noext',
         'knockout': 'Lib/knockout-3.2.0.min',
         'bootstrap': 'Lib/bootstrap.min',
         'insight': 'Lib/insight.min',
@@ -18,6 +20,13 @@
     shim: {
         'jquery': {
             exports: '$'
+        },
+        'signalR': {
+            deps: ['jquery']
+        },
+        'signalRHubs': {
+            deps: ['signalR'],
+            exports: '$.connection'
         },
         'bootstrap': {
             deps: ['jquery']
