@@ -11,7 +11,5 @@ namespace VotingApplication.Data.Model
         public string Name { get; set; }
         public string Description { get; set; }
         public string Info { get; set; }
-
-        public List<Poll> Polls { get; set; }
     }
 }

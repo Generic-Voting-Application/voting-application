@@ -54,23 +54,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 // Hide the manageID to prevent a GET on the poll ID from giving Poll Creator access
                 matchingPoll.ManageID = Guid.Empty;
 
-                // Hide UUIDs of any other polls that are linked through options
-                if (matchingPoll.Options != null)
-                {
-                    foreach (Option matchingPollOptions in matchingPoll.Options)
-                    {
-                        if (matchingPollOptions.Polls != null)
-                        {
-                            foreach (Poll poll in matchingPollOptions.Polls)
-                            {
-                                poll.UUID = Guid.Empty;
-                                poll.ManageID = Guid.Empty;
-                            }
-                        }
-
-                    }
-                }
-
                 // Similarly with tokens
                 matchingPoll.Tokens = new List<Token>();
 

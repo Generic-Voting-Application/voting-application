@@ -28,23 +28,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
                 }
 
-                // Hide UUIDs of any other polls that are linked through options
-                if (matchingPoll.Options != null)
-                {
-                    foreach (Option matchingPollOptions in matchingPoll.Options)
-                    {
-                        if (matchingPollOptions.Polls != null)
-                        {
-                            foreach (Poll poll in matchingPollOptions.Polls)
-                            {
-                                poll.UUID = Guid.Empty;
-                                poll.ManageID = Guid.Empty;
-                            }
-                        }
-
-                    }
-                }
-
                 return this.Request.CreateResponse(HttpStatusCode.OK, matchingPoll.Options);
             }
         }

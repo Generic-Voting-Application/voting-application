@@ -56,13 +56,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
-                if (option.Polls == null)
-                {
-                    option.Polls = new List<Poll>();
-                }
-
                 matchingPoll.Options.Add(option);
-                option.Polls.Add(matchingPoll);
 
                 context.Options.Add(option);
                 context.SaveChanges();
@@ -84,22 +78,28 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(p => p.ManageID == manageId).FirstOrDefault();
+                Poll matchingPoll = context.Polls.Where(p => p.ManageID == manageId).Include(p => p.Options).SingleOrDefault();
                 if (matchingPoll == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
                 // Check validity of options
-                foreach (Option option in options)
+                if (options.Any(p => String.IsNullOrEmpty(p.Name)))
                 {
-                    if (String.IsNullOrEmpty(option.Name))
-                    {
-                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, string.Format("Option name must not be empty"));
-                    }
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, string.Format("Option name must not be empty"));
+                }
 
-                    // Will only stick if we SaveChanges after all options are validated
-                    context.Options.Add(option);
+                // Remove all old options
+                foreach (Option oldOption in matchingPoll.Options.ToList<Option>())
+                {
+                    context.Options.Remove(oldOption);
+                }
+
+                // Add all new options
+                foreach (Option newOption in options)
+                {
+                    context.Options.Add(newOption);
                 }
 
                 matchingPoll.Options = options;

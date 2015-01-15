@@ -229,8 +229,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             List<Option> expectedOptions = new List<Option>();
-            expectedOptions.Add(_burgerOption);
-            expectedOptions.Add(_pizzaOption);
             expectedOptions.Add(newOption);
             expectedOptions.Add(otherNewOption);
             CollectionAssert.AreEquivalent(expectedOptions, _dummyOptions.Local);
@@ -368,18 +366,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             List<Option> expectedOptions = new List<Option>() { _burgerOption, _pizzaOption, newOption };
             CollectionAssert.AreEquivalent(expectedOptions, _mainPoll.Options);
-        }
-
-        [TestMethod]
-        public void PostAddsPollToOptions()
-        {
-            // Act
-            Option newOption = new Option() { Name = "Bella Vista" };
-            _controller.Post(_manageMainUUID, newOption);
-
-            // Assert
-            List<Poll> expectedPolls = new List<Poll>() { _mainPoll };
-            CollectionAssert.AreEquivalent(expectedPolls, newOption.Polls);
         }
 
         [TestMethod]
