@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'Common'], function ($, ko, Common) {
+﻿define('PointsVote', ['jquery', 'knockout', 'Common'], function ($, ko, Common) {
 
     return function PointsVote(pollId, token) {
 
@@ -282,8 +282,6 @@
                 }
             });
         };
-
-        $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
 
         self.initialise = function (pollData) {
 

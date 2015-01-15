@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'bootstrap', 'insight', 'countdown', 'moment', 'Common', 'platform'], function ($, ko, bs, insight, countdown, moment, Common) {
+﻿define('Poll', ['jquery', 'knockout', 'bootstrap', 'insight', 'countdown', 'moment', 'Common', 'ChatClient', 'platform'], function ($, ko, bs, insight, countdown, moment, Common, chatClient) {
     return function VoteViewModel(pollId, token, VotingStrategyViewModel) {
         var self = this;
 
@@ -107,36 +107,7 @@
                 scrollTop: $("#chat-messages")[0].scrollHeight
             });
         };
-
-        var getChatMessages = function () {
-            if (pollId) {
-                var timestamp = Math.floor((new Date).getTime() / 1000);
-                var url = '/api/poll/' + pollId + '/chat?$orderby=Id&$filter=Id gt ' + self.lastMessageId;
-
-                $.ajax({
-                    type: 'GET',
-                    'url': url,
-                    contentType: 'application/json',
-                    success: function (data) {
-
-                        if (data.length > 0) {
-                            var messageId = data[data.length - 1].Id
-                            if (!self.lastMessageId || messageId > self.lastMessageId) {
-                                self.lastMessageId = messageId;
-                            }
-
-                            data.forEach(function (message) {
-                                var timestampMessage = message;
-                                timestampMessage.Timestamp = new moment(message.Timestamp).format('H:mm');
-                                self.chatMessages.push(message);
-                            });
-                            scrollChatWindow();
-                        }
-                    }
-                });
-            }
-        }
-
+        
         var googleLogin = function (authResult) {
             //Login failed
             if (!authResult['status']['signed_in']) {
@@ -223,26 +194,29 @@
             self.userId = undefined;
         }
 
+        self.chatMessage = ko.observable("");
+
+        var receivedMessage = function (message) {
+            message.Timestamp = new moment(message.Timestamp).format('H:mm');
+            self.chatMessages.push(message);
+        };
+        chatClient.onMessage = function (message) {
+            receivedMessage(message);
+            scrollChatWindow();
+        };
+        chatClient.onMessages = function (messages) {
+            ko.utils.arrayForEach(messages, receivedMessage);
+            scrollChatWindow();
+        };
+
+        chatClient.joinPoll(pollId);
+
         self.sendChatMessage = function (data, event) {
             if (self.userId && pollId) {
-                var url = '/api/poll/' + pollId + '/chat';
-                var chatMessage = $('#chatTextInput').val();
-                $('#chatTextInput').val('');
-
-                $.ajax({
-                    type: 'POST',
-                    'url': url,
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        User: { Id: self.userId },
-                        Message: chatMessage
-                    }),
-
-                    error: Common.handleError
-                });
+                chatClient.sendMessage(pollId, self.userId, self.chatMessage());
+                self.chatMessage("");
             }
-
-        }
+        };
 
         self.getResults = function (pollId) {
             $.ajax({
@@ -314,8 +288,6 @@
                 }
             });
 
-            getChatMessages();
-            setInterval(getChatMessages, 3000);
             setInterval(function () {
                 self.getResults(pollId);
             }, 10000);

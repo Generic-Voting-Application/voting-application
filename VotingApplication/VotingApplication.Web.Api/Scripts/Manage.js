@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'bootstrap', 'Common'], function ($, ko, bootstrap, Common) {
+﻿define('Manage', ['jquery', 'knockout', 'bootstrap', 'Common'], function ($, ko, bootstrap, Common) {
     return function ManageViewModel(manageId) {
         var self = this;
 
@@ -7,10 +7,13 @@
         self.templates = ko.observableArray();
         self.votingStrategy = ko.observable(false);
         self.pollId = ko.observable();
+        self.templateId = ko.observable();
 
         self.selectedDeleteOptionId = null;
 
-        var getPollDetails = function () {
+        self.invitationText = ko.observable("");
+
+        self.getPollDetails = function () {
             $.ajax({
                 type: 'GET',
                 url: '/api/manage/' + manageId,
@@ -24,7 +27,7 @@
             });
         };
 
-        var populateVotes = function () {
+        self.populateVotes = function () {
             $.ajax({
                 type: 'GET',
                 url: "/api/manage/" + manageId + "/vote",
@@ -37,7 +40,7 @@
         };
 
 
-        var populateTemplates = function () {
+        self.populateTemplates = function () {
             if (!self.isSignedIn()) {
                 return;
             }
@@ -63,7 +66,7 @@
                 success: function () {
                     $("#reset-votes").attr('disabled', 'disabled');
                     $("#reset-votes").text("Votes were reset");
-                    populateVotes();
+                    self.populateVotes();
                 },
 
                 error: Common.handleError
@@ -71,7 +74,7 @@
         };
 
         self.cloneOptions = function () {
-            var chosenPollId = $("#template").val();
+            var chosenPollId = self.templateId();
             $.ajax({
                 type: 'GET',
                 url: "/api/Poll/" + chosenPollId + "/option",
@@ -111,7 +114,7 @@
                 }),
 
                 success: function () {
-                    getPollDetails();
+                    self.getPollDetails();
                 },
 
                 error: Common.handleError
@@ -125,7 +128,7 @@
                 contentType: 'application/json',
 
                 success: function () {
-                    populateVotes();
+                    self.populateVotes();
                 },
 
                 error: Common.handleError
@@ -139,8 +142,8 @@
                 contentType: 'application/json',
 
                 success: function () {
-                    getPollDetails();
-                    populateVotes();
+                    self.getPollDetails();
+                    self.populateVotes();
                 },
 
                 error: Common.handleError
@@ -149,10 +152,10 @@
 
         self.updatePoll = function () {
 
-        }
+        };
 
         self.sendInvites = function () {
-            var invites = $("#invitation-text").val().split('\n');
+            var invites = self.invitationText().split('\n');
 
             $.ajax({
                 type: 'POST',
@@ -162,7 +165,7 @@
                 data: JSON.stringify(invites),
 
                 success: function () {
-                    $("#invites").val("");
+                    self.invitationText("");
                 }
             });
         }
@@ -171,20 +174,14 @@
             return signedIn();
         }
 
-        $(document).ready(function () {
-            getPollDetails();
-            populateVotes();
-            populateTemplates();
+        self.initialise = function () {
+            self.getPollDetails();
+            self.populateVotes();
+            self.populateTemplates();
 
             Common.setupTooltips();
 
-            // Select first tab
-            $('#tabBar li a:first').tab('show')
-
-            //Add option on pressing return key
-            $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
-        });
-
-        ko.applyBindings(this);
-    }
+            ko.applyBindings(this);
+        };
+    };
 });

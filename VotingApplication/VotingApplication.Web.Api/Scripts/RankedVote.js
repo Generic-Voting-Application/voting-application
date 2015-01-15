@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'jqueryUI', 'Common', 'jqueryTouch'], function ($, ko, jqueryUI, Common) {
+﻿define('RankedVote', ['jquery', 'knockout', 'jqueryUI', 'Common', 'jqueryTouch'], function ($, ko, jqueryUI, Common) {
 
     return function RankedVote(pollId, token) {
 
@@ -406,7 +406,6 @@
             });
         };
 
-        $("#newOptionRow").keypress(function (event) { Common.keyIsEnter(event, self.addOption); });
         self.toggleChartVisible = function () {
             self.chartVisible(!self.chartVisible());
 

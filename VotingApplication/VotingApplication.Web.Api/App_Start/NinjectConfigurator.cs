@@ -17,6 +17,9 @@ namespace VotingApplication.Web.Api.App_Start
             // application's resolver
             var resolver = new NinjectDependencyResolver(container);
             GlobalConfiguration.Configuration.DependencyResolver = resolver;
+
+            // We also need a resolver for SignalR
+            SignalRResolver = new NinjectSignalRDependencyResolver(container);
         }
 
         private void AddBindings(IKernel container)
@@ -26,5 +29,7 @@ namespace VotingApplication.Web.Api.App_Start
             container.Bind<IVotingContext>().To<VotingContext>();
             container.Bind<IMailSender>().To<MailSender>();
         }
+
+        public static Microsoft.AspNet.SignalR.IDependencyResolver SignalRResolver { get; private set; }
     }
 }

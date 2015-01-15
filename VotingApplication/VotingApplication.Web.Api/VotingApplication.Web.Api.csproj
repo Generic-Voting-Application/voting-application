@@ -79,6 +79,12 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.1.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.1.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.1.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Diagnostics.Tracing.EventSource">
       <HintPath>..\packages\Microsoft.Diagnostics.Tracing.EventSource.Redist.1.0.24\lib\net40\Microsoft.Diagnostics.Tracing.EventSource.dll</HintPath>
@@ -287,7 +293,6 @@
     <Compile Include="Controllers\API Controllers\ManageInvitationController.cs" />
     <Compile Include="Controllers\API Controllers\ManageOptionController.cs" />
     <Compile Include="Controllers\API Controllers\ManageVoteController.cs" />
-    <Compile Include="Controllers\API Controllers\PollChatMessageController.cs" />
     <Compile Include="Controllers\API Controllers\PollController.cs" />
     <Compile Include="Controllers\API Controllers\PollOptionController.cs" />
     <Compile Include="Controllers\API Controllers\PollVoteController.cs" />
@@ -320,6 +325,9 @@
     <Content Include="img\sign-in-with-facebook.png" />
     <Content Include="img\sign-in-with-google.png" />
     <Content Include="Scripts\Create.js" />
+    <Content Include="Scripts\Lib\jquery.signalR-2.1.2.js" />
+    <Content Include="Scripts\Lib\jquery.signalR-2.1.2.min.js" />
+    <Content Include="Scripts\KnockoutExtensions.js" />
     <Content Include="Scripts\Lib\bootstrap-switch.min.js" />
     <Content Include="Scripts\Lib\bootstrap.min.js" />
     <Content Include="Scripts\Lib\countdown.min.js" />
@@ -330,9 +338,10 @@
     <Content Include="Scripts\Lib\jquery-sortable-min.js" />
     <Content Include="Scripts\Lib\jquery-ui.min.js" />
     <Content Include="Scripts\Lib\jquery.ui.touch-punch.min.js" />
-    <Content Include="Scripts\Lib\knockout-3.2.0.js" />
-    <Content Include="Scripts\Lib\moment.js" />
+    <Content Include="Scripts\Lib\knockout-3.2.0.min.js" />
+    <Content Include="Scripts\Lib\moment.min.js" />
     <Content Include="Scripts\Config.js" />
+    <Compile Include="Sockets\ChatHub.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -371,12 +380,12 @@
     <Content Include="Scripts\Navbar.js" />
     <Content Include="Scripts\Poll.js" />
     <Content Include="Scripts\Signin.js" />
-    <Content Include="Scripts\SocketClient.js" />
+    <Content Include="Scripts\ChatClient.js" />
     <Content Include="Scripts\Admin.js" />
     <Content Include="Scripts\Common.js" />
-    <Content Include="Scripts\VotingStrategies\RankedVote.js" />
-    <Content Include="Scripts\VotingStrategies\PointsVote.js" />
-    <Content Include="Scripts\VotingStrategies\BasicVote.js" />
+    <Content Include="Scripts\RankedVote.js" />
+    <Content Include="Scripts\PointsVote.js" />
+    <Content Include="Scripts\BasicVote.js" />
     <Content Include="Styling\Lib\bootstrap-datetimepicker.min.css" />
     <Content Include="Views\Decision\Index.cshtml" />
     <None Include="Views\Poll\_BasicVotePartial.cshtml" />
@@ -387,9 +396,6 @@
     <None Include="Views\Poll\_RankedResultsPartial.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
@@ -458,6 +464,13 @@
     <Error Condition="!Exists('..\packages\Microsoft.ApplicationInsights.0.10.0-build17704\tools\net40\Microsoft.ApplicationInsights.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." />
     <Error Condition="Exists('..\packages\Microsoft.ApplicationInsights.0.10.0-build17704\tools\net40\Microsoft.ApplicationInsights.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>npm install</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
