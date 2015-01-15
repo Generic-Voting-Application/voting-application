@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', '/Scripts/Navbar.js'], function ($, ko, Navbar) {
+﻿define(['jquery', 'knockout', 'Navbar'], function ($, ko, Navbar) {
     return function SigninViewModel() {
         var self = this;
 

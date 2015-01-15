@@ -1,4 +1,4 @@
-﻿define(['jquery'], function ($) {
+﻿define('Navbar', ['jquery'], function ($) {
     var self = this;
 
     self.signedIn = function () {

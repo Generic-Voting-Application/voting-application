@@ -80,9 +80,33 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region PUT
 
-        public virtual HttpResponseMessage Put(Guid manageId, Option option)
+        public virtual HttpResponseMessage Put(Guid manageId, List<Option> options)
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT on this controller");
+            using (var context = _contextFactory.CreateContext())
+            {
+                Poll matchingPoll = context.Polls.Where(p => p.ManageID == manageId).FirstOrDefault();
+                if (matchingPoll == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
+                }
+
+                // Check validity of options
+                foreach (Option option in options)
+                {
+                    if (String.IsNullOrEmpty(option.Name))
+                    {
+                        return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, string.Format("Option name must not be empty"));
+                    }
+
+                    // Will only stick if we SaveChanges after all options are validated
+                    context.Options.Add(option);
+                }
+
+                matchingPoll.Options = options;
+                context.SaveChanges();
+
+                return this.Request.CreateResponse(HttpStatusCode.OK);
+            }
         }
 
         public virtual HttpResponseMessage Put(Guid manageId, long voteId, Option option)

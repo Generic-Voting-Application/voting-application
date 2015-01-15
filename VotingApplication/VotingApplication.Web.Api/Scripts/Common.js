@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', '/Scripts/Navbar.js'], function ($, ko) {
+﻿define(['jquery', 'knockout', 'Navbar'], function ($, ko) {
 
     // Checks if elements are collapsed
     (function () {
