@@ -1,10 +1,10 @@
-﻿define('RankedVote', ['jquery', 'knockout', 'jqueryUI', 'Common', 'jqueryTouch'], function ($, ko, jqueryUI, Common) {
+﻿define('RankedVote', ['jquery', 'knockout', 'jqueryUI', 'Common', 'PollOptions', 'jqueryTouch'], function ($, ko, jqueryUI, Common, PollOptions) {
 
     return function RankedVote(pollId, token) {
 
-        self = this;
-        self.options = ko.observableArray();
-        self.optionAdding = ko.observable();
+        var self = this;
+        self.pollOptions = new PollOptions(pollId);
+
         self.selectedOptions = ko.observableArray();
         self.resultOptions = ko.observableArray();
 
@@ -28,7 +28,7 @@
             self.selectedOptions.removeAll();
 
             pickedOptions.forEach(function (option) {
-                var pickedOption = ko.utils.arrayFirst(self.options(), function (item) {
+                var pickedOption = ko.utils.arrayFirst(self.pollOptions.options(), function (item) {
                     return item.Id == option.OptionId;
                 });
 
@@ -37,34 +37,13 @@
         }
 
         var resetOptions = function () {
-            $('#optionTable-tbody').append($('#selectionTable > tbody').remove('tr').children());
+            $('#selectionTable > tbody tr').remove();
         }
         
         var sortByPollValue = function (a, b) {
             return a.PollValue - b.PollValue;
         }
-
-        var refreshOptions = function () {
-            $.ajax({
-                type: 'GET',
-                url: "/api/poll/" + pollId + "/option",
-
-                success: function (data) {
-
-                    data.forEach(function (dataOption) {
-                        if (self.options().filter(function (option) { return option.Id == dataOption.Id }).length > 0) {
-                            return;
-                        }
-                        if (self.selectedOptions().filter(function (option) { return option.Id == dataOption.Id }).length > 0) {
-                            return;
-                        }
-
-                        self.options.push(dataOption);
-                    });
-                }
-            });
-        };
-
+        
         var sortByBallotCount = function (a, b) {
             return a.ballots.length - b.ballots.length;
         };
@@ -74,11 +53,11 @@
             var orderedOptions = [];
             var ballots = [];
             var totalBallots = 0;
-            var totalOptions = self.options().length;
+            var totalOptions = self.pollOptions.options().length;
             resultsByRound = [];
 
             for (var k = 0; k < totalOptions; k++) {
-                var optionId = self.options()[k].Id;
+                var optionId = self.pollOptions.options()[k].Id;
                 options[k] = { Id: optionId, ballots: [] };
             }
 
@@ -117,7 +96,7 @@
 
                 //Convert into a chartable style
                 var roundOptions = options.map(function (d) {
-                    var matchingOption = $.grep(self.options(), function (opt) { return opt.Id == d.Id })[0];
+                    var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id == d.Id })[0];
                     return {
                         Name: matchingOption.Name,
                         BallotCount: d.ballots.length,
@@ -127,7 +106,7 @@
 
                 //Add in removed options as 0-value
                 orderedOptions.forEach(function (d) {
-                    var matchingOption = $.grep(self.options(), function (opt) { return opt.Id == d.Id })[0];
+                    var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id == d.Id })[0];
                     roundOptions.push({
                         Name: matchingOption.Name,
                         BallotCount: 0,
@@ -280,7 +259,7 @@
             var orderedResults = countVotes(votes);
 
             orderedNames = orderedResults.map(function (d) {
-                var matchingOption = $.grep(self.options(), function (opt) { return opt.Id == d.Id })[0];
+                var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id == d.Id })[0];
                 return matchingOption.Name;
             });
 
@@ -292,7 +271,7 @@
             self.resultOptions.removeAll();
             for (var i = 0; i < orderedResults.length; i++) {
 
-                var option = ko.utils.arrayFirst(self.options(), function (item) {
+                var option = ko.utils.arrayFirst(self.pollOptions.options(), function (item) {
                     return item.Id == orderedResults[i].Id;
                 });
                 option.Rank = orderedResults[i].rank || 1;
@@ -363,6 +342,7 @@
 
                 success: function (data) {
                     data.sort(sortByPollValue);
+                    previousPicked = data;
                     selectPickedOptions(data);
                 },
 
@@ -370,42 +350,16 @@
             });
         };
 
+        var previousPicked = [];
+        self.pollOptions.options.subscribe(function () {
+            resetOptions();
+            selectPickedOptions(previousPicked);
+        });
+
         self.displayResults = function (data) {
             displayResults(data);
         }
-
-        self.addOption = function () {
-            //Don't submit without an entry in the name field
-            if ($("#newName").val() === "") {
-                return;
-            }
-
-            var newName = $("#newName").val();
-            var newInfo = $("#newInfo").val();
-            var newDescription = $("#newDescription").val();
-
-            //Reset before posting, to prevent double posts.
-            $("#newName").val("");
-            $("#newDescription").val("");
-            $("#newInfo").val("");
-
-            $.ajax({
-                type: 'POST',
-                url: '/api/poll/' + pollId + '/option',
-                contentType: 'application/json',
-
-                data: JSON.stringify({
-                    Name: newName,
-                    Description: newDescription,
-                    Info: newInfo
-                }),
-
-                success: function () {
-                    refreshOptions();
-                }
-            });
-        };
-
+        
         self.toggleChartVisible = function () {
             self.chartVisible(!self.chartVisible());
 
@@ -416,8 +370,7 @@
 
         self.initialise = function (pollData) {
 
-            self.options(pollData.Options);
-            self.optionAdding(pollData.OptionAdding);
+            self.pollOptions.initialise(pollData);
 
             $(".sortable").sortable({
                 items: 'tbody > tr:not(#newOptionRow)',
@@ -426,7 +379,7 @@
                 dropOnEmpty: true,
                 receive: function (e, ui) {
                     var itemId = ui.item.attr('data-id');
-                    var item = ko.utils.arrayFirst(self.options(), function (item) {
+                    var item = ko.utils.arrayFirst(self.pollOptions.options(), function (item) {
                         return item.Id == itemId;
                     });
 

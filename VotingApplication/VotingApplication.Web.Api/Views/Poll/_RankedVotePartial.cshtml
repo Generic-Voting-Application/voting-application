@@ -11,27 +11,19 @@
                     <th class="col-md-3 hidden-xs hidden-sm">More info</th>
                 </tr>
             </thead>
-            <tbody id="optionTable-tbody" data-bind="foreach: options">
+            <tbody id="optionTable-tbody">
+                <!-- ko foreach: pollOptions.options -->
                 <tr class="clickable" data-bind="attr: {'data-id': Id}">
                     <td class="col-md-3" data-bind="text: Name"></td>
                     <td class="col-md-6" data-bind="text: Description"></td>
                     <td class="col-md-3 hidden-xs hidden-sm" data-bind="text: Info"></td>
                 </tr>
+                <!-- /ko -->
+
+                <!-- ko with: pollOptions -->
+                @Html.Partial("_PollAddOptionPartial")
+                <!-- /ko -->
             </tbody>
-            <tr id="newOptionRow" data-bind="visible: optionAdding">
-                <td>
-                    <input class="form-control input-block" id="newName" placeholder="Name" />
-                </td>
-                <td>
-                    <input class="form-control input-block" id="newDescription" placeholder="Description" />
-                </td>
-                <td class="hidden-xs hidden-sm">
-                    <input class="form-control input-block" id="newInfo" placeholder="More Info" />
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-primary" data-bind="click: addOption.bind()">Add</button>
-                </td>
-            </tr>
         </table>
     </form>
 </div>
