@@ -95,3 +95,12 @@
     </div>
     <div class="col-md-4"></div>
 </div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        require(["/Scripts/Navbar.js"], function (Navbar) {
+            new Navbar();
+        });
+    </script>
+}

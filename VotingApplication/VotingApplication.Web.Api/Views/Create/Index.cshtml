@@ -60,7 +60,9 @@
                             </div>
                             <input class="form-control" type="email" id="email-advanced" placeholder="E.g. email@example.com" pattern="[\w._%+-]+@("@")\w+(\.\w+)+" data-bind="value: creatorEmail">
                         </div>
-
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-6">
                         <div id="strategy-group" class="form-group">
                             <label class="control-label" for="voting-strategy">Poll type</label>
                             <a href="/info" id="strategy-info" class="help-message">[?]</a>
@@ -68,7 +70,7 @@
                                 <p><b>Single Vote</b>:<br />Pick one option</p>
                                 <p>
                                     <b>Ranked Vote</b>:
-                                    <br />Order options by preference<br/>
+                                    <br />Order options by preference<br />
                                     <span class="warning">Not recommended in small votes</span>
                                 </p>
                                 <b>Points-weighted Vote</b>:<br />Distribute points between options
@@ -88,19 +90,6 @@
                         <div id="points-per-vote-group" data-bind="visible: selectedStrategy() == 'Points'" class="form-group">
                             <label class="control-label" for="max-per-vote">Max points per vote</label>
                             <input class="form-control" id="max-per-vote" placeholder="3" />
-                        </div>
-                    </div>
-                    <div class="col-md-1"></div>
-                    <div class="col-md-6">
-
-                        <div id="template-group" class="form-group">
-                            <label class="control-label" for="template">Poll Template</label>
-                            <a id="template-info" class="help-message">[?]</a>
-                            <div class="tip" data-bind="hoverTargetId: template-info">
-                                <p>Sets up the poll with a preset list of options.</p>
-                                Options can still be added or removed from the Poll Management page.
-                            </div>
-                            <select class="form-control select-placeholder" id="template" data-bind="options:templates, optionsText:'Name', optionsValue:'Id', optionsCaption:'Select a template..'"></select>
                         </div>
 
                         <div id="invite-group" class="form-group">

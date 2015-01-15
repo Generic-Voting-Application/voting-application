@@ -164,6 +164,12 @@ label.info-message {
     width:200px;
 }
 
+#template-group {
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .affirmative {
     color: green;
 }

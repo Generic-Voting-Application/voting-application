@@ -4,6 +4,7 @@
 
         self.votes = ko.observableArray();
         self.options = ko.observableArray();
+        self.templates = ko.observableArray();
         self.votingStrategy = ko.observable(false);
         self.pollId = ko.observable();
 
@@ -35,6 +36,25 @@
             });
         };
 
+
+        var populateTemplates = function () {
+            if (!self.isSignedIn()) {
+                return;
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: '/api/poll',
+                beforeSend: function (header) {
+                    header.setRequestHeader("Authorization", "Bearer " + sessionStorage['creator_token']);
+                },
+
+                success: function (data) {
+                    self.templates(data);
+                }
+            });
+        };
+
         self.resetVotes = function () {
             $.ajax({
                 type: 'DELETE',
@@ -49,6 +69,20 @@
                 error: Common.handleError
             });
         };
+
+        self.cloneOptions = function () {
+            var chosenPollId = $("#template").val();
+            $.ajax({
+                type: 'GET',
+                url: "/api/Poll/" + chosenPollId + "/option",
+
+                success: function (data) {
+                    self.options(data);
+                },
+
+                error: Common.handleError
+            });
+        }
 
         self.addOption = function () {
             //Don't submit without an entry in the name field
@@ -133,9 +167,16 @@
             });
         }
 
+        self.isSignedIn = function () {
+            return signedIn();
+        }
+
         $(document).ready(function () {
             getPollDetails();
             populateVotes();
+            populateTemplates();
+
+            Common.setupTooltips();
 
             // Select first tab
             $('#tabBar li a:first').tab('show')

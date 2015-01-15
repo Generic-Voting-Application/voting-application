@@ -26,7 +26,6 @@ namespace VotingApplication.Data.Model
 
         public string CreatorIdentity { get; set; }
 
-        public Guid TemplateId { get; set; }
         public List<Option> Options { get; set; }
 
         public int MaxPoints { get; set; }

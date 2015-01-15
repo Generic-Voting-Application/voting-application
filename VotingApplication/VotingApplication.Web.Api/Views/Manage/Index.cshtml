@@ -45,6 +45,15 @@
             <div class="col-md-1"></div>
         </div>
         <div class="tab-pane fade" id="options">
+            <div id="template-group" class="form-group" data-bind="visible: isSignedIn()">
+                <label class="control-label" for="template">Poll Template</label>
+                <a id="template-info" class="help-message">[?]</a>
+                <div class="tip" data-bind="hoverTargetId: template-info">
+                    Clone the options from a previous poll
+                </div>
+                <select class="form-control" id="template" data-bind="options:templates, optionsText:'Name', optionsValue:'UUID', optionsCaption:'Select a template..'"></select>
+                <button class="btn btn-primary" data-bind="click: cloneOptions">Clone Options</button>
+            </div>
             <table class="table table-hover">
                 <thead>
                     <tr>

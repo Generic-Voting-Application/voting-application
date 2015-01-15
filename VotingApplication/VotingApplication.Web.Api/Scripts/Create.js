@@ -2,7 +2,6 @@
     return function CreateViewModel() {
         var self = this;
 
-        self.templates = ko.observableArray();
         self.selectedStrategy = ko.observable();
         self.expires = ko.observable(false);
 
@@ -46,6 +45,9 @@
                 type: 'POST',
                 url: '/api/poll',
                 contentType: 'application/json',
+                beforeSend: function (header) {
+                    header.setRequestHeader("Authorization", "Bearer " + sessionStorage['creator_token']);
+                },
 
                 data: JSON.stringify({
                     Name: self.pollName(),
@@ -86,48 +88,14 @@
             }
         };
 
-        self.populateTemplates = function () {
-            $.ajax({
-                type: 'GET',
-                url: '/api/template',
-
-                success: function (data) {
-                    self.templates(data);
-                }
-            });
-        };
-
-        var setupTooltips = function() {
-            $(document).tooltip
-
-            function showOrHideElement(show, element) {
-                element.next(".tip").toggle(show);
-            }
-
-            var tooltipTargets = $(".help-message");
-
-            for (var i = 0; i < tooltipTargets.length; i++)
-            {
-                var $hoverTarget = $(tooltipTargets[i]);
-
-                var hideElement = showOrHideElement.bind(null, false, $hoverTarget);
-                var showElement = showOrHideElement.bind(null, true, $hoverTarget);
-                ko.utils.registerEventHandler($hoverTarget, "mouseover", showElement);
-                ko.utils.registerEventHandler($hoverTarget, "mouseout", hideElement);
-                hideElement();
-            }
-        }
-
         $(document).ready(function () {
-            self.populateTemplates();
-
             var defaultExpiryDate = moment().add(30, 'minutes');
             $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate, minDate: moment() });
 
             // Select first tab
             $('#tabBar li a:first').tab('show')
 
-            setupTooltips();
+            Common.setupTooltips();
         });
 
         ko.applyBindings(this);

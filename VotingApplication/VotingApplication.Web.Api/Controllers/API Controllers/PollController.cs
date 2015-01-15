@@ -102,14 +102,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (newPoll.Options == null)
                 {
-                    if (newPoll.TemplateId != Guid.Empty)
-                    {
-                        newPoll.Options = context.Polls.Where(p => p.UUID == newPoll.TemplateId).Include(p => p.Options).FirstOrDefault().Options;
-                    }
-                    else
-                    {
-                        newPoll.Options = new List<Option>(); 
-                    }
+                    newPoll.Options = new List<Option>(); 
                 }
                 
                 if(newPoll.Expires && newPoll.ExpiryDate < DateTime.Now)
@@ -173,13 +166,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (newPoll.Options == null)
                 {
-                    List<Option> options = new List<Option>();
-                    if (newPoll.TemplateId != Guid.Empty)
-                    {
-                        options = context.Polls.Where(p => p.UUID == newPoll.TemplateId).Include(p => p.Options).FirstOrDefault().Options;
-                    }
-
-                    newPoll.Options = options;
+                    newPoll.Options = new List<Option>();
                 }
 
                 Poll matchingPoll = context.Polls.Where(s => s.UUID == id).FirstOrDefault();

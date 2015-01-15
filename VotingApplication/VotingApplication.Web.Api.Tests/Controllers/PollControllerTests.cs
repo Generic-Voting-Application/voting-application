@@ -204,18 +204,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Assert.AreEqual("Poll did not have a name", error.Message);
         }
 
-        [TestMethod]
-        public void PostAcceptsPollWithMissingTemplate()
-        {
-            // Act
-            var response = _controller.Post(new Poll() { Name = "New Poll" });
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
 
         [TestMethod]
-        public void PostAddsEmptyOptionsListToPollWithoutTemplate()
+        public void PostAddsEmptyOptionsListToNewPoll()
         {
             // Act
             Poll newPoll = new Poll() { Name = "New Poll" };
@@ -226,19 +217,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostPopulatesOptionsByTemplateId()
-        {
-            // Act
-            Poll newPoll = new Poll() { Name = "New Poll", TemplateId = _templateUUID };
-            var response = _controller.Post(newPoll);
-
-            // Assert
-            List<Option> expectedOptions = new List<Option>() { _redOption };
-            CollectionAssert.AreEquivalent(expectedOptions, newPoll.Options);
-        }
-
-        [TestMethod]
-        public void PostRetainsSuppliedTemplate()
+        public void PostRetainsSuppliedOptions()
         {
             // Act
             List<Option> customOptions = new List<Option>() { _redOption };
@@ -373,17 +352,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostByIdAcceptsPollWithMissingTemplateId()
-        {
-            // Act
-            var response = _controller.Post(UUIDs[0], new Poll() { Name = "New Poll" });
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void PostByIdAddsEmptyOptionsListToPollWithoutTemplate()
+        public void PostByIdAddsEmptyOptionsListToNewPoll()
         {
             // Act
             Poll newPoll = new Poll() { Name = "New Poll" };
@@ -394,19 +363,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PostByIdPopulatesOptionsByTemplateId()
-        {
-            // Act
-            Poll newPoll = new Poll() { Name = "New Poll", TemplateId = _templateUUID };
-            var response = _controller.Post(UUIDs[0], newPoll);
-
-            // Assert
-            List<Option> expectedOptions = new List<Option>() { _redOption };
-            CollectionAssert.AreEquivalent(expectedOptions, newPoll.Options);
-        }
-
-        [TestMethod]
-        public void PostByIdRetainsSuppliedTemplate()
+        public void PostByIdRetainsSuppliedOptions()
         {
             // Act
             List<Option> customOptions = new List<Option>() { _redOption };
