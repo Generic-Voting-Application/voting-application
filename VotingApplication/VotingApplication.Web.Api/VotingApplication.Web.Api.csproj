@@ -79,6 +79,12 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.1.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.1.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.1.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Diagnostics.Tracing.EventSource">
       <HintPath>..\packages\Microsoft.Diagnostics.Tracing.EventSource.Redist.1.0.24\lib\net40\Microsoft.Diagnostics.Tracing.EventSource.dll</HintPath>
@@ -287,7 +293,6 @@
     <Compile Include="Controllers\API Controllers\ManageInvitationController.cs" />
     <Compile Include="Controllers\API Controllers\ManageOptionController.cs" />
     <Compile Include="Controllers\API Controllers\ManageVoteController.cs" />
-    <Compile Include="Controllers\API Controllers\PollChatMessageController.cs" />
     <Compile Include="Controllers\API Controllers\TemplateController.cs" />
     <Compile Include="Controllers\API Controllers\PollController.cs" />
     <Compile Include="Controllers\API Controllers\PollOptionController.cs" />
@@ -319,6 +324,8 @@
     <Content Include="img\sign-in-with-facebook.png" />
     <Content Include="img\sign-in-with-google.png" />
     <Content Include="Scripts\Create.js" />
+    <Content Include="Scripts\Lib\jquery.signalR-2.1.2.js" />
+    <Content Include="Scripts\Lib\jquery.signalR-2.1.2.min.js" />
     <Content Include="Scripts\KnockoutExtensions.js" />
     <Content Include="Scripts\Lib\bootstrap-switch.min.js" />
     <Content Include="Scripts\Lib\bootstrap.min.js" />
@@ -333,6 +340,7 @@
     <Content Include="Scripts\Lib\knockout-3.2.0.min.js" />
     <Content Include="Scripts\Lib\moment.min.js" />
     <Content Include="Scripts\Config.js" />
+    <Compile Include="Sockets\ChatHub.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -369,7 +377,7 @@
     <Content Include="Scripts\Lib\require.js" />
     <Content Include="Scripts\Manage.js" />
     <Content Include="Scripts\Poll.js" />
-    <Content Include="Scripts\SocketClient.js" />
+    <Content Include="Scripts\ChatClient.js" />
     <Content Include="Scripts\Admin.js" />
     <Content Include="Scripts\Common.js" />
     <Content Include="Scripts\RankedVote.js" />
