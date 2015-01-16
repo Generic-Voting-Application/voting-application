@@ -173,6 +173,7 @@
             updateButtons(event.target.parentElement);
         }
 
+        self.onVoted = null;
         self.doVote = function (data, event) {
             var userId = Common.currentUserId(pollId);
 

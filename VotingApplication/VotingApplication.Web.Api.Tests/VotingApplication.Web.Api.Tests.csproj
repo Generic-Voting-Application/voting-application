@@ -149,6 +149,7 @@
     <Content Include="Scripts\CreateTests.js" />
     <Content Include="Scripts\ManageTests.js" />
     <Content Include="Scripts\PollOptionsTests.js" />
+    <Content Include="Scripts\RankedVoteTests.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\lib\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\lib\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />

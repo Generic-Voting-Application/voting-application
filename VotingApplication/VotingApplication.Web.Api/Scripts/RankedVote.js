@@ -13,12 +13,15 @@
         var selectPickedOptions = function (votes) {
             var selected = votes.map(function (vote) {
                 return ko.utils.arrayFirst(self.pollOptions.options(), function (item) {
-                    return item.Id == vote.OptionId;
+                    return item.Id === vote.OptionId;
                 });
             });
             self.selectedOptions(selected);
         };
 
+        // Remaining list of "non-selected" options is created
+        // as a computed array dependant on the selected options
+        // and full set of options
         self.remainOptions = ko.computed(function () {
             var notSelected = function (option) {
                 return self.selectedOptions().filter(function (o) { return o.Id === option.Id; }).length === 0;
@@ -31,11 +34,11 @@
         var orderedNames = [];
         var chart;
         var roundIndex = 0;
-        
+
         var sortByPollValue = function (a, b) {
             return a.PollValue - b.PollValue;
-        }
-        
+        };
+
         var sortByBallotCount = function (a, b) {
             return a.ballots.length - b.ballots.length;
         };
@@ -76,11 +79,11 @@
                 // Sort the votes on the ballots and assign each ballot to first choice
                 ballots.forEach(function (ballot) {
                     ballot.sort(sortByPollValue);
-                    var availableChoices = ballot.filter(function (option) { return $.inArray(option.OptionId, availableOptions) != -1; })
+                    var availableChoices = ballot.filter(function (option) { return $.inArray(option.OptionId, availableOptions) !== -1; });
                     if (availableChoices.length > 0) {
-                        var firstChoiceId = availableChoices[0].OptionId
-                        var firstChoiceOption = options.filter(function (option) { return option.Id == firstChoiceId })[0];
-                        firstChoiceOption.ballots.push(ballot)
+                        var firstChoiceId = availableChoices[0].OptionId;
+                        var firstChoiceOption = options.filter(function (option) { return option.Id === firstChoiceId; })[0];
+                        firstChoiceOption.ballots.push(ballot);
                     }
                 });
 
@@ -88,23 +91,23 @@
 
                 //Convert into a chartable style
                 var roundOptions = options.map(function (d) {
-                    var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id == d.Id })[0];
+                    var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id === d.Id; })[0];
                     return {
                         Name: matchingOption.Name,
                         BallotCount: d.ballots.length,
-                        Voters: d.ballots.map(function (x) { return x[0].User.Name + " (#" + (x.map(function (y) { return y.OptionId }).indexOf(matchingOption.Id) + 1) + ")"; })
-                    }
+                        Voters: d.ballots.map(function (x) { return x[0].User.Name + " (#" + (x.map(function (y) { return y.OptionId; }).indexOf(matchingOption.Id) + 1) + ")"; })
+                    };
                 });
 
                 //Add in removed options as 0-value
                 orderedOptions.forEach(function (d) {
-                    var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id == d.Id })[0];
+                    var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id === d.Id; })[0];
                     roundOptions.push({
                         Name: matchingOption.Name,
                         BallotCount: 0,
                         Voters: []
                     });
-                })
+                });
 
                 // End if we have a majority
                 if (options[options.length - 1].ballots.length > totalBallots / 2) {
@@ -126,7 +129,7 @@
                 var lastPlaceOption = options[0];
                 var lastPlaceBallotCount = lastPlaceOption.ballots.length;
 
-                var removedOptions = options.filter(function (d) { return d.ballots.length == lastPlaceBallotCount; });
+                var removedOptions = options.filter(function (d) { return d.ballots.length === lastPlaceBallotCount; });
                 // Track at what point an option was removed from the running
                 removedOptions.map(function (d) {
                     d.rank = options.length - removedOptions.length + 1;
@@ -141,56 +144,31 @@
             orderedOptions.reverse();
 
             return orderedOptions;
-        }
+        };
 
-        var displayResults = function (votes) {
-            var orderedResults = countVotes(votes);
-
-            orderedNames = orderedResults.map(function (d) {
-                var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id == d.Id })[0];
-                return matchingOption.Name;
-            });
-
-            //Exit early if data has not changed
-            if (chart && JSON.stringify(resultsByRound) == JSON.stringify(chart.series().slice(0, chart.series().length - 1).map(function (d) { return d.data.rawData() })))
-                return;
-
-            // Fill in the table
-            self.resultOptions.removeAll();
-            for (var i = 0; i < orderedResults.length; i++) {
-
-                var option = ko.utils.arrayFirst(self.pollOptions.options(), function (item) {
-                    return item.Id == orderedResults[i].Id;
-                });
-                option.Rank = orderedResults[i].rank || 1;
-                self.resultOptions.push(option);
-            }
-
-            self.drawChart(resultsByRound.slice(0));
-        }
-
-        self.doVote = function (data, event) {
+        self.onVoted = null;
+        self.doVote = function () {
             var userId = Common.currentUserId(pollId);
 
             if (userId && pollId) {
-                var token = token || Common.sessionItem("token", pollId);
+                var useToken = token || Common.sessionItem("token", pollId);
                 // Convert selected options to ranked votes
                 var selectedOptionsArray = self.selectedOptions().map(function (option, index) {
                     return {
                         OptionId: option.Id,
                         PollId: pollId,
                         PollValue: index + 1,
-                        Token: { TokenGuid: token }
+                        Token: { TokenGuid: useToken }
                     };
                 });
-                
+
                 $.ajax({
                     type: 'PUT',
                     url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
                     contentType: 'application/json',
                     data: JSON.stringify(selectedOptionsArray),
 
-                    success: function (returnData) {
+                    success: function () {
                         if (self.onVoted) self.onVoted();
                     },
 
@@ -214,9 +192,31 @@
             });
         };
 
-        self.displayResults = function (data) {
-            displayResults(data);
-        }
+        self.displayResults = function (votes) {
+            var orderedResults = countVotes(votes);
+
+            orderedNames = orderedResults.map(function (d) {
+                var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id === d.Id; })[0];
+                return matchingOption.Name;
+            });
+
+            //Exit early if data has not changed
+            if (chart && JSON.stringify(resultsByRound) === JSON.stringify(chart.series().slice(0, chart.series().length - 1).map(function (d) { return d.data.rawData(); })))
+                return;
+
+            // Fill in the table
+            self.resultOptions.removeAll();
+            for (var i = 0; i < orderedResults.length; i++) {
+
+                var option = ko.utils.arrayFirst(self.pollOptions.options(), function (item) {
+                    return item.Id === orderedResults[i].Id;
+                });
+                option.Rank = orderedResults[i].rank || 1;
+                self.resultOptions.push(option);
+            }
+
+            self.drawChart(resultsByRound.slice(0));
+        };
 
         self.initialise = function (pollData) {
 
@@ -227,7 +227,7 @@
                 connectWith: '.sortable',
                 axis: 'y',
                 dropOnEmpty: true,
-                receive: function (e, ui) {
+                receive: function () {
                     var votes = [];
                     $('#selectionTable tr.clickable').each(function (i, row) {
                         votes.push({
@@ -235,6 +235,8 @@
                         });
                     });
 
+                    // Cancel the sort operation and update the Knockout
+                    // arrays, letting Knockout re-arrange the DOM
                     $(".sortable").sortable("cancel");
                     selectPickedOptions(votes);
                 }
@@ -248,7 +250,7 @@
             $("#chart-results").html('');
             $("#chart-buttons").html('');
 
-            if (!self.chartVisible() || data.length == 0)
+            if (!self.chartVisible() || data.length === 0)
                 return;
 
             //Get voter count
@@ -282,8 +284,6 @@
             var seriesIndex = roundIndex;
 
             //Add a button to display individual rounds
-            var button = $("#chart-buttons").append('<button class="btn btn-primary" onclick="self.filterRounds(0)">All Rounds</button>');
-
             for (var i = 1; i <= data.length; i++) {
                 $("#chart-buttons").append('<button class="btn btn-primary" onclick="self.filterRounds(' + i + ')">Round ' + i + '</button>');
             }
@@ -319,7 +319,7 @@
                         return "Option eliminated";
                 });
 
-                var newSeries = chart.series()
+                var newSeries = chart.series();
                 newSeries.push(series);
                 chart.series(newSeries);
             });
@@ -329,17 +329,17 @@
             .keyFunction(function (d) {
                 return d.Name;
             })
-            .valueFunction(function (d) {
+            .valueFunction(function () {
                 return voterCount / 2;
             })
-            .tooltipFunction(function (d) {
+            .tooltipFunction(function () {
                 return "50% Majority";
             })
             .widthFactor(1.1)
             .thickness(2)
             .title('Majority');
 
-            var newSeries = chart.series()
+            var newSeries = chart.series();
             newSeries.push(series);
             chart.series(newSeries);
 
@@ -351,12 +351,12 @@
 
             //Redraw with all results
             self.filterRounds(0);
-        }
+        };
 
         self.filterRounds = function (filterIndex) {
             roundIndex = filterIndex;
             self.drawChart(resultsByRound);
-        }
+        };
 
-    }
+    };
 });
