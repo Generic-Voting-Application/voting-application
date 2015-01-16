@@ -82,7 +82,7 @@
                         TokenGuid: useToken
                     };
                 })
-                .filter(function (vote) { return vote.PollValue > 0; });
+                .filter(function (vote) { return vote.VoteValue > 0; });
 
             if (userId && pollId) {
                 $.ajax({

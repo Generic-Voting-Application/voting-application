@@ -144,6 +144,8 @@
     <Content Include="Scripts\BasicVoteTests.js" />
     <Content Include="Scripts\CreateTests.js" />
     <Content Include="Scripts\ManageTests.js" />
+    <Content Include="Scripts\PointsOptionTests.js" />
+    <Content Include="Scripts\PointsVoteTests.js" />
     <Content Include="Scripts\PollOptionsTests.js" />
     <Content Include="Scripts\RankedVoteTests.js" />
   </ItemGroup>
