@@ -12,6 +12,7 @@ using Moq;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -27,6 +28,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Poll _mainPoll;
         private InMemoryDbSet<Option> _dummyOptions;
         private InMemoryDbSet<Vote> _dummyVotes;
+        InMemoryDbSet<Poll> _dummyPolls;
 
         [TestInitialize]
         public void setup()
@@ -46,17 +48,17 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _dummyVotes = new InMemoryDbSet<Vote>(true);
             _dummyVotes.Add(_burgerVote);
 
-            InMemoryDbSet<Poll> dummyPolls = new InMemoryDbSet<Poll>(true);
-            _mainPoll = new Poll() { UUID = mainUUID, ManageID = _manageMainUUID, Options = new List<Option>() { _burgerOption, _pizzaOption } };
-            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageID = _manageEmptyUUID, Options = new List<Option>() };
-            dummyPolls.Add(_mainPoll);
-            dummyPolls.Add(emptyPoll);
+            _dummyPolls = new InMemoryDbSet<Poll>(true);
+            _mainPoll = new Poll() { UUID = mainUUID, ManageId = _manageMainUUID, Options = new List<Option>() { _burgerOption, _pizzaOption } };
+            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageId = _manageEmptyUUID, Options = new List<Option>() };
+            _dummyPolls.Add(_mainPoll);
+            _dummyPolls.Add(emptyPoll);
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
             mockContext.Setup(a => a.Options).Returns(_dummyOptions);
-            mockContext.Setup(a => a.Polls).Returns(dummyPolls);
+            mockContext.Setup(a => a.Polls).Returns(_dummyPolls);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
             mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
 
@@ -105,9 +107,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_manageEmptyUUID);
 
             // Assert
-            List<Option> expectedOptions = new List<Option>();
-            List<Option> responseOptions = ((ObjectContent)response.Content).Value as List<Option>;
-            CollectionAssert.AreEquivalent(expectedOptions, responseOptions);
+            List<OptionRequestResponseModel> responseOptions = ((ObjectContent)response.Content).Value as List<OptionRequestResponseModel>;
+            Assert.AreEqual(0, responseOptions.Count);
         }
 
         [TestMethod]
@@ -117,9 +118,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_manageMainUUID);
 
             // Assert
-            List<Option> expectedOptions = new List<Option>() { _burgerOption, _pizzaOption };
-            List<Option> responseOptions = ((ObjectContent)response.Content).Value as List<Option>;
-            CollectionAssert.AreEquivalent(expectedOptions, responseOptions);
+            List<OptionRequestResponseModel> responseOptions = ((ObjectContent)response.Content).Value as List<OptionRequestResponseModel>;
+            Assert.AreEqual(2, responseOptions.Count);
+            CollectionAssert.AreEqual(new string[] { "Burger King", "Pizza Hut" }, responseOptions.Select(r => r.Name).ToArray());
         }
         
         [TestMethod]
@@ -164,34 +165,23 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostIsAllowed()
         {
             // Act
-            var response = _controller.Post(_manageMainUUID, new Option() { Name = "Abc", Description = "Abc", Info = "Abc" });
+            var response = _controller.Post(_manageMainUUID, new OptionCreationRequestModel() { Name = "Abc", Description = "Abc", Info = "Abc" });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         [TestMethod]
-        public void PostWithoutNameIsRejected()
+        public void PostInvalidInputIsRejected()
         {
+            // Arrange
+            _controller.ModelState.AddModelError("Name", "");
+
             // Act
-            var response = _controller.Post(_manageMainUUID, new Option() { Description = "Abc", Info = "Abc" });
+            var response = _controller.Post(_manageMainUUID, new OptionCreationRequestModel() { Name = "", Description = "Abc", Info = "Abc" });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Option name must not be empty", error.Message);
-        }
-
-        [TestMethod]
-        public void PostWithEmptyNameIsRejected()
-        {
-            // Act
-            var response = _controller.Post(_manageMainUUID, new Option() { Name = "", Description = "Abc", Info = "Abc" });
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Option name must not be empty", error.Message);
         }
 
 
@@ -199,7 +189,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostWithoutDescriptionIsAccepted()
         {
             // Act
-            var response = _controller.Post(_manageMainUUID, new Option() { Name = "Abc", Info = "Abc" });
+            var response = _controller.Post(_manageMainUUID, new OptionCreationRequestModel() { Name = "Abc", Info = "Abc" });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -209,7 +199,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostWithoutMoreInfoIsAccepted()
         {
             // Act
-            var response = _controller.Post(_manageMainUUID, new Option() { Name = "Abc", Description = "Abc" });
+            var response = _controller.Post(_manageMainUUID, new OptionCreationRequestModel() { Name = "Abc", Description = "Abc" });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -219,77 +209,33 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostAddsOptionToOptionList()
         {
             // Act
-            Option newOption = new Option() { Name = "Bella Vista" };
+            OptionCreationRequestModel newOption = new OptionCreationRequestModel() { Name = "Bella Vista" };
             _controller.Post(_manageMainUUID, newOption);
 
             // Assert
-            List<Option> expectedOptions = new List<Option>();
-            expectedOptions.Add(_burgerOption);
-            expectedOptions.Add(_pizzaOption);
-            expectedOptions.Add(newOption);
-            CollectionAssert.AreEquivalent(expectedOptions, _dummyOptions.Local);
+            Assert.AreEqual(3, _mainPoll.Options.Count);
         }
-
-        [TestMethod]
-        public void PostReturnsIdOfNewOption()
-        {
-            // Act
-            Option newOption = new Option() { Name = "Bella Vista" };
-            var response = _controller.Post(_manageMainUUID, newOption);
-
-            // Assert
-            long optionId = (long)((ObjectContent)response.Content).Value;
-            Assert.AreEqual(3, optionId);
-        }
-
-        [TestMethod]
-        public void PostSetsIdOfNewOption()
-        {
-            // Act
-            Option newOption = new Option() { Name = "Bella Vista" };
-            _controller.Post(_manageMainUUID, newOption);
-
-            // Assert
-            Assert.AreEqual(3, newOption.Id);
-        }
-
 
         [TestMethod]
         public void PostReturnsNotFoundForMissingPoll()
         {
             // Act
-            Guid newGuid = Guid.NewGuid();
-            Option newOption = new Option() { Name = "Bella Vista" };
-            var response = _controller.Post(newGuid, newOption);
+            OptionCreationRequestModel newOption = new OptionCreationRequestModel() { Name = "Bella Vista" };
+            var response = _controller.Post(Guid.NewGuid(), newOption);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll " + newGuid + " not found", error.Message);
         }
 
         [TestMethod]
         public void PostAddsOptionToPoll()
         {
             // Act
-            Option newOption = new Option() { Name = "Bella Vista" };
+            OptionCreationRequestModel newOption = new OptionCreationRequestModel() { Name = "Bella Vista" };
             _controller.Post(_manageMainUUID, newOption);
 
             // Assert
-            List<Option> expectedOptions = new List<Option>() { _burgerOption, _pizzaOption, newOption };
-            CollectionAssert.AreEquivalent(expectedOptions, _mainPoll.Options);
-        }
-
-        [TestMethod]
-        public void PostAddsPollToOptions()
-        {
-            // Act
-            Option newOption = new Option() { Name = "Bella Vista" };
-            _controller.Post(_manageMainUUID, newOption);
-
-            // Assert
-            List<Poll> expectedPolls = new List<Poll>() { _mainPoll };
-            CollectionAssert.AreEquivalent(expectedPolls, newOption.Polls);
+            Assert.AreEqual(3, _mainPoll.Options.Count);
         }
 
         [TestMethod]

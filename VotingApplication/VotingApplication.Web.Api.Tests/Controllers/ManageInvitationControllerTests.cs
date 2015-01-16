@@ -29,8 +29,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             _mainUUID = Guid.NewGuid();
             _inviteOnlyUUID = Guid.NewGuid();
-            _mainPoll = new Poll() { ManageID = _mainUUID, Tokens = new List<Token>() };
-            _inviteOnlyPoll = new Poll() { ManageID = _inviteOnlyUUID, InviteOnly = true, Tokens = new List<Token>() };
+            _mainPoll = new Poll() { ManageId = _mainUUID, Tokens = new List<Token>() };
+            _inviteOnlyPoll = new Poll() { ManageId = _inviteOnlyUUID, InviteOnly = true, Tokens = new List<Token>() };
             
             InMemoryDbSet<Poll> dummyPolls = new InMemoryDbSet<Poll>(true);
             dummyPolls.Add(_mainPoll);

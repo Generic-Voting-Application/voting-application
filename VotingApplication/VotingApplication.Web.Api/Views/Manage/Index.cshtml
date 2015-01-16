@@ -37,9 +37,9 @@
                     </thead>
                     <tbody data-bind="foreach: votes">
                         <tr>
-                            <td data-bind="text: User.Name"></td>
-                            <td data-bind="text: Option.Name"></td>
-                            <td data-bind="text: PollValue"></td>
+                            <td data-bind="text: VoterName"></td>
+                            <td data-bind="text: OptionName"></td>
+                            <td data-bind="text: VoteValue"></td>
                             <td class="delete-vote-row"><button class="btn btn-danger" data-bind="click: $parent.deleteVote.bind()">Delete Vote</button></td>
                         </tr>
                     </tbody>

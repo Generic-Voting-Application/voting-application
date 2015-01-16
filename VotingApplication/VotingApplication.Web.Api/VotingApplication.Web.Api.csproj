@@ -16,7 +16,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44300</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
@@ -303,10 +303,7 @@
     <Compile Include="Controllers\Web Controllers\PollController.cs" />
     <Compile Include="Controllers\Web Controllers\InfoController.cs" />
     <Compile Include="Controllers\Web Controllers\CreateController.cs" />
-    <Compile Include="Controllers\API Controllers\OptionController.cs" />
     <Compile Include="Controllers\API Controllers\UserController.cs" />
-    <Compile Include="Controllers\API Controllers\UserVoteController.cs" />
-    <Compile Include="Controllers\API Controllers\VoteController.cs" />
     <Compile Include="Controllers\API Controllers\WebApiController.cs" />
     <Compile Include="Filters\BasicAuthenticator.cs" />
     <Compile Include="Global.asax.cs">
@@ -314,6 +311,14 @@
     </Compile>
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\DBViewModels\ManagePollRequestResponseModel.cs" />
+    <Compile Include="Models\DBViewModels\OptionRequestResponseModel.cs" />
+    <Compile Include="Models\DBViewModels\OptionCreationRequestModel.cs" />
+    <Compile Include="Models\DBViewModels\PollRequestResponseModel.cs" />
+    <Compile Include="Models\DBViewModels\PollCreationRequestModel.cs" />
+    <Compile Include="Models\DBViewModels\PollCreationResponseModel.cs" />
+    <Compile Include="Models\DBViewModels\VoteRequestResponseModel.cs" />
+    <Compile Include="Models\DBViewModels\VoteRequestModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageModels.cs" />
     <Compile Include="Models\PollModels.cs" />
@@ -439,7 +444,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>57534</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:49717/</IISUrl>
+          <IISUrl>http://localhost:44300</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

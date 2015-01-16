@@ -187,4 +187,4 @@ FakesAssemblies/
 Packages.dgml
 
 # Minified scripts
-VotingApplication/VotingApplication.Web.Api/Scripts/Min/
+VotingApplication/VotingApplication.Web.Api/Scripts/Min/*
