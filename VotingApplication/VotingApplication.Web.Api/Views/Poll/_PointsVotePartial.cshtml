@@ -22,10 +22,12 @@
                 <td class="hidden-xs" data-bind="text: Description"></td>
                 <td class="hidden-xs hidden-sm" data-bind="text: Info"></td>
                 <td>
-                    <span class="btn-group">
-                        <button type="button" class="btn btn-primary pull-left" data-bind="click: $parent.decreaseVote">-</button>
-                        <label class="points-label" data-bind="text: $parent.pointsArray()[$index()] + '/' + $parent.maxPerVote()"></label>
-                        <button type="button" class="btn btn-primary pull-right" data-bind="click: $parent.increaseVote">+</button>
+                    <span class="btn-group" data-bind="with: $parent.pointsForOption($index())">
+                        <button type="button" class="btn btn-primary pull-left"
+                                data-bind="click: decreaseVote, enable: canDecrease">-</button>
+                        <label class="points-label" data-bind="text: allocationText"></label>
+                        <button type="button" class="btn btn-primary pull-right"
+                                data-bind="click: increaseVote, enable: canIncrease">+</button>
                     </span>
                 </td>
             </tr>

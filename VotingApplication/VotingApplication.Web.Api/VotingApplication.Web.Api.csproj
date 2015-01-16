@@ -376,6 +376,7 @@
     <None Include="Properties\PublishProfiles\voting-application - Web Deploy.pubxml" />
     <Content Include="Scripts\Lib\require.js" />
     <Content Include="Scripts\Manage.js" />
+    <Content Include="Scripts\PointsOption.js" />
     <Content Include="Scripts\Poll.js" />
     <Content Include="Scripts\PollOptions.js" />
     <Content Include="Scripts\ChatClient.js" />
