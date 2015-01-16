@@ -1,4 +1,4 @@
-﻿define('Create', ['jquery', 'knockout', 'Common', 'KnockoutExtensions'], function ($, ko, Common) {
+﻿define('Create', ['jquery', 'knockout', 'Common', 'Validation', 'KnockoutExtensions'], function ($, ko, Common, Validation) {
     return function CreateViewModel() {
         var self = this;
 
@@ -22,7 +22,7 @@
         self.creatingPoll = ko.observable(false);
 
         self.createPoll = function () {
-            if (!self.validateForm()) return;
+            if (!Validation.validateForm($("#poll-create-form"))) return;
             self.creatingPoll(true);
             
             $.ajax({
@@ -59,47 +59,6 @@
 
         self.navigateToManage = function (manageId) {
             window.location.href = "/Manage/Index/" + manageId;
-        };
-
-        self.validateForm = function () {
-            //Clear out previous error messages
-            $('text').remove('.error-message');
-
-            var inputs = $("#poll-create-form .form-group");
-            for (var i = 0; i < inputs.length; i++) {
-                validateField(inputs[i]);
-            }
-
-            return $("#poll-create-form")[0].checkValidity();
-        };
-
-        var validateField = function (field) {
-            if ($(field).is(':visible')) {
-                var $inputField = $(field).find('input');
-                var inputField = $inputField[0];
-
-                if (!inputField) {
-                    return;
-                }
-
-                if ($inputField.attr('date') !== undefined) {
-                    // Validation of date fields
-                    if (isNaN(Date.parse(self.expiryDate()))) {
-                        inputField.setCustomValidity("Please enter a valid date");
-                    } else {
-                        inputField.setCustomValidity("");
-                    }
-                }
-
-                if (!inputField.checkValidity()) {
-                    $inputField.addClass('error');
-                    var errorMessage = inputField.validationMessage;
-                    $(field).append('<text class="error-message">' + errorMessage + '</text>');
-                }
-                else {
-                    $inputField.removeClass('error');
-                }
-            }
         };
 
         self.initialise = function () {

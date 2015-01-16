@@ -1,4 +1,4 @@
-﻿define(['jquery', 'knockout', 'Navbar'], function ($, ko, Navbar) {
+﻿define(['jquery', 'knockout', 'Navbar', 'Validation'], function ($, ko, Navbar, Validation) {
     return function SigninViewModel() {
         var self = this;
 
@@ -15,18 +15,11 @@
         }
 
         self.register = function () {
-            $("#invalid-username").toggle(!checkEmailFormat(self.newUsername()));
-            $("#password-length").toggle(self.newPassword().length < 6);
             $("#different-password").toggle(self.newPassword() != self.confirmPassword());
             $("#duplicate-username").hide();
 
-            // Don't continue if any errors are still displayed
-            var errors = $(".error-message");
-            for (var i = 0; i < errors.length; i++) {
-                if ($(errors[i]).css('display') != 'none') {
-                    return;
-                }
-            }
+            if (!Validation.validateForm($("#register-form"))) return;
+            if (self.newPassword() != self.confirmPassword()) return;
 
             var data = {
                 Email: self.newUsername(),
