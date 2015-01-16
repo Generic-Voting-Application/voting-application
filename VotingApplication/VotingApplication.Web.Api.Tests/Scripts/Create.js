@@ -1,4 +1,4 @@
-﻿define(["Create", "Common", "mockjax"], function (CreateViewModel, Common, mockjax) {
+﻿define(["Create", "Common", "mockjax", "Validation"], function (CreateViewModel, Common, mockjax, Validation) {
     describe("CreateViewModel", function () {
 
         //#region Setup
@@ -20,7 +20,7 @@
 
         it("createPoll with Invalid expect Do nothing", function (done) {
             // arrange
-            spyOn(target, 'validateForm').and.returnValue(false);
+            spyOn(Validation, 'validateForm').and.returnValue(false);
             var posted = false;
             mockjax({
                 type: "POST", url: "/api/poll",
@@ -33,7 +33,7 @@
 
             // assert
             setTimeout(function () {
-                expect(target.validateForm).toHaveBeenCalled();
+                expect(Validation.validateForm).toHaveBeenCalled();
                 expect(target.creatingPoll()).toBe(false);
                 expect(posted).toBe(false);
                 expect(target.navigateToManage.calls.count()).toEqual(0);
@@ -43,7 +43,7 @@
 
         it("createPoll with Valid expect Create new poll and navigates to Manage page", function (done) {
             // arrange
-            spyOn(target, 'validateForm').and.returnValue(true);
+            spyOn(Validation, 'validateForm').and.returnValue(true);
             mockjax({
                 type: "POST", url: "/api/poll",
                 responseText: { ManageID: 303 }
@@ -54,7 +54,7 @@
 
             // assert
             setTimeout(function () {
-                expect(target.validateForm).toHaveBeenCalled();
+                expect(Validation.validateForm).toHaveBeenCalled();
                 expect(target.creatingPoll()).toBe(true);
                 expect(target.navigateToManage).toHaveBeenCalledWith(303);
                 done();
@@ -63,7 +63,7 @@
 
         it("createPoll with Data expect Create new poll with options", function (done) {
             // arrange
-            spyOn(target, 'validateForm').and.returnValue(true);
+            spyOn(Validation, 'validateForm').and.returnValue(true);
             var posted;
             mockjax({
                 type: "POST", url: "/api/poll",
@@ -113,7 +113,7 @@
 
         it("createPoll with Exception expect Handle server error", function (done) {
             // arrange
-            spyOn(target, 'validateForm').and.returnValue(true);
+            spyOn(Validation, 'validateForm').and.returnValue(true);
             mockjax({
                 type: "POST", url: "/api/poll",
                 status: 500, responseText: {}
