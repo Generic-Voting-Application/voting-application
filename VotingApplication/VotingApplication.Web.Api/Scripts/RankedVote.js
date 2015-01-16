@@ -4,41 +4,33 @@
 
         var self = this;
         self.pollOptions = new PollOptions(pollId);
-
         self.selectedOptions = ko.observableArray();
+
         self.resultOptions = ko.observableArray();
 
         self.chartVisible = ko.observable(false);
+
+        var selectPickedOptions = function (votes) {
+            var selected = votes.map(function (vote) {
+                return ko.utils.arrayFirst(self.pollOptions.options(), function (item) {
+                    return item.Id == vote.OptionId;
+                });
+            });
+            self.selectedOptions(selected);
+        };
+
+        self.remainOptions = ko.computed(function () {
+            var notSelected = function (option) {
+                return self.selectedOptions().filter(function (o) { return o.Id === option.Id; }).length === 0;
+            };
+
+            return self.pollOptions.options().filter(notSelected);
+        });
 
         var resultsByRound = [];
         var orderedNames = [];
         var chart;
         var roundIndex = 0;
-
-        var selectOption = function (option) {
-            var $option = $('#optionTable-tbody > tr').filter(function () {
-                return $(this).attr('data-id') == option.Id;
-            });
-
-            $('#selectionTable > tbody').append($option.remove());
-            self.selectedOptions.push(option)
-        }
-
-        var selectPickedOptions = function (pickedOptions) {
-            self.selectedOptions.removeAll();
-
-            pickedOptions.forEach(function (option) {
-                var pickedOption = ko.utils.arrayFirst(self.pollOptions.options(), function (item) {
-                    return item.Id == option.OptionId;
-                });
-
-                selectOption(pickedOption);
-            });
-        }
-
-        var resetOptions = function () {
-            $('#selectionTable > tbody tr').remove();
-        }
         
         var sortByPollValue = function (a, b) {
             return a.PollValue - b.PollValue;
@@ -151,7 +143,107 @@
             return orderedOptions;
         }
 
-        var drawChart = function (data) {
+        var displayResults = function (votes) {
+            var orderedResults = countVotes(votes);
+
+            orderedNames = orderedResults.map(function (d) {
+                var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id == d.Id })[0];
+                return matchingOption.Name;
+            });
+
+            //Exit early if data has not changed
+            if (chart && JSON.stringify(resultsByRound) == JSON.stringify(chart.series().slice(0, chart.series().length - 1).map(function (d) { return d.data.rawData() })))
+                return;
+
+            // Fill in the table
+            self.resultOptions.removeAll();
+            for (var i = 0; i < orderedResults.length; i++) {
+
+                var option = ko.utils.arrayFirst(self.pollOptions.options(), function (item) {
+                    return item.Id == orderedResults[i].Id;
+                });
+                option.Rank = orderedResults[i].rank || 1;
+                self.resultOptions.push(option);
+            }
+
+            self.drawChart(resultsByRound.slice(0));
+        }
+
+        self.doVote = function (data, event) {
+            var userId = Common.currentUserId(pollId);
+
+            if (userId && pollId) {
+                var token = token || Common.sessionItem("token", pollId);
+                // Convert selected options to ranked votes
+                var selectedOptionsArray = self.selectedOptions().map(function (option, index) {
+                    return {
+                        OptionId: option.Id,
+                        PollId: pollId,
+                        PollValue: index + 1,
+                        Token: { TokenGuid: token }
+                    };
+                });
+                
+                $.ajax({
+                    type: 'PUT',
+                    url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
+                    contentType: 'application/json',
+                    data: JSON.stringify(selectedOptionsArray),
+
+                    success: function (returnData) {
+                        if (self.onVoted) self.onVoted();
+                    },
+
+                    error: Common.handleError
+                });
+            }
+        };
+
+        self.getVotes = function (pollId, userId) {
+            $.ajax({
+                type: 'GET',
+                url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
+                contentType: 'application/json',
+
+                success: function (data) {
+                    data.sort(sortByPollValue);
+                    selectPickedOptions(data);
+                },
+
+                error: Common.handleError
+            });
+        };
+
+        self.displayResults = function (data) {
+            displayResults(data);
+        }
+
+        self.initialise = function (pollData) {
+
+            self.pollOptions.initialise(pollData);
+
+            $(".sortable").sortable({
+                items: 'tbody > tr:not(#newOptionRow)',
+                connectWith: '.sortable',
+                axis: 'y',
+                dropOnEmpty: true,
+                receive: function (e, ui) {
+                    var votes = [];
+                    $('#selectionTable tr.clickable').each(function (i, row) {
+                        votes.push({
+                            OptionId: $(row).attr('data-id')
+                        });
+                    });
+
+                    $(".sortable").sortable("cancel");
+                    selectPickedOptions(votes);
+                }
+            });
+        };
+
+        // TODO: Extract chart code from viewModel class - ideally
+        // into a shared custom knockout binding to bind to data
+        self.drawChart = function (data) {
             // Hack to fix insight's lack of data reloading
             $("#chart-results").html('');
             $("#chart-buttons").html('');
@@ -191,9 +283,8 @@
 
             //Add a button to display individual rounds
             var button = $("#chart-buttons").append('<button class="btn btn-primary" onclick="self.filterRounds(0)">All Rounds</button>');
-            
-            for (var i = 1; i <= data.length; i++)
-            {
+
+            for (var i = 1; i <= data.length; i++) {
                 $("#chart-buttons").append('<button class="btn btn-primary" onclick="self.filterRounds(' + i + ')">Round ' + i + '</button>');
             }
 
@@ -255,111 +346,6 @@
             chart.draw();
         };
 
-        var displayResults = function (votes) {
-            var orderedResults = countVotes(votes);
-
-            orderedNames = orderedResults.map(function (d) {
-                var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id == d.Id })[0];
-                return matchingOption.Name;
-            });
-
-            //Exit early if data has not changed
-            if (chart && JSON.stringify(resultsByRound) == JSON.stringify(chart.series().slice(0, chart.series().length - 1).map(function (d) { return d.data.rawData() })))
-                return;
-
-            // Fill in the table
-            self.resultOptions.removeAll();
-            for (var i = 0; i < orderedResults.length; i++) {
-
-                var option = ko.utils.arrayFirst(self.pollOptions.options(), function (item) {
-                    return item.Id == orderedResults[i].Id;
-                });
-                option.Rank = orderedResults[i].rank || 1;
-                self.resultOptions.push(option);
-            }
-
-            drawChart(resultsByRound.slice(0));
-        }
-
-        self.filterRounds = function (filterIndex) {
-            roundIndex = filterIndex;
-            drawChart(resultsByRound);
-        }
-
-        self.doVote = function (data, event) {
-            var userId = Common.currentUserId(pollId);
-
-            if (userId && pollId) {
-
-                var selectionRows = $('#selectionTable > tbody > tr');
-
-                var selectedOptionsArray = [];
-                var minRank = Number.MAX_VALUE;
-                ko.utils.arrayForEach(self.selectedOptions(), function (selection) {
-
-                    var $optionElement = selectionRows.filter(function () {
-                        return $(this).attr('data-id') == selection.Id;
-                    });
-
-                    var rank = $("#selectionTable > tbody > tr").index($optionElement[0]);
-                    minRank = Math.min(minRank, rank);
-
-                    selectedOptionsArray.push({
-                        OptionId: selection.Id,
-                        PollId: pollId,
-                        PollValue: rank,
-                        Token: { TokenGuid: token || Common.sessionItem("token", pollId) }
-                    });
-                });
-
-                // Offset by the first value to account for table headers and sort out 0 index
-                selectedOptionsArray.map(function (option) {
-                    option.PollValue -= minRank - 1;
-                });
-
-                $.ajax({
-                    type: 'PUT',
-                    url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
-                    contentType: 'application/json',
-                    data: JSON.stringify(selectedOptionsArray),
-
-                    success: function (returnData) {
-                        if (self.onVoted) self.onVoted();
-                    },
-
-                    error: Common.handleError
-                });
-            }
-        };
-
-        self.getVotes = function (pollId, userId) {
-            resetOptions();
-
-            $.ajax({
-                type: 'GET',
-                url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
-                contentType: 'application/json',
-
-                success: function (data) {
-                    data.sort(sortByPollValue);
-                    previousPicked = data;
-                    selectPickedOptions(data);
-                },
-
-                error: Common.handleError
-            });
-        };
-
-        var previousPicked = [];
-        self.pollOptions.options.subscribe(function () {
-            resetOptions();
-            selectPickedOptions(previousPicked);
-        });
-
-        self.displayResults = function (data) {
-            displayResults(data);
-        }
-        
         self.toggleChartVisible = function () {
             self.chartVisible(!self.chartVisible());
 
@@ -367,44 +353,10 @@
             self.filterRounds(0);
         }
 
+        self.filterRounds = function (filterIndex) {
+            roundIndex = filterIndex;
+            self.drawChart(resultsByRound);
+        }
 
-        self.initialise = function (pollData) {
-
-            self.pollOptions.initialise(pollData);
-
-            $(".sortable").sortable({
-                items: 'tbody > tr:not(#newOptionRow)',
-                connectWith: '.sortable',
-                axis: 'y',
-                dropOnEmpty: true,
-                receive: function (e, ui) {
-                    var itemId = ui.item.attr('data-id');
-                    var item = ko.utils.arrayFirst(self.pollOptions.options(), function (item) {
-                        return item.Id == itemId;
-                    });
-
-                    var rows = $(this).find('tbody > tr');
-                    var rowIds = $.map(rows, function (d, i) { return $(d).data("id") });
-                    var insertionIndex = rowIds.indexOf(item.Id);
-
-                    if ($(e.target).hasClass('selection-content')) {
-                        //Insert at index in selectedOptions
-                        self.selectedOptions.splice(insertionIndex, 0, item);
-                    } else {
-                        //Get index of where we dropped the item
-                        self.selectedOptions.remove(item);
-                    }
-
-                    //Make sure rows are a part of the table body
-                    if (rows.length == 0) {
-                        $(this).find('tbody').append(ui.item)
-                    }
-                    else {
-                        rows.eq(insertionIndex).before(ui.item);
-                    }
-
-                }
-            });
-        } 
     }
 });

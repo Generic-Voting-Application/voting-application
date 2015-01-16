@@ -12,7 +12,7 @@
                 </tr>
             </thead>
             <tbody id="optionTable-tbody">
-                <!-- ko foreach: pollOptions.options -->
+                <!-- ko foreach: remainOptions -->
                 <tr class="clickable" data-bind="attr: {'data-id': Id}">
                     <td class="col-md-3" data-bind="text: Name"></td>
                     <td class="col-md-6" data-bind="text: Description"></td>
@@ -43,7 +43,12 @@
                 <th class="col-md-3 hidden-xs hidden-sm">More info</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody data-bind="foreach: selectedOptions">
+            <tr class="clickable" data-bind="attr: {'data-id': Id}">
+                <td class="col-md-3" data-bind="text: Name"></td>
+                <td class="col-md-6" data-bind="text: Description"></td>
+                <td class="col-md-3 hidden-xs hidden-sm" data-bind="text: Info"></td>
+            </tr>
         </tbody>
     </table>
 </div>
