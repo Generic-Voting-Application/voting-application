@@ -197,7 +197,10 @@
         self.chatMessage = ko.observable("");
 
         var receivedMessage = function (message) {
-            message.Timestamp = new moment(message.Timestamp).format('H:mm');
+
+            messageTimestamp = new moment(message.Timestamp);
+
+            message.Timestamp = messageTimestamp.isSame(new moment(), 'day') ? messageTimestamp.format('H:mm') :  messageTimestamp.calendar();
             self.chatMessages.push(message);
         };
         chatClient.onMessage = function (message) {

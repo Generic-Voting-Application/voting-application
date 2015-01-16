@@ -101,7 +101,7 @@
                 <form>
                     <div class="input-append form-group">
                         <input class="form-control" type='text' id="chatTextInput" placeholder="Message"
-                               data-bind="enable: userName(), value: chatMessage, valueUpdate: 'afterkeydown'" />
+                               data-bind="enable: userName(), value: chatMessage, valueUpdate: 'afterkeydown'" autocomplete='off' />
                         <button class="btn btn-primary" type="submit"
                                 data-bind="click: sendChatMessage, enable: userName() && chatMessage()">Send</button>
                     </div>
