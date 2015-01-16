@@ -53,6 +53,10 @@
                 },
 
                 success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var date = new Date(data[i].CreatedDate);
+                        data[i].Name = data[i].Name + " (" + date.toDateString() + ")";
+                    }
                     self.templates(data);
                 }
             });

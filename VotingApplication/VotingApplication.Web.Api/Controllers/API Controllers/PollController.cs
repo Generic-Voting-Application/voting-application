@@ -101,6 +101,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 newPoll.UUID = Guid.NewGuid();
                 newPoll.ManageID = Guid.NewGuid();
                 newPoll.LastUpdated = DateTime.Now;
+                newPoll.CreatedDate = DateTime.Now;
                 newPoll.Tokens = new List<Token>();
 
                 // Do the long-running SendCreateEmail task in a different thread, so we can return early

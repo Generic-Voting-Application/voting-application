@@ -45,5 +45,6 @@ namespace VotingApplication.Data.Model
         public bool OptionAdding { get; set; }
 
         public DateTime LastUpdated { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }
