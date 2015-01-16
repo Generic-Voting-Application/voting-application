@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -50,8 +51,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             User bobUser = new User { Id = 1, Name = "Bob" };
             User joeUser = new User { Id = 2, Name = "Joe" };
 
-            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = mainUUID };
-            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, PollId = mainUUID };
+            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = mainUUID, User = bobUser, Poll = mainPoll, Option = burgerOption };
+            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, PollId = mainUUID, User = joeUser, Poll = mainPoll, Option = burgerOption };
             _otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, PollId = otherUUID };
 
             dummyUsers.Add(bobUser);
@@ -114,6 +115,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
             Assert.AreEqual(2, responseVotes.Count);
+            CollectionAssert.AreEqual(new long[] { 1, 2 }, responseVotes.Select(r => r.UserId).ToArray());
+            CollectionAssert.AreEqual(new long[] { 1, 1 }, responseVotes.Select(r => r.OptionId).ToArray());
         }
 
         [TestMethod]

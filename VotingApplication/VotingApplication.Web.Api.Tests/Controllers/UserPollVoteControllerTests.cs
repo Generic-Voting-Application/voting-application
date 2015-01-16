@@ -82,7 +82,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             dummyPolls.Add(tokenPoll);
             dummyPolls.Add(timedPoll);
 
-            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = _mainUUID, Token = _bobToken };
+            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = _mainUUID, Token = _bobToken, User = bobUser, Option = burgerOption, Poll = mainPoll };
             dummyUsers.Add(bobUser);
             _dummyVotes.Add(_bobVote);
 
@@ -135,6 +135,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
             Assert.AreEqual(1, responseVotes.Count);
+            Assert.AreEqual(1, responseVotes.Single().UserId);
+            Assert.AreEqual(1, responseVotes.Single().OptionId);
         }
 
         [TestMethod]

@@ -121,6 +121,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             List<OptionRequestResponseModel> responseOptions = ((ObjectContent)response.Content).Value as List<OptionRequestResponseModel>;
             Assert.AreEqual(2, responseOptions.Count);
+            CollectionAssert.AreEqual(new string[] { "Burger King", "Pizza Hut" }, responseOptions.Select(r => r.Name).ToArray());
         }
 
         [TestMethod]

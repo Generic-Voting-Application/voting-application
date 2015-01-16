@@ -24,7 +24,7 @@
             var posted = false;
             mockjax({
                 type: "POST", url: "/api/poll",
-                responseText: { ManageID: 303 },
+                responseText: { ManageId: 303 },
                 response: function () { posted = true; }
             });
 
@@ -46,7 +46,7 @@
             spyOn(target, 'validateForm').and.returnValue(true);
             mockjax({
                 type: "POST", url: "/api/poll",
-                responseText: { ManageID: 303 }
+                responseText: { ManageId: 303 }
             });
 
             // act
@@ -67,7 +67,7 @@
             var posted;
             mockjax({
                 type: "POST", url: "/api/poll",
-                responseText: { ManageID: 303 },
+                responseText: { ManageId: 303 },
                 response: function (request) { posted = JSON.parse(request.data); }
             });
 
