@@ -1,0 +1,106 @@
+﻿<div class="page-header">
+    <h2 class="centered">
+        Get Polling!
+    </h2>
+</div>
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-4">
+        <h3 class="centered">The Basic Package</h3>
+        <ul>
+            <li>Create a quick poll with basic setup</li>
+            <li>Invite people to come and vote</li>
+            <li>No registration required</li>
+        </ul>
+        <br />
+        <div class="centered">
+            <a class="btn btn-primary" href="/Create/Index">Quick poll</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h3 class="centered">The Full Package</h3>
+        <ul>
+            <li>More types of polls</li>
+            <li>Time-limit polls</li>
+            <li>Invitation-only polls for added security</li>
+            <li>Save your options as templates for future polls</li>
+        </ul>
+        <div class="centered">
+            <a class="btn btn-primary" href="/SignIn/Index">Register</a>
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Basic</th>
+                    <th>Full</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Single Vote</td>
+                    <td class="affirmative">✔</td>
+                    <td class="affirmative">✔</td>
+                </tr>
+                <tr>
+                    <td>Points Vote</td>
+                    <td class="negative">✘</td>
+                    <td class="affirmative">✔</td>
+                </tr>
+                <tr>
+                    <td>Ranked Vote</td>
+                    <td class="negative">✘</td>
+                    <td class="affirmative">✔</td>
+                </tr>
+                <tr>
+                    <th colspan="3"></th>
+                </tr>
+                <tr>
+                    <td>Poll Details emailed to you</td>
+                    <td class="affirmative">✔</td>
+                    <td class="affirmative">✔</td>
+                </tr>
+                <tr>
+                    <td>Anonymous Voting</td>
+                    <td class="negative">✘</td>
+                    <td class="affirmative">✔</td>
+                </tr>
+                <tr>
+                    <td>Time-limit Polls</td>
+                    <td class="negative">✘</td>
+                    <td class="affirmative">✔</td>
+                </tr>
+                <tr>
+                    <td>Invitation-only Polls</td>
+                    <td class="negative">✘</td>
+                    <td class="affirmative">✔</td>
+                </tr>
+                <tr>
+                    <td>Voters can add Options</td>
+                    <td class="negative">✘</td>
+                    <td class="affirmative">✔</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        require(["Navbar"], function (Navbar) {
+            new Navbar();
+        });
+    </script>
+}

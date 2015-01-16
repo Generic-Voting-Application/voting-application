@@ -26,7 +26,6 @@ namespace VotingApplication.Data.Context
         public IDbSet<User> Users { get; set; }
         public IDbSet<Vote> Votes { get; set; }
         public IDbSet<Poll> Polls { get; set; }
-        public IDbSet<Template> Templates { get; set; }
         public IDbSet<Token> Tokens { get; set; }
     }
 

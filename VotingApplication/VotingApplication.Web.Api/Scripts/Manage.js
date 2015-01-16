@@ -1,10 +1,12 @@
-﻿define('Manage', ['jquery', 'knockout', 'bootstrap', 'Common'], function ($, ko, bootstrap, Common) {
+﻿define('Manage', ['jquery', 'knockout', 'bootstrap', 'Common', 'Navbar'], function ($, ko, bootstrap, Common, Navbar) {
     return function ManageViewModel(manageId) {
         var self = this;
 
         self.votes = ko.observableArray();
         self.options = ko.observableArray();
+        self.templates = ko.observableArray();
         self.pollId = ko.observable();
+        self.templateId = ko.observable();
 
         self.selectedDeleteOptionId = null;
 
@@ -36,6 +38,29 @@
             });
         };
 
+
+        self.populateTemplates = function () {
+            if (!self.isSignedIn()) {
+                return;
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: '/api/poll',
+                beforeSend: function (header) {
+                    header.setRequestHeader("Authorization", "Bearer " + sessionStorage['creator_token']);
+                },
+
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var date = new Date(data[i].CreatedDate);
+                        data[i].Name = data[i].Name + " (" + date.toDateString() + ")";
+                    }
+                    self.templates(data);
+                }
+            });
+        };
+
         self.resetVotes = function () {
             $.ajax({
                 type: 'DELETE',
@@ -50,6 +75,45 @@
                 error: Common.handleError
             });
         };
+
+        self.cloneOptions = function () {
+            // The ID of the poll to copy - Not the poll we are currently managing
+            var chosenPollId = self.templateId();
+
+            if (chosenPollId == undefined) {
+                return;
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: "/api/Poll/" + chosenPollId + "/option",
+
+                success: function (data) {
+                    self.options(data);
+                    self.saveOptions();
+                },
+
+                error: Common.handleError
+            });
+        }
+
+        self.saveOptions = function () {
+            var data = [];
+            for (var i = 0; i < self.options().length; i++) {
+                var option = self.options()[i];
+                var optionData = { Name: option.Name, Description: option.Description, Info: option.Info };
+                data.push(optionData);
+            }
+
+            $.ajax({
+                type: 'PUT',
+                url: "/api/manage/" + manageId + "/option",
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                
+                error: Common.handleError
+            });
+        }
 
         self.addOption = function () {
             //Don't submit without an entry in the name field
@@ -134,9 +198,16 @@
             });
         }
 
+        self.isSignedIn = function () {
+            return Navbar.signedIn();
+        }
+
         self.initialise = function () {
             self.getPollDetails();
             self.populateVotes();
+            self.populateTemplates();
+
+            Common.setupTooltips();
 
             ko.applyBindings(this);
         };
