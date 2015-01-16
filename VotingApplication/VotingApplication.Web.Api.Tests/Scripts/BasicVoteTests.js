@@ -37,7 +37,7 @@
             var posted = false;
             mockjax({
                 type: "PUT", url: "/api/user/912/poll/303/vote",
-                data: JSON.stringify([{ OptionId: 17, PollId: "303", Token: { TokenGuid: "515" }  }]),
+                data: JSON.stringify([{ OptionId: 17, TokenGuid: "515" }]),
                 response: function () { posted = true; }, responseText: {}
             });
 
@@ -61,7 +61,7 @@
             var posted = false;
             mockjax({
                 type: "PUT", url: "/api/user/912/poll/303/vote",
-                data: JSON.stringify([{ OptionId: 17, PollId: "303", Token: { TokenGuid: "616" } }]),
+                data: JSON.stringify([{ OptionId: 17, TokenGuid: "616" }]),
                 response: function () { posted = true; }, responseText: {}
             });
 
@@ -135,9 +135,9 @@
         it("displayResults with Votes expect Draw grouped votes", function () {
             // arrange
             var data = [
-                { Option: { Name: "One" }, User: { Name: "User-1" } },
-                { Option: { Name: "Two" }, User: { Name: "User-2" } },
-                { Option: { Name: "One" } }
+                { OptionName: "One", VoterName: "User-1" },
+                { OptionName: "Two", VoterName: "User-2" },
+                { OptionName: "One", VoterName: "Anonymous User" }
             ];
 
             // act

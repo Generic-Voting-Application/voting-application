@@ -1,8 +1,6 @@
-﻿define('Create', ['jquery', 'knockout', 'Common', 'KnockoutExtensions'], function ($, ko, Common) {
+﻿define('Create', ['jquery', 'knockout', 'Common', 'Validation', 'KnockoutExtensions'], function ($, ko, Common, Validation) {
     return function CreateViewModel() {
         var self = this;
-
-        self.templates = ko.observableArray();
 
         // Basic Poll options
         self.pollName = ko.observable("");
@@ -24,32 +22,36 @@
         self.creatingPoll = ko.observable(false);
 
         self.createPoll = function () {
-            if (!self.validateForm()) return;
+            if (!Validation.validateForm($("#poll-create-form"))) return;
             self.creatingPoll(true);
             
             $.ajax({
                 type: 'POST',
                 url: '/api/poll',
                 contentType: 'application/json',
+                beforeSend: function (header) {
+                    header.setRequestHeader("Authorization", "Bearer " + sessionStorage['creator_token']);
+                },
 
+                // This is needed to ensure that values not given are not set on the JSON object
                 data: JSON.stringify({
-                    Name: self.pollName(),
-                    Creator: self.creatorName(),
-                    Email: self.creatorEmail(),
-                    TemplateId: self.templateId(),
-                    VotingStrategy: self.strategy(),
-                    MaxPoints: self.maxPoints(),
-                    MaxPerVote: self.maxPerVote(),
-                    InviteOnly: self.inviteOnly(),
-                    AnonymousVoting: self.anonymousVoting(),
-                    RequireAuth: self.requireAuth(),
-                    Expires: self.expiry(),
-                    ExpiryDate: new Date(self.expiryDate()),
-                    OptionAdding: self.optionAdding()
+                    Name: self.pollName() || undefined,
+                    Creator: self.creatorName() || undefined,
+                    Email: self.creatorEmail() || undefined,
+                    TemplateId: self.templateId() || undefined,
+                    VotingStrategy: self.strategy() || undefined,
+                    MaxPoints: self.maxPoints() || undefined,
+                    MaxPerVote: self.maxPerVote() || undefined,
+                    InviteOnly: self.inviteOnly() || undefined,
+                    AnonymousVoting: self.anonymousVoting() || undefined,
+                    RequireAuth: self.requireAuth() || undefined,
+                    Expires: self.expiry() || undefined,
+                    ExpiryDate: new Date(self.expiryDate()) || undefined,
+                    OptionAdding: self.optionAdding() || undefined
                 }),
 
                 success: function (data) {
-                    self.navigateToManage(data.ManageID);
+                    self.navigateToManage(data.ManageId);
                 },
 
                 error: Common.handleError
@@ -60,82 +62,8 @@
             window.location.href = "/Manage/Index/" + manageId;
         };
 
-        self.populateTemplates = function () {
-            $.ajax({
-                type: 'GET',
-                url: '/api/template',
-
-                success: function (data) {
-                    self.templates(data);
-                }
-            });
-        };
-
-        self.validateForm = function () {
-            //Clear out previous error messages
-            $('text').remove('.error-message');
-
-            var inputs = $("#poll-create-form .form-group");
-            for (var i = 0; i < inputs.length; i++) {
-                validateField(inputs[i]);
-            }
-
-            return $("#poll-create-form")[0].checkValidity();
-        };
-
-        var validateField = function (field) {
-            if ($(field).is(':visible')) {
-                var $inputField = $(field).find('input');
-                var inputField = $inputField[0];
-
-                if (!inputField) {
-                    return;
-                }
-
-                if ($inputField.attr('date') !== undefined) {
-                    // Validation of date fields
-                    if (isNaN(Date.parse(self.expiryDate()))) {
-                        inputField.setCustomValidity("Please enter a valid date");
-                    } else {
-                        inputField.setCustomValidity("");
-                    }
-                }
-
-                if (!inputField.checkValidity()) {
-                    $inputField.addClass('error');
-                    var errorMessage = inputField.validationMessage;
-                    $(field).append('<text class="error-message">' + errorMessage + '</text>');
-                }
-                else {
-                    $inputField.removeClass('error');
-                }
-            }
-        };
-
-        var setupTooltips = function() {
-            $(document).tooltip
-
-            function showOrHideElement(show, element) {
-                element.next(".tip").toggle(show);
-            }
-
-            var tooltipTargets = $(".help-message");
-
-            for (var i = 0; i < tooltipTargets.length; i++)
-            {
-                var $hoverTarget = $(tooltipTargets[i]);
-
-                var hideElement = showOrHideElement.bind(null, false, $hoverTarget);
-                var showElement = showOrHideElement.bind(null, true, $hoverTarget);
-                ko.utils.registerEventHandler($hoverTarget, "mouseover", showElement);
-                ko.utils.registerEventHandler($hoverTarget, "mouseout", hideElement);
-                hideElement();
-            }
-        }
-
         self.initialise = function () {
-            self.populateTemplates();
-            setupTooltips();
+            Common.setupTooltips();
 
             ko.applyBindings(this);
         };

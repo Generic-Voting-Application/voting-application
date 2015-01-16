@@ -35,8 +35,8 @@
         var chart;
         var roundIndex = 0;
 
-        var sortByPollValue = function (a, b) {
-            return a.PollValue - b.PollValue;
+        var sortByVoteValue = function (a, b) {
+            return a.VoteValue - b.VoteValue;
         };
 
         var sortByBallotCount = function (a, b) {
@@ -78,7 +78,7 @@
 
                 // Sort the votes on the ballots and assign each ballot to first choice
                 ballots.forEach(function (ballot) {
-                    ballot.sort(sortByPollValue);
+                    ballot.sort(sortByVoteValue);
                     var availableChoices = ballot.filter(function (option) { return $.inArray(option.OptionId, availableOptions) !== -1; });
                     if (availableChoices.length > 0) {
                         var firstChoiceId = availableChoices[0].OptionId;
@@ -95,7 +95,7 @@
                     return {
                         Name: matchingOption.Name,
                         BallotCount: d.ballots.length,
-                        Voters: d.ballots.map(function (x) { return x[0].User.Name + " (#" + (x.map(function (y) { return y.OptionId; }).indexOf(matchingOption.Id) + 1) + ")"; })
+                        Voters: d.ballots.map(function (x) { return x[0].VoterName + " (#" + (x.map(function (y) { return y.OptionId; }).indexOf(matchingOption.Id) + 1) + ")"; })
                     };
                 });
 
@@ -156,9 +156,8 @@
                 var selectedOptionsArray = self.selectedOptions().map(function (option, index) {
                     return {
                         OptionId: option.Id,
-                        PollId: pollId,
-                        PollValue: index + 1,
-                        Token: { TokenGuid: useToken }
+                        VoteValue: index + 1,
+                        TokenGuid: useToken
                     };
                 });
 
@@ -184,7 +183,7 @@
                 contentType: 'application/json',
 
                 success: function (data) {
-                    data.sort(sortByPollValue);
+                    data.sort(sortByVoteValue);
                     selectPickedOptions(data);
                 },
 

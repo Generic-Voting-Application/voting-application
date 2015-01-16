@@ -1,17 +1,16 @@
-﻿using System;
+﻿using FakeDbSet;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
-using FakeDbSet;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -43,17 +42,17 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _manageOtherUUID = Guid.NewGuid();
             _manageEmptyUUID = Guid.NewGuid();
 
-            Poll mainPoll = new Poll() { UUID = mainUUID, ManageID = _manageMainUUID };
-            Poll otherPoll = new Poll() { UUID = otherUUID, ManageID = _manageOtherUUID };
-            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageID = _manageEmptyUUID };
+            Poll mainPoll = new Poll() { UUID = mainUUID, ManageId = _manageMainUUID };
+            Poll otherPoll = new Poll() { UUID = otherUUID, ManageId = _manageOtherUUID };
+            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageId = _manageEmptyUUID };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
 
             User bobUser = new User { Id = 1, Name = "Bob" };
             User joeUser = new User { Id = 2, Name = "Joe" };
 
-            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = mainUUID };
-            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, PollId = mainUUID };
+            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = mainUUID, User = bobUser, Poll = mainPoll, Option = burgerOption };
+            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, PollId = mainUUID, User = joeUser, Poll = mainPoll, Option = burgerOption };
             _otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, PollId = otherUUID };
 
             dummyUsers.Add(bobUser);
@@ -114,11 +113,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_manageMainUUID);
 
             // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            expectedVotes.Add(_bobVote);
-            expectedVotes.Add(_joeVote);
-            List<Vote> responseVotes = ((ObjectContent)response.Content).Value as List<Vote>;
-            CollectionAssert.AreEquivalent(expectedVotes, responseVotes);
+            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            Assert.AreEqual(2, responseVotes.Count);
+            CollectionAssert.AreEqual(new long[] { 1, 2 }, responseVotes.Select(r => r.UserId).ToArray());
+            CollectionAssert.AreEqual(new long[] { 1, 1 }, responseVotes.Select(r => r.OptionId).ToArray());
         }
 
         [TestMethod]
@@ -128,9 +126,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_manageEmptyUUID);
 
             // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            List<Vote> responseVotes = ((ObjectContent)response.Content).Value as List<Vote>;
-            CollectionAssert.AreEquivalent(expectedVotes, responseVotes);
+            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            Assert.AreEqual(0, responseVotes.Count);
         }
 
         [TestMethod]

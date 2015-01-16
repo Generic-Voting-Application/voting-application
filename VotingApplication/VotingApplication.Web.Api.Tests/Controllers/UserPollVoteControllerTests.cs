@@ -12,6 +12,7 @@ using Moq;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -81,7 +82,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             dummyPolls.Add(tokenPoll);
             dummyPolls.Add(timedPoll);
 
-            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = _mainUUID, Token = _bobToken };
+            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = _mainUUID, Token = _bobToken, User = bobUser, Option = burgerOption, Poll = mainPoll };
             dummyUsers.Add(bobUser);
             _dummyVotes.Add(_bobVote);
 
@@ -132,10 +133,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(1, _mainUUID);
 
             // Assert
-            List<Vote> actualVotes = ((ObjectContent)response.Content).Value as List<Vote>;
-            List<Vote> expectedVotes = new List<Vote>();
-            expectedVotes.Add(_bobVote);
-            CollectionAssert.AreEquivalent(expectedVotes, actualVotes);
+            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            Assert.AreEqual(1, responseVotes.Count);
+            Assert.AreEqual(1, responseVotes.Single().UserId);
+            Assert.AreEqual(1, responseVotes.Single().OptionId);
         }
 
         [TestMethod]
@@ -170,92 +171,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(2, _otherUUID);
 
             // Assert
-            List<Vote> actualVotes = ((ObjectContent)response.Content).Value as List<Vote>;
-            List<Vote> expectedVotes = new List<Vote>();
-            CollectionAssert.AreEquivalent(expectedVotes, actualVotes);
-        }
-
-        [TestMethod]
-        public void GetByIdIsAllowed()
-        {
-            // Act
-            var response = _controller.Get(1, _mainUUID, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-
-        [TestMethod]
-        public void GetByIdForNonexistentUserIsNotFound()
-        {
-            // Act
-            var response = _controller.Get(99, _mainUUID, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("User 99 not found", error.Message);
-        }
-
-        [TestMethod]
-        public void GetByIdForNonexistentPollIsNotFound()
-        {
-            // Act
-            Guid newGuid = Guid.NewGuid();
-            var response = _controller.Get(1, newGuid, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll " + newGuid + " not found", error.Message);
-        }
-
-        [TestMethod]
-        public void GetByIdForNonexistentVoteIsNotFound()
-        {
-            // Act
-            var response = _controller.Get(1, _mainUUID, 99);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Vote 99 not found", error.Message);
-        }
-
-        [TestMethod]
-        public void GetVoteForDifferentUserIsNotFound()
-        {
-            // Act
-            var response = _controller.Get(1, _mainUUID, 2); // Vote 2 belongs to User 2
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Vote 2 not found", error.Message);
-        }
-
-        [TestMethod]
-        public void GetVoteForDifferentPollIsNotFound()
-        {
-            // Act
-            var response = _controller.Get(1, _mainUUID, 3); // Vote 3 belongs to Poll 2
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Vote 3 not found", error.Message);
-        }
-
-        [TestMethod]
-        public void GetByIdFetchesIdForThatUserPoll()
-        {
-            // Act
-            var response = _controller.Get(1, _mainUUID, 1);
-
-            // Assert
-            var responseVote = ((ObjectContent)response.Content).Value as Vote;
-            Assert.AreEqual(_bobVote, responseVote);
+            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            Assert.AreEqual(0, responseVotes.Count);
         }
 
         #endregion
@@ -263,222 +180,80 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region PUT
 
         [TestMethod]
-        public void PutNonexistentUserIsNotAllowed()
+        public void PostRejectsVoteWithInvalidInput()
         {
+             // Arrange
+            _controller.ModelState.AddModelError("OptionId", "");
+
             // Act
-            var response = _controller.Put(9, _mainUUID, new List<Vote>() { new Vote() { OptionId = 1, PollId = _mainUUID } });
+            var response = _controller.Put(1, _mainUUID, new List<VoteRequestModel>());
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("User 9 not found", error.Message);
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [TestMethod]
         public void PutNonexistentOptionIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, _mainUUID, new List<Vote>() { new Vote() { OptionId = 7, PollId = _mainUUID } });
+            var response = _controller.Put(1, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel(){ OptionId = 99} });
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Option 7 not found", error.Message);
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [TestMethod]
         public void PutNonexistentPollIsNotAllowed()
         {
             // Act
-            Guid newGuid = Guid.NewGuid();
-            var response = _controller.Put(1, newGuid, new List<Vote>() { new Vote() { OptionId = 1, PollId = newGuid } });
+            var response = _controller.Put(1, Guid.NewGuid(), new List<VoteRequestModel>() {});
 
             // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll " + newGuid + " not found", error.Message);
         }
 
-        [TestMethod]
-        public void PutMissingOptionIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Put(1, _mainUUID, new List<Vote>() { new Vote() });
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Vote must specify an option", error.Message);
-        }
 
         [TestMethod]
-        public void PutWithNewVoteIfNoneExistsIsAllowed()
+        public void PutWithNewVoteIsAllowed()
         {
             // Act
-            var response = _controller.Put(3, _mainUUID, new List<Vote>() { new Vote() { OptionId = 1, PollId = _mainUUID, Token = _otherToken } });
+            var response = _controller.Put(3, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1, VoteValue = 0, TokenGuid = _bobToken.TokenGuid } });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void PutAddsANewVoteIfNoneExistsAndReturnsVoteId()
-        {
-            // Act
-            var response = _controller.Put(3, _mainUUID, new List<Vote>() { new Vote() { OptionId = 1, PollId = _mainUUID, Token = _otherToken } });
-
-            // Assert
-            List<long> responseVoteIds = ((ObjectContent)response.Content).Value as List<long>;
-            CollectionAssert.AreEquivalent(new List<long>() { 3 }, responseVoteIds);
-        }
-
-        [TestMethod]
-        public void PutAddsANewVoteIfNoneExists()
-        {
-            // Act
-            var newVote = new Vote() { OptionId = 1, PollId = _mainUUID, Token = _otherToken };
-            var response = _controller.Put(3, _mainUUID, new List<Vote>() { newVote });
-
-            // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            expectedVotes.Add(_bobVote);
-            expectedVotes.Add(_joeVote);
-            expectedVotes.Add(newVote);
-            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
+            Assert.AreEqual(3, _dummyVotes.Local.Count);
         }
 
         [TestMethod]
         public void PutReplacesCurrentVote()
         {
             // Act
-            var newVote = new Vote() { OptionId = 2, PollId = _mainUUID, Token = _bobToken };
-            var response = _controller.Put(1, _mainUUID, new List<Vote>() { newVote });
+            var response = _controller.Put(1, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1, VoteValue = 0, TokenGuid = _bobToken.TokenGuid } });
 
             // Assert
-            Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[0].OptionId);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual(2, _dummyVotes.Local.Count);
         }
 
         [TestMethod]
-        public void PutWithPollReplacesInThatPoll()
+        public void PutWithNewVoteSetsVoteValueCorrectly()
         {
             // Act
-            var newVote = new Vote() { OptionId = 2, PollId = _otherUUID, Token = _otherToken };
-            _controller.Put(1, _otherUUID, new List<Vote>() { newVote });
+            var response = _controller.Put(3, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1, VoteValue = 35, TokenGuid = _bobToken.TokenGuid } });
 
             // Assert
-            Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[2].OptionId);
-        }
-
-        [TestMethod]
-        public void PutWithoutValueDefaultsToOne()
-        {
-            // Act
-            var newVote = new Vote() { OptionId = 1, PollId = _mainUUID, Token = _otherToken };
-            _controller.Put(1, _mainUUID, new List<Vote>() { newVote });
-
-            // Assert
-            Assert.AreEqual(newVote.PollValue, 1);
-        }
-
-        [TestMethod]
-        public void PutWithValueRetainsTheValue()
-        {
-            // Act
-            var newVote = new Vote() { OptionId = 1, PollId = _mainUUID, PollValue = 35 };
-            _controller.Put(1, _mainUUID, new List<Vote>() { newVote });
-
-            // Assert
-            Assert.AreEqual(newVote.PollValue, 35);
-        }
-
-        [TestMethod]
-        public void PutWithInvalidValueNotAllowed()
-        {
-            // Arrange
-            var newVote = new Vote() { OptionId = 1, PollId = _pointsUUID, PollValue = 99, Token = _otherToken };
-
-            // Act
-            var response = _controller.Put(1, _pointsUUID, new List<Vote>() { newVote });
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Invalid vote value: 99", error.Message);
-        }
-
-        [TestMethod]
-        public void PutWithNoTokenOnTokenPollNotAllowed()
-        {
-            // Arrange
-            var newVote = new Vote() { OptionId = 1, PollId = _tokenUUID };
-
-            // Act
-            var response = _controller.Put(1, _tokenUUID, new List<Vote>() { newVote });
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual(String.Format("A valid token is required for poll {0}", _tokenUUID), error.Message);
-        }
-
-        [TestMethod]
-        public void PutWithInvalidTokenOnTokenPollNotAllowed()
-        {
-            // Arrange
-            Token invalidToken = new Token { TokenGuid = Guid.NewGuid() };
-            var newVote = new Vote() { OptionId = 1, PollId = _tokenUUID, Token = invalidToken };
-
-            // Act
-            var response = _controller.Put(1, _tokenUUID, new List<Vote>() { newVote });
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual(String.Format("Invalid token: {0}", invalidToken.TokenGuid), error.Message);
-        }
-
-        [TestMethod]
-        public void PutWithValidTokenOnTokenPollAllowed()
-        {
-            // Arrange
-            var newVote = new Vote() { OptionId = 1, PollId = _tokenUUID, Token = _validToken };
-
-            // Act
-            _controller.Put(1, _tokenUUID, new List<Vote>() { newVote });
-
-            // Assert
-            Assert.AreEqual(newVote.OptionId, _dummyVotes.Local[0].OptionId);
-        }
-
-
-        [TestMethod]
-        public void PutWithOnTokenPollClearsExistingVotesWithSameToken()
-        {
-            // Arrange
-            var newVote = new Vote() { OptionId = 1, PollId = _tokenUUID, Token = _bobToken };
-            _dummyVotes.Add(newVote);
-
-            // Act
-            _controller.Put(2, _tokenUUID, new List<Vote>() { newVote });
-
-            // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            expectedVotes.Add(_bobVote);
-            expectedVotes.Add(_joeVote);
-            expectedVotes.Add(newVote);
-            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual(35, _dummyVotes.Local.Last().PollValue);
         }
 
         [TestMethod]
         public void PutInvalidOptionIsNotAllowed()
         {
             // Act
-            var response = _controller.Put(1, _mainUUID, new List<Vote>() { new Vote { OptionId = 3, PollId = _mainUUID } });
+            var response = _controller.Put(1, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 3 } });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual(String.Format("Option choice not valid for poll {0}", _mainUUID), error.Message);
         }
 
         [TestMethod]
@@ -488,7 +263,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var newVote = new Vote() { OptionId = 1, PollId = _timedUUID };
 
             // Act
-            var response = _controller.Put(1, _timedUUID, new List<Vote>() { newVote });
+            var response = _controller.Put(1, _timedUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);

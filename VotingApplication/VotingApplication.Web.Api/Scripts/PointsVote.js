@@ -38,13 +38,9 @@
         var countVotes = function (votes) {
             var totalCounts = [];
             votes.forEach(function (vote) {
-                var optionName = vote.Option.Name;
-                var voter = "Anonymous User";
-                var voteValue = vote.PollValue;
-
-                if (vote.User) {
-                    voter = vote.User.Name;
-                }
+                var optionName = vote.OptionName;
+                var voter = vote.VoterName;
+                var voteValue = vote.VoteValue;
 
                 var voteString = voter + " (" + voteValue + ")";
 
@@ -52,13 +48,13 @@
                 var existingOption = totalCounts.filter(function (vote) { return vote.Name == optionName; }).pop();
 
                 if (existingOption) {
-                    existingOption.Sum += vote.PollValue;
+                    existingOption.Sum += voteValue;
                     existingOption.Voters.push(voteString);
                 }
                 else {
                     totalCounts.push({
                         Name: optionName,
-                        Sum: vote.PollValue,
+                        Sum: voteValue,
                         Voters: [voteString]
                     });
                 }
@@ -82,9 +78,8 @@
                 .map(function (option, i) {
                     return {
                         OptionId: option.Id,
-                        PollId: pollId,
-                        PollValue: self.pointsForOption(i).value(),
-                        Token: { TokenGuid: useToken }
+                        VoteValue: self.pointsForOption(i).value(),
+                        TokenGuid: useToken
                     };
                 })
                 .filter(function (vote) { return vote.PollValue > 0; });
@@ -124,7 +119,7 @@
                         if (optionIndex == -1)
                             continue;
 
-                        self.pointsArray()[optionIndex].value(data[i].PollValue);
+                        self.pointsArray()[optionIndex].value(data[i].VoteValue);
                     }
                 }
             });

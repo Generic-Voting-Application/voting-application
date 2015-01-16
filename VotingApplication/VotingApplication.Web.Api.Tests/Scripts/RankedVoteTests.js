@@ -52,8 +52,8 @@
             // arrange
 
             var expectedVotes = [
-                { OptionId: 17, PollId: "303", PollValue: 1, Token: { TokenGuid: "515" } },
-                { OptionId: 25, PollId: "303", PollValue: 2, Token: { TokenGuid: "515" } }
+                { OptionId: 17, VoteValue: 1, TokenGuid: "515" },
+                { OptionId: 25, VoteValue: 2, TokenGuid: "515" }
             ];
 
             var posted = false;
@@ -82,7 +82,7 @@
             // arrange
             target = new RankedVote("303");
 
-            var expectedVotes = [ { OptionId: 17, PollId: "303", PollValue: 1, Token: { TokenGuid: "616" } } ];
+            var expectedVotes = [ { OptionId: 17, VoteValue: 1, TokenGuid: "616" } ];
 
             var posted = false;
             mockjax({
@@ -169,21 +169,21 @@
             // User-4 votes Option 2-4-1
             // User-5 votes Option 2-3
             var data = [
-                { OptionId: 13, UserId: 1, User: { Name: "User-1" } },
-                { OptionId: 17, UserId: 1, User: { Name: "User-1" } },
-                { OptionId: 21, UserId: 1, User: { Name: "User-1" } },
-                { OptionId: 25, UserId: 1, User: { Name: "User-1" } },
-                { OptionId: 21, UserId: 2, User: { Name: "User-2" } },
-                { OptionId: 13, UserId: 2, User: { Name: "User-2" } },
-                { OptionId: 21, UserId: 3, User: { Name: "User-3" } },
-                { OptionId: 25, UserId: 3, User: { Name: "User-3" } },
-                { OptionId: 17, UserId: 3, User: { Name: "User-3" } },
-                { OptionId: 13, UserId: 3, User: { Name: "User-3" } },
-                { OptionId: 17, UserId: 4, User: { Name: "User-4" } },
-                { OptionId: 25, UserId: 4, User: { Name: "User-4" } },
-                { OptionId: 13, UserId: 4, User: { Name: "User-4" } },
-                { OptionId: 17, UserId: 5, User: { Name: "User-5" } },
-                { OptionId: 21, UserId: 5, User: { Name: "User-5" } }
+                { OptionId: 13, UserId: 1, VoterName: "User-1" },
+                { OptionId: 17, UserId: 1, VoterName: "User-1" },
+                { OptionId: 21, UserId: 1, VoterName: "User-1" },
+                { OptionId: 25, UserId: 1, VoterName: "User-1" },
+                { OptionId: 21, UserId: 2, VoterName: "User-2" },
+                { OptionId: 13, UserId: 2, VoterName: "User-2" },
+                { OptionId: 21, UserId: 3, VoterName: "User-3" },
+                { OptionId: 25, UserId: 3, VoterName: "User-3" },
+                { OptionId: 17, UserId: 3, VoterName: "User-3" },
+                { OptionId: 13, UserId: 3, VoterName: "User-3" },
+                { OptionId: 17, UserId: 4, VoterName: "User-4" },
+                { OptionId: 25, UserId: 4, VoterName: "User-4" },
+                { OptionId: 13, UserId: 4, VoterName: "User-4" },
+                { OptionId: 17, UserId: 5, VoterName: "User-5" },
+                { OptionId: 21, UserId: 5, VoterName: "User-5" }
             ];
 
             // act

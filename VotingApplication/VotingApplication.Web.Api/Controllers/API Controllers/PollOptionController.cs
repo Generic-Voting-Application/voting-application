@@ -8,6 +8,7 @@ using System.Web;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Filters;
+using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -16,37 +17,50 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         public PollOptionController() : base() { }
         public PollOptionController(IContextFactory contextFactory) : base(contextFactory) { }
 
+        private OptionRequestResponseModel OptionToModel(Option option)
+        {
+            return new OptionRequestResponseModel
+            {
+                Name = option.Name,
+                Info = option.Info,
+                Description = option.Description
+            };
+        }
+
+        private Option ModelToOption(OptionCreationRequestModel model)
+        {
+            return new Option
+            {
+                Name = model.Name,
+                Info = model.Info,
+                Description = model.Description
+            };
+        }
+
         #region GET
 
         public virtual HttpResponseMessage Get(Guid pollId)
         {
+            #region DB Get / Validation
+
+            Poll poll;
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(s => s.UUID == pollId).Include(s => s.Options).FirstOrDefault();
-                if (matchingPoll == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
-                }
-
-                // Hide UUIDs of any other polls that are linked through options
-                if (matchingPoll.Options != null)
-                {
-                    foreach (Option matchingPollOptions in matchingPoll.Options)
-                    {
-                        if (matchingPollOptions.Polls != null)
-                        {
-                            foreach (Poll poll in matchingPollOptions.Polls)
-                            {
-                                poll.UUID = Guid.Empty;
-                                poll.ManageID = Guid.Empty;
-                            }
-                        }
-
-                    }
-                }
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, matchingPoll.Options);
+                poll = context.Polls.Where(s => s.UUID == pollId).Include(s => s.Options).SingleOrDefault();
             }
+
+            if (poll == null)
+            {
+                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
+            }
+
+            #endregion
+
+            #region Response
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, poll.Options.Select(OptionToModel).ToList());
+
+            #endregion
         }
 
         public virtual HttpResponseMessage Get(Guid pollId, long optionId)
@@ -58,41 +72,59 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region POST
 
-        public virtual HttpResponseMessage Post(Guid pollId, Option option)
+        public virtual HttpResponseMessage Post(Guid pollId, OptionCreationRequestModel optionCreationRequest)
         {
+            #region Input Validation
+
+            if (optionCreationRequest == null)
+            {
+                return this.Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+
             using (var context = _contextFactory.CreateContext())
             {
-                if (option == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Option required");
-                }
-
-                Poll matchingPoll = context.Polls.Where(p => p.UUID == pollId).FirstOrDefault();
-                if (matchingPoll == null)
+                Poll poll = context.Polls.Where(p => p.UUID == pollId).FirstOrDefault();
+                if (poll == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", pollId));
                 }
 
-                if (!matchingPoll.OptionAdding)
+                if (!poll.OptionAdding)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, string.Format("Option adding not allowed for poll {0}", pollId));
                 }
-
-                if (option.Name == null || option.Name.Length == 0)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Cannot create an option without a name");
-                }
-
-                if (matchingPoll.Options == null)
-                {
-                    matchingPoll.Options = new List<Option>();
-                }
-
-                matchingPoll.Options.Add(option);
-                context.SaveChanges();
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, option.Id);
             }
+
+            if (!ModelState.IsValid)
+            {
+                return this.Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+
+            #endregion
+
+            #region DB Object Creation
+
+            Option newOption = ModelToOption(optionCreationRequest);
+
+            using (var context = _contextFactory.CreateContext())
+            {
+                Poll poll = context.Polls.Where(p => p.UUID == pollId).Single();
+                if (poll.Options == null)
+                {
+                    poll.Options = new List<Option>();
+                }
+
+                poll.Options.Add(newOption);
+                context.SaveChanges();
+            }
+
+            #endregion
+
+            #region Response
+
+            return this.Request.CreateResponse(HttpStatusCode.OK);
+
+            #endregion
         }
 
         public virtual HttpResponseMessage Post(Guid pollId, long optionId, Option option)
