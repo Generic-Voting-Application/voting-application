@@ -22,6 +22,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private PollController _controller;
         private Poll _mainPoll;
         private Poll _otherPoll;
+        private Poll _templatePoll;
+        private Guid _templateUUID;
         private Guid[] UUIDs;
         private Option _redOption;
         private InMemoryDbSet<Poll> _dummyPolls;
@@ -30,25 +32,22 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void setup()
         {
             _redOption = new Option() { Name = "Red" };
-            Template emptyTemplate = new Template() { Id = 1 };
-            Template redTemplate = new Template() { Id = 2, Options = new List<Option>() { _redOption } };
-            InMemoryDbSet<Template> dummyTemplates = new InMemoryDbSet<Template>(true);
-            dummyTemplates.Add(emptyTemplate);
-            dummyTemplates.Add(redTemplate);
 
-            UUIDs = new [] {Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()};
+            UUIDs = new [] {Guid.NewGuid(), Guid.NewGuid(), _templateUUID, Guid.NewGuid()};
             _mainPoll = new Poll() { UUID = UUIDs[0], ManageId = Guid.NewGuid() };
             _otherPoll = new Poll() { UUID = UUIDs[1], ManageId = Guid.NewGuid() };
+            _templateUUID = Guid.NewGuid();
+            _templatePoll = new Poll() { UUID = _templateUUID, ManageId = Guid.NewGuid(), Options = new List<Option>() { _redOption }, CreatorIdentity = "a@b.c" };
 
             _dummyPolls = new InMemoryDbSet<Poll>(true);
             _dummyPolls.Add(_mainPoll);
             _dummyPolls.Add(_otherPoll);
+            _dummyPolls.Add(_templatePoll);
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
             mockContext.Setup(a => a.Polls).Returns(_dummyPolls);
-            mockContext.Setup(a => a.Templates).Returns(dummyTemplates);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
             var mockMailSender = new Mock<IMailSender>();
@@ -69,15 +68,48 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region GET
 
         [TestMethod]
-        public void GetIsNotAllowed()
+        public void GetIsAllowed()
         {
             // Act
             var response = _controller.Get();
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
-        
+
+        [TestMethod]
+        public void GetWithAUserFetchesAllPollsByThatUser()
+        {
+            // Arrange
+            var identity = new System.Security.Principal.GenericIdentity("a@b.c");
+            var user = new System.Security.Principal.GenericPrincipal(identity, new string[0]);
+            _controller.User = user;
+
+            // Act
+            var response = _controller.Get();
+
+            // Assert
+            List<Poll> expectedPolls = new List<Poll>() { _templatePoll };
+            List<Poll> responsePolls = ((ObjectContent)response.Content).Value as List<Poll>;
+            CollectionAssert.AreEquivalent(expectedPolls, responsePolls);
+        }
+
+        [TestMethod]
+        public void GetWithANewUserFetchesEmptyPollList()
+        {
+            // Arrange
+            var identity = new System.Security.Principal.GenericIdentity("newUser@b.c");
+            var user = new System.Security.Principal.GenericPrincipal(identity, new string[0]);
+            _controller.User = user;
+
+            // Act
+            var response = _controller.Get();
+
+            // Assert
+            List<Poll> responsePolls = ((ObjectContent)response.Content).Value as List<Poll>;
+            CollectionAssert.AreEquivalent(new List<Poll>(), responsePolls);
+        }
+
         [TestMethod]
         public void GetByIdIsAllowed()
         {
@@ -189,6 +221,23 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
+        public void PostWithAuthorizationSetsUsernameOfPollOwner()
+        {
+            // Arrange
+            var identity = new System.Security.Principal.GenericIdentity("newUser@b.c");
+            var user = new System.Security.Principal.GenericPrincipal(identity, new string[0]);
+            _controller.User = user;
+
+            // Act
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+            _controller.Post(newPoll);
+
+            // Assert
+            Poll createdPoll = _dummyPolls.Last();
+            Assert.AreEqual("newUser@b.c", createdPoll.CreatorIdentity);
+        }
+
+        [TestMethod]
         public void PostReturnsIDsOfNewPoll()
         {
             // Act
@@ -210,7 +259,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             PollCreationResponseModel responseModel = ((ObjectContent)response.Content).Value as PollCreationResponseModel;
 
             // Assert
-            Assert.AreEqual(_dummyPolls.Count(), 3);
+            Assert.AreEqual(_dummyPolls.Count(), 4);
         }  
         #endregion
 

@@ -1,4 +1,4 @@
-﻿define(['jquery'], function () {
+﻿define(['jquery', 'knockout', 'Navbar'], function ($, ko) {
 
     // Checks if elements are collapsed
     (function () {
@@ -55,6 +55,26 @@
 
     Common.logoutUser = function (pollId) {
         localStorage.removeItem("user_" + pollId);
+    }
+
+    Common.setupTooltips = function () {
+        $(document).tooltip
+
+        function showOrHideElement(show, element) {
+            element.next(".tip").toggle(show);
+        }
+
+        var tooltipTargets = $(".help-message");
+
+        for (var i = 0; i < tooltipTargets.length; i++) {
+            var $hoverTarget = $(tooltipTargets[i]);
+
+            var hideElement = showOrHideElement.bind(null, false, $hoverTarget);
+            var showElement = showOrHideElement.bind(null, true, $hoverTarget);
+            ko.utils.registerEventHandler($hoverTarget, "mouseover", showElement);
+            ko.utils.registerEventHandler($hoverTarget, "mouseout", hideElement);
+            hideElement();
+        }
     }
 
     Common.handleError = function (error) {

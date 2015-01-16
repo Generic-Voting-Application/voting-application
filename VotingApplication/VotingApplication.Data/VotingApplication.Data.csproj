@@ -61,7 +61,6 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\ChatMessage.cs" />
     <Compile Include="Model\Option.cs" />
-    <Compile Include="Model\Template.cs" />
     <Compile Include="Model\Poll.cs" />
     <Compile Include="Model\Token.cs" />
     <Compile Include="Model\User.cs" />

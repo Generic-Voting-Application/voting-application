@@ -117,7 +117,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             #endregion
         }
 
-        public virtual HttpResponseMessage Post(Guid manageId, long voteId, Option option)
+        public virtual HttpResponseMessage Post(Guid manageId, long voteId, OptionCreationRequestModel option)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
         }
@@ -126,9 +126,39 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region PUT
 
-        public virtual HttpResponseMessage Put(Guid manageId, Option option)
+        public virtual HttpResponseMessage Put(Guid manageId, List<Option> options)
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT on this controller");
+            using (var context = _contextFactory.CreateContext())
+            {
+                Poll matchingPoll = context.Polls.Where(p => p.ManageId == manageId).Include(p => p.Options).SingleOrDefault();
+                if (matchingPoll == null)
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
+                }
+
+                // Check validity of options
+                if (options.Any(p => String.IsNullOrEmpty(p.Name)))
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, string.Format("Option name must not be empty"));
+                }
+
+                // Remove all old options
+                foreach (Option oldOption in matchingPoll.Options.ToList<Option>())
+                {
+                    context.Options.Remove(oldOption);
+                }
+
+                // Add all new options
+                foreach (Option newOption in options)
+                {
+                    context.Options.Add(newOption);
+                }
+
+                matchingPoll.Options = options;
+                context.SaveChanges();
+
+                return this.Request.CreateResponse(HttpStatusCode.OK);
+            }
         }
 
         public virtual HttpResponseMessage Put(Guid manageId, long voteId, Option option)

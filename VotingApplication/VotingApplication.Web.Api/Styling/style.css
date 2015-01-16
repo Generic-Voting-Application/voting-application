@@ -168,6 +168,20 @@ label.info-message {
     width:200px;
 }
 
+#template-group {
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.affirmative {
+    color: green;
+}
+
+.negative {
+    color: red;
+}
+
 @media (min-width: 768px) {
     .divider {
         border-right: 1px solid #ccc;

@@ -293,18 +293,19 @@
     <Compile Include="Controllers\API Controllers\ManageInvitationController.cs" />
     <Compile Include="Controllers\API Controllers\ManageOptionController.cs" />
     <Compile Include="Controllers\API Controllers\ManageVoteController.cs" />
-    <Compile Include="Controllers\API Controllers\TemplateController.cs" />
     <Compile Include="Controllers\API Controllers\PollController.cs" />
     <Compile Include="Controllers\API Controllers\PollOptionController.cs" />
     <Compile Include="Controllers\API Controllers\PollVoteController.cs" />
     <Compile Include="Controllers\API Controllers\UserPollVoteController.cs" />
     <Compile Include="Controllers\Web Controllers\AdminController.cs" />
+    <Compile Include="Controllers\Web Controllers\DecisionController.cs" />
     <Compile Include="Controllers\Web Controllers\ManageController.cs" />
     <Compile Include="Controllers\Web Controllers\PollController.cs" />
     <Compile Include="Controllers\Web Controllers\InfoController.cs" />
     <Compile Include="Controllers\Web Controllers\CreateController.cs" />
     <Compile Include="Controllers\API Controllers\UserController.cs" />
     <Compile Include="Controllers\API Controllers\WebApiController.cs" />
+    <Compile Include="Controllers\Web Controllers\SignInController.cs" />
     <Compile Include="Filters\BasicAuthenticator.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -381,14 +382,18 @@
     <None Include="Properties\PublishProfiles\voting-application - Web Deploy.pubxml" />
     <Content Include="Scripts\Lib\require.js" />
     <Content Include="Scripts\Manage.js" />
+    <Content Include="Scripts\Navbar.js" />
     <Content Include="Scripts\Poll.js" />
+    <Content Include="Scripts\Signin.js" />
     <Content Include="Scripts\ChatClient.js" />
     <Content Include="Scripts\Admin.js" />
     <Content Include="Scripts\Common.js" />
     <Content Include="Scripts\RankedVote.js" />
     <Content Include="Scripts\PointsVote.js" />
     <Content Include="Scripts\BasicVote.js" />
+    <Content Include="Scripts\Validation.js" />
     <Content Include="Styling\Lib\bootstrap-datetimepicker.min.css" />
+    <Content Include="Views\Decision\Index.cshtml" />
     <None Include="Views\Poll\_BasicVotePartial.cshtml" />
     <None Include="Views\Poll\_PointsVotePartial.cshtml" />
     <Content Include="Views\Poll\_PointsResultsPartial.cshtml" />
@@ -411,6 +416,7 @@
     <Content Include="Scripts\Lib\bootstrap-datetimepicker.min.js" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Poll\Index.cshtml" />
+    <Content Include="Views\SignIn\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VotingApplication.Data\VotingApplication.Data.csproj">
@@ -444,7 +450,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>57534</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:44300</IISUrl>
+          <IISUrl>https://localhost:44300/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

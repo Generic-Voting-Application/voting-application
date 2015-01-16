@@ -19,7 +19,8 @@ namespace VotingApplication.Data.Model
 
         public String VotingStrategy { get; set; }
 
-        public long TemplateId { get; set; }
+        public string CreatorIdentity { get; set; }
+
         public List<Option> Options { get; set; }
 
         public int MaxPoints { get; set; }
@@ -39,5 +40,6 @@ namespace VotingApplication.Data.Model
         public bool OptionAdding { get; set; }
 
         public DateTime LastUpdated { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

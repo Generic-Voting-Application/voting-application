@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Web.Configuration;
+using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
@@ -55,7 +56,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Name = pollCreationRequest.Name,
                 Creator = pollCreationRequest.Creator,
                 VotingStrategy = pollCreationRequest.VotingStrategy,
-                TemplateId = 0,
                 Options = new List<Option>(),
                 MaxPoints = pollCreationRequest.MaxPoints,
                 MaxPerVote = pollCreationRequest.MaxPerVote,
@@ -67,15 +67,23 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Expires = pollCreationRequest.Expires,
                 ExpiryDate = pollCreationRequest.ExpiryDate,
                 OptionAdding = pollCreationRequest.OptionAdding,
-                LastUpdated = DateTime.Now
+                LastUpdated = DateTime.Now,
+                CreatedDate = DateTime.Now,
+                CreatorIdentity = this.User.Identity.Name
             };
         }
 
         #region Get
 
+        [Authorize]
         public override HttpResponseMessage Get()
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET on this controller");
+            using (var context = _contextFactory.CreateContext())
+            {
+                var username = this.User.Identity.Name;
+                List<Poll> matchingPolls = context.Polls.Where(p => p.CreatorIdentity == username).ToList<Poll>();
+                return this.Request.CreateResponse(HttpStatusCode.OK, matchingPolls);
+            }
         }
 
         public virtual HttpResponseMessage Get(Guid id)
