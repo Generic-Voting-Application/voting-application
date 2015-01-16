@@ -12,6 +12,7 @@ using Moq;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -33,10 +34,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _redOption = new Option() { Name = "Red" };
 
             UUIDs = new [] {Guid.NewGuid(), Guid.NewGuid(), _templateUUID, Guid.NewGuid()};
-            _mainPoll = new Poll() { UUID = UUIDs[0], ManageID = Guid.NewGuid() };
-            _otherPoll = new Poll() { UUID = UUIDs[1], ManageID = Guid.NewGuid() };
+            _mainPoll = new Poll() { UUID = UUIDs[0], ManageId = Guid.NewGuid() };
+            _otherPoll = new Poll() { UUID = UUIDs[1], ManageId = Guid.NewGuid() };
             _templateUUID = Guid.NewGuid();
-            _templatePoll = new Poll() { UUID = _templateUUID, ManageID = Guid.NewGuid(), Options = new List<Option>() { _redOption }, CreatorIdentity = "a@b.c" };
+            _templatePoll = new Poll() { UUID = _templateUUID, ManageId = Guid.NewGuid(), Options = new List<Option>() { _redOption }, CreatorIdentity = "a@b.c" };
 
             _dummyPolls = new InMemoryDbSet<Poll>(true);
             _dummyPolls.Add(_mainPoll);
@@ -132,28 +133,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Assert.AreEqual("Poll " + newGuid + " not found", error.Message);
         }
 
-        [TestMethod]
-        public void GetByIdReturnsPollWithMatchingId()
-        {
-            // Act
-            var response = _controller.Get(UUIDs[1]);
-
-            // Assert
-            Poll responsePoll = ((ObjectContent)response.Content).Value as Poll;
-            Assert.AreEqual(_otherPoll, responsePoll);
-        }
-
-        [TestMethod]
-        public void GetByIdDoesNotIncludeManageId()
-        {
-            // Act
-            var response = _controller.Get(UUIDs[0]);
-
-            // Assert
-            Poll responsePoll = ((ObjectContent)response.Content).Value as Poll;
-            Assert.AreEqual(Guid.Empty, responsePoll.ManageID);
-        }
-
         #endregion
 
         #region PUT
@@ -186,69 +165,59 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostIsAllowed()
         {
             // Act
-            var response = _controller.Post(new Poll() { Name = "New Poll" });
+            var response = _controller.Post(new PollCreationRequestModel() { Name = "New Poll" });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         [TestMethod]
-        public void PostRejectsPollWithMissingName()
+        public void PostRejectsPollWithInvalidInput()
         {
+            // Arrange
+            _controller.ModelState.AddModelError("Name", "");
+
             // Act
-            var response = _controller.Post(new Poll());
+            var response = _controller.Post(new PollCreationRequestModel());
 
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll did not have a name", error.Message);
-        }
-
-
-        [TestMethod]
-        public void PostAddsEmptyOptionsListToNewPoll()
-        {
-            // Act
-            Poll newPoll = new Poll() { Name = "New Poll" };
-            var response = _controller.Post(newPoll);
-
-            // Assert
-            CollectionAssert.AreEquivalent(new List<Poll>(), newPoll.Options);
-        }
-
-        [TestMethod]
-        public void PostRetainsSuppliedOptions()
-        {
-            // Act
-            List<Option> customOptions = new List<Option>() { _redOption };
-            Poll newPoll = new Poll() { Name = "New Poll", Options = customOptions };
-            var response = _controller.Post(newPoll);
-
-            // Assert
-            CollectionAssert.AreEquivalent(customOptions, newPoll.Options);
-        }
-
-        [TestMethod]
-        public void PostRejectsPollWithBlankName()
-        {
-            // Act
-            var response = _controller.Post(new Poll() { Name = "" });
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll did not have a name", error.Message);
         }
 
         [TestMethod]
         public void PostAssignsPollUUID()
         {
             // Act
-            Poll newPoll = new Poll() { Name = "New Poll" };
-            _controller.Post(newPoll);
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+            var response = _controller.Post(newPoll);
+            PollCreationResponseModel responseModel = ((ObjectContent)response.Content).Value as PollCreationResponseModel;
+           
+            // Assert
+            Assert.AreNotEqual(Guid.Empty, responseModel.UUID);
+        }
+
+        [TestMethod]
+        public void PostAssignsPollManageId()
+        {
+            // Act
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+            var response = _controller.Post(newPoll);
+            PollCreationResponseModel responseModel = ((ObjectContent)response.Content).Value as PollCreationResponseModel;
 
             // Assert
-            Assert.AreNotEqual(Guid.Empty, newPoll.UUID);
+            Assert.AreNotEqual(Guid.Empty, responseModel.ManageId);
+        }
+        
+        [TestMethod]
+        public void PostAssignsPollManageIdDifferentFromPollId()
+        {
+            // Act
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+            var response = _controller.Post(newPoll);
+            PollCreationResponseModel responseModel = ((ObjectContent)response.Content).Value as PollCreationResponseModel;
+
+            // Assert
+            Assert.AreNotEqual(responseModel.UUID, responseModel.ManageId);
         }
 
         [TestMethod]
@@ -260,196 +229,38 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.User = user;
 
             // Act
-            Poll newPoll = new Poll() { Name = "New Poll" };
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
             _controller.Post(newPoll);
 
             // Assert
-            Assert.AreEqual("newUser@b.c", newPoll.CreatorIdentity);
-        }
-
-        [TestMethod]
-        public void PostAssignsPollManageID()
-        {
-            // Act
-            Poll newPoll = new Poll() { Name = "New Poll" };
-            _controller.Post(newPoll);
-
-            // Assert
-            Assert.AreNotEqual(Guid.Empty, newPoll.ManageID);
-        }
-
-        [TestMethod]
-        public void PostAssignsPollManageIDDifferentFromPollId()
-        {
-            // Act
-            Poll newPoll = new Poll() { Name = "New Poll" };
-            _controller.Post(newPoll);
-
-            // Assert
-            Assert.AreNotEqual(newPoll.UUID, newPoll.ManageID);
+            Poll createdPoll = _dummyPolls.Last();
+            Assert.AreEqual("newUser@b.c", createdPoll.CreatorIdentity);
         }
 
         [TestMethod]
         public void PostReturnsIDsOfNewPoll()
         {
             // Act
-            Poll newPoll = new Poll() { Name = "New Poll" };
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
             var response = _controller.Post(newPoll);
+            PollCreationResponseModel responseModel = ((ObjectContent)response.Content).Value as PollCreationResponseModel;
 
             // Assert
-            Poll responsePoll = ((ObjectContent)response.Content).Value as Poll;
-            Assert.AreEqual(newPoll.UUID, responsePoll.UUID);
-            Assert.AreEqual(newPoll.ManageID, responsePoll.ManageID);
-        }
-
-        [TestMethod]
-        public void PostSetsIdOfNewPoll()
-        {
-            // Act
-            Poll newPoll = new Poll() { Name = "New Poll" };
-            var response = _controller.Post(newPoll);
-
-            // Assert
-            Assert.AreEqual(UUIDs[3], newPoll.UUID);
+            Assert.AreEqual(_dummyPolls.Last().UUID, responseModel.UUID);
+            Assert.AreEqual(_dummyPolls.Last().ManageId, responseModel.ManageId);
         }
 
         [TestMethod]
         public void PostAddsNewPollToPolls()
         {
             // Act
-            Poll newPoll = new Poll() { Name = "New Poll" };
-            _controller.Post(newPoll);
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+            var response = _controller.Post(newPoll);
+            PollCreationResponseModel responseModel = ((ObjectContent)response.Content).Value as PollCreationResponseModel;
 
             // Assert
-            List<Poll> expectedPolls = new List<Poll>();
-            expectedPolls.Add(_mainPoll);
-            expectedPolls.Add(_otherPoll);
-            expectedPolls.Add(_templatePoll);
-            expectedPolls.Add(newPoll);
-            CollectionAssert.AreEquivalent(expectedPolls, _dummyPolls.Local);
-        }
-
-        [TestMethod]
-        public void PostByIdIsAllowed()
-        {
-            // Act
-            var response = _controller.Post(UUIDs[0], new Poll() { Name = "New Poll" });
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void PostByIdRejectsNullPoll()
-        {
-            // Act
-            var response = _controller.Post(UUIDs[0], null);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll is null", error.Message);
-        }
-
-        [TestMethod]
-        public void PostByIdAddsEmptyOptionsListToNewPoll()
-        {
-            // Act
-            Poll newPoll = new Poll() { Name = "New Poll" };
-            var response = _controller.Post(UUIDs[0], newPoll);
-
-            // Assert
-            CollectionAssert.AreEquivalent(new List<Poll>(), newPoll.Options);
-        }
-
-        [TestMethod]
-        public void PostByIdRetainsSuppliedOptions()
-        {
-            // Act
-            List<Option> customOptions = new List<Option>() { _redOption };
-            Poll newPoll = new Poll() { Name = "New Poll", Options = customOptions };
-            var response = _controller.Post(UUIDs[0], newPoll);
-
-            // Assert
-            CollectionAssert.AreEquivalent(customOptions, newPoll.Options);
-        }
-
-        [TestMethod]
-        public void PostByIdRejectsPollWithMissingName()
-        {
-            // Act
-            var response = _controller.Post(UUIDs[0], new Poll() { });
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll does not have a name", error.Message);
-        }
-
-        [TestMethod]
-        public void PostByIdRejectsPollWithBlankName()
-        {
-            // Act
-            var response = _controller.Post(UUIDs[0], new Poll() { Name = "" });
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll does not have a name", error.Message);
-        }
-
-        [TestMethod]
-        public void PostByIdReplacesThePollWithThatId()
-        {
-            // Act
-            Poll newPoll = new Poll() { Name = "New Poll" };
-            var response = _controller.Post(UUIDs[1], newPoll);
-
-            // Assert
-            List<Poll> expectedPolls = new List<Poll>();
-            expectedPolls.Add(_mainPoll);
-            expectedPolls.Add(_templatePoll);
-            expectedPolls.Add(newPoll);
-            CollectionAssert.AreEquivalent(expectedPolls, _dummyPolls.Local);
-        }
-
-        [TestMethod]
-        public void PostByIdReturnsIdOfTheReplacedPoll()
-        {
-            // Act
-            Poll newPoll = new Poll() { Name = "New Poll" };
-            var response = _controller.Post(UUIDs[1], newPoll);
-
-            // Assert
-            Guid responseUUID = (Guid)((ObjectContent)response.Content).Value;
-            Assert.AreEqual(UUIDs[1], responseUUID);
-        }
-
-        [TestMethod]
-        public void PostByIdForNewIdReturnsIdTheNewId()
-        {
-            // Act
-            Guid newUUID = UUIDs[3];
-            Poll newPoll = new Poll() { Name = "New Poll" };
-            var response = _controller.Post(newUUID, newPoll);
-
-            // Assert
-            Guid responseUUID = (Guid)((ObjectContent)response.Content).Value;
-            Assert.AreEqual(newUUID, responseUUID);
-        }
-
-        [TestMethod]
-        public void PostByIdForNewIdSetsUUIDOnPoll()
-        {
-            // Act
-            Guid newUUID = UUIDs[3];
-            Poll newPoll = new Poll() { Name = "New Poll" };
-            var response = _controller.Post(newUUID, newPoll);
-
-            // Assert
-            Assert.AreEqual(newUUID, newPoll.UUID);
-        }
-
+            Assert.AreEqual(_dummyPolls.Count(), 4);
+        }  
         #endregion
 
         #region DELETE
@@ -473,8 +284,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
         }
-
         #endregion
-
+        
     }
 }

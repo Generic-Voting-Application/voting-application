@@ -103,15 +103,12 @@
     <Compile Include="Controllers\ManageInvitationControllerTests.cs" />
     <Compile Include="Controllers\ManageOptionControllerTests.cs" />
     <Compile Include="Controllers\ManageVoteControllerTests.cs" />
-    <Compile Include="Controllers\OptionControllerTests.cs" />
     <Compile Include="Controllers\PollControllerTests.cs" />
     <Compile Include="Controllers\PollOptionControllerTests.cs" />
     <Compile Include="Controllers\PollVoteControllerTests.cs" />
     <Compile Include="Controllers\UserPollVoteControllerTests.cs" />
-    <Compile Include="Controllers\UserVoteControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\UserControllerTests.cs" />
-    <Compile Include="Controllers\VoteControllerTests.cs" />
     <Compile Include="Sockets\ChatHubTests.cs" />
   </ItemGroup>
   <ItemGroup>

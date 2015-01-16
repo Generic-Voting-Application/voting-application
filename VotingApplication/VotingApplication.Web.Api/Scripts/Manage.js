@@ -5,7 +5,6 @@
         self.votes = ko.observableArray();
         self.options = ko.observableArray();
         self.templates = ko.observableArray();
-        self.votingStrategy = ko.observable(false);
         self.pollId = ko.observable();
         self.templateId = ko.observable();
 

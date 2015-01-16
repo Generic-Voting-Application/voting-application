@@ -33,24 +33,25 @@
                     header.setRequestHeader("Authorization", "Bearer " + sessionStorage['creator_token']);
                 },
 
+                // This is needed to ensure that values not given are not set on the JSON object
                 data: JSON.stringify({
-                    Name: self.pollName(),
-                    Creator: self.creatorName(),
-                    Email: self.creatorEmail(),
-                    TemplateId: self.templateId(),
-                    VotingStrategy: self.strategy(),
-                    MaxPoints: self.maxPoints(),
-                    MaxPerVote: self.maxPerVote(),
-                    InviteOnly: self.inviteOnly(),
-                    AnonymousVoting: self.anonymousVoting(),
-                    RequireAuth: self.requireAuth(),
-                    Expires: self.expiry(),
-                    ExpiryDate: new Date(self.expiryDate()),
-                    OptionAdding: self.optionAdding()
+                    Name: self.pollName() || undefined,
+                    Creator: self.creatorName() || undefined,
+                    Email: self.creatorEmail() || undefined,
+                    TemplateId: self.templateId() || undefined,
+                    VotingStrategy: self.strategy() || undefined,
+                    MaxPoints: self.maxPoints() || undefined,
+                    MaxPerVote: self.maxPerVote() || undefined,
+                    InviteOnly: self.inviteOnly() || undefined,
+                    AnonymousVoting: self.anonymousVoting() || undefined,
+                    RequireAuth: self.requireAuth() || undefined,
+                    Expires: self.expiry() || undefined,
+                    ExpiryDate: new Date(self.expiryDate()) || undefined,
+                    OptionAdding: self.optionAdding() || undefined
                 }),
 
                 success: function (data) {
-                    self.navigateToManage(data.ManageID);
+                    self.navigateToManage(data.ManageId);
                 },
 
                 error: Common.handleError
