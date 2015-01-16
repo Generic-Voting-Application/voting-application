@@ -17,6 +17,26 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         public PollOptionController() : base() { }
         public PollOptionController(IContextFactory contextFactory) : base(contextFactory) { }
 
+        private OptionRequestResponseModel OptionToModel(Option option)
+        {
+            return new OptionRequestResponseModel
+            {
+                Name = option.Name,
+                Info = option.Info,
+                Description = option.Description
+            };
+        }
+
+        private Option ModelToOption(OptionCreationRequestModel model)
+        {
+            return new Option
+            {
+                Name = model.Name,
+                Info = model.Info,
+                Description = model.Description
+            };
+        }
+
         #region GET
 
         public virtual HttpResponseMessage Get(Guid pollId)
@@ -38,20 +58,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             #region Response
 
-            List<OptionRequestResponseModel> response = new List<OptionRequestResponseModel>();
-
-            foreach(Option option in poll.Options)
-            {
-                OptionRequestResponseModel responseOption = new OptionRequestResponseModel();
-
-                responseOption.Name = option.Name;
-                responseOption.Info = option.Info;
-                responseOption.Description = option.Description;
-
-                response.Add(responseOption);
-            }
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, response);
+            return this.Request.CreateResponse(HttpStatusCode.OK, poll.Options.Select(OptionToModel).ToList());
 
             #endregion
         }
@@ -97,16 +104,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             #region DB Object Creation
 
-            Option newOption = new Option();
-
-            newOption.Name = optionCreationRequest.Name;
-            newOption.Info = optionCreationRequest.Info;
-            newOption.Description = optionCreationRequest.Description;
+            Option newOption = ModelToOption(optionCreationRequest);
 
             using (var context = _contextFactory.CreateContext())
             {
                 Poll poll = context.Polls.Where(p => p.UUID == pollId).Single();
-                if(poll.Options == null)
+                if (poll.Options == null)
                 {
                     poll.Options = new List<Option>();
                 }

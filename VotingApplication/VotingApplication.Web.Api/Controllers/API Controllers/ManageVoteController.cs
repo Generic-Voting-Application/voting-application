@@ -16,6 +16,27 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         public ManageVoteController() : base() { }
         public ManageVoteController(IContextFactory contextFactory) : base(contextFactory) { }
 
+        private VoteRequestResponseModel VoteToModel(Vote vote)
+        {
+            VoteRequestResponseModel model = new VoteRequestResponseModel();
+
+            if (vote.Option != null)
+            {
+                model.OptionId = vote.Option.Id;
+                model.OptionName = vote.Option.Name;
+            }
+
+            if (vote.User != null)
+            {
+                model.VoterName = vote.User.Name;
+                model.UserId = vote.User.Id;
+            }
+
+            model.VoteValue = vote.PollValue;
+
+            return model;
+        }
+
         #region GET
 
         public virtual HttpResponseMessage Get(Guid manageId)
@@ -38,33 +59,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             #endregion
 
-            #region Response
-
-            List<VoteRequestResponseModel> response = new List<VoteRequestResponseModel>();
-
-            foreach (Vote vote in votes)
-            {
-                VoteRequestResponseModel responseVote = new VoteRequestResponseModel();
-
-                if (vote.Option != null)
-                {
-                    responseVote.OptionId = vote.Option.Id;
-                    responseVote.OptionName = vote.Option.Name;
-                }
-
-                if (vote.User != null)
-                {
-                    responseVote.VoterName = vote.User.Name;
-                    responseVote.UserId = vote.User.Id;
-                }
-
-                responseVote.VoteValue = vote.PollValue;
-
-                response.Add(responseVote);
-            }
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, response);
-            #endregion
+            return this.Request.CreateResponse(HttpStatusCode.OK, votes.Select(VoteToModel).ToList());
         }
 
         public virtual HttpResponseMessage Get(Guid manageId, long voteId)

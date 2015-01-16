@@ -13,8 +13,28 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
     public class ManageOptionController : WebApiController
     {
-        public ManageOptionController() : base() {}
+        public ManageOptionController() : base() { }
         public ManageOptionController(IContextFactory contextFactory) : base(contextFactory) { }
+
+        private OptionRequestResponseModel OptionToModel(Option option)
+        {
+            return new OptionRequestResponseModel
+            {
+                Name = option.Name,
+                Info = option.Info,
+                Description = option.Description
+            };
+        }
+
+        private Option ModelToOption(OptionCreationRequestModel model)
+        {
+            return new Option
+            {
+                Name = model.Name,
+                Info = model.Info,
+                Description = model.Description
+            };
+        }
 
         #region GET
 
@@ -35,24 +55,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             #endregion
 
-            #region Response
-
-            List<OptionRequestResponseModel> response = new List<OptionRequestResponseModel>();
-
-            foreach (Option option in poll.Options)
-            {
-                OptionRequestResponseModel responseOption = new OptionRequestResponseModel();
-
-                responseOption.Name = option.Name;
-                responseOption.Info = option.Info;
-                responseOption.Description = option.Description;
-
-                response.Add(responseOption);
-            }
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, response);
-
-            #endregion
+            return this.Request.CreateResponse(HttpStatusCode.OK, poll.Options.Select(OptionToModel).ToList());
         }
 
         public virtual HttpResponseMessage Get(Guid manageId, long voteId)
@@ -91,11 +94,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             #region DB Object Creation
 
-            Option newOption = new Option();
-
-            newOption.Name = optionCreationRequest.Name;
-            newOption.Info = optionCreationRequest.Info;
-            newOption.Description = optionCreationRequest.Description;
+            Option newOption = ModelToOption(optionCreationRequest);
 
             using (var context = _contextFactory.CreateContext())
             {

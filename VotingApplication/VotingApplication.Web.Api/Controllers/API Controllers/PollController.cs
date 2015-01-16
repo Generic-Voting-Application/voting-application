@@ -27,6 +27,50 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             _mailSender = mailSender;
         }
 
+        private PollRequestResponseModel PollToModel(Poll poll)
+        {
+            return new PollRequestResponseModel
+            {
+                Name = poll.Name,
+                Creator = poll.Creator,
+                VotingStrategy = poll.VotingStrategy,
+                MaxPoints = poll.MaxPoints,
+                MaxPerVote = poll.MaxPerVote,
+                InviteOnly = poll.InviteOnly,
+                AnonymousVoting = poll.AnonymousVoting,
+                RequireAuth = poll.RequireAuth,
+                Expires = poll.Expires,
+                ExpiryDate = poll.ExpiryDate,
+                OptionAdding = poll.OptionAdding,
+                Options = poll.Options
+            };
+        }
+
+        private Poll ModelToPoll(PollCreationRequestModel pollCreationRequest)
+        {
+            return new Poll
+            {
+                UUID = Guid.NewGuid(),
+                ManageId = Guid.NewGuid(),
+                Name = pollCreationRequest.Name,
+                Creator = pollCreationRequest.Creator,
+                VotingStrategy = pollCreationRequest.VotingStrategy,
+                TemplateId = 0,
+                Options = new List<Option>(),
+                MaxPoints = pollCreationRequest.MaxPoints,
+                MaxPerVote = pollCreationRequest.MaxPerVote,
+                InviteOnly = pollCreationRequest.InviteOnly,
+                Tokens = new List<Token>(),
+                ChatMessages = new List<ChatMessage>(),
+                AnonymousVoting = pollCreationRequest.AnonymousVoting,
+                RequireAuth = pollCreationRequest.RequireAuth,
+                Expires = pollCreationRequest.Expires,
+                ExpiryDate = pollCreationRequest.ExpiryDate,
+                OptionAdding = pollCreationRequest.OptionAdding,
+                LastUpdated = DateTime.Now
+            };
+        }
+
         #region Get
 
         public override HttpResponseMessage Get()
@@ -51,26 +95,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             #endregion
 
-            #region Response
-
-            PollRequestResponseModel response = new PollRequestResponseModel();
-
-            response.Name = poll.Name;
-            response.Creator = poll.Creator;
-            response.VotingStrategy = poll.VotingStrategy;
-            response.MaxPoints = poll.MaxPoints;
-            response.MaxPerVote = poll.MaxPerVote;
-            response.InviteOnly = poll.InviteOnly;
-            response.AnonymousVoting = poll.AnonymousVoting;
-            response.RequireAuth = poll.RequireAuth;
-            response.Expires = poll.Expires;
-            response.ExpiryDate = poll.ExpiryDate;
-            response.OptionAdding = poll.OptionAdding;
-            response.Options = poll.Options;
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, response);
-
-            #endregion
+            return this.Request.CreateResponse(HttpStatusCode.OK, PollToModel(poll));
         }
 
         #endregion
@@ -109,26 +134,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             #region DB Object Creation
 
-            Poll newPoll = new Poll();
-
-            newPoll.UUID = Guid.NewGuid();
-            newPoll.ManageId = Guid.NewGuid();
-            newPoll.Name = pollCreationRequest.Name;
-            newPoll.Creator = pollCreationRequest.Creator;
-            newPoll.VotingStrategy = pollCreationRequest.VotingStrategy;
-            newPoll.TemplateId = 0;
-            newPoll.Options = new List<Option>();
-            newPoll.MaxPoints = pollCreationRequest.MaxPoints;
-            newPoll.MaxPerVote = pollCreationRequest.MaxPerVote;
-            newPoll.InviteOnly = pollCreationRequest.InviteOnly;
-            newPoll.Tokens = new List<Token>();
-            newPoll.ChatMessages = new List<ChatMessage>();
-            newPoll.AnonymousVoting = pollCreationRequest.AnonymousVoting;
-            newPoll.RequireAuth = pollCreationRequest.RequireAuth;
-            newPoll.Expires = pollCreationRequest.Expires;
-            newPoll.ExpiryDate = pollCreationRequest.ExpiryDate;
-            newPoll.OptionAdding = pollCreationRequest.OptionAdding;
-            newPoll.LastUpdated = DateTime.Now;
+            Poll newPoll = ModelToPoll(pollCreationRequest);
 
             using (var context = _contextFactory.CreateContext())
             {
@@ -143,10 +149,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             #region Response
 
-            PollCreationResponseModel response = new PollCreationResponseModel();
-
-            response.UUID = newPoll.UUID;
-            response.ManageId = newPoll.ManageId;
+            PollCreationResponseModel response = new PollCreationResponseModel
+            {
+                UUID = newPoll.UUID,
+                ManageId = newPoll.ManageId
+            };            
 
             return this.Request.CreateResponse(HttpStatusCode.OK, response);
 

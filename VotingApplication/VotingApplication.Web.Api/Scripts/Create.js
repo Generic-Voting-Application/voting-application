@@ -32,6 +32,7 @@
                 url: '/api/poll',
                 contentType: 'application/json',
 
+                // This is needed to ensure that values not given are not set on the JSON object
                 data: JSON.stringify({
                     Name: self.pollName() || undefined,
                     Creator: self.creatorName() || undefined,
@@ -49,7 +50,7 @@
                 }),
 
                 success: function (data) {
-                    self.navigateToManage(data.ManageID);
+                    self.navigateToManage(data.ManageId);
                 },
 
                 error: Common.handleError

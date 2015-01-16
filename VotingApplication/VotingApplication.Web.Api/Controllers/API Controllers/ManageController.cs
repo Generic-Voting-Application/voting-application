@@ -14,6 +14,15 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         public ManageController() : base() {}
         public ManageController(IContextFactory contextFactory) : base(contextFactory) { }
 
+        private ManagePollRequestResponseModel PollToModel(Poll poll)
+        {
+            return new ManagePollRequestResponseModel
+            {
+                UUID = poll.UUID,
+                Options = poll.Options,
+            };
+        }
+
         #region GET
 
         public override HttpResponseMessage Get()
@@ -36,16 +45,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
             #endregion
 
-            #region Response
-
-            ManagePollRequestResponseModel response = new ManagePollRequestResponseModel();
-
-            response.UUID = poll.UUID;
-            response.Options = poll.Options;
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, response);
-
-            #endregion
+            return this.Request.CreateResponse(HttpStatusCode.OK, PollToModel(poll));
         }
 
 

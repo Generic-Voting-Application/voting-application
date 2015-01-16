@@ -17,6 +17,41 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region GET
 
+        private VoteRequestResponseModel VoteToModel(Vote vote, Poll poll)
+        {
+            VoteRequestResponseModel model = new VoteRequestResponseModel();
+
+            if (vote.Option != null)
+            {
+                model.OptionId = vote.Option.Id;
+                model.OptionName = vote.Option.Name;
+            }
+
+            if (vote.User != null)
+            {
+                model.VoterName = poll.AnonymousVoting ? "Anonymous User" : vote.User.Name;
+                model.UserId = vote.User.Id;
+            }
+
+            model.VoteValue = vote.PollValue;
+
+            return model;
+        }
+
+        private Vote ModelToVote(VoteRequestModel voteRequest, Option option, Poll poll, User user)
+        {
+           return  new Vote
+            {
+                Option = option,//context.Options.Single(o => o.Id == voteRequest.OptionId),
+                Poll = poll,//context.Polls.Single(p => p.UUID == pollId),
+                PollId = poll.UUID,
+                Token = new Token { PollId = poll.UUID, UserId = user.Id, TokenGuid = voteRequest.TokenGuid },
+                User = user,//context.Users.Single(u => u.Id == userId),
+                PollValue = voteRequest.VoteValue
+            };
+            
+        }
+
         public virtual HttpResponseMessage Get(long userId, Guid pollId)
         {
 
@@ -43,35 +78,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             #endregion
 
-            #region Response
-
-            List<VoteRequestResponseModel> response = new List<VoteRequestResponseModel>();
-
-            foreach (Vote vote in votes)
-            {
-                VoteRequestResponseModel responseVote = new VoteRequestResponseModel();
-
-                if (vote.Option != null)
-                {
-                    responseVote.OptionId = vote.Option.Id;
-                    responseVote.OptionName = vote.Option.Name;
-                }
-
-                if (vote.User != null)
-                {
-                    responseVote.VoterName = poll.AnonymousVoting ? "Anonymous User" : vote.User.Name;
-                    responseVote.UserId = vote.User.Id;
-                }
-
-                responseVote.VoteValue = vote.PollValue;
-
-                response.Add(responseVote);
-            }
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, response);
-
-            #endregion
-
+            return this.Request.CreateResponse(HttpStatusCode.OK, votes.Select(v => VoteToModel(v, poll)).ToList());
         }
 
         #endregion
@@ -168,17 +175,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     context.Votes.Remove(contextVote);
                 }
 
+                // For some reason, we don't have an addrange function on Entity Framework
                 foreach (VoteRequestModel voteRequest in voteRequests)
                 {
-                    Vote newVote = new Vote();
-                    newVote.Option = context.Options.Single(o => o.Id == voteRequest.OptionId);
-                    newVote.Poll = context.Polls.Single(p => p.UUID == pollId);
-                    newVote.PollId = pollId;
-                    newVote.Token = new Token { PollId = pollId, UserId = userId, TokenGuid = voteRequest.TokenGuid };
-                    newVote.User = context.Users.Single(u => u.Id == userId);
-                    newVote.PollValue = voteRequest.VoteValue;
-
-                    context.Votes.Add(newVote);
+                    context.Votes.Add(ModelToVote(voteRequest, context.Options.Single(o => o.Id == voteRequest.OptionId), 
+                                                               context.Polls.Single(p => p.UUID == pollId),
+                                                               context.Users.Single(u => u.Id == userId)));
                 }
 
                 context.SaveChanges();
