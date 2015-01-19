@@ -198,8 +198,11 @@
 
         var receivedMessage = function (message) {
 
+            // Careful here, startOf modifies the object it is called on.
             messageTimestamp = new moment(message.Timestamp);
-            message.Timestamp = messageTimestamp.startOf('day').isSame(new moment().startOf('day')) ? messageTimestamp.format('HH:mm') : messageTimestamp.format('DD/MM');
+            messageDayStart = new moment(message.Timestamp).startOf('day');
+
+            message.Timestamp = messageDayStart.isSame(new moment().startOf('day')) ? messageTimestamp.format('HH:mm') : messageTimestamp.format('DD/MM');
 
             self.chatMessages.push(message);
         };
