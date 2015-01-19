@@ -1,20 +1,21 @@
 ﻿define('Validation', ['jquery'], function ($) {
 
     return new function Validation() {
+        var self = this;
 
-        this.validateForm = function (form) {
+        self.validateForm = function (form) {
             //Clear out previous error messages
             $('text').remove('.error-message');
 
             var inputs = form.find(".form-group");
             for (var i = 0; i < inputs.length; i++) {
-                Validation.validateField(inputs[i]);
+                self.validateField(inputs[i]);
             }
 
             return form[0].checkValidity();
         };
 
-        this.validateField = function (field) {
+        self.validateField = function (field) {
             if ($(field).is(':visible')) {
                 var $inputField = $(field).find('input');
                 var inputField = $inputField[0];
