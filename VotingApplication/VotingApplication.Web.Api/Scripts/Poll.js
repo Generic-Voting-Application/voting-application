@@ -199,8 +199,8 @@
         var receivedMessage = function (message) {
 
             messageTimestamp = new moment(message.Timestamp);
+            message.Timestamp = messageTimestamp.startOf('day').isSame(new moment().startOf('day')) ? messageTimestamp.format('HH:mm') : messageTimestamp.format('DD/MM');
 
-            message.Timestamp = messageTimestamp.isSame(new moment(), 'day') ? messageTimestamp.format('H:mm') :  messageTimestamp.calendar();
             self.chatMessages.push(message);
         };
         chatClient.onMessage = function (message) {
@@ -229,6 +229,7 @@
                 statusCode: {
                     200: function (data) {
                         if (self.votingStrategy) {
+
                             lastResultsRequest = Date.now();
                             self.votingStrategy.displayResults(data);
                         }
