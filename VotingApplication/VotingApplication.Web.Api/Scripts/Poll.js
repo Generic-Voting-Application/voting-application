@@ -1,4 +1,4 @@
-﻿define('Poll', ['jquery', 'knockout', 'bootstrap', 'insight', 'countdown', 'moment', 'Common', 'ChatClient', 'platform'], function ($, ko, bs, insight, countdown, moment, Common, chatClient) {
+﻿define('Poll', ['jquery', 'knockout', 'bootstrap', 'countdown', 'moment', 'Common', 'ChatClient', 'platform'], function ($, ko, bs, countdown, moment, Common, chatClient) {
     return function VoteViewModel(pollId, token, VotingStrategyViewModel) {
         var self = this;
 
@@ -295,6 +295,11 @@
 
         if (VotingStrategyViewModel) {
             self.votingStrategy = new VotingStrategyViewModel(pollId, token);
+
+            self.votingStrategy.onVoted = function () {
+                // Switch to the vote panel
+                $('#resultSection > div')[0].click();
+            };
         }
 
         ko.applyBindings(this);

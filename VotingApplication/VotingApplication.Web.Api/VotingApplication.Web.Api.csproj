@@ -382,8 +382,10 @@
     <None Include="Properties\PublishProfiles\voting-application - Web Deploy.pubxml" />
     <Content Include="Scripts\Lib\require.js" />
     <Content Include="Scripts\Manage.js" />
+    <Content Include="Scripts\PointsOption.js" />
     <Content Include="Scripts\Navbar.js" />
     <Content Include="Scripts\Poll.js" />
+    <Content Include="Scripts\PollOptions.js" />
     <Content Include="Scripts\Signin.js" />
     <Content Include="Scripts\ChatClient.js" />
     <Content Include="Scripts\Admin.js" />
@@ -398,6 +400,7 @@
     <None Include="Views\Poll\_PointsVotePartial.cshtml" />
     <Content Include="Views\Poll\_PointsResultsPartial.cshtml" />
     <Content Include="Views\Poll\_BasicResultsPartial.cshtml" />
+    <Content Include="Views\Poll\_PollAddOptionPartial.cshtml" />
     <None Include="Views\Poll\_RankedVotePartial.cshtml" />
     <None Include="Views\Poll\_RankedResultsPartial.cshtml" />
     <Content Include="Web.config" />

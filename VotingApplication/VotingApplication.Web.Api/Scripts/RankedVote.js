@@ -1,68 +1,42 @@
-﻿define('RankedVote', ['jquery', 'knockout', 'jqueryUI', 'Common', 'jqueryTouch'], function ($, ko, jqueryUI, Common) {
+﻿define('RankedVote', ['jquery', 'knockout', 'jqueryUI', 'Common', 'PollOptions', 'insight', 'jqueryTouch'], function ($, ko, jqueryUI, Common, PollOptions, insight) {
 
     return function RankedVote(pollId, token) {
 
-        self = this;
-        self.options = ko.observableArray();
-        self.optionAdding = ko.observable();
+        var self = this;
+        self.pollOptions = new PollOptions(pollId);
         self.selectedOptions = ko.observableArray();
+
         self.resultOptions = ko.observableArray();
 
         self.chartVisible = ko.observable(false);
+
+        var selectPickedOptions = function (votes) {
+            var selected = votes.map(function (vote) {
+                return ko.utils.arrayFirst(self.pollOptions.options(), function (item) {
+                    return item.Id === vote.OptionId;
+                });
+            });
+            self.selectedOptions(selected);
+        };
+
+        // Remaining list of "non-selected" options is created
+        // as a computed array dependant on the selected options
+        // and full set of options
+        self.remainOptions = ko.computed(function () {
+            var notSelected = function (option) {
+                return self.selectedOptions().filter(function (o) { return o.Id === option.Id; }).length === 0;
+            };
+
+            return self.pollOptions.options().filter(notSelected);
+        });
 
         var resultsByRound = [];
         var orderedNames = [];
         var chart;
         var roundIndex = 0;
 
-        var selectOption = function (option) {
-            var $option = $('#optionTable-tbody > tr').filter(function () {
-                return $(this).attr('data-id') == option.Id;
-            });
-
-            $('#selectionTable > tbody').append($option.remove());
-            self.selectedOptions.push(option)
-        }
-
-        var selectPickedOptions = function (pickedOptions) {
-            self.selectedOptions.removeAll();
-
-            pickedOptions.forEach(function (option) {
-                var pickedOption = ko.utils.arrayFirst(self.options(), function (item) {
-                    return item.Id == option.OptionId;
-                });
-
-                selectOption(pickedOption);
-            });
-        }
-
-        var resetOptions = function () {
-            $('#optionTable-tbody').append($('#selectionTable > tbody').remove('tr').children());
-        }
-        
         var sortByVoteValue = function (a, b) {
             return a.VoteValue - b.VoteValue;
-        }
-
-        var refreshOptions = function () {
-            $.ajax({
-                type: 'GET',
-                url: "/api/poll/" + pollId + "/option",
-
-                success: function (data) {
-
-                    data.forEach(function (dataOption) {
-                        if (self.options().filter(function (option) { return option.Id == dataOption.Id }).length > 0) {
-                            return;
-                        }
-                        if (self.selectedOptions().filter(function (option) { return option.Id == dataOption.Id }).length > 0) {
-                            return;
-                        }
-
-                        self.options.push(dataOption);
-                    });
-                }
-            });
         };
 
         var sortByBallotCount = function (a, b) {
@@ -74,11 +48,11 @@
             var orderedOptions = [];
             var ballots = [];
             var totalBallots = 0;
-            var totalOptions = self.options().length;
+            var totalOptions = self.pollOptions.options().length;
             resultsByRound = [];
 
             for (var k = 0; k < totalOptions; k++) {
-                var optionId = self.options()[k].Id;
+                var optionId = self.pollOptions.options()[k].Id;
                 options[k] = { Id: optionId, ballots: [] };
             }
 
@@ -105,11 +79,11 @@
                 // Sort the votes on the ballots and assign each ballot to first choice
                 ballots.forEach(function (ballot) {
                     ballot.sort(sortByVoteValue);
-                    var availableChoices = ballot.filter(function (option) { return $.inArray(option.OptionId, availableOptions) != -1; })
+                    var availableChoices = ballot.filter(function (option) { return $.inArray(option.OptionId, availableOptions) !== -1; });
                     if (availableChoices.length > 0) {
-                        var firstChoiceId = availableChoices[0].OptionId
-                        var firstChoiceOption = options.filter(function (option) { return option.Id == firstChoiceId })[0];
-                        firstChoiceOption.ballots.push(ballot)
+                        var firstChoiceId = availableChoices[0].OptionId;
+                        var firstChoiceOption = options.filter(function (option) { return option.Id === firstChoiceId; })[0];
+                        firstChoiceOption.ballots.push(ballot);
                     }
                 });
 
@@ -117,23 +91,23 @@
 
                 //Convert into a chartable style
                 var roundOptions = options.map(function (d) {
-                    var matchingOption = $.grep(self.options(), function (opt) { return opt.Id == d.Id })[0];
+                    var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id === d.Id; })[0];
                     return {
                         Name: matchingOption.Name,
                         BallotCount: d.ballots.length,
-                        Voters: d.ballots.map(function (x) { return x[0].VoterName + " (#" + (x.map(function (y) { return y.OptionId }).indexOf(matchingOption.Id) + 1) + ")"; })
-                    }
+                        Voters: d.ballots.map(function (x) { return x[0].VoterName + " (#" + (x.map(function (y) { return y.OptionId; }).indexOf(matchingOption.Id) + 1) + ")"; })
+                    };
                 });
 
                 //Add in removed options as 0-value
                 orderedOptions.forEach(function (d) {
-                    var matchingOption = $.grep(self.options(), function (opt) { return opt.Id == d.Id })[0];
+                    var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id === d.Id; })[0];
                     roundOptions.push({
                         Name: matchingOption.Name,
                         BallotCount: 0,
                         Voters: []
                     });
-                })
+                });
 
                 // End if we have a majority
                 if (options[options.length - 1].ballots.length > totalBallots / 2) {
@@ -155,7 +129,7 @@
                 var lastPlaceOption = options[0];
                 var lastPlaceBallotCount = lastPlaceOption.ballots.length;
 
-                var removedOptions = options.filter(function (d) { return d.ballots.length == lastPlaceBallotCount; });
+                var removedOptions = options.filter(function (d) { return d.ballots.length === lastPlaceBallotCount; });
                 // Track at what point an option was removed from the running
                 removedOptions.map(function (d) {
                     d.rank = options.length - removedOptions.length + 1;
@@ -170,14 +144,112 @@
             orderedOptions.reverse();
 
             return orderedOptions;
-        }
+        };
 
-        var drawChart = function (data) {
+        self.onVoted = null;
+        self.doVote = function () {
+            var userId = Common.currentUserId(pollId);
+
+            if (userId && pollId) {
+                var useToken = token || Common.sessionItem("token", pollId);
+                // Convert selected options to ranked votes
+                var selectedOptionsArray = self.selectedOptions().map(function (option, index) {
+                    return {
+                        OptionId: option.Id,
+                        VoteValue: index + 1,
+                        TokenGuid: useToken
+                    };
+                });
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
+                    contentType: 'application/json',
+                    data: JSON.stringify(selectedOptionsArray),
+
+                    success: function () {
+                        if (self.onVoted) self.onVoted();
+                    },
+
+                    error: Common.handleError
+                });
+            }
+        };
+
+        self.getVotes = function (pollId, userId) {
+            $.ajax({
+                type: 'GET',
+                url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
+                contentType: 'application/json',
+
+                success: function (data) {
+                    data.sort(sortByVoteValue);
+                    selectPickedOptions(data);
+                },
+
+                error: Common.handleError
+            });
+        };
+
+        self.displayResults = function (votes) {
+            var orderedResults = countVotes(votes);
+
+            orderedNames = orderedResults.map(function (d) {
+                var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id === d.Id; })[0];
+                return matchingOption.Name;
+            });
+
+            //Exit early if data has not changed
+            if (chart && JSON.stringify(resultsByRound) === JSON.stringify(chart.series().slice(0, chart.series().length - 1).map(function (d) { return d.data.rawData(); })))
+                return;
+
+            // Fill in the table
+            self.resultOptions.removeAll();
+            for (var i = 0; i < orderedResults.length; i++) {
+
+                var option = ko.utils.arrayFirst(self.pollOptions.options(), function (item) {
+                    return item.Id === orderedResults[i].Id;
+                });
+                option.Rank = orderedResults[i].rank || 1;
+                self.resultOptions.push(option);
+            }
+
+            self.drawChart(resultsByRound.slice(0));
+        };
+
+        self.initialise = function (pollData) {
+
+            self.pollOptions.initialise(pollData);
+
+            $(".sortable").sortable({
+                items: 'tbody > tr:not(#newOptionRow)',
+                connectWith: '.sortable',
+                axis: 'y',
+                dropOnEmpty: true,
+                receive: function () {
+                    var votes = [];
+                    $('#selectionTable tr.clickable').each(function (i, row) {
+                        votes.push({
+                            OptionId: $(row).attr('data-id')
+                        });
+                    });
+
+                    // Cancel the sort operation and update the Knockout
+                    // arrays, letting Knockout re-arrange the DOM
+                    $(".sortable").sortable("cancel");
+                    selectPickedOptions(votes);
+                }
+            });
+        };
+
+        // TODO: Extract chart code from viewModel class - ideally
+        // into a shared custom knockout binding to bind to data
+        self.drawChart = function (data) {
             // Hack to fix insight's lack of data reloading
             $("#chart-results").html('');
             $("#chart-buttons").html('');
 
-            if (!self.chartVisible() || data.length == 0)
+            if (!self.chartVisible() || data.length === 0)
                 return;
 
             //Get voter count
@@ -211,10 +283,7 @@
             var seriesIndex = roundIndex;
 
             //Add a button to display individual rounds
-            var button = $("#chart-buttons").append('<button class="btn btn-primary" onclick="self.filterRounds(0)">All Rounds</button>');
-            
-            for (var i = 1; i <= data.length; i++)
-            {
+            for (var i = 1; i <= data.length; i++) {
                 $("#chart-buttons").append('<button class="btn btn-primary" onclick="self.filterRounds(' + i + ')">Round ' + i + '</button>');
             }
 
@@ -249,7 +318,7 @@
                         return "Option eliminated";
                 });
 
-                var newSeries = chart.series()
+                var newSeries = chart.series();
                 newSeries.push(series);
                 chart.series(newSeries);
             });
@@ -259,150 +328,21 @@
             .keyFunction(function (d) {
                 return d.Name;
             })
-            .valueFunction(function (d) {
+            .valueFunction(function () {
                 return voterCount / 2;
             })
-            .tooltipFunction(function (d) {
+            .tooltipFunction(function () {
                 return "50% Majority";
             })
             .widthFactor(1.1)
             .thickness(2)
             .title('Majority');
 
-            var newSeries = chart.series()
+            var newSeries = chart.series();
             newSeries.push(series);
             chart.series(newSeries);
 
             chart.draw();
-        };
-
-        var displayResults = function (votes) {
-            var orderedResults = countVotes(votes);
-
-            orderedNames = orderedResults.map(function (d) {
-                var matchingOption = $.grep(self.options(), function (opt) { return opt.Id == d.Id })[0];
-                return matchingOption.Name;
-            });
-
-            //Exit early if data has not changed
-            if (chart && JSON.stringify(resultsByRound) == JSON.stringify(chart.series().slice(0, chart.series().length - 1).map(function (d) { return d.data.rawData() })))
-                return;
-
-            // Fill in the table
-            self.resultOptions.removeAll();
-            for (var i = 0; i < orderedResults.length; i++) {
-
-                var option = ko.utils.arrayFirst(self.options(), function (item) {
-                    return item.Id == orderedResults[i].Id;
-                });
-                option.Rank = orderedResults[i].rank || 1;
-                self.resultOptions.push(option);
-            }
-
-            drawChart(resultsByRound.slice(0));
-        }
-
-        self.filterRounds = function (filterIndex) {
-            roundIndex = filterIndex;
-            drawChart(resultsByRound);
-        }
-
-        self.doVote = function (data, event) {
-            var userId = Common.currentUserId(pollId);
-
-            if (userId && pollId) {
-
-                var selectionRows = $('#selectionTable > tbody > tr');
-
-                var selectedOptionsArray = [];
-                var minRank = Number.MAX_VALUE;
-                ko.utils.arrayForEach(self.selectedOptions(), function (selection) {
-
-                    var $optionElement = selectionRows.filter(function () {
-                        return $(this).attr('data-id') == selection.Id;
-                    });
-
-                    var rank = $("#selectionTable > tbody > tr").index($optionElement[0]);
-                    minRank = Math.min(minRank, rank);
-
-                    selectedOptionsArray.push({
-                        OptionId: selection.Id,
-                        VoteValue: rank,
-                        TokenGuid: token || Common.sessionItem("token", pollId)
-                    });
-                });
-
-                // Offset by the first value to account for table headers and sort out 0 index
-                selectedOptionsArray.map(function (option) {
-                    option.VoteValue -= minRank - 1;
-                });
-
-                $.ajax({
-                    type: 'PUT',
-                    url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
-                    contentType: 'application/json',
-                    data: JSON.stringify(selectedOptionsArray),
-
-                    success: function (returnData) {
-                        $('#resultSection > div')[0].click();
-                    },
-
-                    error: Common.handleError
-                });
-            }
-        };
-
-        self.getVotes = function (pollId, userId) {
-            resetOptions();
-
-            $.ajax({
-                type: 'GET',
-                url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
-                contentType: 'application/json',
-
-                success: function (data) {
-                    data.sort(sortByVoteValue);
-                    selectPickedOptions(data);
-                },
-
-                error: Common.handleError
-            });
-        };
-
-        self.displayResults = function (data) {
-            displayResults(data);
-        }
-
-        self.addOption = function () {
-            //Don't submit without an entry in the name field
-            if ($("#newName").val() === "") {
-                return;
-            }
-
-            var newName = $("#newName").val();
-            var newInfo = $("#newInfo").val();
-            var newDescription = $("#newDescription").val();
-
-            //Reset before posting, to prevent double posts.
-            $("#newName").val("");
-            $("#newDescription").val("");
-            $("#newInfo").val("");
-
-            $.ajax({
-                type: 'POST',
-                url: '/api/poll/' + pollId + '/option',
-                contentType: 'application/json',
-
-                data: JSON.stringify({
-                    Name: newName,
-                    Description: newDescription,
-                    Info: newInfo
-                }),
-
-                success: function () {
-                    refreshOptions();
-                }
-            });
         };
 
         self.toggleChartVisible = function () {
@@ -410,47 +350,12 @@
 
             //Redraw with all results
             self.filterRounds(0);
-        }
+        };
 
+        self.filterRounds = function (filterIndex) {
+            roundIndex = filterIndex;
+            self.drawChart(resultsByRound);
+        };
 
-        self.initialise = function (pollData) {
-
-            self.options(pollData.Options);
-            self.optionAdding(pollData.OptionAdding);
-
-            $(".sortable").sortable({
-                items: 'tbody > tr:not(#newOptionRow)',
-                connectWith: '.sortable',
-                axis: 'y',
-                dropOnEmpty: true,
-                receive: function (e, ui) {
-                    var itemId = ui.item.attr('data-id');
-                    var item = ko.utils.arrayFirst(self.options(), function (item) {
-                        return item.Id == itemId;
-                    });
-
-                    var rows = $(this).find('tbody > tr');
-                    var rowIds = $.map(rows, function (d, i) { return $(d).data("id") });
-                    var insertionIndex = rowIds.indexOf(item.Id);
-
-                    if ($(e.target).hasClass('selection-content')) {
-                        //Insert at index in selectedOptions
-                        self.selectedOptions.splice(insertionIndex, 0, item);
-                    } else {
-                        //Get index of where we dropped the item
-                        self.selectedOptions.remove(item);
-                    }
-
-                    //Make sure rows are a part of the table body
-                    if (rows.length == 0) {
-                        $(this).find('tbody').append(ui.item)
-                    }
-                    else {
-                        rows.eq(insertionIndex).before(ui.item);
-                    }
-
-                }
-            });
-        } 
-    }
+    };
 });

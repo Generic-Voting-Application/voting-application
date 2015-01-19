@@ -1,20 +1,24 @@
-﻿define('PointsVote', ['jquery', 'knockout', 'Common'], function ($, ko, Common) {
+﻿define('PointsVote', ['jquery', 'knockout', 'Common', 'PollOptions', 'PointsOption', 'insight'], function ($, ko, Common, PollOptions, PointsOption, insight) {
 
     return function PointsVote(pollId, token) {
 
-        self = this;
-        self.options = ko.observableArray();
+        var self = this;
+        self.pollOptions = new PollOptions(pollId);
+
         self.maxPerVote = ko.observable();
         self.maxPoints = ko.observable();
-        self.optionAdding = ko.observable();
         self.pointsArray = ko.observableArray();
 
         var chart;
 
+        self.pointsForOption = function (index) {
+            return self.pointsArray()[index];
+        };
+
         self.pointsRemaining = ko.computed(function () {
             var total = 0;
             ko.utils.arrayForEach(self.pointsArray(), function (item) {
-                total += item;
+                total += item.value();
             });
             var remaining = self.maxPoints() - total;
             return remaining;
@@ -26,17 +30,10 @@
 
         var resetVote = function () {
             //Populate with an array of options.length number of 0-values
-            self.pointsArray(Array.apply(null, Array(self.options().length)).map(Boolean).map(Number));
-            updateAllButtons();
+            self.pointsArray(self.pollOptions.options().map(function (o) {
+                return new PointsOption(self.maxPerVote, self.pointsRemaining);
+            }));
         };
-
-        var updateAllButtons = function () {
-            var allButtonGroups = $("#optionTable span");
-            for (var i = 0; i < allButtonGroups.length; i++) {
-                var buttonGroup = allButtonGroups[i];
-                updateButtons(buttonGroup);
-            }
-        }
 
         var countVotes = function (votes) {
             var totalCounts = [];
@@ -65,7 +62,86 @@
             return totalCounts;
         };
 
-        var drawChart = function (data) {
+        self.pollOptions.options.subscribe(function () {
+            var newOptionCount = self.pollOptions.options().length - self.pointsArray().length;
+            for (var i = 0; i < newOptionCount; i++) {
+                self.pointsArray.push(new PointsOption(self.maxPerVote, self.pointsRemaining));
+            }
+        });
+
+        self.onVoted = null;
+        self.doVote = function (data, event) {
+            var userId = Common.currentUserId(pollId);
+
+            var useToken = token || Common.sessionItem("token", pollId);
+            var votesData = self.pollOptions.options()
+                .map(function (option, i) {
+                    return {
+                        OptionId: option.Id,
+                        VoteValue: self.pointsForOption(i).value(),
+                        TokenGuid: useToken
+                    };
+                })
+                .filter(function (vote) { return vote.VoteValue > 0; });
+
+            if (userId && pollId) {
+                $.ajax({
+                    type: 'PUT',
+                    url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
+                    contentType: 'application/json',
+                    data: JSON.stringify(votesData),
+
+                    success: function (returnData) {
+                        if (self.onVoted) self.onVoted();
+                    },
+
+                    error: Common.handleError
+                });
+            }
+        };
+
+        self.getVotes = function (pollId, userId) {
+            $.ajax({
+                type: 'GET',
+                url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
+                contentType: 'application/json',
+
+                success: function (data) {
+                    resetVote();
+                    var allOptions = self.pollOptions.options();
+                    for (var i = 0; i < data.length; i++) {
+                        //Find index of previously voted option
+                        var vote = allOptions.filter(function (d) {
+                            return d.Id == data[i].OptionId;
+                        })[0];
+                        var optionIndex = self.pollOptions.options().indexOf(vote);
+
+                        if (optionIndex == -1)
+                            continue;
+
+                        self.pointsArray()[optionIndex].value(data[i].VoteValue);
+                    }
+                }
+            });
+        };
+
+        self.displayResults = function(data) {
+            var groupedVotes = countVotes(data);
+            self.drawChart(groupedVotes);
+        }
+        
+        self.initialise = function (pollData) {
+            self.pollOptions.initialise(pollData);
+
+            self.maxPerVote(pollData.MaxPerVote);
+            self.maxPoints(pollData.MaxPoints);
+
+            resetVote();
+        }
+
+        // TODO: Extract chart code from viewModel class - ideally
+        // into a shared custom knockout binding to bind to data
+        self.drawChart = function (data) {
             //Exit early if data has not changed
             if (chart && JSON.stringify(data) == JSON.stringify(chart.series()[0].data.rawData()))
                 return;
@@ -108,187 +184,6 @@
             chart.draw();
         };
 
-        var refreshOptions = function () {
-            $.ajax({
-                type: 'GET',
-                url: "/api/poll/" + pollId + "/option",
-
-                success: function (data) {
-                    var newOptionCount = data.length - self.options().length;
-                    self.options.removeAll();
-                    self.options(data);
-
-                    for (var i = 0; i < newOptionCount; i++){
-                        self.pointsArray.push(0);
-                    }
-
-                    updateAllButtons();
-                }
-            });
-        }
-
-        var updateButtons = function (buttonGroup) {
-            var index = $("#optionTable span").index(buttonGroup);
-            var minusButton = $(buttonGroup).find(".btn.pull-left");
-
-            if (self.pointsArray().length > 0) {
-                var sumOfAllPoints = self.pointsArray().reduce(function (prevValue, currentValue) { return prevValue + currentValue; });
-                var pointsForGroup = self.pointsArray()[index];
-            }
-
-
-            // Minus button clickable for value > 0
-            if (pointsForGroup > 0) {
-                minusButton.removeAttr('disabled');
-            }
-            else {
-                minusButton.attr('disabled', 'disabled');
-            }
-
-            // Plus button clickable if more points can be added to group and total
-            if (sumOfAllPoints >= self.maxPoints()) {
-                $("#optionTable span .btn.pull-right").attr('disabled', 'disabled');
-            }
-            else {
-                var $allPlusButtons = $("#optionTable span .btn.pull-right");
-                for (var i = 0; i < $allPlusButtons.length; i++) {
-                    var plusButton = $allPlusButtons[i];
-                    if (self.pointsArray()[i] >= self.maxPerVote()) {
-                        $(plusButton).attr('disabled', 'disabled');
-                    }
-                    else {
-                        $(plusButton).removeAttr('disabled');
-                    }
-                }
-            }
-        }
-
-        self.decreaseVote = function (data, event) {
-            var pointsIndex = self.options().indexOf(data);
-            self.pointsArray()[pointsIndex]--;
-            self.pointsArray.valueHasMutated();
-
-            updateButtons(event.target.parentElement);
-        }
-
-        self.increaseVote = function (data, event) {
-            var pointsIndex = self.options().indexOf(data);
-            self.pointsArray()[pointsIndex]++;
-            self.pointsArray.valueHasMutated();
-
-            updateButtons(event.target.parentElement);
-        }
-
-        self.doVote = function (data, event) {
-            var userId = Common.currentUserId(pollId);
-
-            var votesData = [];
-
-            for (var i = 0; i < self.options().length; i++) {
-                if (self.pointsArray()[i] == 0) {
-                    continue;
-                }
-
-                var vote = {
-                    OptionId: self.options()[i].Id,
-                    VoteValue: self.pointsArray()[i],
-                    TokenGuid: token || Common.sessionItem("token", pollId)
-                };
-
-                votesData.push(vote);
-            }
-
-            if (userId && pollId) {
-                $.ajax({
-                    type: 'PUT',
-                    url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
-                    contentType: 'application/json',
-                    data: JSON.stringify(votesData),
-
-                    success: function (returnData) {
-                        $('#resultSection > div')[0].click();
-                    },
-
-                    error: Common.handleError
-                });
-            }
-        };
-
-        self.getVotes = function (pollId, userId) {
-            $.ajax({
-                type: 'GET',
-                url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
-                contentType: 'application/json',
-
-                success: function (data) {
-                    resetVote();
-                    var allOptions = self.options();
-                    for (var i = 0; i < data.length; i++) {
-                        //Find index of previously voted option
-                        var vote = allOptions.filter(function (d) {
-                            return d.Id == data[i].OptionId;
-                        })[0];
-                        var optionIndex = self.options().indexOf(vote);
-
-                        if (optionIndex == -1)
-                            continue;
-
-                        self.pointsArray()[optionIndex] = data[i].VoteValue;
-                        self.pointsArray.valueHasMutated();
-                    }
-                    updateAllButtons();
-                }
-            });
-        };
-
-        self.displayResults = function(data) {
-            var groupedVotes = countVotes(data);
-            drawChart(groupedVotes);
-        }
-
-        self.addOption = function () {
-            //Don't submit without an entry in the name field
-            if ($("#newName").val() === "") {
-                return;
-            }
-
-            var newName = $("#newName").val();
-            var newInfo = $("#newInfo").val();
-            var newDescription = $("#newDescription").val();
-
-            //Reset before posting, to prevent double posts.
-            $("#newName").val("");
-            $("#newDescription").val("");
-            $("#newInfo").val("");
-
-            $.ajax({
-                type: 'POST',
-                url: '/api/poll/' + pollId + '/option',
-                contentType: 'application/json',
-
-                data: JSON.stringify({
-                    Name: newName,
-                    Description: newDescription,
-                    Info: newInfo
-                }),
-
-                success: function () {
-                    refreshOptions();
-                }
-            });
-        };
-
-        self.initialise = function (pollData) {
-
-            self.options(pollData.Options);
-            self.maxPerVote(pollData.MaxPerVote);
-            self.maxPoints(pollData.MaxPoints);
-            self.optionAdding(pollData.OptionAdding);
-
-            resetVote();
-        }
-
-        
     }
 
 });
