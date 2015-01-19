@@ -17,9 +17,13 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
         [EmailAddress]
         public string Email { get; set; }
 
-        public long TemplateId { get; set; }
+        [Range(1, int.MaxValue)]
         public int MaxPoints { get; set; }
+
+        [Range(1, int.MaxValue)]
         public int MaxPerVote { get; set; }
+
+        public long TemplateId { get; set; }
         public bool InviteOnly { get; set; }
         public bool AnonymousVoting { get; set; }
         public bool RequireAuth { get; set; }

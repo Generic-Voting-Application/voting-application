@@ -87,12 +87,12 @@
 
                         <div id="max-points-group" data-bind="visible: strategy() == 'Points'" class="form-group">
                             <label class="control-label" for="max-points">Max points</label>
-                            <input class="form-control" id="max-points" placeholder="7" data-bind="value: maxPoints" />
+                            <input class="form-control" id="max-points" placeholder="7" positiveint data-bind="value: maxPoints" />
                         </div>
 
                         <div id="points-per-vote-group" data-bind="visible: strategy() == 'Points'" class="form-group">
                             <label class="control-label" for="max-per-vote">Max points per vote</label>
-                            <input class="form-control" id="max-per-vote" placeholder="3" data-bind="value: maxPerVote" />
+                            <input class="form-control" id="max-per-vote" placeholder="3" positiveint data-bind="value: maxPerVote" />
                         </div>
                     </div>
                     <div class="col-md-1"></div>

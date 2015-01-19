@@ -26,8 +26,19 @@
 
                 if ($inputField.attr('date') !== undefined) {
                     // Validation of date fields
-                    if (isNaN(Date.parse(self.expiryDate()))) {
+                    if (isNaN(Date.parse($inputField[0].value))) {
                         inputField.setCustomValidity("Please enter a valid date");
+                    } else {
+                        inputField.setCustomValidity("");
+                    }
+                }
+
+                if ($inputField.attr('positiveInt') !== undefined) {
+                    // Validation of date fields
+                    if (isNaN(parseInt($inputField[0].value))) {
+                        inputField.setCustomValidity("Please enter a valid number");
+                    } else if (inputField.value < 0) {
+                        inputField.setCustomValidity("Please enter a number greater than 0");
                     } else {
                         inputField.setCustomValidity("");
                     }
