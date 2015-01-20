@@ -50,14 +50,12 @@
         <div class="tab-pane fade in active" id="options">
             <div id="template-group" class="form-group" data-bind="visible: isSignedIn()">
                 <label class="control-label" for="template">Poll Template</label>
-                <a id="template-info" class="help-message">[?]</a>
-                <div class="tip" data-bind="hoverTargetId: template-info">
-                    Clone the options from a previous poll
-                </div>
-                <select class="form-control" id="template" data-bind="value:templateId, options:templates, optionsText:'Name', optionsValue:'UUID', optionsCaption:'Select a template..'"></select>
-                <button class="btn btn-primary" data-bind="click: cloneOptions">Clone Options</button>
-            </div>
-            <form>
+                <a id="template-info" class="help-message" data-toggle="tooltip" data-placement="right"
+                   title="Clone the options from a previous poll">[?]</a>
+            <select class="form-control" id="template" data-bind="value:templateId, options:templates, optionsText:'Name', optionsValue:'UUID', optionsCaption:'Select a template..'"></select>
+            <button class="btn btn-primary" data-bind="click: cloneOptions">Clone Options</button>
+        </div>
+        <form>
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -75,37 +73,37 @@
                         <td><button type="button" class="btn btn-danger" data-bind="click: $parent.deleteOption.bind()" data-toggle="modal" data-target="#deleteOptionModal">Delete</button></td>
                     </tr>
                 </tbody>
-                    <tr id="newOptionRow">
-                        <td>
-                            <input class="form-control input-block" id="newName" placeholder="Option" />
-                        </td>
-                        <td>
-                            <input class="form-control input-block" id="newDescription" placeholder="Description" />
-                        </td>
-                        <td class="hidden-xs hidden-sm">
-                            <input class="form-control input-block" id="newInfo" placeholder="More Info" />
-                        </td>
-                        <td>
-                            <button type="submit" class="btn btn-primary" data-bind="click: addOption.bind()">Add</button>
-                        </td>
-                    </tr>
-                </table>
-                </form>
-        </div>
-        <div class="tab-pane fade in" id="invites">
-            <div class="col-md-2"></div>
-            <div class="col-md-8">
-                <div id="invites-group" class="form-group">
-                    <label class=" control-label" for="invites">Invitations (one per line)</label>
-                    <textarea cols=40 rows=3 class="form-control" placeholder="E.g. email@example.com" data-bind="value: invitationText"></textarea>
-                    <div class="centered">
-                        <button class="btn btn-primary" type="submit" data-bind="click: sendInvites.bind()">Send Invitations</button>
-                    </div>
+                <tr id="newOptionRow">
+                    <td>
+                        <input class="form-control input-block" id="newName" placeholder="Option" />
+                    </td>
+                    <td>
+                        <input class="form-control input-block" id="newDescription" placeholder="Description" />
+                    </td>
+                    <td class="hidden-xs hidden-sm">
+                        <input class="form-control input-block" id="newInfo" placeholder="More Info" />
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-primary" data-bind="click: addOption.bind()">Add</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div class="tab-pane fade in" id="invites">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div id="invites-group" class="form-group">
+                <label class=" control-label" for="invites">Invitations (one per line)</label>
+                <textarea cols=40 rows=3 class="form-control" placeholder="E.g. email@example.com" data-bind="value: invitationText"></textarea>
+                <div class="centered">
+                    <button class="btn btn-primary" type="submit" data-bind="click: sendInvites.bind()">Send Invitations</button>
                 </div>
             </div>
-            <div class="col-md-2"></div>
         </div>
+        <div class="col-md-2"></div>
     </div>
+</div>
 </div>
 <div class="col-md-2"></div>
 

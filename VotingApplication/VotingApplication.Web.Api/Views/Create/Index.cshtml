@@ -30,11 +30,9 @@
 
                         <div id="email-group" class="form-group">
                             <label class="control-label" for="email">Creator Email</label>
-                            <a id="email-info" class="help-message">[?]</a>
-                            <div class="tip" data-bind="hoverTargetId: email-info">
-                                <p>Only used to email you the details of your poll.</p>
-                                This will never be used for marketing purposes.
-                            </div>
+                            <a id="email-info" class="help-message" data-toggle="tooltip" data-placement="top"
+                               title="<p>Only used to email you the details of your poll.</p>
+                                This will never be used for marketing purposes.">[?]</a>
                             <input class="form-control" type="email" id="email" placeholder="E.g. email@example.com" pattern="[\w._%+-]+@("@")\w+(\.\w+)+" data-bind="value: creatorEmail">
                         </div>
                     </div>
@@ -56,11 +54,9 @@
 
                         <div id="email-group" class="form-group">
                             <label class="control-label" for="email-advanced">Creator Email</label>
-                            <a id="email-info" class="help-message">[?]</a>
-                            <div class="tip" data-bind="hoverTargetId: email-info">
-                                <p>Only used to email you the details of your poll.</p>
-                                This will never be used for marketing purposes.
-                            </div>
+                            <a id="email-info" class="help-message" data-toggle="tooltip" data-placement="top"
+                               title="<p>Only used to email you the details of your poll.</p>
+                                This will never be used for marketing purposes.">[?]</a>
                             <input class="form-control" type="email" id="email-advanced" placeholder="E.g. email@example.com" pattern="[\w._%+-]+@("@")\w+(\.\w+)+" data-bind="value: creatorEmail">
                         </div>
                     </div>
@@ -68,16 +64,14 @@
                     <div class="col-md-6">
                         <div id="strategy-group" class="form-group">
                             <label class="control-label" for="voting-strategy">Poll type</label>
-                            <a id="strategy-info" class="help-message">[?]</a>
-                            <div class="tip" data-bind="hoverTargetId:strategy-info">
-                                <p><b>Single Vote</b>:<br />Pick one option</p>
+                            <a id="strategy-info" class="help-message" data-toggle="tooltip" data-placement="top"
+                               title="<p><b>Single Vote</b>:<br />Pick one option</p>
                                 <p>
                                     <b>Ranked Vote</b>:
                                     <br />Order options by preference<br />
-                                    <span class="warning">Not recommended in small votes</span>
+                                    <span class='warning'>Not recommended in small votes</span>
                                 </p>
-                                <b>Points-weighted Vote</b>:<br />Distribute points between options
-                            </div>
+                                <b>Points-weighted Vote</b>:<br />Distribute points between options">[?]</a>
                             <select class="form-control" id="voting-strategy" data-bind="value: strategy">
                                 <option value="Basic">Single Vote</option>
                                 <option value="Ranked">Ranked Vote</option>
@@ -98,40 +92,32 @@
                         <div id="invite-group" class="form-group">
                             <label class="control-label" for="invite-only">Invite only</label>
                             <input class="checkbox-inline" type="checkbox" id="invite-only" data-bind="checked: inviteOnly">
-                            <a id="invite-info" class="help-message">[?]</a>
-                            <div class="tip" data-bind="hoverTargetId: invite-info">
-                                <p>If you know each voter by email, this provides extra security.</p>
-                                Voters who were not invited will not be allowed to vote, and invited voters will not be able to cheat to get more votes.
-                            </div>
+                            <a id="invite-info" class="help-message" data-toggle="tooltip" data-placement="top"
+                               title="<p>If you know each voter by email, this provides extra security.</p>
+                                Voters who were not invited will not be allowed to vote, and invited voters will not be able to cheat to get more votes.">[?]</a>
                         </div>
 
                         <div id="anonymous-voting-group" class="form-group">
                             <label class="control-label" for="anonymous-voting">Vote Anonymously</label>
                             <input class="checkbox-inline" type="checkbox" id="anonymous-voting" data-bind="checked: anonymousVoting">
-                            <a id="anonymous-info" class="help-message">[?]</a>
-                            <div class="tip" data-bind="hoverTargetId: anonymous-info">
-                                <p>Whether poll results should display the voter name, or "Anonymous Voter".</p>
-                                Votes on the Poll Management page will still display names regardless.
-                            </div>
+                            <a id="anonymous-info" class="help-message" data-toggle="tooltip" data-placement="top"
+                               title="<p>Whether poll results should display the voter name, or 'anonymous voter'.</p>
+                                Votes on the Poll Management page will still display names regardless.">[?]</a>
                         </div>
 
                         <div id="require-auth-group" class="form-group">
                             <label class="control-label" for="require-auth">Require Social Media Login</label>
                             <input class="checkbox-inline" type="checkbox" id="require-auth" data-bind="value: requireAuth">
-                            <a id="auth-info" class="help-message">[?]</a>
-                            <div class="tip" data-bind="hoverTargetId: auth-info">
-                                <p>If checked, users will be required to login with Facebook or Google+.</p>
-                                If not checked, users will also have the option to choose their own display name.
-                            </div>
+                            <a id="auth-info" class="help-message" data-toggle="tooltip" data-placement="top"
+                               title="<p>If checked, users will be required to login with Facebook or Google+.</p>
+                                If not checked, users will also have the option to choose their own display name.">[?]</a>
                         </div>
 
                         <div id="expiry-voting-group" class="form-group">
                             <label class="control-label checkbox-label" for="expiry">Time limit</label>
                             <input class="checkbox-inline" type="checkbox" id="expiry" data-bind="checked: expiry">
-                            <a id="timelimit-info" class="help-message">[?]</a>
-                            <div class="tip" data-bind="hoverTargetId: timelimit-info">
-                                If checked, the poll will close after the selected time and voters will be unable to continue voting.
-                            </div>
+                            <a id="timelimit-info" class="help-message" data-toggle="tooltip" data-placement="top"
+                               title="If checked, the poll will close after the selected time and voters will be unable to continue voting.">[?]</a>
                         </div>
 
                         <div id="expiry-date-group" class="form-group" data-bind="visible: expiry">
@@ -143,11 +129,9 @@
                         <div id="option-adding-group" class="form-group">
                             <label class="control-label checkbox-label" for="option-adding">Allow users to add options</label>
                             <input class="checkbox-inline" type="checkbox" id="option-adding" data-bind="checked: optionAdding">
-                            <a id="add-options-info" class="help-message">[?]</a>
-                            <div class="tip" data-bind="hoverTargetId: add-options-info">
-                                <p>If checked, users will be able to submit their own options from the poll page.</p>
-                                You will still be able to add and remove options from the Poll Management page.
-                            </div>
+                            <a id="add-options-info" class="help-message" data-toggle="tooltip" data-placement="top"
+                               title="<p>If checked, users will be able to submit their own options from the poll page.</p>
+                                You will still be able to add and remove options from the Poll Management page.">[?]</a>
                         </div>
                     </div>
                 </div>
