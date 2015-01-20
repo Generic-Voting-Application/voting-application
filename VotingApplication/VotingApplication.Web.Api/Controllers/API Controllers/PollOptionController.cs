@@ -21,6 +21,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             return new OptionRequestResponseModel
             {
+                Id = option.Id,
                 Name = option.Name,
                 Info = option.Info,
                 Description = option.Description
