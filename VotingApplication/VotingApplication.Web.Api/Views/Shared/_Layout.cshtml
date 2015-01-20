@@ -25,16 +25,33 @@
                     <li><a href="/info">Voting Info</a></li>
                 </ul>
             </div>
+            <div class="navbar-form pull-right">
+                <a id="navbar-signin" hidden class="btn btn-primary" href="/SignIn/Index">Sign In</a>
+                <a id="navbar-signout" hidden class="btn btn-primary">Sign Out</a>
+            </div>
         </div>
     </nav>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Generic Voting Application</p>
-        </footer>
     </div>
-    <script data-main="/Scripts/main.js" src="/Scripts/Lib/require.js"></script>
-    <script type="text/javascript" async defer>require(['@ViewBag.Script'])</script>
+    
+    <footer>
+        <div class="container">
+            <hr />
+            <p>&copy; @DateTime.Now.Year - Generic Voting Application | <a href="https://github.com/Generic-Voting-Application/voting-application/issues">Report a bug</a> | <a href="mailto:generic.voting@gmail.com">Email us your suggestions</a></p>
+        </div>
+    </footer>
+
+    <script src="/Scripts/Lib/require.js"></script>
+    <script src="/Scripts/Config.js"></script>
+
+    @{
+        if (!String.Equals(System.Web.Configuration.WebConfigurationManager.AppSettings["JSDebug"], "true", StringComparison.OrdinalIgnoreCase))
+        {
+            @:<script src="/Scripts/Min/@(ViewBag.ScriptName).js"></script>
+        }
+    }
+
+    @RenderSection("scripts", false)
 </body>
 </html>

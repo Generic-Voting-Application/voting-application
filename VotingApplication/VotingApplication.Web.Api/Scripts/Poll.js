@@ -1,17 +1,21 @@
-﻿require(['jquery', 'knockout', 'bootstrap', 'insight', 'countdown', 'Common', 'platform'], function ($, ko, bs, insight, countdown, Common) {
-    function VoteViewModel() {
+﻿define('Poll', ['jquery', 'knockout', 'bootstrap', 'countdown', 'moment', 'Common', 'ChatClient', 'platform'], function ($, ko, bs, countdown, moment, Common, chatClient) {
+    return function VoteViewModel(pollId, token, VotingStrategyViewModel) {
         var self = this;
 
-        var votingStrategy;
         var lockCollapse = false;
         var selectedPanel = null;
+        var lastResultsRequest = 0;
 
+        token = token || Common.sessionItem("token", pollId);
+
+        self.votingStrategy = null;
+
+        self.pollId = pollId;
         self.pollName = ko.observable("Poll Name");
         self.pollCreator = ko.observable("Poll Creator");
-        self.options = ko.observableArray();
         self.chatMessages = ko.observableArray();
         self.lastMessageId = 0;
-        self.userName = ko.observable(Common.currentUserName());
+        self.userName = ko.observable(Common.currentUserName(pollId));
         self.requireAuth = ko.observable();
 
         self.pollExpires = ko.observable(false);
@@ -47,12 +51,21 @@
 
         // End Facebook boilerplate
 
+        var updatePollExpiryTime = function () {
+            self.pollExpiryDate.notifySubscribers();
+            if (self.pollExpired() && self.userName()) {
+                showSection($('#resultSection'));
+            }
+        }
+
         var getPollDetails = function (pollId, callback) {
             $.ajax({
                 type: 'GET',
                 url: "/api/poll/" + pollId,
 
                 success: function (data) {
+                    self.votingStrategy.initialise(data);
+
                     self.pollName(data.Name);
                     self.pollCreator(data.Creator);
                     self.requireAuth(data.RequireAuth);
@@ -60,59 +73,14 @@
                     self.pollExpiryDate(new Date(data.ExpiryDate));
 
                     if (data.Expires) {
-                        setInterval(function () {
-                            self.pollExpiryDate.notifySubscribers();
-                        }, 1000);
+                        setInterval(updatePollExpiryTime, 1000);
                     }
 
-                    switch (data.VotingStrategy) {
-                        case 'Basic':
-                            loadStrategy('/Partials/VotingStrategies/BasicVote.html', '/Scripts/VotingStrategies/BasicVote.js', data, callback);
-                            break;
-                        case 'Points':
-                            loadStrategy('/Partials/VotingStrategies/PointsVote.html', '/Scripts/VotingStrategies/PointsVote.js', data, callback);
-                            break;
-                        case 'Ranked':
-                            loadStrategy('/Partials/VotingStrategies/RankedVote.html', 'VotingStrategies/RankedVote', data, callback);
-                            break;
-                    }
+                    callback();
                 },
 
                 error: Common.handleError
             });
-        };
-
-        var loadStrategy = function (htmlFile, votingStrategy, pollData, callback) {
-            // Load partial HTML
-            $.ajax({
-                type: 'GET',
-                url: htmlFile,
-                dataType: 'html',
-
-                success: function (data) {
-                    $("#votingArea").append(data);
-                    require([votingStrategy], function (strategy) {
-                        votingStrategyFunc(strategy, pollData);
-                        callback();
-                    });
-                },
-
-                error: Common.handleError
-            });
-        };
-
-        var votingStrategyFunc = function (strategy, pollData) {
-            function StrategyViewModel() {
-                votingStrategy = new strategy(pollData.Options, pollData);
-
-                //Refresh results every 10 seconds
-                var allResults = function () { votingStrategy.getResults(self.pollId) };
-                setInterval(allResults, 10000);
-
-                return votingStrategy;
-            }
-
-            ko.applyBindings(new StrategyViewModel(), $('#votingArea')[0]);
         };
 
         var showSection = function (element) {
@@ -139,34 +107,7 @@
                 scrollTop: $("#chat-messages")[0].scrollHeight
             });
         };
-
-        var getChatMessages = function () {
-            if (self.pollId) {
-                var timestamp = Math.floor((new Date).getTime() / 1000);
-                var url = 'api/poll/' + self.pollId + '/chat?$orderby=Id&$filter=Id gt ' + self.lastMessageId;
-
-                $.ajax({
-                    type: 'GET',
-                    'url': url,
-                    contentType: 'application/json',
-                    success: function (data) {
-
-                        if (data.length > 0) {
-                            var messageId = data[data.length - 1].Id
-                            if (!self.lastMessageId || messageId > self.lastMessageId) {
-                                self.lastMessageId = messageId;
-                            }
-
-                            data.forEach(function (message) {
-                                self.chatMessages.push(message);
-                            });
-                            scrollChatWindow();
-                        }
-                    }
-                });
-            }
-        }
-
+        
         var googleLogin = function (authResult) {
             //Login failed
             if (!authResult['status']['signed_in']) {
@@ -201,7 +142,7 @@
                 })
             });
         }
-        
+
         self.googleLogin = function (data, event) {
             gapi.auth.signIn({
                 'callback': googleLogin
@@ -214,8 +155,6 @@
 
         self.submitLogin = function (data, event) {
             var username = $("#loginUsername").val();
-            var pollId = Common.getPollId();
-            var tokenId = Common.getToken();
 
             $.ajax({
                 type: 'PUT',
@@ -224,14 +163,20 @@
                 data: JSON.stringify({
                     Name: username,
                     PollId: pollId,
-                    TokenId: tokenId
+                    Token: {
+                        TokenGuid: token
+                    }
                 }),
 
                 success: function (data) {
-                    Common.loginUser(data, username);
+                    Common.loginUser(data, username, pollId);
                     self.userName(username);
-                    self.userId = Common.currentUserId();
-                    showSection($('#voteSection'));
+                    self.userId = Common.currentUserId(pollId);
+                    if (!self.pollExpired()) {
+                        showSection($('#voteSection'));
+                    } else {
+                        showSection($('#resultSection'));
+                    }
                 },
 
                 error: [Common.handleError, function (jqXHR, textStatus, errorThrown) {
@@ -244,51 +189,101 @@
         };
 
         self.logout = function () {
-            Common.logoutUser();
+            Common.logoutUser(pollId);
             self.userName(undefined);
             self.userId = undefined;
         }
 
-        self.sendChatMessage = function (data, event) {
-            if (self.userId && self.pollId) {
-                var url = 'api/poll/' + self.pollId + '/chat';
-                var chatMessage = $('#chatTextInput').val();
-                $('#chatTextInput').val('');
+        self.chatMessage = ko.observable("");
 
+        var receivedMessage = function (message) {
+
+            // Careful here, startOf modifies the object it is called on.
+            messageTimestamp = new moment(message.Timestamp);
+            messageDayStart = new moment(message.Timestamp).startOf('day');
+
+            message.Timestamp = messageDayStart.isSame(new moment().startOf('day')) ? messageTimestamp.format('HH:mm') : messageTimestamp.format('DD/MM');
+
+            self.chatMessages.push(message);
+        };
+        chatClient.onMessage = function (message) {
+            receivedMessage(message);
+            scrollChatWindow();
+        };
+        chatClient.onMessages = function (messages) {
+            ko.utils.arrayForEach(messages, receivedMessage);
+            scrollChatWindow();
+        };
+
+        chatClient.joinPoll(pollId);
+
+        self.sendChatMessage = function (data, event) {
+            if (self.userId && pollId) {
+                chatClient.sendMessage(pollId, self.userId, self.chatMessage());
+                self.chatMessage("");
+            }
+        };
+
+        self.getResults = function (pollId) {
+            $.ajax({
+                type: 'GET',
+                url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastResultsRequest,
+
+                statusCode: {
+                    200: function (data) {
+                        if (self.votingStrategy) {
+
+                            lastResultsRequest = Date.now();
+                            self.votingStrategy.displayResults(data);
+                        }
+                    }
+                },
+
+                error: Common.handleError
+            });
+        };
+
+        self.clearVote = function () {
+            var userId = Common.currentUserId(pollId);
+
+            var voteData = JSON.stringify([]);
+
+            if (userId && pollId) {
                 $.ajax({
-                    type: 'POST',
-                    'url': url,
+                    type: 'PUT',
+                    url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
                     contentType: 'application/json',
-                    data: JSON.stringify({
-                        User: { Id: self.userId },
-                        Message: chatMessage
-                    }),
+                    data: voteData,
+
+                    success: function (returnData) {
+                        lastResultsRequest = 0;
+
+                        $('#resultSection > div')[0].click();
+                    },
 
                     error: Common.handleError
                 });
             }
-
         }
 
         $('#voteSection .accordion-body').on('show.bs.collapse', function () {
-            if (votingStrategy) {
-                votingStrategy.getVotes(self.pollId, self.userId);
+            if (self.votingStrategy) {
+                self.votingStrategy.getVotes(pollId, self.userId);
             }
         });
 
         $('#resultSection .accordion-body').on('show.bs.collapse', function () {
-            if (votingStrategy) {
-                votingStrategy.getResults(self.pollId);
+            if (self.votingStrategy) {
+                self.getResults(pollId);
             }
         });
 
         $(document).ready(function () {
-            self.pollId = Common.getPollId();
-            self.userId = Common.currentUserId();
+            self.userId = Common.currentUserId(pollId);
 
-            getPollDetails(self.pollId, function () {
+            getPollDetails(pollId, function () {
                 if (self.userId) {
-                    $('#loginUsername').val(Common.currentUserName());
+                    $('#loginUsername').val(Common.currentUserName(pollId));
                     if (!self.pollExpired()) {
                         showSection($('#voteSection'));
                     } else {
@@ -300,10 +295,20 @@
                 }
             });
 
-            getChatMessages();
-            setInterval(getChatMessages, 3000);
+            setInterval(function () {
+                self.getResults(pollId);
+            }, 10000);
         });
-    }
 
-    ko.applyBindings(new VoteViewModel());
+        if (VotingStrategyViewModel) {
+            self.votingStrategy = new VotingStrategyViewModel(pollId, token);
+
+            self.votingStrategy.onVoted = function () {
+                // Switch to the vote panel
+                $('#resultSection > div')[0].click();
+            };
+        }
+
+        ko.applyBindings(this);
+    }
 });

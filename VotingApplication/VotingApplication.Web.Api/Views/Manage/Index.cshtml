@@ -1,0 +1,117 @@
+﻿@model ManageModel
+@{
+    ViewBag.ScriptName = "Manage";
+}
+<div class="col-md-2"></div>
+<div class="col-md-8">
+    <div class="page-header">
+        <h2 class="centered">
+            Poll Management
+        </h2>
+    </div>
+    <div id="errorArea"></div>
+    <div class="text-center">
+        <a data-bind="attr: { href: '/Poll/Index/' + pollId() }">Poll Link</a>
+    </div>
+    <ul id="tabBar" class="nav nav-tabs">
+        <li class="active"><a href="#options" data-toggle="tab">Poll Options</a></li>
+        <li><a href="#invites" data-toggle="tab">Invitations</a></li>
+        <li><a href="#votes" data-toggle="tab">Votes</a></li>
+    </ul>
+    <br />
+    <div id="tabContent" class="tab-content">
+        <div class="tab-pane fade in" id="votes">
+            <div class="text-center">
+                <button class="btn btn-primary" id="reset-votes" data-bind="click: resetVotes">Reset Vote</button>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-10 centered">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Option</th>
+                            <th>Vote Weighting</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: votes">
+                        <tr>
+                            <td data-bind="text: VoterName"></td>
+                            <td data-bind="text: OptionName"></td>
+                            <td data-bind="text: VoteValue"></td>
+                            <td class="delete-vote-row"><button class="btn btn-danger" data-bind="click: $parent.deleteVote.bind()">Delete Vote</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+        <div class="tab-pane fade in active" id="options">
+            <div id="template-group" class="form-group" data-bind="visible: isSignedIn()">
+                <label class="control-label" for="template">Poll Template</label>
+                <a id="template-info" class="help-message" data-toggle="tooltip" data-placement="right"
+                   title="Clone the options from a previous poll">[?]</a>
+            <select class="form-control" id="template" data-bind="value:templateId, options:templates, optionsText:'Name', optionsValue:'UUID', optionsCaption:'Select a template..'"></select>
+            <button class="btn btn-primary" data-bind="click: cloneOptions">Clone Options</button>
+        </div>
+        <form>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Option</th>
+                        <th>Description</th>
+                        <th class="hidden-xs hidden-sm">More info</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: options">
+                    <tr>
+                        <td data-bind="text: Name"></td>
+                        <td data-bind="text: Description"></td>
+                        <td class="hidden-xs hidden-sm" data-bind="text: Info"></td>
+                        <td><button type="button" class="btn btn-danger" data-bind="click: $parent.deleteOption.bind()" data-toggle="modal" data-target="#deleteOptionModal">Delete</button></td>
+                    </tr>
+                </tbody>
+                <tr id="newOptionRow">
+                    <td>
+                        <input class="form-control input-block" id="newName" placeholder="Option" />
+                    </td>
+                    <td>
+                        <input class="form-control input-block" id="newDescription" placeholder="Description" />
+                    </td>
+                    <td class="hidden-xs hidden-sm">
+                        <input class="form-control input-block" id="newInfo" placeholder="More Info" />
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-primary" data-bind="click: addOption.bind()">Add</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div class="tab-pane fade in" id="invites">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div id="invites-group" class="form-group">
+                <label class=" control-label" for="invites">Invitations (one per line)</label>
+                <textarea cols=40 rows=3 class="form-control" placeholder="E.g. email@example.com" data-bind="value: invitationText"></textarea>
+                <div class="centered">
+                    <button class="btn btn-primary" type="submit" data-bind="click: sendInvites.bind()">Send Invitations</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+</div>
+<div class="col-md-2"></div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        require(["Manage"], function (ManageViewModel) {
+            new ManageViewModel('@Model.Id').initialise();
+        });
+    </script>
+}

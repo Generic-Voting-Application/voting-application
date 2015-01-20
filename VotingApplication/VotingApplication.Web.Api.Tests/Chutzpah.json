@@ -1,0 +1,14 @@
+﻿{
+    "Framework": "jasmine",
+    "TestHarnessReferenceMode": "AMD",
+    "References": [
+        { "path": "../votingapplication.web.api/scripts/lib/require.js" },
+        { "path": "../votingapplication.web.api/scripts/config.js" },
+        { "path": "config.js" }
+    ],
+    "Tests": [
+        { "Exclude": "config.js" },
+        { "Path":  "lib", "Exclude": "*.js" }
+    ],
+    "AMDBasePath": "../votingapplication.web.api/scripts"
+}
