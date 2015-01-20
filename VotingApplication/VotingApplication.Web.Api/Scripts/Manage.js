@@ -203,11 +203,11 @@
         }
 
         self.initialise = function () {
+            $('[data-toggle="tooltip"]').tooltip({ html: true });
+
             self.getPollDetails();
             self.populateVotes();
             self.populateTemplates();
-
-            Common.setupTooltips();
 
             ko.applyBindings(this);
         };
