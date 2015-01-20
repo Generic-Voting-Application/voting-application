@@ -5,30 +5,29 @@
         var self = this;
         self.pollOptions = new PollOptions(pollId);
         self.selectedOptions = ko.observableArray();
+        self.remainOptions = ko.observableArray();
 
         self.resultOptions = ko.observableArray();
 
         self.chartVisible = ko.observable(false);
 
         var selectPickedOptions = function (votes) {
+            self.selectedOptions([]);
+            self.remainOptions([]);
+
             var selected = votes.map(function (vote) {
                 return ko.utils.arrayFirst(self.pollOptions.options(), function (item) {
                     return item.Id === vote.OptionId;
                 });
             });
             self.selectedOptions(selected);
-        };
 
-        // Remaining list of "non-selected" options is created
-        // as a computed array dependant on the selected options
-        // and full set of options
-        self.remainOptions = ko.computed(function () {
             var notSelected = function (option) {
                 return self.selectedOptions().filter(function (o) { return o.Id === option.Id; }).length === 0;
             };
 
-            return self.pollOptions.options().filter(notSelected);
-        });
+            self.remainOptions(self.pollOptions.options().filter(notSelected));
+        };
 
         var resultsByRound = [];
         var orderedNames = [];
@@ -226,17 +225,19 @@
                 connectWith: '.sortable',
                 axis: 'y',
                 dropOnEmpty: true,
-                receive: function () {
+                stop: function () {
                     var votes = [];
                     $('#selectionTable tr.clickable').each(function (i, row) {
                         votes.push({
-                            OptionId: $(row).attr('data-id')
+                            OptionId: parseInt($(row).attr('data-id'))
                         });
                     });
 
                     // Cancel the sort operation and update the Knockout
                     // arrays, letting Knockout re-arrange the DOM
                     $(".sortable").sortable("cancel");
+                    $(".sortable tr.clickable").remove();
+
                     selectPickedOptions(votes);
                 }
             });

@@ -31,23 +31,7 @@
 
         });
         //#endregion
-
-        it("remainOptions with Selected Options expect Non-selected Options", function () {
-            // arrange
-            target.pollOptions.options([
-                    { Id: 13, Name: "Option-1" }, { Id: 17, Name: "Option-2" },
-                    { Id: 21, Name: "Option-3" }, { Id: 25, Name: "Option-4" }
-                ]);
-
-            target.selectedOptions([{ Id: 17, Name: "Option-2" }, { Id: 25, Name: "Option-4" }]);
-
-            // act
-            var result = target.remainOptions();
-
-            // assert
-            expect(result).toEqual([{ Id: 13, Name: "Option-1" }, { Id: 21, Name: "Option-3" }]);
-        });
-
+        
         it("doVote with Token expect Post vote and notify", function (done) {
             // arrange
 
@@ -108,7 +92,8 @@
 
         it("getVotes without Voted expect Clear selected", function (done) {
             // arrange
-            target.pollOptions.options([{ Id: 13, Name: "Option-1" }, { Id: 17, Name: "Option-2" }]);
+            target.pollOptions.options([{ Id: 13, Name: "Option-1" }, { Id: 17, Name: "Option-2" }, { Id: 21, Name: "Option-3" }]);
+            target.selectedOptions([{ Id: 13, Name: "Option-1" }, { Id: 21, Name: "Option-3" }]);
             target.selectedOptions([{ Id: 17, Name: "Option-2" }]);
 
             mockjax({
@@ -123,6 +108,7 @@
             setTimeout(function () {
                 // Neither should be highlighted
                 expect(target.selectedOptions().length).toEqual(0);
+                expect(target.remainOptions()).toEqual([{ Id: 13, Name: "Option-1" }, { Id: 17, Name: "Option-2" }, { Id: 21, Name: "Option-3" }]);
                 done();
             }, 10);
         });
@@ -130,6 +116,7 @@
         it("getVotes with Voted expect Set selected", function (done) {
             // arrange
             target.pollOptions.options([{ Id: 13, Name: "Option-1" }, { Id: 17, Name: "Option-2" }, { Id: 21, Name: "Option-3" }]);
+            target.selectedOptions([{ Id: 13, Name: "Option-1" }, { Id: 21, Name: "Option-3" }]);
             target.selectedOptions([{ Id: 17, Name: "Option-2" }]);
 
             mockjax({
@@ -144,6 +131,7 @@
             setTimeout(function () {
                 // Neither should be highlighted
                 expect(target.selectedOptions()).toEqual([{ Id: 13, Name: "Option-1" }, { Id: 21, Name: "Option-3" }]);
+                expect(target.remainOptions()).toEqual([{ Id: 17, Name: "Option-2" }]);
                 done();
             }, 10);
         });
