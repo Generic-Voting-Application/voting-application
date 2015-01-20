@@ -116,10 +116,6 @@ label.info-message {
     min-height: 20px;
 }
 
-/*.tooltip-inner {
-    white-space:pre-wrap;
-}*/
-
 #reset-votes, #save-options-as {
     width: 150px;
     height: 40px;
