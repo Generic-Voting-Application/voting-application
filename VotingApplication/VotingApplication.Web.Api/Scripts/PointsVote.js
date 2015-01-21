@@ -129,7 +129,7 @@
 
         self.displayResults = function(data) {
             var groupedVotes = countVotes(data);
-            self.chartData(groupedVotes);
+            self.chartData([{ Data: groupedVotes }]);
         }
         
         self.initialise = function (pollData) {

@@ -122,7 +122,7 @@
             target.displayResults([]);
 
             // assert
-            expect(target.chartData()).toEqual([]);
+            expect(target.chartData()).toEqual([{ name: 'Votes', data: [] }]);
         });
 
         it("displayResults with Votes expect Draw grouped votes", function () {
@@ -137,10 +137,10 @@
             target.displayResults(data);
 
             // assert
-            var expectedVotes = [
+            var expectedVotes = [{ name: 'Votes', data: [
                 { Name: 'One', Sum: 2, Voters: ['User-1', 'Anonymous User'] },
                 { Name: 'Two', Sum: 1, Voters: ['User-2'] }
-            ];
+            ]}];
             expect(target.chartData()).toEqual(expectedVotes);
         });
     });
