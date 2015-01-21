@@ -386,6 +386,7 @@
     <Content Include="Scripts\Navbar.js" />
     <Content Include="Scripts\Poll.js" />
     <Content Include="Scripts\PollOptions.js" />
+    <Content Include="Scripts\ResultChart.js" />
     <Content Include="Scripts\Signin.js" />
     <Content Include="Scripts\ChatClient.js" />
     <Content Include="Scripts\Admin.js" />

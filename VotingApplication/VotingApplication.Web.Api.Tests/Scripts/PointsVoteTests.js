@@ -3,7 +3,6 @@
 
         //#region Setup
         var target;
-        var drawnData;
         beforeEach(function () {
             // Setup test target with pollId and token
             target = new PointsVote("303", "515");
@@ -24,12 +23,6 @@
                 if (sessionKey === "token" && pollId === "303") return "616";
                 return 0;
             })
-
-            // Spy on the target.drawChart method, and store the drawn data
-            spyOn(target, 'drawChart').and.callFake(function (data) {
-                drawnData = data;
-            });
-
         });
         //#endregion
 
@@ -203,7 +196,7 @@
             target.displayResults([]);
 
             // assert
-            expect(drawnData).toEqual([]);
+            expect(target.chartData()).toEqual([]);
         });
 
         it("displayResults with Votes expect Draw grouped votes", function () {
@@ -222,7 +215,7 @@
                 { Name: 'One', Sum: 5, Voters: ['User-1 (3)', 'User-2 (2)'] },
                 { Name: 'Two', Sum: 1, Voters: ['User-2 (1)'] }
             ];
-            expect(drawnData).toEqual(expectedVotes);
+            expect(target.chartData()).toEqual(expectedVotes);
         });
     });
 });
