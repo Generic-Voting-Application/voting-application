@@ -122,7 +122,7 @@
             target.displayResults([]);
 
             // assert
-            expect(target.chartData()).toEqual([{ name: 'Votes', data: [] }]);
+            expect(target.chartData()).toEqual([{ Data: [] }]);
         });
 
         it("displayResults with Votes expect Draw grouped votes", function () {
@@ -137,11 +137,26 @@
             target.displayResults(data);
 
             // assert
-            var expectedVotes = [{ name: 'Votes', data: [
+            var expectedVotes = [{ Data: [
                 { Name: 'One', Sum: 2, Voters: ['User-1', 'Anonymous User'] },
                 { Name: 'Two', Sum: 1, Voters: ['User-2'] }
             ]}];
             expect(target.chartData()).toEqual(expectedVotes);
+        });
+
+        it("displayResults with Votes expect Announce Winner", function () {
+            // arrange
+            var data = [
+                { OptionName: "One", VoterName: "User-1" },
+                { OptionName: "Two", VoterName: "User-2" },
+                { OptionName: "One", VoterName: "Anonymous User" }
+            ];
+
+            // act
+            target.displayResults(data);
+
+            // assert
+            expect(target.winner()).toEqual("One");
         });
     });
 });

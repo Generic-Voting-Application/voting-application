@@ -137,19 +137,12 @@
             expect(target.chartData()).toEqual([]);
         });
 
-        it("displayResults with Votes expect Draw ranked vote result", function () {
-            // arrange
-            target.pollOptions.options([
-                    { Id: 13, Name: "Option-1" }, { Id: 17, Name: "Option-2" },
-                    { Id: 21, Name: "Option-3" }, { Id: 25, Name: "Option-4" }
-            ]);
-
-            // User-1 votes Option 1-2-3-4
-            // User-2 votes Option 3-1
-            // User-3 votes Option 3-4-2-1
-            // User-4 votes Option 2-4-1
-            // User-5 votes Option 2-3
-            var data = [
+        // User-1 votes Option 1-2-3-4
+        // User-2 votes Option 3-1
+        // User-3 votes Option 3-4-2-1
+        // User-4 votes Option 2-4-1
+        // User-5 votes Option 2-3
+        var testVotes = [
                 { OptionId: 13, UserId: 1, VoterName: "User-1" },
                 { OptionId: 17, UserId: 1, VoterName: "User-1" },
                 { OptionId: 21, UserId: 1, VoterName: "User-1" },
@@ -165,10 +158,17 @@
                 { OptionId: 13, UserId: 4, VoterName: "User-4" },
                 { OptionId: 17, UserId: 5, VoterName: "User-5" },
                 { OptionId: 21, UserId: 5, VoterName: "User-5" }
-            ];
+        ];
 
+        it("displayResults with Votes expect Draw ranked vote result", function () {
+            // arrange
+            target.pollOptions.options([
+                    { Id: 13, Name: "Option-1" }, { Id: 17, Name: "Option-2" },
+                    { Id: 21, Name: "Option-3" }, { Id: 25, Name: "Option-4" }
+            ]);
+            
             // act
-            target.displayResults(data);
+            target.displayResults(testVotes);
 
             // assert
 
@@ -193,6 +193,20 @@
             ]};
 
             expect(target.chartData()).toEqual([option1, option2, option3, option4]);
+        });
+
+        it("displayResults with Votes expect Announce Winner", function () {
+            // arrange
+            target.pollOptions.options([
+                    { Id: 13, Name: "Option-1" }, { Id: 17, Name: "Option-2" },
+                    { Id: 21, Name: "Option-3" }, { Id: 25, Name: "Option-4" }
+            ]);
+
+            // act
+            target.displayResults(testVotes);
+
+            // assert
+            expect(target.winner()).toEqual("Option-2");
         });
     });
 });

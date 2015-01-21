@@ -8,6 +8,7 @@
         self.remainOptions = ko.observableArray();
 
         self.chartData = ko.observableArray();
+        self.winner = ko.observable("");
 
         self.chartVisible = ko.observable(false);
 
@@ -201,6 +202,20 @@
         self.displayResults = function (votes) {
             var groupedVotes = countVotes(votes);
             self.chartData(groupedVotes);
+
+            var winner = { name: "", votes: 0 };
+            groupedVotes.forEach(function (optionVotes) {
+                var optionResult = {
+                    name: optionVotes.Name,
+                    votes: optionVotes.Data[optionVotes.Data.length - 1].Sum
+                };
+
+                if (optionResult.votes > winner.votes) {
+                    winner = optionResult;
+                }
+            });
+
+            self.winner(winner.name);
         };
 
         self.initialise = function (pollData) {

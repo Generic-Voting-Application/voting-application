@@ -10,6 +10,7 @@
         self.pointsArray = ko.observableArray();
 
         self.chartData = ko.observableArray();
+        self.winner = ko.observable("");
 
         var chart;
 
@@ -130,6 +131,15 @@
         self.displayResults = function(data) {
             var groupedVotes = countVotes(data);
             self.chartData([{ Data: groupedVotes }]);
+
+            var winner = { Name: "", Sum: 0 };
+            groupedVotes.forEach(function (optionVotes) {
+                if (optionVotes.Sum > winner.Sum) {
+                    winner = optionVotes;
+                }
+            });
+
+            self.winner(winner.Name);
         }
         
         self.initialise = function (pollData) {
