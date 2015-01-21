@@ -50,7 +50,7 @@
 
             var insightSeries = settings.columns ? insight.ColumnSeries : insight.RowSeries;
             var allSeries = data.map(function (series, i) {
-                return new insightSeries('series' + i, new insight.DataSet(series.Data), xAxis, yAxis)
+                return new insightSeries('option-' + i, new insight.DataSet(series.Data), xAxis, yAxis)
                     .keyFunction(function (d) {
                         return d.Name;
                     })
