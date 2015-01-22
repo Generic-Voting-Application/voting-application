@@ -1,4 +1,4 @@
-﻿define('RankedVote', ['jquery', 'knockout', 'jqueryUI', 'Common', 'PollOptions', 'insight', 'jqueryTouch'], function ($, ko, jqueryUI, Common, PollOptions, insight) {
+﻿define('RankedVote', ['jquery', 'knockout', 'jqueryUI', 'Common', 'PollOptions', 'ResultChart'], function ($, ko, jqueryUI, Common, PollOptions) {
 
     return function RankedVote(pollId, token) {
 
@@ -7,7 +7,9 @@
         self.selectedOptions = ko.observableArray();
         self.remainOptions = ko.observableArray();
 
-        self.resultOptions = ko.observableArray();
+        self.chartData = ko.observableArray();
+        self.winVotesRequired = ko.observable(0);
+        self.winners = ko.observableArray();
 
         self.chartVisible = ko.observable(false);
 
@@ -29,7 +31,6 @@
             self.remainOptions(self.pollOptions.options().filter(notSelected));
         };
 
-        var resultsByRound = [];
         var orderedNames = [];
         var chart;
         var roundIndex = 0;
@@ -44,11 +45,10 @@
 
         var countVotes = function (votes) {
             var options = [];
-            var orderedOptions = [];
             var ballots = [];
             var totalBallots = 0;
             var totalOptions = self.pollOptions.options().length;
-            resultsByRound = [];
+            var resultsByRound = [];
 
             for (var k = 0; k < totalOptions; k++) {
                 var optionId = self.pollOptions.options()[k].Id;
@@ -93,20 +93,15 @@
                     var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id === d.Id; })[0];
                     return {
                         Name: matchingOption.Name,
-                        BallotCount: d.ballots.length,
+                        Sum: d.ballots.length,
                         Voters: d.ballots.map(function (x) { return x[0].VoterName + " (#" + (x.map(function (y) { return y.OptionId; }).indexOf(matchingOption.Id) + 1) + ")"; })
                     };
                 });
 
-                //Add in removed options as 0-value
-                orderedOptions.forEach(function (d) {
-                    var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id === d.Id; })[0];
-                    roundOptions.push({
-                        Name: matchingOption.Name,
-                        BallotCount: 0,
-                        Voters: []
-                    });
-                });
+                var roundSeries = {
+                    name: 'Round ' + (resultsByRound.length + 1).toString(),
+                    data: roundOptions
+                };
 
                 // End if we have a majority
                 if (options[options.length - 1].ballots.length > totalBallots / 2) {
@@ -116,33 +111,48 @@
                         options[i].rank = 2;
                     }
 
-                    resultsByRound.push(roundOptions);
+                    resultsByRound.push(roundSeries);
                     break;
                 }
 
                 if (options[0].ballots.length > 0) {
-                    resultsByRound.push(roundOptions);
+                    resultsByRound.push(roundSeries);
                 }
 
                 // Remove all last place options
                 var lastPlaceOption = options[0];
                 var lastPlaceBallotCount = lastPlaceOption.ballots.length;
 
-                var removedOptions = options.filter(function (d) { return d.ballots.length === lastPlaceBallotCount; });
-                // Track at what point an option was removed from the running
-                removedOptions.map(function (d) {
-                    d.rank = options.length - removedOptions.length + 1;
-                    return d;
-                });
-                orderedOptions.push.apply(orderedOptions, removedOptions);
-
                 options = options.filter(function (d) { return d.ballots.length > lastPlaceBallotCount; });
             }
 
-            orderedOptions.push.apply(orderedOptions, options);
-            orderedOptions.reverse();
+            // Transpose the rounds with options data into options with rounds for the chart
+            var resultsByOption = self.pollOptions.options().map(function (option) {
+                // Get the per-round results for this option
+                var roundData = resultsByRound.map(function (round) {
+                    var roundOption = round.data.filter(function (o) { return o.Name === option.Name; });
+                    if (roundOption.length > 0) {
+                        return {
+                            Name: round.name,
+                            Sum: roundOption[0].Sum,
+                            Voters: roundOption[0].Voters
+                        };
+                    } else {
+                        return {
+                            Name: round.name,
+                            Sum: 0,
+                            Voters: []
+                        };
+                    }
+                });
 
-            return orderedOptions;
+                return {
+                    Name: option.Name,
+                    Data: roundData
+                };
+            });
+
+            return resultsByOption;
         };
 
         self.onVoted = null;
@@ -191,29 +201,34 @@
         };
 
         self.displayResults = function (votes) {
-            var orderedResults = countVotes(votes);
+            var groupedVotes = countVotes(votes);
 
-            orderedNames = orderedResults.map(function (d) {
-                var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id === d.Id; })[0];
-                return matchingOption.Name;
+            // Sort based on the relative performance in the last round
+            // that either option had votes
+            groupedVotes.sort(function (a, b) {
+                var index = Math.min(a.Data.length, b.Data.length) - 1;
+                while (index > 0 && a.Data[index].Sum === 0 && b.Data[index].Sum === 0) {
+                    index--;
+                }
+                return a.Data[index].Sum - b.Data[index].Sum;
             });
 
-            //Exit early if data has not changed
-            if (chart && JSON.stringify(resultsByRound) === JSON.stringify(chart.series().slice(0, chart.series().length - 1).map(function (d) { return d.data.rawData(); })))
-                return;
+            // Count the voters based on round one
+            var voterCount = groupedVotes.reduce(function (sum, group) {
+                return sum + group.Data[0].Sum
+            }, 0);
+            self.winVotesRequired(Math.ceil(voterCount / 2));
 
-            // Fill in the table
-            self.resultOptions.removeAll();
-            for (var i = 0; i < orderedResults.length; i++) {
+            self.chartData(groupedVotes);
 
-                var option = ko.utils.arrayFirst(self.pollOptions.options(), function (item) {
-                    return item.Id === orderedResults[i].Id;
-                });
-                option.Rank = orderedResults[i].rank || 1;
-                self.resultOptions.push(option);
-            }
-
-            self.drawChart(resultsByRound.slice(0));
+            // Store the winners' names (may be a tie)
+            self.winners(self.pollOptions.getWinners(groupedVotes, function (group) {
+                // Return the option's result in the final round
+                return {
+                    Name: group.Name,
+                    Sum: group.Data[group.Data.length - 1].Sum
+                };
+            }));
         };
 
         self.initialise = function (pollData) {
@@ -242,121 +257,6 @@
                 }
             });
         };
-
-        // TODO: Extract chart code from viewModel class - ideally
-        // into a shared custom knockout binding to bind to data
-        self.drawChart = function (data) {
-            // Hack to fix insight's lack of data reloading
-            $("#chart-results").html('');
-            $("#chart-buttons").html('');
-
-            if (!self.chartVisible() || data.length === 0)
-                return;
-
-            //Get voter count
-            var voterCount = 0;
-            data[0].forEach(function (d) {
-                voterCount += d.Voters.length;
-            });
-
-            chart = new insight.Chart('', '#chart-results')
-            .width($("#chart-results").width())
-            .height($("#chart-results").width());
-
-            var xAxis = new insight.Axis('', insight.scales.ordinal)
-                .isOrdered(true)
-                .orderingFunction(function (a, b) {
-                    var finalAIndex = orderedNames.indexOf(a.Name);
-                    var finalBIndex = orderedNames.indexOf(b.Name);
-                    return finalAIndex - finalBIndex;
-                })
-                .tickLabelRotation(45);
-
-            var yAxis = new insight.Axis('Votes', insight.scales.linear)
-                .tickFrequency(1)
-                .axisRange(-0.1, voterCount);
-            chart.xAxis(xAxis);
-            chart.yAxis(yAxis);
-            chart.legend(new insight.Legend());
-
-            chart.series([]);
-
-            var seriesIndex = roundIndex;
-
-            //Add a button to display individual rounds
-            for (var i = 1; i <= data.length; i++) {
-                $("#chart-buttons").append('<button class="btn btn-primary" onclick="self.filterRounds(' + i + ')">Round ' + i + '</button>');
-            }
-
-            //Disable the currently selected button
-            var currentRoundButton = $("#chart-buttons").children()[roundIndex];
-            $(currentRoundButton).attr('disabled', 'disabled');
-
-            //Filter to a specific round
-            if (roundIndex > 0) {
-                data = data.slice(roundIndex - 1, roundIndex);
-                seriesIndex = roundIndex - 1;
-            }
-
-            //Map out each round
-            data.forEach(function (roundData) {
-
-                var voteData = new insight.DataSet(roundData);
-                var series = new insight.ColumnSeries('votes_' + (seriesIndex++), voteData, xAxis, yAxis)
-                .keyFunction(function (d) {
-                    return d.Name;
-                })
-                .valueFunction(function (d) {
-
-                    return d.BallotCount;
-                })
-                .title('Round ' + seriesIndex)
-                .tooltipFunction(function (d) {
-                    if (d.Voters.length > 0) {
-                        return d.Voters.toString().replace(/,/g, "<br />");
-                    }
-                    else
-                        return "Option eliminated";
-                });
-
-                var newSeries = chart.series();
-                newSeries.push(series);
-                chart.series(newSeries);
-            });
-
-            //Annotate the decision line
-            var series = new insight.MarkerSeries('marker', new insight.DataSet(data[0]), xAxis, yAxis)
-            .keyFunction(function (d) {
-                return d.Name;
-            })
-            .valueFunction(function () {
-                return voterCount / 2;
-            })
-            .tooltipFunction(function () {
-                return "50% Majority";
-            })
-            .widthFactor(1.1)
-            .thickness(2)
-            .title('Majority');
-
-            var newSeries = chart.series();
-            newSeries.push(series);
-            chart.series(newSeries);
-
-            chart.draw();
-        };
-
-        self.toggleChartVisible = function () {
-            self.chartVisible(!self.chartVisible());
-
-            //Redraw with all results
-            self.filterRounds(0);
-        };
-
-        self.filterRounds = function (filterIndex) {
-            roundIndex = filterIndex;
-            self.drawChart(resultsByRound);
-        };
-
+        
     };
 });

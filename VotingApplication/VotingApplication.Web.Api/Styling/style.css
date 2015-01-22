@@ -198,25 +198,46 @@ label.info-message {
 }
 
 /* InsightJS things */
-.markerclass {
+.annotationsclass {
     fill: red !important;
     fill-opacity: 0.3 !important;
 }
 
-.series-3 {
-    fill: #081d58;
-}
-
-.series-2 {
+.series-0 {
     fill: #034e7b;
 }
-
-.series-1 { 
+.series-1 {
+    fill: #037b4e;
+}
+.series-2 {
+    fill: #b00570;
+}
+.series-3 {
+    fill: #7b4e03;
+}
+.series-4 {
     fill: #0570b0;
 }
-
-.series-0 {
+.series-5 { 
+    fill: #70b005;
+}
+.series-6 {
+    fill: #cf74a9;
+}
+.series-7 {
+    fill: #081d58;
+}
+.series-8 {
+    fill: #08581d;
+}
+.series-9 {
+    fill: #58081d;
+}
+.series-10 {
     fill: #74a9cf;
+}
+.series-11 {
+    fill: #74cfa9;
 }
 
 /* tooltips */
@@ -230,3 +251,4 @@ label.info-message {
     display: block;
     width: 320px;
 }
+
