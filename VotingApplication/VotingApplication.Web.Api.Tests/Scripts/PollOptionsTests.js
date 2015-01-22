@@ -151,64 +151,6 @@
                 done();
             }, 10);
         });
-
-        it("getWinners with No Groups expect No Winner", function () {
-            // act
-            var result = target.getWinners([]);
-
-            // assert
-            expect(result).toEqual([]);
-        });
-
-        it("getWinners with Clear Winner expect Return Winner Name", function () {
-            // arrange
-            var groupedVotes = [
-                { Name: "Option-1", Sum: 3 },
-                { Name: "Option-2", Sum: 8 },
-                { Name: "Option-3", Sum: 5 }
-            ];
-
-            // act
-            var result = target.getWinners(groupedVotes);
-
-            // assert
-            expect(result).toEqual([ "Option-2" ]);
-        });
-
-        it("getWinners with Joint Winners expect Return Winners Names", function () {
-            // arrange
-            var groupedVotes = [
-                { Name: "Option-1", Sum: 3 },
-                { Name: "Option-2", Sum: 5 },
-                { Name: "Option-3", Sum: 5 }
-            ];
-
-            // act
-            var result = target.getWinners(groupedVotes);
-
-            // assert
-            expect(result).toEqual(["Option-2", "Option-3"]);
-        });
-
-        it("getWinners with Callback expect Get Winner from Callback data", function () {
-            // arrange
-            var groupedVotes = [
-                { testName: "Option-1", testSum: 3 },
-                { testName: "Option-2", testSum: 8 },
-                { testName: "Option-3", testSum: 5 }
-            ];
-
-            var callbackFn = function (group) {
-                return { Name: group.testName, Sum: group.testSum };
-            };
-
-            // act
-            var result = target.getWinners(groupedVotes, callbackFn);
-
-            // assert
-            expect(result).toEqual(["Option-2"]);
-        });
-
     });
 });
 
