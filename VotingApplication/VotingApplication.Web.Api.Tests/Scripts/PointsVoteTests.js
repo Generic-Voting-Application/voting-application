@@ -221,17 +221,20 @@
         it("displayResults with Votes expect Announce Winner", function () {
             // arrange
             var data = [
-                { OptionName: "One", VoteValue: 3, VoterName: "User-1" },
-                { OptionName: "Two", VoteValue: 1, VoterName: "User-2" },
-                { OptionName: "One", VoteValue: 2, VoterName: "User-2" }
+                { OptionName: "One", VoterName: "User-1" },
+                { OptionName: "Two", VoterName: "User-2" },
+                { OptionName: "One", VoterName: "Anonymous User" }
             ];
+
+            spyOn(target.pollOptions, 'getWinners').and.returnValue(["O", "T"]);
 
             // act
             target.displayResults(data);
 
             // assert
-            expect(target.winner()).toEqual("One");
+            expect(target.winners()).toEqual(["O", "T"]);
         });
+
     });
 });
 

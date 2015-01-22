@@ -152,11 +152,13 @@
                 { OptionName: "One", VoterName: "Anonymous User" }
             ];
 
+            spyOn(target.pollOptions, 'getWinners').and.returnValue(["O", "T"]);
+
             // act
             target.displayResults(data);
 
             // assert
-            expect(target.winner()).toEqual("One");
+            expect(target.winners()).toEqual(["O", "T"]);
         });
     });
 });

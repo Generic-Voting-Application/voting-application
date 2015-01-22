@@ -202,12 +202,31 @@
                     { Id: 21, Name: "Option-3" }, { Id: 25, Name: "Option-4" }
             ]);
 
+            // Capture the option votes from the callback
+            var optionVotes = [];
+            spyOn(target.pollOptions, 'getWinners').and.callFake(function (groupedVotes, getOptionVotes) {
+                groupedVotes.forEach(function (g) {
+                    optionVotes.push(getOptionVotes(g));
+                });
+
+                return ["O", "T"];
+            });
+
             // act
             target.displayResults(testVotes);
 
             // assert
-            expect(target.winner()).toEqual("Option-2");
+            expect(target.winners()).toEqual(["O", "T"]);
+
+            // Check the option votes from the callback
+            expect(optionVotes).toEqual([
+                { Name: 'Option-1', Sum: 0 },
+                { Name: 'Option-2', Sum: 3 },
+                { Name: 'Option-3', Sum: 2 },
+                { Name: 'Option-4', Sum: 0 }
+            ]);
         });
+
     });
 });
 

@@ -5,7 +5,7 @@
         self.pollOptions = new PollOptions(pollId);
 
         self.chartData = ko.observableArray();
-        self.winner = ko.observable("");
+        self.winners = ko.observableArray();
 
         var chart;
         var anonymousPoll = true;
@@ -88,14 +88,8 @@
             var groupedVotes = countVotes(data);
             self.chartData([{ Data: groupedVotes }]);
 
-            var winner = { Name: "", Sum: 0 };
-            groupedVotes.forEach(function (optionVotes) {
-                if (optionVotes.Sum > winner.Sum) {
-                    winner = optionVotes;
-                }
-            });
-
-            self.winner(winner.Name);
+            // Store the winners' names (may be a tie)
+            self.winners(self.pollOptions.getWinners(groupedVotes));
         };
 
         self.initialise = function (pollData) {

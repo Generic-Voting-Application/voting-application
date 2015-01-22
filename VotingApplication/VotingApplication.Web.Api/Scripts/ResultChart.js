@@ -8,9 +8,9 @@
         this.drawChart = function (data, options) {
             if (!data.length) return;
 
-            var dataUnchanged = false;
+            var dataUnchanged = true;
             var barCount = 0;
-            for (var n = 0; n < data.length; n++) {
+            for (var n = 0; (n < data.length) && dataUnchanged; n++) {
                 barCount += data[n].Data.length;
                 dataUnchanged = dataUnchanged &&
                     chart && chart.series().length > n &&
@@ -30,9 +30,12 @@
             // Hack to fix insight's lack of data reloading
             $element.html('');
 
+            // Fixed height for column chart, but scale to number of rows for bar charts
+            var chartHeight = settings.columns ? 400 : Math.min(barCount * 50 + 100, 400);
+
             chart = new insight.Chart('', $element[0])
                 .width($element.width())
-                .height(400); //Math.min(barCount * 50 + 100, 400));
+                .height(chartHeight);
 
             var voteAxis = new insight.Axis('Votes', insight.scales.linear);
             var optionAxis = new insight.Axis('', insight.scales.ordinal)
