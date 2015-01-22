@@ -198,7 +198,7 @@ label.info-message {
 }
 
 /* InsightJS things */
-.markerclass {
+.annotationsclass {
     fill: red !important;
     fill-opacity: 0.3 !important;
 }
