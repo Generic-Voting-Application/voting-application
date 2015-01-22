@@ -48,9 +48,11 @@
             chart.yAxis(yAxis);
 
             if (settings.legend) {
-                chart.legend(new insight.Legend());
+                var legendSeries = data.map(function (s, i) { return 'option-' + i; });
+                chart.legend(new insight.Legend(legendSeries));
             }
 
+            // Add a chart series for each data series
             var insightSeries = settings.columns ? insight.ColumnSeries : insight.RowSeries;
             var allSeries = data.map(function (series, i) {
                 return new insightSeries('option-' + i, new insight.DataSet(series.Data), xAxis, yAxis)
@@ -76,6 +78,22 @@
                             + "Votes: " + d.Sum + "<br />" + votersDisplay.toString().replace(/,/g, "<br />") + addition;
                     });
             });
+
+            // Add a chart series for the annotations
+            if (settings.annotations) {
+                settings.annotations.forEach(function (annotation, index) {
+                    var annotationSeries = new insight.MarkerSeries('annotations',
+                                new insight.DataSet(data[0].Data), xAxis, yAxis)
+                        .keyFunction(function (d) {
+                            return d.Name;
+                        })
+                        .valueFunction(function () { return annotation.value })
+                        .tooltipFunction(function () { return annotation.tip })
+                        .widthFactor(1.1)
+                        .thickness(2);
+                    allSeries.push(annotationSeries);
+                });
+            }
 
             chart.series(allSeries);
             chart.draw();

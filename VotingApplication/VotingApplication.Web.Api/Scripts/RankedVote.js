@@ -8,6 +8,7 @@
         self.remainOptions = ko.observableArray();
 
         self.chartData = ko.observableArray();
+        self.winVotesRequired = ko.observable(0);
         self.winners = ko.observableArray();
 
         self.chartVisible = ko.observable(false);
@@ -201,6 +202,23 @@
 
         self.displayResults = function (votes) {
             var groupedVotes = countVotes(votes);
+
+            // Sort based on the relative performance in the last round
+            // that either option had votes
+            groupedVotes.sort(function (a, b) {
+                var index = Math.min(a.Data.length, b.Data.length) - 1;
+                while (index > 0 && a.Data[index].Sum === 0 && b.Data[index].Sum === 0) {
+                    index--;
+                }
+                return a.Data[index].Sum - b.Data[index].Sum;
+            });
+
+            // Count the voters based on round one
+            var voterCount = groupedVotes.reduce(function (sum, group) {
+                return sum + group.Data[0].Sum
+            }, 0);
+            self.winVotesRequired(Math.ceil(voterCount / 2));
+
             self.chartData(groupedVotes);
 
             // Store the winners' names (may be a tie)

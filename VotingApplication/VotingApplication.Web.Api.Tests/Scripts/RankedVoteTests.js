@@ -192,7 +192,7 @@
                 { Name: 'Round 2', Sum: 0, Voters: [] }
             ]};
 
-            expect(target.chartData()).toEqual([option1, option2, option3, option4]);
+            expect(target.chartData()).toEqual([option4, option1, option3, option2]);
         });
 
         it("displayResults with Votes expect Announce Winner", function () {
@@ -220,10 +220,10 @@
 
             // Check the option votes from the callback
             expect(optionVotes).toEqual([
+                { Name: 'Option-4', Sum: 0 },
                 { Name: 'Option-1', Sum: 0 },
-                { Name: 'Option-2', Sum: 3 },
                 { Name: 'Option-3', Sum: 2 },
-                { Name: 'Option-4', Sum: 0 }
+                { Name: 'Option-2', Sum: 3 }
             ]);
         });
 
