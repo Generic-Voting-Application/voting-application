@@ -63,7 +63,7 @@
         };
 
         self.initialise = function () {
-            Common.setupTooltips();
+            $('[data-toggle="tooltip"]').tooltip({ html: true });
 
             ko.applyBindings(this);
         };

@@ -46,7 +46,7 @@
     <script src="/Scripts/Config.js"></script>
 
     @{
-        if (!String.Equals(System.Web.Configuration.WebConfigurationManager.AppSettings["JSDebug"], "true", StringComparison.OrdinalIgnoreCase))
+        if (!System.Diagnostics.Debugger.IsAttached)
         {
             @:<script src="/Scripts/Min/@(ViewBag.ScriptName).js"></script>
         }
