@@ -3,7 +3,6 @@
 
         //#region Setup
         var target;
-        var drawnData;
         beforeEach(function () {
             // Setup test target with pollId and token
             target = new BasicVote("303", "515");
@@ -23,12 +22,6 @@
                 if (sessionKey === "token" && pollId === "303") return "616";
                 return 0;
             })
-
-            // Spy on the target.drawChart method, and store the drawn data
-            spyOn(target, 'drawChart').and.callFake(function (data) {
-                drawnData = data;
-            });
-
         });
         //#endregion
 
@@ -129,7 +122,7 @@
             target.displayResults([]);
 
             // assert
-            expect(drawnData).toEqual([]);
+            expect(target.chartData()).toEqual([{ Data: [] }]);
         });
 
         it("displayResults with Votes expect Draw grouped votes", function () {
@@ -144,11 +137,28 @@
             target.displayResults(data);
 
             // assert
-            var expectedVotes = [
-                { Name: 'One', Count: 2, Voters: ['User-1', 'Anonymous User'] },
-                { Name: 'Two', Count: 1, Voters: ['User-2'] }
+            var expectedVotes = [{ Data: [
+                { Name: 'One', Sum: 2, Voters: ['User-1', 'Anonymous User'] },
+                { Name: 'Two', Sum: 1, Voters: ['User-2'] }
+            ]}];
+            expect(target.chartData()).toEqual(expectedVotes);
+        });
+
+        it("displayResults with Votes expect Announce Winner", function () {
+            // arrange
+            var data = [
+                { OptionName: "One", VoterName: "User-1" },
+                { OptionName: "Two", VoterName: "User-2" },
+                { OptionName: "One", VoterName: "Anonymous User" }
             ];
-            expect(drawnData).toEqual(expectedVotes);
+
+            spyOn(target.pollOptions, 'getWinners').and.returnValue(["O", "T"]);
+
+            // act
+            target.displayResults(data);
+
+            // assert
+            expect(target.winners()).toEqual(["O", "T"]);
         });
     });
 });

@@ -1,4 +1,4 @@
-﻿define('PointsVote', ['jquery', 'knockout', 'Common', 'PollOptions', 'PointsOption', 'insight'], function ($, ko, Common, PollOptions, PointsOption, insight) {
+﻿define('PointsVote', ['jquery', 'knockout', 'Common', 'PollOptions', 'PointsOption', 'ResultChart'], function ($, ko, Common, PollOptions, PointsOption) {
 
     return function PointsVote(pollId, token) {
 
@@ -8,6 +8,9 @@
         self.maxPerVote = ko.observable();
         self.maxPoints = ko.observable();
         self.pointsArray = ko.observableArray();
+
+        self.chartData = ko.observableArray();
+        self.winners = ko.observableArray();
 
         var chart;
 
@@ -37,7 +40,10 @@
 
         var countVotes = function (votes) {
             var totalCounts = [];
-            votes.forEach(function (vote) {
+            
+            votes.sort(function (a, b) {
+                return b.VoteValue - a.VoteValue;
+            }).forEach(function (vote) {
                 var optionName = vote.OptionName;
                 var voter = vote.VoterName;
                 var voteValue = vote.VoteValue;
@@ -59,6 +65,7 @@
                     });
                 }
             });
+
             return totalCounts;
         };
 
@@ -127,7 +134,10 @@
 
         self.displayResults = function(data) {
             var groupedVotes = countVotes(data);
-            self.drawChart(groupedVotes);
+            self.chartData([{ Data: groupedVotes }]);
+
+            // Store the winners' names (may be a tie)
+            self.winners(self.pollOptions.getWinners(groupedVotes));
         }
         
         self.initialise = function (pollData) {
@@ -138,51 +148,6 @@
 
             resetVote();
         }
-
-        // TODO: Extract chart code from viewModel class - ideally
-        // into a shared custom knockout binding to bind to data
-        self.drawChart = function (data) {
-            //Exit early if data has not changed
-            if (chart && JSON.stringify(data) == JSON.stringify(chart.series()[0].data.rawData()))
-                return;
-
-            // Hack to fix insight's lack of data reloading
-            $('#chart-results').html('');
-            var voteData = new insight.DataSet(data);
-
-            chart = new insight.Chart('', '#chart-results')
-            .width($("#chart-results").width())
-            .height(data.length * 50 + 100);
-
-            var xAxis = new insight.Axis('Votes', insight.scales.linear);
-            var yAxis = new insight.Axis('', insight.scales.ordinal)
-                .isOrdered(true);
-            chart.xAxis(xAxis);
-            chart.yAxis(yAxis);
-
-            var series = new insight.RowSeries('votes', voteData, xAxis, yAxis)
-            .keyFunction(function (d) {
-                return d.Name;
-            })
-            .valueFunction(function (d) {
-
-                return d.Sum;
-            })
-            .tooltipFunction(function (d) {
-                var voterCount = d.Voters.length;
-                var maxToDisplay = 5;
-                if (voterCount <= maxToDisplay) {
-                    return "Votes: " + d.Sum + "<br />" + d.Voters.toString().replace(/,/g, "<br />");
-                }
-                else {
-                    return "Votes: " + d.Sum + "<br />" + d.Voters.slice(0, maxToDisplay).toString().replace(/,/g, "<br />") + "<br />" + "+ " + (voterCount - maxToDisplay) + " others";
-                }
-            });
-
-            chart.series([series]);
-
-            chart.draw();
-        };
 
     }
 
