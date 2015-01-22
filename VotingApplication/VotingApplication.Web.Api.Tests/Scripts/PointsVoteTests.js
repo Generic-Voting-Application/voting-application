@@ -3,6 +3,7 @@
 
         //#region Setup
         var target;
+        var drawnData;
         beforeEach(function () {
             // Setup test target with pollId and token
             target = new PointsVote("303", "515");
@@ -23,6 +24,12 @@
                 if (sessionKey === "token" && pollId === "303") return "616";
                 return 0;
             })
+
+            // Spy on the target.drawChart method, and store the drawn data
+            spyOn(target, 'drawChart').and.callFake(function (data) {
+                drawnData = data;
+            });
+
         });
         //#endregion
 
@@ -196,7 +203,7 @@
             target.displayResults([]);
 
             // assert
-            expect(target.chartData()).toEqual([{ Data: [] }]);
+            expect(drawnData).toEqual([]);
         });
 
         it("displayResults with Votes expect Draw grouped votes", function () {
@@ -211,30 +218,12 @@
             target.displayResults(data);
 
             // assert
-            var expectedVotes = [{ Data: [
+            var expectedVotes = [
                 { Name: 'One', Sum: 5, Voters: ['User-1 (3)', 'User-2 (2)'] },
                 { Name: 'Two', Sum: 1, Voters: ['User-2 (1)'] }
-            ]}];
-            expect(target.chartData()).toEqual(expectedVotes);
-        });
-
-        it("displayResults with Votes expect Announce Winner", function () {
-            // arrange
-            var data = [
-                { OptionName: "One", VoterName: "User-1" },
-                { OptionName: "Two", VoterName: "User-2" },
-                { OptionName: "One", VoterName: "Anonymous User" }
             ];
-
-            spyOn(target.pollOptions, 'getWinners').and.returnValue(["O", "T"]);
-
-            // act
-            target.displayResults(data);
-
-            // assert
-            expect(target.winners()).toEqual(["O", "T"]);
+            expect(drawnData).toEqual(expectedVotes);
         });
-
     });
 });
 

@@ -3,6 +3,7 @@
 
         //#region Setup
         var target;
+        var drawnData;
         beforeEach(function () {
             // Setup test target with pollId and token
             target = new RankedVote("303", "515");
@@ -22,6 +23,12 @@
                 if (sessionKey === "token" && pollId === "303") return "616";
                 return 0;
             })
+
+            // Spy on the target.drawChart method, and store the drawn data
+            spyOn(target, 'drawChart').and.callFake(function (data) {
+                drawnData = data;
+            });
+
         });
         //#endregion
         
@@ -134,15 +141,22 @@
             target.displayResults([]);
 
             // assert
-            expect(target.chartData()).toEqual([]);
+            expect(drawnData).toEqual([]);
         });
 
-        // User-1 votes Option 1-2-3-4
-        // User-2 votes Option 3-1
-        // User-3 votes Option 3-4-2-1
-        // User-4 votes Option 2-4-1
-        // User-5 votes Option 2-3
-        var testVotes = [
+        it("displayResults with Votes expect Draw ranked vote result", function () {
+            // arrange
+            target.pollOptions.options([
+                    { Id: 13, Name: "Option-1" }, { Id: 17, Name: "Option-2" },
+                    { Id: 21, Name: "Option-3" }, { Id: 25, Name: "Option-4" }
+            ]);
+
+            // User-1 votes Option 1-2-3-4
+            // User-2 votes Option 3-1
+            // User-3 votes Option 3-4-2-1
+            // User-4 votes Option 2-4-1
+            // User-5 votes Option 2-3
+            var data = [
                 { OptionId: 13, UserId: 1, VoterName: "User-1" },
                 { OptionId: 17, UserId: 1, VoterName: "User-1" },
                 { OptionId: 21, UserId: 1, VoterName: "User-1" },
@@ -158,75 +172,35 @@
                 { OptionId: 13, UserId: 4, VoterName: "User-4" },
                 { OptionId: 17, UserId: 5, VoterName: "User-5" },
                 { OptionId: 21, UserId: 5, VoterName: "User-5" }
-        ];
+            ];
 
-        it("displayResults with Votes expect Draw ranked vote result", function () {
-            // arrange
-            target.pollOptions.options([
-                    { Id: 13, Name: "Option-1" }, { Id: 17, Name: "Option-2" },
-                    { Id: 21, Name: "Option-3" }, { Id: 25, Name: "Option-4" }
-            ]);
-            
             // act
-            target.displayResults(testVotes);
+            target.displayResults(data);
 
             // assert
 
-            // Round 1: Option-1 (1), Option-2 (2), Option-3 (2)
-            // Round 2: Option-2 (3), Option-3 (2)
+            // Round 1
+            // Option-1 (1), Option-2 (2), Option-3 (2)
+            var round1 = [
+                { Name: 'Option-1', BallotCount: 1, Voters: ['User-1 (#1)'] },
+                { Name: 'Option-2', BallotCount: 2, Voters: ['User-4 (#1)', 'User-5 (#1)'] },
+                { Name: 'Option-3', BallotCount: 2, Voters: ['User-2 (#1)', 'User-3 (#1)'] },
+                { Name: 'Option-4', BallotCount: 0, Voters: [] }
+            ];
+            // Eliminate Option-4 then Option 1
 
-            var option1 = { Name: "Option-1", Data: [
-                { Name: 'Round 1', Sum: 1, Voters: ['User-1 (#1)'] },
-                { Name: 'Round 2', Sum: 0, Voters: [] }
-            ]};
-            var option2 = { Name: "Option-2", Data: [
-                { Name: 'Round 1', Sum: 2, Voters: ['User-4 (#1)', 'User-5 (#1)'] },
-                { Name: 'Round 2', Sum: 3, Voters: ['User-1 (#2)', 'User-4 (#1)', 'User-5 (#1)'] }
-            ]};
-            var option3 = { Name: "Option-3", Data: [
-                { Name: 'Round 1', Sum: 2, Voters: ['User-2 (#1)', 'User-3 (#1)'] },
-                { Name: 'Round 2', Sum: 2, Voters: ['User-2 (#1)', 'User-3 (#1)'] }
-            ]};
-            var option4 = { Name: "Option-4", Data: [
-                { Name: 'Round 1', Sum: 0, Voters: [] },
-                { Name: 'Round 2', Sum: 0, Voters: [] }
-            ]};
+            // Round 2
+            // Option-2 (3), Option-3 (2)
+            var round2 = [
+                { Name: 'Option-3', BallotCount: 2, Voters: ['User-2 (#1)', 'User-3 (#1)'] },
+                { Name: 'Option-2', BallotCount: 3, Voters: ['User-1 (#2)', 'User-4 (#1)', 'User-5 (#1)'] },
+                { Name: 'Option-4', BallotCount: 0, Voters: [] },
+                { Name: 'Option-1', BallotCount: 0, Voters: [] }
+            ];
+            // Option-2 wins
 
-            expect(target.chartData()).toEqual([option4, option1, option3, option2]);
+            expect(drawnData).toEqual([round1, round2]);
         });
-
-        it("displayResults with Votes expect Announce Winner", function () {
-            // arrange
-            target.pollOptions.options([
-                    { Id: 13, Name: "Option-1" }, { Id: 17, Name: "Option-2" },
-                    { Id: 21, Name: "Option-3" }, { Id: 25, Name: "Option-4" }
-            ]);
-
-            // Capture the option votes from the callback
-            var optionVotes = [];
-            spyOn(target.pollOptions, 'getWinners').and.callFake(function (groupedVotes, getOptionVotes) {
-                groupedVotes.forEach(function (g) {
-                    optionVotes.push(getOptionVotes(g));
-                });
-
-                return ["O", "T"];
-            });
-
-            // act
-            target.displayResults(testVotes);
-
-            // assert
-            expect(target.winners()).toEqual(["O", "T"]);
-
-            // Check the option votes from the callback
-            expect(optionVotes).toEqual([
-                { Name: 'Option-4', Sum: 0 },
-                { Name: 'Option-1', Sum: 0 },
-                { Name: 'Option-3', Sum: 2 },
-                { Name: 'Option-2', Sum: 3 }
-            ]);
-        });
-
     });
 });
 
