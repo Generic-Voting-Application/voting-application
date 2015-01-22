@@ -40,7 +40,10 @@
 
         var countVotes = function (votes) {
             var totalCounts = [];
-            votes.forEach(function (vote) {
+            
+            votes.sort(function (a, b) {
+                return b.VoteValue - a.VoteValue;
+            }).forEach(function (vote) {
                 var optionName = vote.OptionName;
                 var voter = vote.VoterName;
                 var voteValue = vote.VoteValue;
@@ -62,6 +65,7 @@
                     });
                 }
             });
+
             return totalCounts;
         };
 
