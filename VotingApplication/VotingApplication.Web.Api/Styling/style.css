@@ -1,5 +1,5 @@
-﻿@import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.css";
-@import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css";
+﻿@import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css";
+@import "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css";
 @import "https://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css";
 @import "//cdnjs.cloudflare.com/ajax/libs/insightjs/1.3.0/insight.min.css";
 @import "Lib/bootstrap-datetimepicker.min.css";
@@ -198,46 +198,25 @@ label.info-message {
 }
 
 /* InsightJS things */
-.annotationsclass {
+.markerclass {
     fill: red !important;
     fill-opacity: 0.3 !important;
 }
 
-.series-0 {
-    fill: #034e7b;
-}
-.series-1 {
-    fill: #037b4e;
-}
-.series-2 {
-    fill: #b00570;
-}
 .series-3 {
-    fill: #7b4e03;
-}
-.series-4 {
-    fill: #0570b0;
-}
-.series-5 { 
-    fill: #70b005;
-}
-.series-6 {
-    fill: #cf74a9;
-}
-.series-7 {
     fill: #081d58;
 }
-.series-8 {
-    fill: #08581d;
+
+.series-2 {
+    fill: #034e7b;
 }
-.series-9 {
-    fill: #58081d;
+
+.series-1 { 
+    fill: #0570b0;
 }
-.series-10 {
+
+.series-0 {
     fill: #74a9cf;
-}
-.series-11 {
-    fill: #74cfa9;
 }
 
 /* tooltips */
@@ -251,4 +230,3 @@ label.info-message {
     display: block;
     width: 320px;
 }
-
