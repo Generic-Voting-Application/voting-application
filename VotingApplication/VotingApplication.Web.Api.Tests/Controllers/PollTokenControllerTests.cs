@@ -59,7 +59,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_mainUUID);
             Guid responseGuid;
 
-            bool isGuid = Guid.TryParse(((ObjectContent)response.Content).Value as String, out responseGuid);
+            bool isGuid = Guid.TryParse(((ObjectContent)response.Content).Value.ToString(), out responseGuid);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -91,7 +91,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetFailsOnInviteOnlyPoll()
         {
             // Act
-            var response = _controller.Get(Guid.NewGuid());
+            var response = _controller.Get(_inviteUUID);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
