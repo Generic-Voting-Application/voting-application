@@ -23,38 +23,39 @@
 
     }
 
-    Common.currentUserId = function (pollId) {
-        return Common.sessionItem("id", pollId);
-    };
+    var tokenGuid = '';
 
-    Common.currentUserName = function (pollId) {
-        return Common.sessionItem("userName", pollId);
-    };
+    Common.resolveToken = function (pollId, uriTokenGuid) {
+        tokenGuid = uriTokenGuid || localStorage[pollId];
+        if(!tokenGuid){
+            $.ajax({
+                type: 'GET',
+                url: '/api/poll/' + pollId + '/token',
+                contentType: 'application/json',
 
-    Common.sessionItem = function (sessionKey, pollId) {
-        var localUserJSON = localStorage["user_" + pollId];
-
-        if (localUserJSON) {
-            var localUser = $.parseJSON(localUserJSON);
-            if (localUser.expires < Date.now()) {
-                localStorage.removeItem("user_" + pollId);
-            }
-            else {
-                return localUser[sessionKey];
-            }
+                success: function (data) {
+                    tokenGuid = data;
+                    localStorage[pollId] = data;
+                }
+            });
         }
-
-        return undefined;
     }
 
-    Common.loginUser = function (userData, userName, pollId) {
-        //Expire in 6 hours
-        var expiryTime = Date.now() + (6 * 60 * 60 * 1000);
-        localStorage["user_" + pollId] = JSON.stringify({ id: userData.UserId, userName: userName, expires: expiryTime, token: userData.TokenGuid });
+    Common.getToken = function (pollId) {
+        return localStorage[pollId];
+    }
+
+    Common.getVoterName = function (pollId) {
+        return localStorage['userName'];
     };
 
-    Common.logoutUser = function (pollId) {
-        localStorage.removeItem("user_" + pollId);
+    Common.setVoterName = function (userName, pollId) {
+        localStorage['userName'] = userName;
+    };    
+
+    Common.clearStorage = function (pollId) {
+        localStorage.removeItem(pollId);
+        localStorage.removeItem('userName');
     }
 
     Common.handleError = function (error) {

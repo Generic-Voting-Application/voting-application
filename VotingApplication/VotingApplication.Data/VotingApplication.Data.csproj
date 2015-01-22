@@ -67,7 +67,6 @@
     <Compile Include="Model\Option.cs" />
     <Compile Include="Model\Poll.cs" />
     <Compile Include="Model\Token.cs" />
-    <Compile Include="Model\User.cs" />
     <Compile Include="Model\Vote.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Context\VotingContext.cs" />

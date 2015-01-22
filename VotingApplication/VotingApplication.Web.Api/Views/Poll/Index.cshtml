@@ -95,7 +95,7 @@
         <div class="panel panel-default" id="chat-panel">
             <div class="panel-heading"><span class="panel-title">Chat</span></div>
             <div style="height:300px; overflow-y:auto" id="chat-messages" class="panel-body" data-bind="foreach: {data: chatMessages, as: 'message'}">
-                <div data-bind="text: message.User.Name + ' (' + message.Timestamp + '): ' + message.Message"></div>
+                <div data-bind="text: message.VoterName + ' (' + message.Timestamp + '): ' + message.Message"></div>
             </div>
             <div class="panel-footer">
                 <form>
@@ -115,7 +115,7 @@
 {
     <script type="text/javascript">
         require(["Poll", '@(Model.VotingStrategy + "Vote")'], function (PollViewModel, VotingStrategyViewModel) {
-            new PollViewModel('@Model.Id', '@Model.Token', VotingStrategyViewModel);
+            new PollViewModel('@Model.Id', '@Model.URITokenGuid', VotingStrategyViewModel);
         });
     </script>
 }

@@ -10,12 +10,24 @@ using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
-    public class UserPollVoteController : WebApiController
+    public class TokenPollVoteController : WebApiController
     {
-        public UserPollVoteController() : base() { }
-        public UserPollVoteController(IContextFactory contextFactory) : base(contextFactory) { }
+        public TokenPollVoteController() : base() { }
+        public TokenPollVoteController(IContextFactory contextFactory) : base(contextFactory) { }
 
-        #region GET
+        private Vote ModelToVote(VoteRequestModel voteRequest, Guid tokenGuid, Option option, Poll poll)
+        {
+            return new Vote
+            {
+                Option = option,
+                Poll = poll,
+                PollId = poll.UUID,
+                Token = new Token { TokenGuid = tokenGuid },
+                VoteValue = voteRequest.VoteValue,
+                VoterName = voteRequest.VoterName
+            };
+
+        }
 
         private VoteRequestResponseModel VoteToModel(Vote vote, Poll poll)
         {
@@ -25,72 +37,53 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 model.OptionId = vote.Option.Id;
                 model.OptionName = vote.Option.Name;
+                model.VoterName = vote.VoterName;
             }
 
-            if (vote.User != null)
-            {
-                model.VoterName = poll.AnonymousVoting ? "Anonymous User" : vote.User.Name;
-                model.UserId = vote.User.Id;
-            }
-
-            model.VoteValue = vote.PollValue;
+            model.VoteValue = vote.VoteValue;
 
             return model;
         }
 
-        private Vote ModelToVote(VoteRequestModel voteRequest, Option option, Poll poll, User user)
-        {
-           return  new Vote
-            {
-                Option = option,//context.Options.Single(o => o.Id == voteRequest.OptionId),
-                Poll = poll,//context.Polls.Single(p => p.UUID == pollId),
-                PollId = poll.UUID,
-                Token = new Token { PollId = poll.UUID, UserId = user.Id, TokenGuid = voteRequest.TokenGuid },
-                User = user,//context.Users.Single(u => u.Id == userId),
-                PollValue = voteRequest.VoteValue
-            };
-            
-        }
 
-        public virtual HttpResponseMessage Get(long userId, Guid pollId)
-        {
+        #region GET
 
-            #region DBGet / Validation
+        public virtual HttpResponseMessage Get(Guid tokenGuid, Guid pollId)
+        {
 
             List<Vote> votes;
             Poll poll;
             using (var context = _contextFactory.CreateContext())
             {
-                User user = context.Users.Where(u => u.Id == userId).FirstOrDefault();
-                if (user == null)
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("User {0} not found", userId));
-                }
-
                 poll = context.Polls.Where(s => s.UUID == pollId).FirstOrDefault();
                 if (poll == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
                 }
 
-                votes = context.Votes.Where(v => v.UserId == userId && v.PollId == pollId).Include(v => v.Option).ToList();
+                votes = context.Votes.Where(v => v.Token.TokenGuid == tokenGuid && v.PollId == pollId).Include(v => v.Option).ToList();
             }
 
-            #endregion
-
             return this.Request.CreateResponse(HttpStatusCode.OK, votes.Select(v => VoteToModel(v, poll)).ToList());
+
+        }
+
+
+        public virtual HttpResponseMessage Get(Guid tokenGuid, Guid pollId, long voteId)
+        {
+            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET by id on this controller");
         }
 
         #endregion
 
         #region POST
 
-        public virtual HttpResponseMessage Post(long userId, Guid pollId, Vote vote)
+        public virtual HttpResponseMessage Post(Guid tokenGuid, Guid pollId, Vote vote)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
         }
 
-        public virtual HttpResponseMessage Post(long userId, Guid pollId, long voteId, Vote vote)
+        public virtual HttpResponseMessage Post(Guid tokenGuid, Guid pollId, long voteId, Vote vote)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
         }
@@ -99,7 +92,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region PUT
 
-        public virtual HttpResponseMessage Put(long userId, Guid pollId, List<VoteRequestModel> voteRequests)
+        public virtual HttpResponseMessage Put(Guid tokenGuid, Guid pollId, List<VoteRequestModel> voteRequests)
         {
             #region Input Validation
 
@@ -115,11 +108,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             using (var context = _contextFactory.CreateContext())
             {
-                if (!context.Users.Any(u => u.Id == userId))
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("User {0} not found", userId));
-                }
-
                 Poll poll = context.Polls.Where(p => p.UUID == pollId).Include(p => p.Tokens).Include(p => p.Options).SingleOrDefault();
                 if (poll == null)
                 {
@@ -129,6 +117,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 if (poll.Expires && poll.ExpiryDate < DateTime.Now)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", pollId));
+                }
+
+                if (!poll.Tokens.Any(t => t.TokenGuid == tokenGuid))
+                {
+                    return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("Token {0} not valid for this poll", tokenGuid));
                 }
 
                 foreach (VoteRequestModel voteRequest in voteRequests)
@@ -141,11 +134,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     if (!poll.Options.Any(o => o.Id == voteRequest.OptionId))
                     {
                         ModelState.AddModelError("OptionId", "Option choice not valid for this poll");
-                    }
-
-                    if (!poll.Tokens.Any(t => t.TokenGuid == voteRequest.TokenGuid))
-                    {
-                        ModelState.AddModelError("TokenGuid", String.Format("Token {0} not valid for this poll", voteRequest.TokenGuid));
                     }
 
                     if (poll.VotingStrategy == "Points" && (voteRequest.VoteValue > poll.MaxPerVote || voteRequest.VoteValue > poll.MaxPoints))
@@ -166,9 +154,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             using (var context = _contextFactory.CreateContext())
             {
-
-                // TODO: This needs to be changed
-                List<Vote> existingVotes = context.Votes.Where(v => v.UserId == userId && v.PollId == pollId).ToList<Vote>();
+                List<Vote> existingVotes = context.Votes.Where(v => v.Token.TokenGuid == tokenGuid && v.PollId == pollId).ToList<Vote>();
 
                 foreach (Vote contextVote in existingVotes)
                 {
@@ -178,9 +164,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 // For some reason, we don't have an addrange function on Entity Framework
                 foreach (VoteRequestModel voteRequest in voteRequests)
                 {
-                    context.Votes.Add(ModelToVote(voteRequest, context.Options.Single(o => o.Id == voteRequest.OptionId), 
-                                                               context.Polls.Single(p => p.UUID == pollId),
-                                                               context.Users.Single(u => u.Id == userId)));
+                    context.Votes.Add(ModelToVote(voteRequest,
+                                                  tokenGuid,
+                                                  context.Options.Single(o => o.Id == voteRequest.OptionId),
+                                                  context.Polls.Single(p => p.UUID == pollId)));
                 }
 
                 context.SaveChanges();
@@ -199,12 +186,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region DELETE
 
-        public virtual HttpResponseMessage Delete(long userId, Guid pollId)
+        public virtual HttpResponseMessage Delete(Guid tokenGuid, Guid pollId)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
         }
 
-        public virtual HttpResponseMessage Delete(long userId, Guid pollId, long voteId)
+        public virtual HttpResponseMessage Delete(Guid tokenGuid, Guid pollId, long voteId)
         {
             return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE by id on this controller");
         }

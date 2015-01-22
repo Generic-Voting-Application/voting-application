@@ -15,7 +15,7 @@
             <div class="input-group">
                 <input readonly="readonly" class="form-control" data-bind="value: window.location.origin + '/Poll/Index/' + pollId(), click: function(i, e){ e.target.select() }" />
                 <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" data-bind="click: function(){window.location=('/Poll/Index/' + pollId())}">Go</button>
+                    <a class="btn btn-primary" data-bind="attr: { href: '/Poll/Index/' + pollId() }">Go</a>
                 </span>
             </div>
         </form>

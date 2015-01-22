@@ -1,5 +1,5 @@
 ﻿define('BasicVote', ['jquery', 'knockout', 'Common', 'PollOptions', 'insight'], function ($, ko, Common, PollOptions, insight) {
-    return function BasicVote(pollId, token) {
+    return function BasicVote(pollId) {
 
         var self = this;
         self.pollOptions = new PollOptions(pollId);
@@ -39,17 +39,17 @@
 
         self.onVoted = null;
         self.doVote = function (data) {
-            var userId = Common.currentUserId(pollId);
-
             var voteData = JSON.stringify([{
                 OptionId: data.Id,
-                TokenGuid: token || Common.sessionItem("token", pollId)
+                VoterName: Common.getVoterName()
             }]);
 
-            if (userId && pollId) {
+            var tokenGuid = Common.getToken(pollId);
+
+            if (tokenGuid && pollId) {
                 $.ajax({
                     type: 'PUT',
-                    url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
+                    url: '/api/token/' + tokenGuid + '/poll/' + pollId + '/vote',
                     contentType: 'application/json',
                     data: voteData,
 
@@ -62,23 +62,28 @@
             }
         };
 
-        self.getVotes = function (pollId, userId) {
-            $.ajax({
-                type: 'GET',
-                url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
-                contentType: 'application/json',
+        self.getPreviousVotes = function (pollId) {
+            var tokenGuid = Common.getToken(pollId);
 
-                success: function (data) {
-                    if (data[0]) {
-                        highlightOption(data[0].OptionId);
-                    }
-                    else {
-                        highlightOption(-1);
-                    }
-                },
+            if (tokenGuid && pollId) {
 
-                error: Common.handleError
-            });
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/token/' + tokenGuid + '/poll/' + pollId + '/vote',
+                    contentType: 'application/json',
+
+                    success: function (data) {
+                        if (data[0]) {
+                            highlightOption(data[0].OptionId);
+                        }
+                        else {
+                            highlightOption(-1);
+                        }
+                    },
+
+                    error: Common.handleError
+                });
+            }
         };
 
         self.displayResults = function (data) {

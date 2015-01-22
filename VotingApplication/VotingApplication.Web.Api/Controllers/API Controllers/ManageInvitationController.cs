@@ -84,7 +84,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 string tokenString = "";
                 if (poll.InviteOnly)
                 {
-                    Token token = new Token() { PollId = poll.UUID, TokenGuid = Guid.NewGuid() };
+                    Token token = new Token() { TokenGuid = Guid.NewGuid() };
                     tokenString = "/" + token.TokenGuid;
                     poll.Tokens.Add(token);
                 }

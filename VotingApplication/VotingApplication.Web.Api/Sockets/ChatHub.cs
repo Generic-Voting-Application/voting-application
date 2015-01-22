@@ -38,12 +38,12 @@ namespace VotingApplication.Web.Api.Sockets
             }
         }
 
-        public void SendMessage(Guid pollId, long userId, string message)
+        public void SendMessage(Guid pollId, string voterName, string message)
         {
             try
             {
                 // Add the new message to the database
-                var newMessage = AddNewMessage(pollId, userId, message);
+                var newMessage = AddNewMessage(pollId, voterName, message);
 
                 // Broadcast the new message to group
                 Clients.Group(pollId.ToString()).broadcastMessage(newMessage);
@@ -59,7 +59,7 @@ namespace VotingApplication.Web.Api.Sockets
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(p => p.UUID == pollId).Include(p => p.ChatMessages.Select(m => m.User)).FirstOrDefault();
+                Poll matchingPoll = context.Polls.Where(p => p.UUID == pollId).FirstOrDefault();
                 if (matchingPoll == null)
                 {
                     throw new InvalidOperationException(string.Format("Poll {0} not found", pollId));
@@ -71,11 +71,11 @@ namespace VotingApplication.Web.Api.Sockets
             }
         }
 
-        private ChatMessage AddNewMessage(Guid pollId, long userId, string message)
+        private ChatMessage AddNewMessage(Guid pollId, string voterName, string message)
         {
             var newMessage = new ChatMessage
             {
-                User = new User { Id = userId },
+                VoterName = voterName,
                 Message = message
             };
 
@@ -85,20 +85,13 @@ namespace VotingApplication.Web.Api.Sockets
                 {
                     throw new InvalidOperationException("Message must not be empty");
                 }
-                if (newMessage.User == null || newMessage.User.Id == 0)
+                if (string.IsNullOrEmpty(newMessage.VoterName))
                 {
-                    throw new InvalidOperationException("Message requires a user");
+                    throw new InvalidOperationException("Message requires a vote name");
                 }
                 if (string.IsNullOrEmpty(newMessage.Message))
                 {
                     throw new InvalidOperationException("Message text required");
-                }
-
-                // Lookup the UserId
-                User matchingUser = context.Users.Where(u => u.Id == newMessage.User.Id).FirstOrDefault();
-                if (matchingUser == null)
-                {
-                    throw new InvalidOperationException(string.Format("User {0} not found", newMessage.User.Id));
                 }
 
                 // Lookup the matching Poll
@@ -109,7 +102,6 @@ namespace VotingApplication.Web.Api.Sockets
                 }
 
                 // Get the message ready
-                newMessage.User = matchingUser;
                 newMessage.Timestamp = DateTime.Now;
 
                 // Add to the list

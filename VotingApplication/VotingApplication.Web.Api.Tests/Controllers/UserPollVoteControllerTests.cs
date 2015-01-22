@@ -19,7 +19,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
     [TestClass]
     public class UserPollVoteControllerTests
     {
-        private UserPollVoteController _controller;
+        private TokenPollVoteController _controller;
         private Vote _bobVote;
         private Vote _joeVote;
         private InMemoryDbSet<Vote> _dummyVotes;
@@ -101,7 +101,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Polls).Returns(dummyPolls);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
-            _controller = new UserPollVoteController(mockContextFactory.Object);
+            _controller = new TokenPollVoteController(mockContextFactory.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -243,7 +243,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.AreEqual(35, _dummyVotes.Local.Last().PollValue);
+            Assert.AreEqual(35, _dummyVotes.Local.Last().VoteValue);
         }
 
         [TestMethod]
