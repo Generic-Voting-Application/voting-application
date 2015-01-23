@@ -23,6 +23,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             if (vote.Option != null)
             {
+                model.VoterId = vote.Token.Id;
                 model.OptionId = vote.Option.Id;
                 model.OptionName = vote.Option.Name;
             }
