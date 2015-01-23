@@ -1,4 +1,4 @@
-﻿define('BasicVote', ['jquery', 'knockout', 'Common', 'PollOptions', 'insight'], function ($, ko, Common, PollOptions, insight) {
+﻿define('BasicVote', ['jquery', 'knockout', 'Common', 'PollOptions', 'ResultChart', 'insight'], function ($, ko, Common, PollOptions) {
     return function BasicVote(pollId) {
 
         var self = this;
