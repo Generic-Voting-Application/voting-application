@@ -8,12 +8,12 @@
         this.drawChart = function (data, options) {
             if (!data.length) return;
 
-            var dataUnchanged = true;
+            var dataUnchanged = chart && data.length === chart.series().length;
             var barCount = 0;
             for (var n = 0; (n < data.length) && dataUnchanged; n++) {
                 barCount += data[n].Data.length;
                 dataUnchanged = dataUnchanged &&
-                    chart && chart.series().length > n &&
+                    chart.series().length > n &&
                     JSON.stringify(data[n].Data) == JSON.stringify(chart.series()[n].Data.rawData());
             }
             //Exit early if data has not changed
@@ -23,7 +23,9 @@
             var defaultSettings = {
                 legend: false,
                 ordered: true,
-                columns: false
+                columns: false,
+                voteTitle: 'Votes',
+                optionTitle: ''
             };
             var settings = $.extend(defaultSettings, options);
 
@@ -31,14 +33,14 @@
             $element.html('');
 
             // Fixed height for column chart, but scale to number of rows for bar charts
-            var chartHeight = settings.columns ? 400 : Math.min(barCount * 50 + 100, 400);
+            var chartHeight = settings.columns ? 400 : Math.min(barCount * 50 + 100, 600);
 
             chart = new insight.Chart('', $element[0])
                 .width($element.width())
                 .height(chartHeight);
 
-            var voteAxis = new insight.Axis('Votes', insight.scales.linear);
-            var optionAxis = new insight.Axis('', insight.scales.ordinal)
+            var voteAxis = new insight.Axis(settings.voteTitle, insight.scales.linear);
+            var optionAxis = new insight.Axis(settings.optionTitle, insight.scales.ordinal)
                     .isOrdered(settings.ordered);
 
             var xAxis = settings.columns ? optionAxis : voteAxis;
@@ -96,7 +98,9 @@
             }
 
             chart.series(allSeries);
-            chart.draw();
+
+            // First parameter disables animation
+            chart.draw(true);
         };
     };
 

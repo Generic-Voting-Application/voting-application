@@ -390,6 +390,7 @@
     <Content Include="Scripts\RankedVote.js" />
     <Content Include="Scripts\PointsVote.js" />
     <Content Include="Scripts\BasicVote.js" />
+    <Content Include="Scripts\SliderExtension.js" />
     <Content Include="Scripts\Validation.js" />
     <Content Include="Styling\Lib\bootstrap-datetimepicker.min.css" />
     <Content Include="Views\Decision\Index.cshtml" />

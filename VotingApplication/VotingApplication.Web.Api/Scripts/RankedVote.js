@@ -1,4 +1,4 @@
-﻿define('RankedVote', ['jquery', 'knockout', 'jqueryUI', 'Common', 'PollOptions', 'ResultChart'], function ($, ko, jqueryUI, Common, PollOptions) {
+﻿define('RankedVote', ['jquery', 'knockout', 'jqueryUI', 'Common', 'PollOptions', 'ResultChart', 'SliderExtension'], function ($, ko, jqueryUI, Common, PollOptions) {
 
     return function RankedVote(pollId, token) {
 
@@ -11,7 +11,24 @@
         self.winVotesRequired = ko.observable(0);
         self.winners = ko.observableArray();
 
-        self.chartVisible = ko.observable(false);
+        self.roundsRange = ko.observableArray([0, 0]);
+        self.roundsDisplay = ko.observableArray([0, 0]);
+
+        self.filteredChartData = ko.computed(function () {
+            var display = {
+                from: self.roundsDisplay()[0] - 1,
+                to: self.roundsDisplay()[1] - 1
+            };
+
+            return self.chartData().map(function (option) {
+                return {
+                    Name: option.Name,
+                    Data: option.Data.filter(function (r, i) {
+                        return i >= display.from && i <= display.to;
+                    })
+                };
+            });
+        });
 
         var selectPickedOptions = function (votes) {
             self.selectedOptions([]);
@@ -44,16 +61,11 @@
         };
 
         var countVotes = function (votes) {
-            var options = [];
             var ballots = [];
             var totalBallots = 0;
-            var totalOptions = self.pollOptions.options().length;
             var resultsByRound = [];
 
-            for (var k = 0; k < totalOptions; k++) {
-                var optionId = self.pollOptions.options()[k].Id;
-                options[k] = { Id: optionId, ballots: [] };
-            }
+            var options = self.pollOptions.options().map(function (o) { return { Name: o.Name, Id: o.Id, ballots: [] }; });
 
             // Group votes into ballots (per user)
             votes.forEach(function (vote) {
@@ -68,11 +80,8 @@
             while (options.length > 0) {
 
                 // Clear out all ballots from previous round
-                options = options.map(function (d) {
-                    d.ballots = [];
-                    return d;
-                });
-
+                options.forEach(function (d) { d.ballots = []; });
+                // Option IDs that haven't been eliminated
                 var availableOptions = options.map(function (d) { return d.Id; });
 
                 // Sort the votes on the ballots and assign each ballot to first choice
@@ -86,37 +95,29 @@
                     }
                 });
 
+                // Sort by performance in this round
                 options.sort(sortByBallotCount);
 
                 //Convert into a chartable style
                 var roundOptions = options.map(function (d) {
-                    var matchingOption = $.grep(self.pollOptions.options(), function (opt) { return opt.Id === d.Id; })[0];
                     return {
-                        Name: matchingOption.Name,
+                        Name: d.Name,
                         Sum: d.ballots.length,
-                        Voters: d.ballots.map(function (x) { return x[0].VoterName + " (#" + (x.map(function (y) { return y.OptionId; }).indexOf(matchingOption.Id) + 1) + ")"; })
+                        Voters: d.ballots.map(function (x) { return x[0].VoterName + " (#" + (x.map(function (y) { return y.OptionId; }).indexOf(d.Id) + 1) + ")"; })
                     };
                 });
 
-                var roundSeries = {
-                    name: 'Round ' + (resultsByRound.length + 1).toString(),
-                    data: roundOptions
-                };
+                // Series representing this round
+                if (options[0].ballots.length > 0) {
+                    resultsByRound.push({
+                        name: (resultsByRound.length + 1).toString(),
+                        data: roundOptions
+                    });
+                }
 
                 // End if we have a majority
                 if (options[options.length - 1].ballots.length > totalBallots / 2) {
-
-                    //Mark all other remaining results as having lost
-                    for (var i = 0; i < options.length - 1; i++) {
-                        options[i].rank = 2;
-                    }
-
-                    resultsByRound.push(roundSeries);
                     break;
-                }
-
-                if (options[0].ballots.length > 0) {
-                    resultsByRound.push(roundSeries);
                 }
 
                 // Remove all last place options
@@ -219,7 +220,13 @@
             }, 0);
             self.winVotesRequired(Math.ceil(voterCount / 2));
 
+            self.roundsRange([1, 1]);
             self.chartData(groupedVotes);
+
+            // Setup the number of rounds and the display range
+            var numRounds = groupedVotes.length ? groupedVotes[0].Data.length : 0;
+            self.roundsRange([1, numRounds]);
+            self.roundsDisplay([1, numRounds])
 
             // Store the winners' names (may be a tie)
             self.winners(self.pollOptions.getWinners(groupedVotes, function (group) {
