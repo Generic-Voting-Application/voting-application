@@ -11,7 +11,6 @@
         self.winVotesRequired = ko.observable(0);
         self.winners = ko.observableArray();
 
-        self.chartVisible = ko.observable(false);
 
         var selectPickedOptions = function (votes) {
             self.selectedOptions([]);
@@ -99,7 +98,7 @@
                 });
 
                 var roundSeries = {
-                    name: 'Round ' + (resultsByRound.length + 1).toString(),
+                    name: (resultsByRound.length + 1).toString(),
                     data: roundOptions
                 };
 

@@ -1,3 +1,3 @@
-﻿<div data-bind="resultChart: chartData, chartOptions: {
-        legend: true, ordered: false, columns: true,
+﻿<div data-bind="resultChart: filteredChartData, chartOptions: {
+        legend: true, ordered: false, columns: true, optionTitle: 'Round',
         annotations: [ { value: winVotesRequired(), tip: '50% Majority' } ] }"></div>
