@@ -12,13 +12,13 @@
             $.mockjaxSettings.responseTime = 1;
             mockjax.clear();
 
-            // Spy on Common.currentUserId (only return user id for correct poll id)
+            // Spy on Common.getVoterName
             spyOn(Common, 'getVoterName').and.callFake(function () {
                 return "Bob";
                 return 0;
             });
 
-            // Spy on Common.currentUserId (only return user id for correct poll id)
+            // Spy on Common.getToken
             spyOn(Common, 'getToken').and.callFake(function (pollId) {
                 if (pollId === "303") return "00000000-0000-0000-0000-000000000001";
                 return 0;
