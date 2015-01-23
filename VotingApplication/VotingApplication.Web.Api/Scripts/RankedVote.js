@@ -1,6 +1,6 @@
 ﻿define('RankedVote', ['jquery', 'knockout', 'jqueryUI', 'Common', 'PollOptions', 'ResultChart'], function ($, ko, jqueryUI, Common, PollOptions) {
 
-    return function RankedVote(pollId, token) {
+    return function RankedVote(pollId) {
 
         var self = this;
         self.pollOptions = new PollOptions(pollId);

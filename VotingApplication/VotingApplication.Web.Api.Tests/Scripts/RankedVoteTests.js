@@ -14,7 +14,6 @@
             // Spy on Common.getVoterName
             spyOn(Common, 'getVoterName').and.callFake(function () {
                 return "Bob";
-                return 0;
             });
 
             // Spy on Common.getToken
