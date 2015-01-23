@@ -101,12 +101,16 @@ namespace VotingApplication.Web.Api.Controllers
                         // If the poll is open, create a token for the user so they can use it next time
                         matchingToken = new Token() { TokenGuid = Guid.NewGuid(), PollId = matchingPoll.UUID };
                         matchingPoll.Tokens.Add(matchingToken);
-                        context.Tokens.Add(matchingToken);
                     }
                 }
+                User existingUser = null;
 
-                List<User> existingUsers = context.Users.Where(u => u.Token != null && u.Token.TokenGuid == matchingToken.TokenGuid).ToList<User>();
-                if (existingUsers.Count() == 0)
+                if (newUser.Token != null)
+                {
+                    existingUser = context.Users.Where(u => u.Token != null && u.Token.TokenGuid == newUser.Token.TokenGuid).FirstOrDefault();
+                }
+
+                if (existingUser == null)
                 {
                     // Save once to generate user ID
                     newUser.Token = matchingToken;
@@ -114,8 +118,14 @@ namespace VotingApplication.Web.Api.Controllers
                     context.SaveChanges();
 
                     matchingToken.UserId = newUser.Id;
-                    context.SaveChanges();
                 }
+                else
+                {
+                    existingUser.Name = newUser.Name;
+                }
+
+
+                context.SaveChanges();
 
                 return this.Request.CreateResponse(HttpStatusCode.OK, matchingToken);
             }

@@ -1,145 +1,71 @@
-﻿require(['jquery', 'knockout', 'datetimepicker', 'moment', 'Common', 'jqueryUI'], function ($, ko, datetimepicker, moment, Common) {
-    function HomeViewModel() {
+﻿define('Create', ['jquery', 'knockout', 'Common', 'Validation', 'KnockoutExtensions'], function ($, ko, Common, Validation) {
+    return function CreateViewModel() {
         var self = this;
 
-        self.templates = ko.observableArray();
-        self.selectedStrategy = ko.observable();
-        self.expires = ko.observable(false);
+        // Basic Poll options
+        self.pollName = ko.observable("");
+        self.creatorName = ko.observable("");
+        self.creatorEmail = ko.observable("");
+
+        // Advanced Poll options
+        self.templateId = ko.observable("");
+        self.strategy = ko.observable("");
+        self.maxPoints = ko.observable(7);
+        self.maxPerVote = ko.observable(3);
+        self.inviteOnly = ko.observable(false);
+        self.anonymousVoting = ko.observable(false);
+        self.requireAuth = ko.observable(false);
+        self.expiry = ko.observable(false);
+        self.expiryDate = ko.observable("");
+        self.optionAdding = ko.observable(false);
+
+        self.creatingPoll = ko.observable(false);
 
         self.createPoll = function () {
-            //Clear out previous error messages
-            $('text').remove('.error-message');
-
-            var inputs = $("#poll-create-form div");
-            for (var i = 0; i < inputs.length; i++) {
-                self.validateField(inputs[i]);
-            }
-
-            if (!$("#poll-create-form")[0].checkValidity()) {
-                return;
-            }
-
-            $("#poll-create-btn").attr('disabled', 'disabled');
-            $("#poll-create-btn").text('Creating...');
-
-            var creatorName = $("#poll-creator").val();
-            var pollName = $("#poll-name").val();
-            var email = $("#email").val();
-            var templateId = $("#template").val();
-            var invites = $("#invites").val();
-            var strategy = $("#voting-strategy").val();
-            var maxPoints = $("#max-points").val() || 7;
-            var maxPerVote = $("#max-per-vote").val() || 3;
-            var inviteOnly = $('#invite-only').is(':checked');
-            var anonymousVoting = $('#anonymous-voting').is(':checked');
-            var requireAuth = $('#require-auth').is(':checked');
-            var expiry = $('#expiry').is(':checked');
-            var expiryDate = expiry ? new Date($('#expiry-date').val()) : null;
-            var optionAdding = $('#option-adding').is(':checked');
-
-            if (expiryDate == 'Invalid Date' && expiry) {
-                expiryDate = new Date();
-                expiryDate.setMinutes(expiryDate.getMinutes() + 30);
-            }
+            if (!Validation.validateForm($("#poll-create-form"))) return;
+            self.creatingPoll(true);
             
             $.ajax({
                 type: 'POST',
                 url: '/api/poll',
                 contentType: 'application/json',
+                beforeSend: function (header) {
+                    header.setRequestHeader("Authorization", "Bearer " + sessionStorage['creator_token']);
+                },
 
+                // This is needed to ensure that values not given are not set on the JSON object
                 data: JSON.stringify({
-                    Name: pollName,
-                    Creator: creatorName,
-                    Email: email,
-                    Invites: invites.split('\n'),
-                    templateId: templateId,
-                    VotingStrategy: strategy,
-                    MaxPoints: maxPoints,
-                    MaxPerVote: maxPerVote,
-                    InviteOnly: inviteOnly,
-                    AnonymousVoting: anonymousVoting,
-                    RequireAuth: requireAuth,
-                    Expires: expiry,
-                    ExpiryDate: expiryDate,
-                    OptionAdding: optionAdding
+                    Name: self.pollName() || undefined,
+                    Creator: self.creatorName() || undefined,
+                    Email: self.creatorEmail() || undefined,
+                    TemplateId: self.templateId() || undefined,
+                    VotingStrategy: self.strategy() || undefined,
+                    MaxPoints: self.maxPoints() || undefined,
+                    MaxPerVote: self.maxPerVote() || undefined,
+                    InviteOnly: self.inviteOnly() || undefined,
+                    AnonymousVoting: self.anonymousVoting() || undefined,
+                    RequireAuth: self.requireAuth() || undefined,
+                    Expires: self.expiry() || undefined,
+                    ExpiryDate: new Date(self.expiryDate()) || undefined,
+                    OptionAdding: self.optionAdding() || undefined
                 }),
 
                 success: function (data) {
-                    self.pollCreated(data.UUID, data.ManageID);
-                }
+                    self.navigateToManage(data.ManageId);
+                },
+
+                error: Common.handleError
             });
         };
 
-        self.pollCreated = function (PollId, ManageId) {
-
-            // Simulate a page change and make the back button simply refresh the page.
-            history.pushState({}, "");
-            window.addEventListener("popstate", function (e) {
-                history.go(0);
-            });
-
-            // Load partial HTML
-            $.ajax({
-                type: 'GET',
-                url: '/Partials/CheckEmail.html',
-                dataType: 'html',
-
-                success: function (data) {
-                    $("#content").html(data);
-                    $("#poll-id").attr("href", "/?poll=" + PollId);
-                    $("#manage-id").attr("href", "/?manage=" + ManageId);
-                }
-            });
+        self.navigateToManage = function (manageId) {
+            window.location.href = "/Manage/Index/" + manageId;
         };
 
-        self.validateField = function (field) {
-            var inputField = $(field).find('input')[0];
+        self.initialise = function () {
+            $('[data-toggle="tooltip"]').tooltip({ html: true });
 
-            if (!inputField) {
-                return;
-            }
-
-            if (!inputField.checkValidity()) {
-                $(inputField).addClass('error');
-                var errorMessage = inputField.validationMessage;
-                $(field).append('<text class="error-message">' + errorMessage + '</text>');
-            }
-            else {
-                $(inputField).removeClass('error');
-            }
+            ko.applyBindings(this);
         };
-
-        self.populateTemplates = function () {
-            $.ajax({
-                type: 'GET',
-                url: '/api/template',
-
-                success: function (data) {
-                    self.templates(data);
-                }
-            });
-        };
-
-        $(document).ready(function () {
-            self.populateTemplates();
-
-            var defaultExpiryDate = moment().add(30, 'minutes');
-            $('#expiry-date').datetimepicker({ defaultDate: defaultExpiryDate });
-
-            $(document).tooltip
-
-            function showOrHideElement(show) {
-                $(".tip").toggle(show);
-            }
-
-            var hideElement = showOrHideElement.bind(null, false);
-            var showElement = showOrHideElement.bind(null, true);
-            var $hoverTarget = $("#strategy-info");
-            ko.utils.registerEventHandler($hoverTarget, "mouseover", showElement);
-            ko.utils.registerEventHandler($hoverTarget, "mouseout", hideElement);
-            hideElement();
-        });
     }
-
-    ko.applyBindings(new HomeViewModel());
 });

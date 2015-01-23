@@ -12,6 +12,7 @@ using Moq;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -42,7 +43,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _emptyUUID = Guid.NewGuid();
             _anonymousUUID = Guid.NewGuid();
 
-            Poll mainPoll = new Poll() { UUID = _mainUUID };
+            Poll mainPoll = new Poll() { UUID = _mainUUID, LastUpdated = DateTime.Today };
             Poll otherPoll = new Poll() { UUID = _otherUUID };
             Poll emptyPoll = new Poll() { UUID = _emptyUUID };
             Poll anonymousPoll = new Poll() { UUID = _anonymousUUID };
@@ -54,10 +55,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             User bobUser = new User { Id = 1, Name = "Bob" };
             User joeUser = new User { Id = 2, Name = "Joe" };
 
-            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = _mainUUID };
-            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, PollId = _mainUUID };
+            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = _mainUUID, User = bobUser, Poll = mainPoll, Option = burgerOption };
+            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, PollId = _mainUUID, User = joeUser, Poll = mainPoll, Option = burgerOption };
             _otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, PollId = _otherUUID };
-            _anonymousVote = new Vote() { Id = 4, OptionId = 1, UserId = 1, PollId = _anonymousUUID };
+            _anonymousVote = new Vote() { Id = 4, OptionId = 1, UserId = 1, PollId = _anonymousUUID, User = new User { Name = "" } };
 
             dummyUsers.Add(bobUser);
             dummyUsers.Add(joeUser);
@@ -119,11 +120,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_mainUUID);
 
             // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            expectedVotes.Add(_bobVote);
-            expectedVotes.Add(_joeVote);
-            List<Vote> responseVotes = ((ObjectContent)response.Content).Value as List<Vote>;
-            CollectionAssert.AreEquivalent(expectedVotes, responseVotes);
+            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            Assert.AreEqual(2, responseVotes.Count);
+            CollectionAssert.AreEqual(new long[] { 1, 2 }, responseVotes.Select(r => r.UserId).ToArray());
+            CollectionAssert.AreEqual(new long[] { 1, 1 }, responseVotes.Select(r => r.OptionId).ToArray());
         }
 
         [TestMethod]
@@ -133,9 +133,60 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_emptyUUID);
 
             // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            List<Vote> responseVotes = ((ObjectContent)response.Content).Value as List<Vote>;
-            CollectionAssert.AreEquivalent(expectedVotes, responseVotes);
+            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            Assert.AreEqual(0, responseVotes.Count);
+        }
+
+        [TestMethod]
+        public void GetOnAnonPollDoesNotReturnUsernames()
+        {
+            // Act
+            var response = _controller.Get(_anonymousUUID);
+
+            // Assert
+            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            Assert.AreEqual(1, responseVotes.Count);
+            Assert.AreEqual("Anonymous User", responseVotes[0].VoterName);
+        }
+
+        [TestMethod]
+        public void GetWithLowTimestampReturnsResults()
+        {
+            // Act
+            Uri requestURI;
+            Uri.TryCreate("http://localhost/?lastPoll=0", UriKind.Absolute, out requestURI);
+            _controller.Request.RequestUri = requestURI;
+            var response = _controller.Get(_mainUUID);
+
+            // Assert
+            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            Assert.AreEqual(2, responseVotes.Count);
+        }
+
+        [TestMethod]
+        public void GetWithHighTimestampReturnsNotModified()
+        {
+            // Act
+            Uri requestURI;
+            Uri.TryCreate("http://localhost/?lastPoll=2145916800000", UriKind.Absolute, out requestURI);
+            _controller.Request.RequestUri = requestURI;
+            var response = _controller.Get(_mainUUID);
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.NotModified, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void GetWithHighTimestampReturnsNoResults()
+        {
+            // Act
+            Uri requestURI;
+            Uri.TryCreate("http://localhost/?lastPoll=2145916800000", UriKind.Absolute, out requestURI);
+            _controller.Request.RequestUri = requestURI;
+            var response = _controller.Get(_mainUUID);
+
+            // Assert
+            Assert.IsNull(response.Content);
         }
 
         [TestMethod]
@@ -146,18 +197,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void GetOnAnonPollDoesNotReturnUsernames()
-        {
-            // Act
-            var response = _controller.Get(_anonymousUUID);
-
-            // Assert
-            List<Vote> responseVotes = ((ObjectContent)response.Content).Value as List<Vote>;
-            Assert.AreEqual(1, responseVotes.Count);
-            Assert.IsNull(responseVotes[0].User);
         }
 
         #endregion

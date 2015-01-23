@@ -255,6 +255,16 @@ namespace VotingApplication.Web.Api.Tests
         }
 
         [TestMethod]
+        public void PutNewUsernameWithExistingTokenUpdatesExistingUsername()
+        {
+            // Act
+            var response = _controller.Put(new User() { Name = "Another User", PollId = _openPollUUID, Token = new Token() { TokenGuid = _openTokenUUID } });
+
+            // Assert
+            Assert.AreEqual("Another User", _bobUser.Name);
+        }
+
+        [TestMethod]
         public void PutNewUserWithExistingUsernameDoesNotChangeUserList()
         {
             // Act

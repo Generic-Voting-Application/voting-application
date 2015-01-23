@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SendGrid;
+using SendGrid.SmtpApi;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -8,13 +10,13 @@ using System.Web.Configuration;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
-    public static class MailSender
+    public class MailSender : IMailSender
     {
-        private static SmtpClient client;
+        private NetworkCredential credentials;
 
-        static MailSender()
+        public MailSender()
         {
-            string hostEmail = WebConfigurationManager.AppSettings["HostEmail"];
+            string hostEmail = WebConfigurationManager.AppSettings["HostLogin"];
             string hostPassword = WebConfigurationManager.AppSettings["HostPassword"];
 
             if (hostEmail == null || hostPassword == null)
@@ -22,16 +24,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 return;
             }
 
-            client = new SmtpClient();
-            client.Port = 25;
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.UseDefaultCredentials = false;
-            client.Host = "smtp.gmail.com";
-            client.EnableSsl = true;
-            client.Credentials = new NetworkCredential(hostEmail, hostPassword);
+            credentials = new NetworkCredential(hostEmail, hostPassword);
         }
 
-        public static void SendMail(string to, string subject, string message)
+        public void SendMail(string to, string subject, string message)
         {
             if (to == null || to.Length == 0)
             {
@@ -40,18 +36,14 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             string hostEmail = WebConfigurationManager.AppSettings["HostEmail"];
 
-            MailMessage mail = new MailMessage(hostEmail, to);
+            SendGridMessage mail = new SendGridMessage();
+            mail.From = new MailAddress(hostEmail, "Voting App");
+            mail.AddTo(to);
             mail.Subject = subject;
-            mail.Body = message;
+            mail.Text = message;
 
-            try
-            {
-                client.Send(mail);
-            }
-            catch (SmtpException)
-            {
-                // Ignore the mail
-            }
+            var transportWeb = new SendGrid.Web(credentials);
+            transportWeb.Deliver(mail);
         }
     }
 }

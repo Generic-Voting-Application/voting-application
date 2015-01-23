@@ -15,7 +15,7 @@ body {
     padding-right: 15px;
 }
 
-h2 {
+.centered {
     text-align: center;
 }
 
@@ -23,11 +23,17 @@ h4 {
     font-weight: bold;
 }
 
+.warning {
+    color: red;
+    font-weight: bold
+}
+
 input, select, textarea {
     margin-bottom: 15px;
     width: 100%;
     border-width: 1px;
     max-width: 100%;
+    margin-top: 0px !important;
 }
 
 label {
@@ -100,11 +106,6 @@ label.info-message {
     min-width: 30px;
 }
 
-.checkbox-label {
-    float:left;
-    width:90%;
-}
-
 .checkbox-inline {
     float:right; 
     width:10%; 
@@ -132,6 +133,12 @@ label.info-message {
     border-style: solid;
 }
 
+#tabBar {
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 #chat-panel {
     margin-top:20px;
 }
@@ -146,6 +153,10 @@ label.info-message {
     padding-bottom: 15px;
 }
 
+.nav-tabs .active, .tab-pane.active {
+    opacity: 1;
+}
+
 .signinButton {
     padding: 0px;
     margin: 0px;
@@ -155,6 +166,20 @@ label.info-message {
 
 .signinButton > img {
     width:200px;
+}
+
+#template-group {
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.affirmative {
+    color: green;
+}
+
+.negative {
+    color: red;
 }
 
 @media (min-width: 768px) {
@@ -201,9 +226,7 @@ label.info-message {
 	padding: 10px 10px;
 	border-radius: 8px;
 	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-	position: absolute;
-    display: inline;
-    z-index: 1000;
-    left: 125px;
-    top: 550px;
+	position: relative;
+    display: block;
+    width: 320px;
 }

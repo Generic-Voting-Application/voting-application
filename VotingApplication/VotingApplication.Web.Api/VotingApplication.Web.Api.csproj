@@ -16,7 +16,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44302</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
@@ -78,6 +78,12 @@
     <Reference Include="Microsoft.AspNet.Identity.Owin">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.1.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.1.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.1.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Diagnostics.Tracing.EventSource">
@@ -160,6 +166,12 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="SendGrid.SmtpApi">
+      <HintPath>..\packages\SendGrid.SmtpApi.1.1.3\lib\net40\SendGrid.SmtpApi.dll</HintPath>
+    </Reference>
+    <Reference Include="SendGridMail">
+      <HintPath>..\packages\Sendgrid.5.0.0\lib\SendGridMail.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -275,43 +287,52 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\API Controllers\AccountController.cs" />
+    <Compile Include="Controllers\API Controllers\IMailSender.cs" />
     <Compile Include="Controllers\API Controllers\MailSender.cs" />
     <Compile Include="Controllers\API Controllers\ManageController.cs" />
+    <Compile Include="Controllers\API Controllers\ManageInvitationController.cs" />
     <Compile Include="Controllers\API Controllers\ManageOptionController.cs" />
     <Compile Include="Controllers\API Controllers\ManageVoteController.cs" />
-    <Compile Include="Controllers\API Controllers\PollChatMessageController.cs" />
-    <Compile Include="Controllers\API Controllers\TemplateController.cs" />
     <Compile Include="Controllers\API Controllers\PollController.cs" />
     <Compile Include="Controllers\API Controllers\PollOptionController.cs" />
     <Compile Include="Controllers\API Controllers\PollVoteController.cs" />
     <Compile Include="Controllers\API Controllers\UserPollVoteController.cs" />
     <Compile Include="Controllers\Web Controllers\AdminController.cs" />
+    <Compile Include="Controllers\Web Controllers\DecisionController.cs" />
+    <Compile Include="Controllers\Web Controllers\ManageController.cs" />
+    <Compile Include="Controllers\Web Controllers\PollController.cs" />
     <Compile Include="Controllers\Web Controllers\InfoController.cs" />
-    <Compile Include="Controllers\Web Controllers\HomeController.cs" />
-    <Compile Include="Controllers\API Controllers\OptionController.cs" />
+    <Compile Include="Controllers\Web Controllers\CreateController.cs" />
     <Compile Include="Controllers\API Controllers\UserController.cs" />
-    <Compile Include="Controllers\API Controllers\UserVoteController.cs" />
-    <Compile Include="Controllers\API Controllers\VoteController.cs" />
     <Compile Include="Controllers\API Controllers\WebApiController.cs" />
+    <Compile Include="Controllers\Web Controllers\SignInController.cs" />
     <Compile Include="Filters\BasicAuthenticator.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\DBViewModels\ManagePollRequestResponseModel.cs" />
+    <Compile Include="Models\DBViewModels\OptionRequestResponseModel.cs" />
+    <Compile Include="Models\DBViewModels\OptionCreationRequestModel.cs" />
+    <Compile Include="Models\DBViewModels\PollRequestResponseModel.cs" />
+    <Compile Include="Models\DBViewModels\PollCreationRequestModel.cs" />
+    <Compile Include="Models\DBViewModels\PollCreationResponseModel.cs" />
+    <Compile Include="Models\DBViewModels\VoteRequestResponseModel.cs" />
+    <Compile Include="Models\DBViewModels\VoteRequestModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ManageModels.cs" />
+    <Compile Include="Models\PollModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Content Include="img\poll.jpg" />
     <Content Include="img\sign-in-with-facebook.png" />
     <Content Include="img\sign-in-with-google.png" />
-    <Content Include="Partials\CheckEmail.html" />
-    <Content Include="Partials\VotingStrategies\RankedVote.html" />
-    <Content Include="Partials\VotingStrategies\PointsVote.html" />
-    <Content Include="Partials\VotingStrategies\BasicVote.html" />
-    <Content Include="Partials\VotingStrategies\RankedVoteResults.html" />
     <Content Include="Scripts\Create.js" />
+    <Content Include="Scripts\Lib\jquery.signalR-2.1.2.js" />
+    <Content Include="Scripts\Lib\jquery.signalR-2.1.2.min.js" />
+    <Content Include="Scripts\KnockoutExtensions.js" />
     <Content Include="Scripts\Lib\bootstrap-switch.min.js" />
     <Content Include="Scripts\Lib\bootstrap.min.js" />
     <Content Include="Scripts\Lib\countdown.min.js" />
@@ -322,9 +343,10 @@
     <Content Include="Scripts\Lib\jquery-sortable-min.js" />
     <Content Include="Scripts\Lib\jquery-ui.min.js" />
     <Content Include="Scripts\Lib\jquery.ui.touch-punch.min.js" />
-    <Content Include="Scripts\Lib\knockout-3.2.0.js" />
-    <Content Include="Scripts\Lib\moment.js" />
-    <Content Include="Scripts\Main.js" />
+    <Content Include="Scripts\Lib\knockout-3.2.0.min.js" />
+    <Content Include="Scripts\Lib\moment.min.js" />
+    <Content Include="Scripts\Config.js" />
+    <Compile Include="Sockets\ChatHub.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -360,37 +382,44 @@
     <None Include="Properties\PublishProfiles\voting-application - Web Deploy.pubxml" />
     <Content Include="Scripts\Lib\require.js" />
     <Content Include="Scripts\Manage.js" />
+    <Content Include="Scripts\PointsOption.js" />
+    <Content Include="Scripts\Navbar.js" />
     <Content Include="Scripts\Poll.js" />
-    <Content Include="Scripts\SocketClient.js" />
+    <Content Include="Scripts\PollOptions.js" />
+    <Content Include="Scripts\Signin.js" />
+    <Content Include="Scripts\ChatClient.js" />
     <Content Include="Scripts\Admin.js" />
     <Content Include="Scripts\Common.js" />
-    <Content Include="Scripts\Home.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Partials\Create.html" />
-    <Content Include="Partials\Manage.html" />
-    <Content Include="Partials\Poll.html" />
-    <Content Include="Scripts\VotingStrategies\RankedVote.js" />
-    <Content Include="Scripts\VotingStrategies\PointsVote.js" />
-    <Content Include="Scripts\VotingStrategies\BasicVote.js" />
+    <Content Include="Scripts\RankedVote.js" />
+    <Content Include="Scripts\PointsVote.js" />
+    <Content Include="Scripts\BasicVote.js" />
+    <Content Include="Scripts\Validation.js" />
     <Content Include="Styling\Lib\bootstrap-datetimepicker.min.css" />
+    <Content Include="Views\Decision\Index.cshtml" />
+    <Content Include="Views\Poll\_BasicVotePartial.cshtml" />
+    <Content Include="Views\Poll\_PointsVotePartial.cshtml" />
+    <Content Include="Views\Poll\_PointsResultsPartial.cshtml" />
+    <Content Include="Views\Poll\_BasicResultsPartial.cshtml" />
+    <Content Include="Views\Poll\_PollAddOptionPartial.cshtml" />
+    <Content Include="Views\Poll\_RankedVotePartial.cshtml" />
+    <Content Include="Views\Poll\_RankedResultsPartial.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Styling\style.css" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Create\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Info\Index.cshtml" />
     <Content Include="Scripts\Lib\bootstrap-datetimepicker.min.js" />
+    <Content Include="Views\Manage\Index.cshtml" />
+    <Content Include="Views\Poll\Index.cshtml" />
+    <Content Include="Views\SignIn\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VotingApplication.Data\VotingApplication.Data.csproj">
@@ -424,7 +453,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>57534</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:49717/</IISUrl>
+          <IISUrl>https://localhost:44302/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
@@ -444,6 +473,13 @@
     <Error Condition="!Exists('..\packages\Microsoft.ApplicationInsights.0.10.0-build17704\tools\net40\Microsoft.ApplicationInsights.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." />
     <Error Condition="Exists('..\packages\Microsoft.ApplicationInsights.0.10.0-build17704\tools\net40\Microsoft.ApplicationInsights.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PreBuildEvent>npm install</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

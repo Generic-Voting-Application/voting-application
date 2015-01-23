@@ -12,19 +12,15 @@ namespace VotingApplication.Data.Model
         public long Id { get; set; }
 
         public Guid UUID { get; set; }
-        public Guid ManageID { get; set; }
+        public Guid ManageId { get; set; }
         public string Name { get; set; }
 
         public string Creator { get; set; }
 
         public String VotingStrategy { get; set; }
 
-        [NotMapped]
-        public string Email { get; set; }
-        [NotMapped]
-        public List<string> Invites { get; set; }
+        public string CreatorIdentity { get; set; }
 
-        public long TemplateId { get; set; }
         public List<Option> Options { get; set; }
 
         public int MaxPoints { get; set; }
@@ -42,5 +38,8 @@ namespace VotingApplication.Data.Model
         public DateTimeOffset ExpiryDate { get; set; }
 
         public bool OptionAdding { get; set; }
+
+        public DateTime LastUpdated { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

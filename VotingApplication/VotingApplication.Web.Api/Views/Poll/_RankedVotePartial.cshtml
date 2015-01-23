@@ -1,0 +1,58 @@
+﻿<div class="panel panel-default">
+    <div class="panel-heading">
+        <h2 class="panel-title">Options</h2>
+    </div>
+    <form>
+        <table id="optionTable" class="table table-hover sortable">
+            <thead>
+                <tr>
+                    <th class="col-md-3">Option</th>
+                    <th class="col-md-6">Description</th>
+                    <th class="col-md-3 hidden-xs hidden-sm">More info</th>
+                </tr>
+            </thead>
+            <tbody id="optionTable-tbody">
+                <!-- ko foreach: remainOptions -->
+                <tr class="clickable" data-bind="attr: {'data-id': Id}">
+                    <td class="col-md-3" data-bind="text: Name"></td>
+                    <td class="col-md-6" data-bind="text: Description"></td>
+                    <td class="col-md-3 hidden-xs hidden-sm" data-bind="text: Info"></td>
+                </tr>
+                <!-- /ko -->
+
+                <!-- ko with: pollOptions -->
+                @Html.Partial("_PollAddOptionPartial")
+                <!-- /ko -->
+            </tbody>
+        </table>
+    </form>
+</div>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h2 class="panel-title">Selection</h2>
+    </div>
+    <table id="selectionTable" class="table table-hover sortable selection-content">
+        <thead>
+            <tr>
+                <th class="col-md-3">Option</th>
+                <th class="col-md-6">Description</th>
+                <th class="col-md-3 hidden-xs hidden-sm">More info</th>
+            </tr>
+        </thead>
+        <tbody id="selectionTable-body">
+            <!-- ko foreach: selectedOptions -->
+            <tr class="clickable" data-bind="attr: {'data-id': Id}">
+                <td class="col-md-3" data-bind="text: Name"></td>
+                <td class="col-md-6" data-bind="text: Description"></td>
+                <td class="col-md-3 hidden-xs hidden-sm" data-bind="text: Info"></td>
+            </tr>
+            <!-- /ko -->
+
+            <tr data-bind="visible: selectedOptions().length == 0">
+                <td colspan="3">Drag options here in preference order</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<button class="btn btn-primary" data-bind="click: doVote, enable: selectedOptions().length > 0">Submit Vote</button>
