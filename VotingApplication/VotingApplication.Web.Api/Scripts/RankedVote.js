@@ -1,6 +1,6 @@
 ﻿define('RankedVote', ['jquery', 'knockout', 'jqueryUI', 'Common', 'PollOptions', 'ResultChart', 'SliderExtension'], function ($, ko, jqueryUI, Common, PollOptions) {
 
-    return function RankedVote(pollId, token) {
+    return function RankedVote(pollId) {
 
         var self = this;
         self.pollOptions = new PollOptions(pollId);
@@ -158,22 +158,21 @@
 
         self.onVoted = null;
         self.doVote = function () {
-            var userId = Common.currentUserId(pollId);
+            var tokenGuid = Common.getToken(pollId);
 
-            if (userId && pollId) {
-                var useToken = token || Common.sessionItem("token", pollId);
+            if (tokenGuid && pollId) {
                 // Convert selected options to ranked votes
                 var selectedOptionsArray = self.selectedOptions().map(function (option, index) {
                     return {
                         OptionId: option.Id,
                         VoteValue: index + 1,
-                        TokenGuid: useToken
+                        VoterName: Common.getVoterName()
                     };
                 });
 
                 $.ajax({
                     type: 'PUT',
-                    url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
+                    url: '/api/token/' + tokenGuid + '/poll/' + pollId + '/vote',
                     contentType: 'application/json',
                     data: JSON.stringify(selectedOptionsArray),
 
@@ -186,19 +185,25 @@
             }
         };
 
-        self.getVotes = function (pollId, userId) {
-            $.ajax({
-                type: 'GET',
-                url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
-                contentType: 'application/json',
+        self.getPreviousVotes = function (pollId) {
 
-                success: function (data) {
-                    data.sort(sortByVoteValue);
-                    selectPickedOptions(data);
-                },
+            var tokenGuid = Common.getToken(pollId);
 
-                error: Common.handleError
-            });
+            if (tokenGuid && pollId) {
+
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/token/' + tokenGuid + '/poll/' + pollId + '/vote',
+                    contentType: 'application/json',
+
+                    success: function (data) {
+                        data.sort(sortByVoteValue);
+                        selectPickedOptions(data);
+                    },
+
+                    error: Common.handleError
+                });
+            }
         };
 
         self.displayResults = function (votes) {

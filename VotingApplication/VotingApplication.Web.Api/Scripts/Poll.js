@@ -1,12 +1,10 @@
 ﻿define('Poll', ['jquery', 'knockout', 'bootstrap', 'countdown', 'moment', 'Common', 'ChatClient', 'platform'], function ($, ko, bs, countdown, moment, Common, chatClient) {
-    return function VoteViewModel(pollId, token, VotingStrategyViewModel) {
+    return function VoteViewModel(pollId, uriTokenGuid, VotingStrategyViewModel) {
         var self = this;
 
         var lockCollapse = false;
         var selectedPanel = null;
         var lastResultsRequest = 0;
-
-        token = token || Common.sessionItem("token", pollId);
 
         self.votingStrategy = null;
 
@@ -15,7 +13,7 @@
         self.pollCreator = ko.observable("Poll Creator");
         self.chatMessages = ko.observableArray();
         self.lastMessageId = 0;
-        self.userName = ko.observable(Common.currentUserName(pollId));
+        self.userName = ko.observable(Common.getVoterName(pollId));
         self.requireAuth = ko.observable();
 
         self.pollExpires = ko.observable(false);
@@ -107,7 +105,7 @@
                 scrollTop: $("#chat-messages")[0].scrollHeight
             });
         };
-        
+
         var googleLogin = function (authResult) {
             //Login failed
             if (!authResult['status']['signed_in']) {
@@ -154,44 +152,20 @@
         };
 
         self.submitLogin = function (data, event) {
-            var username = $("#loginUsername").val();
+            var userName = $("#loginUsername").val();
+            self.userName(userName);
+            Common.setVoterName(userName, pollId);
 
-            $.ajax({
-                type: 'PUT',
-                url: '/api/user',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    Name: username,
-                    PollId: pollId,
-                    Token: {
-                        TokenGuid: token
-                    }
-                }),
-
-                success: function (data) {
-                    Common.loginUser(data, username, pollId);
-                    self.userName(username);
-                    self.userId = Common.currentUserId(pollId);
-                    if (!self.pollExpired()) {
-                        showSection($('#voteSection'));
-                    } else {
-                        showSection($('#resultSection'));
-                    }
-                },
-
-                error: [Common.handleError, function (jqXHR, textStatus, errorThrown) {
-                    if (jqXHR.status == 400) {
-                        $('#loginSection').addClass("has-error");
-                        $('#usernameWarnMessage').show();
-                    }
-                }]
-            });
+            if (!self.pollExpired()) {
+                showSection($('#voteSection'));
+            } else {
+                showSection($('#resultSection'));
+            }
         };
 
         self.logout = function () {
-            Common.logoutUser(pollId);
+            Common.clearStorage(pollId);
             self.userName(undefined);
-            self.userId = undefined;
         }
 
         self.chatMessage = ko.observable("");
@@ -218,8 +192,8 @@
         chatClient.joinPoll(pollId);
 
         self.sendChatMessage = function (data, event) {
-            if (self.userId && pollId) {
-                chatClient.sendMessage(pollId, self.userId, self.chatMessage());
+            if (pollId) {
+                chatClient.sendMessage(pollId, Common.getVoterName(), self.chatMessage());
                 self.chatMessage("");
             }
         };
@@ -244,14 +218,14 @@
         };
 
         self.clearVote = function () {
-            var userId = Common.currentUserId(pollId);
-
             var voteData = JSON.stringify([]);
 
-            if (userId && pollId) {
+            var tokenGuid = Common.getToken(pollId);
+
+            if (tokenGuid && pollId) {
                 $.ajax({
                     type: 'PUT',
-                    url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
+                    url: '/api/token/' + Common.getToken(pollId) + '/poll/' + pollId + '/vote',
                     contentType: 'application/json',
                     data: voteData,
 
@@ -268,7 +242,7 @@
 
         $('#voteSection .accordion-body').on('show.bs.collapse', function () {
             if (self.votingStrategy) {
-                self.votingStrategy.getVotes(pollId, self.userId);
+                self.votingStrategy.getPreviousVotes(pollId);
             }
         });
 
@@ -279,11 +253,13 @@
         });
 
         $(document).ready(function () {
-            self.userId = Common.currentUserId(pollId);
+            Common.resolveToken(pollId, uriTokenGuid);
 
             getPollDetails(pollId, function () {
-                if (self.userId) {
-                    $('#loginUsername').val(Common.currentUserName(pollId));
+
+                var voterName = Common.getVoterName(pollId);
+                if (voterName) {
+                    self.userName(voterName);
                     if (!self.pollExpired()) {
                         showSection($('#voteSection'));
                     } else {
@@ -301,7 +277,7 @@
         });
 
         if (VotingStrategyViewModel) {
-            self.votingStrategy = new VotingStrategyViewModel(pollId, token);
+            self.votingStrategy = new VotingStrategyViewModel(pollId);
 
             self.votingStrategy.onVoted = function () {
                 // Switch to the vote panel

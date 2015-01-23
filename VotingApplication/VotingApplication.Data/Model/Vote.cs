@@ -8,10 +8,8 @@ namespace VotingApplication.Data.Model
         public long OptionId { get; set; }
         public Option Option { get; set; }
 
-        public int PollValue { get; set; }
-
-        public long UserId { get; set; }
-        public User User { get; set; }
+        public int VoteValue { get; set; }
+        public String VoterName { get; set; }
 
         public Guid PollId { get; set; }
         public Poll Poll { get; set; }

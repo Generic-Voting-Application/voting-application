@@ -27,9 +27,9 @@
         };
 
         // Send a message to the server
-        self.sendMessage = function sendMessage(pollId, userId, message) {
+        self.sendMessage = function sendMessage(pollId, voterName, message) {
             chat.server
-                .sendMessage(pollId, userId, message)
+                .sendMessage(pollId, voterName, message)
                 .fail(function (x) {
                     console.error(x);
                 });

@@ -1,13 +1,11 @@
-﻿using System.Data.Entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
-using VotingApplication.Web.Api.Filters;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers

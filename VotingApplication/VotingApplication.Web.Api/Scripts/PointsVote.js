@@ -1,6 +1,6 @@
 ﻿define('PointsVote', ['jquery', 'knockout', 'Common', 'PollOptions', 'PointsOption', 'ResultChart'], function ($, ko, Common, PollOptions, PointsOption) {
 
-    return function PointsVote(pollId, token) {
+    return function PointsVote(pollId) {
 
         var self = this;
         self.pollOptions = new PollOptions(pollId);
@@ -40,7 +40,7 @@
 
         var countVotes = function (votes) {
             var totalCounts = [];
-            
+
             votes.sort(function (a, b) {
                 return b.VoteValue - a.VoteValue;
             }).forEach(function (vote) {
@@ -78,23 +78,23 @@
 
         self.onVoted = null;
         self.doVote = function (data, event) {
-            var userId = Common.currentUserId(pollId);
 
-            var useToken = token || Common.sessionItem("token", pollId);
             var votesData = self.pollOptions.options()
                 .map(function (option, i) {
                     return {
                         OptionId: option.Id,
                         VoteValue: self.pointsForOption(i).value(),
-                        TokenGuid: useToken
+                        VoterName: Common.getVoterName()
                     };
                 })
                 .filter(function (vote) { return vote.VoteValue > 0; });
 
-            if (userId && pollId) {
+            var tokenGuid = Common.getToken(pollId);
+
+            if (tokenGuid && pollId) {
                 $.ajax({
                     type: 'PUT',
-                    url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
+                    url: '/api/token/' + tokenGuid + '/poll/' + pollId + '/vote',
                     contentType: 'application/json',
                     data: JSON.stringify(votesData),
 
@@ -107,39 +107,44 @@
             }
         };
 
-        self.getVotes = function (pollId, userId) {
-            $.ajax({
-                type: 'GET',
-                url: '/api/user/' + userId + '/poll/' + pollId + '/vote',
-                contentType: 'application/json',
+        self.getPreviousVotes = function (pollId) {
+            var tokenGuid = Common.getToken(pollId);
 
-                success: function (data) {
-                    resetVote();
-                    var allOptions = self.pollOptions.options();
-                    for (var i = 0; i < data.length; i++) {
-                        //Find index of previously voted option
-                        var vote = allOptions.filter(function (d) {
-                            return d.Id == data[i].OptionId;
-                        })[0];
-                        var optionIndex = self.pollOptions.options().indexOf(vote);
+            if (tokenGuid && pollId) {
 
-                        if (optionIndex == -1)
-                            continue;
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/token/' + tokenGuid + '/poll/' + pollId + '/vote',
+                    contentType: 'application/json',
 
-                        self.pointsArray()[optionIndex].value(data[i].VoteValue);
+                    success: function (data) {
+                        resetVote();
+                        var allOptions = self.pollOptions.options();
+                        for (var i = 0; i < data.length; i++) {
+                            //Find index of previously voted option
+                            var vote = allOptions.filter(function (d) {
+                                return d.Id == data[i].OptionId;
+                            })[0];
+                            var optionIndex = self.pollOptions.options().indexOf(vote);
+
+                            if (optionIndex == -1)
+                                continue;
+
+                            self.pointsArray()[optionIndex].value(data[i].VoteValue);
+                        }
                     }
-                }
-            });
+                });
+            }
         };
 
-        self.displayResults = function(data) {
+        self.displayResults = function (data) {
             var groupedVotes = countVotes(data);
             self.chartData([{ Data: groupedVotes }]);
 
             // Store the winners' names (may be a tie)
             self.winners(self.pollOptions.getWinners(groupedVotes));
         }
-        
+
         self.initialise = function (pollData) {
             self.pollOptions.initialise(pollData);
 

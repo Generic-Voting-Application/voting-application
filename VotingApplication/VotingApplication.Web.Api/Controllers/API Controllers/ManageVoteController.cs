@@ -26,13 +26,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 model.OptionName = vote.Option.Name;
             }
 
-            if (vote.User != null)
-            {
-                model.VoterName = vote.User.Name;
-                model.UserId = vote.User.Id;
-            }
-
-            model.VoteValue = vote.PollValue;
+            model.VoterName = vote.VoterName;
+            model.VoteValue = vote.VoteValue;
 
             return model;
         }

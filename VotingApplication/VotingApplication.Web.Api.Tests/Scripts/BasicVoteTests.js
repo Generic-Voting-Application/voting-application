@@ -11,17 +11,16 @@
             $.mockjaxSettings.responseTime = 1;
             mockjax.clear();
 
-            // Spy on Common.currentUserId (only return user id for correct poll id)
-            spyOn(Common, 'currentUserId').and.callFake(function (pollId) {
-                if (pollId === "303") return 912;
-                return 0;
+            // Spy on Common.getVoterName
+            spyOn(Common, 'getVoterName').and.callFake(function () {
+                return "Bob";
             });
 
-            // Spy on Common.sessionItem (only return token for correct key and poll id)
-            spyOn(Common, 'sessionItem').and.callFake(function (sessionKey, pollId) {
-                if (sessionKey === "token" && pollId === "303") return "616";
+            // Spy on Common.getToken
+            spyOn(Common, 'getToken').and.callFake(function (pollId) {
+                if (pollId === "303") return "00000000-0000-0000-0000-000000000001";
                 return 0;
-            })
+            });
         });
         //#endregion
 
@@ -29,15 +28,15 @@
             // arrange
             var posted = false;
             mockjax({
-                type: "PUT", url: "/api/user/912/poll/303/vote",
-                data: JSON.stringify([{ OptionId: 17, TokenGuid: "515" }]),
+                type: "PUT", url: "/api/token/00000000-0000-0000-0000-000000000001/poll/303/vote",
+                data: JSON.stringify([{ OptionId: 17, VoterName: "Bob" }]),
                 response: function () { posted = true; }, responseText: {}
             });
 
             spyOn(target, 'onVoted');
 
             // act
-            target.doVote({ Id: 17 });
+            target.doVote({ Id: 17, VoterName:"Bob" });
 
             // assert
             setTimeout(function () {
@@ -53,8 +52,8 @@
 
             var posted = false;
             mockjax({
-                type: "PUT", url: "/api/user/912/poll/303/vote",
-                data: JSON.stringify([{ OptionId: 17, TokenGuid: "616" }]),
+                type: "PUT", url: "/api/token/00000000-0000-0000-0000-000000000001/poll/303/vote",
+                data: JSON.stringify([{ OptionId: 17, VoterName: "Bob" }]),
                 response: function () { posted = true; }, responseText: {}
             });
 
@@ -78,12 +77,12 @@
                 { Id: 17, Name: "Option-2", highlight: ko.observable(true) }
             ]);
             mockjax({
-                type: "GET", url: "/api/user/912/poll/303/vote",
+                type: "GET", url: "/api/token/00000000-0000-0000-0000-000000000001/poll/303/vote",
                 responseText: []
             });
 
             // act
-            target.getVotes("303", 912);
+            target.getPreviousVotes("303", 912);
 
             // assert
             setTimeout(function () {
@@ -101,12 +100,12 @@
                 { Id: 17, Name: "Option-2", highlight: ko.observable(true) }
             ]);
             mockjax({
-                type: "GET", url: "/api/user/912/poll/303/vote",
+                type: "GET", url: "/api/token/00000000-0000-0000-0000-000000000001/poll/303/vote",
                 responseText: [{ OptionId: 13 }]
             });
 
             // act
-            target.getVotes("303", 912);
+            target.getPreviousVotes("303", 912);
 
             // assert
             setTimeout(function () {
