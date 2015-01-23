@@ -146,14 +146,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 {
                     return this.Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
                 }
-            }
 
-            #endregion
-
-            #region DB Object Creation
-
-            using (var context = _contextFactory.CreateContext())
-            {
                 List<Vote> existingVotes = context.Votes.Where(v => v.Token.TokenGuid == tokenGuid && v.PollId == pollId).ToList<Vote>();
 
                 foreach (Vote contextVote in existingVotes)
@@ -169,6 +162,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                                                   context.Options.Single(o => o.Id == voteRequest.OptionId),
                                                   context.Polls.Single(p => p.UUID == pollId)));
                 }
+
+                poll.LastUpdated = DateTime.Now;
 
                 context.SaveChanges();
             }
