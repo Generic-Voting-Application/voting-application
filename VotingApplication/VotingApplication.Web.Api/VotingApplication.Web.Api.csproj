@@ -2,7 +2,7 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>
     </ProductVersion>
@@ -382,6 +382,7 @@
     <Content Include="Scripts\Navbar.js" />
     <Content Include="Scripts\Poll.js" />
     <Content Include="Scripts\PollOptions.js" />
+    <Content Include="Scripts\ResultChart.js" />
     <Content Include="Scripts\Signin.js" />
     <Content Include="Scripts\ChatClient.js" />
     <Content Include="Scripts\Admin.js" />
@@ -392,13 +393,13 @@
     <Content Include="Scripts\Validation.js" />
     <Content Include="Styling\Lib\bootstrap-datetimepicker.min.css" />
     <Content Include="Views\Decision\Index.cshtml" />
-    <None Include="Views\Poll\_BasicVotePartial.cshtml" />
-    <None Include="Views\Poll\_PointsVotePartial.cshtml" />
+    <Content Include="Views\Poll\_BasicVotePartial.cshtml" />
+    <Content Include="Views\Poll\_PointsVotePartial.cshtml" />
     <Content Include="Views\Poll\_PointsResultsPartial.cshtml" />
     <Content Include="Views\Poll\_BasicResultsPartial.cshtml" />
     <Content Include="Views\Poll\_PollAddOptionPartial.cshtml" />
-    <None Include="Views\Poll\_RankedVotePartial.cshtml" />
-    <None Include="Views\Poll\_RankedResultsPartial.cshtml" />
+    <Content Include="Views\Poll\_RankedVotePartial.cshtml" />
+    <Content Include="Views\Poll\_RankedResultsPartial.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
