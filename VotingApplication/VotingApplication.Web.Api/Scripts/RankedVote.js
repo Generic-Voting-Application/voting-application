@@ -1,4 +1,4 @@
-﻿define('RankedVote', ['jquery', 'knockout', 'jqueryUI', 'Common', 'PollOptions', 'ResultChart'], function ($, ko, jqueryUI, Common, PollOptions) {
+﻿define('RankedVote', ['jquery', 'knockout', 'jqueryUI', 'Common', 'PollOptions', 'ResultChart', 'SliderExtension'], function ($, ko, jqueryUI, Common, PollOptions) {
 
     return function RankedVote(pollId, token) {
 
@@ -11,6 +11,24 @@
         self.winVotesRequired = ko.observable(0);
         self.winners = ko.observableArray();
 
+        self.roundsRange = ko.observableArray([0, 0]);
+        self.roundsDisplay = ko.observableArray([0, 0]);
+
+        self.filteredChartData = ko.computed(function () {
+            var display = {
+                from: self.roundsDisplay()[0] - 1,
+                to: self.roundsDisplay()[1] - 1
+            };
+
+            return self.chartData().map(function (option) {
+                return {
+                    Name: option.Name,
+                    Data: option.Data.filter(function (r, i) {
+                        return i >= display.from && i <= display.to;
+                    })
+                };
+            });
+        });
 
         var selectPickedOptions = function (votes) {
             self.selectedOptions([]);
@@ -218,7 +236,13 @@
             }, 0);
             self.winVotesRequired(Math.ceil(voterCount / 2));
 
+            self.roundsRange([1, 1]);
             self.chartData(groupedVotes);
+
+            // Setup the number of rounds and the display range
+            var numRounds = groupedVotes.length ? groupedVotes[0].Data.length : 0;
+            self.roundsRange([1, numRounds]);
+            self.roundsDisplay([1, numRounds])
 
             // Store the winners' names (may be a tie)
             self.winners(self.pollOptions.getWinners(groupedVotes, function (group) {

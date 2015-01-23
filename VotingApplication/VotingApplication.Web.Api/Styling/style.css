@@ -197,6 +197,10 @@ label.info-message {
     text-align:center;
 }
 
+.round-slider {
+    margin: 15px 15px 15px 88px;
+}
+
 /* InsightJS things */
 .annotationsclass {
     fill: red !important;

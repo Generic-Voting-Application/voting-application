@@ -24,7 +24,54 @@
             })
         });
         //#endregion
-        
+
+        it("filteredChartData without ChartData expect Empty", function () {
+            // act
+            target.chartData([]);
+
+            // assert
+            expect(target.filteredChartData()).toEqual([]);
+        });
+
+        it("filteredChartData with All Rounds expect All Data", function () {
+            // act
+            var chartData = [
+                { Name: "Option-1", Data: [{ Name: '1' }, { Name: '2' }, { Name: '3' }, { Name: '4' }] },
+                { Name: "Option-2", Data: [{ Name: '1' }, { Name: '2' }, { Name: '3' }, { Name: '4' }] },
+                { Name: "Option-3", Data: [{ Name: '1' }, { Name: '2' }, { Name: '3' }, { Name: '4' }] },
+                { Name: "Option-4", Data: [{ Name: '1' }, { Name: '2' }, { Name: '3' }, { Name: '4' }] }
+            ];
+            target.chartData(chartData);
+
+            target.roundsRange([1, 4]);
+            target.roundsDisplay([1, 4]);
+
+            // assert
+            expect(target.filteredChartData()).toEqual(chartData);
+        });
+
+        it("filteredChartData with Restricted Rounds expect Filtered Data", function () {
+            // act
+            var chartData = [
+                { Name: "Option-1", Data: [{ Name: '1' }, { Name: '2' }, { Name: '3' }, { Name: '4' }] },
+                { Name: "Option-2", Data: [{ Name: '1' }, { Name: '2' }, { Name: '3' }, { Name: '4' }] },
+                { Name: "Option-3", Data: [{ Name: '1' }, { Name: '2' }, { Name: '3' }, { Name: '4' }] },
+                { Name: "Option-4", Data: [{ Name: '1' }, { Name: '2' }, { Name: '3' }, { Name: '4' }] }
+            ];
+            target.chartData(chartData);
+
+            target.roundsRange([2, 3]);
+            target.roundsDisplay([2, 3]);
+
+            // assert
+            expect(target.filteredChartData()).toEqual([
+                { Name: "Option-1", Data: [{ Name: '2' }, { Name: '3' }] },
+                { Name: "Option-2", Data: [{ Name: '2' }, { Name: '3' }] },
+                { Name: "Option-3", Data: [{ Name: '2' }, { Name: '3' }] },
+                { Name: "Option-4", Data: [{ Name: '2' }, { Name: '3' }] }
+            ]);
+        });
+
         it("doVote with Token expect Post vote and notify", function (done) {
             // arrange
 
@@ -137,6 +184,11 @@
             expect(target.chartData()).toEqual([]);
         });
 
+        var testPollOptions = [
+                    { Id: 13, Name: "Option-1" }, { Id: 17, Name: "Option-2" },
+                    { Id: 21, Name: "Option-3" }, { Id: 25, Name: "Option-4" }
+        ];
+
         // User-1 votes Option 1-2-3-4
         // User-2 votes Option 3-1
         // User-3 votes Option 3-4-2-1
@@ -162,10 +214,7 @@
 
         it("displayResults with Votes expect Draw ranked vote result", function () {
             // arrange
-            target.pollOptions.options([
-                    { Id: 13, Name: "Option-1" }, { Id: 17, Name: "Option-2" },
-                    { Id: 21, Name: "Option-3" }, { Id: 25, Name: "Option-4" }
-            ]);
+            target.pollOptions.options(testPollOptions);
             
             // act
             target.displayResults(testVotes);
@@ -176,20 +225,20 @@
             // Round 2: Option-2 (3), Option-3 (2)
 
             var option1 = { Name: "Option-1", Data: [
-                { Name: 'Round 1', Sum: 1, Voters: ['User-1 (#1)'] },
-                { Name: 'Round 2', Sum: 0, Voters: [] }
+                { Name: '1', Sum: 1, Voters: ['User-1 (#1)'] },
+                { Name: '2', Sum: 0, Voters: [] }
             ]};
             var option2 = { Name: "Option-2", Data: [
-                { Name: 'Round 1', Sum: 2, Voters: ['User-4 (#1)', 'User-5 (#1)'] },
-                { Name: 'Round 2', Sum: 3, Voters: ['User-1 (#2)', 'User-4 (#1)', 'User-5 (#1)'] }
+                { Name: '1', Sum: 2, Voters: ['User-4 (#1)', 'User-5 (#1)'] },
+                { Name: '2', Sum: 3, Voters: ['User-1 (#2)', 'User-4 (#1)', 'User-5 (#1)'] }
             ]};
             var option3 = { Name: "Option-3", Data: [
-                { Name: 'Round 1', Sum: 2, Voters: ['User-2 (#1)', 'User-3 (#1)'] },
-                { Name: 'Round 2', Sum: 2, Voters: ['User-2 (#1)', 'User-3 (#1)'] }
+                { Name: '1', Sum: 2, Voters: ['User-2 (#1)', 'User-3 (#1)'] },
+                { Name: '2', Sum: 2, Voters: ['User-2 (#1)', 'User-3 (#1)'] }
             ]};
             var option4 = { Name: "Option-4", Data: [
-                { Name: 'Round 1', Sum: 0, Voters: [] },
-                { Name: 'Round 2', Sum: 0, Voters: [] }
+                { Name: '1', Sum: 0, Voters: [] },
+                { Name: '2', Sum: 0, Voters: [] }
             ]};
 
             expect(target.chartData()).toEqual([option4, option1, option3, option2]);
@@ -197,10 +246,7 @@
 
         it("displayResults with Votes expect Announce Winner", function () {
             // arrange
-            target.pollOptions.options([
-                    { Id: 13, Name: "Option-1" }, { Id: 17, Name: "Option-2" },
-                    { Id: 21, Name: "Option-3" }, { Id: 25, Name: "Option-4" }
-            ]);
+            target.pollOptions.options(testPollOptions);
 
             // Capture the option votes from the callback
             var optionVotes = [];
@@ -227,6 +273,17 @@
             ]);
         });
 
+        it("displayResults with Votes expect Round Range", function () {
+            // arrange
+            target.pollOptions.options(testPollOptions);
+
+            // act
+            target.displayResults(testVotes);
+
+            // assert
+            expect(target.roundsRange()).toEqual([1, 2]);
+            expect(target.roundsDisplay()).toEqual([1, 2]);
+        });
     });
 });
 

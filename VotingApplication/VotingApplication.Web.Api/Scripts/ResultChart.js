@@ -98,7 +98,9 @@
             }
 
             chart.series(allSeries);
-            chart.draw();
+
+            // First parameter disables animation
+            chart.draw(true);
         };
     };
 
