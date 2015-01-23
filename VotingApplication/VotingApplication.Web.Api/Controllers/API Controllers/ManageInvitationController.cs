@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Web;
 using System.Web.Configuration;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
@@ -45,7 +45,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(p => p.ManageId == manageId).FirstOrDefault();
+                Poll matchingPoll = context.Polls.Where(p => p.ManageId == manageId).Include(p => p.Tokens).FirstOrDefault();
                 if (matchingPoll == null)
                 {
                     return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
