@@ -1,4 +1,11 @@
-﻿define('Poll', ['jquery', 'knockout', 'bootstrap', 'countdown', 'moment', 'Common', 'ChatClient', 'platform'], function ($, ko, bs, countdown, moment, Common, chatClient) {
+﻿//facebook boiler plate
+//social media login
+//scrolling window
+//Login name
+//Showing sections
+//Handling accordian clicks
+
+define('Poll', ['jquery', 'knockout', 'bootstrap', 'countdown', 'moment', 'Common', 'SocialMedia', 'ChatClient', 'platform'], function ($, ko, bs, countdown, moment, Common, social, chatClient) {
     return function VoteViewModel(pollId, uriTokenGuid, VotingStrategyViewModel) {
         var self = this;
 
@@ -28,26 +35,6 @@
                 return null;
             }
         });
-
-        // Begin Facebook boilerplate
-
-        window.fbAsyncInit = function () {
-            FB.init({
-                appId: '333351380206896',
-                xfbml: true,
-                version: 'v2.2'
-            });
-        };
-
-        (function (d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) { return; }
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/en_US/sdk.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-
-        // End Facebook boilerplate
 
         var updatePollExpiryTime = function () {
             self.pollExpiryDate.notifySubscribers();
@@ -106,45 +93,17 @@
             });
         };
 
-        var googleLogin = function (authResult) {
-            //Login failed
-            if (!authResult['status']['signed_in']) {
-                return;
-            }
-
-            //Load the username and login to GVA
-            gapi.client.load('plus', 'v1', function () {
-                var request = gapi.client.plus.people.get({
-                    'userId': 'me'
-                });
-                request.execute(function (resp) {
-                    //Hijack the regular login
-                    $("#loginUsername").val(resp.displayName);
-                    self.submitLogin();
-                });
-            });
+        var socialLoginResponse = function (username) {
+            self.userName(username);
+            self.submitLogin();
+        };
+        
+        self.facebookLogin = function () {
+            social.facebookLogin(socialLoginResponse);
         }
 
-        self.facebookLogin = function (data, event) {
-            FB.login(function (response) {
-                if (response.status != 'connected') {
-                    return;
-                }
-
-                FB.api('/me', function (content) {
-                    var username = content.first_name + " " + content.last_name;
-
-                    //Hijack the regular login
-                    $("#loginUsername").val(username);
-                    self.submitLogin();
-                })
-            });
-        }
-
-        self.googleLogin = function (data, event) {
-            gapi.auth.signIn({
-                'callback': googleLogin
-            });
+        self.googleLogin = function () {
+            social.googleLogin(socialLoginResponse);
         };
 
         self.showSection = function (data, event) {
@@ -152,9 +111,7 @@
         };
 
         self.submitLogin = function (data, event) {
-            var userName = $("#loginUsername").val();
-            self.userName(userName);
-            Common.setVoterName(userName, pollId);
+            Common.setVoterName(self.userName(), pollId);
 
             if (!self.pollExpired()) {
                 showSection($('#voteSection'));
@@ -165,7 +122,7 @@
 
         self.logout = function () {
             Common.clearStorage(pollId);
-            self.userName(undefined);
+            self.userName("");
         }
 
         self.chatMessage = ko.observable("");
