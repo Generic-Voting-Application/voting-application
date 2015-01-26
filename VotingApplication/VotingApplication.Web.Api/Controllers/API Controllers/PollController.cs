@@ -76,7 +76,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         #region Get
 
         [Authorize]
-        public override HttpResponseMessage Get()
+        public HttpResponseMessage Get()
         {
             using (var context = _contextFactory.CreateContext())
             {

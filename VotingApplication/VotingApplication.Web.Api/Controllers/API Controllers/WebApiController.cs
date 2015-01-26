@@ -23,37 +23,5 @@ namespace VotingApplication.Web.Api.Controllers
         {
             this._contextFactory = contextFactory;
         }
-
-        #region GET
-
-        public virtual HttpResponseMessage Get()
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET on this controller");
-        }
-
-        #endregion
-
-        #region PUT
-
-        public virtual HttpResponseMessage Put(long id, object obj)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT by id on this controller");
-        }
-
-        #endregion
-
-        #region DELETE
-
-        public virtual HttpResponseMessage Delete()
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
-        }
-
-        public virtual HttpResponseMessage Delete(long id)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE by id on this controller");
-        }
-
-        #endregion
     }
 }

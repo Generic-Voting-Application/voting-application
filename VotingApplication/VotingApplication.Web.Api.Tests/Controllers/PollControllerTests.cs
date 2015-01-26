@@ -135,30 +135,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         #endregion
 
-        #region PUT
-
-        [TestMethod]
-        public void PutIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Put(new Poll());
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void PutByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Put(1, new Poll());
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        #endregion
-
         #region POST
 
         [TestMethod]
@@ -261,29 +237,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(_dummyPolls.Count(), 4);
         }  
-        #endregion
-
-        #region DELETE
-
-        [TestMethod]
-        public void DeleteIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Delete();
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void DeleteByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Delete(1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
         #endregion
         
     }
