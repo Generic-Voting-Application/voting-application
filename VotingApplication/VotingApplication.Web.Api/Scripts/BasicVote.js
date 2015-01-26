@@ -18,6 +18,11 @@
 
         var countVotes = function (votes) {
             var totalCounts = [];
+            if (!votes)
+            {
+                return totalCounts;
+            }
+
             votes.forEach(function (vote) {
                 var optionName = vote.OptionName;
                 var voter = vote.VoterName;

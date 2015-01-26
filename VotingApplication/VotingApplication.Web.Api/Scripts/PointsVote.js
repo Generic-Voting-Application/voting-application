@@ -41,6 +41,11 @@
         var countVotes = function (votes) {
             var totalCounts = [];
 
+            if (!votes)
+            {
+                return totalCounts;
+            }
+
             votes.sort(function (a, b) {
                 return b.VoteValue - a.VoteValue;
             }).forEach(function (vote) {

@@ -154,7 +154,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             // Not sure how else to check this for now
-            Assert.AreEqual(0, response.Count);
+            Assert.IsNull(response);
         }
 
         #endregion

@@ -65,6 +65,11 @@
             var totalBallots = 0;
             var resultsByRound = [];
 
+            if (!votes)
+            {
+                return [];
+            }
+
             var options = self.pollOptions.options().map(function (o) { return { Name: o.Name, Id: o.Id, ballots: [] }; });
 
             // Group votes into ballots (per user)

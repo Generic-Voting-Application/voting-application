@@ -62,7 +62,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     if (poll.LastUpdated.CompareTo(clientLastUpdated) < 0)
                     {
                         StatusCode(HttpStatusCode.NotModified);
-                        return new List<VoteRequestResponseModel>();
+                        return null;
                     }
                 }
 
