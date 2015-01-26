@@ -85,7 +85,8 @@
                     <div class="col-md-1"></div>
                     <div class="col-md-10 centered" data-bind="with: votingStrategy">
                         <div><h2>
-                            Winner<span data-bind="text: winners().length > 1 ? 's (Draw)' : ''"></span>: 
+                            <span data-bind="text: $parent.pollExpired() ? 'Winner' : 'Leader'">
+                            </span><span data-bind="text: winners().length > 1 ? 's (Draw)' : ''"></span>: 
                             <span data-bind="text: winners().join(', ')"></span>
                         </h2></div>
 
