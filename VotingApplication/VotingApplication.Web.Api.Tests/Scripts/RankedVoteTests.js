@@ -194,21 +194,21 @@
         // User-4 votes Option 2-4-1
         // User-5 votes Option 2-3
         var testVotes = [
-                { OptionId: 13, UserId: 1, VoterName: "User-1" },
-                { OptionId: 17, UserId: 1, VoterName: "User-1" },
-                { OptionId: 21, UserId: 1, VoterName: "User-1" },
-                { OptionId: 25, UserId: 1, VoterName: "User-1" },
-                { OptionId: 21, UserId: 2, VoterName: "User-2" },
-                { OptionId: 13, UserId: 2, VoterName: "User-2" },
-                { OptionId: 21, UserId: 3, VoterName: "User-3" },
-                { OptionId: 25, UserId: 3, VoterName: "User-3" },
-                { OptionId: 17, UserId: 3, VoterName: "User-3" },
-                { OptionId: 13, UserId: 3, VoterName: "User-3" },
-                { OptionId: 17, UserId: 4, VoterName: "User-4" },
-                { OptionId: 25, UserId: 4, VoterName: "User-4" },
-                { OptionId: 13, UserId: 4, VoterName: "User-4" },
-                { OptionId: 17, UserId: 5, VoterName: "User-5" },
-                { OptionId: 21, UserId: 5, VoterName: "User-5" }
+                { OptionId: 13, VoterName: "User-1", VoterId: 1 },
+                { OptionId: 17, VoterName: "User-1", VoterId: 1 },
+                { OptionId: 21, VoterName: "User-1", VoterId: 1 },
+                { OptionId: 25, VoterName: "User-1", VoterId: 1 },
+                { OptionId: 21, VoterName: "User-2", VoterId: 2 },
+                { OptionId: 13, VoterName: "User-2", VoterId: 2 },
+                { OptionId: 21, VoterName: "User-3", VoterId: 3 },
+                { OptionId: 25, VoterName: "User-3", VoterId: 3 },
+                { OptionId: 17, VoterName: "User-3", VoterId: 3 },
+                { OptionId: 13, VoterName: "User-3", VoterId: 3 },
+                { OptionId: 17, VoterName: "User-4", VoterId: 4 },
+                { OptionId: 25, VoterName: "User-4", VoterId: 4 },
+                { OptionId: 13, VoterName: "User-4", VoterId: 4 },
+                { OptionId: 17, VoterName: "User-5", VoterId: 5 },
+                { OptionId: 21, VoterName: "User-5", VoterId: 5 }
         ];
 
         it("displayResults with Votes expect Draw ranked vote result", function () {
