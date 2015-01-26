@@ -305,7 +305,7 @@
     <Compile Include="Controllers\Web Controllers\PollController.cs" />
     <Compile Include="Controllers\Web Controllers\InfoController.cs" />
     <Compile Include="Controllers\Web Controllers\CreateController.cs" />
-    <Compile Include="Controllers\API Controllers\WebApiController.cs" />
+    <Compile Include="Controllers\Web Controllers\WebApiController.cs" />
     <Compile Include="Controllers\Web Controllers\SignInController.cs" />
     <Compile Include="Filters\BasicAuthenticator.cs" />
     <Compile Include="Global.asax.cs">

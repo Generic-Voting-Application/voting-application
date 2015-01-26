@@ -59,10 +59,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_mainUUID);
             Guid responseGuid;
 
-            bool isGuid = Guid.TryParse(((ObjectContent)response.Content).Value.ToString(), out responseGuid);
+            bool isGuid = Guid.TryParse(response.ToString(), out responseGuid);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.IsTrue(isGuid);
         }
 
@@ -70,31 +69,26 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetSavesNewToken()
         {
             // Act
-            var response = _controller.Get(_mainUUID);
+            _controller.Get(_mainUUID);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.AreEqual(1, _mainPoll.Tokens.Count);
         }
 
         [TestMethod]
+        [ExpectedException(typeof(HttpResponseException))]
         public void GetFailsOnNonExistantPoll()
         {
             // Act
-            var response = _controller.Get(Guid.NewGuid());
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            _controller.Get(Guid.NewGuid());
         }
 
         [TestMethod]
+        [ExpectedException(typeof(HttpResponseException))]
         public void GetFailsOnInviteOnlyPoll()
         {
             // Act
-            var response = _controller.Get(_inviteUUID);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
+            _controller.Get(_inviteUUID);
         }
 
         #endregion
