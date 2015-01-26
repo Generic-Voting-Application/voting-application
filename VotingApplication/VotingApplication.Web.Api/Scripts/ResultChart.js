@@ -10,11 +10,12 @@
 
             var dataUnchanged = chart && data.length === chart.series().length;
             var barCount = 0;
-            for (var n = 0; (n < data.length) && dataUnchanged; n++) {
+            for (var n = 0; n < data.length; n++) {
                 barCount += data[n].Data.length;
+                var chartSeries = chart ? chart.series() : null;
                 dataUnchanged = dataUnchanged &&
-                    chart.series().length > n &&
-                    JSON.stringify(data[n].Data) == JSON.stringify(chart.series()[n].Data.rawData());
+                    chart && chart.series().length > n &&
+                    JSON.stringify(data[n].Data) == JSON.stringify(chart.series()[n].data.rawData());
             }
             //Exit early if data has not changed
             if (dataUnchanged)
