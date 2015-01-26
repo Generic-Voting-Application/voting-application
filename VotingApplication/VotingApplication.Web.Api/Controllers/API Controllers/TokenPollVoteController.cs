@@ -112,7 +112,19 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                         ModelState.AddModelError("OptionId", "Option choice not valid for this poll");
                     }
 
-                    if (poll.VotingStrategy == "Points" && (voteRequest.VoteValue > poll.MaxPerVote || voteRequest.VoteValue > poll.MaxPoints))
+                    if (poll.VotingStrategy == "Points" && (voteRequest.VoteValue > poll.MaxPerVote || 
+                                                            voteRequest.VoteValue > poll.MaxPoints || 
+                                                            voteRequest.VoteValue <= 0))
+                    {
+                        ModelState.AddModelError("VoteValue", String.Format("Invalid vote value: {0}", voteRequest.VoteValue));
+                    }
+
+                    if (poll.VotingStrategy == "Ranked" && voteRequest.VoteValue <= 0)
+                    {
+                        ModelState.AddModelError("VoteValue", String.Format("Invalid vote value: {0}", voteRequest.VoteValue));
+                    }
+
+                    if (poll.VotingStrategy == "Basic" && voteRequest.VoteValue != 0)
                     {
                         ModelState.AddModelError("VoteValue", String.Format("Invalid vote value: {0}", voteRequest.VoteValue));
                     }
