@@ -99,18 +99,18 @@
         </div>
     </div>
     <div class="col-md-4">
-        <div class="panel panel-default" id="chat-panel">
+        <div class="panel panel-default" id="chat-panel" data-bind="with: chatWindow">
             <div class="panel-heading"><span class="panel-title">Chat</span></div>
-            <div style="height:300px; overflow-y:auto" id="chat-messages" class="panel-body" data-bind="foreach: {data: chatMessages, as: 'message'}">
+            <div style="height:300px; overflow-y:auto" class="panel-body" data-bind="foreach: {data: chatMessages, as: 'message'}, scrollOnChange: chatMessages">
                 <div data-bind="text: message.VoterName + ' (' + message.Timestamp + '): ' + message.Message"></div>
             </div>
             <div class="panel-footer">
                 <form>
                     <div class="input-append form-group">
                         <input class="form-control" type='text' id="chatTextInput" placeholder="Message"
-                               data-bind="enable: userName(), value: chatMessage, valueUpdate: 'afterkeydown'" autocomplete='off' />
+                               data-bind="enable: $parent.userName(), value: chatMessage, valueUpdate: 'afterkeydown'" autocomplete='off' />
                         <button class="btn btn-primary" type="submit"
-                                data-bind="click: sendChatMessage, enable: userName() && chatMessage()">Send</button>
+                                data-bind="click: sendChatMessage, enable: $parent.userName() && chatMessage()">Send</button>
                     </div>
                 </form>
             </div>

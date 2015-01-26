@@ -31,4 +31,17 @@
         }
     };
 
+    // Custom binding for a window that scrolls to the bottom when the observable changes
+    ko.bindingHandlers.scrollOnChange = {
+        update: function (element, valueAccessor) {
+            var value = ko.unwrap(valueAccessor()),
+                $element = $(element);
+
+            // Animate to end of scroll window
+            $element.animate({
+                scrollTop: element.scrollHeight
+            });
+        }
+    };
+
 });

@@ -1,4 +1,4 @@
-﻿define('SocialMedia', [], function () {
+﻿define('SocialMedia', ['platform'], function () {
 
     return new function SocialMedia() {
 

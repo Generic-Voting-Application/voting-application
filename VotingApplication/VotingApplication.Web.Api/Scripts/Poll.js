@@ -1,11 +1,8 @@
-﻿//facebook boiler plate
-//social media login
-//scrolling window
-//Login name
+﻿//scrolling window
 //Showing sections
 //Handling accordian clicks
 
-define('Poll', ['jquery', 'knockout', 'bootstrap', 'countdown', 'moment', 'Common', 'SocialMedia', 'ChatClient', 'platform'], function ($, ko, bs, countdown, moment, Common, social, chatClient) {
+define('Poll', ['jquery', 'knockout', 'countdown', 'Common', 'SocialMedia', 'ChatWindow', 'KnockoutExtensions'], function ($, ko, countdown, Common, social, ChatWindow) {
     return function VoteViewModel(pollId, uriTokenGuid, VotingStrategyViewModel) {
         var self = this;
 
@@ -14,11 +11,11 @@ define('Poll', ['jquery', 'knockout', 'bootstrap', 'countdown', 'moment', 'Commo
         var lastResultsRequest = 0;
 
         self.votingStrategy = null;
+        self.chatWindow = new ChatWindow(pollId);
 
         self.pollId = pollId;
         self.pollName = ko.observable("Poll Name");
         self.pollCreator = ko.observable("Poll Creator");
-        self.chatMessages = ko.observableArray();
         self.lastMessageId = 0;
         self.userName = ko.observable(Common.getVoterName(pollId));
         self.requireAuth = ko.observable();
@@ -87,12 +84,6 @@ define('Poll', ['jquery', 'knockout', 'bootstrap', 'countdown', 'moment', 'Commo
             }
         };
 
-        var scrollChatWindow = function () {
-            $("#chat-messages").animate({
-                scrollTop: $("#chat-messages")[0].scrollHeight
-            });
-        };
-
         var socialLoginResponse = function (username) {
             self.userName(username);
             self.submitLogin();
@@ -124,36 +115,6 @@ define('Poll', ['jquery', 'knockout', 'bootstrap', 'countdown', 'moment', 'Commo
             Common.clearStorage(pollId);
             self.userName("");
         }
-
-        self.chatMessage = ko.observable("");
-
-        var receivedMessage = function (message) {
-
-            // Careful here, startOf modifies the object it is called on.
-            messageTimestamp = new moment(message.Timestamp);
-            messageDayStart = new moment(message.Timestamp).startOf('day');
-
-            message.Timestamp = messageDayStart.isSame(new moment().startOf('day')) ? messageTimestamp.format('HH:mm') : messageTimestamp.format('DD/MM');
-
-            self.chatMessages.push(message);
-        };
-        chatClient.onMessage = function (message) {
-            receivedMessage(message);
-            scrollChatWindow();
-        };
-        chatClient.onMessages = function (messages) {
-            ko.utils.arrayForEach(messages, receivedMessage);
-            scrollChatWindow();
-        };
-
-        chatClient.joinPoll(pollId);
-
-        self.sendChatMessage = function (data, event) {
-            if (pollId) {
-                chatClient.sendMessage(pollId, Common.getVoterName(), self.chatMessage());
-                self.chatMessage("");
-            }
-        };
 
         self.getResults = function (pollId) {
             $.ajax({
