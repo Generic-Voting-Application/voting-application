@@ -51,11 +51,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
 
-            _bobVote = new Vote() { Id = 1, OptionId = 1, PollId = _mainUUID, Poll = mainPoll, Option = burgerOption };
-            _joeVote = new Vote() { Id = 2, OptionId = 1, PollId = _mainUUID, Poll = mainPoll, Option = burgerOption };
-            _otherVote = new Vote() { Id = 3, OptionId = 1, PollId = _otherUUID };
-            _anonymousVote = new Vote() { Id = 4, OptionId = 1, PollId = _anonymousUUID};
-            
+            _bobVote = new Vote() { Id = 1, OptionId = 1, PollId = _mainUUID, Poll = mainPoll, Option = burgerOption, Token = new Token() };
+            _joeVote = new Vote() { Id = 2, OptionId = 1, PollId = _mainUUID, Poll = mainPoll, Option = burgerOption, Token = new Token() };
+            _otherVote = new Vote() { Id = 3, OptionId = 1, PollId = _otherUUID, Token = new Token() };
+            _anonymousVote = new Vote() { Id = 4, OptionId = 1, PollId = _anonymousUUID, Token = new Token() };
+
             _dummyVotes.Add(_bobVote);
             _dummyVotes.Add(_joeVote);
             _dummyVotes.Add(_otherVote);

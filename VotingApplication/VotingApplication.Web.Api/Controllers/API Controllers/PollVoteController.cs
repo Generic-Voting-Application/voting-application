@@ -23,6 +23,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             if (vote.Option != null)
             {
+                model.VoterId = vote.Token.Id;
                 model.OptionId = vote.Option.Id;
                 model.OptionName = vote.Option.Name;
             }
@@ -45,7 +46,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             using (var context = _contextFactory.CreateContext())
             {
                 poll = context.Polls.Where(s => s.UUID == pollId).FirstOrDefault();
-                votes = context.Votes.Where(v => v.PollId == pollId).Include(v => v.Option).ToList();
+                votes = context.Votes.Where(v => v.PollId == pollId).Include(v => v.Option).Include(v => v.Token).ToList();
             }
 
             if (poll == null)

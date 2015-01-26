@@ -69,11 +69,11 @@
 
             // Group votes into ballots (per user)
             votes.forEach(function (vote) {
-                if (!ballots[vote.UserId]) {
-                    ballots[vote.UserId] = [];
+                if (!ballots[vote.VoterId]) {
+                    ballots[vote.VoterId] = [];
                     totalBallots++;
                 }
-                ballots[vote.UserId].push(vote);
+                ballots[vote.VoterId].push(vote);
             });
 
             // Start counting
