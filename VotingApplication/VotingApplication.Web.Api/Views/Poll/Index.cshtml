@@ -17,15 +17,14 @@
         <div id="errorArea"></div>
         <div class="accordion" id="accordion">
             <!--Login Section-->
-            <div id="loginSection" class="accordion-group panel panel-default">
-                <div class="accordion-heading panel-heading clickable" data-bind="click: function(){if(!userName()) showSection($element)}">
-                    <button id="logout-button" class="btn btn-danger" data-bind="click: logout, visible: userName(), click: function() { logout(); showSection($element.parentElement)}">Logout</button>
+            <div id="loginSection" class="accordion-group panel panel-default" data-bind="accordionSection: showSection() === pollSections.login">
+                <div class="accordion-heading panel-heading clickable" data-bind="click: function(){if(!userName()) showSection(pollSections.login)}">
+                    <button id="logout-button" class="btn btn-danger" data-bind="click: logout, visible: userName(), click: logout">Logout</button>
                     <h4>Login</h4> <span data-bind="text: '(Logged in as: '+userName()+')', visible: userName() "></span>
                 </div>
                 <div class="accordion-body panel-body collapse row">
                     <div data-bind="visible: !requireAuth()" class="row">
                         <div class="col-xs-1"></div>
-
                         <div class="col-sm-4 centered form-group" data-bind="visible: !requireAuth()">
                             <h4>Vote anonymously...</h4>
                             <form>
@@ -36,7 +35,6 @@
                                 <button id="Name-loginSubmit" class="btn btn-primary" data-bind="click: submitLogin">Submit</button>
                             </form>
                         </div>
-
                         <div class="col-sm-1 divider"></div>
                         <div class="col-sm-1"></div>
                         <div class="col-sm-4 centered form-group">
@@ -60,11 +58,12 @@
                 </div>
             </div>
             <!--Voting Section-->
-            <div id="voteSection" class="accordion-group panel panel-default" data-bind="css: { 'panel-warning' : pollExpired() || !userName() }">
-                <div class="accordion-heading panel-heading" data-bind="click: function() { if(!pollExpired() && userName()) showSection($element) }, css: {'clickable' : !pollExpired() && userName()}">
+            <div id="voteSection" class="accordion-group panel panel-default" data-bind="
+                        css: { 'panel-warning' : pollExpired() || !userName() },
+                        accordionSection: showSection() === pollSections.vote, onShow: getPreviousVotes">
+                <div class="accordion-heading panel-heading" data-bind="click: function() { if(!pollExpired() && userName()) showSection(pollSections.vote) }, css: {'clickable' : !pollExpired() && userName()}">
                     <h4>Vote</h4><span data-bind="text: pollExpired() ? 'Poll closed' : ('Poll closes in ' + pollExpiryOffset()), visible: pollExpires()"></span>
                 </div>
-
                 <div class="accordion-body panel-body collapse row">
                     <div class="col-md-1"></div>
                     <div class="col-md-10 centered" id="votingArea" data-bind="with: votingStrategy">
@@ -78,8 +77,9 @@
                 </div>
             </div>
             <!--Results Section-->
-            <div id="resultSection" class="accordion-group panel panel-default">
-                <div class="accordion-heading panel-heading clickable" data-bind="click: function(){ showSection($element) }">
+            <div id="resultSection" class="accordion-group panel panel-default"
+                    data-bind="accordionSection: showSection() === pollSections.results, onShow: getResults">
+                <div class="accordion-heading panel-heading clickable" data-bind="click: function(){ showSection(pollSections.results) }">
                     <h4>Results</h4>
                 </div>
                 <div class="accordion-body panel-body collapse row">
@@ -122,7 +122,7 @@
 {
     <script type="text/javascript">
         require(["Poll", '@(Model.VotingStrategy + "Vote")'], function (PollViewModel, VotingStrategyViewModel) {
-            new PollViewModel('@Model.Id', '@Model.URITokenGuid', VotingStrategyViewModel);
+            new PollViewModel('@Model.Id', '@Model.URITokenGuid', VotingStrategyViewModel).initialise();
         });
     </script>
 }

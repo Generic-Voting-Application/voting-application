@@ -3,12 +3,18 @@
 //Handling accordian clicks
 
 define('Poll', ['jquery', 'knockout', 'countdown', 'Common', 'SocialMedia', 'ChatWindow', 'KnockoutExtensions'], function ($, ko, countdown, Common, social, ChatWindow) {
+
     return function VoteViewModel(pollId, uriTokenGuid, VotingStrategyViewModel) {
         var self = this;
 
-        var lockCollapse = false;
-        var selectedPanel = null;
         var lastResultsRequest = 0;
+
+        self.pollSections = {
+            vote: 0,
+            results: 1,
+            login: 2
+        };
+        self.showSection = ko.observable(self.pollSections.login);
 
         self.votingStrategy = null;
         self.chatWindow = new ChatWindow(pollId);
@@ -36,7 +42,7 @@ define('Poll', ['jquery', 'knockout', 'countdown', 'Common', 'SocialMedia', 'Cha
         var updatePollExpiryTime = function () {
             self.pollExpiryDate.notifySubscribers();
             if (self.pollExpired() && self.userName()) {
-                showSection($('#resultSection'));
+                self.showSection(self.pollSections.results);
             }
         }
 
@@ -65,30 +71,11 @@ define('Poll', ['jquery', 'knockout', 'countdown', 'Common', 'SocialMedia', 'Cha
             });
         };
 
-        var showSection = function (element) {
-            if (selectedPanel == null || (selectedPanel[0] != element[0])) {
-                selectedPanel = element;
-                if (!lockCollapse) {
-                    lockCollapse = true;
-                    var siblings = element.siblings();
-                    for (var i = 0; i < siblings.length; i++) {
-                        $(siblings[i]).collapseSection('hide');
-                        $(siblings[i]).removeClass('panel-primary');
-                    }
-                    element.collapseSection('show');
-                    $(element).on('shown.bs.collapse', function (e) {
-                        lockCollapse = false;
-                    });
-                    element.addClass('panel-primary');
-                }
-            }
-        };
-
         var socialLoginResponse = function (username) {
             self.userName(username);
             self.submitLogin();
         };
-        
+
         self.facebookLogin = function () {
             social.facebookLogin(socialLoginResponse);
         }
@@ -97,26 +84,23 @@ define('Poll', ['jquery', 'knockout', 'countdown', 'Common', 'SocialMedia', 'Cha
             social.googleLogin(socialLoginResponse);
         };
 
-        self.showSection = function (data, event) {
-            showSection($(data).parent());
-        };
-
         self.submitLogin = function (data, event) {
             Common.setVoterName(self.userName(), pollId);
 
             if (!self.pollExpired()) {
-                showSection($('#voteSection'));
+                self.showSection(self.pollSections.vote);
             } else {
-                showSection($('#resultSection'));
+                self.showSection(self.pollSections.results);
             }
         };
 
         self.logout = function () {
             Common.clearStorage(pollId);
             self.userName("");
+            self.showSection(self.pollSections.login);
         }
 
-        self.getResults = function (pollId) {
+        self.getResults = function () {
             $.ajax({
                 type: 'GET',
                 url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastResultsRequest,
@@ -133,6 +117,16 @@ define('Poll', ['jquery', 'knockout', 'countdown', 'Common', 'SocialMedia', 'Cha
 
                 error: Common.handleError
             });
+            
+            // Setup refresh timer
+            self.setupResultsRefresh();
+        };
+
+        var refreshInterval;
+        self.setupResultsRefresh = function () {
+            if (!refreshInterval) {
+                refreshInterval = setInterval(self.getResults, 10000);
+            }
         };
 
         self.clearVote = function () {
@@ -150,7 +144,7 @@ define('Poll', ['jquery', 'knockout', 'countdown', 'Common', 'SocialMedia', 'Cha
                     success: function (returnData) {
                         lastResultsRequest = 0;
 
-                        $('#resultSection > div')[0].click();
+                        self.showSection(self.pollSections.results)
                     },
 
                     error: Common.handleError
@@ -158,51 +152,43 @@ define('Poll', ['jquery', 'knockout', 'countdown', 'Common', 'SocialMedia', 'Cha
             }
         }
 
-        $('#voteSection .accordion-body').on('show.bs.collapse', function () {
-            if (self.votingStrategy) {
-                self.votingStrategy.getPreviousVotes(pollId);
-            }
-        });
+        self.getPreviousVotes = function () {
+            self.votingStrategy.getPreviousVotes(pollId);
+        };
 
-        $('#resultSection .accordion-body').on('show.bs.collapse', function () {
-            if (self.votingStrategy) {
-                self.getResults(pollId);
-            }
-        });
-
-        $(document).ready(function () {
-            Common.resolveToken(pollId, uriTokenGuid);
-
+        self.setupPollScreen = function () {
             getPollDetails(pollId, function () {
 
                 var voterName = Common.getVoterName(pollId);
                 if (voterName) {
                     self.userName(voterName);
                     if (!self.pollExpired()) {
-                        showSection($('#voteSection'));
+                        self.showSection(self.pollSections.vote);
                     } else {
-                        showSection($('#resultSection'));
+                        self.showSection(self.pollSections.results);
                     }
 
                 } else {
-                    showSection($('#loginSection'));
+                    self.showSection(self.pollSections.login);
                 }
             });
 
-            setInterval(function () {
-                self.getResults(pollId);
-            }, 10000);
-        });
+            if (VotingStrategyViewModel) {
+                self.votingStrategy = new VotingStrategyViewModel(pollId);
 
-        if (VotingStrategyViewModel) {
-            self.votingStrategy = new VotingStrategyViewModel(pollId);
+                self.votingStrategy.onVoted = function () {
+                    // Switch to the results panel
+                    self.showSection(self.pollSections.results);
+                };
+            }
+        };
 
-            self.votingStrategy.onVoted = function () {
-                // Switch to the vote panel
-                $('#resultSection > div')[0].click();
-            };
-        }
+        self.initialise = function () {
+            Common.resolveToken(pollId, uriTokenGuid);
+            self.setupPollScreen();
 
-        ko.applyBindings(this);
-    }
+            ko.applyBindings(this);
+        };
+    };
+
 });

@@ -44,4 +44,25 @@
         }
     };
 
+    // Temporary Knockout Binding for Accordion Sections
+    ko.bindingHandlers.accordionSection = {
+        update: function (element, valueAccessor, allBindingsAccessor) {
+            var selected = ko.unwrap(valueAccessor()),
+                $el = $(element);
+
+            var $body = $el.find('.accordion-body');
+
+            if (selected) {
+                $body.collapse('show');
+                $el.addClass('panel-primary');
+
+                var onShow = allBindingsAccessor().onShow;
+                if (onShow) { onShow(); }
+            } else {
+                $body.collapse('hide');
+                $el.removeClass('panel-primary');
+            }
+        }
+    };
+
 });
