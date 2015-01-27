@@ -15,14 +15,14 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         public TokenPollVoteController() : base() { }
         public TokenPollVoteController(IContextFactory contextFactory) : base(contextFactory) { }
 
-        private Vote ModelToVote(VoteRequestModel voteRequest, Guid tokenGuid, Option option, Poll poll)
+        private Vote ModelToVote(VoteRequestModel voteRequest, Token token, Option option, Poll poll)
         {
             return new Vote
             {
                 Option = option,
                 Poll = poll,
                 PollId = poll.UUID,
-                Token = new Token { TokenGuid = tokenGuid },
+                Token = token,
                 VoteValue = voteRequest.VoteValue,
                 VoterName = voteRequest.VoterName
             };
@@ -95,7 +95,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     this.ThrowError(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", pollId));
                 }
 
-                if (!poll.Tokens.Any(t => t.TokenGuid == tokenGuid))
+                Token token = poll.Tokens.Where(t => t.TokenGuid == tokenGuid).SingleOrDefault();
+
+                if (token == null)
                 {
                     this.ThrowError(HttpStatusCode.Forbidden, String.Format("Token {0} not valid for this poll", tokenGuid));
                 }
@@ -146,7 +148,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 foreach (VoteRequestModel voteRequest in voteRequests)
                 {
                     context.Votes.Add(ModelToVote(voteRequest,
-                                                  tokenGuid,
+                                                  token,
                                                   context.Options.Single(o => o.Id == voteRequest.OptionId),
                                                   context.Polls.Single(p => p.UUID == pollId)));
                 }
