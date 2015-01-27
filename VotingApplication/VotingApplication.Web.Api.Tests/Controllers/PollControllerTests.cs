@@ -33,7 +33,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             _redOption = new Option() { Name = "Red" };
 
-            UUIDs = new [] {Guid.NewGuid(), Guid.NewGuid(), _templateUUID, Guid.NewGuid()};
+            UUIDs = new[] { Guid.NewGuid(), Guid.NewGuid(), _templateUUID, Guid.NewGuid() };
             _mainPoll = new Poll() { UUID = UUIDs[0], ManageId = Guid.NewGuid() };
             _otherPoll = new Poll() { UUID = UUIDs[1], ManageId = Guid.NewGuid() };
             _templateUUID = Guid.NewGuid();
@@ -117,7 +117,15 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            var response = _controller.Get(newGuid);
+            try
+            {
+                var response = _controller.Get(newGuid);
+            }
+            catch (HttpResponseException e)
+            {
+                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
+                throw;
+            }
         }
 
         #endregion
@@ -139,7 +147,15 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.ModelState.AddModelError("Name", "");
 
             // Act
-            _controller.Post(new PollCreationRequestModel());
+            try
+            {
+                _controller.Post(new PollCreationRequestModel());
+            }
+            catch (HttpResponseException e)
+            {
+                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]
@@ -148,7 +164,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Act
             PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
             var response = _controller.Post(newPoll);
-           
+
             // Assert
             Assert.AreNotEqual(Guid.Empty, response.UUID);
         }
@@ -163,7 +179,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreNotEqual(Guid.Empty, response.ManageId);
         }
-        
+
         [TestMethod]
         public void PostAssignsPollManageIdDifferentFromPollId()
         {
@@ -213,8 +229,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             Assert.AreEqual(_dummyPolls.Count(), 4);
-        }  
+        }
         #endregion
-        
+
     }
 }

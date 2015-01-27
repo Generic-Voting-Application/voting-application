@@ -91,7 +91,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            _controller.Get(newGuid);
+            try
+            {
+                _controller.Get(newGuid);
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]
@@ -115,7 +124,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             CollectionAssert.AreEqual(new long[] { 1, 2 }, response.Select(r => r.Id).ToArray());
             CollectionAssert.AreEqual(new string[] { "Burger King", "Pizza Hut" }, response.Select(r => r.Name).ToArray());
         }
-        
+
         #endregion
 
         #region POST
@@ -125,7 +134,15 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostIsNotAllowedOnPollsWithOptionTurnedOff()
         {
             // Act
-            _controller.Post(_mainUUID, new OptionCreationRequestModel());
+            try
+            {
+                _controller.Post(_mainUUID, new OptionCreationRequestModel());
+            }
+            catch (HttpResponseException e)
+            {
+                Assert.AreEqual(HttpStatusCode.MethodNotAllowed, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]
@@ -133,7 +150,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostWithNullOptionNotAllowed()
         {
             // Act
-            _controller.Post(_emptyUUID, null);
+            try
+            {
+                _controller.Post(_emptyUUID, null);
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]
@@ -142,8 +168,17 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             Guid invalidGuid = Guid.NewGuid();
-            _controller.Post(invalidGuid, new OptionCreationRequestModel());
-            
+            try
+            {
+                _controller.Post(invalidGuid, new OptionCreationRequestModel());
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
+                throw;
+            }
+
         }
 
         [TestMethod]

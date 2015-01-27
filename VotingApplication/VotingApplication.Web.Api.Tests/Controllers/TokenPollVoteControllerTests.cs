@@ -131,7 +131,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            _controller.Get(_bobToken.TokenGuid, newGuid);
+            try
+            {
+                _controller.Get(_bobToken.TokenGuid, newGuid);
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]
@@ -152,11 +161,20 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         [ExpectedException(typeof(HttpResponseException))]
         public void PostRejectsVoteWithInvalidInput()
         {
-             // Arrange
+            // Arrange
             _controller.ModelState.AddModelError("OptionId", "");
 
             // Act
-            _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>());
+            try
+            {
+                _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>());
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]
@@ -164,7 +182,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutNonexistentOptionIsNotAllowed()
         {
             // Act
-            _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 99 } });
+            try
+            {
+                _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 99 } });
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]
@@ -172,7 +199,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutNonexistentPollIsNotAllowed()
         {
             // Act
-            _controller.Put(_bobToken.TokenGuid, Guid.NewGuid(), new List<VoteRequestModel>() { });
+            try
+            {
+                _controller.Put(_bobToken.TokenGuid, Guid.NewGuid(), new List<VoteRequestModel>() { });
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]
@@ -210,7 +246,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutInvalidOptionIsNotAllowed()
         {
             // Act
-            _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 3 } });
+            try
+            {
+                _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 3 } });
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]
@@ -221,7 +266,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var newVote = new Vote() { OptionId = 1, PollId = _timedUUID };
 
             // Act
-            _controller.Put(_bobToken.TokenGuid, _timedUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } });
+            try
+            {
+                _controller.Put(_bobToken.TokenGuid, _timedUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } });
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.Forbidden, e.Response.StatusCode);
+                throw;
+            }
         }
 
         #endregion

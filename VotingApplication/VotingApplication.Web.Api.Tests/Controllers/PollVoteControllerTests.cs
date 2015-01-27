@@ -95,7 +95,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            _controller.Get(newGuid);
+            try
+            {
+                _controller.Get(newGuid);
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]

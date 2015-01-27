@@ -132,7 +132,15 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            _controller.Put(newGuid, new List<Option>() {});
+            try
+            {
+                _controller.Put(newGuid, new List<Option>() { });
+            }
+            catch(HttpResponseException e)
+            {
+                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]
@@ -153,7 +161,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             Option newOption = new Option() { Description = "Abc", Info = "Abc" };
-            _controller.Put(_manageMainUUID, new List<Option> { newOption });
+            try
+            {
+                _controller.Put(_manageMainUUID, new List<Option> { newOption });
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]
@@ -162,7 +179,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             Option newOption = new Option() { Name = "", Description = "Abc", Info = "Abc" };
-            _controller.Put(_manageMainUUID, new List<Option> { newOption });
+            try
+            {
+                _controller.Put(_manageMainUUID, new List<Option> { newOption });
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]
@@ -215,7 +241,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.ModelState.AddModelError("Name", "");
 
             // Act
-            _controller.Post(_manageMainUUID, new OptionCreationRequestModel() { Name = "", Description = "Abc", Info = "Abc" });
+            try
+            {
+                _controller.Post(_manageMainUUID, new OptionCreationRequestModel() { Name = "", Description = "Abc", Info = "Abc" });
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
+                throw;
+            }
         }
 
 
@@ -250,7 +285,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             OptionCreationRequestModel newOption = new OptionCreationRequestModel() { Name = "Bella Vista" };
-            _controller.Post(Guid.NewGuid(), newOption);
+            try
+            {
+                _controller.Post(Guid.NewGuid(), newOption);
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]
@@ -305,7 +349,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            _controller.Delete(newGuid, 1);
+            try
+            {
+                _controller.Delete(newGuid, 1);
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]

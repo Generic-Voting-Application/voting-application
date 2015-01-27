@@ -80,7 +80,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetFailsOnNonExistantPoll()
         {
             // Act
-            _controller.Get(Guid.NewGuid());
+            try
+            {
+                _controller.Get(Guid.NewGuid());
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]
@@ -88,7 +97,15 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetFailsOnInviteOnlyPoll()
         {
             // Act
-            _controller.Get(_inviteUUID);
+            try {
+                _controller.Get(_inviteUUID);
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.Forbidden, e.Response.StatusCode);
+                throw;
+            }
         }
 
         #endregion

@@ -62,7 +62,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostWithInvalidPollIdIsRejected()
         {
             // Act
-            _controller.Post(Guid.NewGuid(), new List<string>());
+            try
+            {
+                _controller.Post(Guid.NewGuid(), new List<string>());
+            }
+            catch (HttpResponseException e)
+            {
+                // Assert
+                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
+                throw;
+            }
         }
 
         [TestMethod]
