@@ -22,11 +22,9 @@
 
         chatClient.joinPoll(pollId);
 
-        self.sendChatMessage = function (data, event) {
-            if (pollId) {
-                chatClient.sendMessage(pollId, Common.getVoterName(), self.chatMessage());
-                self.chatMessage("");
-            }
+        self.sendChatMessage = function () {
+            chatClient.sendMessage(pollId, Common.getVoterName(), self.chatMessage());
+            self.chatMessage("");
         };
 
     };
