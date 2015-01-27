@@ -16,7 +16,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             });
         }
 
-        public static HttpResponseMessage ThrowError(this ApiController controller, HttpStatusCode statusCode, ModelStateDictionary modelState)
+        public static void ThrowError(this ApiController controller, HttpStatusCode statusCode, ModelStateDictionary modelState)
         {
             throw new HttpResponseException(controller.Request.CreateErrorResponse(statusCode, modelState));
         }
