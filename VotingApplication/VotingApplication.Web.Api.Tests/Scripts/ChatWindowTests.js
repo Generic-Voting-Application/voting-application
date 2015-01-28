@@ -3,11 +3,12 @@
 
         //#region Setup
         var target;
-        var chatClientMock;
+        var chatWindowMock;
+        var socialMock;
 
         beforeEach(function (done) {
             // Define a mock for ChatClient to be injected with RequireJS
-            chatClientMock = jasmine.createSpyObj('ChatClient', ['joinPoll', 'sendMessage'])
+            chatWindowMock = jasmine.createSpyObj('ChatWindow', ['joinPoll', 'sendMessage']);
             define("ChatClient", [], function () { return chatClientMock; });
 
             // Create an instance of the test target with the mock dependencies
