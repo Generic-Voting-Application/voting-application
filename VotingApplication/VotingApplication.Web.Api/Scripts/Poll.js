@@ -23,7 +23,10 @@ define('Poll', ['jquery', 'knockout', 'countdown', 'Common', 'SocialMedia', 'Cha
         self.pollName = ko.observable("Poll Name");
         self.pollCreator = ko.observable("Poll Creator");
         self.lastMessageId = 0;
+
+        self.enteredName = ko.observable("");
         self.userName = ko.observable("");
+
         self.requireAuth = ko.observable();
 
         self.pollExpires = ko.observable(false);
@@ -68,13 +71,8 @@ define('Poll', ['jquery', 'knockout', 'countdown', 'Common', 'SocialMedia', 'Cha
 
                     var voterName = Common.getVoterName(pollId);
                     if (voterName) {
-                        self.userName(voterName);
-                        if (!self.pollExpired()) {
-                            self.showSection(self.pollSections.vote);
-                        } else {
-                            self.showSection(self.pollSections.results);
-                        }
-
+                        self.enteredName(voterName);
+                        self.submitLogin();
                     } else {
                         self.showSection(self.pollSections.login);
                     }
@@ -85,7 +83,7 @@ define('Poll', ['jquery', 'knockout', 'countdown', 'Common', 'SocialMedia', 'Cha
         };
 
         var socialLoginResponse = function (username) {
-            self.userName(username);
+            self.enteredName(username);
             self.submitLogin();
         };
 
@@ -98,18 +96,22 @@ define('Poll', ['jquery', 'knockout', 'countdown', 'Common', 'SocialMedia', 'Cha
         };
 
         self.submitLogin = function () {
-            Common.setVoterName(self.userName(), pollId);
+            self.userName(self.enteredName());
 
-            if (!self.pollExpired()) {
-                self.showSection(self.pollSections.vote);
-            } else {
-                self.showSection(self.pollSections.results);
-            }
+            Common.setVoterName(self.userName(), pollId);
+            Common.resolveToken(pollId, uriTokenGuid, function () {
+                if (!self.pollExpired()) {
+                    self.showSection(self.pollSections.vote);
+                } else {
+                    self.showSection(self.pollSections.results);
+                }
+            });
         };
 
         self.logout = function () {
             Common.clearStorage(pollId);
             self.userName("");
+            self.enteredName("");
             self.showSection(self.pollSections.login);
         };
 
@@ -183,7 +185,6 @@ define('Poll', ['jquery', 'knockout', 'countdown', 'Common', 'SocialMedia', 'Cha
         };
 
         self.initialise = function () {
-            Common.resolveToken(pollId, uriTokenGuid);
             self.setupPollScreen();
 
             ko.applyBindings(this);

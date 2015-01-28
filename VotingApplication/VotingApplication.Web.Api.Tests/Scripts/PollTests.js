@@ -188,7 +188,7 @@
             }, 10);
         });
 
-        it("setupPollScreen with Voter Not Expired expect Show Vote Section", function (done) {
+        it("setupPollScreen with Voter expect Login", function (done) {
             // arrange
             mockjax({
                 type: "GET", url: "/api/poll/test-poll-1",
@@ -196,35 +196,15 @@
             });
             spyOn(target, "setupPollExpiryTimer");
             spyOn(Common, "getVoterName").and.returnValue("Bob Tester");
+            spyOn(target, "submitLogin");
 
             // act
             target.setupPollScreen();
 
             // assert
             setTimeout(function () {
-                expect(target.userName()).toEqual("Bob Tester");
-                expect(target.showSection()).toEqual(target.pollSections.vote);
-
-                done();
-            }, 10);
-        });
-
-        it("setupPollScreen with Voter Expired expect Show Results Section", function (done) {
-            // arrange
-            mockjax({
-                type: "GET", url: "/api/poll/test-poll-1",
-                responseText: { Expires: true, ExpiryDate: pastDate }
-            });
-            spyOn(target, "setupPollExpiryTimer");
-            spyOn(Common, "getVoterName").and.returnValue("Bob Tester");
-
-            // act
-            target.setupPollScreen();
-
-            // assert
-            setTimeout(function () {
-                expect(target.userName()).toEqual("Bob Tester");
-                expect(target.showSection()).toEqual(target.pollSections.results);
+                expect(target.enteredName()).toEqual("Bob Tester");
+                expect(target.submitLogin).toHaveBeenCalled();
 
                 done();
             }, 10);
@@ -267,7 +247,7 @@
 
             // assert
             setTimeout(function () {
-                expect(target.userName()).toEqual("Bob Facebook");
+                expect(target.enteredName()).toEqual("Bob Facebook");
                 expect(target.submitLogin).toHaveBeenCalled();
 
                 done();
@@ -287,18 +267,24 @@
 
             // assert
             setTimeout(function () {
-                expect(target.userName()).toEqual("Bob Google");
+                expect(target.enteredName()).toEqual("Bob Google");
                 expect(target.submitLogin).toHaveBeenCalled();
 
                 done();
             }, 10);
         });
 
-        it("submitLogin without Expired expect Set Name and Vote", function () {
+        it("submitLogin without Expired expect Set Name and Vote", function (done) {
             // arrange
             spyOn(Common, 'setVoterName');
+            spyOn(Common, 'resolveToken').and.callFake(function (poll, uriToken, callback) {
+                if (poll === "test-poll-1" && uriToken === "test-token-453") {
+                    // Callback asynchronously
+                    setTimeout(function () { callback(); }, 5);
+                }
+            });
 
-            target.userName("Bob Tester");
+            target.enteredName("Bob Tester");
             target.showSection(target.pollSections.login);
 
             target.pollExpires(false);
@@ -307,15 +293,25 @@
             target.submitLogin();
 
             // assert
-            expect(Common.setVoterName).toHaveBeenCalledWith("Bob Tester", "test-poll-1");
-            expect(target.showSection()).toEqual(target.pollSections.vote);
+            setTimeout(function () {
+                expect(Common.setVoterName).toHaveBeenCalledWith("Bob Tester", "test-poll-1");
+                expect(target.showSection()).toEqual(target.pollSections.vote);
+
+                done();
+            }, 10);
         });
 
-        it("submitLogin with Expired expect Set Name and Results", function () {
+        it("submitLogin with Expired expect Set Name and Results", function (done) {
             // arrange
             spyOn(Common, 'setVoterName');
+            spyOn(Common, 'resolveToken').and.callFake(function (poll, uriToken, callback) {
+                if (poll === "test-poll-1" && uriToken === "test-token-453") {
+                    // Callback asynchronously
+                    setTimeout(function () { callback(); }, 5);
+                }
+            });
 
-            target.userName("Bob Tester");
+            target.enteredName("Bob Tester");
             target.showSection(target.pollSections.login);
 
             target.pollExpires(true);
@@ -325,14 +321,19 @@
             target.submitLogin();
 
             // assert
-            expect(Common.setVoterName).toHaveBeenCalledWith("Bob Tester", "test-poll-1");
-            expect(target.showSection()).toEqual(target.pollSections.results);
+            setTimeout(function () {
+                expect(Common.setVoterName).toHaveBeenCalledWith("Bob Tester", "test-poll-1");
+                expect(target.showSection()).toEqual(target.pollSections.results);
+
+                done();
+            }, 10);
         });
 
         it("logout expect Clear Name and Show Login", function () {
             // arrange
             spyOn(Common, 'clearStorage');
 
+            target.enteredName("Bob Tester");
             target.userName("Bob Tester");
             target.showSection(target.pollSections.vote);
 
@@ -341,6 +342,7 @@
 
             // assert
             expect(Common.clearStorage).toHaveBeenCalledWith("test-poll-1");
+            expect(target.enteredName()).toEqual("");
             expect(target.userName()).toEqual("");
             expect(target.showSection()).toEqual(target.pollSections.login);
         });

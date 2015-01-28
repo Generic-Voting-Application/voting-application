@@ -6,7 +6,7 @@
 
     var tokenGuid = '';
 
-    Common.resolveToken = function (pollId, uriTokenGuid) {
+    Common.resolveToken = function (pollId, uriTokenGuid, callbackFn) {
         tokenGuid = uriTokenGuid || localStorage[pollId];
         if(!tokenGuid){
             $.ajax({
@@ -17,9 +17,12 @@
                 success: function (data) {
                     tokenGuid = data;
                     localStorage[pollId] = data;
+
+                    if (callbackFn) callbackFn();
                 }
             });
-        }
+        } else if (callbackFn)
+            callbackFn();
     }
 
     Common.getToken = function (pollId) {
