@@ -24,6 +24,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Poll _otherPoll;
         private Poll _templatePoll;
         private Guid _templateUUID;
+        private DateTime _templateCreatedDate;
         private Guid[] UUIDs;
         private Option _redOption;
         private InMemoryDbSet<Poll> _dummyPolls;
@@ -36,8 +37,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             UUIDs = new[] { Guid.NewGuid(), Guid.NewGuid(), _templateUUID, Guid.NewGuid() };
             _mainPoll = new Poll() { UUID = UUIDs[0], ManageId = Guid.NewGuid() };
             _otherPoll = new Poll() { UUID = UUIDs[1], ManageId = Guid.NewGuid() };
+            
             _templateUUID = Guid.NewGuid();
-            _templatePoll = new Poll() { UUID = _templateUUID, ManageId = Guid.NewGuid(), Options = new List<Option>() { _redOption }, CreatorIdentity = "a@b.c" };
+            _templateCreatedDate = DateTime.Now.AddDays(-5);
+            _templatePoll = new Poll() { UUID = _templateUUID, ManageId = Guid.NewGuid(), CreatedDate = _templateCreatedDate,
+                Options = new List<Option>() { _redOption }, CreatorIdentity = "a@b.c" };
 
             _dummyPolls = new InMemoryDbSet<Poll>(true);
             _dummyPolls.Add(_mainPoll);
@@ -86,7 +90,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get();
 
             // Assert
-            Assert.AreEqual(_templatePoll.Creator, response.Single().Creator);
+            var responsePoll = response.Single();
+            Assert.AreEqual(_templatePoll.UUID, responsePoll.UUID);
+            Assert.AreEqual(_templatePoll.Creator, responsePoll.Creator);
+            Assert.AreEqual(_templatePoll.CreatedDate, responsePoll.CreatedDate);
         }
 
         [TestMethod]
