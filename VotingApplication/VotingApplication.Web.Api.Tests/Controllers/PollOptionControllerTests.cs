@@ -86,21 +86,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void GetWithNonexistentPollIsNotFound()
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            try
-            {
-                _controller.Get(newGuid);
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Get(newGuid);
         }
 
         [TestMethod]
@@ -130,54 +121,28 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region POST
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.MethodNotAllowed)]
         public void PostIsNotAllowedOnPollsWithOptionTurnedOff()
         {
             // Act
-            try
-            {
-                _controller.Post(_mainUUID, new OptionCreationRequestModel());
-            }
-            catch (HttpResponseException e)
-            {
-                Assert.AreEqual(HttpStatusCode.MethodNotAllowed, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Post(_mainUUID, new OptionCreationRequestModel());
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
         public void PostWithNullOptionNotAllowed()
         {
             // Act
-            try
-            {
-                _controller.Post(_emptyUUID, null);
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Post(_emptyUUID, null);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
-        public void PostForNonExistantPollNotAllowed()
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
+        public void PostForNonExistantPollNotFound()
         {
             // Act
             Guid invalidGuid = Guid.NewGuid();
-            try
-            {
-                _controller.Post(invalidGuid, new OptionCreationRequestModel());
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Post(invalidGuid, new OptionCreationRequestModel());
 
         }
 

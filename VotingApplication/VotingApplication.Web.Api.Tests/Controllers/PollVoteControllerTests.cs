@@ -90,21 +90,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void GetNonexistentPollIsNotFound()
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            try
-            {
-                _controller.Get(newGuid);
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Get(newGuid);
         }
 
         [TestMethod]

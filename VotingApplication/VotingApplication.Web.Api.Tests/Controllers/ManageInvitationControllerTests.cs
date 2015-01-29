@@ -31,7 +31,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _inviteOnlyUUID = Guid.NewGuid();
             _mainPoll = new Poll() { ManageId = _mainUUID, Tokens = new List<Token>() };
             _inviteOnlyPoll = new Poll() { ManageId = _inviteOnlyUUID, InviteOnly = true, Tokens = new List<Token>() };
-            
+
             InMemoryDbSet<Poll> dummyPolls = new InMemoryDbSet<Poll>(true);
             dummyPolls.Add(_mainPoll);
             dummyPolls.Add(_inviteOnlyPoll);
@@ -47,7 +47,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
-        
+
         #region POST
 
         [TestMethod]
@@ -58,20 +58,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void PostWithInvalidPollIdIsRejected()
         {
             // Act
-            try
-            {
-                _controller.Post(Guid.NewGuid(), new List<string>());
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Post(Guid.NewGuid(), new List<string>());
         }
 
         [TestMethod]

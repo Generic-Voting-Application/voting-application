@@ -76,36 +76,20 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void GetFailsOnNonExistantPoll()
         {
             // Act
-            try
-            {
-                _controller.Get(Guid.NewGuid());
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Get(Guid.NewGuid());
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.Forbidden)]
         public void GetFailsOnInviteOnlyPoll()
         {
             // Act
-            try {
-                _controller.Get(_inviteUUID);
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.Forbidden, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Get(_inviteUUID);
+
         }
 
         #endregion

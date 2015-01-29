@@ -112,20 +112,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void GetByIdOnNonexistentPollsAreNotFound()
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            try
-            {
-                var response = _controller.Get(newGuid);
-            }
-            catch (HttpResponseException e)
-            {
-                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
-                throw;
-            }
+            var response = _controller.Get(newGuid);
         }
 
         #endregion
@@ -140,22 +132,14 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
         public void PostRejectsPollWithInvalidInput()
         {
             // Arrange
             _controller.ModelState.AddModelError("Name", "");
 
             // Act
-            try
-            {
-                _controller.Post(new PollCreationRequestModel());
-            }
-            catch (HttpResponseException e)
-            {
-                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Post(new PollCreationRequestModel());
         }
 
         [TestMethod]

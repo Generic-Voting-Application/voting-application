@@ -126,21 +126,13 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void GetNonexistentPollIsNotFound()
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            try
-            {
-                _controller.Get(_bobToken.TokenGuid, newGuid);
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Get(_bobToken.TokenGuid, newGuid);
+
         }
 
         [TestMethod]
@@ -158,57 +150,30 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region PUT
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
         public void PostRejectsVoteWithInvalidInput()
         {
             // Arrange
             _controller.ModelState.AddModelError("OptionId", "");
 
             // Act
-            try
-            {
-                _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>());
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>());
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
         public void PutNonexistentOptionIsNotAllowed()
         {
             // Act
-            try
-            {
-                _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 99 } });
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 99 } });
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void PutNonexistentPollIsNotAllowed()
         {
             // Act
-            try
-            {
-                _controller.Put(_bobToken.TokenGuid, Guid.NewGuid(), new List<VoteRequestModel>() { });
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Put(_bobToken.TokenGuid, Guid.NewGuid(), new List<VoteRequestModel>() { });
         }
 
         [TestMethod]
@@ -242,40 +207,22 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
         public void PutInvalidOptionIsNotAllowed()
         {
             // Act
-            try
-            {
-                _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 3 } });
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 3 } });
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.Forbidden)]
         public void PutOnAnExpiredPollNotAllowed()
         {
             // Arrange
             var newVote = new Vote() { OptionId = 1, PollId = _timedUUID };
 
             // Act
-            try
-            {
-                _controller.Put(_bobToken.TokenGuid, _timedUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } });
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.Forbidden, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Put(_bobToken.TokenGuid, _timedUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } });
         }
 
         #endregion

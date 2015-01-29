@@ -83,21 +83,13 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void GetNonexistentPollIsNotFound()
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            try
-            {
-                _controller.Get(newGuid);
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
-                throw;
-            }
+
+            _controller.Get(newGuid);
         }
 
         [TestMethod]
@@ -140,21 +132,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void DeleteFromMissingPollIsNotFound()
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            try
-            {
-                _controller.Delete(newGuid);
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Delete(newGuid);
         }
 
         [TestMethod]
@@ -211,20 +194,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void DeleteByIdOnMissingPollIsNotFound()
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            try
-            {
-                _controller.Delete(newGuid, 1);
-            }
-            catch (HttpResponseException e)
-            {
-                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Delete(newGuid, 1);
         }
 
         [TestMethod]

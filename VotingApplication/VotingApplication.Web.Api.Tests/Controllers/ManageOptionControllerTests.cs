@@ -86,7 +86,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void GetWithNonexistentPollIsNotFound()
         {
             // Act
@@ -127,20 +127,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void PutReturnsNotFoundForMissingPoll()
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            try
-            {
-                _controller.Put(newGuid, new List<Option>() { });
-            }
-            catch(HttpResponseException e)
-            {
-                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Put(newGuid, new List<Option>() { });
         }
 
         [TestMethod]
@@ -156,39 +148,21 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
         public void PutWithoutNameIsRejected()
         {
             // Act
             Option newOption = new Option() { Description = "Abc", Info = "Abc" };
-            try
-            {
-                _controller.Put(_manageMainUUID, new List<Option> { newOption });
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Put(_manageMainUUID, new List<Option> { newOption });
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
         public void PutWithEmptyNameIsRejected()
         {
             // Act
             Option newOption = new Option() { Name = "", Description = "Abc", Info = "Abc" };
-            try
-            {
-                _controller.Put(_manageMainUUID, new List<Option> { newOption });
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Put(_manageMainUUID, new List<Option> { newOption });
         }
 
         [TestMethod]
@@ -234,25 +208,15 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
         public void PostInvalidInputIsRejected()
         {
             // Arrange
             _controller.ModelState.AddModelError("Name", "");
 
             // Act
-            try
-            {
-                _controller.Post(_manageMainUUID, new OptionCreationRequestModel() { Name = "", Description = "Abc", Info = "Abc" });
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.BadRequest, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Post(_manageMainUUID, new OptionCreationRequestModel() { Name = "", Description = "Abc", Info = "Abc" });
         }
-
 
         [TestMethod]
         public void PostWithoutDescriptionIsAccepted()
@@ -280,21 +244,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void PostReturnsNotFoundForMissingPoll()
         {
             // Act
             OptionCreationRequestModel newOption = new OptionCreationRequestModel() { Name = "Bella Vista" };
-            try
-            {
-                _controller.Post(Guid.NewGuid(), newOption);
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Post(Guid.NewGuid(), newOption);
         }
 
         [TestMethod]
@@ -344,21 +299,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void DeleteByIdIsIsNotAllowedForMissingPollUUID()
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            try
-            {
-                _controller.Delete(newGuid, 1);
-            }
-            catch (HttpResponseException e)
-            {
-                // Assert
-                Assert.AreEqual(HttpStatusCode.NotFound, e.Response.StatusCode);
-                throw;
-            }
+            _controller.Delete(newGuid, 1);
         }
 
         [TestMethod]
