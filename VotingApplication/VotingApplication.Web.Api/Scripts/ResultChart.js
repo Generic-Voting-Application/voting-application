@@ -53,6 +53,9 @@
             if (settings.legend) {
                 var legendSeries = data.map(function (s, i) { return 'option-' + i; });
                 chart.legend(new insight.Legend(legendSeries));
+                chart.margin({ left: 85, right: 70, top: 0, bottom: 45 });
+            } else {
+                chart.autoMargin(true);
             }
 
             // Add a chart series for each data series
