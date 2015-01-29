@@ -52,11 +52,16 @@
                 },
 
                 success: function (data) {
-                    for (var i = 0; i < data.length; i++) {
-                        var date = new Date(data[i].CreatedDate);
-                        data[i].Name = data[i].Name + " (" + date.toDateString() + ")";
-                    }
-                    self.templates(data);
+                    // Don't include the current Poll
+                    var templates = data
+                        .filter(function (t) { return t.UUID !== self.pollId(); })
+                        .map(function (t) {
+                            return {
+                                UUID: t.UUID,
+                                Name: t.Name + " (" + new Date(t.CreatedDate).toDateString() + ")"
+                            };
+                        });
+                    self.templates(templates);
                 }
             });
         };
@@ -110,20 +115,15 @@
             });
         }
 
+        self.newName = ko.observable("");
+        self.newDescription = ko.observable("");
+        self.newInfo = ko.observable("");
+
         self.addOption = function () {
             //Don't submit without an entry in the name field
-            if ($("#newName").val() === "") {
+            if (self.newName() === "") {
                 return;
             }
-
-            var newName = $("#newName").val();
-            var newInfo = $("#newInfo").val();
-            var newDescription = $("#newDescription").val();
-
-            //Reset before posting, to prevent double posts.
-            $("#newName").val("");
-            $("#newDescription").val("");
-            $("#newInfo").val("");
 
             $.ajax({
                 type: 'POST',
@@ -131,9 +131,9 @@
                 contentType: 'application/json',
 
                 data: JSON.stringify({
-                    Name: newName,
-                    Description: newDescription,
-                    Info: newInfo
+                    Name: self.newName(),
+                    Description: self.newDescription(),
+                    Info: self.newInfo()
                 }),
 
                 success: function () {
@@ -142,6 +142,11 @@
 
                 error: Common.handleError
             });
+
+            // Reset the fields
+            self.newName("");
+            self.newDescription("");
+            self.newInfo("");
         };
 
         self.deleteVote = function (data, event) {
