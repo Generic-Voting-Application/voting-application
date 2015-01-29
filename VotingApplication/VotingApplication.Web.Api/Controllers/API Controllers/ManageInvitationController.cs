@@ -25,35 +25,21 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             _mailSender = mailSender;
         }
 
-        #region GET
-
-        public HttpResponseMessage Get(Guid manageId)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET on this controller");
-        }
-
-        public HttpResponseMessage Get(Guid manageId, long invitationId)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET by Id on this controller");
-        }
-
-        #endregion
-
         #region POST
 
-        public HttpResponseMessage Post(Guid manageId, List<string> invitationEmails)
+        public void Post(Guid manageId, List<string> invitationEmails)
         {
             using (var context = _contextFactory.CreateContext())
             {
                 Poll matchingPoll = context.Polls.Where(p => p.ManageId == manageId).Include(p => p.Tokens).FirstOrDefault();
                 if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
+                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
                 SendVoteEmails(matchingPoll, invitationEmails);
 
-                return this.Request.CreateResponse(HttpStatusCode.OK);
+                return;
             }
         }
 
@@ -96,39 +82,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Thread newThread = new Thread(new ThreadStart(() => _mailSender.SendMail(emailAddress, "Have your say!", message)));
                 newThread.Start();
             }
-        }
-
-        public HttpResponseMessage Post(Guid manageId, long invitationId, string invitation)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by Id on this controller");
-        }
-
-        #endregion
-
-        #region PUT
-
-        public HttpResponseMessage Put(Guid manageId, List<string> invitation)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT on this controller");
-        }
-
-        public HttpResponseMessage Put(Guid manageId, long invitationId, string invitation)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT by Id on this controller");
-        }
-
-        #endregion
-
-        #region DELETE
-
-        public HttpResponseMessage Delete(Guid manageId)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
-        }
-
-        public HttpResponseMessage Delete(Guid manageId, long invitationId)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE by Id on this controller");
         }
 
         #endregion

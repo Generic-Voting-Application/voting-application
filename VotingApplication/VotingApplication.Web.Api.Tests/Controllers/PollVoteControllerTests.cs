@@ -86,23 +86,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetIsAllowed()
         {
             // Act
-            var response = _controller.Get(_mainUUID);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            _controller.Get(_mainUUID);
         }
 
         [TestMethod]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void GetNonexistentPollIsNotFound()
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            var response = _controller.Get(newGuid);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll " + newGuid + " not found", error.Message);
+            _controller.Get(newGuid);
         }
 
         [TestMethod]
@@ -112,9 +105,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_mainUUID);
 
             // Assert
-            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
-            Assert.AreEqual(2, responseVotes.Count);
-            CollectionAssert.AreEqual(new long[] { 1, 1 }, responseVotes.Select(r => r.OptionId).ToArray());
+            Assert.AreEqual(2, response.Count);
+            CollectionAssert.AreEqual(new long[] { 1, 1 }, response.Select(r => r.OptionId).ToArray());
         }
 
         [TestMethod]
@@ -124,8 +116,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_emptyUUID);
 
             // Assert
-            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
-            Assert.AreEqual(0, responseVotes.Count);
+            Assert.AreEqual(0, response.Count);
         }
 
         [TestMethod]
@@ -135,9 +126,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_anonymousUUID);
 
             // Assert
-            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
-            Assert.AreEqual(1, responseVotes.Count);
-            Assert.AreEqual("Anonymous User", responseVotes[0].VoterName);
+            Assert.AreEqual(1, response.Count);
+            Assert.AreEqual("Anonymous User", response[0].VoterName);
         }
 
         [TestMethod]
@@ -150,8 +140,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_mainUUID);
 
             // Assert
-            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
-            Assert.AreEqual(2, responseVotes.Count);
+            Assert.AreEqual(2, response.Count);
         }
 
         [TestMethod]
@@ -164,102 +153,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_mainUUID);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.NotModified, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void GetWithHighTimestampReturnsNoResults()
-        {
-            // Act
-            Uri requestURI;
-            Uri.TryCreate("http://localhost/?lastPoll=2145916800000", UriKind.Absolute, out requestURI);
-            _controller.Request.RequestUri = requestURI;
-            var response = _controller.Get(_mainUUID);
-
-            // Assert
-            Assert.IsNull(response.Content);
-        }
-
-        [TestMethod]
-        public void GetByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Get(_mainUUID, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        #endregion
-
-        #region PUT
-
-        [TestMethod]
-        public void PutIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Put(1, new Vote());
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void PutByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Put(_mainUUID, 1, new Vote());
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        #endregion
-
-        #region POST
-
-        [TestMethod]
-        public void PostIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Post(_mainUUID, new Vote());
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void PostByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Post(_mainUUID, 1, new Vote());
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        #endregion
-
-        #region DELETE
-
-        [TestMethod]
-        public void DeleteIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Delete(_mainUUID);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void DeleteByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Delete(_mainUUID, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            // Not sure how else to check this for now
+            Assert.IsNull(response);
         }
 
         #endregion

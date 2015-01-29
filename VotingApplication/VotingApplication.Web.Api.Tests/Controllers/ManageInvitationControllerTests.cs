@@ -31,7 +31,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _inviteOnlyUUID = Guid.NewGuid();
             _mainPoll = new Poll() { ManageId = _mainUUID, Tokens = new List<Token>() };
             _inviteOnlyPoll = new Poll() { ManageId = _inviteOnlyUUID, InviteOnly = true, Tokens = new List<Token>() };
-            
+
             InMemoryDbSet<Poll> dummyPolls = new InMemoryDbSet<Poll>(true);
             dummyPolls.Add(_mainPoll);
             dummyPolls.Add(_inviteOnlyPoll);
@@ -48,53 +48,21 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Configuration = new HttpConfiguration();
         }
 
-        #region GET
-
-        [TestMethod]
-        public void GetIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Get(_mainUUID);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void GetByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Get(_mainUUID, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        #endregion
-
         #region POST
 
         [TestMethod]
         public void PostIsAllowed()
         {
             // Act
-            var response = _controller.Post(_mainUUID, new List<string>());
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            _controller.Post(_mainUUID, new List<string>());
         }
 
         [TestMethod]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void PostWithInvalidPollIdIsRejected()
         {
             // Act
-            Guid newGuid = Guid.NewGuid();
-            var response = _controller.Post(newGuid, new List<string>());
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll " + newGuid + " not found", error.Message);
+            _controller.Post(Guid.NewGuid(), new List<string>());
         }
 
         [TestMethod]
@@ -129,65 +97,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Assert.AreEqual(0, _inviteOnlyPoll.Tokens.Count);
         }
 
-        [TestMethod]
-        public void PostByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Post(_mainUUID, 1, null);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
         #endregion
-
-        #region PUT
-
-        [TestMethod]
-        public void PutIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Put(_mainUUID, new List<string>());
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void PutByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Put(_mainUUID, 1, null);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        #endregion
-
-        #region DELETE
-
-        [TestMethod]
-        public void DeleteIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Delete(_mainUUID);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void DeleteByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Delete(_mainUUID, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        #endregion
-
     }
 }

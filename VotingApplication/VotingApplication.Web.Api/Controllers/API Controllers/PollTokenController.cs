@@ -19,7 +19,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region GET
 
-        public virtual HttpResponseMessage Get(Guid pollId)
+        public Guid Get(Guid pollId)
         {
             using (var context = _contextFactory.CreateContext())
             {
@@ -27,12 +27,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (poll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
+                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
                 }
 
                 if (poll.InviteOnly)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, string.Format("Poll {0} is invite only", pollId));
+                    this.ThrowError(HttpStatusCode.Forbidden, string.Format("Poll {0} is invite only", pollId));
                 }
 
                 Guid newTokenGuid = Guid.NewGuid();
@@ -46,34 +46,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 context.SaveChanges();
 
-                return this.Request.CreateResponse(HttpStatusCode.OK, newTokenGuid);
+                return newTokenGuid;
             }
-        }
-
-        #endregion
-
-        #region POST
-        public virtual HttpResponseMessage Post(Guid pollId)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
-        }
-
-        #endregion
-
-        #region PUT
-
-        public virtual HttpResponseMessage Put(Guid pollId)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT on this controller");
-        }
-
-        #endregion
-
-        #region DELETE
-
-        public virtual HttpResponseMessage Delete(Guid pollId)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
         }
 
         #endregion
