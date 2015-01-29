@@ -16,12 +16,10 @@ namespace VotingApplication.Web.Api.Validators
                 modelState.AddModelError("Vote", "Invalid number of votes");
             }
 
-            foreach (VoteRequestModel voteRequest in voteRequests)
+            if (voteRequests.Any(v => v.VoteValue > poll.MaxPerVote || v.VoteValue <= 0) || voteRequests.Sum(v => v.VoteValue) > poll.MaxPoints)
             {
-                if (voteRequest.VoteValue > poll.MaxPerVote || voteRequest.VoteValue > poll.MaxPoints || voteRequest.VoteValue <= 0)
-                {
-                    modelState.AddModelError("VoteValue", String.Format("Invalid vote value: {0}", voteRequest.VoteValue));
-                }
+                modelState.AddModelError("VoteValue", String.Format("Invalid vote value, vote values must be between 1 and {0} with thier total not exceeding {1}", 
+                                                                    poll.MaxPerVote, poll.MaxPoints));
             }
         }
     }
