@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web;
+using System.Web.Http.Description;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
@@ -36,7 +37,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region GET
 
-        public List<VoteRequestResponseModel> Get(Guid pollId)
+        [ResponseType(typeof(IEnumerable<VoteRequestResponseModel>))]
+        public HttpResponseMessage Get(Guid pollId)
         {
             using (var context = _contextFactory.CreateContext())
             {
@@ -61,12 +63,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                     if (poll.LastUpdated.CompareTo(clientLastUpdated) < 0)
                     {
-                        StatusCode(HttpStatusCode.NotModified);
-                        return null;
+                        return new HttpResponseMessage(HttpStatusCode.NotModified);
                     }
                 }
 
-                return votes.Select(v => VoteToModel(v, poll)).ToList();
+                var result = votes.Select(v => VoteToModel(v, poll)).ToList();
+                return Request.CreateResponse(HttpStatusCode.OK, result);
             }
         }
 

@@ -105,8 +105,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_mainUUID);
 
             // Assert
-            Assert.AreEqual(2, response.Count);
-            CollectionAssert.AreEqual(new long[] { 1, 1 }, response.Select(r => r.OptionId).ToArray());
+            var responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            Assert.AreEqual(2, responseVotes.Count);
+            CollectionAssert.AreEqual(new long[] { 1, 1 }, responseVotes.Select(r => r.OptionId).ToArray());
         }
 
         [TestMethod]
@@ -116,7 +117,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_emptyUUID);
 
             // Assert
-            Assert.AreEqual(0, response.Count);
+            var responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            Assert.AreEqual(0, responseVotes.Count);
         }
 
         [TestMethod]
@@ -126,8 +128,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_anonymousUUID);
 
             // Assert
-            Assert.AreEqual(1, response.Count);
-            Assert.AreEqual("Anonymous User", response[0].VoterName);
+            var responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            Assert.AreEqual(1, responseVotes.Count);
+            Assert.AreEqual("Anonymous User", responseVotes[0].VoterName);
         }
 
         [TestMethod]
@@ -140,7 +143,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_mainUUID);
 
             // Assert
-            Assert.AreEqual(2, response.Count);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+
+            var responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            Assert.AreEqual(2, responseVotes.Count);
         }
 
         [TestMethod]
@@ -153,8 +159,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_mainUUID);
 
             // Assert
-            // Not sure how else to check this for now
-            Assert.IsNull(response);
+            Assert.AreEqual(HttpStatusCode.NotModified, response.StatusCode);
         }
 
         #endregion
