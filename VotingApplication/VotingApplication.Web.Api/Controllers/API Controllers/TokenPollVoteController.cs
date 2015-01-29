@@ -54,82 +54,58 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region GET
 
-        public virtual HttpResponseMessage Get(Guid tokenGuid, Guid pollId)
+        public List<VoteRequestResponseModel> Get(Guid tokenGuid, Guid pollId)
         {
 
-            List<Vote> votes;
-            Poll poll;
             using (var context = _contextFactory.CreateContext())
             {
-                poll = context.Polls.Where(s => s.UUID == pollId).FirstOrDefault();
+                Poll poll = context.Polls.Where(s => s.UUID == pollId).FirstOrDefault();
                 if (poll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
+                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
                 }
 
-                votes = context.Votes.Where(v => v.Token.TokenGuid == tokenGuid && v.PollId == pollId).Include(v => v.Option).ToList();
+                List<Vote> votes = context.Votes.Where(v => v.Token.TokenGuid == tokenGuid && v.PollId == pollId).Include(v => v.Option).ToList();
+
+                return votes.Select(v => VoteToModel(v, poll)).ToList();
             }
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, votes.Select(v => VoteToModel(v, poll)).ToList());
-
-        }
-
-
-        public virtual HttpResponseMessage Get(Guid tokenGuid, Guid pollId, long voteId)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET by id on this controller");
-        }
-
-        #endregion
-
-        #region POST
-
-        public virtual HttpResponseMessage Post(Guid tokenGuid, Guid pollId, Vote vote)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
-        }
-
-        public virtual HttpResponseMessage Post(Guid tokenGuid, Guid pollId, long voteId, Vote vote)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
         }
 
         #endregion
 
         #region PUT
 
-        public virtual HttpResponseMessage Put(Guid tokenGuid, Guid pollId, List<VoteRequestModel> voteRequests)
+        public void Put(Guid tokenGuid, Guid pollId, List<VoteRequestModel> voteRequests)
         {
-            #region Input Validation
-
-            if (voteRequests == null)
-            {
-                return this.Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return this.Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
-            }
-
             using (var context = _contextFactory.CreateContext())
             {
+                if (voteRequests == null)
+                {
+                    this.ThrowError(HttpStatusCode.BadRequest);
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    this.ThrowError(HttpStatusCode.BadRequest, ModelState);
+                }
+
                 Poll poll = context.Polls.Where(p => p.UUID == pollId).Include(p => p.Tokens).Include(p => p.Options).SingleOrDefault();
                 if (poll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Poll {0} not found", pollId));
+                    this.ThrowError(HttpStatusCode.NotFound, String.Format("Poll {0} not found", pollId));
                 }
 
                 if (poll.Expires && poll.ExpiryDate < DateTime.Now)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", pollId));
+                    this.ThrowError(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", pollId));
                 }
 
                 Token token = poll.Tokens.Where(t => t.TokenGuid == tokenGuid).SingleOrDefault();
 
                 if (token == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, String.Format("Token {0} not valid for this poll", tokenGuid));
+                    this.ThrowError(HttpStatusCode.Forbidden, String.Format("Token {0} not valid for this poll", tokenGuid));
                 }
 
                 foreach (VoteRequestModel voteRequest in voteRequests)
@@ -146,7 +122,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (!ModelState.IsValid)
                 {
-                    return this.Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
+                    this.ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
                 List<Vote> existingVotes = context.Votes.Where(v => v.Token.TokenGuid == tokenGuid && v.PollId == pollId).ToList<Vote>();
@@ -170,30 +146,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 context.SaveChanges();
             }
 
-            #endregion
-
-            #region Response
-
-            return this.Request.CreateResponse(HttpStatusCode.OK);
-
-            #endregion
+            return;
         }
 
         #endregion
-
-        #region DELETE
-
-        public virtual HttpResponseMessage Delete(Guid tokenGuid, Guid pollId)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
-        }
-
-        public virtual HttpResponseMessage Delete(Guid tokenGuid, Guid pollId, long voteId)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE by id on this controller");
-        }
-
-        #endregion
-
     }
 }

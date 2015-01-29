@@ -59,7 +59,9 @@ namespace VotingApplication.Web.Api.Sockets
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(p => p.UUID == pollId).FirstOrDefault();
+                Poll matchingPoll = context.Polls.Where(p => p.UUID == pollId)
+                        .Include(p => p.ChatMessages)
+                        .FirstOrDefault();
                 if (matchingPoll == null)
                 {
                     throw new InvalidOperationException(string.Format("Poll {0} not found", pollId));

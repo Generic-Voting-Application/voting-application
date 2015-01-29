@@ -1,19 +1,32 @@
-﻿define('Poll', ['jquery', 'knockout', 'bootstrap', 'countdown', 'moment', 'Common', 'ChatClient', 'platform'], function ($, ko, bs, countdown, moment, Common, chatClient) {
+﻿//scrolling window
+//Showing sections
+//Handling accordian clicks
+
+define('Poll', ['jquery', 'knockout', 'countdown', 'Common', 'SocialMedia', 'ChatWindow', 'KnockoutExtensions'], function ($, ko, countdown, Common, social, ChatWindow) {
+
     return function VoteViewModel(pollId, uriTokenGuid, VotingStrategyViewModel) {
         var self = this;
 
-        var lockCollapse = false;
-        var selectedPanel = null;
-        var lastResultsRequest = 0;
+        self.lastResultsRequest = 0;
+
+        self.pollSections = {
+            vote: 0,
+            results: 1,
+            login: 2
+        };
+        self.showSection = ko.observable(self.pollSections.login);
 
         self.votingStrategy = null;
+        self.chatWindow = new ChatWindow(pollId);
 
         self.pollId = pollId;
         self.pollName = ko.observable("Poll Name");
         self.pollCreator = ko.observable("Poll Creator");
-        self.chatMessages = ko.observableArray();
         self.lastMessageId = 0;
-        self.userName = ko.observable(Common.getVoterName(pollId));
+
+        self.enteredName = ko.observable("");
+        self.userName = ko.observable("");
+
         self.requireAuth = ko.observable();
 
         self.pollExpires = ko.observable(false);
@@ -29,34 +42,16 @@
             }
         });
 
-        // Begin Facebook boilerplate
-
-        window.fbAsyncInit = function () {
-            FB.init({
-                appId: '333351380206896',
-                xfbml: true,
-                version: 'v2.2'
-            });
+        self.setupPollExpiryTimer = function () {
+            setInterval(function () {
+                self.pollExpiryDate.notifySubscribers();
+                if (self.pollExpired() && self.userName()) {
+                    self.showSection(self.pollSections.results);
+                }
+            }, 1000);
         };
 
-        (function (d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) { return; }
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/en_US/sdk.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-
-        // End Facebook boilerplate
-
-        var updatePollExpiryTime = function () {
-            self.pollExpiryDate.notifySubscribers();
-            if (self.pollExpired() && self.userName()) {
-                showSection($('#resultSection'));
-            }
-        }
-
-        var getPollDetails = function (pollId, callback) {
+        var getPollDetails = function () {
             $.ajax({
                 type: 'GET',
                 url: "/api/poll/" + pollId,
@@ -71,143 +66,65 @@
                     self.pollExpiryDate(new Date(data.ExpiryDate));
 
                     if (data.Expires) {
-                        setInterval(updatePollExpiryTime, 1000);
+                        self.setupPollExpiryTimer();
                     }
 
-                    callback();
+                    var voterName = Common.getVoterName(pollId);
+                    if (voterName) {
+                        self.enteredName(voterName);
+                        self.submitLogin();
+                    } else {
+                        self.showSection(self.pollSections.login);
+                    }
                 },
 
                 error: Common.handleError
             });
         };
 
-        var showSection = function (element) {
-            if (selectedPanel == null || (selectedPanel[0] != element[0])) {
-                selectedPanel = element;
-                if (!lockCollapse) {
-                    lockCollapse = true;
-                    var siblings = element.siblings();
-                    for (var i = 0; i < siblings.length; i++) {
-                        $(siblings[i]).collapseSection('hide');
-                        $(siblings[i]).removeClass('panel-primary');
-                    }
-                    element.collapseSection('show');
-                    $(element).on('shown.bs.collapse', function (e) {
-                        lockCollapse = false;
-                    });
-                    element.addClass('panel-primary');
+        var socialLoginResponse = function (username) {
+            self.enteredName(username);
+            self.submitLogin();
+        };
+
+        self.facebookLogin = function () {
+            social.facebookLogin(socialLoginResponse);
+        };
+
+        self.googleLogin = function () {
+            social.googleLogin(socialLoginResponse);
+        };
+
+        self.submitLogin = function () {
+            self.userName(self.enteredName());
+
+            Common.setVoterName(self.userName(), pollId);
+            Common.resolveToken(pollId, uriTokenGuid, function () {
+                if (!self.pollExpired()) {
+                    self.showSection(self.pollSections.vote);
+                } else {
+                    self.showSection(self.pollSections.results);
                 }
-            }
-        };
-
-        var scrollChatWindow = function () {
-            $("#chat-messages").animate({
-                scrollTop: $("#chat-messages")[0].scrollHeight
             });
-        };
-
-        var googleLogin = function (authResult) {
-            //Login failed
-            if (!authResult['status']['signed_in']) {
-                return;
-            }
-
-            //Load the username and login to GVA
-            gapi.client.load('plus', 'v1', function () {
-                var request = gapi.client.plus.people.get({
-                    'userId': 'me'
-                });
-                request.execute(function (resp) {
-                    //Hijack the regular login
-                    $("#loginUsername").val(resp.displayName);
-                    self.submitLogin();
-                });
-            });
-        }
-
-        self.facebookLogin = function (data, event) {
-            FB.login(function (response) {
-                if (response.status != 'connected') {
-                    return;
-                }
-
-                FB.api('/me', function (content) {
-                    var username = content.first_name + " " + content.last_name;
-
-                    //Hijack the regular login
-                    $("#loginUsername").val(username);
-                    self.submitLogin();
-                })
-            });
-        }
-
-        self.googleLogin = function (data, event) {
-            gapi.auth.signIn({
-                'callback': googleLogin
-            });
-        };
-
-        self.showSection = function (data, event) {
-            showSection($(data).parent());
-        };
-
-        self.submitLogin = function (data, event) {
-            var userName = $("#loginUsername").val();
-            self.userName(userName);
-            Common.setVoterName(userName, pollId);
-
-            if (!self.pollExpired()) {
-                showSection($('#voteSection'));
-            } else {
-                showSection($('#resultSection'));
-            }
         };
 
         self.logout = function () {
             Common.clearStorage(pollId);
-            self.userName(undefined);
-        }
-
-        self.chatMessage = ko.observable("");
-
-        var receivedMessage = function (message) {
-
-            // Careful here, startOf modifies the object it is called on.
-            messageTimestamp = new moment(message.Timestamp);
-            messageDayStart = new moment(message.Timestamp).startOf('day');
-
-            message.Timestamp = messageDayStart.isSame(new moment().startOf('day')) ? messageTimestamp.format('HH:mm') : messageTimestamp.format('DD/MM');
-
-            self.chatMessages.push(message);
-        };
-        chatClient.onMessage = function (message) {
-            receivedMessage(message);
-            scrollChatWindow();
-        };
-        chatClient.onMessages = function (messages) {
-            ko.utils.arrayForEach(messages, receivedMessage);
-            scrollChatWindow();
+            self.userName("");
+            self.enteredName("");
+            self.showSection(self.pollSections.login);
         };
 
-        chatClient.joinPoll(pollId);
-
-        self.sendChatMessage = function (data, event) {
-            if (pollId) {
-                chatClient.sendMessage(pollId, Common.getVoterName(), self.chatMessage());
-                self.chatMessage("");
-            }
-        };
-
-        self.getResults = function (pollId) {
+        self.getResults = function () {
             $.ajax({
                 type: 'GET',
-                url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastResultsRequest,
+                url: '/api/poll/' + pollId + '/vote?lastPoll=' + self.lastResultsRequest,
 
                 statusCode: {
                     200: function (data) {
                         if (self.votingStrategy) {
 
-                            lastResultsRequest = Date.now();
+                            self.lastResultsRequest = Date.now();
                             self.votingStrategy.displayResults(data);
                         }
                     }
@@ -215,6 +132,16 @@
 
                 error: Common.handleError
             });
+            
+            // Setup refresh timer
+            self.setupResultsRefresh();
+        };
+
+        var refreshInterval;
+        self.setupResultsRefresh = function () {
+            if (!refreshInterval) {
+                refreshInterval = setInterval(self.getResults, 10000);
+            }
         };
 
         self.clearVote = function () {
@@ -229,62 +156,38 @@
                     contentType: 'application/json',
                     data: voteData,
 
-                    success: function (returnData) {
-                        lastResultsRequest = 0;
+                    success: function () {
+                        self.lastResultsRequest = 0;
 
-                        $('#resultSection > div')[0].click();
+                        self.showSection(self.pollSections.results);
                     },
 
                     error: Common.handleError
                 });
             }
-        }
+        };
 
-        $('#voteSection .accordion-body').on('show.bs.collapse', function () {
-            if (self.votingStrategy) {
-                self.votingStrategy.getPreviousVotes(pollId);
+        self.getPreviousVotes = function () {
+            self.votingStrategy.getPreviousVotes(pollId);
+        };
+
+        self.setupPollScreen = function () {
+            if (VotingStrategyViewModel) {
+                self.votingStrategy = new VotingStrategyViewModel(pollId);
+
+                self.votingStrategy.onVoted = function () {
+                    // Switch to the results panel
+                    self.showSection(self.pollSections.results);
+                };
             }
-        });
 
-        $('#resultSection .accordion-body').on('show.bs.collapse', function () {
-            if (self.votingStrategy) {
-                self.getResults(pollId);
-            }
-        });
+            getPollDetails();
+        };
 
-        $(document).ready(function () {
-            Common.resolveToken(pollId, uriTokenGuid);
+        self.initialise = function () {
+            self.setupPollScreen();
 
-            getPollDetails(pollId, function () {
-
-                var voterName = Common.getVoterName(pollId);
-                if (voterName) {
-                    self.userName(voterName);
-                    if (!self.pollExpired()) {
-                        showSection($('#voteSection'));
-                    } else {
-                        showSection($('#resultSection'));
-                    }
-
-                } else {
-                    showSection($('#loginSection'));
-                }
-            });
-
-            setInterval(function () {
-                self.getResults(pollId);
-            }, 10000);
-        });
-
-        if (VotingStrategyViewModel) {
-            self.votingStrategy = new VotingStrategyViewModel(pollId);
-
-            self.votingStrategy.onVoted = function () {
-                // Switch to the vote panel
-                $('#resultSection > div')[0].click();
-            };
-        }
-
-        ko.applyBindings(this);
-    }
+            ko.applyBindings(this);
+        };
+    };
 });

@@ -38,42 +38,30 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region GET
 
-        public virtual HttpResponseMessage Get(Guid manageId)
+        public List<OptionRequestResponseModel> Get(Guid manageId)
         {
-            #region DB Get / Validation
-
-            Poll poll;
             using (var context = _contextFactory.CreateContext())
             {
-                poll = context.Polls.Where(s => s.ManageId == manageId).Include(s => s.Options).SingleOrDefault();
+                Poll poll = context.Polls.Where(s => s.ManageId == manageId).Include(s => s.Options).SingleOrDefault();
+
+                if (poll == null)
+                {
+                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
+                }
+
+                return poll.Options.Select(OptionToModel).ToList();
             }
-
-            if (poll == null)
-            {
-                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
-            }
-
-            #endregion
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, poll.Options.Select(OptionToModel).ToList());
-        }
-
-        public virtual HttpResponseMessage Get(Guid manageId, long voteId)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET by id on this controller");
         }
 
         #endregion
 
         #region POST
 
-        public virtual HttpResponseMessage Post(Guid manageId, OptionCreationRequestModel optionCreationRequest)
+        public void Post(Guid manageId, OptionCreationRequestModel optionCreationRequest)
         {
-            #region Input Validation
-
             if (optionCreationRequest == null)
             {
-                return this.Request.CreateResponse(HttpStatusCode.BadRequest);
+                this.ThrowError(HttpStatusCode.BadRequest);
             }
 
             using (var context = _contextFactory.CreateContext())
@@ -81,18 +69,14 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Poll poll = context.Polls.Where(p => p.ManageId == manageId).FirstOrDefault();
                 if (poll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", manageId));
+                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", manageId));
                 }
             }
 
             if (!ModelState.IsValid)
             {
-                return this.Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
+                this.ThrowError(HttpStatusCode.BadRequest, ModelState);
             }
-
-            #endregion
-
-            #region DB Object Creation
 
             Option newOption = ModelToOption(optionCreationRequest);
 
@@ -108,38 +92,27 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 context.SaveChanges();
             }
 
-            #endregion
-
-            #region Response
-
-            return this.Request.CreateResponse(HttpStatusCode.OK);
-
-            #endregion
-        }
-
-        public virtual HttpResponseMessage Post(Guid manageId, long voteId, OptionCreationRequestModel option)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
+            return;
         }
 
         #endregion
 
         #region PUT
 
-        public virtual HttpResponseMessage Put(Guid manageId, List<Option> options)
+        public void Put(Guid manageId, List<Option> options)
         {
             using (var context = _contextFactory.CreateContext())
             {
                 Poll matchingPoll = context.Polls.Where(p => p.ManageId == manageId).Include(p => p.Options).SingleOrDefault();
                 if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
+                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
                 // Check validity of options
                 if (options.Any(p => String.IsNullOrEmpty(p.Name)))
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.BadRequest, string.Format("Option name must not be empty"));
+                    this.ThrowError(HttpStatusCode.BadRequest, string.Format("Option name must not be empty"));
                 }
 
                 // Remove all old options
@@ -157,32 +130,22 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 matchingPoll.Options = options;
                 context.SaveChanges();
 
-                return this.Request.CreateResponse(HttpStatusCode.OK);
+                return;
             }
-        }
-
-        public virtual HttpResponseMessage Put(Guid manageId, long voteId, Option option)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT by id on this controller");
         }
 
         #endregion
 
         #region DELETE
 
-        public virtual HttpResponseMessage Delete(Guid manageId)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
-        }
-
-        public virtual HttpResponseMessage Delete(Guid manageId, long optionId)
+        public void Delete(Guid manageId, long optionId)
         {
             using (var context = _contextFactory.CreateContext())
             {
                 Poll matchingPoll = context.Polls.Where(s => s.ManageId == manageId).Include(s => s.Options).FirstOrDefault();
                 if (matchingPoll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
+                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
                 Option matchingOption = matchingPoll.Options.Where(o => o.Id == optionId).FirstOrDefault();
@@ -200,7 +163,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 context.SaveChanges();
 
-                return this.Request.CreateResponse(HttpStatusCode.OK);
+                return;
             }
         }
 

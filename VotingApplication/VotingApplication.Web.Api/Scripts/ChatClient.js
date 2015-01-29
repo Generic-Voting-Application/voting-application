@@ -1,4 +1,4 @@
-﻿define(['signalRHubs'], function (signalRHubs) {
+﻿define('ChatClient', ['signalRHubs'], function (signalRHubs) {
     function ChatClient() {
         // Proxy to the chatHub signalR Hub
         var chat = signalRHubs.chatHub;

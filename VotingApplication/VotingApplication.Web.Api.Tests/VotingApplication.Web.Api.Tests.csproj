@@ -100,6 +100,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ExpectedHttpExceptionAttribute.cs" />
     <Compile Include="Controllers\ManageInvitationControllerTests.cs" />
     <Compile Include="Controllers\ManageOptionControllerTests.cs" />
     <Compile Include="Controllers\ManageVoteControllerTests.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Validators\RankedVoteValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".jshintrc" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -140,16 +142,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="config.js" />
     <Content Include="Scripts\BasicVoteTests.js" />
+    <Content Include="Scripts\ChatWindowTests.js" />
     <Content Include="Scripts\CreateTests.js" />
     <Content Include="Scripts\ManageTests.js" />
     <Content Include="Scripts\PointsOptionTests.js" />
     <Content Include="Scripts\PointsVoteTests.js" />
     <Content Include="Scripts\PollOptionsTests.js" />
+    <Content Include="Scripts\PollTests.js" />
     <Content Include="Scripts\RankedVoteTests.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

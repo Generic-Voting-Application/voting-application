@@ -78,56 +78,42 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         #region Get
 
         [Authorize]
-        public override HttpResponseMessage Get()
+        public List<PollRequestResponseModel> Get()
         {
             using (var context = _contextFactory.CreateContext())
             {
                 var username = this.User.Identity.Name;
                 List<Poll> matchingPolls = context.Polls.Where(p => p.CreatorIdentity == username).ToList<Poll>();
-                return this.Request.CreateResponse(HttpStatusCode.OK, matchingPolls);
+                return matchingPolls.Select(p => PollToModel(p)).ToList();
             }
         }
 
-        public virtual HttpResponseMessage Get(Guid id)
+        public PollRequestResponseModel Get(Guid id)
         {
-            #region DB Get / Validation
-
-            Poll poll;
             using (var context = _contextFactory.CreateContext())
             {
-                poll = context.Polls.Where(s => s.UUID == id).Include(s => s.Options).FirstOrDefault();
+                Poll poll = context.Polls.Where(s => s.UUID == id).Include(s => s.Options).FirstOrDefault();
+
+                if (poll == null)
+                {
+                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", id));
+                }
+
+                return PollToModel(poll);
             }
-
-            if (poll == null)
-            {
-                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", id));
-            }
-
-            #endregion
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, PollToModel(poll));
-        }
-
-        #endregion
-
-        #region Put
-
-        public virtual HttpResponseMessage Put(object obj)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT on this controller");
         }
 
         #endregion
 
         #region Post
 
-        public virtual HttpResponseMessage Post(PollCreationRequestModel pollCreationRequest)
+        public PollCreationResponseModel Post(PollCreationRequestModel pollCreationRequest)
         {
             #region Input Validation
 
             if (pollCreationRequest == null)
             {
-                return this.Request.CreateResponse(HttpStatusCode.BadRequest);
+                this.ThrowError(HttpStatusCode.BadRequest);
             }
 
             if (pollCreationRequest.Expires && pollCreationRequest.ExpiryDate < DateTime.Now)
@@ -137,7 +123,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             if (!ModelState.IsValid)
             {
-                return this.Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
+                this.ThrowError(HttpStatusCode.BadRequest, ModelState);
             }
 
             #endregion
@@ -163,9 +149,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 UUID = newPoll.UUID,
                 ManageId = newPoll.ManageId
-            };            
+            };
 
-            return this.Request.CreateResponse(HttpStatusCode.OK, response);
+            return response;
 
             #endregion
         }

@@ -8,7 +8,6 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
         [Required]
         public long OptionId { get; set; }
 
-        [Range(0, int.MaxValue)]
         public int VoteValue { get; set; }
 
         public string VoterName { get; set; }
