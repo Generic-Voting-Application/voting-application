@@ -190,5 +190,4 @@ define('Poll', ['jquery', 'knockout', 'countdown', 'Common', 'SocialMedia', 'Cha
             ko.applyBindings(this);
         };
     };
-
 });
