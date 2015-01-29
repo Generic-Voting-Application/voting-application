@@ -34,7 +34,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 Name = poll.Name,
                 Creator = poll.Creator,
-                VotingStrategy = poll.VotingStrategy,
+                VotingStrategy = poll.PollType.ToString(),
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,
                 InviteOnly = poll.InviteOnly,
@@ -55,7 +55,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 ManageId = Guid.NewGuid(),
                 Name = pollCreationRequest.Name,
                 Creator = pollCreationRequest.Creator,
-                VotingStrategy = pollCreationRequest.VotingStrategy,
+                PollType = pollCreationRequest.VotingStrategy != null && 
+                           Enum.IsDefined(typeof(PollType), pollCreationRequest.VotingStrategy) ?
+                                (PollType)Enum.Parse(typeof(PollType), pollCreationRequest.VotingStrategy, true) : PollType.Basic,
                 Options = new List<Option>(),
                 MaxPoints = pollCreationRequest.MaxPoints,
                 MaxPerVote = pollCreationRequest.MaxPerVote,

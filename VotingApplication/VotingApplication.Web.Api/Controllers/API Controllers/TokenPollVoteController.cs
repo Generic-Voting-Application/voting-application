@@ -7,13 +7,19 @@ using System.Net.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
+using VotingApplication.Web.Api.Validators;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
     public class TokenPollVoteController : WebApiController
     {
+        private IVoteValidatorFactory _voteValidatorFactory;
+
         public TokenPollVoteController() : base() { }
-        public TokenPollVoteController(IContextFactory contextFactory) : base(contextFactory) { }
+        public TokenPollVoteController(IContextFactory contextFactory, IVoteValidatorFactory voteValidatorFactory) : base(contextFactory) 
+        {
+            _voteValidatorFactory = voteValidatorFactory;
+        }
 
         private Vote ModelToVote(VoteRequestModel voteRequest, Token token, Option option, Poll poll)
         {
@@ -128,21 +134,15 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 foreach (VoteRequestModel voteRequest in voteRequests)
                 {
-                    if (!context.Options.Any(o => o.Id == voteRequest.OptionId))
-                    {
-                        ModelState.AddModelError("OptionId", String.Format("Option {0} not found", voteRequest.OptionId));
-                    }
-
                     if (!poll.Options.Any(o => o.Id == voteRequest.OptionId))
                     {
                         ModelState.AddModelError("OptionId", "Option choice not valid for this poll");
                     }
-
-                    if (poll.VotingStrategy == "Points" && (voteRequest.VoteValue > poll.MaxPerVote || voteRequest.VoteValue > poll.MaxPoints))
-                    {
-                        ModelState.AddModelError("VoteValue", String.Format("Invalid vote value: {0}", voteRequest.VoteValue));
-                    }
                 }
+
+                // Poll specific validation
+                IVoteValidator voteValidator = _voteValidatorFactory.CreateValidator(poll.PollType);
+                voteValidator.Validate(voteRequests, poll, ModelState);
 
                 if (!ModelState.IsValid)
                 {

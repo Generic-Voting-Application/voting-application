@@ -13,6 +13,7 @@ using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
 using VotingApplication.Web.Api.Models.DBViewModels;
+using VotingApplication.Web.Api.Validators;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -50,7 +51,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             Poll mainPoll = new Poll() { UUID = _mainUUID, Expires = true, ExpiryDate = DateTime.Now.AddMinutes(30), Tokens = new List<Token>() { _bobToken, _joeToken, _otherToken } };
             Poll otherPoll = new Poll() { UUID = _otherUUID, Tokens = new List<Token>() { _otherToken } };
-            Poll pointsPoll = new Poll() { UUID = _pointsUUID, VotingStrategy = "Points", MaxPerVote = 5, MaxPoints = 3, Tokens = new List<Token>() { _otherToken } };
+            Poll pointsPoll = new Poll() { UUID = _pointsUUID, PollType = PollType.Points, MaxPerVote = 5, MaxPoints = 3, Tokens = new List<Token>() { _otherToken } };
             Poll tokenPoll = new Poll() { UUID = _tokenUUID, Tokens = new List<Token>() { _validToken }, InviteOnly = true };
             Poll timedPoll = new Poll() { UUID = _timedUUID, Expires = true, ExpiryDate = DateTime.Now.AddMinutes(-30) };
 
@@ -92,7 +93,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Polls).Returns(dummyPolls);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
-            _controller = new TokenPollVoteController(mockContextFactory.Object);
+            _controller = new TokenPollVoteController(mockContextFactory.Object, new VoteValidatorFactory());
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -217,11 +218,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithNewVoteSetsVoteValueCorrectly()
         {
             // Act
-            var response = _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1, VoteValue = 35 } });
+            var response = _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1, VoteValue = 0 } });
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.AreEqual(35, _dummyVotes.Local.Single(v => v.Token.TokenGuid == _bobToken.TokenGuid && v.PollId == _mainUUID).VoteValue);
+            Assert.AreEqual(0, _dummyVotes.Local.Single(v => v.Token.TokenGuid == _bobToken.TokenGuid && v.PollId == _mainUUID).VoteValue);
         }
 
         [TestMethod]
@@ -247,6 +248,17 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
             HttpError error = ((ObjectContent)response.Content).Value as HttpError;
             Assert.AreEqual(String.Format("Poll {0} has expired", _timedUUID), error.Message);
+        }
+
+        [TestMethod]
+        public void PutWithMultipleVotesIsNotAllowed()
+        {
+            // Act
+            var response = _controller.Put(_otherToken.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1, VoteValue = 0 }, new VoteRequestModel() { OptionId = 1, VoteValue = 0 } });
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.AreEqual(2, _dummyVotes.Local.Count);
         }
 
         #endregion
