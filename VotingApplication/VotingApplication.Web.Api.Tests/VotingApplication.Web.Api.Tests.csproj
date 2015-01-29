@@ -110,6 +110,9 @@
     <Compile Include="Controllers\TokenPollVoteControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sockets\ChatHubTests.cs" />
+    <Compile Include="Validators\BasicVoteValidatorTests.cs" />
+    <Compile Include="Validators\PointsVoteValidatorTests.cs" />
+    <Compile Include="Validators\RankedVoteValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

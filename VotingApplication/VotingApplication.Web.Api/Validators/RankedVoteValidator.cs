@@ -19,7 +19,7 @@ namespace VotingApplication.Web.Api.Validators
             List<VoteRequestModel> sortedVotes = voteRequests.OrderBy(v => v.VoteValue).ToList();
 
             // Order the vote values and check that they are 1..n 
-            if (!voteRequests.OrderBy(v => v.VoteValue).Select(v => v.VoteValue).SequenceEqual(Enumerable.Range(1, voteRequests.Count)) || voteRequests.Any(v => v.VoteValue <= 0))
+            if (!voteRequests.OrderBy(v => v.VoteValue).Select(v => v.VoteValue).SequenceEqual(Enumerable.Range(1, voteRequests.Count)))
             {
                 modelState.AddModelError("VoteValue", String.Format("Invalid vote value, values should be greater than 0 and contain values from 1 to n where n is the number of votes"));
             }
