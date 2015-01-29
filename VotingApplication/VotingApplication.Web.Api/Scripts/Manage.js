@@ -86,31 +86,26 @@
 
             $.ajax({
                 type: 'GET',
-                url: "/api/Poll/" + chosenPollId + "/option",
+                url: "/api/poll/" + chosenPollId + "/option",
 
                 success: function (data) {
-                    self.options(data);
-                    self.saveOptions();
+                    self.saveOptions(data);
                 },
 
                 error: Common.handleError
             });
         }
 
-        self.saveOptions = function () {
-            var data = [];
-            for (var i = 0; i < self.options().length; i++) {
-                var option = self.options()[i];
-                var optionData = { Name: option.Name, Description: option.Description, Info: option.Info };
-                data.push(optionData);
-            }
-
+        self.saveOptions = function (options) {
+            // We need to get the resulting list back so we have the correct IDs
             $.ajax({
                 type: 'PUT',
                 url: "/api/manage/" + manageId + "/option",
                 contentType: 'application/json',
-                data: JSON.stringify(data),
-                
+                data: JSON.stringify(options),
+                success: function (data) {
+                    self.options(data)
+                },
                 error: Common.handleError
             });
         }
