@@ -238,17 +238,14 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutSelectsCorrectValidatorForTypeOfPoll()
         {
             // Arrange
-            bool pointsValidateCalled = false;
             var pointsValidator = new Mock<IVoteValidator>();
-            pointsValidator.Setup(a => a.Validate(It.IsAny<List<VoteRequestModel>>(), It.IsAny<Poll>(), It.IsAny<ModelStateDictionary>()))
-                           .Callback(() => pointsValidateCalled = true);            
             _mockValidatorFactory.Setup(a => a.CreateValidator(PollType.Points)).Returns(pointsValidator.Object);
 
             // Act
             _controller.Put(_otherToken.TokenGuid, _pointsUUID, new List<VoteRequestModel> { new VoteRequestModel { OptionId = 1, VoteValue = 2 } });
 
             // Assert
-            Assert.IsTrue(pointsValidateCalled);
+            pointsValidator.Verify(a => a.Validate(It.IsAny<List<VoteRequestModel>>(), It.IsAny<Poll>(), It.IsAny<ModelStateDictionary>()));
         }
 
         #endregion
