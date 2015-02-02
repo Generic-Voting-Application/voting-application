@@ -31,7 +31,7 @@ namespace VotingApplication.Web.Api.Controllers
 
                     if (poll != null)
                     {
-                        pollModel.VotingStrategy = poll.VotingStrategy;
+                        pollModel.VotingStrategy = poll.PollType.ToString();
                     }
                 }
 

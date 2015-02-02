@@ -13,6 +13,8 @@ using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
 using VotingApplication.Web.Api.Models.DBViewModels;
+using VotingApplication.Web.Api.Validators;
+using System.Web.Http.ModelBinding;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -34,6 +36,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Token _joeToken;
         private Token _otherToken;
 
+        private Mock<IVoteValidatorFactory> _mockValidatorFactory;
+
         [TestInitialize]
         public void setup()
         {
@@ -50,7 +54,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             Poll mainPoll = new Poll() { UUID = _mainUUID, Expires = true, ExpiryDate = DateTime.Now.AddMinutes(30), Tokens = new List<Token>() { _bobToken, _joeToken, _otherToken } };
             Poll otherPoll = new Poll() { UUID = _otherUUID, Tokens = new List<Token>() { _otherToken } };
-            Poll pointsPoll = new Poll() { UUID = _pointsUUID, VotingStrategy = "Points", MaxPerVote = 5, MaxPoints = 3, Tokens = new List<Token>() { _otherToken } };
+            Poll pointsPoll = new Poll() { UUID = _pointsUUID, PollType = PollType.Points, MaxPerVote = 5, MaxPoints = 3, Tokens = new List<Token>() { _otherToken } };
             Poll tokenPoll = new Poll() { UUID = _tokenUUID, Tokens = new List<Token>() { _validToken }, InviteOnly = true };
             Poll timedPoll = new Poll() { UUID = _timedUUID, Expires = true, ExpiryDate = DateTime.Now.AddMinutes(-30) };
 
@@ -92,7 +96,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Polls).Returns(dummyPolls);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
-            _controller = new TokenPollVoteController(mockContextFactory.Object);
+            var mockValidator = new Mock<IVoteValidator>();
+
+            _mockValidatorFactory = new Mock<IVoteValidatorFactory>();
+            _mockValidatorFactory.Setup(a => a.CreateValidator(PollType.Basic)).Returns(mockValidator.Object);
+
+            _controller = new TokenPollVoteController(mockContextFactory.Object, _mockValidatorFactory.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -200,10 +209,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithNewVoteSetsVoteValueCorrectly()
         {
             // Act
-            _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1, VoteValue = 35 } });
+            _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1, VoteValue = 0 } });
 
             // Assert
-            Assert.AreEqual(35, _dummyVotes.Local.Single(v => v.Token.TokenGuid == _bobToken.TokenGuid && v.PollId == _mainUUID).VoteValue);
+            Assert.AreEqual(0, _dummyVotes.Local.Single(v => v.Token.TokenGuid == _bobToken.TokenGuid && v.PollId == _mainUUID).VoteValue);
         }
 
         [TestMethod]
@@ -223,6 +232,20 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Act
             _controller.Put(_bobToken.TokenGuid, _timedUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } });
+        }
+
+        [TestMethod]
+        public void PutSelectsCorrectValidatorForTypeOfPoll()
+        {
+            // Arrange
+            var pointsValidator = new Mock<IVoteValidator>();
+            _mockValidatorFactory.Setup(a => a.CreateValidator(PollType.Points)).Returns(pointsValidator.Object);
+
+            // Act
+            _controller.Put(_otherToken.TokenGuid, _pointsUUID, new List<VoteRequestModel> { new VoteRequestModel { OptionId = 1, VoteValue = 2 } });
+
+            // Assert
+            pointsValidator.Verify(a => a.Validate(It.IsAny<List<VoteRequestModel>>(), It.IsAny<Poll>(), It.IsAny<ModelStateDictionary>()));
         }
 
         #endregion

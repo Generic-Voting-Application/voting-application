@@ -327,6 +327,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
+    <Compile Include="Validators\PointsVoteValidator.cs" />
+    <Compile Include="Validators\RankedVoteValidator.cs" />
+    <Compile Include="Validators\BasicVoteValidator.cs" />
+    <Compile Include="Validators\IVoteValidator.cs" />
+    <Compile Include="Validators\VoteValidatorFactory.cs" />
+    <Compile Include="Validators\IVoteValidatorFactory.cs" />
     <Content Include="img\poll.jpg" />
     <Content Include="img\sign-in-with-facebook.png" />
     <Content Include="img\sign-in-with-google.png" />
