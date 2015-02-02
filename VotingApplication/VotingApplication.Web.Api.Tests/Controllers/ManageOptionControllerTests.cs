@@ -139,12 +139,13 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutOverwritesOptionsOnAPoll()
         {
             // Act
-            Option newOption = new Option() { Name = "Put Option" };
+            Option newOption = new Option() { Id = 101, Name = "Put Option" };
             List<Option> options = new List<Option>() { newOption };
             _controller.Put(_manageMainUUID, options);
 
             // Assert
             CollectionAssert.AreEquivalent(_mainPoll.Options, options);
+            Assert.AreEqual(0, _mainPoll.Options[0].Id);
         }
 
         [TestMethod]
@@ -182,19 +183,18 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PutAddsOptionsToOptionList()
+        public void PutReturnsUpdatedOptionList()
         {
             // Act
-            Option newOption = new Option() { Name = "Bella Vista" };
-            Option otherNewOption = new Option() { Name = "Bella Vista" };
-            _controller.Put(_manageMainUUID, new List<Option>() { newOption, otherNewOption });
+            Option newOption = new Option() { Id = 101, Name = "Put Option" };
+            List<Option> options = new List<Option>() { newOption };
+            var response = _controller.Put(_manageMainUUID, options);
 
             // Assert
-            List<Option> expectedOptions = new List<Option>();
-            expectedOptions.Add(newOption);
-            expectedOptions.Add(otherNewOption);
-            CollectionAssert.AreEquivalent(expectedOptions, _dummyOptions.Local);
+            CollectionAssert.AreEquivalent(response, options);
+            Assert.AreEqual(0, response[0].Id);
         }
+
         #endregion
 
         #region POST

@@ -82,13 +82,13 @@
                     </tbody>
                     <tr id="newOptionRow">
                         <td>
-                            <input class="form-control input-block" id="newName" placeholder="Option" />
+                            <input class="form-control input-block" placeholder="Option" data-bind="value: newName" />
                         </td>
                         <td>
-                            <input class="form-control input-block" id="newDescription" placeholder="Description" />
+                            <input class="form-control input-block" placeholder="Description" data-bind="value: newDescription" />
                         </td>
                         <td class="hidden-xs hidden-sm">
-                            <input class="form-control input-block" id="newInfo" placeholder="More Info" />
+                            <input class="form-control input-block" placeholder="More Info" data-bind="value: newInfo" />
                         </td>
                         <td>
                             <button type="submit" class="btn btn-primary" data-bind="click: addOption.bind()">Add</button>
