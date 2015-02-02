@@ -31,7 +31,7 @@ namespace VotingApplication.Web.Api.Tests.Validators
         {
             // Arrange
             List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 1, OptionId = 1 }, 
-                                                                        new VoteRequestModel { VoteValue = 1, OptionId = 1 } };
+                                                                        new VoteRequestModel { VoteValue = 2, OptionId = 1 } };
 
             // Act
             _validator.Validate(votes, _poll, _modelState);
@@ -92,7 +92,7 @@ namespace VotingApplication.Web.Api.Tests.Validators
         public void ValidateAcceptsValidInput()
         {
             // Arrange
-            List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 1, OptionId = 1},
+            List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 2, OptionId = 1},
                                                                         new VoteRequestModel { VoteValue = 2, OptionId = 2} };
 
             // Act

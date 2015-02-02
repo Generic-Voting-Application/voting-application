@@ -95,10 +95,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
             var mockValidator = new Mock<IVoteValidator>();
-            mockValidator.Setup(a => a.Validate(It.IsAny<List<VoteRequestModel>>(), It.IsAny<Poll>(), It.IsAny<ModelStateDictionary>()));
 
             var mockValidatorFactory = new Mock<IVoteValidatorFactory>();
-            mockValidatorFactory.Setup(a => a.CreateValidator(It.IsAny<PollType>())).Returns(mockValidator.Object);
+            mockValidatorFactory.Setup(a => a.CreateValidator(PollType.Basic)).Returns(mockValidator.Object);
 
             _controller = new TokenPollVoteController(mockContextFactory.Object, new VoteValidatorFactory());
             _controller.Request = new HttpRequestMessage();
