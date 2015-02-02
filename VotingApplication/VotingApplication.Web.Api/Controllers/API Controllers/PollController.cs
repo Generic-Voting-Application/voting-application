@@ -32,8 +32,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             return new PollRequestResponseModel
             {
+                UUID = poll.UUID,
                 Name = poll.Name,
                 Creator = poll.Creator,
+                CreatedDate = poll.CreatedDate,
                 VotingStrategy = poll.VotingStrategy,
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,

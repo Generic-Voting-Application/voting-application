@@ -99,7 +99,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region PUT
 
-        public void Put(Guid manageId, List<Option> options)
+        public List<Option> Put(Guid manageId, List<Option> options)
         {
             using (var context = _contextFactory.CreateContext())
             {
@@ -121,16 +121,17 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     context.Options.Remove(oldOption);
                 }
 
-                // Add all new options
+                // Add all new options (clone not original)
                 foreach (Option newOption in options)
                 {
-                    context.Options.Add(newOption);
+                    newOption.Id = 0;
                 }
 
                 matchingPoll.Options = options;
                 context.SaveChanges();
 
-                return;
+                // Return the new set of options with IDs
+                return matchingPoll.Options.ToList();
             }
         }
 

@@ -52,11 +52,16 @@
                 },
 
                 success: function (data) {
-                    for (var i = 0; i < data.length; i++) {
-                        var date = new Date(data[i].CreatedDate);
-                        data[i].Name = data[i].Name + " (" + date.toDateString() + ")";
-                    }
-                    self.templates(data);
+                    // Don't include the current Poll
+                    var templates = data
+                        .filter(function (t) { return t.UUID !== self.pollId(); })
+                        .map(function (t) {
+                            return {
+                                UUID: t.UUID,
+                                Name: t.Name + " (" + new Date(t.CreatedDate).toDateString() + ")"
+                            };
+                        });
+                    self.templates(templates);
                 }
             });
         };
@@ -86,49 +91,39 @@
 
             $.ajax({
                 type: 'GET',
-                url: "/api/Poll/" + chosenPollId + "/option",
+                url: "/api/poll/" + chosenPollId + "/option",
 
                 success: function (data) {
-                    self.options(data);
-                    self.saveOptions();
+                    self.saveOptions(data);
                 },
 
                 error: Common.handleError
             });
         }
 
-        self.saveOptions = function () {
-            var data = [];
-            for (var i = 0; i < self.options().length; i++) {
-                var option = self.options()[i];
-                var optionData = { Name: option.Name, Description: option.Description, Info: option.Info };
-                data.push(optionData);
-            }
-
+        self.saveOptions = function (options) {
+            // We need to get the resulting list back so we have the correct IDs
             $.ajax({
                 type: 'PUT',
                 url: "/api/manage/" + manageId + "/option",
                 contentType: 'application/json',
-                data: JSON.stringify(data),
-                
+                data: JSON.stringify(options),
+                success: function (data) {
+                    self.options(data)
+                },
                 error: Common.handleError
             });
         }
 
+        self.newName = ko.observable("");
+        self.newDescription = ko.observable("");
+        self.newInfo = ko.observable("");
+
         self.addOption = function () {
             //Don't submit without an entry in the name field
-            if ($("#newName").val() === "") {
+            if (self.newName() === "") {
                 return;
             }
-
-            var newName = $("#newName").val();
-            var newInfo = $("#newInfo").val();
-            var newDescription = $("#newDescription").val();
-
-            //Reset before posting, to prevent double posts.
-            $("#newName").val("");
-            $("#newDescription").val("");
-            $("#newInfo").val("");
 
             $.ajax({
                 type: 'POST',
@@ -136,9 +131,9 @@
                 contentType: 'application/json',
 
                 data: JSON.stringify({
-                    Name: newName,
-                    Description: newDescription,
-                    Info: newInfo
+                    Name: self.newName(),
+                    Description: self.newDescription(),
+                    Info: self.newInfo()
                 }),
 
                 success: function () {
@@ -147,6 +142,11 @@
 
                 error: Common.handleError
             });
+
+            // Reset the fields
+            self.newName("");
+            self.newDescription("");
+            self.newInfo("");
         };
 
         self.deleteVote = function (data, event) {
