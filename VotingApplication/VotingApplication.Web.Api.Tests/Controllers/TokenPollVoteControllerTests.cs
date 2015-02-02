@@ -36,6 +36,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Token _joeToken;
         private Token _otherToken;
 
+        private Mock<IVoteValidatorFactory> _mockValidatorFactory;
+
         [TestInitialize]
         public void setup()
         {
@@ -96,10 +98,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             var mockValidator = new Mock<IVoteValidator>();
 
-            var mockValidatorFactory = new Mock<IVoteValidatorFactory>();
-            mockValidatorFactory.Setup(a => a.CreateValidator(PollType.Basic)).Returns(mockValidator.Object);
+            _mockValidatorFactory = new Mock<IVoteValidatorFactory>();
+            _mockValidatorFactory.Setup(a => a.CreateValidator(PollType.Basic)).Returns(mockValidator.Object);
 
-            _controller = new TokenPollVoteController(mockContextFactory.Object, new VoteValidatorFactory());
+            _controller = new TokenPollVoteController(mockContextFactory.Object, _mockValidatorFactory.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -230,6 +232,23 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Act
             _controller.Put(_bobToken.TokenGuid, _timedUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } });
+        }
+
+        [TestMethod]
+        public void PutSelectsCorrectValidatorForTypeOfPoll()
+        {
+            // Arrange
+            bool pointsValidateCalled = false;
+            var pointsValidator = new Mock<IVoteValidator>();
+            pointsValidator.Setup(a => a.Validate(It.IsAny<List<VoteRequestModel>>(), It.IsAny<Poll>(), It.IsAny<ModelStateDictionary>()))
+                           .Callback(() => pointsValidateCalled = true);            
+            _mockValidatorFactory.Setup(a => a.CreateValidator(PollType.Points)).Returns(pointsValidator.Object);
+
+            // Act
+            _controller.Put(_otherToken.TokenGuid, _pointsUUID, new List<VoteRequestModel> { new VoteRequestModel { OptionId = 1, VoteValue = 2 } });
+
+            // Assert
+            Assert.IsTrue(pointsValidateCalled);
         }
 
         #endregion
