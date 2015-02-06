@@ -16,12 +16,13 @@
 
                 success: function (data) {
                     tokenGuid = data;
-                    localStorage[pollId] = data;
-
-                    if (callbackFn) callbackFn();
                 }
             });
-        } else if (callbackFn)
+        }
+
+        localStorage[pollId] = tokenGuid;
+
+        if (callbackFn)
             callbackFn();
     }
 
