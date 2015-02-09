@@ -8,7 +8,7 @@
 
     Common.resolveToken = function (pollId, uriTokenGuid, callbackFn) {
         tokenGuid = uriTokenGuid || localStorage[pollId];
-        if(!tokenGuid){
+        if (!tokenGuid) {
             $.ajax({
                 type: 'GET',
                 url: '/api/poll/' + pollId + '/token',
@@ -16,13 +16,20 @@
 
                 success: function (data) {
                     tokenGuid = data;
-                    localStorage[pollId] = data;
-
-                    if (callbackFn) callbackFn();
+                    localStorage[pollId] = tokenGuid;
+                    if (callbackFn) {
+                        callbackFn();
+                    }
                 }
             });
-        } else if (callbackFn)
-            callbackFn();
+        }
+        else {
+            localStorage[pollId] = tokenGuid;
+
+            if (callbackFn) {
+                callbackFn();
+            }
+        }
     }
 
     Common.getToken = function (pollId) {

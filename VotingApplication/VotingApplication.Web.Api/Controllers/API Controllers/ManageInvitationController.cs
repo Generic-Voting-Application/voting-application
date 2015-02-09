@@ -38,6 +38,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 }
 
                 SendVoteEmails(matchingPoll, invitationEmails);
+                context.SaveChanges();
 
                 return;
             }
