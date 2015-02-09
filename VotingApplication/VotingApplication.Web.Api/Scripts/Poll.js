@@ -96,10 +96,11 @@ define('Poll', ['jquery', 'knockout', 'countdown', 'Common', 'SocialMedia', 'Cha
         };
 
         self.submitLogin = function () {
-            self.userName(self.enteredName());
-
-            Common.setVoterName(self.userName(), pollId);
             Common.resolveToken(pollId, uriTokenGuid, function () {
+                self.userName(self.enteredName());
+
+                Common.setVoterName(self.userName(), pollId);
+
                 if (!self.pollExpired()) {
                     self.showSection(self.pollSections.vote);
                 } else {
