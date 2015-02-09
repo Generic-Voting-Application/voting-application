@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace VotingApplication.Web.Api
 {
@@ -19,6 +20,8 @@ namespace VotingApplication.Web.Api
             // Fix the infinite recursion of Poll.Template.Options[0].Templates[0].Options[0].[...]
             // by not populating the Option.Templates after already encountering Poll.Template
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+
+            //NLog.Logger logger = NLog.LogManager.GetLogger("Test");
         }
     }
 }

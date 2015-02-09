@@ -163,6 +163,9 @@
       <HintPath>..\packages\Ninject.Web.Common.3.2.3.0\lib\net45-full\Ninject.Web.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.3.2.0.0\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
@@ -308,9 +311,15 @@
     <Compile Include="Controllers\Web Controllers\WebApiController.cs" />
     <Compile Include="Controllers\Web Controllers\SignInController.cs" />
     <Compile Include="Filters\BasicAuthenticator.cs" />
+    <Compile Include="Filters\LoggingExceptionFilterAttribute.cs" />
+    <Compile Include="Filters\LoggingHandleErrorAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Logging\ConsoleLogger.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\LoggerFactory.cs" />
+    <Compile Include="Logging\NLogger.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DBViewModels\ManagePollRequestResponseModel.cs" />
@@ -382,6 +391,12 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\PublishProfiles\voting-application - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\voting-application - Web Deploy.pubxml" />
     <Content Include="Scripts\Lib\require.js" />
@@ -410,7 +425,9 @@
     <Content Include="Views\Poll\_PollAddOptionPartial.cshtml" />
     <Content Include="Views\Poll\_RankedVotePartial.cshtml" />
     <Content Include="Views\Poll\_RankedResultsPartial.cshtml" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
