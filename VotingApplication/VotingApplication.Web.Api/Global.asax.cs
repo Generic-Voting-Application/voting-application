@@ -20,8 +20,6 @@ namespace VotingApplication.Web.Api
             // Fix the infinite recursion of Poll.Template.Options[0].Templates[0].Options[0].[...]
             // by not populating the Option.Templates after already encountering Poll.Template
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-
-            //NLog.Logger logger = NLog.LogManager.GetLogger("Test");
         }
     }
 }
