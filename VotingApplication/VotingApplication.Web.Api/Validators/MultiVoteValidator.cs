@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Web.Http.ModelBinding;
 using VotingApplication.Data.Model;
@@ -6,19 +7,20 @@ using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Validators
 {
-    public class BasicVoteValidator : IVoteValidator
+    public class MultiVoteValidator : IVoteValidator
     {
         public void Validate(List<VoteRequestModel> voteRequests, Poll poll, ModelStateDictionary modelState)
         {
-            if(voteRequests.Count != 1)
+            if (voteRequests.GroupBy(v => v.OptionId).Any(g => g.Count() > 1))
             {
                 modelState.AddModelError("Vote", "Invalid number of votes");
             }
-            else
+
+            foreach (VoteRequestModel voteRequest in voteRequests)
             {
-                if(voteRequests[0].VoteValue != 1)
+                if (voteRequest.VoteValue != 0)
                 {
-                    modelState.AddModelError("VoteValue", String.Format("Invalid vote value: {0}", voteRequests[0].VoteValue));
+                    modelState.AddModelError("VoteValue", String.Format("Invalid vote value: {0}", voteRequest.VoteValue));
                 }
             }
         }
