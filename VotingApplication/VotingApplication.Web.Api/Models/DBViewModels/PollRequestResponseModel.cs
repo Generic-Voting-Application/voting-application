@@ -6,8 +6,10 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
 {
     public class PollRequestResponseModel
     {
+        public Guid UUID { get; set; }
         public string Name { get; set; }
         public string Creator { get; set; }
+        public DateTime CreatedDate { get; set; }
         public string VotingStrategy { get; set; }
         public int MaxPoints { get; set; }
         public int MaxPerVote { get; set; }

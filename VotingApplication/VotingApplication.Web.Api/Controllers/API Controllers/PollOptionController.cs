@@ -1,13 +1,11 @@
-﻿using System.Data.Entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
-using VotingApplication.Web.Api.Filters;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
@@ -40,76 +38,53 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region GET
 
-        public virtual HttpResponseMessage Get(Guid pollId)
-        {
-            #region DB Get / Validation
 
-            Poll poll;
+        public List<OptionRequestResponseModel> Get(Guid pollId)
+        {
             using (var context = _contextFactory.CreateContext())
             {
-                poll = context.Polls.Where(s => s.UUID == pollId).Include(s => s.Options).SingleOrDefault();
+                Poll poll = context.Polls.Where(s => s.UUID == pollId).Include(s => s.Options).SingleOrDefault();
+
+                if (poll == null)
+                {
+                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
+                }
+
+                return poll.Options.Select(OptionToModel).ToList();
             }
-
-            if (poll == null)
-            {
-                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
-            }
-
-            #endregion
-
-            #region Response
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, poll.Options.Select(OptionToModel).ToList());
-
-            #endregion
-        }
-
-        public virtual HttpResponseMessage Get(Guid pollId, long optionId)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET by id on this controller");
         }
 
         #endregion
 
         #region POST
 
-        public virtual HttpResponseMessage Post(Guid pollId, OptionCreationRequestModel optionCreationRequest)
+        public void Post(Guid pollId, OptionCreationRequestModel optionCreationRequest)
         {
-            #region Input Validation
-
-            if (optionCreationRequest == null)
-            {
-                return this.Request.CreateResponse(HttpStatusCode.BadRequest);
-            }
-
             using (var context = _contextFactory.CreateContext())
             {
+                if (optionCreationRequest == null)
+                {
+                    this.ThrowError(HttpStatusCode.BadRequest);
+                }
+
                 Poll poll = context.Polls.Where(p => p.UUID == pollId).FirstOrDefault();
                 if (poll == null)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", pollId));
+                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", pollId));
                 }
 
                 if (!poll.OptionAdding)
                 {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, string.Format("Option adding not allowed for poll {0}", pollId));
+                    this.ThrowError(HttpStatusCode.MethodNotAllowed, string.Format("Option adding not allowed for poll {0}", pollId));
                 }
-            }
 
-            if (!ModelState.IsValid)
-            {
-                return this.Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    this.ThrowError(HttpStatusCode.BadRequest, ModelState);
+                }
 
-            #endregion
+                Option newOption = ModelToOption(optionCreationRequest);
 
-            #region DB Object Creation
-
-            Option newOption = ModelToOption(optionCreationRequest);
-
-            using (var context = _contextFactory.CreateContext())
-            {
-                Poll poll = context.Polls.Where(p => p.UUID == pollId).Single();
                 if (poll.Options == null)
                 {
                     poll.Options = new List<Option>();
@@ -117,51 +92,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 poll.Options.Add(newOption);
                 context.SaveChanges();
+
+                return;
             }
-
-            #endregion
-
-            #region Response
-
-            return this.Request.CreateResponse(HttpStatusCode.OK);
-
-            #endregion
         }
-
-        public virtual HttpResponseMessage Post(Guid pollId, long optionId, Option option)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
-        }
-
         #endregion
-
-        #region PUT
-
-        public virtual HttpResponseMessage Put(Guid pollId, Option option)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT on this controller");
-        }
-
-        public virtual HttpResponseMessage Put(Guid pollId, long optionId, Option option)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT by id on this controller");
-        }
-
-        #endregion
-
-        #region DELETE
-
-        public virtual HttpResponseMessage Delete(Guid pollId)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE on this controller");
-        }
-
-        public virtual HttpResponseMessage Delete(Guid pollId, long optionId)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use DELETE by id on this controller");
-        }
-
-        #endregion
-
     }
 }

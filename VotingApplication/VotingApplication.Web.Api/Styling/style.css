@@ -197,26 +197,63 @@ label.info-message {
     text-align:center;
 }
 
+.round-slider {
+    margin: 15px 15px 15px 88px;
+}
+
 /* InsightJS things */
 .markerclass {
     fill: red !important;
     fill-opacity: 0.3 !important;
 }
 
-.series-3 {
-    fill: #081d58;
-}
-
-.series-2 {
-    fill: #034e7b;
-}
-
-.series-1 { 
-    fill: #0570b0;
-}
-
 .series-0 {
-    fill: #74a9cf;
+    fill: #F44336; /* Red */
+}
+.series-1 {
+    fill: #2196F3; /* Blue */
+}
+.series-2 {
+    fill: #8BC34A; /* Light Green */
+}
+.series-3 {
+    fill: #FF5722; /* Deep Orange */
+}
+.series-4 {
+    fill: #9C27B0; /* Purple */
+}
+.series-5 { 
+    fill: #4DD0E1; /* Cyan 300 */
+}
+.series-6 {
+    fill: #FFEB3B; /* Yellow */
+}
+.series-7 {
+    fill: #9E9E9E; /* Grey */
+}
+.series-8 {
+    fill: #F06292; /* Pink 300 */
+}
+.series-9 {
+    fill: #3F51B5; /* Dark Blue */
+}
+.series-10 {
+    fill: #43A047; /* Green 600 */
+}
+.series-11 {
+    fill: #795548; /* Brown */
+}
+.series-12 {
+    fill: #5E35B1; /* Deep Purple 600 */
+}
+.series-13 {
+    fill: #00897B; /* Teal */
+}
+.series-14 {
+    fill: #FFB300; /* Amber 600 */
+}
+.series-15 {
+    fill: #546E7A; /* Blue Grey 600 */
 }
 
 /* tooltips */
@@ -230,3 +267,4 @@ label.info-message {
     display: block;
     width: 320px;
 }
+

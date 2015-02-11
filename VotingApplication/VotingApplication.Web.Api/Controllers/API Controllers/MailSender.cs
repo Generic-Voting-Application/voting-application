@@ -42,8 +42,15 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             mail.Subject = subject;
             mail.Text = message;
 
-            var transportWeb = new SendGrid.Web(credentials);
-            transportWeb.Deliver(mail);
+            try
+            {
+                var transportWeb = new SendGrid.Web(credentials);
+                transportWeb.Deliver(mail);
+            }
+            catch (Exception)
+            {
+                //Ignore failed email sending
+            }
         }
     }
 }

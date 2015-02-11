@@ -52,7 +52,25 @@
                     });
                 }
             });
+        };
+
+        // Take the grouped votes and return the winner(s) names(s)
+        self.getWinners = function (groupedVotes, getOptionVotes) {
+            var winners = null;
+            groupedVotes.forEach(function (g) {
+                // Optional callback to get the data for this grouped option
+                var optionVotes = getOptionVotes ? getOptionVotes(g) : g;
+
+                if (!winners || optionVotes.Sum > winners[0].Sum) {
+                    winners = [optionVotes];
+                } else if (winners[0].Sum === optionVotes.Sum) {
+                    // This is a tie
+                    winners.push(optionVotes);
         }
+            });
+
+            return winners ? winners.map(function (w) { return w.Name; }) : [];
+        };
 
         self.initialise = function (pollData) {
             self.options(pollData.Options.map(mapOption));

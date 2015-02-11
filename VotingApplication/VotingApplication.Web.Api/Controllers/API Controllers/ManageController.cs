@@ -11,7 +11,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
     public class ManageController : WebApiController
     {
-        public ManageController() : base() {}
+        public ManageController() : base() { }
         public ManageController(IContextFactory contextFactory) : base(contextFactory) { }
 
         private ManagePollRequestResponseModel PollToModel(Poll poll)
@@ -25,56 +25,19 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region GET
 
-        public override HttpResponseMessage Get()
+        public ManagePollRequestResponseModel Get(Guid manageId)
         {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use GET on this controller");
-        }
-
-        public virtual HttpResponseMessage Get(Guid manageId)
-        {
-            #region DB Get / Validation
-            Poll poll;
             using (var context = _contextFactory.CreateContext())
             {
-                poll = context.Polls.Where(s => s.ManageId == manageId).Include(s => s.Options).FirstOrDefault();
+                Poll poll = context.Polls.Where(s => s.ManageId == manageId).Include(s => s.Options).FirstOrDefault();
+
+                if (poll == null)
+                {
+                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll for {0} not found", manageId));
+                }
+
+                return PollToModel(poll);
             }
-
-            if (poll == null)
-            {
-                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, string.Format("Poll for {0} not found", manageId));
-            }
-            #endregion
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, PollToModel(poll));
-        }
-
-
-        #endregion
-
-        #region POST
-
-        public virtual HttpResponseMessage Post(Guid manageId, Vote vote)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST on this controller");
-        }
-
-        public virtual HttpResponseMessage Post(Guid manageId, long voteId, Vote vote)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use POST by id on this controller");
-        }
-
-        #endregion
-
-        #region PUT
-
-        public virtual HttpResponseMessage Put(Guid manageId, Vote vote)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT on this controller");
-        }
-
-        public virtual HttpResponseMessage Put(Guid manageId, long voteId, Vote vote)
-        {
-            return this.Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Cannot use PUT by id on this controller");
         }
 
         #endregion

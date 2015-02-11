@@ -17,7 +17,7 @@ namespace VotingApplication.Data.Model
 
         public string Creator { get; set; }
 
-        public String VotingStrategy { get; set; }
+        public PollType PollType { get; set; }
 
         public string CreatorIdentity { get; set; }
 
