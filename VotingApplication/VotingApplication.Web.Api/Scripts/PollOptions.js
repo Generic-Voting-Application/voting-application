@@ -66,7 +66,7 @@
                 } else if (winners[0].Sum === optionVotes.Sum) {
                     // This is a tie
                     winners.push(optionVotes);
-                }
+        }
             });
 
             return winners ? winners.map(function (w) { return w.Name; }) : [];

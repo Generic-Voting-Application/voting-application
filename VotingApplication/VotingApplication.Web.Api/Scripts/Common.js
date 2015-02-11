@@ -20,7 +20,9 @@
                     if (callbackFn) {
                         callbackFn();
                     }
-                }
+                },
+
+                error: Common.handleError
             });
         }
         else {
@@ -59,10 +61,15 @@
                 break;
         }
 
+        var responseMessage = "";
+        if (error.responseText.length > 0) {
+            reponseMessage = JSON.parse(error.responseText).Message
+        }
+
         var newError = '<div class="alert alert-danger">' +
         '<a href="#" class="close" data-dismiss="alert">&times;</a>' +
         '<strong>' + error.statusText + ' </strong>' +
-        JSON.parse(error.responseText).Message +
+        responseMessage +
         (friendlyText ? '<br/>' + friendlyText : '') +
         '</div>';
 
