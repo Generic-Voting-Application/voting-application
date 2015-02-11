@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html ng-app="VotingApp" ng-controller="HomePageController">
+<head>
+    <title ng-bind="models.helloAngular"></title>
+    <link rel="stylesheet" type="text/css" href="~/Style">
+</head>
+<body>
+    <h1>{{models.helloAngular}}</h1>
+
+    <ul>
+        <li><a href="/#/routeOne">Route One</a></li>
+        <li><a href="/#/routeTwo">Route Two</a></li>
+        <li><a href="/#/routeThree">Route Three</a></li>
+    </ul>
+
+    <div ng-view></div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-route.min.js"></script>
+    @Scripts.Render("~/Scripts/VotingApp")
+</body>
+</html>
