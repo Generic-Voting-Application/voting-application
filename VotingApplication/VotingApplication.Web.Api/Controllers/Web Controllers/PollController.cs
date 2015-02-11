@@ -20,7 +20,7 @@ namespace VotingApplication.Web.Api.Controllers
         {
             ViewBag.Title = "Cast your vote";
 
-            PollModel pollModel = new PollModel { Id = id, Token = token, VotingStrategy = String.Empty };
+            PollModel pollModel = new PollModel { Id = id, URITokenGuid = token, VotingStrategy = String.Empty };
 
             using (var context = _contextFactory.CreateContext())
             {
@@ -31,7 +31,7 @@ namespace VotingApplication.Web.Api.Controllers
 
                     if (poll != null)
                     {
-                        pollModel.VotingStrategy = poll.VotingStrategy;
+                        pollModel.VotingStrategy = poll.PollType.ToString();
                     }
                 }
 

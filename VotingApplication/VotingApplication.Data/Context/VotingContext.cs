@@ -23,7 +23,6 @@ namespace VotingApplication.Data.Context
         }
 
         public IDbSet<Option> Options { get; set; }
-        public IDbSet<User> Users { get; set; }
         public IDbSet<Vote> Votes { get; set; }
         public IDbSet<Poll> Polls { get; set; }
         public IDbSet<Token> Tokens { get; set; }
@@ -34,7 +33,6 @@ namespace VotingApplication.Data.Context
         public VoteConfiguration()
         {
             this.Property(v => v.OptionId).HasColumnName("OptionId");
-            this.Property(v => v.UserId).HasColumnName("UserId");
             this.Property(v => v.PollId).HasColumnName("PollId");
         }
     }

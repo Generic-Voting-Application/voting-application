@@ -29,7 +29,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         [TestInitialize]
         public void setup()
         {
-            InMemoryDbSet<User> dummyUsers = new InMemoryDbSet<User>(true);
             _dummyVotes = new InMemoryDbSet<Vote>(true);
             InMemoryDbSet<Option> dummyOptions = new InMemoryDbSet<Option>(true);
             InMemoryDbSet<Poll> dummyPolls = new InMemoryDbSet<Poll>(true);
@@ -48,15 +47,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
 
-            User bobUser = new User { Id = 1, Name = "Bob" };
-            User joeUser = new User { Id = 2, Name = "Joe" };
-
-            _bobVote = new Vote() { Id = 1, OptionId = 1, UserId = 1, PollId = mainUUID, User = bobUser, Poll = mainPoll, Option = burgerOption };
-            _joeVote = new Vote() { Id = 2, OptionId = 1, UserId = 2, PollId = mainUUID, User = joeUser, Poll = mainPoll, Option = burgerOption };
-            _otherVote = new Vote() { Id = 3, OptionId = 1, UserId = 1, PollId = otherUUID };
-
-            dummyUsers.Add(bobUser);
-            dummyUsers.Add(joeUser);
+            _bobVote = new Vote() { Id = 1, OptionId = 1, PollId = mainUUID, Poll = mainPoll, Option = burgerOption };
+            _joeVote = new Vote() { Id = 2, OptionId = 1, PollId = mainUUID, Poll = mainPoll, Option = burgerOption };
+            _otherVote = new Vote() { Id = 3, OptionId = 1, PollId = otherUUID };
 
             _dummyVotes.Add(_bobVote);
             _dummyVotes.Add(_joeVote);
@@ -72,7 +65,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
             mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
-            mockContext.Setup(a => a.Users).Returns(dummyUsers);
             mockContext.Setup(a => a.Options).Returns(dummyOptions);
             mockContext.Setup(a => a.Polls).Returns(dummyPolls);
 
@@ -88,22 +80,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             var response = _controller.Get(_manageMainUUID);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         [TestMethod]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void GetNonexistentPollIsNotFound()
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            var response = _controller.Get(newGuid);
 
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll " + newGuid + " not found", error.Message);
+            _controller.Get(newGuid);
         }
 
         [TestMethod]
@@ -113,10 +99,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_manageMainUUID);
 
             // Assert
-            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
-            Assert.AreEqual(2, responseVotes.Count);
-            CollectionAssert.AreEqual(new long[] { 1, 2 }, responseVotes.Select(r => r.UserId).ToArray());
-            CollectionAssert.AreEqual(new long[] { 1, 1 }, responseVotes.Select(r => r.OptionId).ToArray());
+            Assert.AreEqual(2, response.Count);
+            CollectionAssert.AreEqual(new long[] { 1, 1 }, response.Select(r => r.OptionId).ToArray());
         }
 
         [TestMethod]
@@ -126,66 +110,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_manageEmptyUUID);
 
             // Assert
-            List<VoteRequestResponseModel> responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
-            Assert.AreEqual(0, responseVotes.Count);
-        }
-
-        [TestMethod]
-        public void GetByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Get(_manageMainUUID, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        #endregion
-
-        #region PUT
-
-        [TestMethod]
-        public void PutIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Put(1, new Vote());
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void PutByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Put(_manageMainUUID, 1, new Vote());
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        #endregion
-
-        #region POST
-
-        [TestMethod]
-        public void PostIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Post(_manageMainUUID, new Vote());
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
-        }
-
-        [TestMethod]
-        public void PostByIdIsNotAllowed()
-        {
-            // Act
-            var response = _controller.Post(_manageMainUUID, 1, new Vote());
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.MethodNotAllowed, response.StatusCode);
+            Assert.AreEqual(0, response.Count);
         }
 
         #endregion
@@ -196,40 +121,30 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void DeleteIsAllowed()
         {
             // Act
-            var response = _controller.Delete(_manageMainUUID);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            _controller.Delete(_manageMainUUID);
         }
 
         [TestMethod]
         public void DeleteFromPollWithNoVotesIsAllowed()
         {
             // Act
-            var response = _controller.Delete(_manageMainUUID);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            _controller.Delete(_manageMainUUID);
         }
 
         [TestMethod]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void DeleteFromMissingPollIsNotFound()
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            var response = _controller.Delete(newGuid);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll " + newGuid + " not found", error.Message);
+            _controller.Delete(newGuid);
         }
 
         [TestMethod]
         public void DeleteOnlyRemovesVotesFromMatchingPoll()
         {
             // Act
-            var response = _controller.Delete(_manageMainUUID);
+            _controller.Delete(_manageMainUUID);
 
             // Assert
             List<Vote> expectedVotes = new List<Vote>();
@@ -241,17 +156,14 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void DeleteByIdIsAllowed()
         {
             // Act
-            var response = _controller.Delete(_manageMainUUID, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            _controller.Delete(_manageMainUUID, 1);
         }
 
         [TestMethod]
         public void DeleteByIdRemovesMatchingVote()
         {
             // Act
-            var response = _controller.Delete(_manageMainUUID, 2);
+            _controller.Delete(_manageMainUUID, 2);
 
             // Assert
             List<Vote> expectedVotes = new List<Vote>();
@@ -264,17 +176,14 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void DeleteByIdOnMissingVoteIsAllowed()
         {
             // Act
-            var response = _controller.Delete(_manageMainUUID, 99);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            _controller.Delete(_manageMainUUID, 99);
         }
 
         [TestMethod]
         public void DeleteByIdOnMissingVoteDoesNotModifyVotes()
         {
             // Act
-            var response = _controller.Delete(_manageMainUUID, 99);
+            _controller.Delete(_manageMainUUID, 99);
 
             // Assert
             List<Vote> expectedVotes = new List<Vote>();
@@ -285,33 +194,26 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
         public void DeleteByIdOnMissingPollIsNotFound()
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            var response = _controller.Delete(newGuid, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
-            HttpError error = ((ObjectContent)response.Content).Value as HttpError;
-            Assert.AreEqual("Poll " + newGuid + " not found", error.Message);
+            _controller.Delete(newGuid, 1);
         }
 
         [TestMethod]
         public void DeleteByIdOnVoteInOtherPollIsAllowed()
         {
             // Act
-            var response = _controller.Delete(_manageEmptyUUID, 1);
-
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            _controller.Delete(_manageEmptyUUID, 1);
         }
 
         [TestMethod]
         public void DeleteByIdOnVoteInOtherPollDoesNotRemoveOtherVote()
         {
             // Act
-            var response = _controller.Delete(_manageEmptyUUID, 1);
+            _controller.Delete(_manageEmptyUUID, 1);
 
             // Assert
             List<Vote> expectedVotes = new List<Vote>();

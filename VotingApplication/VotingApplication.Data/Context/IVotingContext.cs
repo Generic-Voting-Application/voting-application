@@ -9,7 +9,6 @@ namespace VotingApplication.Data.Context
     public interface IVotingContext : IDisposable
     {
         IDbSet<Option> Options { get; set; }
-        IDbSet<User> Users { get; set; }
         IDbSet<Vote> Votes { get; set; }
         IDbSet<Poll> Polls { get; set; }
         IDbSet<Token> Tokens { get; set; }

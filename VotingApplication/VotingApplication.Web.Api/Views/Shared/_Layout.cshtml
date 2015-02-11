@@ -45,13 +45,6 @@
     <script src="/Scripts/Lib/require.js"></script>
     <script src="/Scripts/Config.js"></script>
 
-    @{
-        if (!String.Equals(System.Web.Configuration.WebConfigurationManager.AppSettings["JSDebug"], "true", StringComparison.OrdinalIgnoreCase))
-        {
-            @:<script src="/Scripts/Min/@(ViewBag.ScriptName).js"></script>
-        }
-    }
-
     @RenderSection("scripts", false)
 </body>
 </html>

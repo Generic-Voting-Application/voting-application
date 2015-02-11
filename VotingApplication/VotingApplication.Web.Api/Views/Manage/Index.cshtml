@@ -11,7 +11,14 @@
     </div>
     <div id="errorArea"></div>
     <div class="text-center">
-        <a data-bind="attr: { href: '/Poll/Index/' + pollId() }">Poll Link</a>
+        <form class="form-inline">
+            <div class="input-group">
+                <input readonly="readonly" class="form-control" data-bind="value: window.location.origin + '/Poll/Index/' + pollId(), click: function(i, e){ e.target.select() }" />
+                <span class="input-group-btn">
+                    <a class="btn btn-primary" data-bind="attr: { href: '/Poll/Index/' + pollId() }">Go</a>
+                </span>
+            </div>
+        </form>
     </div>
     <ul id="tabBar" class="nav nav-tabs">
         <li class="active"><a href="#options" data-toggle="tab">Poll Options</a></li>
@@ -75,13 +82,13 @@
                 </tbody>
                 <tr id="newOptionRow">
                     <td>
-                        <input class="form-control input-block" id="newName" placeholder="Option" />
+                        <input class="form-control input-block" placeholder="Option" data-bind="value: newName" />
                     </td>
                     <td>
-                        <input class="form-control input-block" id="newDescription" placeholder="Description" />
+                        <input class="form-control input-block" placeholder="Description" data-bind="value: newDescription" />
                     </td>
                     <td class="hidden-xs hidden-sm">
-                        <input class="form-control input-block" id="newInfo" placeholder="More Info" />
+                        <input class="form-control input-block" placeholder="More Info" data-bind="value: newInfo" />
                     </td>
                     <td>
                         <button type="submit" class="btn btn-primary" data-bind="click: addOption.bind()">Add</button>
