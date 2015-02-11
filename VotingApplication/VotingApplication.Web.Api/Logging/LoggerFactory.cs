@@ -5,13 +5,13 @@ using System.Web;
 
 namespace VotingApplication.Web.Api.Logging
 {
-    public class LoggerFactory
+    public static class LoggerFactory
     {
-        private static ILogger _logger;
+        private static ILogger _logger = new NLogger();
 
-        public ILogger GetLogger()
+        public static ILogger GetLogger()
         {
-            return _logger ?? new ConsoleLogger();
+            return _logger;
         }
     }
 }

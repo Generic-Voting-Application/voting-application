@@ -15,7 +15,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 ReasonPhrase = message
             });
 
-            ILogger logger = new LoggerFactory().GetLogger();
+            ILogger logger = LoggerFactory.GetLogger();
+
             logger.Log(message, exception);
 
             throw exception;
@@ -25,7 +26,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             HttpResponseException exception = new HttpResponseException(controller.Request.CreateErrorResponse(statusCode, modelState));
 
-            ILogger logger = new LoggerFactory().GetLogger();
+            ILogger logger = LoggerFactory.GetLogger();
             logger.Log(exception);
 
             throw exception;

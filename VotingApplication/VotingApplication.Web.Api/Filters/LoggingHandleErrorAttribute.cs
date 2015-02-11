@@ -7,7 +7,7 @@ namespace VotingApplication.Web.Api.Filters
     {
         public override void OnException(ExceptionContext filterContext)
         {
-            ILogger logger = new LoggerFactory().GetLogger();
+            ILogger logger = LoggerFactory.GetLogger();
 
             logger.Log(filterContext.Exception.Message, filterContext.Exception);
 

@@ -50,7 +50,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
             catch (Exception exception)
             {
-                ILogger logger = new LoggerFactory().GetLogger();
+                ILogger logger = LoggerFactory.GetLogger();
                 logger.Log(exception);
             }
         }
