@@ -214,7 +214,7 @@
         it("displayResults with Votes expect Draw ranked vote result", function () {
             // arrange
             target.pollOptions.options(testPollOptions);
-            
+
             // act
             target.displayResults(testVotes);
 
