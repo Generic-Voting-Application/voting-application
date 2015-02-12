@@ -1,19 +1,22 @@
 ﻿<!DOCTYPE html>
 <html ng-app="VotingApp" ng-controller="HomePageController">
 <head>
-    <title ng-bind="models.helloAngular"></title>
+    <title ng-bind="models.pageTitle"></title>
     <link rel="stylesheet" type="text/css" href="~/Style">
 </head>
 <body>
-    <h1>{{models.helloAngular}}</h1>
+    <div class="center-panel">
+        <div class="body-content">
+            <h2>Where do we go for lunch?</h2>
 
-    <ul>
-        <li><a href="/#/routeOne">Route One</a></li>
-        <li><a href="/#/routeTwo">Route Two</a></li>
-        <li><a href="/#/routeThree">Route Three</a></li>
-    </ul>
+            <div ng-view></div>
+            <div style="width: 100%; height: 500px; background-color: lightgray"></div>
 
-    <div ng-view></div>
+            <p>Poll closes in: 5 hours</p>
+        </div>
+        <div id="footer"><a href="mailto:generic.voting@gmail.com">Contact us</a> | © 2015 – Scott Logic Ltd</div>
+    </div>
+
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-route.min.js"></script>

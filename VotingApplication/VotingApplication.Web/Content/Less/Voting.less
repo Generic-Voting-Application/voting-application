@@ -7,6 +7,52 @@
 @Black:         #000000;
 @White:         #FFFFFF;
 
+// General CSS
+
+html {
+    height: 100%;
+}
+
 body {
+    display: flex;
+    height: 100%;
+    margin: 0px;
+
+    font: normal 14px 'Open Sans';
     background-color: @Green200;
+}
+
+h1, h2, h3, h4 {
+    font-weight: bold;
+    font-family: Roboto;
+}
+
+a {
+    text-decoration: none;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0px;
+    height: 30px;
+    background-color: @White;
+}
+
+// Voting page specific
+
+.center-panel {
+    background-color: @White;
+    box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.6);
+
+    min-width: 320px;
+    max-width: 500px;
+    align-content: center;
+    margin: auto;
+    padding: 0px 10px;
+
+    height: 100%;
+}
+
+.body-content {
+    padding: 0px 20px;
 }
