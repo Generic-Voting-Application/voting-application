@@ -1,6 +1,9 @@
-﻿using BundleTransformer.Core.Builders;
+﻿using BundleTransformer.Autoprefixer.PostProcessors;
+using BundleTransformer.Core.Builders;
 using BundleTransformer.Core.Orderers;
+using BundleTransformer.Core.PostProcessors;
 using BundleTransformer.Core.Transformers;
+using System.Collections.Generic;
 using System.Web.Optimization;
 
 namespace VotingApplication.Web
@@ -9,8 +12,11 @@ namespace VotingApplication.Web
     {
         public static void RegisterBundles(BundleCollection bundles)
         {
+            List<IPostProcessor> postProcessors = new List<IPostProcessor>();
+            postProcessors.Add(new AutoprefixCssPostProcessor());
+            var styleTransformer = new StyleTransformer(postProcessors);
+
             var nullBuilder = new NullBuilder();
-            var styleTransformer = new StyleTransformer();
             var scriptTransformer = new ScriptTransformer();
             var nullOrderer = new NullOrderer();
 
