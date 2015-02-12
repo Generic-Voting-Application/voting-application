@@ -1,0 +1,19 @@
+﻿$Green200:      #A5D6A7;
+$Green500:      #4CAF50;
+$Green700:      #388E3C;
+$BlueGrey100:   #CFD8DC;
+$Grey400:       #BDBDBD;
+$Grey600:       #757575;
+$Black:         #000000;
+$White:         #FFFFFF;
+
+body {
+    background-color: $Green200;
+}
+
+div {
+  column-count: 3;
+  display: flex;
+  border-radius: 20px;
+  background-color: $BlueGrey100;
+}
