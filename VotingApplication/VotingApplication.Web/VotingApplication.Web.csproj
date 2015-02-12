@@ -181,6 +181,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\Controllers\HomePageController.js" />
+    <Content Include="Scripts\Controllers\ResultsPageController.js" />
+    <Content Include="Scripts\Controllers\VotingPageController.js" />
     <Content Include="Scripts\VotingApp.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
