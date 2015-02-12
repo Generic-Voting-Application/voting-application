@@ -1,4 +1,7 @@
-﻿using System.Web.Optimization;
+﻿using BundleTransformer.Core.Builders;
+using BundleTransformer.Core.Orderers;
+using BundleTransformer.Core.Transformers;
+using System.Web.Optimization;
 
 namespace VotingApplication.Web
 {
@@ -6,12 +9,25 @@ namespace VotingApplication.Web
     {
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new LessBundle("~/Style")
-                .IncludeDirectory("~/Content/Less", "*.less"));
+            var nullBuilder = new NullBuilder();
+            var styleTransformer = new StyleTransformer();
+            var scriptTransformer = new ScriptTransformer();
+            var nullOrderer = new NullOrderer();
 
-            bundles.Add(new ScriptBundle("~/Scripts/VotingApp")
-                .IncludeDirectory("~/Scripts/Controllers", "*.js")
-                .Include("~/Scripts/VotingApp.js"));
+            StyleBundle styleBundle = new StyleBundle("~/Bundles/Style");
+            styleBundle.IncludeDirectory("~/Content/Scss", "*.scss");
+            styleBundle.Builder = nullBuilder;
+            styleBundle.Transforms.Add(styleTransformer);
+            styleBundle.Orderer = nullOrderer;
+            bundles.Add(styleBundle);
+
+            ScriptBundle scriptBundle = new ScriptBundle("~/Bundles/Script");
+            scriptBundle.IncludeDirectory("~/Scripts/Controllers", "*.js");
+            scriptBundle.Include("~/Scripts/VotingApp.js");
+            scriptBundle.Builder = nullBuilder;
+            scriptBundle.Transforms.Add(scriptTransformer);
+            scriptBundle.Orderer = nullOrderer;
+            bundles.Add(scriptBundle);
 
             BundleTable.EnableOptimizations = true;
         }

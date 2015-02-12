@@ -2,7 +2,7 @@
 <html ng-app="VotingApp" ng-controller="HomePageController">
 <head>
     <title ng-bind="models.helloAngular"></title>
-    <link rel="stylesheet" type="text/css" href="~/Style">
+    @Styles.Render("~/Bundles/Style")
 </head>
 <body>
     <div><h1>{{models.helloAngular}}</h1></div>
@@ -17,6 +17,6 @@
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-route.min.js"></script>
-    @Scripts.Render("~/Scripts/VotingApp")
+    @Scripts.Render("~/Bundles/Script")
 </body>
 </html>
