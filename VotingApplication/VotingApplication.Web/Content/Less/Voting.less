@@ -18,7 +18,7 @@ body {
     height: 100%;
     margin: 0px;
 
-    font: normal 14px 'Open Sans';
+    font: normal 12pt 'Open Sans';
     background-color: @Green200;
 }
 
@@ -29,6 +29,30 @@ h1, h2, h3, h4 {
 
 a {
     text-decoration: none;
+}
+
+.btn {
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 12pt;
+    padding: 5px;
+    border-style: solid;
+}
+
+.info-btn {
+    background-color: @White;
+    border-color: @Grey400;
+    border-width: 1px;
+    color: @Grey600;
+}
+
+.flexbox {
+    width: 100%;
+    display: flex;
+}
+
+.centered {
+    margin: auto;
 }
 
 #footer {
@@ -54,4 +78,14 @@ a {
 
 .body-content {
     padding: 0px 20px;
+}
+
+#current-user {
+    width: 100%;
+    display: inline-block;
+}
+
+#not-user-btn {
+    width: 100px;
+    float: right;
 }
