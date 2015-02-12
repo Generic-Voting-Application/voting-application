@@ -4,17 +4,12 @@ namespace VotingApplication.Web.Controllers
 {
     public class RoutesController : Controller
     {
-        public ActionResult One()
+        public ActionResult Voting()
         {
             return View();
         }
 
-        public ActionResult Two()
-        {
-            return View();
-        }
-
-        public ActionResult Three()
+        public ActionResult Results()
         {
             return View();
         }

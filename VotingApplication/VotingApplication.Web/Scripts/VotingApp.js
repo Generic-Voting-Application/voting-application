@@ -4,14 +4,14 @@ VotingApp.controller('HomePageController', HomePageController);
 
 var configFunction = function ($routeProvider) {
     $routeProvider.
-        when('/routeOne', {
-            templateUrl: 'routes/one'
+        when('/voting', {
+            templateUrl: 'routes/voting'
         })
-        .when('/routeTwo', {
-            templateUrl: 'routes/two'
+        .when('/results', {
+            templateUrl: 'routes/results'
         })
-        .when('/routeThree', {
-            templateUrl: 'routes/three'
+        .otherwise({
+            redirectTo: '/voting'
         });
 }
 configFunction.$inject = ['$routeProvider'];

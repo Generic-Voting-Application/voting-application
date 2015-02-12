@@ -204,9 +204,8 @@
     <Content Include="Content\Less\Voting.less" />
     <Content Include="Content\Less\Creation.less" />
     <None Include="Project_Readme.html" />
-    <Content Include="Views\Routes\One.cshtml" />
-    <Content Include="Views\Routes\Two.cshtml" />
-    <Content Include="Views\Routes\Three.cshtml" />
+    <Content Include="Views\Routes\Voting.cshtml" />
+    <Content Include="Views\Routes\Results.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
