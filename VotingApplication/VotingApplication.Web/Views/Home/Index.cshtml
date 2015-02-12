@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html ng-app="VotingApp" ng-controller="HomePageController">
+<head>
+    <title ng-bind="models.pageTitle"></title>
+    @Styles.Render("~/Bundles/Style")
+</head>
+<body>
+    <div class="center-panel">
+        <div class="body-content">
+            <h2>Where do we go for lunch?</h2>
+
+            <div ng-view></div>
+
+            <p>Poll closes in: 5 hours</p>
+        </div>
+        <div id="footer"><a href="mailto:generic.voting@gmail.com">Contact us</a> | © 2015 – Scott Logic Ltd</div>
+    </div>
+
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-route.min.js"></script>
+    @Scripts.Render("~/Bundles/Script")
+</body>
+</html>
+|

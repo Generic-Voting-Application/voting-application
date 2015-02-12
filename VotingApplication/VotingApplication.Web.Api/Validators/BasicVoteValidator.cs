@@ -14,12 +14,11 @@ namespace VotingApplication.Web.Api.Validators
             {
                 modelState.AddModelError("Vote", "Invalid number of votes");
             }
-
-            foreach (VoteRequestModel voteRequest in voteRequests)
+            else
             {
-                if (voteRequest.VoteValue != 0)
+                if(voteRequests[0].VoteValue != 1)
                 {
-                    modelState.AddModelError("VoteValue", String.Format("Invalid vote value: {0}", voteRequest.VoteValue));
+                    modelState.AddModelError("VoteValue", String.Format("Invalid vote value: {0}", voteRequests[0].VoteValue));
                 }
             }
         }
