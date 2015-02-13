@@ -13,5 +13,15 @@ namespace VotingApplication.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult BasicVote()
+        {
+            return View();
+        }
+
+        public ActionResult PointsVote()
+        {
+            return View();
+        }
     }
 }
