@@ -1,5 +1,7 @@
-﻿var PointsVoteController = function ($scope) {
-    console.log("Points");
-}
+﻿(function () {
+    var VotingApp = angular.module('VotingApp');
 
-PointsVoteController.$inject = ['$scope'];
+    VotingApp.controller('PointsVoteController', function ($scope) {
+        console.log("Points");
+    });
+})();

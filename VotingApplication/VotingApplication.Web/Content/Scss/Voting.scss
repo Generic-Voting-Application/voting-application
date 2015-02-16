@@ -1,11 +1,11 @@
-﻿$Green200:      #A5D6A7;
-$Green500:      #4CAF50;
-$Green700:      #388E3C;
-$BlueGrey100:   #CFD8DC;
-$Grey400:       #BDBDBD;
-$Grey600:       #757575;
-$Black:         #000000;
-$White:         #FFFFFF;
+﻿$Green200: #A5D6A7;
+$Green500: #4CAF50;
+$Green700: #388E3C;
+$BlueGrey100: #CFD8DC;
+$Grey400: #BDBDBD;
+$Grey600: #757575;
+$Black: #000000;
+$White: #FFFFFF;
 
 // General CSS
 
@@ -17,7 +17,6 @@ body {
     display: flex;
     height: 100%;
     margin: 0px;
-
     font: normal 12pt 'Open Sans';
     background-color: $Green200;
 }
@@ -51,8 +50,7 @@ a {
     @extend .btn;
     background-color: $Green500;
     border: 1px solid $Green700;
-    //border-width: 0px;
-    font: bold 14pt Open Sans;
+    font: bold 12pt Open Sans;
     color: $White;
 }
 
@@ -75,7 +73,7 @@ hr {
     background-color: $Grey400;
     border-style: none;
     height: 1px;
-    margin-top: 5px;
+    margin-top: 15px;
     margin-bottom: 15px;
 }
 
@@ -86,17 +84,27 @@ hr {
     background-color: $White;
 }
 
+.pull-left {
+    float: left;
+}
+
+.pull-right {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
+
 // Voting page specific
 
 .center-panel {
     background-color: $White;
     box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.6);
-
     min-width: 320px;
     align-content: center;
     margin: auto;
     padding: 0px 10px;
-
     height: 100%;
 }
 
@@ -161,14 +169,6 @@ hr {
     width: 40px;
 }
 
-.pull-left {
-    float: left;
-}
-
-.pull-right {
-    float: right;
-}
-
 .progress {
     background-color: $White;
     border: 1px solid $Green700;
@@ -180,4 +180,22 @@ hr {
     border-width: 0px;
     background-color: $Green500;
     height: 100%;
+}
+
+// Basic voting
+
+.option-block {
+    max-width: 300px;
+    min-height: 80px;
+    padding-top: 5px;
+
+}
+
+.action-block {
+    display: flex;
+    flex-direction: column;
+
+    > .btn {
+        margin: 2px;
+    }
 }
