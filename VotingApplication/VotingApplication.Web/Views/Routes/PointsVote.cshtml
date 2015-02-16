@@ -1,7 +1,7 @@
 ﻿<div ng-controller="PointsVoteController" ng-app="VotingApp">
-    Unallocated points: 3/5
+    Unallocated points: {{unallocatedPoints()}}/{{totalPointsAvailable}}
     <div class="progress" id="progress-bar">
-        <div style="width: 60%" class="progress-bar" role="progressbar"></div>
+        <div style="width: {{unallocatedPoints()/totalPointsAvailable * 100}}%" class="progress-bar" role="progressbar"></div>
     </div>
 
     <h3>Options</h3>
@@ -10,9 +10,9 @@
             <p class="option-text">{{option.name}}</p>
             <div class="option-buttons">
                 <span class="btn-group">
-                    <button class="active-btn pull-left">-</button>
-                    <label class="points-label">{{option.pollValue}}/3</label>
-                    <button class="active-btn pull-right">+</button>
+                    <button class="active-btn pull-left" ng-disabled="(option.pollValue <= 0)" ng-click="(option.pollValue = option.pollValue-1)">-</button>
+                    <label class="points-label">{{option.pollValue}}/{{maxPointsPerOption}}</label>
+                    <button class="active-btn pull-right" ng-disabled="(disabledAddPoints(option.pollValue))" ng-click="(option.pollValue = option.pollValue+1)">+</button>
                 </span>
                 <button class="info-btn more-info" ng-click="descriptionToggle=!descriptionToggle">More info</button>
             </div>

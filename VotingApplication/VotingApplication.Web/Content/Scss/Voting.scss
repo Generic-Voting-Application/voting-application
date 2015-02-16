@@ -1,4 +1,7 @@
-﻿$Green200: #A5D6A7;
+﻿@import url(http://fonts.googleapis.com/css?family=Roboto:700);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+$Green200: #A5D6A7;
 $Green500: #4CAF50;
 $Green700: #388E3C;
 $BlueGrey100: #CFD8DC;
@@ -52,6 +55,10 @@ a {
     border: 1px solid $Green700;
     font: bold 12pt Open Sans;
     color: $White;
+}
+
+:disabled {
+    opacity: 0.5
 }
 
 .vote-btn {
@@ -184,6 +191,7 @@ hr {
 }
 
 .progress-bar {
+    transition: width 0.2s ease-out;
     border-width: 0px;
     background-color: $Green500;
     height: 100%;
