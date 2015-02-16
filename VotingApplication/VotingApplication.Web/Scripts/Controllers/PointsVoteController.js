@@ -22,7 +22,7 @@
         }
 
         $scope.disabledAddPoints = function(pointValue) {
-            return pointValue === $scope.maxPointsPerOption || $scope.unallocatedPoints() === 0;
+            return pointValue >= $scope.maxPointsPerOption || $scope.unallocatedPoints() === 0;
         }
     });
 })();
