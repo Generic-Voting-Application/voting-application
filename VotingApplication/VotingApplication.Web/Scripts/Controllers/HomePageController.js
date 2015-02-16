@@ -1,7 +1,10 @@
-﻿var HomePageController = function ($scope) {
-    $scope.models = {
-        pageTitle: 'Pollster'
-    };
-}
+﻿(function () {
+    var VotingApp = angular.module('VotingApp');
 
-HomePageController.$inject = ['$scope'];
+    VotingApp.controller('HomePageController', function ($scope) {
+        $scope.models = {
+            pageTitle: 'Pollster'
+        };
+    });
+
+})();
