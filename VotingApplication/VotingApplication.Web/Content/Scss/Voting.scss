@@ -6,7 +6,6 @@ $Grey400: #BDBDBD;
 $Grey600: #757575;
 $Black: #000000;
 $White: #FFFFFF;
-$Gray: #666666;
 
 // General CSS
 
@@ -39,21 +38,25 @@ a {
     border-style: solid;
 }
 
-.active-btn {
-    @extend .btn;
-    background-color: $Green500;
-    border-color: $Green700;
-    border-width: 1px;
-    color: $White;
-    font-size: 14px;
-}
-
 .info-btn {
     @extend .btn;
     background-color: $White;
     border-color: $Grey400;
     border-width: 1px;
     color: $Grey600;
+}
+
+.active-btn {
+    @extend .btn;
+    background-color: $Green500;
+    border: 1px solid $Green700;
+    font: bold 12pt Open Sans;
+    color: $White;
+}
+
+.vote-btn {
+    @extend .active-btn;
+    width: 100px;
 }
 
 .flexbox {
@@ -65,9 +68,13 @@ a {
     margin: auto;
 }
 
-.pull-right {
-    float: right;
-    position: relative;
+hr {
+    width: 80%;
+    background-color: $Grey400;
+    border-style: none;
+    height: 1px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 #footer {
@@ -77,6 +84,17 @@ a {
     background-color: $White;
 }
 
+.pull-left {
+    float: left;
+}
+
+.pull-right {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
 
 // Voting page specific
 
@@ -104,23 +122,74 @@ a {
     float: right;
 }
 
-// Basic voting
+#expiry-date {
+    position: relative;
+    top: -20px;
+}
 
 .option-block {
-    max-width: 500px;
-    min-height: 75px;
-    border-top: solid;
-    border-top-width: thin;
-    border-top-color: $Gray;
+    max-width: 300px;
+    min-height: 80px;
     padding-top: 5px;
 
-    &:last-of-type {
-        border-bottom: solid;
-        border-bottom-width: thin;
-        border-bottom-color: $Gray;
-        margin-bottom: 5px;
-    }
 }
+
+// Points-voting specific
+
+.option-text {
+    float:left;
+    padding-right: 10px;
+    max-width: 300px;
+}
+
+.option-description {
+    float: left;
+}
+
+.option-buttons {
+    float: right;
+}
+
+.option-buttons > * {
+    display: block;
+    text-align:center;
+    width: 100%
+}
+
+.btn-group {
+    border: 1px solid $Green700;
+    border-radius: 5px;
+    overflow:hidden;
+    margin-bottom: 5px;
+    width: 100px;
+}
+
+.btn-group > button {
+    border-radius: 0px;
+    border-width: 0px;
+    width: 30px;
+}
+
+.points-label {
+    float: left;
+    padding: 7px 0 0 0;
+    width: 40px;
+}
+
+.progress {
+    background-color: $White;
+    border: 1px solid $Green700;
+    height:10px;
+    border-radius: 4px;
+}
+
+.progress-bar {
+    border-width: 0px;
+    background-color: $Green500;
+    height: 100%;
+}
+
+// Basic voting
 
 .action-block {
     display: flex;

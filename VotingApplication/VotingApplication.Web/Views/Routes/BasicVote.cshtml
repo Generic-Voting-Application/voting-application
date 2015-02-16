@@ -1,15 +1,17 @@
 ﻿<div ng-controller="BasicVoteController" ng-app="VotingApp">
     <h3>Options</h3>
     <div class="option-block" ng-repeat="option in options">
-        {{option.name}}
+        <p class="option-text">{{option.name}}</p>
         <div class="action-block pull-right">
             <button class="active-btn">Vote</button>
             <button class="info-btn" ng-click="descriptionToggle=!descriptionToggle">More Info</button>
         </div>
-        <div ng-show="descriptionToggle">
+        <div class="option-description" ng-show="descriptionToggle">
             {{option.description}}
         </div>
         <div ng-hide="descriptionToggle">
         </div>
+        <div class="clear"></div>
+        <hr />
     </div>
 </div>
