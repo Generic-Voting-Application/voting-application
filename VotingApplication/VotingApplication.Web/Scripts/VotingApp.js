@@ -15,9 +15,7 @@
         else
             return 'routes/BasicVote';
     }
-
-    VotingApp.controller('HomePageController', HomePageController);
-
+    
     var configFunction = function ($routeProvider) {
         $routeProvider.
             when('/voting/:pollId', {
