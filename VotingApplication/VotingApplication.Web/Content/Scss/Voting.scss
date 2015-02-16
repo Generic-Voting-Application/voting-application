@@ -127,16 +127,23 @@ hr {
     top: -20px;
 }
 
-// Points-voting specific
-
-.points-option {
+.option-block {
+    max-width: 300px;
     min-height: 80px;
+    padding-top: 5px;
+
 }
+
+// Points-voting specific
 
 .option-text {
     float:left;
     padding-right: 10px;
     max-width: 300px;
+}
+
+.option-description {
+    float: left;
 }
 
 .option-buttons {
@@ -183,13 +190,6 @@ hr {
 }
 
 // Basic voting
-
-.option-block {
-    max-width: 300px;
-    min-height: 80px;
-    padding-top: 5px;
-
-}
 
 .action-block {
     display: flex;

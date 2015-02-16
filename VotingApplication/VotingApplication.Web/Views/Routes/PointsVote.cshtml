@@ -5,42 +5,26 @@
     </div>
 
     <h3>Options</h3>
-    <div class="points-option">
-        <p class="option-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do...</p>
-        <div class="option-buttons">
-            <span class="btn-group">
-                <button class="active-btn pull-left">-</button>
-                <label class="points-label">2/3</label>
-                <button class="active-btn pull-right">+</button>
-            </span>
-            <button class="info-btn more-info">More info</button>
+    <div ng-repeat="option in options">
+        <div class="option-block">
+            <p class="option-text">{{option.name}}</p>
+            <div class="option-buttons">
+                <span class="btn-group">
+                    <button class="active-btn pull-left">-</button>
+                    <label class="points-label">{{option.pollValue}}/3</label>
+                    <button class="active-btn pull-right">+</button>
+                </span>
+                <button class="info-btn more-info" ng-click="descriptionToggle=!descriptionToggle">More info</button>
+            </div>
+            <div class="option-description" ng-show="descriptionToggle">
+                {{option.description}}
+            </div>
+            <div ng-hide="descriptionToggle">
+            </div>
+            <div class="clear"></div>
         </div>
+        <hr />
     </div>
-    <hr />
-    <div class="points-option">
-        <p class="option-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do...</p>
-        <div class="option-buttons">
-            <span class="btn-group">
-                <button class="active-btn pull-left">-</button>
-                <label class="points-label">2/3</label>
-                <button class="active-btn pull-right">+</button>
-            </span>
-            <button class="info-btn more-info">More info</button>
-        </div>
-    </div>
-    <hr />
-    <div class="points-option">
-        <p class="option-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do...</p>
-        <div class="option-buttons">
-            <span class="btn-group">
-                <button class="active-btn pull-left">-</button>
-                <label class="points-label">2/3</label>
-                <button class="active-btn pull-right">+</button>
-            </span>
-            <button class="info-btn more-info">More info</button>
-        </div>
-    </div>
-    <hr />
     <div class="flexbox">
         <button class="vote-btn centered">Vote</button>
     </div>
