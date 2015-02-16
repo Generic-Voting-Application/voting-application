@@ -300,7 +300,7 @@
     <Content Include="Scripts\Controllers\ResultsPageController.js" />
     <Content Include="Scripts\Controllers\PointsVoteController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
-    <Content Include="Scripts\Services\PollData.js" />
+    <Content Include="Scripts\Services\PollAction.js" />
     <Content Include="Scripts\VotingApp.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
