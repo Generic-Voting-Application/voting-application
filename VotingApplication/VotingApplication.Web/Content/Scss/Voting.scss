@@ -40,10 +40,25 @@ a {
 }
 
 .info-btn {
+    @extend .btn;
     background-color: $White;
     border-color: $Grey400;
     border-width: 1px;
     color: $Grey600;
+}
+
+.active-btn {
+    @extend .btn;
+    background-color: $Green500;
+    border: 1px solid $Green700;
+    //border-width: 0px;
+    font: bold 14pt Open Sans;
+    color: $White;
+}
+
+.vote-btn {
+    @extend .active-btn;
+    width: 100px;
 }
 
 .flexbox {
@@ -53,6 +68,15 @@ a {
 
 .centered {
     margin: auto;
+}
+
+hr {
+    width: 80%;
+    background-color: $Grey400;
+    border-style: none;
+    height: 1px;
+    margin-top: 5px;
+    margin-bottom: 15px;
 }
 
 #footer {
@@ -88,4 +112,67 @@ a {
 #not-user-btn {
     width: 100px;
     float: right;
+}
+
+// Points-voting specific
+
+.points-option {
+    min-height: 80px;
+}
+
+.option-text {
+    float:left;
+    padding-right: 10px;
+    max-width: 300px;
+}
+
+.option-buttons {
+    float: right;
+}
+
+.option-buttons > * {
+    display: block;
+    text-align:center;
+    width: 100%
+}
+
+.btn-group {
+    border: 1px solid $Green700;
+    border-radius: 5px;
+    overflow:hidden;
+    margin-bottom: 5px;
+    width: 100px;
+}
+
+.btn-group > button {
+    border-radius: 0px;
+    border-width: 0px;
+    width: 30px;
+}
+
+.points-label {
+    float: left;
+    padding: 7px 0 0 0;
+    width: 40px;
+}
+
+.pull-left {
+    float: left;
+}
+
+.pull-right {
+    float: right;
+}
+
+.progress {
+    background-color: $White;
+    border: 1px solid $Green700;
+    height:10px;
+    border-radius: 4px;
+}
+
+.progress-bar {
+    border-width: 0px;
+    background-color: $Green500;
+    height: 100%;
 }
