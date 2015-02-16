@@ -30,12 +30,13 @@ namespace VotingApplication.Web
             ScriptBundle scriptBundle = new ScriptBundle("~/Bundles/Script");
             scriptBundle.IncludeDirectory("~/Scripts/Controllers", "*.js");
             scriptBundle.Include("~/Scripts/VotingApp.js");
+            scriptBundle.IncludeDirectory("~/Scripts/Services", "*.js");
             scriptBundle.Builder = nullBuilder;
             scriptBundle.Transforms.Add(scriptTransformer);
             scriptBundle.Orderer = nullOrderer;
             bundles.Add(scriptBundle);
 
-            BundleTable.EnableOptimizations = true;
+            BundleTable.EnableOptimizations = false;
         }
     }
 }
