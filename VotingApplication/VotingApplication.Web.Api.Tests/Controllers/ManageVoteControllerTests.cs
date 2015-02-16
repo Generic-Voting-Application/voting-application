@@ -24,6 +24,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Guid _manageMainUUID;
         private Guid _manageOtherUUID;
         private Guid _manageEmptyUUID;
+        private Poll _mainPoll;
         private InMemoryDbSet<Vote> _dummyVotes;
 
         [TestInitialize]
@@ -41,14 +42,14 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _manageOtherUUID = Guid.NewGuid();
             _manageEmptyUUID = Guid.NewGuid();
 
-            Poll mainPoll = new Poll() { UUID = mainUUID, ManageId = _manageMainUUID };
+            _mainPoll = new Poll() { UUID = mainUUID, ManageId = _manageMainUUID, LastUpdated = new DateTime(100) };
             Poll otherPoll = new Poll() { UUID = otherUUID, ManageId = _manageOtherUUID };
             Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageId = _manageEmptyUUID };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
 
-            _bobVote = new Vote() { Id = 1, OptionId = 1, PollId = mainUUID, Poll = mainPoll, Option = burgerOption };
-            _joeVote = new Vote() { Id = 2, OptionId = 1, PollId = mainUUID, Poll = mainPoll, Option = burgerOption };
+            _bobVote = new Vote() { Id = 1, OptionId = 1, PollId = mainUUID, Poll = _mainPoll, Option = burgerOption };
+            _joeVote = new Vote() { Id = 2, OptionId = 1, PollId = mainUUID, Poll = _mainPoll, Option = burgerOption };
             _otherVote = new Vote() { Id = 3, OptionId = 1, PollId = otherUUID };
 
             _dummyVotes.Add(_bobVote);
@@ -57,7 +58,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             dummyOptions.Add(burgerOption);
 
-            dummyPolls.Add(mainPoll);
+            dummyPolls.Add(_mainPoll);
             dummyPolls.Add(otherPoll);
             dummyPolls.Add(emptyPoll);
 
@@ -153,6 +154,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
+        public void DeleteAllVotesUpdatesLastUpdatedTime()
+        {
+            // Act
+            _controller.Delete(_manageMainUUID);
+
+            // Assert
+            Assert.AreNotEqual(new DateTime(100), _mainPoll.LastUpdated);
+        }
+
+        [TestMethod]
         public void DeleteByIdIsAllowed()
         {
             // Act
@@ -223,6 +234,15 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
         }
 
+        [TestMethod]
+        public void DeleteSingleVoteUpdatesLastUpdatedTime()
+        {
+            // Act
+            _controller.Delete(_manageMainUUID, 1);
+
+            // Assert
+            Assert.AreNotEqual(new DateTime(100), _mainPoll.LastUpdated);
+        }
 
         #endregion
 

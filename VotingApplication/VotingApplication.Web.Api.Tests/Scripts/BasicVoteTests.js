@@ -29,7 +29,7 @@
             var posted = false;
             mockjax({
                 type: "PUT", url: "/api/token/00000000-0000-0000-0000-000000000001/poll/303/vote",
-                data: JSON.stringify([{ OptionId: 17, VoterName: "Bob" }]),
+                data: JSON.stringify([{ OptionId: 17, VoterName: "Bob", VoteValue: 1 }]),
                 response: function () { posted = true; }, responseText: {}
             });
 
@@ -53,7 +53,7 @@
             var posted = false;
             mockjax({
                 type: "PUT", url: "/api/token/00000000-0000-0000-0000-000000000001/poll/303/vote",
-                data: JSON.stringify([{ OptionId: 17, VoterName: "Bob" }]),
+                data: JSON.stringify([{ OptionId: 17, VoterName: "Bob", VoteValue: 1 }]),
                 response: function () { posted = true; }, responseText: {}
             });
 

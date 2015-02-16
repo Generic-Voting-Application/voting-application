@@ -45,7 +45,8 @@
         self.doVote = function (data) {
             var voteData = JSON.stringify([{
                 OptionId: data.Id,
-                VoterName: Common.getVoterName()
+                VoterName: Common.getVoterName(),
+                VoteValue: 1
             }]);
 
             var tokenGuid = Common.getToken(pollId);

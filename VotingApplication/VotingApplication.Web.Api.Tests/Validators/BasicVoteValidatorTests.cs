@@ -23,10 +23,10 @@ namespace VotingApplication.Web.Api.Tests.Validators
         }
 
         [TestMethod]
-        public void ValidateRejectsVoteWithNonZeroValue()
+        public void ValidateRejectsVoteWithInvalidValue()
         {
             // Arrange
-            List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 1 } };
+            List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 6 } };
 
             // Act
             _validator.Validate(votes, _poll, _modelState);
@@ -57,7 +57,7 @@ namespace VotingApplication.Web.Api.Tests.Validators
         public void ValidateAcceptsValidInput()
         {
             // Arrange
-            List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 0 } };
+            List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 1 } };
 
             // Act
             _validator.Validate(votes, _poll, _modelState);

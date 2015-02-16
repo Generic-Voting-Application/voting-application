@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4EF491BF-0EC2-4E96-ACBF-B21232BE3BC9}"
 EndProject
@@ -32,6 +32,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B46648
 		VotingApplication.Web.Api.Tests\RunJavascriptTests.ps1 = VotingApplication.Web.Api.Tests\RunJavascriptTests.ps1
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Web", "VotingApplication.Web\VotingApplication.Web.csproj", "{08D315E9-B845-48E1-A2F0-486E7064C2C3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{942DCB1B-5882-4C01-95AE-3FE71E4103F2} = {942DCB1B-5882-4C01-95AE-3FE71E4103F2}
+		{969076F5-F2AD-4711-853B-BA1BD3439E13} = {969076F5-F2AD-4711-853B-BA1BD3439E13}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +60,10 @@ Global
 		{141C9D63-9053-44D8-B2E3-F436AEE56AC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{141C9D63-9053-44D8-B2E3-F436AEE56AC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{141C9D63-9053-44D8-B2E3-F436AEE56AC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08D315E9-B845-48E1-A2F0-486E7064C2C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08D315E9-B845-48E1-A2F0-486E7064C2C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08D315E9-B845-48E1-A2F0-486E7064C2C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08D315E9-B845-48E1-A2F0-486E7064C2C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

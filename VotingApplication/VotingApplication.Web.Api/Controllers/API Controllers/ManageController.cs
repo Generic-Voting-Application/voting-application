@@ -13,7 +13,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     {
         public ManageController() : base() { }
         public ManageController(IContextFactory contextFactory) : base(contextFactory) { }
-
+        
         private ManagePollRequestResponseModel PollToModel(Poll poll)
         {
             return new ManagePollRequestResponseModel
@@ -26,7 +26,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         #region GET
 
         public ManagePollRequestResponseModel Get(Guid manageId)
-        {
+        {            
             using (var context = _contextFactory.CreateContext())
             {
                 Poll poll = context.Polls.Where(s => s.ManageId == manageId).Include(s => s.Options).FirstOrDefault();

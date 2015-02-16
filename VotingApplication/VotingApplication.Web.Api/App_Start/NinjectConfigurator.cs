@@ -2,6 +2,7 @@
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Logging;
 using VotingApplication.Web.Api.Validators;
 using VotingApplication.Web.Common;
 
@@ -30,6 +31,7 @@ namespace VotingApplication.Web.Api.App_Start
             container.Bind<IVotingContext>().To<VotingContext>();
             container.Bind<IMailSender>().To<MailSender>();
             container.Bind<IVoteValidatorFactory>().To<VoteValidatorFactory>();
+            container.Bind<ILogger>().To<NLogger>();
         }
 
         public static Microsoft.AspNet.SignalR.IDependencyResolver SignalRResolver { get; private set; }

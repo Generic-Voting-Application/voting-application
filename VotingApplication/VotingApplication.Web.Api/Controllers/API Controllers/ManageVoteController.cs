@@ -71,6 +71,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     context.Votes.Remove(vote);
                 }
 
+                matchingPoll.LastUpdated = DateTime.Now;
                 context.SaveChanges();
 
                 return;
@@ -90,6 +91,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Vote matchingVote = context.Votes.Where(v => v.Id == voteId && v.PollId == matchingPoll.UUID).FirstOrDefault();
 
                 context.Votes.Remove(matchingVote);
+
+                matchingPoll.LastUpdated = DateTime.Now;
                 context.SaveChanges();
 
                 return;
