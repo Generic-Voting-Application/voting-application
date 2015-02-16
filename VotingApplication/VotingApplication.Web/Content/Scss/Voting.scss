@@ -188,6 +188,7 @@ hr {
 }
 
 .progress-bar {
+    transition: width 0.2s ease-out;
     border-width: 0px;
     background-color: $Green500;
     height: 100%;
