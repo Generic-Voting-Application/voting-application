@@ -135,10 +135,15 @@ hr {
 }
 
 .option-block {
+    flex-direction:column;
     max-width: 300px;
     min-height: 80px;
     padding-top: 5px;
+}
 
+.option-block-row {
+    flex-direction:row;
+    margin-bottom:15px;
 }
 
 // Points-voting specific
@@ -197,13 +202,8 @@ hr {
     height: 100%;
 }
 
-// Basic voting
+// Basic vote specific
 
-.action-block {
-    display: flex;
-    flex-direction: column;
-
-    > .btn {
-        margin: 2px;
-    }
+.empty-description {
+    min-height: 1em;
 }
