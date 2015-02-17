@@ -6,11 +6,10 @@
             replace: true,
 
             link: function (scope, element, attrs) {
-                scope.hasVotingTemplate = PollStrategy.hasVotingTemplate;
-                scope.getVotingTemplate = PollStrategy.getVotingTemplate;
+                scope.votingTemplate = PollStrategy.votingTemplate;
             },
 
-            template: '<div ng-include="getVotingTemplate()" ng-show="hasVotingTemplate()"></div>'
+            template: '<div ng-include="votingTemplate()"></div>'
         }
     }]);
 })();

@@ -8,17 +8,16 @@
             pollStrategy = data.VotingStrategy;
         });
 
-        var getVotingTemplate = function () {
+        var votingTemplate = function () {
             if (!pollStrategy) {
-                return 'routes/BasicVote';
+                return '';
             }
 
             return 'routes/' + pollStrategy + 'Vote';
         }
 
         return {
-            hasVotingTemplate: function() { return pollStrategy != undefined; },
-            getVotingTemplate: getVotingTemplate
+            votingTemplate: votingTemplate
         };
     }]);
 })();
