@@ -296,15 +296,22 @@
     <None Include="ClearScript.V8\v8-x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Include="Content\Lib\Css\ngDialog-min.css" />
+    <Content Include="Content\Lib\Css\ngDialog-theme-default-min.css" />
+    <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Controllers\LoginController.js" />
     <Content Include="Scripts\Controllers\HomePageController.js" />
     <Content Include="Scripts\Controllers\BasicVoteController.js" />
     <Content Include="Scripts\Controllers\ResultsPageController.js" />
     <Content Include="Scripts\Controllers\PointsVoteController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
+    <Content Include="Scripts\Lib\ngDialog-min.js" />
+    <Content Include="Scripts\Services\AccountService.js" />
     <Content Include="Scripts\Services\PollAction.js" />
+    <Content Include="Scripts\Services\TokenAction.js" />
     <Content Include="Scripts\VotingApp.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -317,10 +324,10 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Routes\PointsVote.cshtml" />
     <Content Include="Views\Routes\BasicVote.cshtml" />
+    <Content Include="Views\Routes\LoginDialog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Scripts\Lib\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

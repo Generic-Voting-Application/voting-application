@@ -21,6 +21,7 @@ namespace VotingApplication.Web
             var nullOrderer = new NullOrderer();
 
             StyleBundle styleBundle = new StyleBundle("~/Bundles/Style");
+            styleBundle.IncludeDirectory("~/Content/Lib/Css", "*.css");
             styleBundle.IncludeDirectory("~/Content/Scss", "*.scss");
             styleBundle.Builder = nullBuilder;
             styleBundle.Transforms.Add(styleTransformer);
@@ -29,8 +30,9 @@ namespace VotingApplication.Web
 
             ScriptBundle scriptBundle = new ScriptBundle("~/Bundles/Script");
             scriptBundle.Include("~/Scripts/VotingApp.js");
-            scriptBundle.IncludeDirectory("~/Scripts/Controllers", "*.js");
+            scriptBundle.IncludeDirectory("~/Scripts/Lib", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Services", "*.js");
+            scriptBundle.IncludeDirectory("~/Scripts/Controllers", "*.js");
             scriptBundle.Builder = nullBuilder;
             scriptBundle.Transforms.Add(scriptTransformer);
             scriptBundle.Orderer = nullOrderer;

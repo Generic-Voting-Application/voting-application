@@ -103,6 +103,18 @@ hr {
     clear: both;
 }
 
+.form-input {
+    border-radius: 5px;
+    font-size: 12pt;
+    padding: 5px;
+    border: 1px solid $Grey600;
+    line-height: 21px;
+}
+
+.ngdialog-content {
+    max-width: 320px !important;
+}
+
 // Voting page specific
 
 .center-panel {

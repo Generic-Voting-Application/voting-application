@@ -1,5 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp', ['ngRoute'])
+    var VotingApp = angular.module('VotingApp', ['ngRoute', 'ngDialog'])
     .directive('votingStrategy', ['PollAction', function (pollData) {
         return {
             templateUrl: votingStrategy(pollData)
