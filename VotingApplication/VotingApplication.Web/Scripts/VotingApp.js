@@ -1,21 +1,6 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp', ['ngRoute'])
-    .directive('votingStrategy', ['PollAction', function (pollData) {
-        return {
-            templateUrl: votingStrategy(pollData)
-        }
-    }]);
+    var VotingApp = angular.module('VotingApp', ['ngRoute']);
 
-    var votingStrategy = function (pollData) {
-        var pollId = pollData.currentPollId();
-
-        // TODO: Actually find out the proper poll strategy with ajax
-        if (pollId == '123')
-            return 'routes/PointsVote';
-        else
-            return 'routes/BasicVote';
-    }
-    
     var configFunction = function ($routeProvider) {
         $routeProvider.
             when('/voting/:pollId', {
@@ -28,6 +13,7 @@
                 redirectTo: '/voting'
             });
     }
+
     configFunction.$inject = ['$routeProvider'];
 
     VotingApp.config(configFunction);
