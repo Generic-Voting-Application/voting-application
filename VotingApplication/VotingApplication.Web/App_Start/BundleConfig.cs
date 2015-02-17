@@ -29,6 +29,7 @@ namespace VotingApplication.Web
 
             ScriptBundle scriptBundle = new ScriptBundle("~/Bundles/Script");
             scriptBundle.Include("~/Scripts/VotingApp.js");
+            scriptBundle.IncludeDirectory("~/Scripts/Lib", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Directives", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Controllers", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Services", "*.js");

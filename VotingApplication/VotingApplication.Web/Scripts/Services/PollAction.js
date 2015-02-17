@@ -42,6 +42,20 @@
 
         }
 
+        self.getResults = function (pollId, callback) {
+
+            if (!pollId) {
+                return null;
+            }
+
+            var getUri = '/api/poll/' + pollId + '/vote';
+
+            $http.get(getUri)
+                .success(function (data, status) { if (callback) { callback(data, status) } })
+                .error(function (data, status) { if (callback) { callback(data, status) } });
+
+        }
+
         self.getTokenVotes = function (pollId, token, callback) {
 
             if (!pollId || !token) {

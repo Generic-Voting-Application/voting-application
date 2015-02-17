@@ -305,6 +305,9 @@
     <Content Include="Scripts\Controllers\PointsVoteController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
     <Content Include="Scripts\Directives\VotingStrategy.js" />
+    <Content Include="Scripts\Lib\crossfilter-min.js" />
+    <Content Include="Scripts\Lib\d3-min.js" />
+    <Content Include="Scripts\Lib\insight-min.js" />
     <Content Include="Scripts\Services\PollAction.js" />
     <Content Include="Scripts\Services\PollStrategy.js" />
     <Content Include="Scripts\VotingApp.js" />
@@ -322,7 +325,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Scripts\Lib\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

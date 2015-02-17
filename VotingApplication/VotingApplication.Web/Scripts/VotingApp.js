@@ -6,7 +6,7 @@
             when('/voting/:pollId', {
                 templateUrl: 'routes/voting'
             })
-            .when('/results', {
+            .when('/results/:pollId', {
                 templateUrl: 'routes/results'
             })
             .otherwise({
