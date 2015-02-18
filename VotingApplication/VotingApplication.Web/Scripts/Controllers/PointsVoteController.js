@@ -9,6 +9,9 @@
 
         PollService.getPoll(PollService.currentPollId(), function (data) {
             $scope.options = data.Options;
+            $scope.options.forEach(function (d) {
+                d.pollValue = 0;
+            });
             $scope.totalPointsAvailable = data.MaxPoints;
             $scope.maxPointsPerOption = data.MaxPerVote;
         });
