@@ -2,7 +2,7 @@
     <h3>Options</h3>
     <div class="option-block" ng-repeat="option in options">
         <div class="option-block-row" margin-bottom:15px">
-            <button class="active-btn pull-right" ng-click="vote(option)">Vote</button>
+            <button class="active-btn pull-right" ng-click="vote([option])">Vote</button>
             {{option.Name}}
             
         </div>

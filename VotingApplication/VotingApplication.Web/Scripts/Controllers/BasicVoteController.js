@@ -1,26 +1,16 @@
 ﻿(function () {
     var VotingApp = angular.module('VotingApp');
 
-    VotingApp.controller('BasicVoteController', ['$scope', 'ngDialog', 'IdentityService', 'PollService', function ($scope, ngDialog, IdentityService, PollService) {
+    VotingApp.controller('BasicVoteController', ['$scope', 'IdentityService', 'PollService', function ($scope, IdentityService, PollService) {
 
         var pollId = PollService.currentPollId();
-
-        var openLoginDialog = function (callback) {
-            ngDialog.open({
-                template: 'Routes/LoginDialog',
-                controller: 'LoginController',
-                scope: $scope,
-                // The preclose callback must return true or the dialog will not close
-                preCloseCallback: (callback ? function () { callback(); return true; } : undefined)
-            });
-        }
-
-        $scope.vote = function (option) {
+        
+        $scope.vote = function (options) {
             if (IdentityService.identityName) {
                 // Do the voting stuff here
-                console.log(option);
+                console.log(options);
             } else {
-                openLoginDialog();
+                IdentityService.openLoginDialog($scope);
             }
         }
 
