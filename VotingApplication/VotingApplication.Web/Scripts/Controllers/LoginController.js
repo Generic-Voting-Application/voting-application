@@ -1,10 +1,10 @@
 ﻿(function () {
     var VotingApp = angular.module('VotingApp');
 
-    VotingApp.controller('LoginController', ['$scope', 'AccountService', function ($scope, AccountService) {
+    VotingApp.controller('LoginController', ['$scope', 'IdentityService', function ($scope, IdentityService) {
         
-        $scope.loginUser = function (name) {
-            AccountService.setAccountName(name);
+        $scope.loginIdentity = function (name) {
+            IdentityService.setIdentityName(name);
 
             $scope.closeThisDialog();
         }

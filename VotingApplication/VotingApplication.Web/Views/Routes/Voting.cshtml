@@ -1,7 +1,7 @@
 ﻿<div ng-controller="VotingPageController" ng-app="VotingApp">
-    <div id="current-user" ng-show="accountName">
-        Voting as: {{accountName}}
-        <button id="not-user-btn" class="btn info-btn">Not {{accountName}}?</button>
+    <div id="current-user" ng-show="identityName">
+        Voting as: {{identityName}}
+        <button id="not-user-btn" class="btn info-btn">Not {{identityName}}?</button>
     </div>
     <div voting-strategy></div>
     <div class="flexbox">

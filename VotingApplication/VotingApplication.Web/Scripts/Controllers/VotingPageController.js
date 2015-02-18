@@ -1,12 +1,12 @@
 ﻿(function () {
     var VotingApp = angular.module('VotingApp');
-    VotingApp.controller('VotingPageController', ['$scope', 'AccountService', function ($scope, AccountService) {
+    VotingApp.controller('VotingPageController', ['$scope', 'IdentityService', function ($scope, IdentityService) {
 
-        $scope.accountName = AccountService.accountName;
+        $scope.identityName = IdentityService.identityName;
 
         // Angular won't auto update this so we need to use the observer pattern
-        AccountService.registerAccountObserver(function () {
-            $scope.accountName = AccountService.accountName;
+        IdentityService.registerIdentityObserver(function () {
+            $scope.identityName = IdentityService.identityName;
         });
 
     }]);

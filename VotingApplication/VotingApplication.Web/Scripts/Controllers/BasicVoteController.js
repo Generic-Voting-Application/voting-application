@@ -1,7 +1,7 @@
 ﻿(function () {
     var VotingApp = angular.module('VotingApp');
 
-    VotingApp.controller('BasicVoteController', ['$scope', 'ngDialog', 'AccountService', 'PollService', function ($scope, ngDialog, AccountService, PollService) {
+    VotingApp.controller('BasicVoteController', ['$scope', 'ngDialog', 'IdentityService', 'PollService', function ($scope, ngDialog, IdentityService, PollService) {
 
         var pollId = PollService.currentPollId();
 
@@ -16,7 +16,7 @@
         }
 
         $scope.vote = function (option) {
-            if (AccountService.accountName) {
+            if (IdentityService.identityName) {
                 // Do the voting stuff here
                 console.log(option);
             } else {
