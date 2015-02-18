@@ -1,7 +1,7 @@
 ﻿(function () {
     var VotingApp = angular.module('VotingApp');
 
-    VotingApp.controller('ResultsPageController', ['$scope', '$location', 'PollAction', function ($scope, $location, PollAction) {
+    VotingApp.controller('ResultsPageController', ['$scope', '$location', 'PollService', function ($scope, $location, PollService) {
         var chart;
 
         // Turn "/#/results/abc/123" into "/#/voting/abc/123"
@@ -81,7 +81,7 @@
         }
 
         $scope.reloadData = function () {
-            PollAction.getResults(PollAction.currentPollId(), function (data) {
+            PollService.getResults(PollService.currentPollId(), function (data) {
                 var groupedData = {};
 
                 // Group together votes for the same options

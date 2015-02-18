@@ -1,7 +1,7 @@
 ﻿(function () {
     var VotingApp = angular.module('VotingApp');
 
-    VotingApp.controller('HomePageController', ['$scope', 'PollAction', function ($scope, PollAction) {
+    VotingApp.controller('HomePageController', ['$scope', 'PollService', function ($scope, PollService) {
         $scope.models = {
             pageTitle: 'Pollster'
         };
@@ -54,7 +54,7 @@
             }
         }
 
-        PollAction.getPoll(PollAction.currentPollId(), function (data) {
+        PollService.getPoll(PollService.currentPollId(), function (data) {
             $scope.pollName = data.Name
             if (data.Expires) {
                 calculateExpiry(new Date(data.ExpiryDate));

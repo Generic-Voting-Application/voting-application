@@ -13,5 +13,5 @@
         var locationTokens = $location.url().split("/");
         locationTokens.splice(0, 2);
         $scope.resultsLink = '/#/results/' + locationTokens.join("/");
-    });
+    }]);
 })();
