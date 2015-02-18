@@ -1,9 +1,13 @@
 ﻿(function () {
     var VotingApp = angular.module('VotingApp');
 
-    VotingApp.controller('PointsVoteController', function ($scope, PollAction) {
+    VotingApp.controller('PointsVoteController', ['$scope', 'PollService', function ($scope, PollService) {
 
-        PollAction.getPoll(PollAction.currentPollId(), function (data) {
+        $scope.options = [];
+        $scope.totalPointsAvailable = 0;
+        $scope.maxPointsPerOption = 0;
+
+        PollService.getPoll(PollService.currentPollId(), function (data) {
             $scope.options = data.Options;
             $scope.totalPointsAvailable = data.MaxPoints;
             $scope.maxPointsPerOption = data.MaxPerVote;
@@ -19,8 +23,8 @@
             return unallocatedPoints;
         }
 
-        $scope.disabledAddPoints = function(pointValue) {
+        $scope.disabledAddPoints = function (pointValue) {
             return pointValue >= $scope.maxPointsPerOption || $scope.unallocatedPoints() === 0;
         }
-    });
+    }]);
 })();
