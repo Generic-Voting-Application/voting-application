@@ -35,10 +35,11 @@ a {
 
 .btn {
     border-radius: 5px;
-    font-weight: bold;
-    font-size: 12pt;
+    font: bold 12pt Open Sans;
     padding: 5px;
     border-style: solid;
+    width: 100px;
+    text-align: center;
 }
 
 .info-btn {
@@ -53,17 +54,11 @@ a {
     @extend .btn;
     background-color: $Green500;
     border: 1px solid $Green700;
-    font: bold 12pt Open Sans;
     color: $White;
 }
 
 :disabled {
     opacity: 0.5
-}
-
-.vote-btn {
-    @extend .active-btn;
-    width: 100px;
 }
 
 .flexbox {
@@ -101,6 +96,18 @@ hr {
 
 .clear {
     clear: both;
+}
+
+.form-input {
+    border-radius: 5px;
+    font-size: 12pt;
+    padding: 5px;
+    border: 1px solid $Grey600;
+    line-height: 21px;
+}
+
+.ngdialog-content {
+    max-width: 320px !important;
 }
 
 // Voting page specific

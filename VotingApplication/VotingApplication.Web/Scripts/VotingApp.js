@@ -1,5 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp', ['ngRoute']);
+    var VotingApp = angular.module('VotingApp', ['ngRoute', 'ngDialog', 'ngStorage'])
 
     VotingApp.config(['$routeProvider', function ($routeProvider) {
         $routeProvider.

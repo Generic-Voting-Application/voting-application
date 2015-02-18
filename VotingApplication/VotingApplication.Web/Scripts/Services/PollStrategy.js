@@ -1,10 +1,10 @@
 ﻿(function () {
     var VotingApp = angular.module('VotingApp');
 
-    VotingApp.factory('PollStrategy', ['PollAction', function (PollAction) {
+    VotingApp.factory('PollStrategy', ['PollService', function (PollService) {
         var pollStrategy;
 
-        PollAction.getPoll(PollAction.currentPollId(), function (data) {
+        PollService.getPoll(PollService.currentPollId(), function (data) {
             pollStrategy = data.VotingStrategy;
         });
 
