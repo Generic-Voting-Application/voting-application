@@ -9,6 +9,10 @@
         locationTokens.splice(0, 2);
         $scope.votingLink = '/#/voting/' + locationTokens.join("/");
 
+        $scope.winner = 'Lorem';
+        //Whether or not we have an "s" on the end of "Winner"
+        $scope.plural = '';
+
         var drawChart = function (data) {
             if (!data.length) return;
 
@@ -30,13 +34,13 @@
             //$element.html('');
 
             // Fixed height for column chart, but scale to number of rows for bar charts
-            var chartHeight = Math.min(barCount * 50 + 100, 600);
+            var chartHeight = Math.min(data.length * 50 + 100, 600);
 
             chart = new insight.Chart('', '#results-chart')
-                .width(350)
+                .width(Math.min(600, window.innerWidth - 60))
                 .height(chartHeight);
 
-            var voteAxis = new insight.Axis('Votes', insight.scales.linear);
+            var voteAxis = new insight.Axis('', insight.scales.linear);
             var optionAxis = new insight.Axis('', insight.scales.ordinal)
                     .isOrdered(true);
 
@@ -84,7 +88,7 @@
                 var groupedData = {};
 
                 // Group together votes for the same options
-                data.map(function (d) {
+                data.forEach(function (d) {
                     if (!(d.OptionName in groupedData)) {
                         groupedData[d.OptionName] = 0;
                     }
@@ -92,11 +96,24 @@
                     groupedData[d.OptionName] += d.VoteValue;
                 });
 
+                var winningScore = 0;
+
                 var datapoints = [];
                 // Separate into datapoints
                 for (var key in groupedData) {
                     datapoints.push({ Name: key, Sum: groupedData[key] });
+                    winningScore = Math.max(winningScore, groupedData[key]);
                 }
+
+                var winners = datapoints.filter(function (d) {
+                    return d.Sum === winningScore;
+                });
+
+                $scope.winner = winners.map(function (d) {
+                    return d.Name;
+                }).join(", ");
+
+                $scope.plural = (winners.length > 1) ? 's (Draw)' : '';
 
                 drawChart(datapoints);
             });

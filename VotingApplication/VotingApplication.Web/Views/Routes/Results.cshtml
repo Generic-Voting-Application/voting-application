@@ -1,10 +1,6 @@
 ﻿<div ng-controller="ResultsPageController" ng-app="VotingApp">
-    <div>
-        <h2>
-            <span>Winner</span>
-            <!-- <span data-bind="text: winners().length > 1 ? 's (Draw)' : ''"></span>-->:
-            <span>Lorem Ipsum</span>
-        </h2>
+    <div class="flexbox">
+        <span id="winner-label" class="centered"><b>Winner{{plural}}:</b> {{winner}}</span>
     </div>
 
     <div id="results-chart"></div>
