@@ -1,8 +1,13 @@
 ﻿(function () {
     var VotingApp = angular.module('VotingApp');
 
-    VotingApp.controller('ResultsPageController', ['$scope', 'PollAction', function ($scope, PollAction) {
+    VotingApp.controller('ResultsPageController', ['$scope', '$location', 'PollAction', function ($scope, $location, PollAction) {
         var chart;
+
+        // Turn "/#/results/abc/123" into "/#/voting/abc/123"
+        var locationTokens = $location.url().split("/");
+        locationTokens.splice(0, 2);
+        $scope.votingLink = '/#/voting/' + locationTokens.join("/");
 
         var drawChart = function (data) {
             if (!data.length) return;
