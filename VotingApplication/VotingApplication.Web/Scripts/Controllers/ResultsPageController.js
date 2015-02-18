@@ -59,8 +59,7 @@
                     .valueFunction(function (d) {
                         return d.Sum;
                     })
-                    .title('Results');
-                    /*
+                    .title('Results')
                     .tooltipFunction(function (d) {
                         var voterCount = d.Voters.length;
                         var votersDisplay = d.Voters;
@@ -72,10 +71,8 @@
                             addition = "<br />+ " + (voterCount - maxToDisplay) + " others";
                         }
 
-                        return (series.Name ? series.Name + "<br />" : "")
-                            + "Votes: " + d.Sum + "<br />" + votersDisplay.toString().replace(/,/g, "<br />") + addition;
+                        return "<b>" + d.Name + "</b>: " + d.Sum + " votes<br/><br/>" + votersDisplay.join("<br />") + addition;
                     });
-                    */
 
             chart.series([allSeries]);
 
@@ -90,10 +87,12 @@
                 // Group together votes for the same options
                 data.forEach(function (d) {
                     if (!(d.OptionName in groupedData)) {
-                        groupedData[d.OptionName] = 0;
+                        groupedData[d.OptionName] = { Value: 0, Voters: [] }
                     }
 
-                    groupedData[d.OptionName] += d.VoteValue;
+                    groupedData[d.OptionName].Value += d.VoteValue;
+                    groupedData[d.OptionName].Voters.push(d.VoterName);
+
                 });
 
                 var winningScore = 0;
@@ -101,8 +100,8 @@
                 var datapoints = [];
                 // Separate into datapoints
                 for (var key in groupedData) {
-                    datapoints.push({ Name: key, Sum: groupedData[key] });
-                    winningScore = Math.max(winningScore, groupedData[key]);
+                    datapoints.push({ Name: key, Sum: groupedData[key].Value, Voters: groupedData[key].Voters });
+                    winningScore = Math.max(winningScore, groupedData[key].Value);
                 }
 
                 var winners = datapoints.filter(function (d) {
