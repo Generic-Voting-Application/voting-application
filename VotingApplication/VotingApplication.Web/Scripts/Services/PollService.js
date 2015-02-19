@@ -62,7 +62,7 @@
                 return null;
             }
 
-            var getUri = '/api/token/' + tokenGuid + '/poll/' + pollId + '/vote';
+            var getUri = '/api/token/' + token + '/poll/' + pollId + '/vote';
 
             $http.get(getUri)
                 .success(function (data, status) { if (callback) { callback(data, status) } })

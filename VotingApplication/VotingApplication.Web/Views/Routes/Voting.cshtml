@@ -1,4 +1,5 @@
 ﻿<div ng-controller="VotingPageController" ng-app="VotingApp">
+    <div poll-heading></div>
     <div id="current-user" ng-show="identityName">
         Voting as: {{identityName}}
         <button id="not-user-btn" class="btn inactive-btn" ng-click="logoutIdentity()">Not {{identityName}}?</button>
