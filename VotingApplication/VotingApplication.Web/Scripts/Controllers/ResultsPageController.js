@@ -31,7 +31,7 @@
                 return;
 
             // Hack to fix insight's lack of data reloading
-            //$element.html('');
+            document.getElementById('results-chart').innerHTML = '';
 
             // Fixed height for column chart, but scale to number of rows for bar charts
             var chartHeight = Math.min(data.length * 50 + 100, 600);
