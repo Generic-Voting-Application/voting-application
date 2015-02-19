@@ -26,6 +26,12 @@
             notifyObservers();
         }
 
+        self.clearIdentityName = function () {
+            self.identityName = null;
+            delete $localStorage.identity;
+            notifyObservers();
+        }
+
         self.openLoginDialog = function (scope, callback) {
             ngDialog.open({
                 template: 'Routes/LoginDialog',
