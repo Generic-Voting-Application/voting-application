@@ -1,31 +1,39 @@
 ﻿(function () {
     var VotingApp = angular.module('VotingApp');
 
-    VotingApp.controller('BasicVoteController', ['$scope', 'ngDialog', 'IdentityService', 'PollService', function ($scope, ngDialog, IdentityService, PollService) {
+    VotingApp.controller('BasicVoteController', ['$scope', 'IdentityService', 'PollService', 'TokenService', function ($scope, IdentityService, PollService, TokenService) {
 
         var pollId = PollService.currentPollId();
-
-        var openLoginDialog = function (callback) {
-            ngDialog.open({
-                template: 'Routes/LoginDialog',
-                controller: 'LoginController',
-                scope: $scope,
-                // The preclose callback must return true or the dialog will not close
-                preCloseCallback: (callback ? function () { callback(); return true; } : undefined)
-            });
-        }
-
+        
         $scope.vote = function (option) {
-            if (IdentityService.identityName) {
-                // Do the voting stuff here
-                console.log(option);
+            if (!option) {
+                return null;
+            }
+
+            if (!IdentityService.identityName) {
+                IdentityService.openLoginDialog($scope);
+            } else if(!token) {
+                // Probably invite only, tell the user
             } else {
-                openLoginDialog();
+
+                votes = [{
+                    OptionId: option.Id,
+                    VoteValue: 1,
+                    VoterName: IdentityService.identityName
+                }];
+
+                PollService.submitVote(pollId, votes, token, function () {
+                    console.log("voted!");
+                });
             }
         }
 
         PollService.getPoll(pollId, function (data) {
             $scope.options = data.Options;
+        });
+
+        TokenService.getToken(pollId, function (data) {
+            token = data;
         });
 
     }]);

@@ -23,7 +23,7 @@
 
             var postUri = '/api/token/' + token + '/poll/' + pollId + '/vote';
 
-            $http.post(postUri, votes)
+            $http.put(postUri, votes)
                 .success(function (data, status) { if (callback) { callback(data, status) } })
                 .error(function (data, status) { if (callback) { callback(data, status) } });
         }

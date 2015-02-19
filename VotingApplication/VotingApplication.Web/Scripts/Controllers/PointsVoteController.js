@@ -1,20 +1,20 @@
 ﻿(function () {
     var VotingApp = angular.module('VotingApp');
 
-    VotingApp.controller('PointsVoteController', ['$scope', 'PollService', function ($scope, PollService) {
+    VotingApp.controller('PointsVoteController', ['$scope', 'PollService', 'IdentityService', function ($scope, PollService, IdentityService) {
 
         $scope.options = [];
         $scope.totalPointsAvailable = 0;
         $scope.maxPointsPerOption = 0;
 
-        PollService.getPoll(PollService.currentPollId(), function (data) {
-            $scope.options = data.Options;
-            $scope.options.forEach(function (d) {
-                d.pollValue = 0;
-            });
-            $scope.totalPointsAvailable = data.MaxPoints;
-            $scope.maxPointsPerOption = data.MaxPerVote;
-        });
+        $scope.vote = function (options) {
+            if (IdentityService.identityName) {
+                // Do the voting stuff here
+                console.log(options);
+            } else {
+                IdentityService.openLoginDialog($scope);
+            }
+        }
 
         $scope.unallocatedPoints = function () {
             var unallocatedPoints = $scope.totalPointsAvailable;
@@ -29,5 +29,14 @@
         $scope.disabledAddPoints = function (pointValue) {
             return pointValue >= $scope.maxPointsPerOption || $scope.unallocatedPoints() === 0;
         }
+
+        PollService.getPoll(PollService.currentPollId(), function (data) {
+            $scope.options = data.Options;
+            $scope.options.forEach(function (d) {
+                d.pollValue = 0;
+            });
+            $scope.totalPointsAvailable = data.MaxPoints;
+            $scope.maxPointsPerOption = data.MaxPerVote;
+        });
     }]);
 })();
