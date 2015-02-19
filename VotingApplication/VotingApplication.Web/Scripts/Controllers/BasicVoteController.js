@@ -4,6 +4,7 @@
     VotingApp.controller('BasicVoteController', ['$scope', 'IdentityService', 'PollService', 'TokenService', function ($scope, IdentityService, PollService, TokenService) {
 
         var pollId = PollService.currentPollId();
+        var token = null;
 
         $scope.vote = function (option) {
             if (!option) {
