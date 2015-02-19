@@ -9,6 +9,8 @@
         $scope.options = [];
         $scope.totalPointsAvailable = 0;
         $scope.maxPointsPerOption = 0;
+        var pollId = PollService.currentPollId();
+        var token;
 
         $scope.vote = function (options) {
             if (!options) {
@@ -33,8 +35,8 @@
                         }
                     });
 
-                PollService.submitVote(pollId, votes, token, function (data) {
-                    console.log(data);
+                PollService.submitVote(pollId, votes, token, function () {
+                    window.location = $scope.$parent.resultsLink;
                 });
             }
         }
@@ -53,6 +55,21 @@
             return pointValue >= $scope.maxPointsPerOption || $scope.unallocatedPoints() === 0;
         }
 
+        var getPreviousVotes = function () {
+            PollService.getTokenVotes(pollId, token, function (data) {
+                console.log(data);
+                data.forEach(function (dataItem) {
+                    for (var i = 0; i < $scope.options.length; i++) {
+                        var option = $scope.options[i];
+                        if (option.Id === dataItem.OptionId) {
+                            option.voteValue = dataItem.VoteValue;
+                            break;
+                        }
+                    };
+                });
+            });
+        }
+
         PollService.getPoll(pollId, function (data) {
             $scope.options = data.Options;
             $scope.options.forEach(function (d) {
@@ -64,6 +81,8 @@
 
         TokenService.getToken(pollId, function (data) {
             token = data;
+            getPreviousVotes();
         });
+
     }]);
 })();
