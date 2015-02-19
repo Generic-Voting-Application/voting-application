@@ -1,3 +1,13 @@
-﻿<div style="width:500px; height: 500px; background-color:lightgray" ng-controller="ResultsPageController" ng-app="VotingApp">
-    Route Two
+﻿<div ng-controller="ResultsPageController" ng-app="VotingApp">
+    <div class="flexbox">
+        <span id="winner-label" class="centered"><b>Winner{{plural}}:</b> {{winner}}</span>
+    </div>
+
+    <div id="results-chart"></div>
+
+    <br />
+
+    <div class="flexbox">
+        <a class="btn info-btn centered" ng-href="{{votingLink}}">Get Voting</a>
+    </div>
 </div>
