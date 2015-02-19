@@ -43,7 +43,7 @@ a {
     text-align: center;
 }
 
-.info-btn {
+.inactive-btn {
     @extend .btn;
     background-color: $White;
     border-color: $Grey400;
@@ -59,7 +59,7 @@ a {
 }
 
 :disabled {
-    opacity: 0.5
+    opacity: 0.5;
 }
 
 .flexbox {
@@ -107,6 +107,18 @@ hr {
     line-height: 21px;
 }
 
+.btn-group {
+    border: 1px solid $Green700;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 5px;
+
+    > button {
+        border-radius: 0px;
+        border-width: 0px;
+    }
+}
+
 .ngdialog-content {
     max-width: 320px !important;
 }
@@ -143,21 +155,21 @@ hr {
 }
 
 .option-block {
-    flex-direction:column;
+    flex-direction: column;
     max-width: 300px;
     min-height: 80px;
     padding-top: 5px;
 }
 
 .option-block-row {
-    flex-direction:row;
-    margin-bottom:15px;
+    flex-direction: row;
+    margin-bottom: 15px;
 }
 
 // Points-voting specific
 
 .option-text {
-    float:left;
+    float: left;
     padding-right: 10px;
     max-width: 300px;
 }
@@ -172,22 +184,17 @@ hr {
 
 .option-buttons > * {
     display: block;
-    text-align:center;
-    width: 100%
+    text-align: center;
+    width: 100%;
 }
 
-.btn-group {
-    border: 1px solid $Green700;
-    border-radius: 5px;
-    overflow:hidden;
-    margin-bottom: 5px;
+.btn-group-points {
+    @extend .btn-group;
     width: 100px;
-}
 
-.btn-group > button {
-    border-radius: 0px;
-    border-width: 0px;
-    width: 30px;
+    > button {
+        width: 30px;
+    }
 }
 
 .points-label {
@@ -199,7 +206,7 @@ hr {
 .progress {
     background-color: $White;
     border: 1px solid $Green700;
-    height:10px;
+    height: 10px;
     border-radius: 4px;
 }
 
@@ -224,4 +231,15 @@ hr {
 
 #winner-label {
     font-size: 18pt;
+}
+
+// Up/Down vote specific
+
+.btn-group-updown {
+    @extend .btn-group;
+    width: 90px;
+
+    > button {
+        width: 44px;
+    }
 }

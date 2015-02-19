@@ -319,6 +319,7 @@
     <Content Include="Scripts\Controllers\BasicVoteController.js" />
     <Content Include="Scripts\Controllers\ResultsPageController.js" />
     <Content Include="Scripts\Controllers\PointsVoteController.js" />
+    <Content Include="Scripts\Controllers\UpDownVoteController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
     <Content Include="Scripts\Lib\ngDialog-min.js" />
     <Content Include="Scripts\Lib\ngStorage-min.js" />
@@ -344,6 +345,7 @@
     <Content Include="Views\Routes\PointsVote.cshtml" />
     <Content Include="Views\Routes\BasicVote.cshtml" />
     <Content Include="Views\Routes\LoginDialog.cshtml" />
+    <Content Include="Views\Routes\UpDownVote.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

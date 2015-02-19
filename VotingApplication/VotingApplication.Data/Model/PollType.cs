@@ -11,7 +11,7 @@ namespace VotingApplication.Data.Model
         Basic,
         Points,
         Ranked,
-        UpDownVote,
-        MultiVote
+        UpDown,
+        Multi
     }
 }

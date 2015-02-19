@@ -1,10 +1,10 @@
 ﻿<div ng-controller="VotingPageController" ng-app="VotingApp">
     <div id="current-user" ng-show="identityName">
         Voting as: {{identityName}}
-        <button id="not-user-btn" class="btn info-btn" ng-click="logoutIdentity()">Not {{identityName}}?</button>
+        <button id="not-user-btn" class="btn inactive-btn" ng-click="logoutIdentity()">Not {{identityName}}?</button>
     </div>
     <div voting-strategy></div>
     <div class="flexbox">
-        <a class="btn info-btn centered" ng-href="{{resultsLink}}">See Results</a>
+        <a class="btn inactive-btn centered" ng-href="{{resultsLink}}">See Results</a>
     </div>
 </div>

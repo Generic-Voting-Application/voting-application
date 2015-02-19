@@ -16,6 +16,12 @@ namespace VotingApplication.Web.Api.Validators
                 case PollType.Ranked:
                     return new RankedVoteValidator();
 
+                case PollType.UpDown:
+                    return new UpDownVoteValidator();
+
+                case PollType.Multi:
+                    return new MultiVoteValidator();
+
                 default:
                     return new BasicVoteValidator();
             }
