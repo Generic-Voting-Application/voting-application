@@ -4,6 +4,10 @@
 
         $scope.identityName = IdentityService.identityName;
 
+        $scope.logoutIdentity = function () {
+            IdentityService.clearIdentityName();
+        }
+
         // Angular won't auto update this so we need to use the observer pattern
         IdentityService.registerIdentityObserver(function () {
             $scope.identityName = IdentityService.identityName;

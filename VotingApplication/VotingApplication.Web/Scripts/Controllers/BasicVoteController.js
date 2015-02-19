@@ -4,18 +4,19 @@
     VotingApp.controller('BasicVoteController', ['$scope', 'IdentityService', 'PollService', 'TokenService', function ($scope, IdentityService, PollService, TokenService) {
 
         var pollId = PollService.currentPollId();
-        
+
         $scope.vote = function (option) {
             if (!option) {
                 return null;
             }
 
-            if (!IdentityService.identityName) {
-                IdentityService.openLoginDialog($scope);
-            } else if(!token) {
+            if (!token) {
                 // Probably invite only, tell the user
+            } else if (!IdentityService.identityName) {
+                IdentityService.openLoginDialog($scope, function () {
+                    $scope.vote(option);
+                });
             } else {
-
                 votes = [{
                     OptionId: option.Id,
                     VoteValue: 1,
