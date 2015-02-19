@@ -323,6 +323,7 @@
     <Content Include="Scripts\Lib\ngDialog-min.js" />
     <Content Include="Scripts\Lib\ngStorage-min.js" />
     <Content Include="Scripts\Services\IdentityService.js" />
+    <Content Include="Scripts\Services\ExpiryStringService.js" />
     <Content Include="Scripts\Services\PollService.js" />
     <Content Include="Scripts\Services\TokenService.js" />
     <Content Include="Scripts\Directives\VotingStrategy.js" />
