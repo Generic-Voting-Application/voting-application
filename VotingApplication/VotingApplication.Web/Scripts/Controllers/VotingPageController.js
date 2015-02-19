@@ -1,6 +1,6 @@
 ﻿(function () {
     var VotingApp = angular.module('VotingApp');
-    VotingApp.controller('VotingPageController', ['$scope', '$location', 'IdentityService', function ($scope, $location, IdentityService) {
+    VotingApp.controller('VotingPageController', ['$scope', '$location', 'IdentityService',  function ($scope, $location, IdentityService) {
 
         $scope.identityName = IdentityService.identityName;
 
@@ -17,5 +17,7 @@
         var locationTokens = $location.url().split("/");
         locationTokens.splice(0, 2);
         $scope.resultsLink = '/#/results/' + locationTokens.join("/");
+
+
     }]);
 })();
