@@ -25,7 +25,7 @@
                 }];
 
                 PollService.submitVote(pollId, votes, token, function () {
-                    console.log("voted!");
+                    window.location = $scope.$parent.resultsLink;
                 });
             }
         }

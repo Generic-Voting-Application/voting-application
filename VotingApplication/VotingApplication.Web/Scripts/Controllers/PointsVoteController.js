@@ -35,7 +35,9 @@
                         }
                     });
 
-                PollService.submitVote(pollId, votes, token);
+                PollService.submitVote(pollId, votes, token, function () {
+                    window.location = $scope.$parent.resultsLink;
+                });
             }
         }
 
