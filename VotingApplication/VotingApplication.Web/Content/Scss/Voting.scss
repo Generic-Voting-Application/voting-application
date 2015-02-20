@@ -108,7 +108,7 @@ hr {
 }
 
 .btn-group {
-    border: 1px solid $Green700;
+    border: 1px solid;
     border-radius: 5px;
     overflow: hidden;
     margin-bottom: 5px;
@@ -190,10 +190,11 @@ hr {
 
 .btn-group-points {
     @extend .btn-group;
+    border-color: $Green500;
     width: 100px;
 
     > button {
-        width: 30px;
+        width: 29px;
     }
 }
 
@@ -238,8 +239,14 @@ hr {
 .btn-group-updown {
     @extend .btn-group;
     width: 90px;
+    border-color: $Grey400;
 
     > button {
         width: 44px;
+
+        &:first-of-type {
+            border-right-width:1px;
+            border-right-color: $Grey400;
+        }
     }
 }
