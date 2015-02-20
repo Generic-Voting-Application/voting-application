@@ -9,8 +9,6 @@
         $scope.options = [];
         $scope.totalPointsAvailable = 0;
         $scope.maxPointsPerOption = 0;
-        var pollId = PollService.currentPollId();
-        var token;
 
         $scope.vote = function (options) {
             if (!options) {
@@ -56,33 +54,35 @@
         }
 
         var getPreviousVotes = function () {
-            PollService.getTokenVotes(pollId, token, function (data) {
-                console.log(data);
-                data.forEach(function (dataItem) {
-                    for (var i = 0; i < $scope.options.length; i++) {
-                        var option = $scope.options[i];
-                        if (option.Id === dataItem.OptionId) {
-                            option.voteValue = dataItem.VoteValue;
-                            break;
-                        }
-                    };
-                });
-            });
+
         }
 
-        PollService.getPoll(pollId, function (data) {
-            $scope.options = data.Options;
+        // Get Poll
+        PollService.getPoll(pollId, function (pollData) {
+            $scope.options = pollData.Options;
             $scope.options.forEach(function (d) {
                 d.voteValue = 0;
             });
-            $scope.totalPointsAvailable = data.MaxPoints;
-            $scope.maxPointsPerOption = data.MaxPerVote;
-        });
+            $scope.totalPointsAvailable = pollData.MaxPoints;
+            $scope.maxPointsPerOption = pollData.MaxPerVote;
 
-        TokenService.getToken(pollId, function (data) {
-            token = data;
-            getPreviousVotes();
-        });
+            // Get Token
+            TokenService.getToken(pollId, function (tokenData) {
+                token = tokenData;
 
+                // Get Previous Votes
+                PollService.getTokenVotes(pollId, token, function (voteData) {
+                    voteData.forEach(function (dataItem) {
+                        for (var i = 0; i < $scope.options.length; i++) {
+                            var option = $scope.options[i];
+                            if (option.Id === dataItem.OptionId) {
+                                option.voteValue = dataItem.VoteValue;
+                                break;
+                            }
+                        };
+                    });
+                });
+            });
+        });
     }]);
 })();

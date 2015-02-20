@@ -30,14 +30,27 @@
             }
         }
 
-        PollService.getPoll(pollId, function (data) {
-            $scope.options = data.Options;
-        });
+        // Get Options
+        PollService.getPoll(pollId, function (pollData) {
+            $scope.options = pollData.Options;
 
-        TokenService.getToken(pollId, function (data) {
-            token = data;
-        });
+            // Get Token
+            TokenService.getToken(pollId, function (tokenData) {
+                token = tokenData;
 
+                // Get Previous Votes
+                PollService.getTokenVotes(pollId, token, function (voteData) {
+                    var vote = voteData[0];
+
+                    angular.forEach($scope.options, function (option) {
+                        if (option.Id === vote.OptionId) {
+                            option.selected = true;
+                        }
+                    });
+                });
+            });
+
+        });
     }]);
 
 })();
