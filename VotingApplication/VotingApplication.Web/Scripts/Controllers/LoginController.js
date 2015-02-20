@@ -7,6 +7,7 @@
             IdentityService.setIdentityName(name);
 
             $scope.closeThisDialog();
+            if ($scope.ngDialogData.callback) $scope.ngDialogData.callback();
         }
 
     }]);

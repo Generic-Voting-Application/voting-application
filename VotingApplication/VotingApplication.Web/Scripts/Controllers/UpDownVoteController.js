@@ -30,7 +30,7 @@
                     });
 
                 PollService.submitVote(pollId, votes, token, function (data) {
-                    console.log(data);
+                    window.location = $scope.$parent.resultsLink;
                 });
             }
         }
