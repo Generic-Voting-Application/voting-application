@@ -46,7 +46,7 @@ a {
     outline: none;
 }
 
-.info-btn {
+.inactive-btn {
     @extend .btn;
     background-color: $White;
     border-color: $Grey400;
@@ -55,7 +55,7 @@ a {
 }
 
 :disabled {
-    opacity: 0.5
+    opacity: 0.5;
 }
 
 .flexbox {
@@ -103,14 +103,24 @@ hr {
     line-height: 21px;
 }
 
+.btn-group {
+    border: 1px solid;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 5px;
+
+    > button {
+        border-radius: 0px;
+        border-width: 0px;
+    }
+}
+
 .ngdialog-content {
     max-width: 320px !important;
 }
 
-/* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 0px 20px;
 }
 
 /* Set width on the form input elements since they're 100% wide by default */

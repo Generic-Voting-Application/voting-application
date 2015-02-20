@@ -320,6 +320,7 @@
     <Content Include="Scripts\Controllers\PollHeadingController.js" />
     <Content Include="Scripts\Controllers\ResultsPageController.js" />
     <Content Include="Scripts\Controllers\PointsVoteController.js" />
+    <Content Include="Scripts\Controllers\UpDownVoteController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
     <Content Include="Scripts\Directives\PollHeading.js" />
     <Content Include="Scripts\Lib\ngDialog-min.js" />
@@ -348,6 +349,7 @@
     <Content Include="Views\Routes\BasicVote.cshtml" />
     <Content Include="Views\Routes\LoginDialog.cshtml" />
     <Content Include="Views\Routes\Create.cshtml" />
+    <Content Include="Views\Routes\UpDownVote.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

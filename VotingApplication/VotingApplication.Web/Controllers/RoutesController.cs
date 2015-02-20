@@ -24,6 +24,12 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
+        public ActionResult UpDownVote()
+        {
+            return View();
+        }
+
+
         public ActionResult LoginDialog()
         {
             return View();

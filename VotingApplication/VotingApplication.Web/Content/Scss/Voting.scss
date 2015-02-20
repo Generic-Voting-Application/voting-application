@@ -1,6 +1,7 @@
 ﻿@import url(http://cdnjs.cloudflare.com/ajax/libs/insightjs/1.3.0/insight.min.css);
 @import '~/Content/Site.scss';
 
+$Green100: #C8E6C9;
 $Green200: #A5D6A7;
 $Green500: #4CAF50;
 $Green700: #388E3C;
@@ -23,10 +24,6 @@ body {
     color: $White;
 }
 
-.body-content {
-    padding: 0px 20px;
-}
-
 #current-user {
     width: 100%;
     display: inline-block;
@@ -43,21 +40,30 @@ body {
 }
 
 .option-block {
-    flex-direction:column;
+    flex-direction: column;
     max-width: 300px;
     min-height: 80px;
-    padding-top: 5px;
+    border-radius: 5px;
+    padding: 5px;
+
+    &:last-of-type {
+        margin-bottom: 5px;
+    }
 }
 
-.option-block-row {
-    flex-direction:row;
-    margin-bottom:15px;
+.option-block .option-block-row {
+    flex-direction: row;
+    margin-bottom: 15px;
+}
+
+.selected-option {
+    background-color: $Green100;
 }
 
 // Points-voting specific
 
 .option-text {
-    float:left;
+    float: left;
     padding-right: 10px;
     max-width: 300px;
 }
@@ -72,22 +78,18 @@ body {
 
 .option-buttons > * {
     display: block;
-    text-align:center;
-    width: 100%
+    text-align: center;
+    width: 100%;
 }
 
-.btn-group {
-    border: 1px solid $Green700;
-    border-radius: 5px;
-    overflow:hidden;
-    margin-bottom: 5px;
+.btn-group-points {
+    @extend .btn-group;
+    border-color: $Green500;
     width: 100px;
-}
 
-.btn-group > button {
-    border-radius: 0px;
-    border-width: 0px;
-    width: 30px;
+    > button {
+        width: 29px;
+    }
 }
 
 .points-label {
@@ -99,7 +101,7 @@ body {
 .progress {
     background-color: $White;
     border: 1px solid $Green700;
-    height:10px;
+    height: 10px;
     border-radius: 4px;
 }
 
@@ -124,4 +126,21 @@ body {
 
 #winner-label {
     font-size: 18pt;
+}
+
+// Up/Down vote specific
+
+.btn-group-updown {
+    @extend .btn-group;
+    width: 90px;
+    border-color: $Grey400;
+
+    > button {
+        width: 44px;
+
+        &:first-of-type {
+            border-right-width:1px;
+            border-right-color: $Grey400;
+        }
+    }
 }
