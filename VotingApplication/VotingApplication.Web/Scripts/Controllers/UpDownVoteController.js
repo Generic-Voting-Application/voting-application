@@ -35,14 +35,28 @@
             }
         }
 
-        PollService.getPoll(pollId, function (data) {
-            $scope.options = data.Options;
-        });
+        // Get Poll
+        PollService.getPoll(pollId, function (pollData) {
+            $scope.options = pollData.Options;
 
-        TokenService.getToken(pollId, function (data) {
-            token = data;
-        });
+            // Get Token
+            TokenService.getToken(pollId, function (tokenData) {
+                token = tokenData;
 
+                // Get Previous Votes
+                PollService.getTokenVotes(pollId, token, function (voteData) {
+                    voteData.forEach(function (dataItem) {
+                        for (var i = 0; i < $scope.options.length; i++) {
+                            var option = $scope.options[i];
+                            if (option.Id === dataItem.OptionId) {
+                                option.voteValue = dataItem.VoteValue;
+                                break;
+                            }
+                        };
+                    });
+                });
+            });
+        });
     }]);
 
 })();

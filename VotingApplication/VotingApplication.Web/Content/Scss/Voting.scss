@@ -22,6 +22,14 @@ body {
     background-color: $Green500;
     border: 1px solid $Green700;
     color: $White;
+    width: 100px;
+}
+
+.go-btn {
+    @extend .btn;
+    background-color: $Green500;
+    border: 1px solid $Green700;
+    color: $White;
 }
 
 #current-user {
@@ -41,7 +49,6 @@ body {
 
 .option-block {
     flex-direction: column;
-    max-width: 300px;
     min-height: 80px;
     border-radius: 5px;
     padding: 5px;
@@ -65,7 +72,7 @@ body {
 .option-text {
     float: left;
     padding-right: 10px;
-    max-width: 300px;
+    margin-top: 0px;
 }
 
 .option-description {
