@@ -24,6 +24,20 @@ body {
     color: $White;
 }
 
+#signin-header {
+    font-size: 10pt;
+    color: $Blue500;
+    margin-top: 5px;
+    margin-bottom: 20px;
+
+    position: relative;
+    left: 20px;
+
+    > i {
+        margin: 0px 2px;
+    }
+}
+
 #register-block {
     width: 205px;
     margin-top: 20px;
