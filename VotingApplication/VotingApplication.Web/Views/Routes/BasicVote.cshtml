@@ -1,10 +1,10 @@
 ﻿<div ng-controller="BasicVoteController" ng-app="VotingApp">
     <h3>Options</h3>
-    <div class="option-block" ng-repeat="option in options">
+    <div class="option-block" ng-repeat="option in options" ng-class="{'selected-option': option.selected }">
         <div class="option-block-row" margin-bottom:15px">
             <button class="active-btn pull-right" ng-click="vote(option)">Vote</button>
             {{option.Name}}
-            
+
         </div>
         <div class="option-block-row">
             <button class="inactive-btn pull-right" ng-click="descriptionToggle=!descriptionToggle">More Info</button>
