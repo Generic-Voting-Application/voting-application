@@ -1,4 +1,6 @@
-﻿$Blue100: #BBDEFB;
+﻿@import '~/Content/Site.scss';
+
+$Blue100: #BBDEFB;
 $Blue200: #90CAF9;
 $Blue300: #64B5F6;
 $Blue500: #2196F3;
@@ -7,6 +9,77 @@ $Grey400: #BDBDBD;
 $Black: #000000;
 $White: #FFFFFF;
 
+h2 {
+    -webkit-margin-after: 0.2em;
+}
+
 body {
     background-color: $Blue100;
+}
+
+.active-btn {
+    @extend .btn;
+    background-color: $Blue500;
+    border: none;
+    color: $White;
+}
+
+#register-block {
+    width: 205px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#question-block {
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+
+    width: 300px;
+    font-size: 10pt;
+
+    > input {
+        width: 100%
+    }
+}
+
+#quickpoll-block {
+    margin-top: 15px;
+    width: 100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.centered-text {
+    width: 100%;
+    text-align: center;
+}
+
+.shadowed {
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+
+// Horizontal rules
+
+.horizontal-ruled:before {
+    content: '';
+    background-color: $Grey400;
+    height: 1px;
+    display: block;
+    position: relative;
+    top: 12px;
+    left: 10%;
+    width: 30%;
+}
+
+.horizontal-ruled:after {
+    content: '';
+    background-color: $Grey400;
+    height: 1px;
+    display: block;
+    position: relative;
+    top: -12px;
+    left: 60%;
+    width: 30%;
 }
