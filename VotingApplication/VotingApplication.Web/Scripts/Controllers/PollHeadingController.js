@@ -11,7 +11,7 @@
         PollService.getPoll(PollService.currentPollId(), function (data) {
             $scope.pollName = data.Name
             if (data.Expires) {
-                calculateExpiry(new Date(data.ExpiryDate));
+                $scope.pollExpiry = ExpiryStringService.timeStringForExpiry(new Date(data.ExpiryDate), calculateExpiry);
             }
         });
     }]);

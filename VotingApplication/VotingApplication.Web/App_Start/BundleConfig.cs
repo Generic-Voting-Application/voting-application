@@ -22,11 +22,27 @@ namespace VotingApplication.Web
 
             StyleBundle styleBundle = new StyleBundle("~/Bundles/Style");
             styleBundle.IncludeDirectory("~/Content/Lib/Css", "*.css");
-            styleBundle.IncludeDirectory("~/Content/Scss", "*.scss");
+            styleBundle.Include("~/Content/Site.scss");
             styleBundle.Builder = nullBuilder;
             styleBundle.Transforms.Add(styleTransformer);
             styleBundle.Orderer = nullOrderer;
             bundles.Add(styleBundle);
+
+            StyleBundle votingBundle = new StyleBundle("~/Bundles/VotingStyle");
+            votingBundle.Include("~/Content/Site.scss");
+            votingBundle.Include("~/Content/Scss/Voting.scss");
+            votingBundle.Builder = nullBuilder;
+            votingBundle.Transforms.Add(styleTransformer);
+            votingBundle.Orderer = nullOrderer;
+            bundles.Add(votingBundle);
+
+            StyleBundle createBundle = new StyleBundle("~/Bundles/CreateStyle");
+            createBundle.Include("~/Content/Site.scss");
+            createBundle.Include("~/Content/Scss/Creation.scss");
+            createBundle.Builder = nullBuilder;
+            createBundle.Transforms.Add(styleTransformer);
+            createBundle.Orderer = nullOrderer;
+            bundles.Add(createBundle);
 
             ScriptBundle scriptBundle = new ScriptBundle("~/Bundles/Script");
             scriptBundle.Include("~/Scripts/VotingApp.js");

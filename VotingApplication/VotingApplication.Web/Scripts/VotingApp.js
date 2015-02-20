@@ -10,7 +10,7 @@
                 templateUrl: 'routes/results'
             })
             .otherwise({
-                redirectTo: '/voting'
+                templateUrl: 'routes/create'
             });
     }]);
 })();
