@@ -44,7 +44,7 @@ a {
     text-align: center;
 }
 
-.info-btn {
+.inactive-btn {
     @extend .btn;
     background-color: $White;
     border-color: $Grey400;
@@ -106,6 +106,18 @@ hr {
     padding: 5px;
     border: 1px solid $Grey600;
     line-height: 21px;
+}
+
+.btn-group {
+    border: 1px solid;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 5px;
+
+    > button {
+        border-radius: 0px;
+        border-width: 0px;
+    }
 }
 
 .ngdialog-content {
@@ -186,18 +198,14 @@ hr {
     width: 100%;
 }
 
-.btn-group {
-    border: 1px solid $Green700;
-    border-radius: 5px;
-    overflow: hidden;
-    margin-bottom: 5px;
+.btn-group-points {
+    @extend .btn-group;
+    border-color: $Green500;
     width: 100px;
-}
 
-.btn-group > button {
-    border-radius: 0px;
-    border-width: 0px;
-    width: 30px;
+    > button {
+        width: 29px;
+    }
 }
 
 .points-label {
@@ -234,4 +242,21 @@ hr {
 
 #winner-label {
     font-size: 18pt;
+}
+
+// Up/Down vote specific
+
+.btn-group-updown {
+    @extend .btn-group;
+    width: 90px;
+    border-color: $Grey400;
+
+    > button {
+        width: 44px;
+
+        &:first-of-type {
+            border-right-width:1px;
+            border-right-color: $Grey400;
+        }
+    }
 }

@@ -1,0 +1,30 @@
+﻿<div ng-controller="UpDownVoteController" ng-app="VotingApp">
+    <h3>Options</h3>
+    <div ng-repeat="option in options">
+        <div class="option-block">
+            <p class="option-text">{{option.Name}}</p>
+            <div class="option-buttons">
+                <span class="btn-group-updown">
+                    <button class="inactive-btn pull-left" ng-class="{'active-btn': option.voteValue==-1}" ng-click="(option.voteValue=(option.voteValue!=-1?-1:0))">
+                        <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+                    </button>
+                    <button class="inactive-btn pull-right" ng-class="{'active-btn': option.voteValue==1}" ng-click="(option.voteValue=(option.voteValue!=1?1:0))">
+                        <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                    </button>
+                </span>
+                <button class="inactive-btn more-info" ng-click="descriptionToggle=!descriptionToggle">More info</button>
+            </div>
+            <div class="option-description" ng-show="descriptionToggle">
+                {{option.Description}}
+            </div>
+            <div ng-hide="descriptionToggle">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <hr />
+    </div>
+    <div class="flexbox">
+        <button class="active-btn centered" ng-click="vote(options)">Vote</button>
+    </div>
+</div>
+<br />
