@@ -1,9 +1,9 @@
 ﻿<div>
-    <form>
+    <form name="loginForm">
         <label for="name-input">Enter your name to vote</label>
         <div class="centered">
-            <input autofocus class="form-input" name="name-input" id="name-input" placeholder="Magnus Carlsen" ng-model="name">
-            <button class="active-btn" ng-click="loginIdentity(name)">Go</button>
+            <input autofocus required class="form-input" name="name-input" id="name-input" placeholder="Magnus Carlsen" ng-model="name">
+            <button class="go-btn" ng-disabled="loginForm.$invalid" ng-click="loginIdentity(name)">Go</button>
         </div>
     </form>
 </div>

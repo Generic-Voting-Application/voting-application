@@ -41,7 +41,6 @@ a {
     font: bold 12pt Open Sans;
     padding: 5px;
     border-style: solid;
-    width: 100px;
     text-align: center;
     outline: none;
 }
@@ -51,6 +50,7 @@ a {
     background-color: $White;
     border-color: $Grey400;
     border-width: 1px;
+    width: 100px;
     color: $Grey600;
 }
 
