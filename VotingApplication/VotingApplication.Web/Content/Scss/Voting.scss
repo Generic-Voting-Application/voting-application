@@ -18,18 +18,13 @@ body {
 }
 
 .active-btn {
-    @extend .btn;
     background-color: $Green500;
     border: 1px solid $Green700;
-    color: $White;
-    width: 100px;
 }
 
 .go-btn {
-    @extend .btn;
     background-color: $Green500;
     border: 1px solid $Green700;
-    color: $White;
 }
 
 #current-user {

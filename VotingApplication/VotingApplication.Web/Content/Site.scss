@@ -54,6 +54,17 @@ a {
     color: $Grey600;
 }
 
+.active-btn {
+    @extend .btn;
+    color: $White;
+    width: 100px;
+}
+
+.go-btn {
+    @extend .btn;
+    color: $White;
+}
+
 :disabled {
     opacity: 0.5;
 }

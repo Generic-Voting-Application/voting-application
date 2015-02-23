@@ -18,10 +18,8 @@ body {
 }
 
 .active-btn {
-    @extend .btn;
     background-color: $Blue500;
     border: none;
-    color: $White;
 }
 
 #signin-header {
