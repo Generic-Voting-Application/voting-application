@@ -50,14 +50,14 @@ a {
     background-color: $White;
     border-color: $Grey400;
     border-width: 1px;
-    width: 100px;
+    min-width: 100px;
     color: $Grey600;
 }
 
 .active-btn {
     @extend .btn;
     color: $White;
-    width: 100px;
+    min-width: 100px;
 }
 
 .go-btn {
@@ -75,7 +75,8 @@ a {
 }
 
 .centered {
-    margin: auto;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 hr {
@@ -114,6 +115,51 @@ hr {
     line-height: 21px;
 }
 
+
+.form-section {
+    margin-bottom: 10px;
+    
+    > input {
+        margin-bottom: 3px;
+    }
+
+    > button {
+        margin-bottom: 3px;
+    }
+}
+
+.form-section-block {
+    @extend .form-section;
+
+    > label {
+        display: block;
+    }
+
+    > input {
+        display: block;
+    }
+
+    > button {
+        display: block;
+    }
+}
+
+.form-section-inline {
+    @extend .form-section;
+
+    > label {
+        display: inline-block;
+    }
+
+    > input {
+        display: inline-block;
+    }
+
+    > button {
+        display: inline-block;
+    }
+}
+
 .btn-group {
     border: 1px solid;
     border-radius: 5px;
@@ -126,10 +172,6 @@ hr {
     }
 }
 
-.ngdialog-content {
-    max-width: 320px !important;
-}
-
 .body-content {
     padding: 0px 20px;
 }
@@ -140,4 +182,3 @@ select,
 textarea {
     max-width: 280px;
 }
-

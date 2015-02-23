@@ -1,5 +1,5 @@
 ﻿@Styles.Render("~/Bundles/CreateStyle")
-<div>
+<div ng-controller="CreatePageController" ng-app="VotingApp">
     <span class="pull-right" id="signin-header">
         Sign In
         <i class="glyphicon glyphicon-user"></i>
@@ -23,7 +23,7 @@
     <h3 class="centered-text horizontal-ruled">or</h3>
 
     <div id="register-block">
-        <button class="active-btn shadowed">Sign In</button>
+        <button class="active-btn shadowed" ng-click="openLoginDialog()">Sign In</button>
         <button class="active-btn shadowed">Register</button>
     </div>
 </div>

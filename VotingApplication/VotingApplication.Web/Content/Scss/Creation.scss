@@ -1,4 +1,4 @@
-﻿@import '~/Content/Site.scss';
+﻿@import '~/Content/Scss/Site.scss';
 
 $Blue100: #BBDEFB;
 $Blue200: #90CAF9;
@@ -70,6 +70,10 @@ body {
 
 .shadowed {
     box-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+
+.account-login {
+     max-width: 320px;
 }
 
 // Horizontal rules

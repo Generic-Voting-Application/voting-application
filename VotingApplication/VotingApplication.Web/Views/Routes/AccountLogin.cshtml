@@ -1,0 +1,13 @@
+﻿<div class="account-login centered">
+    <form name="loginForm" ng-submit="loginAccount(loginForm)">
+        <div class="form-section-block centered">
+            <label for="email-input">Email</label>
+            <input autofocus required class="form-input" name="email-input" id="email-input" placeholder="user@example.com" ng-model="loginForm.email">
+
+            <label for="email-input">Password</label>
+            <input type="password" required class="form-input" name="password-input" id="password-input" placeholder="Password" ng-model="loginForm.password">
+        </div>
+        <button class="active-btn" ng-disabled="loginForm.$invalid" type="submit">Sign In</button>
+        <button class="inactive-btn" type="button">Forgot Password?</button>
+    </form>
+</div>
