@@ -3,8 +3,22 @@
 
     VotingApp.directive('quickPollOrSignIn', function () {
 
+        var pageTemplate = function () {
+            if (!this.createPoll) {
+                return 'routes/createHome';
+            }
+
+            return 'routes/create';
+        }
+
         return {
-            templateUrl: 'routes/create'
+            replace: true,
+
+            link: function (scope, element, attrs) {
+                scope.pageTemplate = pageTemplate;
+            },
+
+            template: '<div ng-include="pageTemplate()"></div>'
         }
     });
 })();

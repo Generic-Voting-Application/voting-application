@@ -314,10 +314,12 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Controllers\CreateHomeController.js" />
     <Content Include="Scripts\Controllers\LoginController.js" />
     <Content Include="Scripts\Controllers\HomePageController.js" />
     <Content Include="Scripts\Controllers\BasicVoteController.js" />
     <Content Include="Scripts\Controllers\PollHeadingController.js" />
+    <Content Include="Scripts\Controllers\QuickPollSignInController.js" />
     <Content Include="Scripts\Controllers\ResultsPageController.js" />
     <Content Include="Scripts\Controllers\PointsVoteController.js" />
     <Content Include="Scripts\Controllers\UpDownVoteController.js" />
@@ -337,6 +339,7 @@
     <Content Include="Scripts\Services\PollStrategy.js" />
     <Content Include="Scripts\VotingApp.js" />
     <Content Include="Views\Routes\Home.cshtml" />
+    <Content Include="Views\Routes\Create.cshtml" />
     <None Include="Views\Routes\PollHeading.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -350,7 +353,7 @@
     <Content Include="Views\Routes\PointsVote.cshtml" />
     <Content Include="Views\Routes\BasicVote.cshtml" />
     <Content Include="Views\Routes\LoginDialog.cshtml" />
-    <Content Include="Views\Routes\Create.cshtml" />
+    <Content Include="Views\Routes\CreateHome.cshtml" />
     <Content Include="Views\Routes\UpDownVote.cshtml" />
   </ItemGroup>
   <ItemGroup>

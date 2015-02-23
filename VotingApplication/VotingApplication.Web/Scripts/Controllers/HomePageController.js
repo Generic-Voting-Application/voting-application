@@ -5,6 +5,8 @@
         $scope.models = {
             pageTitle: 'Pollster'
         };
+
+        $scope.createPoll = false;
     });
 
 })();
