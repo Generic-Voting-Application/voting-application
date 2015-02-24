@@ -2,11 +2,12 @@
     var VotingApp = angular.module('VotingApp');
 
     VotingApp.controller('HomePageController', function ($scope) {
+
         $scope.models = {
             pageTitle: 'Pollster'
         };
 
-        $scope.createPoll = false;
+		$scope.createPoll = false;
     });
 
 })();

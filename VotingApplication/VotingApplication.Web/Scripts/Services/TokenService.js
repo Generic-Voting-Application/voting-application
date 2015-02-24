@@ -16,17 +16,18 @@
                 return;
             }
 
-            var getUri = '/api/poll/' + pollId + '/token';
-
-            $http.get(getUri)
-                .success(function (data, status) {
-                    var token = data.replace(/\"/g, '');
-                    $localStorage[pollId] = token;
-                    if (callback) {
-                        callback(token, status)
-                    }
-                })
-                .error(function (data, status) { if (callback) { callback(data, status) } });
+            $http({
+                method: 'GET',
+                url: '/api/poll/' + pollId + '/token'
+            })
+            .success(function (data, status) {
+                var token = data.replace(/\"/g, '');
+                $localStorage[pollId] = token;
+                if (callback) {
+                    callback(token, status)
+                }
+            })
+            .error(function (data, status) { if (callback) { callback(data, status) } });
         }
 
         return self;

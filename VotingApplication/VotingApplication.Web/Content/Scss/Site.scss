@@ -1,10 +1,14 @@
 ﻿@import url(http://fonts.googleapis.com/css?family=Roboto:700);
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+@import url('//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css');
 
 $Grey400: #BDBDBD;
 $Grey600: #757575;
+$Red500: #f44336;
 $Black: #000000;
 $White: #FFFFFF;
+
+$Error: $Red500;
 
 html {
     height: 100%;
@@ -50,14 +54,14 @@ a {
     background-color: $White;
     border-color: $Grey400;
     border-width: 1px;
-    width: 100px;
+    min-width: 100px;
     color: $Grey600;
 }
 
 .active-btn {
     @extend .btn;
     color: $White;
-    width: 100px;
+    min-width: 100px;
 }
 
 .go-btn {
@@ -75,7 +79,8 @@ a {
 }
 
 .centered {
-    margin: auto;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 hr {
@@ -114,6 +119,56 @@ hr {
     line-height: 21px;
 }
 
+
+.form-section {
+    margin-bottom: 10px;
+
+    > input {
+        margin-bottom: 3px;
+    }
+
+    > button {
+        margin-bottom: 3px;
+    }
+}
+
+.form-section-block {
+    @extend .form-section;
+
+    > label {
+        display: block;
+    }
+
+    > input {
+        display: block;
+    }
+
+    > button {
+        display: block;
+    }
+}
+
+.form-section-inline {
+    @extend .form-section;
+
+    > label {
+        display: inline-block;
+    }
+
+    > input {
+        display: inline-block;
+    }
+
+    > button {
+        display: inline-block;
+    }
+}
+
+.form-error {
+    font-size: small;
+    color: $Error;
+}
+
 .btn-group {
     border: 1px solid;
     border-radius: 5px;
@@ -127,7 +182,20 @@ hr {
 }
 
 .ngdialog-content {
-    max-width: 320px !important;
+    padding: 0px !important;
+}
+
+.dialog-content {
+    padding: 1em 0px 1em 0px;
+}
+
+.dialog-error-bar {
+    color: $White;
+    background-color: $Error;
+    display: block;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    padding: 5px 1em 5px 1em;
 }
 
 .body-content {
@@ -140,4 +208,3 @@ select,
 textarea {
     max-width: 280px;
 }
-

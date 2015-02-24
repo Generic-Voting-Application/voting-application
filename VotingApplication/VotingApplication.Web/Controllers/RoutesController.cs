@@ -30,7 +30,7 @@ namespace VotingApplication.Web.Controllers
         }
 
 
-        public ActionResult LoginDialog()
+        public ActionResult IdentityLogin()
         {
             return View();
         }
@@ -50,7 +50,17 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
+        public ActionResult AccountLogin()
+        {
+            return View();
+        }
+
         public ActionResult Home()
+        {
+            return View();
+        }
+
+        public ActionResult AccountRegister()
         {
             return View();
         }
