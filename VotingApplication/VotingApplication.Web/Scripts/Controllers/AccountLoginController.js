@@ -5,7 +5,7 @@
 
         $scope.loginAccount = function (form) {
 
-            AccountService.logIn(form.email, form.password, function (data) {
+            AccountService.getAccessToken(form.email, form.password, function (data) {
                 AccountService.setAccount(data.access_token);
 
                 $scope.closeThisDialog();

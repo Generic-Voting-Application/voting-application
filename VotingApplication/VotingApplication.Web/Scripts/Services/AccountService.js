@@ -49,15 +49,38 @@
                 .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
             }
 
-                self.openLoginDialog = function (scope, callback) {
-                    ngDialog.open({
-                        template: 'Routes/AccountLogin',
-                        controller: 'AccountLoginController',
-                        'scope': scope,
-                        data: { 'callback': callback }
-                    });
-                }
+            self.register = function(email, password, callback, failureCallback) {
+                $http({
+                    method: 'POST',
+                    url: '/api/Account/Register',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify({
+                        Email: email,
+                        Password: password,
+                    })
+                })
+               .success(function (data) { if (callback) { callback(data) } })
+               .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+            }
 
-                return self;
-            }]);
-        })();
+            self.openLoginDialog = function (scope, callback) {
+                ngDialog.open({
+                    template: 'Routes/AccountLogin',
+                    controller: 'AccountLoginController',
+                    'scope': scope,
+                    data: { 'callback': callback }
+                });
+            }
+
+            self.openRegisterDialog = function (scope, callback) {
+                ngDialog.open({
+                    template: 'Routes/AccountRegister',
+                    controller: 'AccountRegisterController',
+                    'scope': scope,
+                    data: { 'callback': callback }
+                });
+            }
+
+            return self;
+        }]);
+})();
