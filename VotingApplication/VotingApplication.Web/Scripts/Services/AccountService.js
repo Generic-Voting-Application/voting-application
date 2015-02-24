@@ -28,7 +28,7 @@
                 notifyObservers();
             }
 
-            self.logIn = function (email, password, callback, failureCallback) {
+            self.getAccessToken = function (email, password, callback, failureCallback) {
                 $http({
                     method: 'POST',
                     url: '/Token',
