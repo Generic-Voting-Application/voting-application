@@ -20,15 +20,8 @@ namespace VotingApplication.Web
             var scriptTransformer = new ScriptTransformer();
             var nullOrderer = new NullOrderer();
 
-            StyleBundle styleBundle = new StyleBundle("~/Bundles/Style");
-            styleBundle.IncludeDirectory("~/Content/Lib/Css", "*.css");
-            styleBundle.Include("~/Content/Scss/Site.scss");
-            styleBundle.Builder = nullBuilder;
-            styleBundle.Transforms.Add(styleTransformer);
-            styleBundle.Orderer = nullOrderer;
-            bundles.Add(styleBundle);
-
             StyleBundle votingBundle = new StyleBundle("~/Bundles/VotingStyle");
+            votingBundle.IncludeDirectory("~/Content/Lib/Css", "*.css");
             votingBundle.Include("~/Content/Scss/Site.scss");
             votingBundle.Include("~/Content/Scss/Voting.scss");
             votingBundle.Builder = nullBuilder;
@@ -37,6 +30,7 @@ namespace VotingApplication.Web
             bundles.Add(votingBundle);
 
             StyleBundle createBundle = new StyleBundle("~/Bundles/CreateStyle");
+            createBundle.IncludeDirectory("~/Content/Lib/Css", "*.css");
             createBundle.Include("~/Content/Scss/Site.scss");
             createBundle.Include("~/Content/Scss/Creation.scss");
             createBundle.Builder = nullBuilder;

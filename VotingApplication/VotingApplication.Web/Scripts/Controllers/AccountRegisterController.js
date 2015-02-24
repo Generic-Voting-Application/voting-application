@@ -1,7 +1,11 @@
 ﻿(function () {
     var VotingApp = angular.module('VotingApp');
 
-    VotingApp.controller('AccountRegisterController', ['$scope', 'AccountService', function ($scope, AccountService) {
+    VotingApp.controller('AccountRegisterController', ['$scope', 'AccountService', 'ErrorService', function ($scope, AccountService, ErrorService) {
+
+        var displayError = function (errorMessage) {
+            $scope.errorMessage = errorMessage;
+        }
 
         $scope.registerAccount = function (form) {
             AccountService.register(form.email, form.password, function () {
@@ -14,11 +18,20 @@
                     if ($scope.ngDialogData.callback) $scope.ngDialogData.callback();
 
                 }, function (data, status) {
-                    // Handle sign in Error
-                    // Shouldn't happen, maybe remove this
+                    // Handle sign in error
+
+                    // Bad request
+                    if (status === 400 && data.ModelState) {
+                        ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
+                    }
                 });
             }, function (data, status) {
-                // Handle Registration Error
+                // Handle register error
+
+                // Bad request
+                if (status === 400 && data.ModelState) {
+                    ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
+                }
             });
         }
 
