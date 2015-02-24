@@ -10,7 +10,7 @@
                 templateUrl: 'routes/results'
             })
             .otherwise({
-                templateUrl: 'routes/create'
+                templateUrl: 'routes/home'
             });
     }]);
 })();

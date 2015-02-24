@@ -44,5 +44,15 @@ namespace VotingApplication.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult CreateHome()
+        {
+            return View();
+        }
+
+        public ActionResult Home()
+        {
+            return View();
+        }
     }
 }

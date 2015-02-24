@@ -1,0 +1,22 @@
+﻿<div ng-controller="QuickPollSignInController" ng-app="VotingApp">
+    <div style="text-align:center">
+        <h2>Regular Poller?</h2>
+        Register for more config options. It's free!
+    </div>
+
+    <div id="question-block">
+        Your Question <br />
+        <input id="question" placeholder="E.g. Where should we go for lunch?" />
+    </div>
+
+    <div id="quickpoll-block">
+        <button class="inactive-btn shadowed" ng-click="createPoll()">Quick Poll</button>
+    </div>
+
+    <h3 class="centered-text horizontal-ruled">or</h3>
+
+    <div id="register-block">
+        <button class="active-btn shadowed" ng-click="createPoll()">Sign In</button>
+        <button class="active-btn shadowed" ng-click="createPoll()">Register</button>
+    </div>
+</div>
