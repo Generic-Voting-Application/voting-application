@@ -14,27 +14,28 @@
                 });
             };
 
-            self.identityName = $localStorage.identity ? $localStorage.identity.name : null;
+            self.identity = $localStorage.identity;
 
             self.registerIdentityObserver = function (callback) {
                 observerCallbacks.push(callback);
             }
 
             self.setIdentityName = function (name) {
-                self.identityName = name;
-                $localStorage.identity = { 'name': name };
+                var identity = { 'name': name }
+                self.identity = identity;
+                $localStorage.identity = identity;
                 notifyObservers();
             }
 
             self.clearIdentityName = function () {
-                self.identityName = null;
+                self.identity = null;
                 delete $localStorage.identity;
                 notifyObservers();
             }
 
             self.openLoginDialog = function (scope, callback) {
                 ngDialog.open({
-                    template: 'Routes/IdentityLogin',
+                    template: '../Routes/IdentityLogin',
                     controller: 'IdentityLoginController',
                     'scope': scope,
                     data: { 'callback': callback }

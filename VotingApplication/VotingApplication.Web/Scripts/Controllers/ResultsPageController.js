@@ -7,7 +7,7 @@
         // Turn "/#/results/abc/123" into "/#/voting/abc/123"
         var locationTokens = $location.url().split("/");
         locationTokens.splice(0, 2);
-        $scope.votingLink = '/#/voting/' + locationTokens.join("/");
+        $scope.votingLink = '#/Vote/' + locationTokens.join("/");
 
         $scope.winner = 'Lorem';
         //Whether or not we have an "s" on the end of "Winner"

@@ -65,7 +65,7 @@
 
             self.openLoginDialog = function (scope, callback) {
                 ngDialog.open({
-                    template: 'Routes/AccountLogin',
+                    template: '../Routes/AccountLogin',
                     controller: 'AccountLoginController',
                     'scope': scope,
                     data: { 'callback': callback }
@@ -74,7 +74,7 @@
 
             self.openRegisterDialog = function (scope, callback) {
                 ngDialog.open({
-                    template: 'Routes/AccountRegister',
+                    template: '../Routes/AccountRegister',
                     controller: 'AccountRegisterController',
                     'scope': scope,
                     data: { 'callback': callback }

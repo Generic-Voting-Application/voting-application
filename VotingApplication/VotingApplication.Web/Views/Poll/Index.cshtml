@@ -1,7 +1,9 @@
 ﻿<!DOCTYPE html>
-<html ng-app="VotingApp" ng-controller="HomePageController">
+<html ng-app="VotingApp">
 <head>
-    <title ng-bind="models.pageTitle"></title>
+    <title>Pollster</title>
+    @Styles.Render("~/Bundles/StyleLib")
+    @Styles.Render("~/Bundles/VotingStyle")
 </head>
 <body>
     <div class="center-panel">
@@ -10,9 +12,7 @@
         </div>
         <div id="footer"><a href="mailto:generic.voting@gmail.com">Contact us</a> | © 2015 – Scott Logic Ltd</div>
     </div>
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-route.min.js"></script>
+    @Scripts.Render("~/Bundles/ScriptLib")
     @Scripts.Render("~/Bundles/Script")
 </body>
 </html>

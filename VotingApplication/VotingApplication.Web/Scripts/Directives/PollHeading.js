@@ -5,7 +5,7 @@
 
         return {
             replace: true,
-            templateUrl: 'routes/pollHeading'
+            templateUrl: '../Routes/PollHeading'
         }
     });
 })();

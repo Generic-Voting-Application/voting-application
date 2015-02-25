@@ -20,27 +20,39 @@ namespace VotingApplication.Web
             var scriptTransformer = new ScriptTransformer();
             var nullOrderer = new NullOrderer();
 
-            StyleBundle votingBundle = new StyleBundle("~/Bundles/VotingStyle");
-            votingBundle.IncludeDirectory("~/Content/Lib/Css", "*.css");
-            votingBundle.Include("~/Content/Scss/Site.scss");
-            votingBundle.Include("~/Content/Scss/Voting.scss");
-            votingBundle.Builder = nullBuilder;
-            votingBundle.Transforms.Add(styleTransformer);
-            votingBundle.Orderer = nullOrderer;
-            bundles.Add(votingBundle);
+            StyleBundle styleLib = new StyleBundle("~/Bundles/StyleLib");
+            styleLib.IncludeDirectory("~/Content/Lib/Css", "*.css");
+            styleLib.Builder = nullBuilder;
+            styleLib.Transforms.Add(styleTransformer);
+            styleLib.Orderer = nullOrderer;
+            bundles.Add(styleLib);
 
-            StyleBundle createBundle = new StyleBundle("~/Bundles/CreateStyle");
-            createBundle.IncludeDirectory("~/Content/Lib/Css", "*.css");
-            createBundle.Include("~/Content/Scss/Site.scss");
-            createBundle.Include("~/Content/Scss/Creation.scss");
-            createBundle.Builder = nullBuilder;
-            createBundle.Transforms.Add(styleTransformer);
-            createBundle.Orderer = nullOrderer;
-            bundles.Add(createBundle);
+            StyleBundle votingStyle = new StyleBundle("~/Bundles/VotingStyle");
+            votingStyle.Include("~/Content/Scss/Site.scss");
+            votingStyle.Include("~/Content/Scss/Voting.scss");
+            votingStyle.Builder = nullBuilder;
+            votingStyle.Transforms.Add(styleTransformer);
+            votingStyle.Orderer = nullOrderer;
+            bundles.Add(votingStyle);
+
+            StyleBundle createStyle = new StyleBundle("~/Bundles/CreateStyle");
+            createStyle.Include("~/Content/Scss/Site.scss");
+            createStyle.Include("~/Content/Scss/Creation.scss");
+            createStyle.Builder = nullBuilder;
+            createStyle.Transforms.Add(styleTransformer);
+            createStyle.Orderer = nullOrderer;
+            bundles.Add(createStyle);
+
+            ScriptBundle scriptLibBundle = new ScriptBundle("~/Bundles/ScriptLib");
+            scriptLibBundle.IncludeDirectory("~/Scripts/Lib", "*.js");
+            scriptLibBundle.IncludeDirectory("~/Scripts/Lib", "*.js.map");
+            scriptLibBundle.Builder = nullBuilder;
+            scriptLibBundle.Transforms.Add(scriptTransformer);
+            scriptLibBundle.Orderer = nullOrderer;
+            bundles.Add(scriptLibBundle);
 
             ScriptBundle scriptBundle = new ScriptBundle("~/Bundles/Script");
             scriptBundle.Include("~/Scripts/VotingApp.js");
-            scriptBundle.IncludeDirectory("~/Scripts/Lib", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Directives", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Services", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Controllers", "*.js");

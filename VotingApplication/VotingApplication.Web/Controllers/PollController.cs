@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace VotingApplication.Web.Controllers
 {
-    public class HomeController : Controller
+    public class PollController : Controller
     {
         public ActionResult Index()
         {

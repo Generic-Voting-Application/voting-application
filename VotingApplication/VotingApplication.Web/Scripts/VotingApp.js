@@ -3,14 +3,11 @@
 
     VotingApp.config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
-            when('/voting/:pollId', {
-                templateUrl: 'routes/voting'
+            when('/Vote/:pollId', {
+                templateUrl: '../Routes/Vote'
             })
-            .when('/results/:pollId', {
-                templateUrl: 'routes/results'
+            .when('/Results/:pollId', {
+                templateUrl: '../Routes/Results'
             })
-            .otherwise({
-                templateUrl: 'routes/home'
-            });
     }]);
 })();

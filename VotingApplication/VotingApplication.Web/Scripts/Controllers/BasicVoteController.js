@@ -13,7 +13,7 @@
 
             if (!token) {
                 // Probably invite only, tell the user
-            } else if (!IdentityService.identityName) {
+            } else if (!IdentityService.identity) {
                 IdentityService.openLoginDialog($scope, function () {
                     $scope.vote(option);
                 });
@@ -21,7 +21,7 @@
                 votes = [{
                     OptionId: option.Id,
                     VoteValue: 1,
-                    VoterName: IdentityService.identityName
+                    VoterName: IdentityService.identity.name
                 }];
 
                 PollService.submitVote(pollId, votes, token, function () {

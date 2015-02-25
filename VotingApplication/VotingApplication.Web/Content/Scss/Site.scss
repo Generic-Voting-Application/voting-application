@@ -1,6 +1,6 @@
 ﻿@import url(http://fonts.googleapis.com/css?family=Roboto:700);
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
-@import url('//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css');
+@import url(../Lib/Css/bootstrap-glyphicons.css);
 
 $Grey400: #BDBDBD;
 $Grey600: #757575;
@@ -207,4 +207,8 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
 }
