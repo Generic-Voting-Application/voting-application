@@ -1,7 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.controller('UpDownVoteController', ['$scope', 'IdentityService', 'PollService', 'TokenService', function ($scope, IdentityService, PollService, TokenService) {
+    angular.module('GVA.Voting').controller('UpDownVoteController', ['$scope', 'IdentityService', 'PollService', 'TokenService', function ($scope, IdentityService, PollService, TokenService) {
 
         var pollId = PollService.currentPollId();
         var token = null;

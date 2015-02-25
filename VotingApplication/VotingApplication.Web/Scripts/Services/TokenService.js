@@ -1,7 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.factory('TokenService', ['$location', '$http', '$localStorage', function ($location, $http, $localStorage) {
+    angular.module('GVA.Voting').factory('TokenService', ['$location', '$http', '$localStorage', function ($location, $http, $localStorage) {
         var self = this;
 
         self.getToken = function (pollId, callback) {

@@ -1,7 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.controller('IdentityLoginController', ['$scope', 'IdentityService', function ($scope, IdentityService) {
+    angular.module('GVA.Voting').controller('IdentityLoginController', ['$scope', 'IdentityService', function ($scope, IdentityService) {
         
         $scope.loginIdentity = function (form) {
             IdentityService.setIdentityName(form.name);

@@ -1,6 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-    VotingApp.controller('PollHeadingController', ['$scope', 'PollService', 'ExpiryStringService', function ($scope, PollService, ExpiryStringService) {
+    angular.module('GVA.Voting').controller('PollHeadingController', ['$scope', 'PollService', 'ExpiryStringService', function ($scope, PollService, ExpiryStringService) {
         $scope.pollExpiry = undefined;
 
         var calculateExpiry = function (expiryDate) {

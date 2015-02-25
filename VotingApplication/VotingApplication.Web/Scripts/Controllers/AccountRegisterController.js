@@ -1,7 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.controller('AccountRegisterController', ['$scope', 'AccountService', 'ErrorService', function ($scope, AccountService, ErrorService) {
+    angular.module('GVA.Common').controller('AccountRegisterController', ['$scope', 'AccountService', 'ErrorService', function ($scope, AccountService, ErrorService) {
 
         var displayError = function (errorMessage) {
             $scope.errorMessage = errorMessage;

@@ -1,7 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.controller('ResultsPageController', ['$scope', '$location', 'PollService', function ($scope, $location, PollService) {
+    angular.module('GVA.Voting').controller('ResultsPageController', ['$scope', '$location', 'PollService', function ($scope, $location, PollService) {
         var chart;
 
         // Turn "/#/results/abc/123" into "/#/voting/abc/123"

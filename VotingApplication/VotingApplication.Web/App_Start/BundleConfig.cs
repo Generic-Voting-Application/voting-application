@@ -52,7 +52,9 @@ namespace VotingApplication.Web
             bundles.Add(scriptLibBundle);
 
             ScriptBundle scriptBundle = new ScriptBundle("~/Bundles/Script");
-            scriptBundle.Include("~/Scripts/VotingApp.js");
+            scriptBundle.Include("~/Scripts/GVA-Voting.js");
+            scriptBundle.Include("~/Scripts/GVA-Creation.js");
+            scriptBundle.Include("~/Scripts/GVA-Common.js");
             scriptBundle.IncludeDirectory("~/Scripts/Directives", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Services", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Controllers", "*.js");

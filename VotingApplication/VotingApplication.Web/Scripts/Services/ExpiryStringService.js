@@ -1,7 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.factory('ExpiryStringService', function () {
+    angular.module('GVA.Voting').factory('ExpiryStringService', function () {
         var self = this;
 
         var formattedTimeString = function (expiryDate, timeUnit, timeUnitName, callback) {

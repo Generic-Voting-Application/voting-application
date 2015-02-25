@@ -1,7 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.factory('PollService', ['$location', '$http', function ($location, $http) {
+    angular.module('GVA.Voting').factory('PollService', ['$location', '$http', function ($location, $http) {
         var self = this;
 
         self.currentPollId = function () {

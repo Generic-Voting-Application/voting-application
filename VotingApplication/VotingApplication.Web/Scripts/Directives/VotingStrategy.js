@@ -1,7 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.directive('votingStrategy', ['PollService', function (PollService) {
+    angular.module('GVA.Voting').directive('votingStrategy', ['PollService', function (PollService) {
 
         var pollStrategy = null;
 

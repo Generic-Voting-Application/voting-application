@@ -1,7 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.factory('ErrorService', [function () {
+    angular.module('GVA.Common').factory('ErrorService', [function () {
         var self = this;
 
         self.bindModelStateToForm = function (modelState, form, displayGenericError) {

@@ -1,7 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.factory('PollStrategy', ['PollService', function (PollService) {
+    angular.module('GVA.Voting').factory('PollStrategy', ['PollService', function (PollService) {
 
         var self = this;
 

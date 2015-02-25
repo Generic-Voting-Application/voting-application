@@ -1,7 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.directive('pollHeading', function () {
+    angular.module('GVA.Voting').directive('pollHeading', function () {
 
         return {
             replace: true,

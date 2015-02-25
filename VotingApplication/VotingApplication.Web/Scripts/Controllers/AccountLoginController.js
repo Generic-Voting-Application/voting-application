@@ -1,7 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.controller('AccountLoginController', ['$scope', 'AccountService', function ($scope, AccountService) {
+    angular.module('GVA.Common').controller('AccountLoginController', ['$scope', 'AccountService', function ($scope, AccountService) {
 
         $scope.loginAccount = function (form) {
 

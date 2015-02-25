@@ -1,6 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-    VotingApp.controller('VotingPageController', ['$scope', '$location', 'IdentityService',  function ($scope, $location, IdentityService) {
+    angular.module('GVA.Voting').controller('VotingPageController', ['$scope', '$location', 'IdentityService',  function ($scope, $location, IdentityService) {
 
         // Turn "/#/voting/abc/123" into "/#/results/abc/123"
         var locationTokens = $location.url().split("/");
