@@ -2,6 +2,8 @@
     angular.module('GVA.Voting').factory('PollService', ['$location', '$http', function ($location, $http) {
         var self = this;
 
+        var lastCheckedTimestamps = {};
+
         self.currentPollId = function () {
             var urlParams = $location.url().split("/");
 
@@ -43,19 +45,25 @@
 
         }
 
-        self.getResults = function (pollId, callback) {
+        self.getResults = function (pollId, callback, failureCallback) {
 
             if (!pollId) {
                 return null;
             }
 
+            if (!lastCheckedTimestamps[pollId])
+            {
+                lastCheckedTimestamps[pollId] = 0;
+            }
+
             $http({
                 method: 'GET',
-                url: '/api/poll/' + pollId + '/vote'
+                url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastCheckedTimestamps[pollId]
             })
-            .success(function (data, status) { if (callback) { callback(data, status) } })
-            .error(function (data, status) { if (callback) { callback(data, status) } });
+            .success(function (data, status) {  if (callback) { callback(data) } })
+            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
 
+            lastCheckedTimestamps[pollId] = Date.now();
         }
 
         self.getTokenVotes = function (pollId, token, callback) {
