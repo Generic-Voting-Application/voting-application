@@ -167,6 +167,7 @@ hr {
 .form-error {
     font-size: small;
     color: $Error;
+    overflow:scroll;
 }
 
 .btn-group {

@@ -29,6 +29,8 @@
                 // Bad request
                 if (status === 400 && data.ModelState) {
                     ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
+                } else {
+                    displayError(data.Message || data.error_description);
                 }
             });
         }
