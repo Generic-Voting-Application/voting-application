@@ -10,7 +10,7 @@
 
                 AccountService.getAccessToken(form.email, form.password, function (data) {
 
-                    AccountService.setAccount(data.access_token);
+                    AccountService.setAccount(data.access_token, form.email);
 
                     $scope.closeThisDialog();
                     if ($scope.ngDialogData.callback) $scope.ngDialogData.callback();
