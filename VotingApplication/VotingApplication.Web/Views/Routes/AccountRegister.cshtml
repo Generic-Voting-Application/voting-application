@@ -2,11 +2,11 @@
     <form name="registerForm" ng-submit="registerAccount(registerForm)">
         <div class="form-section-block centered">
             <label for="email">Email</label>
-            <input autofocus required class="form-input" type="email" name="email" id="email" placeholder="user@example.com" ng-model="registerForm.email">
+            <input autofocus required class="form-input" type="email" id="email" placeholder="user@example.com" ng-model="registerForm.email">
             <span class="form-error" ng-show="registerForm.errors">{{registerForm.errors.email}}</span>
 
             <label for="password">Password</label>
-            <input type="password" required class="form-input" name="password" id="password" placeholder="Password" ng-model="registerForm.password">
+            <input type="password" required class="form-input" id="password" placeholder="Password" ng-model="registerForm.password">
             <span class="form-error" ng-show="registerForm.errors">{{registerForm.errors.password}}</span>
         </div>
         <button class="active-btn" ng-disabled="registerForm.$invalid" type="submit">Register</button>
