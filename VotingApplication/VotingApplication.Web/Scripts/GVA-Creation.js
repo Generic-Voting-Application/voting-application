@@ -1,5 +1,5 @@
 ﻿(function () {
-    angular.module('GVA.Creation', ['ngRoute', 'ngDialog', 'ngStorage']).config(['$routeProvider', function ($routeProvider) {
+    angular.module('GVA.Creation', ['ngRoute', 'ngDialog', 'ngStorage', 'GVA.Common']).config(['$routeProvider', function ($routeProvider) {
                    
     }]);
 })();

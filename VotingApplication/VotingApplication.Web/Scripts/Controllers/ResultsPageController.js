@@ -85,7 +85,7 @@
             chart.draw(true);
         }
 
-        $scope.reloadData = function () {
+        var reloadData = function () {
             PollService.getResults(PollService.currentPollId(), function (data) {
                 var groupedData = {};
 
@@ -123,6 +123,7 @@
             });
         }
 
-        $scope.reloadData();
+        reloadData();
+        setInterval(reloadData, 3000);
     }]);
 })();

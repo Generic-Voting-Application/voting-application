@@ -44,7 +44,12 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
-        public ActionResult CreateBasic()
+        public ActionResult BasicCreate()
+        {
+            return View();
+        }
+
+        public ActionResult AdvancedCreate()
         {
             return View();
         }
