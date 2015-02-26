@@ -15,7 +15,7 @@
             return pollId;
         }
 
-        self.submitVote = function (pollId, votes, token, callback) {
+        self.submitVote = function (pollId, votes, token, callback, failureCallback) {
 
             if (!pollId || !votes || !token) {
                 return null;
@@ -26,11 +26,11 @@
                 url: '/api/token/' + token + '/poll/' + pollId + '/vote',
                 data: votes
             })
-            .success(function (data, status) { if (callback) { callback(data, status) } })
-            .error(function (data, status) { if (callback) { callback(data, status) } });
+            .success(function (data, status) { if (callback) { callback(data) } })
+            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
         }
 
-        self.getPoll = function (pollId, callback) {
+        self.getPoll = function (pollId, callback, failureCallback) {
 
             if (!pollId) {
                 return null;
@@ -40,8 +40,8 @@
                 method: 'GET',
                 url: '/api/poll/' + pollId
             })
-            .success(function (data, status) { if (callback) { callback(data, status) } })
-            .error(function (data, status) { if (callback) { callback(data, status) } });
+            .success(function (data, status) { if (callback) { callback(data) } })
+            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
 
         }
 
@@ -66,7 +66,7 @@
             lastCheckedTimestamps[pollId] = Date.now();
         }
 
-        self.getTokenVotes = function (pollId, token, callback) {
+        self.getTokenVotes = function (pollId, token, callback, failureCallback) {
 
             if (!pollId || !token) {
                 return null;
@@ -76,8 +76,8 @@
                 method: 'GET',
                 url: '/api/token/' + token + '/poll/' + pollId + '/vote'
             })
-            .success(function (data, status) { if (callback) { callback(data, status) } })
-            .error(function (data, status) { if (callback) { callback(data, status) } });
+            .success(function (data, status) { if (callback) { callback(data) } })
+            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
 
         }
 
