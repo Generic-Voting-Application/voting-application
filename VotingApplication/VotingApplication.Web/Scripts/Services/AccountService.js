@@ -12,16 +12,21 @@
                 });
             };
 
+            self.account = $localStorage.account;
+
             self.registerAccountObserver = function (callback) {
                 observerCallbacks.push(callback);
             }
 
-            self.setAccount = function (token) {
-                $localStorage.account = { 'token': token };
+            self.setAccount = function (token, email) {
+                var account = { 'token': token, 'email': email }
+                self.account = account;
+                $localStorage.account = account;
                 notifyObservers();
             }
 
             self.clearAccount = function () {
+                self.account = null;
                 delete $localStorage.account;
                 notifyObservers();
             }
@@ -47,7 +52,7 @@
                 .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
             }
 
-            self.register = function(email, password, callback, failureCallback) {
+            self.register = function (email, password, callback, failureCallback) {
                 $http({
                     method: 'POST',
                     url: '/api/Account/Register',
