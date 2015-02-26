@@ -33,9 +33,10 @@
 
             // Fixed height for column chart, but scale to number of rows for bar charts
             var chartHeight = Math.min(data.length * 50 + 100, 600);
+            var chartWidth = Math.min(600, document.getElementById('results-chart').offsetWidth);
 
             chart = new insight.Chart('', '#results-chart')
-                .width(Math.min(600, window.innerWidth - 60))
+                .width(chartWidth)
                 .height(chartHeight);
 
             var voteAxis = new insight.Axis('', insight.scales.linear);
