@@ -39,9 +39,15 @@
                 .width(chartWidth)
                 .height(chartHeight);
 
-            var voteAxis = new insight.Axis('', insight.scales.linear);
+            var highestDataValue = data.reduce(function (prev, curr) {
+                return curr.Sum > prev.Sum ? curr : prev;
+            }).Sum;
+            var tickFrequency = Math.max((Math.pow(10, (Math.round(Math.log(highestDataValue) / Math.log(10)) - 1))), 1);
+
+            var voteAxis = new insight.Axis('', insight.scales.linear)
+                .tickFrequency(tickFrequency);
             var optionAxis = new insight.Axis('', insight.scales.ordinal)
-                    .isOrdered(true);
+                .isOrdered(true);
 
             var xAxis = voteAxis;
             var yAxis = optionAxis;

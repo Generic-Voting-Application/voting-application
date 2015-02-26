@@ -17,7 +17,6 @@
 
         return {
             replace: true,
-            //templateUrl: votingTemplate()
             link: function (scope, element, attrs) {
                 scope.votingTemplate = votingTemplate;
             },
