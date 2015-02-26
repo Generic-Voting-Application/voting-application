@@ -1,13 +1,11 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.controller('ResultsPageController', ['$scope', '$location', 'PollService', function ($scope, $location, PollService) {
+    angular.module('GVA.Voting').controller('ResultsPageController', ['$scope', '$location', 'PollService', function ($scope, $location, PollService) {
         var chart;
 
         // Turn "/#/results/abc/123" into "/#/voting/abc/123"
         var locationTokens = $location.url().split("/");
         locationTokens.splice(0, 2);
-        $scope.votingLink = '/#/voting/' + locationTokens.join("/");
+        $scope.votingLink = '#/Vote/' + locationTokens.join("/");
 
         $scope.winner = 'Lorem';
         //Whether or not we have an "s" on the end of "Winner"
@@ -35,9 +33,10 @@
 
             // Fixed height for column chart, but scale to number of rows for bar charts
             var chartHeight = Math.min(data.length * 50 + 100, 600);
+            var chartWidth = Math.min(600, document.getElementById('results-chart').offsetWidth);
 
             chart = new insight.Chart('', '#results-chart')
-                .width(Math.min(600, window.innerWidth - 60))
+                .width(chartWidth)
                 .height(chartHeight);
 
             var voteAxis = new insight.Axis('', insight.scales.linear);

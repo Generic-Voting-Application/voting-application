@@ -1,7 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.factory('TokenService', ['$location', '$http', '$localStorage', function ($location, $http, $localStorage) {
+    angular.module('GVA.Voting').factory('TokenService', ['$location', '$http', '$localStorage', function ($location, $http, $localStorage) {
         var self = this;
 
         self.getToken = function (pollId, callback) {
@@ -16,17 +14,18 @@
                 return;
             }
 
-            var getUri = '/api/poll/' + pollId + '/token';
-
-            $http.get(getUri)
-                .success(function (data, status) {
-                    var token = data.replace(/\"/g, '');
-                    $localStorage[pollId] = token;
-                    if (callback) {
-                        callback(token, status)
-                    }
-                })
-                .error(function (data, status) { if (callback) { callback(data, status) } });
+            $http({
+                method: 'GET',
+                url: '/api/poll/' + pollId + '/token'
+            })
+            .success(function (data, status) {
+                var token = data.replace(/\"/g, '');
+                $localStorage[pollId] = token;
+                if (callback) {
+                    callback(token, status)
+                }
+            })
+            .error(function (data, status) { if (callback) { callback(data, status) } });
         }
 
         return self;

@@ -1,7 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.directive('votingStrategy', ['PollService', function (PollService) {
+    angular.module('GVA.Voting').directive('votingStrategy', ['PollService', function (PollService) {
 
         var pollStrategy = null;
 
@@ -14,12 +12,12 @@
                 return '';
             }
 
-            return 'routes/' + pollStrategy + 'Vote';
+            return '../Routes/' + pollStrategy + 'Vote';
         }
 
         return {
             replace: true,
-
+            //templateUrl: votingTemplate()
             link: function (scope, element, attrs) {
                 scope.votingTemplate = votingTemplate;
             },

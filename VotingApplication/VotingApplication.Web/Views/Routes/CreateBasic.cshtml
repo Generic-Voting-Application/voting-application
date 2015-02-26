@@ -1,5 +1,5 @@
-﻿<div ng-controller="QuickPollSignInController" ng-app="VotingApp">
-    <div style="text-align:center">
+﻿<div ng-controller="CreateBasicPageController" ng-app="GVA.Creation">
+    <div>
         <h2>Regular Poller?</h2>
         Register for more config options. It's free!
     </div>
@@ -16,7 +16,7 @@
     <h3 class="centered-text horizontal-ruled">or</h3>
 
     <div id="register-block">
-        <button class="active-btn shadowed" ng-click="createPoll()">Sign In</button>
-        <button class="active-btn shadowed" ng-click="createPoll()">Register</button>
+        <button class="active-btn shadowed" ng-click="openLoginDialog()">Sign In</button>
+        <button class="active-btn shadowed" ng-click="openRegisterDialog()">Register</button>
     </div>
 </div>

@@ -4,7 +4,7 @@ namespace VotingApplication.Web.Controllers
 {
     public class RoutesController : Controller
     {
-        public ActionResult Voting()
+        public ActionResult Vote()
         {
             return View();
         }
@@ -29,8 +29,7 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
-
-        public ActionResult LoginDialog()
+        public ActionResult IdentityLogin()
         {
             return View();
         }
@@ -45,12 +44,17 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
-        public ActionResult CreateHome()
+        public ActionResult CreateBasic()
         {
             return View();
         }
 
-        public ActionResult Home()
+        public ActionResult AccountLogin()
+        {
+            return View();
+        }
+
+        public ActionResult AccountRegister()
         {
             return View();
         }

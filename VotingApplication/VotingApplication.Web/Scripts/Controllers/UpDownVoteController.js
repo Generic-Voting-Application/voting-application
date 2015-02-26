@@ -1,7 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.controller('UpDownVoteController', ['$scope', 'IdentityService', 'PollService', 'TokenService', function ($scope, IdentityService, PollService, TokenService) {
+    angular.module('GVA.Voting').controller('UpDownVoteController', ['$scope', 'IdentityService', 'PollService', 'TokenService', function ($scope, IdentityService, PollService, TokenService) {
 
         var pollId = PollService.currentPollId();
         var token = null;
@@ -13,7 +11,7 @@
 
             if (!token) {
                 // Probably invite only, tell the user
-            } else if (!IdentityService.identityName) {
+            } else if (!IdentityService.identity) {
                 IdentityService.openLoginDialog($scope, function () {
                     $scope.vote(options);
                 });
@@ -25,7 +23,7 @@
                         return {
                             OptionId: option.Id,
                             VoteValue: option.voteValue,
-                            VoterName: IdentityService.identityName
+                            VoterName: IdentityService.identity.name
                         }
                     });
 

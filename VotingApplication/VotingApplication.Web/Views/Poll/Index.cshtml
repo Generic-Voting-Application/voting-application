@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html ng-app="GVA.Voting">
+<head>
+    <title>Pollster</title>
+    @Styles.Render("~/Bundles/StyleLib")
+    @Styles.Render("~/Bundles/VotingStyle")
+    <meta name="viewport" content="initial-scale=1">
+</head>
+<body>
+    <div class="center-panel">
+        <div class="body-content">
+            <div ng-view></div>
+        </div>
+        <div id="footer"><a href="mailto:generic.voting@gmail.com">Contact us</a> | © 2015 – Scott Logic Ltd</div>
+    </div>
+    @Scripts.Render("~/Bundles/ScriptLib")
+    @Scripts.Render("~/Bundles/Script")
+</body>
+</html>

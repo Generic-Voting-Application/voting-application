@@ -1,7 +1,5 @@
 ﻿(function () {
-    var VotingApp = angular.module('VotingApp');
-
-    VotingApp.factory('PollService', ['$location', '$http', function ($location, $http) {
+    angular.module('GVA.Voting').factory('PollService', ['$location', '$http', function ($location, $http) {
         var self = this;
 
         self.currentPollId = function () {
@@ -21,11 +19,13 @@
                 return null;
             }
 
-            var postUri = '/api/token/' + token + '/poll/' + pollId + '/vote';
-
-            $http.put(postUri, votes)
-                .success(function (data, status) { if (callback) { callback(data, status) } })
-                .error(function (data, status) { if (callback) { callback(data, status) } });
+            $http({
+                method: 'PUT',
+                url: '/api/token/' + token + '/poll/' + pollId + '/vote',
+                data: votes
+            })
+            .success(function (data, status) { if (callback) { callback(data, status) } })
+            .error(function (data, status) { if (callback) { callback(data, status) } });
         }
 
         self.getPoll = function (pollId, callback) {
@@ -34,11 +34,12 @@
                 return null;
             }
 
-            var getUri = '/api/poll/' + pollId;
-
-            $http.get(getUri)
-                .success(function (data, status) { if (callback) { callback(data, status) } })
-                .error(function (data, status) { if (callback) { callback(data, status) } });
+            $http({
+                method: 'GET',
+                url: '/api/poll/' + pollId
+            })
+            .success(function (data, status) { if (callback) { callback(data, status) } })
+            .error(function (data, status) { if (callback) { callback(data, status) } });
 
         }
 
@@ -48,11 +49,12 @@
                 return null;
             }
 
-            var getUri = '/api/poll/' + pollId + '/vote';
-
-            $http.get(getUri)
-                .success(function (data, status) { if (callback) { callback(data, status) } })
-                .error(function (data, status) { if (callback) { callback(data, status) } });
+            $http({
+                method: 'GET',
+                url: '/api/poll/' + pollId + '/vote'
+            })
+            .success(function (data, status) { if (callback) { callback(data, status) } })
+            .error(function (data, status) { if (callback) { callback(data, status) } });
 
         }
 
@@ -62,11 +64,12 @@
                 return null;
             }
 
-            var getUri = '/api/token/' + token + '/poll/' + pollId + '/vote';
-
-            $http.get(getUri)
-                .success(function (data, status) { if (callback) { callback(data, status) } })
-                .error(function (data, status) { if (callback) { callback(data, status) } });
+            $http({
+                method: 'GET',
+                url: '/api/token/' + token + '/poll/' + pollId + '/vote'
+            })
+            .success(function (data, status) { if (callback) { callback(data, status) } })
+            .error(function (data, status) { if (callback) { callback(data, status) } });
 
         }
 
