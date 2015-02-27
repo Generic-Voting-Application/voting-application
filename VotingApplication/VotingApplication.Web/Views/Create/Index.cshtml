@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html ng-app="GVA.Creation" ng-controller="CreatePageController as parent">
+<html ng-app="GVA.Creation" ng-controller="CreatePageController">
 <head>
     <title>Pollster</title>
     @Styles.Render("~/Bundles/StyleLib")
@@ -22,10 +22,8 @@
                         <div><a href="#" ng-click="toggleAccountControls=false;signOut()">Sign Out</a></div>
                     </div>
                 </div>
-                
                 <div class="clear"></div>
-                <ng-include ng-if="!account" src="'/Routes/BasicCreate'"></ng-include>
-                <ng-include ng-if="account" src="'/Routes/AdvancedCreate'"></ng-include>
+                <div ng-view></div>
             </div>
         </div>
         <div id="footer"><a href="mailto:generic.voting@gmail.com">Contact us</a> | © 2015 – Scott Logic Ltd</div>
