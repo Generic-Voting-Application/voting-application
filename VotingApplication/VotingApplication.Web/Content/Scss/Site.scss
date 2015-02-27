@@ -12,6 +12,7 @@ $Error: $Red500;
 
 html {
     height: 100%;
+    position: relative;
 }
 
 body {
@@ -94,7 +95,8 @@ hr {
 }
 
 #footer {
-    position: absolute;
+    margin-top: 50px;
+    padding: 0px 20px 0px 20px;
     bottom: 0px;
     height: 30px;
     background-color: $White;
@@ -167,7 +169,7 @@ hr {
 .form-error {
     font-size: small;
     color: $Error;
-    overflow:scroll;
+    overflow: scroll;
 }
 
 .btn-group {
@@ -211,5 +213,5 @@ textarea {
 }
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
+    display: none !important;
 }
