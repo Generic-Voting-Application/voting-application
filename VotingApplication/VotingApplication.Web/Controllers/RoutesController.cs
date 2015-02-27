@@ -29,6 +29,11 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
+        public ActionResult MultiVote()
+        {
+            return View();
+        }
+
         public ActionResult IdentityLogin()
         {
             return View();

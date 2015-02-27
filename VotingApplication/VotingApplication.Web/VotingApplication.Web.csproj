@@ -323,6 +323,7 @@
     <Content Include="Scripts\Controllers\CreatePageController.js" />
     <Content Include="Scripts\Controllers\IdentityLoginController.js" />
     <Content Include="Scripts\Controllers\BasicVoteController.js" />
+    <Content Include="Scripts\Controllers\MultiVoteController.js" />
     <Content Include="Scripts\Controllers\PollHeadingController.js" />
     <Content Include="Scripts\Controllers\ResultsPageController.js" />
     <Content Include="Scripts\Controllers\PointsVoteController.js" />
@@ -356,6 +357,7 @@
     <Content Include="Views\Create\Index.cshtml" />
     <Content Include="Views\Routes\AdvancedCreate.cshtml" />
     <Content Include="Views\Routes\Manage.cshtml" />
+    <Content Include="Views\Routes\MultiVote.cshtml" />
     <None Include="Views\Routes\PollHeading.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
