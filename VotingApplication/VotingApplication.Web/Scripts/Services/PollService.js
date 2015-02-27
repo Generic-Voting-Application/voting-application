@@ -82,7 +82,7 @@
                 method: 'GET',
                 url: '/api/manage/' + manageId,
             })
-            .success(function (data, status) { if (callback) { callback(data) } })
+            .success(function (data) { self.getPoll(data.UUID, callback, failureCallback) })
             .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
 
         }

@@ -1,4 +1,40 @@
 ﻿<div ng-app="GVA.Creation" ng-controller="ManagePageController">
-    Poll Management for {{manageId}}
-    UUID is {{UUID}}
+    <div class="manage-options-area centered">
+        <div>
+            <span class="glyphicon glyphicon-question-sign pull-left manage-option-icon" aria-hidden="true"></span>
+            <h4>Question:</h4>
+            <span>{{poll.Name}}</span>
+            <span class="pull-right"><a href="#">Edit</a></span>
+        </div>
+
+        <div>
+            <span class="glyphicon glyphicon-user pull-left manage-option-icon" aria-hidden="true"></span>
+            <h4>Voters:</h4>
+            <span>Friends & Coworkers</span>
+            <span class="pull-right"><a href="#">Edit</a></span>
+        </div>
+
+        <div>
+            <span class="glyphicon glyphicon-check pull-left manage-option-icon" aria-hidden="true"></span>
+            <h4>Poll Style:</h4>
+            <span>{{poll.VotingStrategy}}</span>
+            <span class="pull-right"><a href="#">Edit</a></span>
+        </div>
+
+        <div>
+            <span class="glyphicon glyphicon-time pull-left manage-option-icon" aria-hidden="true"></span>
+            <h4>Expires:</h4>
+            <span>{{formatPollExpiry()}}</span>
+            <span class="pull-right"><a href="#">Edit</a></span>
+        </div>
+
+        <div>
+            <span class="glyphicon glyphicon-th-list pull-left manage-option-icon" aria-hidden="true"></span>
+            <h4>Options:</h4>
+            <span>{{poll.Options.length}} Options</span>
+            <span class="pull-right"><a href="#">Edit</a></span>
+        </div>
+
+        
+    </div>
 </div>

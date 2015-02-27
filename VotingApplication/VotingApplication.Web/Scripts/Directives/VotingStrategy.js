@@ -1,9 +1,10 @@
 ﻿(function () {
-    angular.module('GVA.Voting').directive('votingStrategy', ['PollService', function (PollService) {
+    angular.module('GVA.Voting').directive('votingStrategy', ['PollService', '$routeParams', function (PollService, $routeParams) {
 
         var pollStrategy = null;
+        var pollId = $routeParams.pollId;
 
-        PollService.getPoll(PollService.currentPollId(), function (data) {
+        PollService.getPoll(pollId, function (data) {
             pollStrategy = data.VotingStrategy;
         });
 
