@@ -33,7 +33,6 @@ body {
 }
 
 #not-user-btn {
-    width: 100px;
     float: right;
 }
 
@@ -66,27 +65,32 @@ body {
     max-width: 320px;
 }
 
+.voting-area {
+    margin-bottom: 15px;
+}
+
 // Points-voting specific
 
 .option-text {
     float: left;
     padding-right: 10px;
     margin-top: 0px;
+    font-weight:bold;
 }
 
 .option-description {
     float: left;
-    clear:left;
+    clear: left;
 }
 
 .option-buttons {
     float: right;
+    width: 100px;
 }
 
 .option-buttons > * {
     display: block;
     text-align: center;
-    width: 100%;
 }
 
 .btn-group-points {
@@ -151,4 +155,16 @@ body {
             border-right-color: $Grey400;
         }
     }
+}
+
+// Multi vote specific
+
+.option-checkbox {
+    margin:5px 10px 0px 10px;
+}
+
+.multivote-option-description {
+    @extend .option-description;
+
+    margin-left: 34px;
 }
