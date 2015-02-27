@@ -5,6 +5,8 @@ $Blue500: #2196F3;
 $Red900: #B71C1C;
 $Red500: #f44336;
 $Grey400: #BDBDBD;
+$BlueGrey400: #78909C;
+$BlueGrey100: #CFD8DC;
 $Black: #000000;
 $White: #FFFFFF;
 
@@ -26,7 +28,6 @@ body {
     color: $Blue500;
     margin-top: 5px;
     margin-bottom: 20px;
-
     position: relative;
     left: 20px;
 
@@ -46,12 +47,11 @@ body {
     margin-top: 50px;
     margin-left: auto;
     margin-right: auto;
-
     width: 300px;
     font-size: 10pt;
 
     > input {
-        width: 100%
+        width: 100%;
     }
 }
 
@@ -72,11 +72,31 @@ body {
 }
 
 .account-login {
-     max-width: 320px;
+    max-width: 320px;
 }
 
 .account-register {
-     max-width: 320px;
+    max-width: 320px;
+}
+
+.account-control-box {
+    position: absolute;
+    border-style: solid;
+    border-width: thin;
+    border-color: $BlueGrey400;
+    width: 100px;
+    right: 0;
+
+    > div {
+        border-top-style: solid;
+        border-top-width: thin;
+        border-top-color: $BlueGrey100;
+        padding: 3px;
+
+        &:first-of-type {
+            border-top: none;
+        }
+    }
 }
 
 // Horizontal rules

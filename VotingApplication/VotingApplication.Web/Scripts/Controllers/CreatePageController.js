@@ -7,6 +7,10 @@
             AccountService.openLoginDialog($scope);
         }
 
+        $scope.signOut = function () {
+            AccountService.clearAccount();
+        }
+
         AccountService.registerAccountObserver(function () {
             $scope.account = AccountService.account;
         });
