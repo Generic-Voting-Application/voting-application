@@ -14,20 +14,17 @@
             //Whether or not we have an "s" on the end of "Winner"
             $scope.plural = '';
 
-<<<<<<< HEAD
             var drawChart = function (data) {
                 if (!data.length) return;
-=======
-            var highestDataValue = data.reduce(function (prev, curr) {
-                return curr.Sum > prev.Sum ? curr : prev;
-            }).Sum;
-            var tickFrequency = Math.max((Math.pow(10, (Math.round(Math.log(highestDataValue) / Math.log(10)) - 1))), 1);
+                var highestDataValue = data.reduce(function (prev, curr) {
+                    return curr.Sum > prev.Sum ? curr : prev;
+                }).Sum;
+                var tickFrequency = Math.max((Math.pow(10, (Math.round(Math.log(highestDataValue) / Math.log(10)) - 1))), 1);
 
-            var voteAxis = new insight.Axis('', insight.scales.linear)
-                .tickFrequency(tickFrequency);
-            var optionAxis = new insight.Axis('', insight.scales.ordinal)
-                .isOrdered(true);
->>>>>>> feature/new-ux
+                var voteAxis = new insight.Axis('', insight.scales.linear)
+                    .tickFrequency(tickFrequency);
+                var optionAxis = new insight.Axis('', insight.scales.ordinal)
+                    .isOrdered(true);
 
                 var dataUnchanged = chart && data.length === chart.series().length;
 
