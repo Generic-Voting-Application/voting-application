@@ -5,6 +5,7 @@
                 var manageId = $routeParams.manageId;
                 
                 $scope.poll = {};
+                $scope.manageId = manageId;
 
                 $scope.formatPollExpiry = function(){
                     if(!$scope.poll.Expires || !$scope.poll.ExpiryDate){
