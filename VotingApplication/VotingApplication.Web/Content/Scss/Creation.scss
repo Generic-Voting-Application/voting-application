@@ -138,7 +138,7 @@ body {
     margin: 2px;
 
     &:active {
-        background-color:$Blue300;
+        background-color: $Blue300;
         box-shadow: 0px 0px 4px 0px rgba($Black, 0.6);
     }
 }
@@ -147,11 +147,19 @@ body {
     max-width: 300px;
 }
 
+.manage-option-area {
+    margin-top: 1.3em;
+}
+
 .manage-option-icon {
-    margin-bottom: 50px;
     margin-right: 10px;
+    margin-bottom: 1em;
 }
 
 .manage-section-area {
     max-width: 220px;
+}
+
+.manage-option-input {
+    width: 90%;
 }

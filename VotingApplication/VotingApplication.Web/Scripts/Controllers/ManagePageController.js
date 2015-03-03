@@ -3,7 +3,8 @@
             function ($scope, $routeParams, AccountService, ManageService) {
 
                 var manageId = $routeParams.manageId;
-                
+                var loaded = false;
+
                 $scope.poll = {};
                 $scope.manageId = manageId;
 
@@ -11,17 +12,25 @@
                     AccountService.openLoginDialog($scope);
                 }
 
-                $scope.formatPollExpiry = function(){
-                    if(!$scope.poll.Expires || !$scope.poll.ExpiryDate){
+                $scope.update = function () {
+                    if (loaded) {
+                        ManageService.poll = $scope.poll;
+                        ManageService.updatePoll();
+                    }
+                };
+
+                $scope.formatPollExpiry = function () {
+                    if (!$scope.poll.Expires || !$scope.poll.ExpiryDate) {
                         return 'Never';
                     }
 
                     var expiryDate = new Date($scope.poll.ExpiryDate);
                     return expiryDate.toLocaleString();
                 }
-                
+
                 ManageService.getPoll(manageId, function (data) {
                     $scope.poll = data;
+                    loaded = true;
                 });
 
             }]);

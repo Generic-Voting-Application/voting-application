@@ -320,7 +320,6 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\Controllers\AccountRegisterController.js" />
     <Content Include="Scripts\Controllers\AccountLoginController.js" />
-    <Content Include="Scripts\Controllers\ManageNameController.js" />
     <Content Include="Scripts\Controllers\ManagePageController.js" />
     <Content Include="Scripts\Controllers\CreatePageController.js" />
     <Content Include="Scripts\Controllers\IdentityLoginController.js" />
@@ -362,7 +361,6 @@
     <Content Include="Views\Routes\MultiVote.cshtml" />
     <Content Include="Views\Routes\ManageVoters.cshtml" />
     <Content Include="Views\Routes\ManageOptions.cshtml" />
-    <Content Include="Views\Routes\ManageName.cshtml" />
     <Content Include="Views\Routes\ManagePollType.cshtml" />
     <Content Include="Views\Routes\ManageExpiry.cshtml" />
     <None Include="Views\Routes\PollHeading.cshtml" />
