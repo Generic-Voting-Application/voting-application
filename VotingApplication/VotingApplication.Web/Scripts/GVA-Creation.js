@@ -10,9 +10,6 @@
            .when('/Manage/:manageId/Name', {
                templateUrl: '../Routes/ManageName'
            })
-           .when('/Manage/:manageId/Question', {
-               templateUrl: '../Routes/ManageQuestion'
-           })
            .when('/Manage/:manageId/Options', {
                templateUrl: '../Routes/ManageOptions'
            })

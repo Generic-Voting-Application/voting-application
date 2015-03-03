@@ -74,7 +74,7 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
-        public ActionResult ManageQuestion()
+        public ActionResult ManageName()
         {
             return View();
         }

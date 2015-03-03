@@ -128,6 +128,21 @@ body {
 
 // Manage page specific
 
+.manage-option-btn {
+    background-color: $Blue500;
+    color: $White;
+    border: none;
+    box-shadow: 1px 1px 4px 0px rgba($Black, 0.6);
+    padding: 5px;
+    min-width: 75px;
+    margin: 2px;
+
+    &:active {
+        background-color:$Blue300;
+        box-shadow: 0px 0px 4px 0px rgba($Black, 0.6);
+    }
+}
+
 .manage-options-area {
     max-width: 300px;
 }
@@ -135,4 +150,8 @@ body {
 .manage-option-icon {
     margin-bottom: 50px;
     margin-right: 10px;
+}
+
+.manage-section-area {
+    max-width: 220px;
 }

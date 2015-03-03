@@ -320,6 +320,7 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\Controllers\AccountRegisterController.js" />
     <Content Include="Scripts\Controllers\AccountLoginController.js" />
+    <Content Include="Scripts\Controllers\ManageNameController.js" />
     <Content Include="Scripts\Controllers\ManagePageController.js" />
     <Content Include="Scripts\Controllers\CreatePageController.js" />
     <Content Include="Scripts\Controllers\IdentityLoginController.js" />
@@ -342,13 +343,13 @@
     <Content Include="Scripts\Services\ErrorService.js" />
     <Content Include="Scripts\Services\IdentityService.js" />
     <Content Include="Scripts\Services\ExpiryStringService.js" />
+    <Content Include="Scripts\Services\ManageService.js" />
     <Content Include="Scripts\Services\PollService.js" />
     <Content Include="Scripts\Services\TokenService.js" />
     <Content Include="Scripts\Directives\VotingStrategy.js" />
     <Content Include="Scripts\Lib\crossfilter-min.js" />
     <Content Include="Scripts\Lib\d3-min.js" />
     <Content Include="Scripts\Lib\insight-min.js" />
-    <Content Include="Scripts\Services\PollStrategy.js" />
     <Content Include="Scripts\GVA-Voting.js" />
     <Content Include="Views\Routes\AccountLogin.cshtml" />
     <Content Include="Views\Routes\AccountRegister.cshtml" />
@@ -361,7 +362,7 @@
     <Content Include="Views\Routes\MultiVote.cshtml" />
     <Content Include="Views\Routes\ManageVoters.cshtml" />
     <Content Include="Views\Routes\ManageOptions.cshtml" />
-    <Content Include="Views\Routes\ManageQuestion.cshtml" />
+    <Content Include="Views\Routes\ManageName.cshtml" />
     <Content Include="Views\Routes\ManagePollType.cshtml" />
     <Content Include="Views\Routes\ManageExpiry.cshtml" />
     <None Include="Views\Routes\PollHeading.cshtml" />

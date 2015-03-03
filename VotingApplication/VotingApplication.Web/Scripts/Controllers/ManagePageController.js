@@ -1,11 +1,15 @@
 ﻿(function () {
-    angular.module('GVA.Creation').controller('ManagePageController', ['$scope', '$routeParams', 'AccountService', 'PollService',
-            function ($scope, $routeParams, AccountService, PollService) {
+    angular.module('GVA.Creation').controller('ManagePageController', ['$scope', '$routeParams', 'AccountService', 'ManageService',
+            function ($scope, $routeParams, AccountService, ManageService) {
 
                 var manageId = $routeParams.manageId;
                 
                 $scope.poll = {};
                 $scope.manageId = manageId;
+
+                $scope.openLoginDialog = function () {
+                    AccountService.openLoginDialog($scope);
+                }
 
                 $scope.formatPollExpiry = function(){
                     if(!$scope.poll.Expires || !$scope.poll.ExpiryDate){
@@ -16,7 +20,7 @@
                     return expiryDate.toLocaleString();
                 }
                 
-                PollService.getPollByManageId(manageId, function (data) {
+                ManageService.getPoll(manageId, function (data) {
                     $scope.poll = data;
                 });
 
