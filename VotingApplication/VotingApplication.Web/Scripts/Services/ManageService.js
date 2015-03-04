@@ -38,13 +38,13 @@
 
         }
         
-        self.updatePoll = function (callback, failureCallback) {
+        self.updatePoll = function (manageId, poll, callback, failureCallback) {
             $http({
                 method: 'PUT',
-                url: '/api/manage/' + $routeParams.manageId,
-                data: self.poll
+                url: '/api/manage/' + manageId,
+                data: poll
             })
-            .success(function (data) { self.poll = data; notifyObservers(); if (callback) { callback(data) } })
+            .success(function (data) { if (callback) { callback(data) } })
             .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
         }
 

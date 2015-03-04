@@ -7,6 +7,7 @@ using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Controllers;
+using System.Collections.Generic;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -79,7 +80,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             using (var context = _contextFactory.CreateContext())
             {
-                Poll existingPoll = context.Polls.Where(p => p.ManageId == manageId).SingleOrDefault();
+                Poll existingPoll = context.Polls.Where(p => p.ManageId == manageId).Include(p => p.Options).SingleOrDefault();
 
                 if (existingPoll == null)
                 {
@@ -95,6 +96,25 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 existingPoll.Name = updateRequest.Name;
                 existingPoll.OptionAdding = updateRequest.OptionAdding;
                 existingPoll.RequireAuth = updateRequest.RequireAuth;
+
+                List<Option> newOptions = new List<Option>();
+
+                foreach (Option option in existingPoll.Options)
+                {
+                    Option duplicateRequestOption = updateRequest.Options.Find(o => o.Name == option.Name);
+
+                    if(duplicateRequestOption != null)
+                    {
+                        newOptions.Add(option);
+                        updateRequest.Options.Remove(duplicateRequestOption);
+                    }
+                }
+
+                // Deal with deleted votes here
+
+                newOptions.AddRange(updateRequest.Options);
+
+                existingPoll.Options = newOptions;
 
                 existingPoll.LastUpdated = DateTime.Now;
 

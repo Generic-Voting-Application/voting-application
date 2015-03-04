@@ -1,1 +1,13 @@
-﻿
+﻿<div ng-app="GVA.Creation" ng-controller="ManageOptionController">
+    <div class="manage-area centered">
+        <h2>
+            Poll Options
+        </h2>
+        <div class="manage-section" ng-repeat="option in poll.Options">
+            {{option.Name}}
+            <span class="glyphicon glyphicon-remove pull-right clickable" aria-hidden="true" ng-click="remove(option)"></span>
+        </div>
+        
+    </div>
+
+</div>

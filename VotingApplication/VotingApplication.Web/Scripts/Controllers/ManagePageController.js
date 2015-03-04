@@ -15,7 +15,7 @@
                 $scope.update = function () {
                     if (loaded) {
                         ManageService.poll = $scope.poll;
-                        ManageService.updatePoll();
+                        ManageService.updatePoll($routeParams.manageId, $scope.poll);
                     }
                 };
 

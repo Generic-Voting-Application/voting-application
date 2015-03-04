@@ -128,7 +128,7 @@ body {
 
 // Manage page specific
 
-.manage-option-btn {
+.manage-btn {
     background-color: $Blue500;
     color: $White;
     border: none;
@@ -143,23 +143,19 @@ body {
     }
 }
 
-.manage-options-area {
+.manage-area {
     max-width: 300px;
 }
 
-.manage-option-area {
+.manage-section {
     margin-top: 1.3em;
 }
 
-.manage-option-icon {
+.manage-icon {
     margin-right: 10px;
     margin-bottom: 1em;
 }
 
-.manage-section-area {
-    max-width: 220px;
-}
-
-.manage-option-input {
+.manage-name-input {
     width: 90%;
 }

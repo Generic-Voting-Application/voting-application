@@ -320,6 +320,7 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\Controllers\AccountRegisterController.js" />
     <Content Include="Scripts\Controllers\AccountLoginController.js" />
+    <Content Include="Scripts\Controllers\ManageOptionController.js" />
     <Content Include="Scripts\Controllers\ManagePageController.js" />
     <Content Include="Scripts\Controllers\CreatePageController.js" />
     <Content Include="Scripts\Controllers\IdentityLoginController.js" />
