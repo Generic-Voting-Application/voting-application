@@ -4,10 +4,15 @@
             Poll Options
         </h2>
         <div class="manage-section" ng-repeat="option in poll.Options">
-            {{option.Name}}
-            <span class="glyphicon glyphicon-remove pull-right clickable" aria-hidden="true" ng-click="remove(option)"></span>
+            <div>
+                <span class="glyphicon glyphicon-pencil pull-left clickable" aria-hidden="true"></span>
+                <span class="icon-padded-left">{{option.Name}}</span>
+                <span class="glyphicon glyphicon-remove pull-right clickable" aria-hidden="true" ng-click="remove(option)"></span>
+            </div>
+            <div>
+                <span class="glyphicon glyphicon-pencil pull-left clickable" aria-hidden="true"></span>
+                <span class="icon-padded-left">{{option.Description}}</span>
+            </div>
         </div>
-        
     </div>
-
 </div>

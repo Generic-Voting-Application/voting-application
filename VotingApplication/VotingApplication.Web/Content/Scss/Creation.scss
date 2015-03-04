@@ -128,6 +128,10 @@ body {
 
 // Manage page specific
 
+.icon-padded-left {
+    padding-left: 20px;
+}
+
 .manage-btn {
     background-color: $Blue500;
     color: $White;
@@ -149,11 +153,6 @@ body {
 
 .manage-section {
     margin-top: 1.3em;
-}
-
-.manage-icon {
-    margin-right: 10px;
-    margin-bottom: 1em;
 }
 
 .manage-name-input {

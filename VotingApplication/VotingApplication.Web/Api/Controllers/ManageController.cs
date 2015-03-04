@@ -98,25 +98,42 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 existingPoll.RequireAuth = updateRequest.RequireAuth;
 
                 List<Option> newOptions = new List<Option>();
+                List<Option> oldOptions = new List<Option>();
+                List<Vote> oldVotes = new List<Vote>();
 
                 foreach (Option option in existingPoll.Options)
                 {
-                    Option duplicateRequestOption = updateRequest.Options.Find(o => o.Name == option.Name);
+                    Option duplicateRequestOption = updateRequest.Options.Find(o => o.Id == option.Id);
 
-                    if(duplicateRequestOption != null)
+                    if (duplicateRequestOption != null)
                     {
+                        option.Name = duplicateRequestOption.Name;
+                        option.Description = duplicateRequestOption.Description;
+
                         newOptions.Add(option);
                         updateRequest.Options.Remove(duplicateRequestOption);
                     }
+                    else
+                    {
+                        oldOptions.Add(option);
+                        oldVotes.AddRange(context.Votes.Where(v => v.OptionId == option.Id).ToList());
+                    }
                 }
-
-                // Deal with deleted votes here
 
                 newOptions.AddRange(updateRequest.Options);
 
                 existingPoll.Options = newOptions;
-
                 existingPoll.LastUpdated = DateTime.Now;
+
+                foreach (Option oldOption in oldOptions)
+                {
+                    context.Options.Remove(oldOption);
+                }
+
+                foreach (Vote oldVote in oldVotes)
+                {
+                    context.Votes.Remove(oldVote);
+                }
 
                 // Need code to handle poll type changed when enabaled.
 
