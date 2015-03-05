@@ -18,7 +18,7 @@ namespace VotingApplication.Web.Api.Validators
 
             foreach (VoteRequestModel voteRequest in voteRequests)
             {
-                if (voteRequest.VoteValue != 0)
+                if (voteRequest.VoteValue != 1)
                 {
                     modelState.AddModelError("VoteValue", String.Format("Invalid vote value: {0}", voteRequest.VoteValue));
                 }
