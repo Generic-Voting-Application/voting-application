@@ -10,8 +10,6 @@ namespace VotingApplication.Data.Model
     {
         Basic,
         Points,
-        Ranked,
-        UpDown,
-        Multi
+        Ranked
     }
 }
