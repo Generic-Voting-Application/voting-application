@@ -3,7 +3,6 @@
             function ($scope, $routeParams, AccountService, ManageService) {
 
                 var manageId = $routeParams.manageId;
-                var loaded = false;
 
                 $scope.poll = {};
                 $scope.manageId = manageId;
@@ -12,11 +11,9 @@
                     AccountService.openLoginDialog($scope);
                 }
 
-                $scope.update = function () {
-                    if (loaded) {
-                        ManageService.poll = $scope.poll;
-                        ManageService.updatePoll($routeParams.manageId, $scope.poll);
-                    }
+                $scope.updatePoll = function () {
+                    ManageService.poll = $scope.poll;
+                    ManageService.updatePoll($routeParams.manageId, $scope.poll);
                 };
 
                 $scope.formatPollExpiry = function () {
@@ -30,7 +27,6 @@
 
                 ManageService.getPoll(manageId, function (data) {
                     $scope.poll = data;
-                    loaded = true;
                 });
 
             }]);
