@@ -1,7 +1,11 @@
-﻿using Microsoft.Owin.Security.OAuth;
-using System.Net.Http.Headers;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Web.Http;
-using VotingApplication.Web.Api.Filters;
+using Microsoft.Owin.Security.OAuth;
+using Newtonsoft.Json.Serialization;
+using System.Net.Http.Headers;
 
 namespace VotingApplication.Web.Api
 {
@@ -13,7 +17,6 @@ namespace VotingApplication.Web.Api
             // Configure Web API to use only bearer token authentication.
             config.SuppressDefaultHostAuthentication();
             config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
-            config.Filters.Add(new LoggingExceptionFilterAttribute());
 
             // Web API routes
             config.MapHttpAttributeRoutes();

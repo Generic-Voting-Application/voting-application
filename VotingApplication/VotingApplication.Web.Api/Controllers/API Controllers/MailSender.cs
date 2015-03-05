@@ -7,7 +7,6 @@ using System.Net;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Configuration;
-using VotingApplication.Web.Api.Logging;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -35,23 +34,22 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 return;
             }
 
+            string hostEmail = WebConfigurationManager.AppSettings["HostEmail"];
+
+            SendGridMessage mail = new SendGridMessage();
+            mail.From = new MailAddress(hostEmail, "Voting App");
+            mail.AddTo(to);
+            mail.Subject = subject;
+            mail.Text = message;
+
             try
             {
-                string hostEmail = WebConfigurationManager.AppSettings["HostEmail"];
-
-                SendGridMessage mail = new SendGridMessage();
-                mail.From = new MailAddress(hostEmail, "Voting App");
-                mail.AddTo(to);
-                mail.Subject = subject;
-                mail.Text = message;
-
                 var transportWeb = new SendGrid.Web(credentials);
                 transportWeb.Deliver(mail);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                ILogger logger = LoggerFactory.GetLogger();
-                logger.Log(exception);
+                //Ignore failed email sending
             }
         }
     }
