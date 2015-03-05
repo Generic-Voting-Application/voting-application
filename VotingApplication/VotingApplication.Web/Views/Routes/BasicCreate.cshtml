@@ -6,11 +6,11 @@
 
     <div id="question-block">
         Your Question <br />
-        <input id="question" placeholder="E.g. Where should we go for lunch?" />
+        <input id="question" placeholder="E.g. Where should we go for lunch?" ng-model="pollQuestion" />
     </div>
 
     <div id="quickpoll-block">
-        <button class="inactive-btn shadowed" ng-click="createPoll()">Quick Poll</button>
+        <button class="inactive-btn shadowed" ng-click="createPoll(pollQuestion)">Quick Poll</button>
     </div>
 
     <h3 class="centered-text horizontal-ruled">or</h3>

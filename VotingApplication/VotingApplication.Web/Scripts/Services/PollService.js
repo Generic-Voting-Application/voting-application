@@ -51,8 +51,7 @@
                 return null;
             }
 
-            if (!lastCheckedTimestamps[pollId])
-            {
+            if (!lastCheckedTimestamps[pollId]) {
                 lastCheckedTimestamps[pollId] = 0;
             }
 
@@ -60,7 +59,7 @@
                 method: 'GET',
                 url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastCheckedTimestamps[pollId]
             })
-            .success(function (data, status) {  if (callback) { callback(data) } })
+            .success(function (data, status) { if (callback) { callback(data) } })
             .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
 
             lastCheckedTimestamps[pollId] = Date.now();
@@ -80,6 +79,37 @@
             .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
 
         }
+
+        self.createPoll = function (question) {
+            var request = {
+                method: 'POST',
+                url: 'api/poll',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                data: JSON.stringify({
+                    Name: question,
+                    Creator: 'Anonymous',
+                    Email: undefined,
+                    TemplateId: 0,
+                    VotingStrategy: 'Basic',
+                    MaxPoints: 7,
+                    MaxPerVote: 3,
+                    InviteOnly: false,
+                    AnonymousVoting: false,
+                    RequireAuth: false,
+                    Expires: false,
+                    ExpiryDate: undefined,
+                    OptionAdding: false
+                })
+            }
+
+            $http(request).success(function (data) {
+                window.alert(data.ManageId);
+                window.location.href = "/Manage/" + data.ManageId;
+            });
+
+        };
 
         return self;
     }]);
