@@ -80,7 +80,7 @@
 
         }
 
-        self.createPoll = function (question) {
+        self.createPoll = function (question, successCallback) {
             var request = {
                 method: 'POST',
                 url: 'api/poll',
@@ -104,10 +104,8 @@
                 })
             }
 
-            $http(request).success(function (data) {
-                window.alert(data.ManageId);
-                window.location.href = "/Manage/" + data.ManageId;
-            });
+            $http(request)
+                .success(successCallback);
 
         };
 
