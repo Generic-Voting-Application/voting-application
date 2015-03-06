@@ -98,7 +98,7 @@
   <ItemGroup>
     <Compile Include="Controllers\ExpectedHttpExceptionAttribute.cs" />
     <Compile Include="Controllers\ManageInvitationControllerTests.cs" />
-    <Compile Include="Controllers\ManageOptionControllerTests.cs" />
+    <Compile Include="Controllers\ManageControllerTests.cs" />
     <Compile Include="Controllers\ManageVoteControllerTests.cs" />
     <Compile Include="Controllers\PollControllerTests.cs" />
     <Compile Include="Controllers\PollTokenControllerTests.cs" />
