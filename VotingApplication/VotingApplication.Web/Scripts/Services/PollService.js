@@ -1,77 +1,79 @@
 ﻿(function () {
-    angular.module('GVA.Common').factory('PollService', ['$location', '$http', function ($location, $http) {
-        var self = this;
+    angular
+        .module('GVA.Common')
+        .factory('PollService', ['$location', '$http',
+        function ($location, $http) {
+            var self = this;
 
-        var lastCheckedTimestamps = {};
+            var lastCheckedTimestamps = {};
 
-        self.submitVote = function (pollId, votes, token, callback, failureCallback) {
+            self.submitVote = function (pollId, votes, token, callback, failureCallback) {
 
-            if (!pollId || !votes || !token) {
-                return null;
+                if (!pollId || !votes || !token) {
+                    return null;
+                }
+
+                $http({
+                    method: 'PUT',
+                    url: '/api/token/' + token + '/poll/' + pollId + '/vote',
+                    data: votes
+                })
+                .success(function (data) { if (callback) { callback(data) } })
+                .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+
             }
 
-            $http({
-                method: 'PUT',
-                url: '/api/token/' + token + '/poll/' + pollId + '/vote',
-                data: votes
-            })
-            .success(function (data) { if (callback) { callback(data) } })
-            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+            self.getPoll = function (pollId, callback, failureCallback) {
 
-        }
+                if (!pollId) {
+                    return null;
+                }
 
-        self.getPoll = function (pollId, callback, failureCallback) {
+                $http({
+                    method: 'GET',
+                    url: '/api/poll/' + pollId
+                })
+                .success(function (data) { if (callback) { callback(data) } })
+                .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
 
-            if (!pollId) {
-                return null;
             }
 
-            $http({
-                method: 'GET',
-                url: '/api/poll/' + pollId
-            })
-            .success(function (data) { if (callback) { callback(data) } })
-            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+            self.getResults = function (pollId, callback, failureCallback) {
 
-        }
+                if (!pollId) {
+                    return null;
+                }
 
-        self.getResults = function (pollId, callback, failureCallback) {
+                if (!lastCheckedTimestamps[pollId]) {
+                    lastCheckedTimestamps[pollId] = 0;
+                }
 
-            if (!pollId) {
-                return null;
+                $http({
+                    method: 'GET',
+                    url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastCheckedTimestamps[pollId]
+                })
+                .success(function (data) { if (callback) { callback(data) } })
+                .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+
+                lastCheckedTimestamps[pollId] = Date.now();
+
             }
 
-            if (!lastCheckedTimestamps[pollId])
-            {
-                lastCheckedTimestamps[pollId] = 0;
+            self.getTokenVotes = function (pollId, token, callback, failureCallback) {
+
+                if (!pollId || !token) {
+                    return null;
+                }
+
+                $http({
+                    method: 'GET',
+                    url: '/api/token/' + token + '/poll/' + pollId + '/vote'
+                })
+                .success(function (data) { if (callback) { callback(data) } })
+                .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+
             }
 
-            $http({
-                method: 'GET',
-                url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastCheckedTimestamps[pollId]
-            })
-            .success(function (data) {  if (callback) { callback(data) } })
-            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
-
-            lastCheckedTimestamps[pollId] = Date.now();
-
-        }
-
-        self.getTokenVotes = function (pollId, token, callback, failureCallback) {
-
-            if (!pollId || !token) {
-                return null;
-            }
-
-            $http({
-                method: 'GET',
-                url: '/api/token/' + token + '/poll/' + pollId + '/vote'
-            })
-            .success(function (data) { if (callback) { callback(data) } })
-            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
-
-        }
-        
-        return self;
-    }]);
+            return self;
+        }]);
 })();

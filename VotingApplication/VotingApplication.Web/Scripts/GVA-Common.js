@@ -1,3 +1,4 @@
 ﻿(function () {
-    angular.module('GVA.Common', ['ngDialog', 'ngStorage']);
+    angular
+        .module('GVA.Common', ['ngDialog', 'ngStorage']);
 })();

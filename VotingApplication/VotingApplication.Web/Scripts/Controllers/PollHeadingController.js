@@ -1,5 +1,7 @@
 ﻿(function () {
-    angular.module('GVA.Voting').controller('PollHeadingController', ['$scope', '$routeParams', 'PollService', 'ExpiryStringService',
+    angular
+        .module('GVA.Voting')
+        .controller('PollHeadingController', ['$scope', '$routeParams', 'PollService', 'ExpiryStringService',
         function ($scope, $routeParams, PollService, ExpiryStringService) {
             $scope.pollExpiry = undefined;
 

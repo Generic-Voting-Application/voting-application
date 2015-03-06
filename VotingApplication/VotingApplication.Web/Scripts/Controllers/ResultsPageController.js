@@ -1,5 +1,7 @@
 ﻿(function () {
-    angular.module('GVA.Voting').controller('ResultsPageController', ['$scope', '$routeParams', '$location', 'IdentityService', 'PollService', 'TokenService',
+    angular
+        .module('GVA.Voting')
+        .controller('ResultsPageController', ['$scope', '$routeParams', '$location', 'IdentityService', 'PollService', 'TokenService',
         function ($scope, $routeParams, $location, IdentityService, PollService, TokenService) {
 
             var pollId = $routeParams.pollId;

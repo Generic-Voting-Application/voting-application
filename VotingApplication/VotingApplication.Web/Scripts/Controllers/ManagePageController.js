@@ -1,33 +1,39 @@
 ﻿(function () {
-    angular.module('GVA.Creation').controller('ManagePageController', ['$scope', '$routeParams', 'AccountService', 'ManageService',
-            function ($scope, $routeParams, AccountService, ManageService) {
+    angular
+        .module('GVA.Creation')
+        .controller('ManagePageController', ['$scope', '$routeParams', 'AccountService', 'ManageService',
+        function ($scope, $routeParams, AccountService, ManageService) {
 
-                var manageId = $routeParams.manageId;
+            var manageId = $routeParams.manageId;
 
-                $scope.poll = {};
-                $scope.manageId = manageId;
+            $scope.poll = {};
+            $scope.manageId = manageId;
 
-                $scope.openLoginDialog = function () {
-                    AccountService.openLoginDialog($scope);
+            $scope.openLoginDialog = function () {
+                AccountService.openLoginDialog($scope);
+            };
+
+            $scope.updatePoll = function () {
+                ManageService.poll = $scope.poll;
+                ManageService.updatePoll($routeParams.manageId, $scope.poll);
+            };
+
+            $scope.formatPollExpiry = function () {
+                if (!$scope.poll.Expires || !$scope.poll.ExpiryDate) {
+                    return 'Never';
                 }
 
-                $scope.updatePoll = function () {
-                    ManageService.poll = $scope.poll;
-                    ManageService.updatePoll($routeParams.manageId, $scope.poll);
-                };
+                var expiryDate = new Date($scope.poll.ExpiryDate);
+                return expiryDate.toLocaleString();
+            };
 
-                $scope.formatPollExpiry = function () {
-                    if (!$scope.poll.Expires || !$scope.poll.ExpiryDate) {
-                        return 'Never';
-                    }
+            $scope.selectText = function ($event) {
+                $event.target.select();
+            };
 
-                    var expiryDate = new Date($scope.poll.ExpiryDate);
-                    return expiryDate.toLocaleString();
-                }
+            ManageService.getPoll(manageId, function (data) {
+                $scope.poll = data;
+            });
 
-                ManageService.getPoll(manageId, function (data) {
-                    $scope.poll = data;
-                });
-
-            }]);
+        }]);
 })();

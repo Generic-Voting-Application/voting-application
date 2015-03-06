@@ -80,7 +80,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             using (var context = _contextFactory.CreateContext())
             {
-                Poll existingPoll = context.Polls.Where(p => p.ManageId == manageId).Include(p => p.Options).SingleOrDefault();
+                Poll existingPoll = context.Polls
+                                           .Where(p => p.ManageId == manageId)
+                                           .Include(p => p.Options)
+                                           .SingleOrDefault();
 
                 if (existingPoll == null)
                 {
@@ -101,6 +104,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 List<Option> oldOptions = new List<Option>();
                 List<Vote> oldVotes = new List<Vote>();
 
+                // Match up duplicates and clear out votes of options that are deleted
                 foreach (Option option in existingPoll.Options)
                 {
                     Option duplicateRequestOption = updateRequest.Options.Find(o => o.Id == option.Id);

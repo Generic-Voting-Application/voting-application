@@ -118,6 +118,11 @@ hr {
     clear: both;
 }
 
+.full-width {
+    width:100%;
+    max-width:none;
+}
+
 .form-input {
     border-radius: 5px;
     font-size: 12pt;

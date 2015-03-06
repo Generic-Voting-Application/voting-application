@@ -4,6 +4,7 @@ $Blue100: #BBDEFB;
 $Blue200: #90CAF9;
 $Blue300: #64B5F6;
 $Blue500: #2196F3;
+$Blue700: #1976D2;
 $Red900: #B71C1C;
 $Red500: #f44336;
 $Grey400: #BDBDBD;
@@ -23,6 +24,11 @@ body {
 .active-btn {
     background-color: $Blue500;
     border: none;
+}
+
+.go-btn {
+    background-color: $Blue500;
+    border: 1px solid $Blue700;
 }
 
 #signin-header {
@@ -161,4 +167,13 @@ body {
 
 .manage-name-input {
     width: 90%;
+}
+
+.poll-link-area {
+    padding-right: 0.1em;
+    overflow: hidden;
+}
+
+#poll-link-go-btn {
+    margin-top: 1.2em;
 }

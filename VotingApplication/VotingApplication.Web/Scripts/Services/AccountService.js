@@ -1,5 +1,7 @@
 ﻿(function () {
-    angular.module('GVA.Common').factory('AccountService', ['$localStorage', '$http', '$localStorage', 'ngDialog',
+    angular
+        .module('GVA.Common')
+        .factory('AccountService', ['$localStorage', '$http', '$localStorage', 'ngDialog',
         function ($localStorage, $http, $localStorage, ngDialog) {
 
             var self = this;
