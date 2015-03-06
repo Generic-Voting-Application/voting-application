@@ -1,8 +1,7 @@
 ﻿(function () {
     angular
         .module('GVA.Creation')
-        .controller('CreateBasicPageController', ['$scope', 'AccountService', 'PollService',
-        function ($scope, AccountService, PollService) {
+        .controller('CreateBasicPageController', ['$scope', 'AccountService', 'PollService', function ($scope, AccountService, PollService) {
 
             $scope.openLoginDialog = function () {
                 AccountService.openLoginDialog($scope);

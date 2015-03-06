@@ -57,9 +57,22 @@
 
                 lastCheckedTimestamps[pollId] = Date.now();
 
+<<<<<<< HEAD
+            if (!lastCheckedTimestamps[pollId]) {
+                lastCheckedTimestamps[pollId] = 0;
+            }
+
+            $http({
+                method: 'GET',
+                url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastCheckedTimestamps[pollId]
+            })
+            .success(function (data, status) { if (callback) { callback(data) } })
+            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+=======
             }
 
             self.getTokenVotes = function (pollId, token, callback, failureCallback) {
+>>>>>>> Generic-Voting-Application/feature/new-ux
 
                 if (!pollId || !token) {
                     return null;
@@ -73,6 +86,16 @@
                 .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
 
             }
+
+<<<<<<< HEAD
+            $http({
+                method: 'GET',
+                url: '/api/token/' + token + '/poll/' + pollId + '/vote'
+            })
+            .success(function (data, status) { if (callback) { callback(data) } })
+            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+
+        }
 
         self.createPoll = function (question, successCallback) {
             var request = {
@@ -103,6 +126,10 @@
 
         };
 
+        return self;
+    }]);
+=======
             return self;
         }]);
+>>>>>>> Generic-Voting-Application/feature/new-ux
 })();

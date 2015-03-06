@@ -1,6 +1,11 @@
 ﻿(function () {
+<<<<<<< HEAD
+    angular.module('GVA.Creation', ['ngRoute', 'ngDialog', 'ngStorage', 'GVA.Common', 'GVA.Voting']).config(['$routeProvider', function ($routeProvider) {
+        // TODO: GVA.Voting should not be required, it should be GVA.Polls, but it's not been created yet.
+    }]);
+=======
     angular
-        .module('GVA.Creation', ['ngRoute', 'ngDialog', 'ngStorage', 'GVA.Common', 'GVA.Voting'])
+        .module('GVA.Creation', ['ngRoute', 'ngDialog', 'ngStorage', 'GVA.Common'])
         .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider
@@ -29,5 +34,5 @@
                    templateUrl: '../Routes/BasicCreate'
                })
         }]);
-        // TODO: GVA.Voting should not be required, it should be GVA.Polls, but it's not been created yet.
+>>>>>>> Generic-Voting-Application/feature/new-ux
 })();

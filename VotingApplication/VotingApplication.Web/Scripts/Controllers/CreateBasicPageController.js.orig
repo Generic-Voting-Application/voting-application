@@ -6,8 +6,12 @@
 
             $scope.openLoginDialog = function () {
                 AccountService.openLoginDialog($scope);
+            $scope.openLoginDialog = function () {
+                AccountService.openLoginDialog($scope);
             };
 
+            $scope.openRegisterDialog = function () {
+                AccountService.openRegisterDialog($scope);
             $scope.openRegisterDialog = function () {
                 AccountService.openRegisterDialog($scope);
             };

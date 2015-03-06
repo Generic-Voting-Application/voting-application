@@ -68,5 +68,30 @@ namespace VotingApplication.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult Manage()
+        {
+            return View();
+        }
+
+        public ActionResult ManageOptions()
+        {
+            return View();
+        }
+
+        public ActionResult ManageVoters()
+        {
+            return View();
+        }
+
+        public ActionResult ManagePollType()
+        {
+            return View();
+        }
+
+        public ActionResult ManageExpiry()
+        {
+            return View();
+        }
     }
 }
