@@ -74,6 +74,35 @@
 
             }
 
+        self.createPoll = function (question, successCallback) {
+            var request = {
+                method: 'POST',
+                url: 'api/poll',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                data: JSON.stringify({
+                    Name: question,
+                    Creator: 'Anonymous',
+                    Email: undefined,
+                    TemplateId: 0,
+                    VotingStrategy: 'Basic',
+                    MaxPoints: 7,
+                    MaxPerVote: 3,
+                    InviteOnly: false,
+                    AnonymousVoting: false,
+                    RequireAuth: false,
+                    Expires: false,
+                    ExpiryDate: undefined,
+                    OptionAdding: false
+                })
+            }
+
+            $http(request)
+                .success(successCallback);
+
+        };
+
             return self;
         }]);
 })();
