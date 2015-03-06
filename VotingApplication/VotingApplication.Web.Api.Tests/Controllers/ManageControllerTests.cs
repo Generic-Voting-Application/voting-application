@@ -189,6 +189,20 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Put(_manageMainUUID, request);
         }
 
+        [TestMethod]
+        public void PutClearsOptionsIfNoneAreGiven()
+        {
+            ManagePollUpdateRequest request = new ManagePollUpdateRequest
+            {
+                Name = "Test",
+                VotingStrategy = PollType.Basic.ToString()
+            };
+            _controller.Put(_manageMainUUID, request);
+
+            // Assert
+            Assert.AreEqual(0, _mainPoll.Options.Count);
+        }
+
         #endregion
     }
 }
