@@ -1,0 +1,69 @@
+﻿<div ng-app="GVA.Creation" ng-controller="ManagePageController">
+    <div class="manage-area centered">
+        <h2>
+            Poll Management
+        </h2>
+        <div class="manage-section">
+            <span id="poll-link-go-btn" class="pull-right"><a href="/Poll/#/Vote/{{poll.UUID}}"><button class="go-btn">Go</button></a></span>
+            <div class="poll-link-area">
+                <label for="poll-link">Poll Link</label>
+                <div>
+                    <input class="full-width" id="poll-link" ng-model="poll.UUID" ng-click="selectText($event)" />
+                </div>
+            </div>
+
+        </div>
+        <div class="manage-section">
+            <div>
+                <span class="glyphicon glyphicon-question-sign pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Question:</h4>
+            </div>
+            <div>
+                <span class="icon-padded-left"><input class="manage-name-input" ng-model="poll.Name" required ng-model-options="{debounce: 1000}" ng-change="updatePoll()" /></span>
+            </div>
+        </div>
+        <div class="manage-section">
+            <div>
+                <span class="glyphicon glyphicon-th-list pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Options:</h4>
+            </div>
+            <div>
+                <span class="icon-padded-left">{{poll.Options.length}} Options</span>
+                <span class="pull-right"><a href="#/Manage/{{manageId}}/Options">Edit</a></span>
+            </div>
+        </div>
+        <div class="manage-section">
+            <div>
+                <span class="glyphicon glyphicon-user pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Voters:</h4>
+            </div>
+            <div>
+                <span class="icon-padded-left">Friends & Coworkers</span>
+                <span ng-if="account" class="pull-right"><a href="#/Manage/{{manageId}}/Voters">Edit</a></span>
+                <span ng-if="!account" class="pull-right"><a href="javascript:;" ng-click="openLoginDialog()">Unlock</a></span>
+            </div>
+        </div>
+        <div class="manage-section">
+            <div>
+                <span class="glyphicon glyphicon-check pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Poll Style:</h4>
+            </div>
+            <div>
+                <span class="icon-padded-left">{{poll.VotingStrategy}}</span>
+                <span ng-if="account" class="pull-right"><a href="#/Manage/{{manageId}}/PollType">Edit</a></span>
+                <span ng-if="!account" class="pull-right"><a href="javascript:;" ng-click="openLoginDialog()">Unlock</a></span>
+            </div>
+        </div>
+        <div class="manage-section">
+            <div>
+                <span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Expires:</h4>
+            </div>
+            <div>
+                <span class="icon-padded-left">{{formatPollExpiry()}}</span>
+                <span ng-if="account" class="pull-right"><a href="#/Manage/{{manageId}}/Expiry">Edit</a></span>
+                <span ng-if="!account" class="pull-right"><a href="javascript:;" ng-click="openLoginDialog()">Unlock</a></span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,10 +1,15 @@
-﻿$Blue100: #BBDEFB;
+﻿@import '~/Content/Scss/Site.scss';
+
+$Blue100: #BBDEFB;
 $Blue200: #90CAF9;
 $Blue300: #64B5F6;
 $Blue500: #2196F3;
+$Blue700: #1976D2;
 $Red900: #B71C1C;
 $Red500: #f44336;
 $Grey400: #BDBDBD;
+$BlueGrey400: #78909C;
+$BlueGrey100: #CFD8DC;
 $Black: #000000;
 $White: #FFFFFF;
 
@@ -21,14 +26,19 @@ body {
     border: none;
 }
 
+.go-btn {
+    background-color: $Blue500;
+    border: 1px solid $Blue700;
+}
+
 #signin-header {
     font-size: 10pt;
     color: $Blue500;
     margin-top: 5px;
     margin-bottom: 20px;
-
     position: relative;
     left: 20px;
+
 
     > i {
         margin: 0px 2px;
@@ -46,12 +56,11 @@ body {
     margin-top: 50px;
     margin-left: auto;
     margin-right: auto;
-
     width: 300px;
     font-size: 10pt;
 
     > input {
-        width: 100%
+        width: 100%;
     }
 }
 
@@ -72,11 +81,31 @@ body {
 }
 
 .account-login {
-     max-width: 320px;
+    max-width: 320px;
 }
 
 .account-register {
-     max-width: 320px;
+    max-width: 320px;
+}
+
+.account-control-box {
+    position: absolute;
+    border-style: solid;
+    border-width: thin;
+    border-color: $BlueGrey400;
+    width: 100px;
+    right: 0;
+
+    > div {
+        border-top-style: solid;
+        border-top-width: thin;
+        border-top-color: $BlueGrey100;
+        padding: 3px;
+
+        &:first-of-type {
+            border-top: none;
+        }
+    }
 }
 
 // Horizontal rules
@@ -101,4 +130,50 @@ body {
     top: -12px;
     left: 60%;
     width: 30%;
+}
+
+// Manage page specific
+
+.icon-padded-left {
+    padding-left: 20px;
+}
+
+.manage-btn {
+    background-color: $Blue500;
+    color: $White;
+    border: none;
+    box-shadow: 1px 1px 4px 0px rgba($Black, 0.6);
+    padding: 5px;
+    min-width: 75px;
+    margin: 2px;
+
+    &:active {
+        background-color: $Blue300;
+        box-shadow: 0px 0px 4px 0px rgba($Black, 0.6);
+    }
+}
+
+.manage-area {
+    max-width: 300px;
+}
+
+.manage-section {
+    margin-top: 1.3em;
+}
+
+.manage-section-row {
+    margin-bottom: 5px;
+}
+
+.manage-name-input {
+    width: 90%;
+}
+
+.poll-link-area {
+    padding-right: 0.1em;
+    overflow: hidden;
+}
+
+#poll-link-go-btn {
+    margin-top: 1.2em;
 }

@@ -1,0 +1,34 @@
+﻿<div ng-app="GVA.Creation" ng-controller="ManageOptionController">
+    <div class="manage-area centered">
+        <h2>
+            Poll Options
+        </h2>
+        <div class="manage-section" ng-repeat="option in poll.Options">
+            <div>
+                <span class="glyphicon glyphicon-remove pull-right clickable" aria-hidden="true" ng-click="remove(option)"></span>
+                <span class="glyphicon glyphicon-pencil pull-left clickable" ng-if="!editToggle" aria-hidden="true" ng-click="$parent.editToggle=true"></span>
+                <span class="glyphicon glyphicon-ok pull-left clickable" ng-if="editToggle" aria-hidden="true" ng-click="editToggle=false;updatePoll()"></span>
+                <h4 class="icon-padded-left" ng-if="!editToggle">{{option.Name}}</h4>
+                <h4 class="icon-padded-left" ng-if="editToggle"><input ng-model="option.Name" /></h4>
+            </div>
+            <div>
+                <span class="icon-padded-left" ng-if="!editToggle">{{option.Description}}</span>
+                <span class="icon-padded-left" ng-if="editToggle"><input ng-model="option.Description" /></span>
+            </div>
+        </div>
+        <div class="manage-section">
+            <form name="newOptionForm" ng-submit="add(newOptionForm);clear(newOptionForm)">
+                <div>
+                    <span class="glyphicon glyphicon-plus pull-right clickable" aria-hidden="true" ng-hide="newOptionForm.$invalid" ng-click="add(newOptionForm);clear(newOptionForm)"></span>
+                    <h4 class="icon-padded-left"><input ng-model="newOptionForm.Name" placeholder="Option Name" required /></h4>
+                </div>
+                <div>
+                    <span class="icon-padded-left"><input ng-model="newOptionForm.Description" placeholder="Option Description" /></span>
+                    @*Angular requires a button for submission. Go figure.*@
+                    <button type="submit" hidden></button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

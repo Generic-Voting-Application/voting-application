@@ -1,5 +1,7 @@
 ﻿(function () {
-    angular.module('GVA.Voting').factory('IdentityService', ['$localStorage', 'ngDialog',
+    angular
+        .module('GVA.Voting')
+        .factory('IdentityService', ['$localStorage', 'ngDialog',
         function ($localStorage, ngDialog) {
 
             var self = this;

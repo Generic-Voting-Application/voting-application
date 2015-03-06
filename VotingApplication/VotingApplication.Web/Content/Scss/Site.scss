@@ -12,6 +12,7 @@ $Error: $Red500;
 
 html {
     height: 100%;
+    position: relative;
 }
 
 body {
@@ -35,6 +36,10 @@ body {
 h1, h2, h3, h4 {
     font-weight: bold;
     font-family: Roboto;
+}
+
+h4 {
+    margin-bottom: 5px;
 }
 
 a {
@@ -94,7 +99,8 @@ hr {
 }
 
 #footer {
-    position: absolute;
+    margin-top: 50px;
+    padding: 0px 20px 0px 20px;
     bottom: 0px;
     height: 30px;
     background-color: $White;
@@ -110,6 +116,11 @@ hr {
 
 .clear {
     clear: both;
+}
+
+.full-width {
+    width:100%;
+    max-width:none;
 }
 
 .form-input {
@@ -167,7 +178,7 @@ hr {
 .form-error {
     font-size: small;
     color: $Error;
-    overflow:scroll;
+    overflow: scroll;
 }
 
 .btn-group {
@@ -203,6 +214,10 @@ hr {
     padding: 0px 20px;
 }
 
+.clickable {
+    cursor:pointer;
+}
+
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
@@ -211,5 +226,5 @@ textarea {
 }
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
+    display: none !important;
 }
