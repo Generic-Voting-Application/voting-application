@@ -14,7 +14,7 @@
 
             $scope.createPoll = function (question) {
                 PollService.createPoll(question, function (data) {
-                    window.location.href = "/Manage/" + data.ManageId;
+                    window.location.href = "/#/Manage/" + data.ManageId;
                 });
             };
 
