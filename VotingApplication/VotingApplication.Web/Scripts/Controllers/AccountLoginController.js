@@ -1,31 +1,37 @@
-﻿(function () {
+﻿/// <reference path="../Services/AccountService.js" />
+/// <reference path="../Services/ErrorService.js" />
+(function () {
     angular
         .module('GVA.Common')
-        .controller('AccountLoginController', ['$scope', 'AccountService',
-        function ($scope, AccountService) {
+        .controller('AccountLoginController', ['$scope', 'AccountService', 'ErrorService',
+            function ($scope, AccountService, ErrorService) {
 
-            var displayError = function (errorMessage) {
-                $scope.errorMessage = errorMessage;
-            }
+                $scope.loginAccount = function (form) {
 
-            $scope.loginAccount = function (form) {
+                    AccountService.getAccessToken(form.email, form.password, callback, failureCallback);
 
-                AccountService.getAccessToken(form.email, form.password, function (data) {
-                    AccountService.setAccount(data.access_token, form.email);
+                    function callback(data) {
+                        AccountService.setAccount(data.access_token, form.email);
 
-                    $scope.closeThisDialog();
-                    if ($scope.ngDialogData.callback) $scope.ngDialogData.callback();
+                        $scope.closeThisDialog();
+                        if ($scope.ngDialogData.callback) {
+                            $scope.ngDialogData.callback();
+                        }
+                    };
 
-                }, function (data, status) {
-                    // Bad request
-                    if (status === 400 && data.ModelState) {
-                        ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
-                    } else {
-                        displayError(data.Message || data.error_description);
+                    function failureCallback(data, status) {
+                        // Bad request
+                        if (status === 400 && data.ModelState) {
+                            ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
+                        }
+                        else {
+                            displayError(data.Message || data.error_description);
+                        }
+                    };
+
+                    var displayError = function (errorMessage) {
+                        $scope.errorMessage = errorMessage;
                     }
-                });
-            }
-
-        }]);
-
+                }
+            }]);
 })();
