@@ -27,6 +27,23 @@
                 return expiryDate.toLocaleString();
             };
 
+            $scope.formatVoters = function () {
+
+                if ($scope.poll.InviteOnly) {
+                    if ($scope.poll.AnonymousVoting) {
+                        return 'Elections';
+                    } else {
+                        return 'Friends & Coworkers';
+                    }
+                } else {
+                    if ($scope.poll.AnonymousVoting) {
+                        return 'Survey Group';
+                    } else {
+                        return 'Social Media';
+                    }
+                }
+            }
+
             $scope.selectText = function ($event) {
                 $event.target.select();
             };

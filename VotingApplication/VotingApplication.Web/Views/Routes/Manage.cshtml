@@ -38,7 +38,7 @@
                 <h4 class="icon-padded-left">Voters:</h4>
             </div>
             <div>
-                <span class="icon-padded-left">Friends & Coworkers</span>
+                <span class="icon-padded-left">{{formatVoters()}}</span>
                 <span ng-if="account" class="pull-right"><a href="#/Manage/{{manageId}}/Voters">Edit</a></span>
                 <span ng-if="!account" class="pull-right"><a href="javascript:;" ng-click="openLoginDialog()">Unlock</a></span>
             </div>

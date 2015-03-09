@@ -1,1 +1,26 @@
-﻿
+﻿<div ng-app="GVA.Creation" ng-controller="ManageVotersController">
+    <div class="manage-area centered">
+        <h2>Poll Voters</h2>
+        <div class="manage-section">
+            <div>
+                <form class="form-section-inline">
+                    <label for="AnonymousVoting">Users must give a name to vote</label>
+                    <toggle-switch id="AnonymousVoting" ng-model="poll.AnonymousVoting" on-label="Yes" off-label="No" ng-click="updatePoll()"></toggle-switch>
+                </form>
+            </div>
+            <div>
+                <form class="form-section-inline">
+                    <label for="InviteOnly">Users require an invite to vote</label>
+                    <toggle-switch id="InviteOnly" ng-model="poll.InviteOnly" on-label="Yes" off-label="No" ng-click="updatePoll()"></toggle-switch>
+                </form>
+            </div>
+        </div>
+        <div class="manage-section">
+            <button class="manage-btn" ng-click="return()">Back</button>
+        </div>
+    </div>
+</div>
+
+
+
+
