@@ -71,6 +71,17 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 ModelState.AddModelError("ExpiryDate", "Invalid or unspecified ExpiryDate");
             }
 
+            if(updateRequest.Options != null)
+            {
+                foreach(Option option in updateRequest.Options)
+                {
+                    if(option.Name == null || option.Name == String.Empty)
+                    {
+                        ModelState.AddModelError("Option.Name", "Invalid or unspecified Option Name");
+                    }
+                }
+            }
+
             if (!ModelState.IsValid)
             {
                 this.ThrowError(HttpStatusCode.BadRequest, ModelState);
@@ -104,27 +115,32 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 List<Option> oldOptions = new List<Option>();
                 List<Vote> oldVotes = new List<Vote>();
 
-                // Match up duplicates and clear out votes of options that are deleted
-                foreach (Option option in existingPoll.Options)
+                if (updateRequest.Options != null && updateRequest.Options.Count > 0)
                 {
-                    Option duplicateRequestOption = updateRequest.Options.Find(o => o.Id == option.Id);
-
-                    if (duplicateRequestOption != null)
+                    // Match up duplicates and clear out votes of options that are deleted
+                    foreach (Option option in existingPoll.Options)
                     {
-                        option.Name = duplicateRequestOption.Name;
-                        option.Description = duplicateRequestOption.Description;
+                        Option duplicateRequestOption = updateRequest.Options.Find(o => o.Id == option.Id);
 
-                        newOptions.Add(option);
-                        updateRequest.Options.Remove(duplicateRequestOption);
+                        if (duplicateRequestOption != null)
+                        {
+                            option.Name = duplicateRequestOption.Name;
+                            option.Description = duplicateRequestOption.Description;
+
+                            newOptions.Add(option);
+                            updateRequest.Options.Remove(duplicateRequestOption);
+                        }
+                        else
+                        {
+                            oldOptions.Add(option);
+                            oldVotes.AddRange(context.Votes.Where(v => v.OptionId == option.Id).ToList());
+                        }
                     }
-                    else
-                    {
-                        oldOptions.Add(option);
-                        oldVotes.AddRange(context.Votes.Where(v => v.OptionId == option.Id).ToList());
-                    }
+
+                    newOptions.AddRange(updateRequest.Options);
                 }
 
-                newOptions.AddRange(updateRequest.Options);
+
 
                 existingPoll.Options = newOptions;
                 existingPoll.LastUpdated = DateTime.Now;

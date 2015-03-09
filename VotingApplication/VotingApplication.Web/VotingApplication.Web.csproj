@@ -238,7 +238,6 @@
     <Compile Include="Api\Controllers\MailSender.cs" />
     <Compile Include="Api\Controllers\ManageController.cs" />
     <Compile Include="Api\Controllers\ManageInvitationController.cs" />
-    <Compile Include="Api\Controllers\ManageOptionController.cs" />
     <Compile Include="Api\Controllers\ManageVoteController.cs" />
     <Compile Include="Api\Controllers\PollController.cs" />
     <Compile Include="Api\Controllers\PollOptionController.cs" />
