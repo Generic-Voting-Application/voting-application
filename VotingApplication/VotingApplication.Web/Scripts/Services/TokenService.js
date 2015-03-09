@@ -1,35 +1,40 @@
 ﻿(function () {
     angular
         .module('GVA.Voting')
-        .factory('TokenService', ['$location', '$http', '$localStorage',
-        function ($location, $http, $localStorage) {
-            var self = this;
+        .factory('TokenService', TokenService);
 
-            self.getToken = function (pollId, callback) {
+    TokenService.$inject = ['$location', '$http', '$localStorage'];
 
-                if (!pollId) {
-                    return null;
-                }
+    function TokenService($location, $http, $localStorage) {
+        var service = {
+            getToken: getTokenForPoll
+        };
 
-                if ($localStorage[pollId]) {
-                    callback($localStorage[pollId]);
-                    return;
-                }
+        return service;
 
-                $http({
-                    method: 'GET',
-                    url: '/api/poll/' + pollId + '/token'
-                })
-                .success(function (data, status) {
-                    var token = data.replace(/\"/g, '');
-                    $localStorage[pollId] = token;
-                    if (callback) {
-                        callback(token, status)
-                    }
-                })
-                .error(function (data, status) { if (callback) { callback(data, status) } });
+        function getTokenForPoll(pollId, callback) {
+
+            if (!pollId) {
+                return null;
             }
 
-            return self;
-        }]);
+            if ($localStorage[pollId]) {
+                callback($localStorage[pollId]);
+                return;
+            }
+
+            $http({
+                method: 'GET',
+                url: '/api/poll/' + pollId + '/token'
+            })
+            .success(function (data, status) {
+                var token = data.replace(/\"/g, '');
+                $localStorage[pollId] = token;
+                if (callback) {
+                    callback(token, status)
+                }
+            })
+            .error(function (data, status) { if (callback) { callback(data, status) } });
+        }
+    }
 })();

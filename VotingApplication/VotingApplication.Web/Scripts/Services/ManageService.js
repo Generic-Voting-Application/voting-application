@@ -1,56 +1,60 @@
 ﻿(function () {
     angular
         .module('GVA.Creation')
-        .factory('ManageService', ['$location', '$http', '$routeParams',
-        function ($location, $http, $routeParams) {
-            var self = this;
+        .factory('ManageService', ManageService);
 
-            var observerCallbacks = [];
 
-            var notifyObservers = function () {
-                angular.forEach(observerCallbacks, function (callback) {
-                    callback();
-                });
-            };
+    ManageService.$inject = ['$location', '$http', '$routeParams'];
 
-            self.poll = null;
+    function ManageService($location, $http, $routeParams) {
+        var self = this;
 
-            self.registerPollObserver = function (callback) {
+        var observerCallbacks = [];
 
-                if (self.poll == null) {
-                    self.getPoll($routeParams.manageId);
-                }
-            
-                observerCallbacks.push(callback);
+        var notifyObservers = function () {
+            angular.forEach(observerCallbacks, function (callback) {
+                callback();
+            });
+        };
+
+        self.poll = null;
+
+        self.registerPollObserver = function (callback) {
+
+            if (self.poll == null) {
+                self.getPoll($routeParams.manageId);
             }
 
-            self.poll = null;
+            observerCallbacks.push(callback);
+        }
 
-            self.getPoll = function (manageId, callback) {
+        self.poll = null;
 
-                if (!manageId) {
-                    return null;
-                }
+        self.getPoll = function (manageId, callback) {
 
-                $http({
-                    method: 'GET',
-                    url: '/api/manage/' + manageId
-                })
-                .success(function (data) { self.poll = data; notifyObservers(); if (callback) { callback(data) } })
-                .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
-
-            }
-        
-            self.updatePoll = function (manageId, poll, callback, failureCallback) {
-                $http({
-                    method: 'PUT',
-                    url: '/api/manage/' + manageId,
-                    data: poll
-                })
-                .success(function (data) { if (callback) { callback(data) } })
-                .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+            if (!manageId) {
+                return null;
             }
 
-            return self;
-    }]);
+            $http({
+                method: 'GET',
+                url: '/api/manage/' + manageId
+            })
+            .success(function (data) { self.poll = data; notifyObservers(); if (callback) { callback(data) } })
+            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+
+        }
+
+        self.updatePoll = function (manageId, poll, callback, failureCallback) {
+            $http({
+                method: 'PUT',
+                url: '/api/manage/' + manageId,
+                data: poll
+            })
+            .success(function (data) { if (callback) { callback(data) } })
+            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+        }
+
+        return self;
+    }
 })();
