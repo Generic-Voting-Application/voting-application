@@ -17,31 +17,7 @@
 
 
         // TODO: Rename this function, as it's ambiguous (i.e. 'vote' is a verb and a noun).
-        $scope.vote = function (option) {
-            if (!option) {
-                return null;
-            }
-
-            if (!token) {
-                // Probably invite only, tell the user
-            }
-            else if (!IdentityService.identity) {
-                IdentityService.openLoginDialog($scope, function () {
-                    $scope.vote(option);
-                });
-            }
-            else {
-                var votes = [{
-                    OptionId: option.Id,
-                    VoteValue: 1,
-                    VoterName: IdentityService.identity.name
-                }];
-
-                PollService.submitVote(pollId, votes, token, function () {
-                    window.location = $scope.$parent.resultsLink;
-                });
-            }
-        }
+        $scope.vote = submitVote;
 
         function activate() {
             PollService.getPoll(pollId, getPollSuccessCallback);
@@ -71,6 +47,33 @@
             };
 
         };
+
+        function submitVote(option) {
+            if (!option) {
+                return null;
+            }
+
+            if (!token) {
+                // Probably invite only, tell the user
+            }
+            else if (!IdentityService.identity) {
+                IdentityService.openLoginDialog($scope, function () {
+                    $scope.vote(option);
+                });
+            }
+            else {
+                var votes = [{
+                    OptionId: option.Id,
+                    VoteValue: 1,
+                    VoterName: IdentityService.identity.name
+                }];
+
+                PollService.submitVote(pollId, votes, token, function () {
+                    window.location = $scope.$parent.resultsLink;
+                });
+            }
+        }
+
     };
 
 
