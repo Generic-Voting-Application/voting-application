@@ -9,21 +9,26 @@
 
     function CreateBasicPageController($scope, AccountService, PollService) {
 
-        $scope.openLoginDialog = function () {
+        $scope.openLoginDialog = showLoginDialog;
+        $scope.openRegisterDialog = showRegisterDialog;
+        $scope.createPoll = createNewPoll;
+
+
+        function showLoginDialog() {
             AccountService.openLoginDialog($scope);
         };
 
-        $scope.openRegisterDialog = function () {
+        function showRegisterDialog() {
             AccountService.openRegisterDialog($scope);
         };
 
-        $scope.createPoll = function (question) {
+        function createNewPoll(question) {
             PollService.createPoll(question, createPollSuccessCallback);
-
-            function createPollSuccessCallback(data) {
-                window.location.href = "/#/Manage/" + data.ManageId;
-            };
         };
 
+        function createPollSuccessCallback(data) {
+            window.location.href = "/#/Manage/" + data.ManageId;
+        };
     };
+
 })();

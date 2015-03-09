@@ -3,35 +3,39 @@
 (function () {
     angular
         .module('GVA.Common')
-        .controller('AccountLoginController', ['$scope', 'AccountService', 'ErrorService',
-            function ($scope, AccountService, ErrorService) {
+        .controller('AccountLoginController', AccountLoginController);
 
-                $scope.loginAccount = function (form) {
+    AccountLoginController.$inject = ['$scope', 'AccountService', 'ErrorService']
 
-                    AccountService.getAccessToken(form.email, form.password, callback, failureCallback);
+    function AccountLoginController($scope, AccountService, ErrorService) {
 
-                    function callback(data) {
-                        AccountService.setAccount(data.access_token, form.email);
+        $scope.loginAccount = function (form) {
 
-                        $scope.closeThisDialog();
-                        if ($scope.ngDialogData.callback) {
-                            $scope.ngDialogData.callback();
-                        }
-                    };
+            AccountService.getAccessToken(form.email, form.password, callback, failureCallback);
 
-                    function failureCallback(data, status) {
-                        // Bad request
-                        if (status === 400 && data.ModelState) {
-                            ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
-                        }
-                        else {
-                            displayError(data.Message || data.error_description);
-                        }
-                    };
+            function callback(data) {
+                AccountService.setAccount(data.access_token, form.email);
 
-                    var displayError = function (errorMessage) {
-                        $scope.errorMessage = errorMessage;
-                    }
+                $scope.closeThisDialog();
+                if ($scope.ngDialogData.callback) {
+                    $scope.ngDialogData.callback();
                 }
-            }]);
+            };
+
+            function failureCallback(data, status) {
+                // Bad request
+                if (status === 400 && data.ModelState) {
+                    ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
+                }
+                else {
+                    displayError(data.Message || data.error_description);
+                }
+            };
+
+            var displayError = function (errorMessage) {
+                $scope.errorMessage = errorMessage;
+            }
+        }
+    };
+
 })();

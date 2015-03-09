@@ -1,16 +1,21 @@
 ﻿(function () {
     angular
         .module('GVA.Voting')
-        .controller('IdentityLoginController', ['$scope', 'IdentityService',
-        function ($scope, IdentityService) {
+        .controller('IdentityLoginController', IdentityLoginController);
 
-            $scope.loginIdentity = function (form) {
-                IdentityService.setIdentityName(form.name);
+    IdentityLoginController.$inject = ['$scope', 'IdentityService'];
 
-                $scope.closeThisDialog();
-                if ($scope.ngDialogData.callback) $scope.ngDialogData.callback();
+    function IdentityLoginController($scope, IdentityService) {
+
+        $scope.loginIdentity = function (form) {
+            IdentityService.setIdentityName(form.name);
+
+            $scope.closeThisDialog();
+
+            if ($scope.ngDialogData.callback) {
+                $scope.ngDialogData.callback();
             }
-
-        }]);
+        }
+    }
 
 })();

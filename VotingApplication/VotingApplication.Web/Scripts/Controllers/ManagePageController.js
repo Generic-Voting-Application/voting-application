@@ -1,39 +1,51 @@
 ﻿(function () {
     angular
         .module('GVA.Creation')
-        .controller('ManagePageController', ['$scope', '$routeParams', 'AccountService', 'ManageService',
-        function ($scope, $routeParams, AccountService, ManageService) {
+        .controller('ManagePageController', ManagePageController);
 
-            var manageId = $routeParams.manageId;
+    ManagePageController.$inject = ['$scope', '$routeParams', 'AccountService', 'ManageService'];
 
-            $scope.poll = {};
-            $scope.manageId = manageId;
+    function ManagePageController($scope, $routeParams, AccountService, ManageService) {
 
-            $scope.openLoginDialog = function () {
-                AccountService.openLoginDialog($scope);
-            };
+        var manageId = $routeParams.manageId;
 
-            $scope.updatePoll = function () {
-                ManageService.poll = $scope.poll;
-                ManageService.updatePoll($routeParams.manageId, $scope.poll);
-            };
+        $scope.poll = {};
+        $scope.manageId = manageId;
 
-            $scope.formatPollExpiry = function () {
-                if (!$scope.poll.Expires || !$scope.poll.ExpiryDate) {
-                    return 'Never';
-                }
+        $scope.openLoginDialog = showLoginDialog;
+        $scope.updatePoll = updatePollDetails;
+        $scope.formatPollExpiry = formatPollExpiryDate;
+        $scope.selectText = selectTargetText;
 
-                var expiryDate = new Date($scope.poll.ExpiryDate);
-                return expiryDate.toLocaleString();
-            };
+        activate();
 
-            $scope.selectText = function ($event) {
-                $event.target.select();
-            };
 
+        function activate() {
             ManageService.getPoll(manageId, function (data) {
                 $scope.poll = data;
             });
+        }
 
-        }]);
+        function showLoginDialog() {
+            AccountService.openLoginDialog($scope);
+        };
+
+        function updatePollDetails() {
+            ManageService.poll = $scope.poll;
+            ManageService.updatePoll($routeParams.manageId, $scope.poll);
+        };
+
+        function formatPollExpiryDate() {
+            if (!$scope.poll.Expires || !$scope.poll.ExpiryDate) {
+                return 'Never';
+            }
+
+            var expiryDate = new Date($scope.poll.ExpiryDate);
+            return expiryDate.toLocaleString();
+        };
+
+        function selectTargetText($event) {
+            $event.target.select();
+        };
+    }
 })();
