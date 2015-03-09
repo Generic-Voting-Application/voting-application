@@ -1,57 +1,77 @@
-﻿(function () {
+﻿/// <reference path="../Services/IdentityService.js" />
+/// <reference path="../Services/PollService.js" />
+/// <reference path="../Services/TokenService.js" />
+(function () {
     angular
         .module('GVA.Voting')
-        .controller('BasicVoteController', ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService',
-        function ($scope, $routeParams, IdentityService, PollService, TokenService) {
+        .controller('BasicVoteController', BasicVoteController);
 
-            var pollId = $routeParams.pollId;
-            var token = null;
+    BasicVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService'];
 
-            $scope.vote = function (option) {
-                if (!option) {
-                    return null;
-                }
+    function BasicVoteController($scope, $routeParams, IdentityService, PollService, TokenService) {
 
-                if (!token) {
-                    // Probably invite only, tell the user
-                } else if (!IdentityService.identity) {
-                    IdentityService.openLoginDialog($scope, function () {
-                        $scope.vote(option);
-                    });
-                } else {
-                    votes = [{
-                        OptionId: option.Id,
-                        VoteValue: 1,
-                        VoterName: IdentityService.identity.name
-                    }];
+        var pollId = $routeParams.pollId;
+        var token = null;
 
-                    PollService.submitVote(pollId, votes, token, function () {
-                        window.location = $scope.$parent.resultsLink;
-                    });
-                }
+        activate();
+
+
+        // Rename this function, as it's ambiguous (i.e. 'vote' is a verb and a noun).
+        $scope.vote = function (option) {
+            if (!option) {
+                return null;
             }
 
-            // Get Options
-            PollService.getPoll(pollId, function (pollData) {
+            if (!token) {
+                // Probably invite only, tell the user
+            }
+            else if (!IdentityService.identity) {
+                IdentityService.openLoginDialog($scope, function () {
+                    $scope.vote(option);
+                });
+            }
+            else {
+                var votes = [{
+                    OptionId: option.Id,
+                    VoteValue: 1,
+                    VoterName: IdentityService.identity.name
+                }];
+
+                PollService.submitVote(pollId, votes, token, function () {
+                    window.location = $scope.$parent.resultsLink;
+                });
+            }
+        }
+
+        function activate() {
+            PollService.getPoll(pollId, getPollSuccessCallback);
+
+            function getPollSuccessCallback(pollData) {
                 $scope.options = pollData.Options;
 
-                // Get Token
-                TokenService.getToken(pollId, function (tokenData) {
-                    token = tokenData;
+                TokenService.getToken(pollId, getTokenSuccessCallback);
+            }
 
-                    // Get Previous Votes
-                    PollService.getTokenVotes(pollId, token, function (voteData) {
-                        var vote = voteData[0];
+            function getTokenSuccessCallback(tokenData) {
+                token = tokenData;
 
-                        angular.forEach($scope.options, function (option) {
-                            if (option.Id === vote.OptionId) {
-                                option.selected = true;
-                            }
-                        });
-                    });
+                PollService.getTokenVotes(pollId, token, getTokenVotesSuccessCallback);
+            };
+
+            function getTokenVotesSuccessCallback(voteData) {
+
+                // BUG: voteData[0] is undefined if the user hasn't voted yet.
+                var vote = voteData[0];
+
+                angular.forEach($scope.options, function (option) {
+                    if (option.Id === vote.OptionId) {
+                        option.selected = true;
+                    }
                 });
+            };
 
-            });
-        }]);
+        };
+    };
+
 
 })();
