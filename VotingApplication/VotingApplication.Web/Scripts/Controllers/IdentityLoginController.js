@@ -1,4 +1,5 @@
-﻿(function () {
+﻿/// <reference path="../Services/IdentityService.js" />
+(function () {
     angular
         .module('GVA.Voting')
         .controller('IdentityLoginController', IdentityLoginController);

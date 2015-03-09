@@ -16,7 +16,7 @@
         activate();
 
 
-        // Rename this function, as it's ambiguous (i.e. 'vote' is a verb and a noun).
+        // TODO: Rename this function, as it's ambiguous (i.e. 'vote' is a verb and a noun).
         $scope.vote = function (option) {
             if (!option) {
                 return null;

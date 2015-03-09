@@ -1,4 +1,6 @@
-﻿(function () {
+﻿/// <reference path="../Services/AccountService.js" />
+/// <reference path="../Services/ManageService.js" />
+(function () {
     angular
         .module('GVA.Creation')
         .controller('ManagePageController', ManagePageController);

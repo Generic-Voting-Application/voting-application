@@ -1,4 +1,5 @@
-﻿(function () {
+﻿/// <reference path="../Services/ManageService.js" />
+(function () {
     angular
         .module('GVA.Creation')
         .controller('ManageOptionController', ManageOptionController);
