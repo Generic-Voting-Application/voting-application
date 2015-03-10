@@ -6,7 +6,7 @@
 
     function ExpiryStringService() {
         var service = {
-            timeStringForExpiry: calculateTimeStringForExpiryDate,
+            timeStringForExpiry: calculateTimeStringForExpiryDate
 
         };
 

@@ -31,7 +31,7 @@
                 var token = data.replace(/\"/g, '');
                 $localStorage[pollId] = token;
                 if (callback) {
-                    callback(token, status)
+                    callback(token, status);
                 }
             })
             .error(function (data, status) { if (callback) { callback(data, status) } });

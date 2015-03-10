@@ -3,9 +3,9 @@
         .module('GVA.Common')
         .factory('AccountService', AccountService);
 
-    AccountService.$inject = ['$localStorage', '$http', '$localStorage', 'ngDialog'];
+    AccountService.$inject = ['$localStorage', '$http', 'ngDialog'];
 
-    function AccountService($localStorage, $http, $localStorage, ngDialog) {
+    function AccountService($localStorage, $http, ngDialog) {
 
         var self = this;
 
@@ -64,7 +64,7 @@
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify({
                     Email: email,
-                    Password: password,
+                    Password: password
                 })
             })
            .success(function (data) { if (callback) { callback(data) } })
