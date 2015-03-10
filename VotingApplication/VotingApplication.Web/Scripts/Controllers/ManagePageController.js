@@ -31,15 +31,15 @@
 
                 if ($scope.poll.InviteOnly) {
                     if ($scope.poll.NamedVoting) {
-                        return 'Elections';
+                        return 'Invite Only, Named Voters';
                     } else {
-                        return 'Friends & Coworkers';
+                        return 'Invite Only, Anonymous Voters';
                     }
                 } else {
                     if ($scope.poll.NamedVoting) {
-                        return 'Survey Group';
+                        return 'Open Voting, Named Voters';
                     } else {
-                        return 'Social Media';
+                        return 'Open Voting, Anonymous Voters';
                     }
                 }
             }

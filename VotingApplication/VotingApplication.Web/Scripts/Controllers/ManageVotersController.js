@@ -31,5 +31,5 @@
                 $scope.poll = ManageService.poll;
             })
         }
-    }]);
+    };
 })();
