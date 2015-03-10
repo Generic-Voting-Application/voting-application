@@ -1,24 +1,35 @@
 ﻿(function () {
     angular
         .module('GVA.Creation')
-        .controller('ManageVotersController', ['$scope', '$routeParams', '$location', 'ManageService',
-        function ($scope, $routeParams, $location, ManageService) {
+        .controller('ManageVotersController', ManageVotersController);
 
-            $scope.poll = ManageService.poll;
-            $scope.manageId = $routeParams.manageId;
+    ManageVotersController.$inject = ['$scope', '$routeParams', '$location', 'ManageService'];
 
-            $scope.updatePoll = function () {
-                ManageService.updatePoll($routeParams.manageId, $scope.poll, function () {
-                    ManageService.getPoll($scope.manageId);
-                });
-            }
 
-            $scope.return = function () {
-                $location.path('Manage/' + $scope.manageId);
-            }
+    function ManageVotersController($scope, $routeParams, $location, ManageService) {
 
+        $scope.poll = ManageService.poll;
+        $scope.manageId = $routeParams.manageId;
+
+        $scope.updatePoll = updatePoll;
+        $scope.return = returnToManage;
+
+        activate();
+
+        function updatePoll() {
+            ManageService.updatePoll($routeParams.manageId, $scope.poll, function () {
+                ManageService.getPoll($scope.manageId);
+            });
+        }
+
+        function returnToManage() {
+            $location.path('Manage/' + $scope.manageId);
+        }
+
+        function activate() {
             ManageService.registerPollObserver(function () {
                 $scope.poll = ManageService.poll;
             })
-        }]);
+        }
+    }]);
 })();

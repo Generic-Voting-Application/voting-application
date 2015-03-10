@@ -182,6 +182,11 @@ body {
 
 .toggle-switch {
     border-radius: 5px;
+    background-color: #f0f0f0;
+
+    .knob {
+        border-radius: 5px;
+    }
 }
 
 .toggle-switch-animate {
@@ -189,7 +194,7 @@ body {
 }
 
 .toggle-switch .switch-left {
-    background: $Blue500;
+    background-color: $Blue500;
 }
 
 .poll-link-area {
