@@ -5,6 +5,7 @@
 
 
     function ExpiryStringService() {
+
         var service = {
             timeStringForExpiry: calculateTimeStringForExpiryDate
 
@@ -40,13 +41,13 @@
             }
 
             return 'Poll closes in: ' + timeString;
-        };
+        }
 
-        var formattedTimeString = function (expiryDate, timeUnit, timeUnitName, callback) {
+        function formattedTimeString(expiryDate, timeUnit, timeUnitName, callback) {
             var secondsToExpiry = Math.floor((expiryDate - Date.now()) / 1000);
 
             var timeValue = Math.floor(secondsToExpiry / timeUnit);
-            timeUnitName = (timeValue == 1) ? timeUnitName : timeUnitName + 's';
+            timeUnitName = (timeValue === 1) ? timeUnitName : timeUnitName + 's';
 
             var timeString = timeValue + ' ' + timeUnitName;
 

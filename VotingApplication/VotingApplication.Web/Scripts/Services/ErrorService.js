@@ -5,6 +5,7 @@
 
 
     function ErrorService() {
+
         var service = {
             bindModelStateToForm: bindModelState
         };

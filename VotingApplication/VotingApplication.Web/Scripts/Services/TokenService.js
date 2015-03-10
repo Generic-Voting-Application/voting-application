@@ -6,6 +6,7 @@
     TokenService.$inject = ['$location', '$http', '$localStorage'];
 
     function TokenService($location, $http, $localStorage) {
+
         var service = {
             getToken: getTokenForPoll
         };
@@ -34,7 +35,10 @@
                     callback(token, status);
                 }
             })
-            .error(function (data, status) { if (callback) { callback(data, status) } });
+            .error(function (data, status) {
+                if (callback)
+                { callback(data, status) }
+            });
         }
     }
 })();

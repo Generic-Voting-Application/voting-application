@@ -7,11 +7,21 @@
     PollService.$inject = ['$location', '$http'];
 
     function PollService($location, $http) {
-        var self = this;
 
         var lastCheckedTimestamps = {};
 
-        self.submitVote = function (pollId, votes, token, callback, failureCallback) {
+        var service = {
+            getPoll: getPoll,
+            createPoll: createPoll,
+
+            submitVote: submitVote,
+            getResults: getResults,
+            getTokenVotes: getTokenVotes
+        };
+
+        return service;
+
+        function submitVote(pollId, votes, token, callback, failureCallback) {
 
             if (!pollId || !votes || !token) {
                 return null;
@@ -22,12 +32,21 @@
                 url: '/api/token/' + token + '/poll/' + pollId + '/vote',
                 data: votes
             })
-            .success(function (data) { if (callback) { callback(data) } })
-            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+            .success(function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            })
+            .error(
+            function (data, status) {
+                if (failureCallback) {
+                    failureCallback(data, status);
+                }
+            });
 
         }
 
-        self.getPoll = function (pollId, callback, failureCallback) {
+        function getPoll(pollId, callback, failureCallback) {
 
             if (!pollId) {
                 return null;
@@ -37,12 +56,20 @@
                 method: 'GET',
                 url: '/api/poll/' + pollId
             })
-            .success(function (data) { if (callback) { callback(data) } })
-            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+            .success(function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            })
+            .error(function (data, status) {
+                if (failureCallback) {
+                    failureCallback(data, status);
+                }
+            });
 
         }
 
-        self.getResults = function (pollId, callback, failureCallback) {
+        function getResults(pollId, callback, failureCallback) {
 
             if (!pollId) {
                 return null;
@@ -56,14 +83,22 @@
                 method: 'GET',
                 url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastCheckedTimestamps[pollId]
             })
-            .success(function (data) { if (callback) { callback(data) } })
-            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+            .success(function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            })
+            .error(function (data, status) {
+                if (failureCallback) {
+                    failureCallback(data, status);
+                }
+            });
 
             lastCheckedTimestamps[pollId] = Date.now();
 
         }
 
-        self.getTokenVotes = function (pollId, token, callback, failureCallback) {
+        function getTokenVotes(pollId, token, callback, failureCallback) {
 
             if (!pollId || !token) {
                 return null;
@@ -73,12 +108,20 @@
                 method: 'GET',
                 url: '/api/token/' + token + '/poll/' + pollId + '/vote'
             })
-            .success(function (data) { if (callback) { callback(data) } })
-            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+            .success(function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            })
+            .error(function (data, status) {
+                if (failureCallback) {
+                    failureCallback(data, status);
+                }
+            });
 
         }
 
-        self.createPoll = function (question, successCallback) {
+        function createPoll(question, successCallback) {
             var request = {
                 method: 'POST',
                 url: 'api/poll',
@@ -100,13 +143,11 @@
                     ExpiryDate: undefined,
                     OptionAdding: false
                 })
-            }
+            };
 
             $http(request)
                 .success(successCallback);
 
-        };
-
-        return self;
+        }
     }
 })();
