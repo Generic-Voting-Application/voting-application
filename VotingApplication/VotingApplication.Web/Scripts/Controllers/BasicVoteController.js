@@ -1,5 +1,4 @@
-﻿/// <reference path="../Services/IdentityService.js" />
-/// <reference path="../Services/PollService.js" />
+﻿/// <reference path="../Services/PollService.js" />
 /// <reference path="../Services/TokenService.js" />
 /// <reference path="../Services/VoteService.js" />
 (function () {
@@ -7,17 +6,17 @@
         .module('GVA.Voting')
         .controller('BasicVoteController', BasicVoteController);
 
-    BasicVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService'];
+    BasicVoteController.$inject = ['$scope', '$routeParams', 'PollService', 'TokenService', 'VoteService'];
 
-    function BasicVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService) {
+    function BasicVoteController($scope, $routeParams, PollService, TokenService, VoteService) {
 
         var pollId = $routeParams.pollId;
         var token = null;
 
+        $scope.submitVote = submitVote;
+
         activate();
 
-
-        $scope.submitVote = submitVote;
 
         function activate() {
             PollService.getPoll(pollId, getPollSuccessCallback);
