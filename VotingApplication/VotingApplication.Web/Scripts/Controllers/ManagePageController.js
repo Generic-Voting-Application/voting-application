@@ -30,13 +30,13 @@
             $scope.formatVoters = function () {
 
                 if ($scope.poll.InviteOnly) {
-                    if ($scope.poll.AnonymousVoting) {
+                    if ($scope.poll.NamedVoting) {
                         return 'Elections';
                     } else {
                         return 'Friends & Coworkers';
                     }
                 } else {
-                    if ($scope.poll.AnonymousVoting) {
+                    if ($scope.poll.NamedVoting) {
                         return 'Survey Group';
                     } else {
                         return 'Social Media';

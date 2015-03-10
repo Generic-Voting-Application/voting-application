@@ -188,6 +188,10 @@ body {
     transition: left 0.2s;
 }
 
+.toggle-switch .switch-left {
+    background: $Blue500;
+}
+
 .poll-link-area {
     padding-right: 0.1em;
     overflow: hidden;

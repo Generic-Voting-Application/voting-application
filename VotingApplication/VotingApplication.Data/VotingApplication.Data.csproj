@@ -62,6 +62,10 @@
     <Compile Include="Migrations\201501190944527_RemoveTemplates.Designer.cs">
       <DependentUpon>201501190944527_RemoveTemplates.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503091629236_RenameAnonymousVoting.cs" />
+    <Compile Include="Migrations\201503091629236_RenameAnonymousVoting.Designer.cs">
+      <DependentUpon>201503091629236_RenameAnonymousVoting.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\ChatMessage.cs" />
     <Compile Include="Model\Option.cs" />
@@ -85,6 +89,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501190944527_RemoveTemplates.resx">
       <DependentUpon>201501190944527_RemoveTemplates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503091629236_RenameAnonymousVoting.resx">
+      <DependentUpon>201503091629236_RenameAnonymousVoting.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

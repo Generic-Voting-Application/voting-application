@@ -47,7 +47,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Poll emptyPoll = new Poll() { UUID = _emptyUUID };
             Poll anonymousPoll = new Poll() { UUID = _anonymousUUID };
 
-            anonymousPoll.AnonymousVoting = true;
+            anonymousPoll.NamedVoting = false;
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
 
