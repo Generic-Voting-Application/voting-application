@@ -1,14 +1,15 @@
 ﻿/// <reference path="../Services/IdentityService.js" />
 /// <reference path="../Services/PollService.js" />
 /// <reference path="../Services/TokenService.js" />
+/// <reference path="../Services/VoteService.js" />
 (function () {
     angular
         .module('GVA.Voting')
         .controller('BasicVoteController', BasicVoteController);
 
-    BasicVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService'];
+    BasicVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService'];
 
-    function BasicVoteController($scope, $routeParams, IdentityService, PollService, TokenService) {
+    function BasicVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService) {
 
         var pollId = $routeParams.pollId;
         var token = null;
@@ -31,7 +32,7 @@
             function getTokenSuccessCallback(tokenData) {
                 token = tokenData;
 
-                PollService.getTokenVotes(pollId, token, getTokenVotesSuccessCallback);
+                VoteService.getTokenVotes(pollId, token, getTokenVotesSuccessCallback);
             };
 
             function getTokenVotesSuccessCallback(voteData) {
@@ -68,7 +69,7 @@
                     VoterName: IdentityService.identity.name
                 }];
 
-                PollService.submitVote(pollId, votes, token, function () {
+                VoteService.submitVote(pollId, votes, token, function () {
                     window.location = $scope.$parent.resultsLink;
                 });
             }

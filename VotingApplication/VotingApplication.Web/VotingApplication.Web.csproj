@@ -334,6 +334,7 @@
     <Content Include="Scripts\Directives\PollHeading.js" />
     <Content Include="Scripts\GVA-Common.js" />
     <Content Include="Scripts\GVA-Creation.js" />
+    <Content Include="Scripts\GVA-Poll.js" />
     <Content Include="Scripts\Lib\angular-min.js" />
     <Content Include="Scripts\Lib\angular-route-min.js" />
     <Content Include="Scripts\Lib\ngDialog-min.js" />
@@ -350,6 +351,7 @@
     <Content Include="Scripts\Lib\d3-min.js" />
     <Content Include="Scripts\Lib\insight-min.js" />
     <Content Include="Scripts\GVA-Voting.js" />
+    <Content Include="Scripts\Services\VoteService.js" />
     <Content Include="Views\Routes\AccountLogin.cshtml" />
     <Content Include="Views\Routes\AccountRegister.cshtml" />
     <Content Include="Views\Routes\BasicCreate.cshtml" />

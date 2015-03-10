@@ -1,14 +1,15 @@
 ﻿/// <reference path="../Services/IdentityService.js" />
 /// <reference path="../Services/PollService.js" />
 /// <reference path="../Services/TokenService.js" />
+/// <reference path="../Services/VoteService.js" />
 (function () {
     angular
         .module('GVA.Voting')
         .controller('UpDownVoteController', UpDownVoteController);
 
-    UpDownVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService'];
+    UpDownVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService'];
 
-    function UpDownVoteController($scope, $routeParams, IdentityService, PollService, TokenService) {
+    function UpDownVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService) {
 
         var pollId = $routeParams.pollId;
         var token = null;
@@ -32,7 +33,7 @@
             token = tokenData;
 
             // Get Previous Votes
-            PollService.getTokenVotes(pollId, token, function (voteData) {
+            VoteService.getTokenVotes(pollId, token, function (voteData) {
                 voteData.forEach(function (dataItem) {
 
                     for (var i = 0; i < $scope.options.length; i++) {
@@ -43,7 +44,7 @@
                             option.voteValue = dataItem.VoteValue;
                             break;
                         }
-                    };
+                    }
                 });
             });
         }
@@ -63,17 +64,17 @@
             }
             else {
 
-                votes = options
-                    .filter(function (option) { return option.voteValue })
+                var votes = options
+                    .filter(function (option) { return option.voteValue; })
                     .map(function (option) {
                         return {
                             OptionId: option.Id,
                             VoteValue: option.voteValue,
                             VoterName: IdentityService.identity.name
-                        }
+                        };
                     });
 
-                PollService.submitVote(pollId, votes, token, function (data) {
+                VoteService.submitVote(pollId, votes, token, function (data) {
                     window.location = $scope.$parent.resultsLink;
                 });
             }

@@ -16,19 +16,19 @@
 
         function showLoginDialog() {
             AccountService.openLoginDialog($scope);
-        };
+        }
 
         function showRegisterDialog() {
             AccountService.openRegisterDialog($scope);
-        };
+        }
 
         function createNewPoll(question) {
             PollService.createPoll(question, createPollSuccessCallback);
-        };
+        }
 
         function createPollSuccessCallback(data) {
             window.location.href = "/#/Manage/" + data.ManageId;
-        };
-    };
+        }
+    }
 
 })();

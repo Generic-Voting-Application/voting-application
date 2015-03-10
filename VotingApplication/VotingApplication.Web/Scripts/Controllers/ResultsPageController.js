@@ -1,13 +1,14 @@
 ﻿/// <reference path="../Services/IdentityService.js" />
 /// <reference path="../Services/PollService.js" />
+/// <reference path="../Services/VoteService.js" />
 (function () {
     angular
         .module('GVA.Voting')
         .controller('ResultsPageController', ResultsPageController);
 
-    ResultsPageController.$inject = ['$scope', '$routeParams', '$location', 'IdentityService', 'PollService'];
+    ResultsPageController.$inject = ['$scope', '$routeParams', '$location', 'IdentityService', 'VoteService'];
 
-    function ResultsPageController($scope, $routeParams, $location, IdentityService, PollService) {
+    function ResultsPageController($scope, $routeParams, $location, IdentityService, VoteService) {
 
         var pollId = $routeParams.pollId;
         var chart;
@@ -107,7 +108,7 @@
         }
 
         var reloadData = function () {
-            PollService.getResults(pollId, getResultsSuccessCallback);
+            VoteService.getResults(pollId, getResultsSuccessCallback);
         }
 
         function getResultsSuccessCallback(data) {
