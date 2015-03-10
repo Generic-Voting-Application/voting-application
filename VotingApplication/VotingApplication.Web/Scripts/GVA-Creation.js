@@ -1,6 +1,6 @@
 ﻿(function () {
     angular
-        .module('GVA.Creation', ['ngRoute', 'ngDialog', 'ngStorage', 'GVA.Common', 'GVA.Voting'])
+        .module('GVA.Creation', ['ngRoute', 'ngDialog', 'ngStorage', 'toggle-switch', 'GVA.Common', 'GVA.Voting'])
         .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider

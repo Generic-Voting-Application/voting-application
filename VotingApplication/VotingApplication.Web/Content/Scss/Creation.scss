@@ -23,7 +23,7 @@ body {
 
 .active-btn {
     background-color: $Blue500;
-    border: none;
+    border: 1px solid $Blue700;
 }
 
 .go-btn {
@@ -167,6 +167,34 @@ body {
 
 .manage-name-input {
     width: 90%;
+}
+
+.manage-voters-table {
+    td, th {
+        padding: 4px;
+    }
+
+    button {
+        width: 100px;
+        height: 75px;
+    }
+}
+
+.toggle-switch {
+    border-radius: 5px;
+    background-color: #f0f0f0;
+
+    .knob {
+        border-radius: 5px;
+    }
+}
+
+.toggle-switch-animate {
+    transition: left 0.2s;
+}
+
+.toggle-switch .switch-left {
+    background-color: $Blue500;
 }
 
 .poll-link-area {

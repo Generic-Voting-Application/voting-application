@@ -89,6 +89,10 @@ a {
     margin-left: auto;
 }
 
+.inline {
+    display: inline-block;
+}
+
 hr {
     width: 80%;
     background-color: $Grey400;
@@ -119,8 +123,8 @@ hr {
 }
 
 .full-width {
-    width:100%;
-    max-width:none;
+    width: 100%;
+    max-width: none;
 }
 
 .form-input {
@@ -146,31 +150,19 @@ hr {
 .form-section-block {
     @extend .form-section;
 
-    > label {
+    > label, input, button, small {
         display: block;
     }
 
-    > input {
-        display: block;
-    }
-
-    > button {
-        display: block;
+    label {
+        margin-bottom: 5px;
     }
 }
 
 .form-section-inline {
     @extend .form-section;
 
-    > label {
-        display: inline-block;
-    }
-
-    > input {
-        display: inline-block;
-    }
-
-    > button {
+    > label, input, button, small {
         display: inline-block;
     }
 }
@@ -215,7 +207,7 @@ hr {
 }
 
 .clickable {
-    cursor:pointer;
+    cursor: pointer;
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
