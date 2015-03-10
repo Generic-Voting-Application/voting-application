@@ -27,23 +27,6 @@
                 return expiryDate.toLocaleString();
             };
 
-            $scope.formatVoters = function () {
-
-                if ($scope.poll.InviteOnly) {
-                    if ($scope.poll.NamedVoting) {
-                        return 'Invite Only, Named Voters';
-                    } else {
-                        return 'Invite Only, Anonymous Voters';
-                    }
-                } else {
-                    if ($scope.poll.NamedVoting) {
-                        return 'Open Voting, Named Voters';
-                    } else {
-                        return 'Open Voting, Anonymous Voters';
-                    }
-                }
-            }
-
             $scope.selectText = function ($event) {
                 $event.target.select();
             };
