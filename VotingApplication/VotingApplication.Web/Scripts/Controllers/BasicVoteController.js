@@ -17,8 +17,7 @@
         activate();
 
 
-        // TODO: Rename this function, as it's ambiguous (i.e. 'vote' is a verb and a noun).
-        $scope.vote = submitVote;
+        $scope.submitVote = submitVote;
 
         function activate() {
             PollService.getPoll(pollId, getPollSuccessCallback);
@@ -59,7 +58,7 @@
             }
             else if (!IdentityService.identity) {
                 IdentityService.openLoginDialog($scope, function () {
-                    $scope.vote(option);
+                    $scope.submitVote(option);
                 });
             }
             else {

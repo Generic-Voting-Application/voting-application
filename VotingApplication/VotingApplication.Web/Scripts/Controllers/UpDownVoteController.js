@@ -14,10 +14,10 @@
         var pollId = $routeParams.pollId;
         var token = null;
 
-        // TODO: Rename this function, as it's ambiguous (i.e. 'vote' is a verb and a noun).
-        $scope.vote = submitVote;
+        $scope.submitVote = submitVote;
 
         activate();
+
 
         function activate() {
             PollService.getPoll(pollId, getPollSuccessCallback);
@@ -59,7 +59,7 @@
             }
             else if (!IdentityService.identity) {
                 IdentityService.openLoginDialog($scope, function () {
-                    $scope.vote(options);
+                    $scope.submitVote(options);
                 });
             }
             else {

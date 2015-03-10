@@ -18,8 +18,7 @@
         $scope.totalPointsAvailable = 0;
         $scope.maxPointsPerOption = 0;
 
-        // TODO: Rename this function, as it's ambiguous (i.e. 'vote' is a verb and a noun).
-        $scope.vote = submitVote;
+        $scope.submitVote = submitVote;
         $scope.unallocatedPoints = calculateUnallocatedPoints;
         $scope.disabledAddPoints = shouldAddPointsBeDisabled;
 
@@ -73,7 +72,7 @@
             }
             else if (!IdentityService.identity) {
                 IdentityService.openLoginDialog($scope, function () {
-                    $scope.vote(options);
+                    $scope.submitVote(options);
                 });
             }
             else {
