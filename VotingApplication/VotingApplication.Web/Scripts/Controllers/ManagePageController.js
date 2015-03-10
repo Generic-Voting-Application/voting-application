@@ -9,13 +9,25 @@
             $scope.poll = {};
             $scope.manageId = manageId;
 
+            var validateInput = function () {
+                if ($scope.poll.Expires && $scope.poll.ExpiryDate < new Date()) {
+                    $scope.invalidDate = true;
+                    return false;
+                }
+
+                $scope.invalidDate = false;
+                return true;
+            }
+
             $scope.openLoginDialog = function () {
                 AccountService.openLoginDialog($scope);
             };
 
             $scope.updatePoll = function () {
-                ManageService.poll = $scope.poll;
-                ManageService.updatePoll($routeParams.manageId, $scope.poll);
+                if (validateInput()) {
+                    ManageService.poll = $scope.poll;
+                    ManageService.updatePoll($routeParams.manageId, $scope.poll);
+                }
             };
 
             $scope.formatPollExpiry = function () {
@@ -30,6 +42,12 @@
             $scope.selectText = function ($event) {
                 $event.target.select();
             };
+
+            $scope.dateFilter = function (date) {
+                var startOfDay = new Date();
+                startOfDay.setHours(0);
+                return date >= startOfDay
+            }
 
             ManageService.getPoll(manageId, function (data) {
                 $scope.poll = data;

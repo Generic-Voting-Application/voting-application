@@ -311,6 +311,9 @@
     </None>
     <Content Include="Content\Lib\Css\angular-toggle-switch.css" />
     <Content Include="Content\Lib\Css\bootstrap-glyphicons.css" />
+    <Content Include="Content\Lib\Css\ng-quick-date-default-theme.css" />
+    <Content Include="Content\Lib\Css\ng-quick-date-plus-default-theme.css" />
+    <Content Include="Content\Lib\Css\ng-quick-date.css" />
     <Content Include="Content\Lib\Css\ngDialog-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-theme-default-min.css" />
     <None Include="Content\Scss\Site.scss" />
@@ -340,6 +343,7 @@
     <Content Include="Scripts\Lib\angular-route-min.js" />
     <Content Include="Scripts\Lib\angular-toggle-switch-min.js" />
     <Content Include="Scripts\Lib\ngDialog-min.js" />
+    <Content Include="Scripts\Lib\ngQuickDate-min.js" />
     <Content Include="Scripts\Lib\ngStorage-min.js" />
     <Content Include="Scripts\Services\AccountService.js" />
     <Content Include="Scripts\Services\ErrorService.js" />
