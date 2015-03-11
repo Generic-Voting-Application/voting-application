@@ -27,7 +27,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 MaxPerVote = poll.MaxPerVote,
                 InviteOnly = poll.InviteOnly,
                 Name = poll.Name,
-                AnonymousVoting = poll.AnonymousVoting,
+                NamedVoting = poll.NamedVoting,
                 RequireAuth = poll.RequireAuth,
                 Expires = poll.Expires,
                 ExpiryDate = poll.ExpiryDate,
@@ -101,7 +101,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll for manage id {0} not found", manageId));
                 }
 
-                existingPoll.AnonymousVoting = updateRequest.AnonymousVoting;
+                existingPoll.NamedVoting = updateRequest.NamedVoting;
                 existingPoll.Expires = updateRequest.Expires;
                 existingPoll.ExpiryDate = updateRequest.ExpiryDate;
                 existingPoll.InviteOnly = updateRequest.InviteOnly;

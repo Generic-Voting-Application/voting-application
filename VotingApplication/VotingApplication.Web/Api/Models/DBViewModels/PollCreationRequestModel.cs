@@ -25,7 +25,7 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
 
         public long TemplateId { get; set; }
         public bool InviteOnly { get; set; }
-        public bool AnonymousVoting { get; set; }
+        public bool NamedVoting { get; set; }
         public bool RequireAuth { get; set; }
         public bool Expires { get; set; }
         public DateTimeOffset ExpiryDate { get; set; }

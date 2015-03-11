@@ -55,7 +55,7 @@
                     MaxPoints: 7,
                     MaxPerVote: 3,
                     InviteOnly: false,
-                    AnonymousVoting: false,
+                    NamedVoting: false,
                     RequireAuth: false,
                     Expires: false,
                     ExpiryDate: undefined,
