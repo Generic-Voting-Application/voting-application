@@ -22,6 +22,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 UUID = poll.UUID,
                 Options = poll.Options,
+                Voters = new List<Token>(),
                 VotingStrategy = poll.PollType.ToString(),
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,
