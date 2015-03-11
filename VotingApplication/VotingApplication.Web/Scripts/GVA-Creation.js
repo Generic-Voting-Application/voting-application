@@ -22,9 +22,6 @@
                 .when('/Manage/:manageId/PollType', {
                     templateUrl: '../Routes/ManagePollType'
                 })
-                .when('/Manage/:manageId/Expiry', {
-                    templateUrl: '../Routes/ManageExpiry'
-                })
                .otherwise({
                    templateUrl: '../Routes/BasicCreate'
                })
