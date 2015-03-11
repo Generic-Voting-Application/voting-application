@@ -4,18 +4,18 @@
         .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider
-               .when('/Manage/', {
-                   templateUrl: '../Routes/Manage'
-               })
-               .when('/Manage/:manageId', {
-                   templateUrl: '../Routes/Manage'
-               })
-               .when('/Manage/:manageId/Name', {
-                   templateUrl: '../Routes/ManageName'
-               })
-               .when('/Manage/:manageId/Options', {
-                   templateUrl: '../Routes/ManageOptions'
-               })
+                .when('/Manage/', {
+                    templateUrl: '../Routes/Manage'
+                })
+                .when('/Manage/:manageId', {
+                    templateUrl: '../Routes/Manage'
+                })
+                .when('/Manage/:manageId/Name', {
+                    templateUrl: '../Routes/ManageName'
+                })
+                .when('/Manage/:manageId/Options', {
+                    templateUrl: '../Routes/ManageOptions'
+                })
                 .when('/Manage/:manageId/Voters', {
                     templateUrl: '../Routes/ManageVoters'
                 })

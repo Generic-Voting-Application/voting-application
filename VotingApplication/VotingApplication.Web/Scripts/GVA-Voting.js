@@ -9,6 +9,6 @@
                 })
                 .when('/Results/:pollId', {
                     templateUrl: '../Routes/Results'
-                })
+                });
         }]);
 })();

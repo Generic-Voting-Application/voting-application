@@ -1,57 +1,68 @@
-﻿(function () {
+﻿/// <reference path="../Services/AccountService.js" />
+/// <reference path="../Services/ManageService.js" />
+(function () {
     angular
         .module('GVA.Creation')
-        .controller('ManagePageController', ['$scope', '$routeParams', 'AccountService', 'ManageService',
-        function ($scope, $routeParams, AccountService, ManageService) {
+        .controller('ManagePageController', ManagePageController);
 
-            var manageId = $routeParams.manageId;
+    ManagePageController.$inject = ['$scope', '$routeParams', 'AccountService', 'ManageService'];
 
-            $scope.poll = {};
-            $scope.manageId = manageId;
+    function ManagePageController($scope, $routeParams, AccountService, ManageService) {
+        
+        $scope.poll = {};
+        $scope.manageId = manageId;
+        $scope.openLoginDialog = showLoginDialog;
+        $scope.updatePoll = updatePollDetails;
+        $scope.formatPollExpiry = formatPollExpiryDate;
+        $scope.selectText = selectTargetText;
+        $scope.dateFilter = dateFilter;
 
-            var validateInput = function () {
-                if ($scope.poll.Expires && $scope.poll.ExpiryDate < new Date()) {
-                    $scope.invalidDate = true;
-                    return false;
-                }
+        activate();
 
-                $scope.invalidDate = false;
-                return true;
-            }
+        function dateFilter (date) {
+            var startOfDay = new Date();
+            startOfDay.setHours(0);
+            return date >= startOfDay
+        }
 
-            $scope.openLoginDialog = function () {
-                AccountService.openLoginDialog($scope);
-            };
-
-            $scope.updatePoll = function () {
-                if (validateInput()) {
-                    ManageService.poll = $scope.poll;
-                    ManageService.updatePoll($routeParams.manageId, $scope.poll);
-                }
-            };
-
-            $scope.formatPollExpiry = function () {
-                if (!$scope.poll.Expires || !$scope.poll.ExpiryDate) {
-                    return 'Never';
-                }
-
-                var expiryDate = new Date($scope.poll.ExpiryDate);
-                return expiryDate.toLocaleString();
-            };
-
-            $scope.selectText = function ($event) {
-                $event.target.select();
-            };
-
-            $scope.dateFilter = function (date) {
-                var startOfDay = new Date();
-                startOfDay.setHours(0);
-                return date >= startOfDay
-            }
-
+        function activate() {
             ManageService.getPoll(manageId, function (data) {
                 $scope.poll = data;
             });
+        }
 
-        }]);
+        function showLoginDialog() {
+            AccountService.openLoginDialog($scope);
+        };
+
+        function updatePollDetails() {
+            if (validateInput()) {
+                ManageService.poll = $scope.poll;
+                ManageService.updatePoll($routeParams.manageId, $scope.poll);
+            }
+        };
+
+        function formatPollExpiryDate() {
+            if (!$scope.poll.Expires || !$scope.poll.ExpiryDate) {
+                return 'Never';
+            }
+
+            var expiryDate = new Date($scope.poll.ExpiryDate);
+            return expiryDate.toLocaleString();
+        };
+
+        function selectTargetText($event) {
+            $event.target.select();
+        };
+
+        var validateInput = function () {
+            if ($scope.poll.Expires && $scope.poll.ExpiryDate < new Date()) {
+                $scope.invalidDate = true;
+                return false;
+            }
+
+            $scope.invalidDate = false;
+            return true;
+        }
+    }
 })();

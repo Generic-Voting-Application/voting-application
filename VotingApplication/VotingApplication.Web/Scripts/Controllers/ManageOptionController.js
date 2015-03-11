@@ -1,46 +1,62 @@
-﻿(function () {
+﻿/// <reference path="../Services/ManageService.js" />
+(function () {
     angular
         .module('GVA.Creation')
-        .controller('ManageOptionController', ['$scope', '$routeParams', '$location', 'ManageService',
-        function ($scope, $routeParams, $location, ManageService) {
+        .controller('ManageOptionController', ManageOptionController);
 
-            $scope.poll = ManageService.poll;
-            $scope.manageId = $routeParams.manageId;
+    ManageOptionController.$inject = ['$scope', '$routeParams', '$location', 'ManageService'];
 
-            $scope.updatePoll = function () {
-                ManageService.updatePoll($routeParams.manageId, $scope.poll, function () {
-                    ManageService.getPoll($scope.manageId);
-                });
+    function ManageOptionController($scope, $routeParams, $location, ManageService) {
 
-            }
+        $scope.poll = ManageService.poll;
+        $scope.manageId = $routeParams.manageId;
+        $scope.updatePoll = updatePollDetails;
+        $scope.return = navigateToManagePage;
+        $scope.remove = removePollOption;
+        $scope.clear = clearPollOption;
+        $scope.add = addPollOption;
 
-            $scope.return = function () {
-                $location.path('Manage/' + $scope.manageId);
-            }
+        activate();
 
-            $scope.remove = function (option) {
-                $scope.poll.Options.splice($scope.poll.Options.indexOf(option), 1);
-                $scope.updatePoll();
-            }
 
-            $scope.clear = function (form) {
-                form.Name = '';
-                form.Description = '';
-                form.$setPristine();
-            }
-
-            $scope.add = function (optionForm) {
-                var newOption = {
-                    Name: optionForm.Name,
-                    Description: optionForm.Description
-                };
-
-                $scope.poll.Options.push(newOption);
-                $scope.updatePoll();
-            }
-
+        function activate() {
             ManageService.registerPollObserver(function () {
                 $scope.poll = ManageService.poll;
-            })
-        }]);
+            });
+        }
+
+        function navigateToManagePage() {
+            $location.path('Manage/' + $scope.manageId);
+        };
+
+        function removePollOption(option) {
+            $scope.poll.Options.splice($scope.poll.Options.indexOf(option), 1);
+            $scope.updatePoll();
+        };
+
+        function clearPollOption(form) {
+            form.Name = '';
+            form.Description = '';
+            form.$setPristine();
+        }
+
+        function addPollOption(optionForm) {
+            var newOption = {
+                Name: optionForm.Name,
+                Description: optionForm.Description
+            };
+
+            $scope.poll.Options.push(newOption);
+            $scope.updatePoll();
+        };
+
+        function updatePollDetails() {
+            ManageService.updatePoll($routeParams.manageId, $scope.poll, updatePollSuccessCallback);
+        };
+
+        function updatePollSuccessCallback() {
+            ManageService.getPoll($scope.manageId);
+        };
+    }
+
 })();

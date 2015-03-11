@@ -1,22 +1,28 @@
-﻿(function () {
+﻿/// <reference path="../Services/AccountService.js" />
+(function () {
     angular
         .module('GVA.Creation')
-        .controller('CreatePageController', ['$scope', 'AccountService',
-        function ($scope, AccountService) {
+        .controller('CreatePageController', CreatePageController);
 
-            $scope.account = AccountService.account;
+    CreatePageController.$inject = ['$scope', 'AccountService'];
 
-            $scope.openLoginDialog = function () {
-                AccountService.openLoginDialog($scope);
-            }
+    function CreatePageController($scope, AccountService) {
 
-            $scope.signOut = function () {
-                AccountService.clearAccount();
-            }
+        $scope.account = AccountService.account;
+        $scope.openLoginDialog = showLoginDialog;
+        $scope.signOut = AccountService.clearAccount;
 
+        activate();
+
+
+        function showLoginDialog() {
+            AccountService.openLoginDialog($scope);
+        }
+
+        function activate() {
             AccountService.registerAccountObserver(function () {
                 $scope.account = AccountService.account;
             });
-
-        }]);
+        }
+    };
 })();
