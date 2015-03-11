@@ -237,7 +237,6 @@
     <Compile Include="Api\Controllers\IMailSender.cs" />
     <Compile Include="Api\Controllers\MailSender.cs" />
     <Compile Include="Api\Controllers\ManageController.cs" />
-    <Compile Include="Api\Controllers\ManageInvitationController.cs" />
     <Compile Include="Api\Controllers\ManageVoteController.cs" />
     <Compile Include="Api\Controllers\PollController.cs" />
     <Compile Include="Api\Controllers\PollOptionController.cs" />
@@ -323,7 +322,9 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\Controllers\AccountRegisterController.js" />
     <Content Include="Scripts\Controllers\AccountLoginController.js" />
+    <Content Include="Scripts\Controllers\ManagePollTypeController.js" />
     <Content Include="Scripts\Controllers\ManageVotersController.js" />
+    <Content Include="Scripts\Controllers\ManageInvitationsController.js" />
     <Content Include="Scripts\Controllers\ManageOptionController.js" />
     <Content Include="Scripts\Controllers\ManagePageController.js" />
     <Content Include="Scripts\Controllers\CreatePageController.js" />
@@ -388,6 +389,7 @@
     <Content Include="Views\Routes\IdentityLogin.cshtml" />
     <Content Include="Views\Routes\UpDownVote.cshtml" />
     <Content Include="Views\Poll\Index.cshtml" />
+    <Content Include="Views\Routes\ManageInvitations.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

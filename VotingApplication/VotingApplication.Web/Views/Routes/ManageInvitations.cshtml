@@ -1,0 +1,32 @@
+﻿<div ng-app="GVA.Creation" ng-controller="ManageInvitationsController">
+    <div class="manage-area centered">
+        <h2>Poll Invitation Style</h2>
+        <div class="manage-section">
+            <div>
+                <form class="form-section-block">
+                    <label for="InviteOnly">Users require an invite to vote</label>
+                    <toggle-switch id="InviteOnly" ng-model="poll.InviteOnly" on-label="Yes" off-label="No" ng-click="updatePoll()"></toggle-switch>
+                    <small ng-if="poll.InviteOnly">Voters may only submit a vote if invited</small>
+                    <small ng-if="!poll.InviteOnly">Anyone with a link to the poll can vote</small>
+                </form>
+            </div>
+        </div>
+        <div class="manage-section">
+            <div>
+                <form class="form-section-block">
+                    <label for="NamedVoting">Users must give a name to vote</label>
+                    <toggle-switch id="NamedVoting" ng-model="poll.NamedVoting" on-label="Yes" off-label="No" ng-click="updatePoll()"></toggle-switch>
+                    <small ng-if="poll.NamedVoting">Voters are required to supply a name when voting</small>
+                    <small ng-if="!poll.NamedVoting">All votes are anonymous</small>
+                </form>
+            </div>
+        </div>
+        <div class="manage-section">
+            <button class="manage-btn" ng-click="return()">Back</button>
+        </div>
+    </div>
+</div>
+
+
+
+

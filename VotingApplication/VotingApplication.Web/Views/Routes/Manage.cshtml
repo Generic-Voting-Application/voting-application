@@ -34,27 +34,25 @@
         </div>
         <div class="manage-section">
             <div>
-                <span class="glyphicon glyphicon-envelope pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Invitations:</h4>
+                <span class="glyphicon glyphicon-user pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Voters:</h4>
             </div>
             <div>
-                <span class="icon-padded-left">Sent by Email</span>
-                <span ng-if="account" class="pull-right"><a href="#/Manage/{{manageId}}">Edit</a></span>
-                <span ng-if="!account" class="pull-right"><a href="javascript:;" ng-click="openLoginDialog()">Unlock</a></span>
+                <span class="icon-padded-left">{{poll.Voters.length}} Voters</span>
+                <gva-unlockable-option option-path="{{manageId}}/Voters"></gva-unlockable-option>
             </div>
         </div>
         <div class="manage-section">
             <div>
-                <span class="glyphicon glyphicon-user pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Voters:</h4>
+                <span class="glyphicon glyphicon-envelope pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Invitation style:</h4>
             </div>
             <div>
                 <span class="icon-padded-left" ng-if="poll.InviteOnly">Invite Only, </span>
                 <span class="icon-padded-left" ng-if="!poll.InviteOnly">Open Voting, </span>
                 <span ng-if="poll.NamedVoting">Named Voters</span>
                 <span ng-if="!poll.NamedVoting">Anonymous Voters</span>
-                <span ng-if="account" class="pull-right"><a href="#/Manage/{{manageId}}/Voters">Edit</a></span>
-                <span ng-if="!account" class="pull-right"><a href="javascript:;" ng-click="openLoginDialog()">Unlock</a></span>
+                <gva-unlockable-option option-path="{{manageId}}/Invitations"></gva-unlockable-option>
             </div>
         </div>
         <div class="manage-section">
@@ -64,8 +62,7 @@
             </div>
             <div>
                 <span class="icon-padded-left">{{poll.VotingStrategy}}</span>
-                <span ng-if="account" class="pull-right"><a href="#/Manage/{{manageId}}/PollType">Edit</a></span>
-                <span ng-if="!account" class="pull-right"><a href="javascript:;" ng-click="openLoginDialog()">Unlock</a></span>
+                <gva-unlockable-option option-path="{{manageId}}/PollType"></gva-unlockable-option>
             </div>
         </div>
         <div class="manage-section">

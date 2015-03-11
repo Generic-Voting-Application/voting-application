@@ -5,15 +5,15 @@
         .module('GVA.Creation')
         .controller('ManagePageController', ManagePageController);
 
-    ManagePageController.$inject = ['$scope', '$routeParams', 'AccountService', 'ManageService'];
+    ManagePageController.$inject = ['$scope', '$routeParams', 'ManageService'];
 
-    function ManagePageController($scope, $routeParams, AccountService, ManageService) {
+    function ManagePageController($scope, $routeParams, ManageService) {
         
         var manageId = $routeParams.manageId;
 
         $scope.poll = {};
+        $scope.voters = [];
         $scope.manageId = manageId;
-        $scope.openLoginDialog = showLoginDialog;
         $scope.updatePoll = updatePollDetails;
         $scope.formatPollExpiry = formatPollExpiryDate;
         $scope.selectText = selectTargetText;
@@ -32,10 +32,6 @@
                 $scope.poll = data;
             });
         }
-
-        function showLoginDialog() {
-            AccountService.openLoginDialog($scope);
-        };
 
         function updatePollDetails() {
             if (validateInput()) {
