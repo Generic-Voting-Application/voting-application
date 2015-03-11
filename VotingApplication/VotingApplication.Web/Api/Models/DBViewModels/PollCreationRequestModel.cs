@@ -12,7 +12,7 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
         public string Creator { get; set; }
 
         [Required]
-        public string VotingStrategy { get; set; } 
+        public string VotingStrategy { get; set; }
 
         [EmailAddress]
         public string Email { get; set; }
@@ -28,7 +28,7 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
         public bool NamedVoting { get; set; }
         public bool RequireAuth { get; set; }
         public bool Expires { get; set; }
-        public DateTimeOffset ExpiryDate { get; set; }
+        public DateTimeOffset? ExpiryDate { get; set; }
 
         public bool OptionAdding { get; set; }
     }
