@@ -1,7 +1,11 @@
 ﻿<div ng-app="GVA.Creation" ng-controller="ManageVotersController">
     <div class="manage-area centered">
         <h2>Poll Voters</h2>
-        
+        <h4>Email to Invite</h4>
+        <input name="new-voter" ng-model="inviteString" ng-change="emailUpdated()" ng-trim="false" />
+
+        <div>{{poll.Voters}}</div>
+
         <div class="manage-section">
             <button class="manage-btn" ng-click="return()">Back</button>
         </div>
