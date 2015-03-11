@@ -14,7 +14,7 @@
                     <label class="points-label">{{option.voteValue}}/{{maxPointsPerOption}}</label>
                     <button class="active-btn pull-right" ng-disabled="(disabledAddPoints(option.voteValue))" ng-click="(option.voteValue = option.voteValue+1)">+</button>
                 </span>
-                <button class="inactive-btn" ng-click="descriptionToggle=!descriptionToggle">More info</button>
+                <button class="inactive-btn btn-medium" ng-click="descriptionToggle=!descriptionToggle">More info</button>
             </div>
             <div class="option-description" ng-show="descriptionToggle">
                 {{option.Description}}
@@ -26,6 +26,6 @@
         <hr />
     </div>
     <div class="flexbox">
-        <button class="active-btn centered" ng-click="submitVote(options)">Vote</button>
+        <button class="active-btn btn-medium centered" ng-click="submitVote(options)">Vote</button>
     </div>
 </div>

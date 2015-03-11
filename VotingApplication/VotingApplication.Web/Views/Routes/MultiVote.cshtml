@@ -5,7 +5,7 @@
             <input class="pull-left option-checkbox" type="checkbox" ng-model="option.voteValue" ng-true-value="1" ng-false-value="0" ng-click="$event.stopPropagation()" />
             <p class="option-text">{{option.Name}}</p>
             <div class="option-buttons">
-                <button class="inactive-btn" ng-click="descriptionToggle=!descriptionToggle;$event.stopPropagation()">More info</button>
+                <button class="inactive-btn btn-medium" ng-click="descriptionToggle=!descriptionToggle;$event.stopPropagation()">More info</button>
             </div>
             <div class="multivote-option-description" ng-show="descriptionToggle">
                 {{option.Description}}
@@ -17,6 +17,6 @@
         <hr />
     </div>
     <div class="flexbox">
-        <button class="active-btn centered" ng-click="submitVote(options)">Vote</button>
+        <button class="active-btn btn-medium centered" ng-click="submitVote(options)">Vote</button>
     </div>
 </div>
