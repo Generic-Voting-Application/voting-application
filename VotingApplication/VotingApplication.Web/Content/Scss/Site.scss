@@ -20,23 +20,32 @@ body {
 }
 
 .center-panel {
-    height: 100%;
+    background-color: $White;
+    box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
     margin: 0 auto;
-    min-height: 100%;
+    min-height: 100vh;
     min-width: 320px;
+    padding: 0px 10px;
     position: relative;
     width: 30%;
-    align-content: center;
-    padding: 0px;
 }
 
-.header {
+header {
     height: 45px;
-    left:0;
-    padding: 5px 30px;
-    position:absolute;
-    top:0;
-    width: 100%;
+    padding: 5px 20px;
+}
+
+footer {
+    padding: 20px 20px 0px 20px;
+    height: 50px;
+    background-color: $White;
+}
+
+.body-content {
+    flex: 1;
+    padding: 5px 20px;
 }
 
 h1, h2, h3, h4 {
@@ -106,12 +115,6 @@ hr {
     height: 1px;
     margin-top: 15px;
     margin-bottom: 15px;
-}
-
-#footer {
-    padding: 0px 20px 0px 20px;
-    height: 30px;
-    background-color: $White;
 }
 
 .pull-left {
@@ -208,25 +211,6 @@ hr {
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
     padding: 5px 1em 5px 1em;
-}
-
-.body-content {
-    background-color: $White;
-    box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.6);
-    padding: 0px 20px;
-    margin:0 auto -30px;
-    min-height:100%;
-}
-
-.body-content:before {
-    content:"";
-    height:45px;
-    display:block;
-}
-.body-content:after {
-    content:"";
-    height:70px;
-    display:block;
 }
 
 .clickable {

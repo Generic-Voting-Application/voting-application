@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="center-panel">
-        <div class="header">
+        <header>
             <div class="pull-right" id="signin-header">
                 <span>
                     <span ng-show="!account"><a href="#" ng-click="openLoginDialog()">Sign In</a></span>
@@ -21,14 +21,11 @@
                     <div><a href="#" ng-click="toggleAccountControls=false;signOut()">Sign Out</a></div>
                 </div>
             </div>
-            <div class="clear"></div>
-        </div>
+        </header>
         <div class="body-content">
-            <div>
-                <div ng-view></div>
-            </div>
+            <div ng-view></div>
         </div>
-        <div id="footer"><a href="mailto:generic.voting@gmail.com">Contact us</a> | © 2015 – Scott Logic Ltd</div>
+        <footer><a href="mailto:generic.voting@gmail.com">Contact us</a> | © 2015 – Scott Logic Ltd</footer>
     </div>
     @Scripts.Render("~/Bundles/ScriptLib")
     @Scripts.Render("~/Bundles/Script")
