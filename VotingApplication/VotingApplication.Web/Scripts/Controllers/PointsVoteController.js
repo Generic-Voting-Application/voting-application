@@ -1,89 +1,112 @@
-﻿(function () {
+﻿/// <reference path="../Services/IdentityService.js" />
+/// <reference path="../Services/PollService.js" />
+/// <reference path="../Services/TokenService.js" />
+(function () {
     angular
         .module('GVA.Voting')
-        .controller('PointsVoteController', ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService',
-        function ($scope, $routeParams, IdentityService, PollService, TokenService) {
+        .controller('PointsVoteController', PointsVoteController);
 
-            var pollId = $routeParams.pollId;
-            var token = null;
+    PointsVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService'];
 
-            $scope.options = [];
-            $scope.totalPointsAvailable = 0;
-            $scope.maxPointsPerOption = 0;
+    function PointsVoteController($scope, $routeParams, IdentityService, PollService, TokenService) {
 
-            $scope.vote = function (options) {
-                if (!options) {
-                    return null;
-                }
+        var pollId = $routeParams.pollId;
+        var token = null;
 
-                if (!token) {
-                    // Probably invite only, tell the user
-                } else if (!IdentityService.identity) {
-                    IdentityService.openLoginDialog($scope, function () {
-                        $scope.vote(options);
-                    });
-                } else {
+        $scope.options = [];
+        $scope.totalPointsAvailable = 0;
+        $scope.maxPointsPerOption = 0;
 
-                    votes = options
-                        .filter(function (option) { return option.voteValue })
-                        .map(function (option) {
-                            return {
-                                OptionId: option.Id,
-                                VoteValue: option.voteValue,
-                                VoterName: IdentityService.identity.name
-                            }
-                        });
+        // TODO: Rename this function, as it's ambiguous (i.e. 'vote' is a verb and a noun).
+        $scope.vote = submitVote;
+        $scope.unallocatedPoints = calculateUnallocatedPoints;
+        $scope.disabledAddPoints = shouldAddPointsBeDisabled;
 
-                    PollService.submitVote(pollId, votes, token, function () {
-                        window.location = $scope.$parent.resultsLink;
-                    });
-                }
-            }
+        activate();
 
-            $scope.unallocatedPoints = function () {
-                var unallocatedPoints = $scope.totalPointsAvailable;
 
-                for (var i = 0; i < $scope.options.length; i++) {
-                    unallocatedPoints -= $scope.options[i].voteValue || 0;
-                }
+        function activate() {
+            PollService.getPoll(pollId, pollServiceSuccessCallback);
+        };
 
-                return unallocatedPoints;
-            }
+        function pollServiceSuccessCallback(pollData) {
+            $scope.options = pollData.Options;
 
-            $scope.disabledAddPoints = function (pointValue) {
-                return pointValue >= $scope.maxPointsPerOption || $scope.unallocatedPoints() === 0;
-            }
+            $scope.options.forEach(function (d) {
+                d.voteValue = 0;
+            });
 
-            var getPreviousVotes = function () {
+            $scope.totalPointsAvailable = pollData.MaxPoints;
+            $scope.maxPointsPerOption = pollData.MaxPerVote;
 
-            }
+            TokenService.getToken(pollId, getTokenSuccessCallback);
+        }
 
-            // Get Poll
-            PollService.getPoll(pollId, function (pollData) {
-                $scope.options = pollData.Options;
-                $scope.options.forEach(function (d) {
-                    d.voteValue = 0;
-                });
-                $scope.totalPointsAvailable = pollData.MaxPoints;
-                $scope.maxPointsPerOption = pollData.MaxPerVote;
+        function getTokenSuccessCallback(tokenData) {
+            token = tokenData;
 
-                // Get Token
-                TokenService.getToken(pollId, function (tokenData) {
-                    token = tokenData;
 
-                    // Get Previous Votes
-                    PollService.getTokenVotes(pollId, token, function (voteData) {
-                        voteData.forEach(function (dataItem) {
-                            for (var i = 0; i < $scope.options.length; i++) {
-                                var option = $scope.options[i];
-                                if (option.Id === dataItem.OptionId) {
-                                    option.voteValue = dataItem.VoteValue;
-                                    break;
-                                }
-                            };
-                        });
-                    });
+            PollService.getTokenVotes(pollId, token, function (voteData) {
+
+                voteData.forEach(function (dataItem) {
+
+                    for (var i = 0; i < $scope.options.length; i++) {
+                        var option = $scope.options[i];
+
+                        if (option.Id === dataItem.OptionId) {
+                            option.voteValue = dataItem.VoteValue;
+                            break;
+                        }
+                    };
                 });
             });
-        }]);
+        }
+
+        function submitVote(options) {
+            if (!options) {
+                return null;
+            }
+
+            if (!token) {
+                // Probably invite only, tell the user
+            }
+            else if (!IdentityService.identity) {
+                IdentityService.openLoginDialog($scope, function () {
+                    $scope.vote(options);
+                });
+            }
+            else {
+
+                var votes = options
+                    .filter(function (option) { return option.voteValue })
+                    .map(function (option) {
+                        return {
+                            OptionId: option.Id,
+                            VoteValue: option.voteValue,
+                            VoterName: IdentityService.identity.name
+                        }
+                    });
+
+                PollService.submitVote(pollId, votes, token, submitVoteSuccessCallback);
+            }
+        };
+
+        function submitVoteSuccessCallback() {
+            window.location = $scope.$parent.resultsLink;
+        }
+
+        function calculateUnallocatedPoints() {
+            var unallocatedPoints = $scope.totalPointsAvailable;
+
+            for (var i = 0; i < $scope.options.length; i++) {
+                unallocatedPoints -= $scope.options[i].voteValue || 0;
+            }
+
+            return unallocatedPoints;
+        };
+
+        function shouldAddPointsBeDisabled(pointValue) {
+            return pointValue >= $scope.maxPointsPerOption || $scope.unallocatedPoints() === 0;
+        };
+    }
 })();

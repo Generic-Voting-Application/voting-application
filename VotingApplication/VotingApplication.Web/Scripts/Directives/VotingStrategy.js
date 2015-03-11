@@ -1,31 +1,35 @@
-﻿(function () {
+﻿/// <reference path="../Services/PollService.js" />
+(function () {
     angular
         .module('GVA.Voting')
-        .directive('votingStrategy', ['PollService', '$routeParams',
-        function (PollService, $routeParams) {
+        .directive('votingStrategy', votingStrategy);
 
-            var pollStrategy = null;
-            var pollId = $routeParams.pollId;
+    votingStrategy.$inject = ['$routeParams', 'PollService'];
 
-            PollService.getPoll(pollId, function (data) {
-                pollStrategy = data.VotingStrategy;
-            });
+    function votingStrategy(PollService, $routeParams) {
 
-            var votingTemplate = function () {
-                if (!pollStrategy) {
-                    return '';
-                }
+        var pollStrategy = null;
+        var pollId = $routeParams.pollId;
 
-                return '../Routes/' + pollStrategy + 'Vote';
+        PollService.getPoll(pollId, function (data) {
+            pollStrategy = data.VotingStrategy;
+        });
+
+        var votingTemplate = function () {
+            if (!pollStrategy) {
+                return '';
             }
 
-            return {
-                replace: true,
-                link: function (scope, element, attrs) {
-                    scope.votingTemplate = votingTemplate;
-                },
+            return '../Routes/' + pollStrategy + 'Vote';
+        }
 
-                template: '<div ng-include="votingTemplate()"></div>'
-            }
-        }]);
+        return {
+            replace: true,
+            link: function (scope, element, attrs) {
+                scope.votingTemplate = votingTemplate;
+            },
+
+            template: '<div ng-include="votingTemplate()"></div>'
+        }
+    }
 })();

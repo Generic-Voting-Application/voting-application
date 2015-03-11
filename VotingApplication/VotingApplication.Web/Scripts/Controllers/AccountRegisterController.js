@@ -1,43 +1,57 @@
-﻿(function () {
+﻿/// <reference path="../Services/AccountService.js" />
+/// <reference path="../Services/ErrorService.js" />
+(function () {
     angular
         .module('GVA.Common')
-        .controller('AccountRegisterController', ['$scope', 'AccountService', 'ErrorService',
-        function ($scope, AccountService, ErrorService) {
+        .controller('AccountRegisterController', AccountRegisterController);
 
-            var displayError = function (errorMessage) {
-                $scope.errorMessage = errorMessage;
-            }
+    AccountRegisterController.$inject = ['$scope', 'AccountService', 'ErrorService'];
 
-            $scope.registerAccount = function (form) {
-                AccountService.register(form.email, form.password, function () {
+    function AccountRegisterController($scope, AccountService, ErrorService) {
 
-                    AccountService.getAccessToken(form.email, form.password, function (data) {
+        var displayError = function (errorMessage) {
+            $scope.errorMessage = errorMessage;
+        };
 
-                        AccountService.setAccount(data.access_token, form.email);
+        $scope.registerAccount = function (form) {
+            AccountService.register(form.email, form.password, registerCallback, registerFailureCallback);
 
-                        $scope.closeThisDialog();
-                        if ($scope.ngDialogData.callback) $scope.ngDialogData.callback();
+            function registerCallback() {
+                AccountService.getAccessToken(form.email, form.password, getAccessTokenCallback, getAccessTokenFailureCallback);
 
-                    }, function (data, status) {
-                        // Handle sign in error
+                function getAccessTokenCallback(data) {
 
-                        // Bad request
-                        if (status === 400 && data.ModelState) {
-                            ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
-                        }
-                    });
-                }, function (data, status) {
-                    // Handle register error
+                    AccountService.setAccount(data.access_token, form.email);
+
+                    $scope.closeThisDialog();
+                    if ($scope.ngDialogData.callback) {
+                        $scope.ngDialogData.callback();
+                    }
+                }
+
+                function getAccessTokenFailureCallback(data, status) {
+                    // Handle sign in error
 
                     // Bad request
                     if (status === 400 && data.ModelState) {
                         ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
-                    } else {
-                        displayError(data.Message || data.error_description);
                     }
-                });
+                }
             }
 
-        }]);
+
+            function registerFailureCallback(data, status) {
+                // Handle register error
+
+                // Bad request
+                if (status === 400 && data.ModelState) {
+                    ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
+                } else {
+                    displayError(data.Message || data.error_description);
+                }
+            }
+        };
+
+    };
 
 })();
