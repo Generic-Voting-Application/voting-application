@@ -8,19 +8,24 @@
     ManagePageController.$inject = ['$scope', '$routeParams', 'AccountService', 'ManageService'];
 
     function ManagePageController($scope, $routeParams, AccountService, ManageService) {
-
+        
         var manageId = $routeParams.manageId;
 
         $scope.poll = {};
         $scope.manageId = manageId;
-
         $scope.openLoginDialog = showLoginDialog;
         $scope.updatePoll = updatePollDetails;
         $scope.formatPollExpiry = formatPollExpiryDate;
         $scope.selectText = selectTargetText;
+        $scope.dateFilter = dateFilter;
 
         activate();
 
+        function dateFilter (date) {
+            var startOfDay = new Date();
+            startOfDay.setHours(0);
+            return date >= startOfDay
+        }
 
         function activate() {
             ManageService.getPoll(manageId, function (data) {
@@ -33,8 +38,10 @@
         };
 
         function updatePollDetails() {
-            ManageService.poll = $scope.poll;
-            ManageService.updatePoll($routeParams.manageId, $scope.poll);
+            if (validateInput()) {
+                ManageService.poll = $scope.poll;
+                ManageService.updatePoll($routeParams.manageId, $scope.poll);
+            }
         };
 
         function formatPollExpiryDate() {
@@ -49,5 +56,15 @@
         function selectTargetText($event) {
             $event.target.select();
         };
+
+        var validateInput = function () {
+            if ($scope.poll.Expires && $scope.poll.ExpiryDate < new Date()) {
+                $scope.invalidDate = true;
+                return false;
+            }
+
+            $scope.invalidDate = false;
+            return true;
+        }
     }
 })();

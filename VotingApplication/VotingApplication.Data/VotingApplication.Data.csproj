@@ -66,6 +66,10 @@
     <Compile Include="Migrations\201503091629236_RenameAnonymousVoting.Designer.cs">
       <DependentUpon>201503091629236_RenameAnonymousVoting.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503101435082_NullablePollDateTime.cs" />
+    <Compile Include="Migrations\201503101435082_NullablePollDateTime.Designer.cs">
+      <DependentUpon>201503101435082_NullablePollDateTime.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\ChatMessage.cs" />
     <Compile Include="Model\Option.cs" />
@@ -92,6 +96,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503091629236_RenameAnonymousVoting.resx">
       <DependentUpon>201503091629236_RenameAnonymousVoting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503101435082_NullablePollDateTime.resx">
+      <DependentUpon>201503101435082_NullablePollDateTime.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

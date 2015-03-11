@@ -35,7 +35,7 @@ namespace VotingApplication.Data.Model
 
         public bool RequireAuth { get; set; }
         public bool Expires { get; set; }
-        public DateTimeOffset ExpiryDate { get; set; }
+        public DateTimeOffset? ExpiryDate { get; set; }
 
         public bool OptionAdding { get; set; }
 

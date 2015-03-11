@@ -23,8 +23,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configura
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Web.Common", "VotingApplication.Web.Common\VotingApplication.Web.Common.csproj", "{969076F5-F2AD-4711-853B-BA1BD3439E13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Web.Api", "VotingApplication.Web.Api\VotingApplication.Web.Api.csproj", "{141C9D63-9053-44D8-B2E3-F436AEE56AC0}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B4664874-E386-4AA5-B494-3124CA40DCDB}"
 	ProjectSection(SolutionItems) = preProject
 		VotingApplication.Web.Api\App_Start\NinjectWebCommon.cs = VotingApplication.Web.Api\App_Start\NinjectWebCommon.cs
@@ -56,10 +54,6 @@ Global
 		{969076F5-F2AD-4711-853B-BA1BD3439E13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{969076F5-F2AD-4711-853B-BA1BD3439E13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{969076F5-F2AD-4711-853B-BA1BD3439E13}.Release|Any CPU.Build.0 = Release|Any CPU
-		{141C9D63-9053-44D8-B2E3-F436AEE56AC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{141C9D63-9053-44D8-B2E3-F436AEE56AC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{141C9D63-9053-44D8-B2E3-F436AEE56AC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{141C9D63-9053-44D8-B2E3-F436AEE56AC0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{08D315E9-B845-48E1-A2F0-486E7064C2C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{08D315E9-B845-48E1-A2F0-486E7064C2C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08D315E9-B845-48E1-A2F0-486E7064C2C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
