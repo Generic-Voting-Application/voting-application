@@ -10,27 +10,42 @@ $White: #FFFFFF;
 
 $Error: $Red500;
 
-html {
+html, body {
     height: 100%;
-    position: relative;
+    margin: 0;
 }
 
 body {
-    display: flex;
-    height: 100%;
-    margin: 0px;
     font: normal 12pt 'Open Sans';
 }
 
 .center-panel {
     background-color: $White;
     box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    min-height: 100vh;
     min-width: 320px;
-    align-content: center;
-    margin: auto;
     padding: 0px 10px;
-    height: 100%;
+    position: relative;
     width: 30%;
+}
+
+header {
+    height: 45px;
+    padding: 5px 20px;
+}
+
+footer {
+    padding: 20px 20px 0px 20px;
+    height: 50px;
+    background-color: $White;
+}
+
+.body-content {
+    flex: 1;
+    padding: 5px 20px;
 }
 
 h1, h2, h3, h4 {
@@ -100,14 +115,6 @@ hr {
     height: 1px;
     margin-top: 15px;
     margin-bottom: 15px;
-}
-
-#footer {
-    margin-top: 50px;
-    padding: 0px 20px 0px 20px;
-    bottom: 0px;
-    height: 30px;
-    background-color: $White;
 }
 
 .pull-left {
@@ -204,10 +211,6 @@ hr {
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
     padding: 5px 1em 5px 1em;
-}
-
-.body-content {
-    padding: 0px 20px;
 }
 
 .clickable {
