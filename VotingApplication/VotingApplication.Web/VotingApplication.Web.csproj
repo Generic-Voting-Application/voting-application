@@ -337,8 +337,9 @@
     <Content Include="Scripts\Controllers\CreateBasicPageController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
     <Content Include="Scripts\Directives\PollHeading.js" />
-    <Content Include="Scripts\GVA-Common.js" />
-    <Content Include="Scripts\GVA-Creation.js" />
+    <Content Include="Scripts\Modules\GVA-Common.js" />
+    <Content Include="Scripts\Modules\GVA-Creation.js" />
+    <Content Include="Scripts\Modules\GVA-Poll.js" />
     <Content Include="Scripts\Lib\angular-min.js" />
     <Content Include="Scripts\Lib\angular-route-min.js" />
     <Content Include="Scripts\Lib\angular-toggle-switch-min.js" />
@@ -356,7 +357,8 @@
     <Content Include="Scripts\Lib\crossfilter-min.js" />
     <Content Include="Scripts\Lib\d3-min.js" />
     <Content Include="Scripts\Lib\insight-min.js" />
-    <Content Include="Scripts\GVA-Voting.js" />
+    <Content Include="Scripts\Modules\GVA-Voting.js" />
+    <Content Include="Scripts\Services\VoteService.js" />
     <Content Include="Views\Routes\AccountLogin.cshtml" />
     <Content Include="Views\Routes\AccountRegister.cshtml" />
     <Content Include="Views\Routes\BasicCreate.cshtml" />

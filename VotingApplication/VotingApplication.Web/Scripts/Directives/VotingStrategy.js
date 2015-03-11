@@ -6,7 +6,7 @@
 
     votingStrategy.$inject = ['$routeParams', 'PollService'];
 
-    function votingStrategy(PollService, $routeParams) {
+    function votingStrategy($routeParams, PollService) {
 
         var pollStrategy = null;
         var pollId = $routeParams.pollId;
@@ -21,7 +21,7 @@
             }
 
             return '../Routes/' + pollStrategy + 'Vote';
-        }
+        };
 
         return {
             replace: true,
@@ -30,6 +30,6 @@
             },
 
             template: '<div ng-include="votingTemplate()"></div>'
-        }
+        };
     }
 })();

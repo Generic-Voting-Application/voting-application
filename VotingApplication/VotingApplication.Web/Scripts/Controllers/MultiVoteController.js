@@ -1,20 +1,20 @@
 ﻿/// <reference path="../Services/IdentityService.js" />
 /// <reference path="../Services/PollService.js" />
 /// <reference path="../Services/TokenService.js" />
+/// <reference path="../Services/VoteService.js" />
 (function () {
     angular
         .module('GVA.Voting')
         .controller('MultiVoteController', MultiVoteController);
 
-    MultiVoteController.$inject = ['$scope', 'IdentityService', 'PollService', 'TokenService'];
+    MultiVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService'];
 
-    function MultiVoteController($scope, IdentityService, PollService, TokenService) {
+    function MultiVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService) {
 
-        var pollId = PollService.currentPollId();
+        var pollId = $routeParams.pollId;
         var token = null;
 
-        // TODO: Rename this function, as it's ambiguous (i.e. 'vote' is a verb and a noun).
-        $scope.vote = submiteVote;
+        $scope.submitVote = submiteVote;
 
         activate();
 
@@ -32,7 +32,7 @@
         function getTokenSuccessCallback(tokenData) {
             token = tokenData;
 
-            PollService.getTokenVotes(pollId, token, getTokenVotesSuccessCallback);
+            VoteService.getTokenVotes(pollId, token, getTokenVotesSuccessCallback);
         };
 
         function getTokenVotesSuccessCallback(voteData) {
@@ -58,7 +58,6 @@
                 // Probably invite only, tell the user
             }
             else if (!IdentityService.identity) {
-
                 IdentityService.openLoginDialog($scope, openLoginDialogCallback);
             }
             else {
@@ -73,12 +72,12 @@
                             }
                         });
 
-                PollService.submitVote(pollId, votes, token, submitVoteSuccessCallback);
+                VoteService.submitVote(pollId, votes, token, submitVoteSuccessCallback);
             }
         }
 
         function openLoginDialogCallback() {
-            $scope.vote(options);
+            $scope.submitVote(options);
         };
 
         function submitVoteSuccessCallback(data) {

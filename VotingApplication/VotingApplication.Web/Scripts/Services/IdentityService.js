@@ -22,20 +22,23 @@
 
         self.registerIdentityObserver = function (callback) {
             observerCallbacks.push(callback);
-        }
+        };
 
         self.setIdentityName = function (name) {
-            var identity = { 'name': name }
+            var identity = { 'name': name };
+
             self.identity = identity;
             $localStorage.identity = identity;
+
             notifyObservers();
-        }
+        };
 
         self.clearIdentityName = function () {
             self.identity = null;
             delete $localStorage.identity;
+
             notifyObservers();
-        }
+        };
 
         self.openLoginDialog = function (scope, callback) {
             ngDialog.open({
@@ -44,7 +47,7 @@
                 'scope': scope,
                 data: { 'callback': callback }
             });
-        }
+        };
 
         return self;
     }

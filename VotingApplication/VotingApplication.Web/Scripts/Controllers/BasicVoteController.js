@@ -1,14 +1,15 @@
 ﻿/// <reference path="../Services/IdentityService.js" />
 /// <reference path="../Services/PollService.js" />
 /// <reference path="../Services/TokenService.js" />
+/// <reference path="../Services/VoteService.js" />
 (function () {
     angular
         .module('GVA.Voting')
         .controller('BasicVoteController', BasicVoteController);
 
-    BasicVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService'];
+    BasicVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService'];
 
-    function BasicVoteController($scope, $routeParams, IdentityService, PollService, TokenService) {
+    function BasicVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService) {
 
         var pollId = $routeParams.pollId;
         var token = null;
@@ -16,8 +17,7 @@
         activate();
 
 
-        // TODO: Rename this function, as it's ambiguous (i.e. 'vote' is a verb and a noun).
-        $scope.vote = submitVote;
+        $scope.submitVote = submitVote;
 
         function activate() {
             PollService.getPoll(pollId, getPollSuccessCallback);
@@ -31,7 +31,7 @@
             function getTokenSuccessCallback(tokenData) {
                 token = tokenData;
 
-                PollService.getTokenVotes(pollId, token, getTokenVotesSuccessCallback);
+                VoteService.getTokenVotes(pollId, token, getTokenVotesSuccessCallback);
             };
 
             function getTokenVotesSuccessCallback(voteData) {
@@ -58,7 +58,7 @@
             }
             else if (!IdentityService.identity) {
                 IdentityService.openLoginDialog($scope, function () {
-                    $scope.vote(option);
+                    $scope.submitVote(option);
                 });
             }
             else {
@@ -68,7 +68,7 @@
                     VoterName: IdentityService.identity.name
                 }];
 
-                PollService.submitVote(pollId, votes, token, function () {
+                VoteService.submitVote(pollId, votes, token, function () {
                     window.location = $scope.$parent.resultsLink;
                 });
             }

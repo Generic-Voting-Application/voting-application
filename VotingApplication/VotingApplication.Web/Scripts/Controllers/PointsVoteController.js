@@ -1,14 +1,15 @@
 ﻿/// <reference path="../Services/IdentityService.js" />
 /// <reference path="../Services/PollService.js" />
 /// <reference path="../Services/TokenService.js" />
+/// <reference path="../Services/VoteService.js" />
 (function () {
     angular
         .module('GVA.Voting')
         .controller('PointsVoteController', PointsVoteController);
 
-    PointsVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService'];
+    PointsVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService'];
 
-    function PointsVoteController($scope, $routeParams, IdentityService, PollService, TokenService) {
+    function PointsVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService) {
 
         var pollId = $routeParams.pollId;
         var token = null;
@@ -17,8 +18,7 @@
         $scope.totalPointsAvailable = 0;
         $scope.maxPointsPerOption = 0;
 
-        // TODO: Rename this function, as it's ambiguous (i.e. 'vote' is a verb and a noun).
-        $scope.vote = submitVote;
+        $scope.submitVote = submitVote;
         $scope.unallocatedPoints = calculateUnallocatedPoints;
         $scope.disabledAddPoints = shouldAddPointsBeDisabled;
 
@@ -46,7 +46,7 @@
             token = tokenData;
 
 
-            PollService.getTokenVotes(pollId, token, function (voteData) {
+            VoteService.getTokenVotes(pollId, token, function (voteData) {
 
                 voteData.forEach(function (dataItem) {
 
@@ -72,7 +72,7 @@
             }
             else if (!IdentityService.identity) {
                 IdentityService.openLoginDialog($scope, function () {
-                    $scope.vote(options);
+                    $scope.submitVote(options);
                 });
             }
             else {
@@ -87,7 +87,7 @@
                         }
                     });
 
-                PollService.submitVote(pollId, votes, token, submitVoteSuccessCallback);
+                VoteService.submitVote(pollId, votes, token, submitVoteSuccessCallback);
             }
         };
 
