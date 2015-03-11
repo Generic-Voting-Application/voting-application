@@ -8,11 +8,12 @@
         </div>
         <div class="option-block-row">
             <button class="inactive-btn pull-right" ng-click="descriptionToggle=!descriptionToggle">More Info</button>
-            <p ng-hide="descriptionToggle">
+            <p class="basic-vote-description" ng-hide="descriptionToggle">
             </p>
-            <p ng-show="descriptionToggle">
+            <p class="basic-vote-description" ng-show="descriptionToggle">
                 {{option.Description}}
             </p>
         </div>
+        <hr>
     </div>
 </div>

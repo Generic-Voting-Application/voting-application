@@ -1,1 +1,32 @@
-﻿
+﻿<div ng-app="GVA.Creation" ng-controller="ManagePollTypeController">
+    <div class="manage-area centered">
+        <h2>The Style</h2>
+        <h3>How will the voters vote?</h3>
+        <div class="manage-section">
+            <span>
+                <button class="inactive-btn btn-large" ng-class="{'active-btn' : poll.VotingStrategy=='Basic'}" ng-click="poll.VotingStrategy='Basic';updatePoll()">Single Vote</button>
+            </span>
+        </div>
+        
+        <div class="manage-section">
+            <span>
+                <button class="inactive-btn btn-large" ng-class="{'active-btn' : poll.VotingStrategy=='Multi'}" ng-click="poll.VotingStrategy='Multi';updatePoll()">Multi Vote</button>
+            </span>
+        </div>
+        <div class="manage-section">
+            <span>
+                <button class="inactive-btn btn-large" ng-class="{'active-btn' : poll.VotingStrategy=='UpDown'}" ng-click="poll.VotingStrategy='UpDown';updatePoll()">Up/Down Vote</button>
+            </span>
+        </div>
+        <div class="manage-section">
+            <span>
+                <button class="inactive-btn btn-large" ng-class="{'active-btn' : poll.VotingStrategy=='Points'}" ng-click="poll.VotingStrategy='Points';updatePoll()">Points Vote</button>
+            </span>
+        </div>
+        <div class="manage-section">
+            <button class="manage-btn" ng-click="return()">Back</button>
+        </div>
+    </div>
+</div>
+
+

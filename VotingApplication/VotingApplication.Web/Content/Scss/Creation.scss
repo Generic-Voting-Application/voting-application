@@ -31,6 +31,11 @@ body {
     border: 1px solid $Blue700;
 }
 
+.btn-large {
+    padding: 12px 30px;
+    min-width: 180px;
+}
+
 #signin-header {
     font-size: 10pt;
     color: $Blue500;

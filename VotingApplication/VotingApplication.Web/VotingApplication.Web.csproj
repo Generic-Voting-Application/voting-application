@@ -323,6 +323,7 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\Controllers\AccountRegisterController.js" />
     <Content Include="Scripts\Controllers\AccountLoginController.js" />
+    <Content Include="Scripts\Controllers\ManagePollTypeController.js" />
     <Content Include="Scripts\Controllers\ManageVotersController.js" />
     <Content Include="Scripts\Controllers\ManageOptionController.js" />
     <Content Include="Scripts\Controllers\ManagePageController.js" />
