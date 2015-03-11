@@ -9,6 +9,8 @@
 
     function ManagePageController($scope, $routeParams, AccountService, ManageService) {
         
+        var manageId = $routeParams.manageId;
+
         $scope.poll = {};
         $scope.manageId = manageId;
         $scope.openLoginDialog = showLoginDialog;
