@@ -10,27 +10,33 @@ $White: #FFFFFF;
 
 $Error: $Red500;
 
-html {
+html, body {
     height: 100%;
-    position: relative;
+    margin: 0;
 }
 
 body {
-    display: flex;
-    height: 100%;
-    margin: 0px;
     font: normal 12pt 'Open Sans';
 }
 
 .center-panel {
-    background-color: $White;
-    box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.6);
-    min-width: 320px;
-    align-content: center;
-    margin: auto;
-    padding: 0px 10px;
+    height: 100%;
+    margin: 0 auto;
     min-height: 100%;
+    min-width: 320px;
+    position: relative;
     width: 30%;
+    align-content: center;
+    padding: 0px;
+}
+
+.header {
+    height: 45px;
+    left:0;
+    padding: 5px 30px;
+    position:absolute;
+    top:0;
+    width: 100%;
 }
 
 h1, h2, h3, h4 {
@@ -103,9 +109,7 @@ hr {
 }
 
 #footer {
-    margin-top: 50px;
     padding: 0px 20px 0px 20px;
-    bottom: 0px;
     height: 30px;
     background-color: $White;
 }
@@ -207,7 +211,22 @@ hr {
 }
 
 .body-content {
+    background-color: $White;
+    box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.6);
     padding: 0px 20px;
+    margin:0 auto -30px;
+    min-height:100%;
+}
+
+.body-content:before {
+    content:"";
+    height:45px;
+    display:block;
+}
+.body-content:after {
+    content:"";
+    height:70px;
+    display:block;
 }
 
 .clickable {
