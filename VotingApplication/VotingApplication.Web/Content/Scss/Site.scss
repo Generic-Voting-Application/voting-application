@@ -75,19 +75,26 @@ a {
     background-color: $White;
     border-color: $Grey400;
     border-width: 1px;
-    min-width: 100px;
     color: $Grey600;
 }
 
 .active-btn {
     @extend .btn;
     color: $White;
-    min-width: 100px;
 }
 
 .go-btn {
     @extend .btn;
     color: $White;
+}
+
+.btn-medium {
+    min-width: 100px;
+}
+
+.btn-large {
+    padding: 12px 30px;
+    min-width: 180px;
 }
 
 :disabled {
