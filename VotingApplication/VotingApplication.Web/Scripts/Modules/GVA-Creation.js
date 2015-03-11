@@ -1,6 +1,6 @@
 ﻿(function () {
     angular
-        .module('GVA.Creation', ['ngRoute', 'ngDialog', 'ngStorage', 'toggle-switch', 'GVA.Common', 'GVA.Poll'])
+        .module('GVA.Creation', ['ngRoute', 'ngDialog', 'ngStorage', 'ngQuickDate', 'toggle-switch', 'GVA.Common', 'GVA.Poll'])
         .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider
@@ -22,11 +22,8 @@
                 .when('/Manage/:manageId/PollType', {
                     templateUrl: '../Routes/ManagePollType'
                 })
-                .when('/Manage/:manageId/Expiry', {
-                    templateUrl: '../Routes/ManageExpiry'
-                })
-                .otherwise({
-                    templateUrl: '../Routes/BasicCreate'
-                });
+               .otherwise({
+                   templateUrl: '../Routes/BasicCreate'
+               })
         }]);
 })();

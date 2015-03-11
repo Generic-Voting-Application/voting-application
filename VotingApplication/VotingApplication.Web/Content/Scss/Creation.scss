@@ -197,6 +197,10 @@ body {
     background-color: $Blue500;
 }
 
+.quickdate-clear {
+    content: '';
+}
+
 .poll-link-area {
     padding-right: 0.1em;
     overflow: hidden;

@@ -66,7 +66,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 this.ThrowError(HttpStatusCode.BadRequest);
             }
 
-            if (updateRequest.Expires && updateRequest.ExpiryDate < DateTime.Now)
+            if (updateRequest.Expires && (updateRequest.ExpiryDate == null || updateRequest.ExpiryDate < DateTime.Now))
             {
                 ModelState.AddModelError("ExpiryDate", "Invalid or unspecified ExpiryDate");
             }

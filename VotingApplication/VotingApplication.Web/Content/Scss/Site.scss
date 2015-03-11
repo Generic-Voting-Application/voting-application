@@ -127,6 +127,10 @@ hr {
     max-width: none;
 }
 
+.error {
+    color: $Error;
+}
+
 .form-input {
     border-radius: 5px;
     font-size: 12pt;
@@ -162,14 +166,14 @@ hr {
 .form-section-inline {
     @extend .form-section;
 
-    > label, input, button, small {
+    > label, input, button, small {                         
         display: inline-block;
     }
 }
 
 .form-error {
+    @extend .error;
     font-size: small;
-    color: $Error;
     overflow: scroll;
 }
 
