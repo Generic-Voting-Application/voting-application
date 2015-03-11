@@ -382,7 +382,6 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Routes\PointsVote.cshtml" />
     <Content Include="Views\Routes\BasicVote.cshtml" />
-    <Content Include="Views\Routes\LoginDialog.cshtml" />
     <Content Include="Views\Routes\IdentityLogin.cshtml" />
     <Content Include="Views\Routes\UpDownVote.cshtml" />
     <Content Include="Views\Poll\Index.cshtml" />
