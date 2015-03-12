@@ -29,6 +29,7 @@ namespace VotingApplication.Web
 
             StyleBundle votingStyle = new StyleBundle("~/Bundles/VotingStyle");
             votingStyle.Include("~/Content/Scss/Voting.scss");
+            votingStyle.Include("~/Content/Scss/Site.scss");
             votingStyle.Builder = nullBuilder;
             votingStyle.Transforms.Add(styleTransformer);
             votingStyle.Orderer = nullOrderer;
@@ -36,6 +37,7 @@ namespace VotingApplication.Web
 
             StyleBundle createStyle = new StyleBundle("~/Bundles/CreateStyle");
             createStyle.Include("~/Content/Scss/Creation.scss");
+            createStyle.Include("~/Content/Scss/Site.scss");
             createStyle.Builder = nullBuilder;
             createStyle.Transforms.Add(styleTransformer);
             createStyle.Orderer = nullOrderer;
