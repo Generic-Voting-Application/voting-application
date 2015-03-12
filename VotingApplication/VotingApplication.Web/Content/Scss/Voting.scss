@@ -75,7 +75,7 @@ body {
     float: left;
     padding-right: 10px;
     margin-top: 0px;
-    font-weight:bold;
+    font-weight: bold;
 }
 
 .option-description {
@@ -160,11 +160,10 @@ body {
 // Multi vote specific
 
 .option-checkbox {
-    margin:5px 10px 0px 10px;
+    margin: 5px 10px 0px 10px;
 }
 
 .multivote-option-description {
     @extend .option-description;
-
     margin-left: 34px;
 }
