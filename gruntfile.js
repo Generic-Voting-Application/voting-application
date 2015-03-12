@@ -8,7 +8,8 @@ module.exports = function(grunt) {
             'VotingApplication/VotingApplication.Web/Scripts/Services/**/*.js'
         ],
         options: {
-            jshintrc: true
+            jshintrc: true,
+            force: true
         }
     }
 });
