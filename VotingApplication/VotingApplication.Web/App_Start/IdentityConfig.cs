@@ -10,6 +10,9 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using VotingApplication.Web.Api.Services;
+using System.Web.Configuration;
+using System.Net;
 
 namespace VotingApplication.Web.Api.Models
 {
@@ -45,6 +48,12 @@ namespace VotingApplication.Web.Api.Models
             {
                 manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
+
+            var emailCredentials = new NetworkCredential(
+                WebConfigurationManager.AppSettings["HostLogin"],
+                WebConfigurationManager.AppSettings["HostPassword"]);
+
+            //manager.EmailService = new EmailService(emailCredentials, WebConfigurationManager.AppSettings["HostEmail"]);
             return manager;
         }
     }

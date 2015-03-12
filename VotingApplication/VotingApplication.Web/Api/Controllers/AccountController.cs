@@ -153,6 +153,64 @@ namespace VotingApplication.Web.Controllers
             return Ok();
         }
 
+        // POST api/Account/ForgotPassword
+        [AllowAnonymous]
+        [Route("ForgotPassword")]
+        public async Task<IHttpActionResult> ForgotPassword(ForgotPasswordBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await UserManager.FindByNameAsync(model.Email);
+
+            // Currently email confirmation is not set up
+            if (user == null /*|| !(await UserManager.IsEmailConfirmedAsync(user.Id))*/ )
+            {
+                ModelState.AddModelError("", "The user either does not exist or is not confirmed.");
+                return BadRequest(ModelState);
+            }
+
+            string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+
+            var callbackUrl = Url.Content("~/#/Account/ResetPassword?email=") + HttpUtility.UrlEncode(user.Email) + "&code=" + HttpUtility.UrlEncode(code);
+
+            await UserManager.SendEmailAsync(user.Id, "Pollster Password Reset", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+            return Ok();
+        }
+
+        // POST api/Account/ResetPassword
+        [AllowAnonymous]
+        [Route("ResetPassword")]
+        public async Task<IHttpActionResult> ResetPassword(ResetPasswordBindingModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError("", "No user found.");
+                    return BadRequest(ModelState);
+                }
+
+                IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+
+                IHttpActionResult errorResult = GetErrorResult(result);
+
+                if (errorResult != null)
+                {
+                    return errorResult;
+                }
+            }
+            return BadRequest(ModelState);
+        }
+
         // POST api/Account/AddExternalLogin
         [Route("AddExternalLogin")]
         public async Task<IHttpActionResult> AddExternalLogin(AddExternalLoginBindingModel model)

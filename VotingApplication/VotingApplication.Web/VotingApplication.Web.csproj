@@ -235,8 +235,6 @@
   <ItemGroup>
     <Compile Include="Api\Controllers\AccountController.cs" />
     <Compile Include="Api\Controllers\ApiControllerExtensions.cs" />
-    <Compile Include="Api\Controllers\IMailSender.cs" />
-    <Compile Include="Api\Controllers\MailSender.cs" />
     <Compile Include="Api\Controllers\ManageController.cs" />
     <Compile Include="Api\Controllers\ManageInvitationController.cs" />
     <Compile Include="Api\Controllers\ManageVoteController.cs" />
@@ -269,6 +267,13 @@
     <Compile Include="Api\Models\PollModels.cs" />
     <Compile Include="Api\Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Api\Results\ChallengeResult.cs" />
+    <Compile Include="Api\Services\EmailService.cs" />
+    <Compile Include="Api\Services\IMailSender.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Api\Services\MailSender.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Api\Validators\BasicVoteValidator.cs" />
     <Compile Include="Api\Validators\IVoteValidator.cs" />
     <Compile Include="Api\Validators\IVoteValidatorFactory.cs" />
@@ -324,6 +329,7 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\Controllers\AccountRegisterController.js" />
     <Content Include="Scripts\Controllers\AccountLoginController.js" />
+    <Content Include="Scripts\Controllers\AccountResetPasswordController.js" />
     <Content Include="Scripts\Controllers\ManageVotersController.js" />
     <Content Include="Scripts\Controllers\ManageOptionController.js" />
     <Content Include="Scripts\Controllers\ManagePageController.js" />
@@ -362,6 +368,7 @@
     <Content Include="Scripts\Services\VoteService.js" />
     <Content Include="Views\Routes\AccountLogin.cshtml" />
     <Content Include="Views\Routes\AccountRegister.cshtml" />
+    <Content Include="Views\Routes\AccountResetPassword.cshtml" />
     <Content Include="Views\Routes\BasicCreate.cshtml" />
     <Content Include="Scripts\Lib\angular-route-min.js.map" />
     <Content Include="Scripts\Lib\angular-min.js.map" />

@@ -22,6 +22,9 @@
                 .when('/Manage/:manageId/PollType', {
                     templateUrl: '../Routes/ManagePollType'
                 })
+                .when('/Account/ResetPassword', {
+                    templateUrl: '../Routes/AccountResetPassword'
+                })
                .otherwise({
                    templateUrl: '../Routes/BasicCreate'
                })

@@ -9,6 +9,7 @@ using System.Threading;
 using System.Web.Configuration;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Services;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {

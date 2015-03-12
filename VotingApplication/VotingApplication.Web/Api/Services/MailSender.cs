@@ -9,7 +9,7 @@ using System.Web;
 using System.Web.Configuration;
 using VotingApplication.Web.Api.Logging;
 
-namespace VotingApplication.Web.Api.Controllers.API_Controllers
+namespace VotingApplication.Web.Api.Services
 {
     public class MailSender : IMailSender
     {

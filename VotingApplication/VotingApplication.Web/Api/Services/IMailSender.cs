@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VotingApplication.Web.Api.Controllers.API_Controllers
+namespace VotingApplication.Web.Api.Services
 {
     public interface IMailSender
     {

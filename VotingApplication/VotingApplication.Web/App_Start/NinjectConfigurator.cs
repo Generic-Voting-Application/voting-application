@@ -1,8 +1,8 @@
 ﻿using Ninject;
 using System.Web.Http;
 using VotingApplication.Data.Context;
-using VotingApplication.Web.Api.Controllers.API_Controllers;
 using VotingApplication.Web.Api.Logging;
+using VotingApplication.Web.Api.Services;
 using VotingApplication.Web.Api.Validators;
 using VotingApplication.Web.Common;
 
