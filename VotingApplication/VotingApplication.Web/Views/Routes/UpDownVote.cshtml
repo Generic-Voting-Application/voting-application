@@ -12,7 +12,7 @@
                         <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
                     </button>
                 </span>
-                <button class="inactive-btn" ng-click="descriptionToggle=!descriptionToggle">More info</button>
+                <button class="inactive-btn btn-medium" ng-click="descriptionToggle=!descriptionToggle">More info</button>
             </div>
             <div class="option-description" ng-show="descriptionToggle">
                 {{option.Description}}
@@ -24,6 +24,6 @@
         <hr />
     </div>
     <div class="flexbox">
-        <button class="active-btn centered" ng-click="submitVote(options)">Vote</button>
+        <button class="active-btn btn-medium centered" ng-click="submitVote(options)">Vote</button>
     </div>
 </div>

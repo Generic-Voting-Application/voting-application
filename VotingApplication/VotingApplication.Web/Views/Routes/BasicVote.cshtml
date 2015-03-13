@@ -2,17 +2,18 @@
     <h3>Options</h3>
     <div class="option-block" ng-repeat="option in options" ng-class="{'selected-option': option.selected }">
         <div class="option-block-row" margin-bottom:15px>
-            <button class="active-btn pull-right" ng-click="submitVote(option)">Vote</button>
+            <button class="active-btn btn-medium pull-right" ng-click="submitVote(option)">Vote</button>
             {{option.Name}}
 
         </div>
         <div class="option-block-row">
-            <button class="inactive-btn pull-right" ng-click="descriptionToggle=!descriptionToggle">More Info</button>
-            <p ng-hide="descriptionToggle">
+            <button class="inactive-btn btn-medium pull-right" ng-click="descriptionToggle=!descriptionToggle">More Info</button>
+            <p class="basic-vote-description" ng-hide="descriptionToggle">
             </p>
-            <p ng-show="descriptionToggle">
+            <p class="basic-vote-description" ng-show="descriptionToggle">
                 {{option.Description}}
             </p>
         </div>
+        <hr>
     </div>
 </div>
