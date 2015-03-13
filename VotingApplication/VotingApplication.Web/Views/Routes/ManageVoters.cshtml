@@ -1,10 +1,15 @@
 ﻿<div ng-app="GVA.Creation" ng-controller="ManageVotersController">
-    <div class="manage-area centered">
+    <div class="centered">
         <h2>Poll Voters</h2>
         <h4>Email to Invite</h4>
         <input name="new-voter" ng-model="inviteString" ng-change="emailUpdated()" ng-trim="false" />
 
-        <div>{{poll.Voters}}</div>
+        <div class="pill-box">
+            <div class="voter-pill" ng-repeat="voter in poll.Voters">
+                <span class="voter-pill-text">{{voter}}</span>
+                <span class="glyphicon glyphicon-remove voter-pill-delete" ng-click="deleteVoter(voter)" aria-hidden="true"></span>
+            </div>
+        </div>
 
         <div class="manage-section">
             <button class="manage-btn" ng-click="return()">Back</button>

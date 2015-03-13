@@ -12,6 +12,7 @@
         $scope.manageId = $routeParams.manageId;
 
         $scope.emailUpdated = emailUpdated;
+        $scope.deleteVoter = deleteVoter;
         $scope.inviteString = '';
 
         $scope.updatePoll = updatePoll;
@@ -43,6 +44,12 @@
                 $scope.poll.Voters = $scope.poll.Voters.concat(newEmails);
                 $scope.inviteString = remainingText;
             }
+        }
+
+        function deleteVoter(voter) {
+            var indexOfVoter = $scope.poll.Voters.indexOf(voter);
+
+            $scope.poll.Voters.splice(indexOfVoter, 1);
         }
 
         function hasTerminatingCharacter(value) {
