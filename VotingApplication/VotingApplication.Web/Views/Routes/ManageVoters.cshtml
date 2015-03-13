@@ -6,12 +6,13 @@
 
         <div class="pill-box">
             <div class="voter-pill" ng-repeat="voter in poll.Voters">
-                <span class="voter-pill-text">{{voter}}</span>
+                <span class="voter-pill-text">{{voter.Email}}</span>
                 <span class="glyphicon glyphicon-remove voter-pill-delete" ng-click="deleteVoter(voter)" aria-hidden="true"></span>
             </div>
         </div>
 
         <div class="manage-section">
+            <button class="manage-btn" ng-click="sendInvitations()">Invite voters</button>
             <button class="manage-btn" ng-click="return()">Back</button>
         </div>
     </div>

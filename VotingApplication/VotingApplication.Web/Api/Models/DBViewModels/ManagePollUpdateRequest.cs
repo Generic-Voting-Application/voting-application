@@ -16,6 +16,7 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
         [Range(1, int.MaxValue)]
         public int MaxPerVote { get; set; }
         public List<Option> Options { get; set; }
+        public List<Token> Voters { get; set; }
         public bool InviteOnly { get; set; }
         public bool NamedVoting { get; set; }
         public bool RequireAuth { get; set; }

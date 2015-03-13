@@ -13,6 +13,7 @@
 
         $scope.emailUpdated = emailUpdated;
         $scope.deleteVoter = deleteVoter;
+        $scope.sendInvitations = sendInvitations;
         $scope.inviteString = '';
 
         $scope.updatePoll = updatePoll;
@@ -38,7 +39,7 @@
                     }).map(function (d) {
                         // Parse to extract the email-like section. 
                         // E.g. Turns "Joe Bloggs <jbloggs@example.com>" into "jbloggs@example.com
-                        return d.match(emailRegex)[0];
+                        return { Email: d.match(emailRegex)[0] };
                     });
 
                 $scope.poll.Voters = $scope.poll.Voters.concat(newEmails);
@@ -50,6 +51,11 @@
             var indexOfVoter = $scope.poll.Voters.indexOf(voter);
 
             $scope.poll.Voters.splice(indexOfVoter, 1);
+        }
+
+        function sendInvitations() {
+            updatePoll();
+            returnToManage();
         }
 
         function hasTerminatingCharacter(value) {

@@ -22,7 +22,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 UUID = poll.UUID,
                 Options = poll.Options,
-                Voters = new List<Token>(),
+                Voters = poll.Tokens,
                 VotingStrategy = poll.PollType.ToString(),
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,
@@ -42,7 +42,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = context.Polls.Where(p => p.ManageId == manageId).Include(s => s.Options).FirstOrDefault();
+                Poll poll = context.Polls
+                    .Where(p => p.ManageId == manageId)
+                    .Include(p => p.Options)
+                    .Include(p => p.Tokens)
+                    .FirstOrDefault();
 
                 if (poll == null)
                 {
@@ -95,6 +99,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Poll existingPoll = context.Polls
                                            .Where(p => p.ManageId == manageId)
                                            .Include(p => p.Options)
+                                           .Include(p => p.Tokens)
                                            .SingleOrDefault();
 
                 if (existingPoll == null)
@@ -141,7 +146,20 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     newOptions.AddRange(updateRequest.Options);
                 }
 
+                foreach (Token voter in updateRequest.Voters)
+                {
+                    if (voter.TokenGuid == Guid.Empty)
+                    {
+                        voter.TokenGuid = Guid.NewGuid();
+                        // TODO: Send email
+                    }
+                    else
+                    {
+                        // TODO: Update Id to match existing
+                    }
+                }
 
+                existingPoll.Tokens = updateRequest.Voters;
 
                 existingPoll.Options = newOptions;
                 existingPoll.LastUpdated = DateTime.Now;
