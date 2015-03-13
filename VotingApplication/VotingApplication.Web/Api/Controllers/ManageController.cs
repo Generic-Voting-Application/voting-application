@@ -8,13 +8,24 @@ using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Controllers;
 using System.Collections.Generic;
+using System.Web.Configuration;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
     public class ManageController : WebApiController
     {
-        public ManageController() : base() { }
-        public ManageController(IContextFactory contextFactory) : base(contextFactory) { }
+
+        private IMailSender _mailSender;
+
+        public ManageController() : base()
+        {
+            _mailSender = new MailSender();
+        }
+
+        public ManageController(IContextFactory contextFactory, IMailSender mailSender) : base(contextFactory)
+        {
+            _mailSender = mailSender;
+        }
 
         private ManagePollRequestResponseModel PollToModel(Poll poll)
         {
@@ -154,7 +165,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     {
                         voter.TokenGuid = Guid.NewGuid();
                         existingPoll.Tokens.Add(voter);
-                        // TODO: Send email
+                        SendInvitation(existingPoll.UUID, voter);
                     }
                     else
                     {
@@ -190,6 +201,20 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
+
+        private void SendInvitation(Guid UUID, Token token)
+        {
+            String hostUri = WebConfigurationManager.AppSettings["HostURI"];
+            if (hostUri == String.Empty)
+            {
+                return;
+            }
+
+            string message = String.Join("\n\n", new List<string>() { "You've been invited to a poll on Pollster",
+            "Have your say at " + hostUri + "/Poll/#/Vote/" + UUID + "/" + token.TokenGuid });
+
+            _mailSender.SendMail(token.Email, "Have your say", message);
+        }
         #endregion
     }
 }
