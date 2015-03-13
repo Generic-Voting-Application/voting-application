@@ -32,8 +32,13 @@ namespace VotingApplication.Web.Api.Services
             msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(text, null, MediaTypeNames.Text.Plain));
             msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(html, null, MediaTypeNames.Text.Html));
 
-            SmtpClient smtpClient = new SmtpClient("localhost");
-            smtpClient.Send(msg);
+            try
+            {
+                SmtpClient smtpClient = new SmtpClient("localhost");
+                smtpClient.Send(msg);
+            } catch (Exception e) {
+
+            }
 
             return Task.FromResult(0);
         }
