@@ -268,10 +268,9 @@
     <Compile Include="Api\Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Api\Results\ChallengeResult.cs" />
     <Compile Include="Api\Services\EmailService.cs" />
+    <Compile Include="Api\Services\SendMailEmailSender.cs" />
+    <Compile Include="Api\Services\Smtp4DevEmailSender.cs" />
     <Compile Include="Api\Services\IMailSender.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Api\Services\MailSender.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Api\Validators\BasicVoteValidator.cs" />

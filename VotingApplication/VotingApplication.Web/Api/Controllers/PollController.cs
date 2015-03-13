@@ -18,10 +18,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     {
         private IMailSender _mailSender;
 
-        public PollController()
+        public PollController(IMailSender mailSender)
             : base()
         {
-            _mailSender = new MailSender();
+            _mailSender = mailSender;
         }
         public PollController(IContextFactory contextFactory, IMailSender mailSender)
             : base(contextFactory)

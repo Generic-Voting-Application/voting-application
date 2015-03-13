@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
-using Microsoft.Owin.Security;
+using System.Web;
+using System.Web.Http;
 using VotingApplication.Web.Api.Services;
-using System.Web.Configuration;
-using System.Net;
 
 namespace VotingApplication.Web.Api.Models
 {
@@ -49,11 +41,8 @@ namespace VotingApplication.Web.Api.Models
                 manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
 
-            var emailCredentials = new NetworkCredential(
-                WebConfigurationManager.AppSettings["HostLogin"],
-                WebConfigurationManager.AppSettings["HostPassword"]);
+            manager.EmailService = GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(EmailService)) as EmailService;
 
-            //manager.EmailService = new EmailService(emailCredentials, WebConfigurationManager.AppSettings["HostEmail"]);
             return manager;
         }
     }

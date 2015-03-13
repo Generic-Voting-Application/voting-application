@@ -17,9 +17,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     {
         private IMailSender _mailSender;
 
-        public ManageInvitationController() : base()
+        public ManageInvitationController(IMailSender mailSender)
+            : base()
         {
-            _mailSender = new MailSender();
+            _mailSender = mailSender;
         }
         public ManageInvitationController(IContextFactory contextFactory, IMailSender mailSender) : base(contextFactory)
         {
