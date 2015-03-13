@@ -44,6 +44,7 @@
 
                 $scope.poll.Voters = $scope.poll.Voters.concat(newEmails);
                 $scope.inviteString = remainingText;
+                $scope.$apply();
             }
         }
 
@@ -76,6 +77,14 @@
             ManageService.registerPollObserver(function () {
                 $scope.poll = ManageService.poll;
             })
+
+            var inputField = document.getElementById("new-voter");
+            inputField.addEventListener("keydown", function (e) {
+                if (e.keyCode == 13) { // User pressed "return key"
+                    $scope.inviteString += '\n';
+                    emailUpdated();
+                }
+            });
         }
     };
 })();
