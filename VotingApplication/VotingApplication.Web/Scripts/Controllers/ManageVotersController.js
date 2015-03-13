@@ -20,7 +20,7 @@
 
         activate();
 
-        var splitterTest = /[\n\s;]+/;
+        var splitterTest = /[\n\s;>]+/;
         var emailRegex = /[\w._%+-]+@\w+(\.\w+)+/;
 
         function emailUpdated() {
