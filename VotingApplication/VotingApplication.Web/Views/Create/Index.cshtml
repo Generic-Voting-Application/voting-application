@@ -23,15 +23,7 @@
             </div>
         </header>
         <div class="body-content">
-            <div ng-switch on="isLoggedIn">
-                <div ng-switch-when="true">
-                    <div ng-include="'Routes/Dashboard'"></div>
-                </div>
-                <div ng-switch-when="false">
-                    <div ng-include="'Routes/BasicCreate'"></div>
-                </div>
-                <div ng-switch-default>default</div>
-            </div>
+            <div ng-view></div>
         </div>
         <footer><a href="mailto:generic.voting@gmail.com">Contact us</a> | © 2015 – Scott Logic Ltd</footer>
     </div>

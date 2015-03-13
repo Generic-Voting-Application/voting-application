@@ -93,5 +93,10 @@ namespace VotingApplication.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult CreatePage()
+        {
+            return View();
+        }
     }
 }

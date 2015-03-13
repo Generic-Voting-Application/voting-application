@@ -23,7 +23,7 @@
                     templateUrl: '../Routes/ManagePollType'
                 })
                .otherwise({
-                   templateUrl: '../Routes/BasicCreate'
+                   templateUrl: '../Routes/CreatePage'
                })
         }]);
 })();
