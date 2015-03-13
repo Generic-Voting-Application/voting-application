@@ -16,9 +16,10 @@
             clearError();
 
             // Can this not be turned into a promise?
-            AccountService.getAccessToken(form.email, form.password, function (data) {
+            AccountService.getAccessToken(form.email, form.password).success(function (data) {
                 loginCallback(form.email, data);
-            }, function (data, status) {
+            })
+            .error(function (data, status) {
                 loginFailureCallback(form, data, status);
             });
         }
@@ -31,9 +32,10 @@
                 return;
             }
 
-            AccountService.forgotPassword(form.email, function (data) {
+            AccountService.forgotPassword(form.email).success(function (data) {
                 console.log('Success');
-            }, function (data, status) {
+            })
+            .error(function (data, status) {
                 console.log('Failed', data, status);
             });
         }

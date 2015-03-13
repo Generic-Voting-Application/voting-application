@@ -36,8 +36,8 @@
             notifyObservers();
         };
 
-        self.getAccessToken = function (email, password, callback, failureCallback) {
-            $http({
+        self.getAccessToken = function (email, password) {
+            return $http({
                 method: 'POST',
                 url: '/Token',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -55,13 +55,11 @@
                     username: email,
                     password: password
                 }
-            })
-            .success(function (data) { if (callback) { callback(data); } })
-            .error(function (data, status) { if (failureCallback) { failureCallback(data, status); } });
+            });
         };
 
-        self.register = function (email, password, callback, failureCallback) {
-            $http({
+        self.register = function (email, password) {
+            return $http({
                 method: 'POST',
                 url: '/api/Account/Register',
                 contentType: 'application/json; charset=utf-8',
@@ -69,25 +67,21 @@
                     Email: email,
                     Password: password
                 })
-            })
-           .success(function (data) { if (callback) { callback(data); } })
-           .error(function (data, status) { if (failureCallback) { failureCallback(data, status); } });
+            });
         };
 
-        self.forgotPassword = function (email, callback, failureCallback) {
-            $http({
+        self.forgotPassword = function (email) {
+            return $http({
                 method: 'POST',
                 url: '/api/Account/ForgotPassword',
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify({
                     Email: email
                 })
-            })
-           .success(function (data) { if (callback) { callback(data); } })
-           .error(function (data, status) { if (failureCallback) { failureCallback(data, status); } });
+            });
         };
 
-        self.resetPassword = function (email, code, password, confirmPassword, callback, failureCallback) {
+        self.resetPassword = function (email, code, password, confirmPassword) {
             $http({
                 method: 'POST',
                 url: '/api/Account/ResetPassword',
@@ -98,9 +92,7 @@
                     Password: password,
                     ConfirmPassword: confirmPassword
                 })
-            })
-           .success(function (data) { if (callback) { callback(data); } })
-           .error(function (data, status) { if (failureCallback) { failureCallback(data, status); } });
+            });
         };
 
         self.openLoginDialog = function (scope, callback) {

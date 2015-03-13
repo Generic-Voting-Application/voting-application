@@ -18,9 +18,9 @@
 
         function resetPassword(form) {
 
-            AccountService.resetPassword(emailParameter, codeParameter, form.password, form.confirmpassword, function (data) {
+            AccountService.resetPassword(emailParameter, codeParameter, form.password, form.confirmpassword).success(function (data) {
                 console.log('Reset success');
-            }, function (data, status) {
+            }).error(function (data, status) {
                 console.log('Reset failed');
             });
         }
