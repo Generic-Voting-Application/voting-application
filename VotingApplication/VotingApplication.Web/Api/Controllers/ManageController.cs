@@ -146,20 +146,30 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     newOptions.AddRange(updateRequest.Options);
                 }
 
+                List<Token> redundantTokens = existingPoll.Tokens.ToList<Token>();
+
                 foreach (Token voter in updateRequest.Voters)
                 {
                     if (voter.TokenGuid == Guid.Empty)
                     {
                         voter.TokenGuid = Guid.NewGuid();
+                        existingPoll.Tokens.Add(voter);
                         // TODO: Send email
                     }
                     else
                     {
-                        // TODO: Update Id to match existing
+                        // Don't mark token as redundant if still in use
+                        Token token = redundantTokens.Find(t => t.TokenGuid == voter.TokenGuid);
+                        redundantTokens.Remove(token);
                     }
                 }
 
-                existingPoll.Tokens = updateRequest.Voters;
+                // Clean up tokens which have been removed
+                foreach (Token token in redundantTokens)
+                {
+                    context.Tokens.Remove(token);
+                    existingPoll.Tokens.Remove(token);
+                }
 
                 existingPoll.Options = newOptions;
                 existingPoll.LastUpdated = DateTime.Now;
