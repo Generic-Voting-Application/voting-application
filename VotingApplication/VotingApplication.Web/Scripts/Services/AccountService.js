@@ -82,7 +82,7 @@
         };
 
         self.resetPassword = function (email, code, password, confirmPassword) {
-            $http({
+            return $http({
                 method: 'POST',
                 url: '/api/Account/ResetPassword',
                 contentType: 'application/json; charset=utf-8',
