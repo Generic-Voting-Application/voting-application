@@ -33,10 +33,14 @@
             }
 
             AccountService.forgotPassword(form.email).success(function (data) {
-                console.log('Success');
+                $scope.closeThisDialog();
+
+                if ($scope.ngDialogData.callback) {
+                    $scope.ngDialogData.callback();
+                }
             })
             .error(function (data, status) {
-                console.log('Failed', data, status);
+                displayError(data.Message || data.error_description);
             });
         }
 
@@ -63,8 +67,8 @@
             $scope.errorMessage = errorMessage;
         }
 
-        function clearError(errorMessage) {
-            $scope.errorMessage = errorMessage;
+        function clearError() {
+            $scope.errorMessage = '';
         }
     }
 
