@@ -66,6 +66,27 @@ namespace VotingApplication.Web.Controllers
             };
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("ConfirmEmail", Name = "ConfirmEmail")]
+        public async Task<IHttpActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                ModelState.AddModelError("error", "You need to provide your user id and confirmation code");
+                return BadRequest(ModelState);
+            }
+
+            IdentityResult result = await UserManager.ConfirmEmailAsync(userId, code);
+            if (result.Succeeded)
+            {
+                return Redirect(Url.Content("~/#/"));
+            }
+
+            IHttpActionResult errorResult = GetErrorResult(result);
+            return errorResult;
+        }
+
         // POST api/Account/Logout
         [Route("Logout")]
         public IHttpActionResult Logout()
@@ -386,14 +407,29 @@ namespace VotingApplication.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser() {
+                UserName = model.Email,
+                Email = model.Email,
+                EmailConfirmed = false
+            };
 
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+            IdentityResult identityResult = await UserManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
+            var createResult = GetErrorResult(identityResult);
+
+            if (createResult != null)
             {
-                return GetErrorResult(result);
+                return createResult;
             }
+
+            // Commented out code for sending confirmation emails
+            /*
+            string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            var callbackUrl = Url.Link("ConfirmEmail", new { userId = user.Id, code = code });
+
+            string body = String.Format("Your account has been successfully created, but you still need one more step.<br />Click <a href={0}> here </a>to verify your account", callbackUrl);
+            await UserManager.SendEmailAsync(user.Id, "Pollster account confirmation", body);
+            */
 
             return Ok();
         }
