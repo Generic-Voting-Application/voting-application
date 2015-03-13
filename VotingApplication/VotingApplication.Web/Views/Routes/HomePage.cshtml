@@ -1,10 +1,10 @@
-﻿<div ng-controller="CreateBasicPageController">
+﻿<div ng-controller="HomepageController">
     <div ng-switch on="isLoggedIn">
         <div ng-switch-when="true">
             <div ng-include="'Routes/Dashboard'"></div>
         </div>
         <div ng-switch-when="false">
-            <div ng-include="'Routes/BasicCreate'"></div>
+            <div ng-include="'Routes/UnregisteredDashboard'"></div>
         </div>
         <div ng-switch-default>default</div>
     </div>

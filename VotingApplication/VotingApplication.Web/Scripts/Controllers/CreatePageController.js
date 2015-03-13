@@ -11,14 +11,7 @@
         $scope.account = AccountService.account;
         $scope.openLoginDialog = showLoginDialog;
         $scope.signOut = AccountService.clearAccount;
-        $scope.isLoggedIn = false;
-        $scope.$watch(
-            function () { return AccountService.account },
-            function () {
-                $scope.isLoggedIn = (AccountService.account != null);
-            });
-
-
+        
         activate();
 
 
