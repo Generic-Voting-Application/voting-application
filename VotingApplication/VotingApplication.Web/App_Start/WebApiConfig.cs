@@ -1,6 +1,8 @@
 ﻿using Microsoft.Owin.Security.OAuth;
+using System.Data.Entity.Migrations;
 using System.Net.Http.Headers;
 using System.Web.Http;
+using VotingApplication.Data.Migrations;
 using VotingApplication.Web.Api.Filters;
 
 namespace VotingApplication.Web
@@ -79,6 +81,9 @@ namespace VotingApplication.Web
             );
 
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
+
+            var migrator = new DbMigrator(new Configuration());
+            migrator.Update();
         }
     }
 }
