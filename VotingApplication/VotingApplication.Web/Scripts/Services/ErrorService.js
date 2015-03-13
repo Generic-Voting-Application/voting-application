@@ -16,7 +16,7 @@
             form.errors = {};
 
             for (var modelError in modelState) {
-                if (modelState.hasOwnProperty(modelError)) {
+                if (modelState.hasOwnProperty(modelError) && modelError !== undefined) {
                     var key = modelError.replace('model.', '').toLowerCase();
 
                     if (form.hasOwnProperty(key)) {

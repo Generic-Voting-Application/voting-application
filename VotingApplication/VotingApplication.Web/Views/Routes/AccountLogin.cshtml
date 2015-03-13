@@ -10,7 +10,7 @@
             <span class="form-error" ng-show="registerForm.errors">{{loginForm.errors.password}}</span>
         </div>
         <button class="active-btn" ng-disabled="loginForm.$invalid" type="submit">Sign In</button>
-        <button class="inactive-btn" type="button">Forgot Password?</button>
+        <button class="inactive-btn" type="button" ng-click="forgottenPassword(loginForm)">Forgot Password?</button>
     </form>
 </div>
 <span class="dialog-error-bar" ng-show="errorMessage">{{errorMessage}}</span>

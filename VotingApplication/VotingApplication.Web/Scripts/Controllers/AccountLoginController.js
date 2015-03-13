@@ -5,37 +5,71 @@
         .module('GVA.Common')
         .controller('AccountLoginController', AccountLoginController);
 
-    AccountLoginController.$inject = ['$scope', 'AccountService', 'ErrorService']
+    AccountLoginController.$inject = ['$scope', 'AccountService', 'ErrorService'];
 
     function AccountLoginController($scope, AccountService, ErrorService) {
 
-        $scope.loginAccount = function (form) {
+        $scope.loginAccount = loginAccount;
+        $scope.forgottenPassword = forgottenPassword;
+        
+        function loginAccount(form) {
+            clearError();
 
-            AccountService.getAccessToken(form.email, form.password, callback, failureCallback);
+            // Can this not be turned into a promise?
+            AccountService.getAccessToken(form.email, form.password).success(function (data) {
+                loginCallback(form.email, data);
+            })
+            .error(function (data, status) {
+                loginFailureCallback(form, data, status);
+            });
+        }
+        
+        function forgottenPassword(form) {
+            clearError();
+            
+            if (form.email === undefined) {
+                displayError('Please supply email address.');
+                return;
+            }
 
-            function callback(data) {
-                AccountService.setAccount(data.access_token, form.email);
-
+            AccountService.forgotPassword(form.email).success(function (data) {
                 $scope.closeThisDialog();
+
                 if ($scope.ngDialogData.callback) {
                     $scope.ngDialogData.callback();
                 }
-            };
+            })
+            .error(function (data, status) {
+                displayError(data.Message || data.error_description);
+            });
+        }
 
-            function failureCallback(data, status) {
-                // Bad request
-                if (status === 400 && data.ModelState) {
-                    ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
-                }
-                else {
-                    displayError(data.Message || data.error_description);
-                }
-            };
+        function loginCallback(email, data) {
+            AccountService.setAccount(data.access_token, email);
 
-            var displayError = function (errorMessage) {
-                $scope.errorMessage = errorMessage;
+            $scope.closeThisDialog();
+            if ($scope.ngDialogData.callback) {
+                $scope.ngDialogData.callback();
             }
         }
-    };
+
+        function loginFailureCallback(form, data, status) {
+            // Bad request
+            if (status === 400 && data.ModelState) {
+                ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
+            }
+            else {
+                displayError(data.Message || data.error_description);
+            }
+        }
+
+        function displayError(errorMessage) {
+            $scope.errorMessage = errorMessage;
+        }
+
+        function clearError() {
+            $scope.errorMessage = '';
+        }
+    }
 
 })();
