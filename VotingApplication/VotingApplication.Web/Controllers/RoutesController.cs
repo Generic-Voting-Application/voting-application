@@ -88,5 +88,10 @@ namespace VotingApplication.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult PollTypeChange()
+        {
+            return View();
+        }
     }
 }

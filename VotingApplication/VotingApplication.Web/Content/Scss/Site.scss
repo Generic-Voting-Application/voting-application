@@ -5,6 +5,7 @@
 $Grey400: #BDBDBD;
 $Grey600: #757575;
 $Red500: #f44336;
+$Red700: #D32F2F;
 $Black: #000000;
 $White: #FFFFFF;
 
@@ -83,6 +84,14 @@ a {
     color: $White;
 }
 
+.error-btn {
+    @extend .btn;
+    color: $White;
+    background-color: $Red500;
+    border-color: $Red700;
+    border-width: 1px;
+}
+
 .go-btn {
     @extend .btn;
     color: $White;
@@ -94,7 +103,7 @@ a {
 
 .btn-large {
     padding: 12px 30px;
-    min-width: 180px;
+    min-width: 200px;
 }
 
 :disabled {
@@ -209,6 +218,10 @@ hr {
 
 .dialog-content {
     padding: 1em;
+
+    > h1, h2, h3 {
+        margin-top: 5px;
+    }
 }
 
 .dialog-error-bar {
