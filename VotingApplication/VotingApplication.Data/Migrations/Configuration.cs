@@ -5,7 +5,7 @@ namespace VotingApplication.Data.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<VotingApplication.Data.Context.VotingContext>
+    public sealed class Configuration : DbMigrationsConfiguration<VotingApplication.Data.Context.VotingContext>
     {
         public Configuration()
         {
