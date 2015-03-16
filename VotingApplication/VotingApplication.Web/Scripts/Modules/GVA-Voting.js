@@ -4,10 +4,10 @@
         .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
-                when('/Vote/:pollId', {
+                when('/Vote/:pollId/:tokenId?', {
                     templateUrl: '../Routes/Vote'
                 })
-                .when('/Results/:pollId', {
+                .when('/Results/:pollId/:tokenId?', {
                     templateUrl: '../Routes/Results'
                 });
         }]);
