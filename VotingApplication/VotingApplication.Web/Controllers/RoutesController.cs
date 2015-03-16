@@ -88,5 +88,15 @@ namespace VotingApplication.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult ManageExpiry()
+        {
+            return View();
+        }
+
+        public ActionResult DatePicker()
+        {
+            return View();
+        }
     }
 }

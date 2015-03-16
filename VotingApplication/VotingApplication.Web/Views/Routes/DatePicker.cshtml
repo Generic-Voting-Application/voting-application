@@ -1,0 +1,15 @@
+﻿<div>
+    <span>{{month}}</span>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th ng-repeat="weekday in weekdays">{{weekday}}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in rows">
+            <td ng-repeat="cell in row">{{cell.date}}</td>
+        </tr>
+    </tbody>
+</table>
