@@ -66,6 +66,27 @@ namespace VotingApplication.Web.Controllers
             };
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("ConfirmEmail", Name = "ConfirmEmail")]
+        public async Task<IHttpActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                ModelState.AddModelError("error", "You need to provide your user id and confirmation code");
+                return BadRequest(ModelState);
+            }
+
+            IdentityResult result = await UserManager.ConfirmEmailAsync(userId, code);
+            if (result.Succeeded)
+            {
+                return Redirect(Url.Content("~/#/"));
+            }
+
+            IHttpActionResult errorResult = GetErrorResult(result);
+            return errorResult;
+        }
+
         // POST api/Account/Logout
         [Route("Logout")]
         public IHttpActionResult Logout()
@@ -151,6 +172,64 @@ namespace VotingApplication.Web.Controllers
             }
 
             return Ok();
+        }
+
+        // POST api/Account/ForgotPassword
+        [AllowAnonymous]
+        [Route("ForgotPassword")]
+        public async Task<IHttpActionResult> ForgotPassword(ForgotPasswordBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await UserManager.FindByNameAsync(model.Email);
+
+            // Currently email confirmation is not set up
+            if (user == null /*|| !(await UserManager.IsEmailConfirmedAsync(user.Id))*/ )
+            {
+                ModelState.AddModelError("", "The user either does not exist or is not confirmed.");
+                return BadRequest(ModelState);
+            }
+
+            string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+
+            var callbackUrl = Url.Content("~/#/Account/ResetPassword?email=") + HttpUtility.UrlEncode(user.Email) + "&code=" + HttpUtility.UrlEncode(code);
+
+            await UserManager.SendEmailAsync(user.Id, "Pollster Password Reset", "We heard you lost your password. You can <a href=\"" + callbackUrl + "\">reset your password</a> to get polling again.");
+
+            return Ok();
+        }
+
+        // POST api/Account/ResetPassword
+        [AllowAnonymous]
+        [Route("ResetPassword")]
+        public async Task<IHttpActionResult> ResetPassword(ResetPasswordBindingModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError("", "No user found.");
+                    return BadRequest(ModelState);
+                }
+
+                IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+
+                IHttpActionResult errorResult = GetErrorResult(result);
+
+                if (errorResult != null)
+                {
+                    return errorResult;
+                }
+            }
+            return BadRequest(ModelState);
         }
 
         // POST api/Account/AddExternalLogin
@@ -328,13 +407,19 @@ namespace VotingApplication.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser() {
+                UserName = model.Email,
+                Email = model.Email,
+                EmailConfirmed = false
+            };
 
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+            IdentityResult identityResult = await UserManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
+            var createResult = GetErrorResult(identityResult);
+
+            if (createResult != null)
             {
-                return GetErrorResult(result);
+                return createResult;
             }
 
             return Ok();

@@ -14,44 +14,25 @@
         };
 
         $scope.registerAccount = function (form) {
-            AccountService.register(form.email, form.password, registerCallback, registerFailureCallback);
+            AccountService.register(form.email, form.password).success(function() {
+                return AccountService.getAccessToken(form.email, form.password);
+            }).success(function (data) {
+                AccountService.setAccount(data.access_token, form.email);
 
-            function registerCallback() {
-                AccountService.getAccessToken(form.email, form.password, getAccessTokenCallback, getAccessTokenFailureCallback);
-
-                function getAccessTokenCallback(data) {
-
-                    AccountService.setAccount(data.access_token, form.email);
-
-                    $scope.closeThisDialog();
-                    if ($scope.ngDialogData.callback) {
-                        $scope.ngDialogData.callback();
-                    }
+                $scope.closeThisDialog();
+                if ($scope.ngDialogData.callback) {
+                    $scope.ngDialogData.callback();
                 }
-
-                function getAccessTokenFailureCallback(data, status) {
-                    // Handle sign in error
-
-                    // Bad request
-                    if (status === 400 && data.ModelState) {
-                        ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
-                    }
-                }
-            }
-
-
-            function registerFailureCallback(data, status) {
-                // Handle register error
-
+            }).error(function (data, status) {
                 // Bad request
                 if (status === 400 && data.ModelState) {
                     ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
                 } else {
                     displayError(data.Message || data.error_description);
                 }
-            }
+            });
         };
 
-    };
+    }
 
 })();

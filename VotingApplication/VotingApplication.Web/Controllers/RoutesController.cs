@@ -64,6 +64,11 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
+        public ActionResult AccountResetPassword()
+        {
+            return View();
+        }
+
         public ActionResult Manage()
         {
             return View();
