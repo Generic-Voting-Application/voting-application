@@ -422,15 +422,6 @@ namespace VotingApplication.Web.Controllers
                 return createResult;
             }
 
-            // Commented out code for sending confirmation emails
-            /*
-            string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-            var callbackUrl = Url.Link("ConfirmEmail", new { userId = user.Id, code = code });
-
-            string body = String.Format("Your account has been successfully created, but you still need one more step.<br />Click <a href={0}> here </a>to verify your account", callbackUrl);
-            await UserManager.SendEmailAsync(user.Id, "Pollster account confirmation", body);
-            */
-
             return Ok();
         }
 
