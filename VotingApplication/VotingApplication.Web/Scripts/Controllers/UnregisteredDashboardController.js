@@ -3,11 +3,11 @@
 (function () {
     angular
         .module('GVA.Creation')
-        .controller('CreateBasicPageController', CreateBasicPageController);
+        .controller('UnregisteredDashboardController', UnregisteredDashboardController);
 
-    CreateBasicPageController.$inject = ['$scope', 'AccountService', 'PollService'];
+    UnregisteredDashboardController.$inject = ['$scope', 'AccountService', 'PollService'];
 
-    function CreateBasicPageController($scope, AccountService, PollService) {
+    function UnregisteredDashboardController($scope, AccountService, PollService) {
 
         $scope.openLoginDialog = showLoginDialog;
         $scope.openRegisterDialog = showRegisterDialog;
