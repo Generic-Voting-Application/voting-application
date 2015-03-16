@@ -1,0 +1,42 @@
+﻿$Blue100: #BBDEFB;
+$Blue200: #90CAF9;
+$Blue300: #64B5F6;
+$Blue500: #2196F3;
+$Blue700: #1976D2;
+$Red900: #B71C1C;
+$Red500: #f44336;
+$Grey400: #BDBDBD;
+$BlueGrey400: #78909C;
+$BlueGrey100: #CFD8DC;
+$Black: #000000;
+$White: #FFFFFF;
+
+.dp-date-picker {
+    width: 100%;
+}
+
+.dp-clickable {
+    cursor: pointer;
+}
+
+.dp-date-control {
+    text-align: center;
+}
+
+.dp-calendar {
+    width: 100%;
+}
+
+.dp-calendar-column {
+    width: percentage(1/7);
+}
+
+.dp-calendar-cell {
+    text-align: center;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.dp-calendar-cell-selected {
+    background-color: $Blue300;
+}
