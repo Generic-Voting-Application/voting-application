@@ -342,7 +342,6 @@
     <Content Include="Scripts\Controllers\ResultsPageController.js" />
     <Content Include="Scripts\Controllers\PointsVoteController.js" />
     <Content Include="Scripts\Controllers\UpDownVoteController.js" />
-    <Content Include="Scripts\Controllers\CreateBasicPageController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
     <Content Include="Scripts\Directives\PollHeading.js" />
     <Content Include="Scripts\Modules\GVA-Common.js" />
