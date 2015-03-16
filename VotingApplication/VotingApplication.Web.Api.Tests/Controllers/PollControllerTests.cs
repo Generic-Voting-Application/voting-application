@@ -1,14 +1,12 @@
-﻿using System;
+﻿using FakeDbSet;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
-using FakeDbSet;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
@@ -38,11 +36,17 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             UUIDs = new[] { Guid.NewGuid(), Guid.NewGuid(), _templateUUID, Guid.NewGuid() };
             _mainPoll = new Poll() { UUID = UUIDs[0], ManageId = Guid.NewGuid() };
             _otherPoll = new Poll() { UUID = UUIDs[1], ManageId = Guid.NewGuid() };
-            
+
             _templateUUID = Guid.NewGuid();
             _templateCreatedDate = DateTime.Now.AddDays(-5);
-            _templatePoll = new Poll() { UUID = _templateUUID, ManageId = Guid.NewGuid(), CreatedDate = _templateCreatedDate,
-                Options = new List<Option>() { _redOption }, CreatorIdentity = "a@b.c" };
+            _templatePoll = new Poll()
+            {
+                UUID = _templateUUID,
+                ManageId = Guid.NewGuid(),
+                CreatedDate = _templateCreatedDate,
+                Options = new List<Option>() { _redOption },
+                CreatorIdentity = "a@b.c"
+            };
 
             _dummyPolls = new InMemoryDbSet<Poll>(true);
             _dummyPolls.Add(_mainPoll);
@@ -57,7 +61,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             var mockMailSender = new Mock<IMailSender>();
 
-            _controller = new PollController(mockContextFactory.Object, mockMailSender.Object);
+            _controller = new PollController(mockContextFactory.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }

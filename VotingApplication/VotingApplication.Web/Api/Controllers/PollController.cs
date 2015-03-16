@@ -7,23 +7,17 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
-using VotingApplication.Web.Api.Services;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
     public class PollController : WebApiController
     {
-        private IMailSender _mailSender;
-
-        public PollController(IMailSender mailSender)
-            : base()
+        public PollController()
         {
-            _mailSender = mailSender;
         }
-        public PollController(IContextFactory contextFactory, IMailSender mailSender)
+        public PollController(IContextFactory contextFactory)
             : base(contextFactory)
         {
-            _mailSender = mailSender;
         }
 
         private PollRequestResponseModel PollToModel(Poll poll)
@@ -71,7 +65,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 OptionAdding = pollCreationRequest.OptionAdding,
                 LastUpdated = DateTime.Now,
                 CreatedDate = DateTime.Now,
-                CreatorIdentity = this.User.Identity.Name
+                CreatorIdentity = User.Identity.Name
             };
         }
 
@@ -82,9 +76,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                var username = this.User.Identity.Name;
-                List<Poll> matchingPolls = context.Polls.Where(p => p.CreatorIdentity == username).ToList<Poll>();
-                return matchingPolls.Select(p => PollToModel(p)).ToList();
+                var username = User.Identity.Name;
+                List<Poll> matchingPolls = context.Polls.Where(p => p.CreatorIdentity == username).ToList();
+                return matchingPolls.Select(PollToModel).ToList();
             }
         }
 
