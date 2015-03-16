@@ -1,12 +1,13 @@
-﻿(function () {
+﻿/// <reference path="AccountService.js" />
+(function () {
     angular
         .module('GVA.Poll')
         .factory('PollService', PollService);
 
 
-    PollService.$inject = ['$http'];
+    PollService.$inject = ['$http', 'AccountService'];
 
-    function PollService($http) {
+    function PollService($http, AccountService) {
 
         var service = {
             getPoll: getPoll,
@@ -40,11 +41,13 @@
         }
 
         function createPoll(question, successCallback) {
+
             var request = {
                 method: 'POST',
                 url: 'api/poll',
                 headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'Authorization': 'Bearer ' + AccountService.account.token
                 },
                 data: JSON.stringify({
                     Name: question,

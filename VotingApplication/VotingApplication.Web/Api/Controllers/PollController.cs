@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Data.Model.Creation;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
@@ -38,34 +40,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 ExpiryDate = poll.ExpiryDate,
                 OptionAdding = poll.OptionAdding,
                 Options = poll.Options
-            };
-        }
-
-        private Poll ModelToPoll(PollCreationRequestModel pollCreationRequest)
-        {
-            return new Poll
-            {
-                UUID = Guid.NewGuid(),
-                ManageId = Guid.NewGuid(),
-                Name = pollCreationRequest.Name,
-                Creator = pollCreationRequest.Creator,
-                PollType = pollCreationRequest.VotingStrategy != null &&
-                           Enum.IsDefined(typeof(PollType), pollCreationRequest.VotingStrategy) ?
-                                (PollType)Enum.Parse(typeof(PollType), pollCreationRequest.VotingStrategy, true) : PollType.Basic,
-                Options = new List<Option>(),
-                MaxPoints = pollCreationRequest.MaxPoints,
-                MaxPerVote = pollCreationRequest.MaxPerVote,
-                InviteOnly = pollCreationRequest.InviteOnly,
-                Tokens = new List<Token>(),
-                ChatMessages = new List<ChatMessage>(),
-                NamedVoting = pollCreationRequest.NamedVoting,
-                RequireAuth = pollCreationRequest.RequireAuth,
-                Expires = pollCreationRequest.Expires,
-                ExpiryDate = pollCreationRequest.ExpiryDate,
-                OptionAdding = pollCreationRequest.OptionAdding,
-                LastUpdated = DateTime.Now,
-                CreatedDate = DateTime.Now,
-                CreatorIdentity = User.Identity.Name
             };
         }
 
@@ -121,7 +95,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             #endregion
 
-            Poll newPoll = ModelToPoll(pollCreationRequest);
+            Poll newPoll = Create(pollCreationRequest);
 
             using (var context = _contextFactory.CreateContext())
             {
@@ -136,6 +110,27 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             };
 
             return response;
+
+        }
+
+        private Poll Create(PollCreationRequestModel pollCreationRequest)
+        {
+            Poll newPoll = PollCreationHelper.Create();
+            newPoll.Name = pollCreationRequest.Name;
+            newPoll.Creator = pollCreationRequest.Creator;
+
+            if (User.Identity.IsAuthenticated)
+            {
+                newPoll.Creator = User.Identity.GetUserName();
+                newPoll.CreatorIdentity = User.Identity.GetUserId();
+            }
+            else
+            {
+                newPoll.Creator = "Anonymous";
+                newPoll.CreatorIdentity = null;
+            }
+
+            return newPoll;
         }
     }
 }
