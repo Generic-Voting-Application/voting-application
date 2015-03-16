@@ -49,12 +49,7 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
-        public ActionResult BasicCreate()
-        {
-            return View();
-        }
-
-        public ActionResult AdvancedCreate()
+        public ActionResult UnregisteredDashboard()
         {
             return View();
         }
@@ -94,7 +89,17 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
+        public ActionResult Dashboard()
+        {
+            return View();
+        }
+
         public ActionResult DatePicker()
+        {
+            return View();
+        }
+
+        public ActionResult HomePage()
         {
             return View();
         }

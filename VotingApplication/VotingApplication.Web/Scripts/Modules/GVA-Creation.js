@@ -26,7 +26,7 @@
                     templateUrl: '../Routes/ManageExpiry'
                 })
                .otherwise({
-                   templateUrl: '../Routes/BasicCreate'
+                   templateUrl: '../Routes/HomePage'
                })
         }]);
 })();
