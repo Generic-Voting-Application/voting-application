@@ -26,7 +26,7 @@
                     templateUrl: '../Routes/AccountResetPassword'
                 })
                .otherwise({
-                   templateUrl: '../Routes/BasicCreate'
+                   templateUrl: '../Routes/HomePage'
                })
         }]);
 })();
