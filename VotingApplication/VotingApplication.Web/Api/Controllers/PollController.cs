@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Web.Configuration;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
@@ -58,7 +55,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 ManageId = Guid.NewGuid(),
                 Name = pollCreationRequest.Name,
                 Creator = pollCreationRequest.Creator,
-                PollType = pollCreationRequest.VotingStrategy != null && 
+                PollType = pollCreationRequest.VotingStrategy != null &&
                            Enum.IsDefined(typeof(PollType), pollCreationRequest.VotingStrategy) ?
                                 (PollType)Enum.Parse(typeof(PollType), pollCreationRequest.VotingStrategy, true) : PollType.Basic,
                 Options = new List<Option>(),
@@ -108,8 +105,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #endregion
 
-        #region Post
-
+        [HttpPost]
         public PollCreationResponseModel Post(PollCreationRequestModel pollCreationRequest)
         {
             #region Input Validation
@@ -131,8 +127,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             #endregion
 
-            #region DB Object Creation
-
             Poll newPoll = ModelToPoll(pollCreationRequest);
 
             using (var context = _contextFactory.CreateContext())
@@ -141,13 +135,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 context.SaveChanges();
             }
 
-            #endregion
-
-            Thread newThread = new Thread(new ThreadStart(() => SendCreateEmail(pollCreationRequest.Email, newPoll.UUID, newPoll.ManageId)));
-            newThread.Start();
-
-            #region Response
-
             PollCreationResponseModel response = new PollCreationResponseModel
             {
                 UUID = newPoll.UUID,
@@ -155,27 +142,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             };
 
             return response;
-
-            #endregion
         }
-
-        private void SendCreateEmail(string email, Guid UUID, Guid manageId)
-        {
-            String hostUri = WebConfigurationManager.AppSettings["HostURI"];
-            if (hostUri == String.Empty)
-            {
-                return;
-            }
-
-            string message = String.Join("\n\n", new List<string>()
-                {"Your poll is now created and ready to go!",
-                 "You can invite people to vote by giving them this link: " + hostUri + "/Poll/Index/" + UUID,
-                 "You can administer your poll at "+ hostUri + "/Manage/Index/" + manageId,
-                 "(Don't share this link around!)"});
-
-            _mailSender.SendMail(email, "Your poll is ready!", message);
-        }
-
-        #endregion
     }
 }
