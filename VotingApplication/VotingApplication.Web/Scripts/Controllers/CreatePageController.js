@@ -11,7 +11,7 @@
         $scope.account = AccountService.account;
         $scope.openLoginDialog = showLoginDialog;
         $scope.signOut = AccountService.clearAccount;
-
+        
         activate();
 
 
