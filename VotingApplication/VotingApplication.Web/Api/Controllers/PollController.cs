@@ -1,31 +1,25 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Web.Configuration;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Data.Model.Creation;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
     public class PollController : WebApiController
     {
-        private IMailSender _mailSender;
-
         public PollController()
-            : base()
         {
-            _mailSender = new MailSender();
         }
-        public PollController(IContextFactory contextFactory, IMailSender mailSender)
+        public PollController(IContextFactory contextFactory)
             : base(contextFactory)
         {
-            _mailSender = mailSender;
         }
 
         private PollRequestResponseModel PollToModel(Poll poll)
@@ -49,34 +43,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             };
         }
 
-        private Poll ModelToPoll(PollCreationRequestModel pollCreationRequest)
-        {
-            return new Poll
-            {
-                UUID = Guid.NewGuid(),
-                ManageId = Guid.NewGuid(),
-                Name = pollCreationRequest.Name,
-                Creator = pollCreationRequest.Creator,
-                PollType = pollCreationRequest.VotingStrategy != null && 
-                           Enum.IsDefined(typeof(PollType), pollCreationRequest.VotingStrategy) ?
-                                (PollType)Enum.Parse(typeof(PollType), pollCreationRequest.VotingStrategy, true) : PollType.Basic,
-                Options = new List<Option>(),
-                MaxPoints = pollCreationRequest.MaxPoints,
-                MaxPerVote = pollCreationRequest.MaxPerVote,
-                InviteOnly = pollCreationRequest.InviteOnly,
-                Tokens = new List<Token>(),
-                ChatMessages = new List<ChatMessage>(),
-                NamedVoting = pollCreationRequest.NamedVoting,
-                RequireAuth = pollCreationRequest.RequireAuth,
-                Expires = pollCreationRequest.Expires,
-                ExpiryDate = pollCreationRequest.ExpiryDate,
-                OptionAdding = pollCreationRequest.OptionAdding,
-                LastUpdated = DateTime.Now,
-                CreatedDate = DateTime.Now,
-                CreatorIdentity = this.User.Identity.Name
-            };
-        }
-
         #region Get
 
         [Authorize]
@@ -84,9 +50,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                var username = this.User.Identity.Name;
-                List<Poll> matchingPolls = context.Polls.Where(p => p.CreatorIdentity == username).ToList<Poll>();
-                return matchingPolls.Select(p => PollToModel(p)).ToList();
+                var username = User.Identity.Name;
+                List<Poll> matchingPolls = context.Polls.Where(p => p.CreatorIdentity == username).ToList();
+                return matchingPolls.Select(PollToModel).ToList();
             }
         }
 
@@ -107,8 +73,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #endregion
 
-        #region Post
-
+        [HttpPost]
         public PollCreationResponseModel Post(PollCreationRequestModel pollCreationRequest)
         {
             #region Input Validation
@@ -130,22 +95,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             #endregion
 
-            #region DB Object Creation
-
-            Poll newPoll = ModelToPoll(pollCreationRequest);
+            Poll newPoll = Create(pollCreationRequest);
 
             using (var context = _contextFactory.CreateContext())
             {
                 context.Polls.Add(newPoll);
                 context.SaveChanges();
             }
-
-            #endregion
-
-            Thread newThread = new Thread(new ThreadStart(() => SendCreateEmail(pollCreationRequest.Email, newPoll.UUID, newPoll.ManageId)));
-            newThread.Start();
-
-            #region Response
 
             PollCreationResponseModel response = new PollCreationResponseModel
             {
@@ -155,26 +111,26 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             return response;
 
-            #endregion
         }
 
-        private void SendCreateEmail(string email, Guid UUID, Guid manageId)
+        private Poll Create(PollCreationRequestModel pollCreationRequest)
         {
-            String hostUri = WebConfigurationManager.AppSettings["HostURI"];
-            if (hostUri == String.Empty)
+            Poll newPoll = PollCreationHelper.Create();
+            newPoll.Name = pollCreationRequest.Name;
+            newPoll.Creator = pollCreationRequest.Creator;
+
+            if (User.Identity.IsAuthenticated)
             {
-                return;
+                newPoll.Creator = User.Identity.GetUserName();
+                newPoll.CreatorIdentity = User.Identity.GetUserId();
+            }
+            else
+            {
+                newPoll.Creator = "Anonymous";
+                newPoll.CreatorIdentity = null;
             }
 
-            string message = String.Join("\n\n", new List<string>()
-                {"Your poll is now created and ready to go!",
-                 "You can invite people to vote by giving them this link: " + hostUri + "/Poll/Index/" + UUID,
-                 "You can administer your poll at "+ hostUri + "/Manage/Index/" + manageId,
-                 "(Don't share this link around!)"});
-
-            _mailSender.SendMail(email, "Your poll is ready!", message);
+            return newPoll;
         }
-
-        #endregion
     }
 }

@@ -235,9 +235,8 @@
   <ItemGroup>
     <Compile Include="Api\Controllers\AccountController.cs" />
     <Compile Include="Api\Controllers\ApiControllerExtensions.cs" />
-    <Compile Include="Api\Controllers\IMailSender.cs" />
-    <Compile Include="Api\Controllers\MailSender.cs" />
     <Compile Include="Api\Controllers\ManageController.cs" />
+    <Compile Include="Api\Controllers\ManageInvitationController.cs" />
     <Compile Include="Api\Controllers\ManageVoteController.cs" />
     <Compile Include="Api\Controllers\PollController.cs" />
     <Compile Include="Api\Controllers\PollOptionController.cs" />
@@ -268,6 +267,12 @@
     <Compile Include="Api\Models\PollModels.cs" />
     <Compile Include="Api\Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Api\Results\ChallengeResult.cs" />
+    <Compile Include="Api\Services\EmailService.cs" />
+    <Compile Include="Api\Services\SendMailEmailSender.cs" />
+    <Compile Include="Api\Services\Smtp4DevEmailSender.cs" />
+    <Compile Include="Api\Services\IMailSender.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Api\Validators\BasicVoteValidator.cs" />
     <Compile Include="Api\Validators\IVoteValidator.cs" />
     <Compile Include="Api\Validators\IVoteValidatorFactory.cs" />
@@ -324,6 +329,9 @@
     <Content Include="Scripts\Controllers\AccountRegisterController.js" />
     <Content Include="Scripts\Controllers\AccountLoginController.js" />
     <Content Include="Scripts\Controllers\ManagePollTypeController.js" />
+    <Content Include="Scripts\Controllers\AccountResetPasswordController.js" />
+    <Content Include="Scripts\Controllers\DashboardController.js" />
+    <Content Include="Scripts\Controllers\HomepageController.js" />
     <Content Include="Scripts\Controllers\ManageVotersController.js" />
     <Content Include="Scripts\Controllers\ManageInvitationsController.js" />
     <Content Include="Scripts\Controllers\ManageOptionController.js" />
@@ -336,7 +344,6 @@
     <Content Include="Scripts\Controllers\ResultsPageController.js" />
     <Content Include="Scripts\Controllers\PointsVoteController.js" />
     <Content Include="Scripts\Controllers\UpDownVoteController.js" />
-    <Content Include="Scripts\Controllers\CreateBasicPageController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
     <Content Include="Scripts\Directives\PollHeading.js" />
     <Content Include="Scripts\Directives\UnlockableOption.js" />
@@ -364,11 +371,12 @@
     <Content Include="Scripts\Services\VoteService.js" />
     <Content Include="Views\Routes\AccountLogin.cshtml" />
     <Content Include="Views\Routes\AccountRegister.cshtml" />
+    <Content Include="Views\Routes\AccountResetPassword.cshtml" />
     <Content Include="Views\Routes\BasicCreate.cshtml" />
+    <Content Include="Views\Routes\UnregisteredDashboard.cshtml" />
     <Content Include="Scripts\Lib\angular-route-min.js.map" />
     <Content Include="Scripts\Lib\angular-min.js.map" />
     <Content Include="Views\Create\Index.cshtml" />
-    <Content Include="Views\Routes\AdvancedCreate.cshtml" />
     <Content Include="Views\Routes\Manage.cshtml" />
     <Content Include="Views\Routes\MultiVote.cshtml" />
     <Content Include="Views\Routes\ManageOptions.cshtml" />
@@ -376,6 +384,8 @@
     <Content Include="Views\Routes\ManageVoters.cshtml" />
     <Content Include="Scripts\Directives\UnlockableOption.html" />
     <Content Include="Scripts\Directives\PollHeading.html" />
+    <Content Include="Views\Routes\Dashboard.cshtml" />
+    <Content Include="Views\Routes\HomePage.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

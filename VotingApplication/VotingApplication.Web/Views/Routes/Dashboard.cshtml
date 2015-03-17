@@ -1,7 +1,6 @@
-﻿<div ng-controller="CreateBasicPageController">
+﻿<div ng-controller="DashboardController">
     <div>
-        <h2>Regular Poller?</h2>
-        Register for more config options. It's free!
+        <h2>Welcome {{account.email}}</h2>
     </div>
 
     <form name="quickPollForm" ng-submit="createPoll(pollQuestion)">
@@ -14,11 +13,4 @@
             <button type="submit" class="inactive-btn btn-medium shadowed" ng-disabled="quickPollForm.$invalid">Quick Poll</button>
         </div>
     </form>
-
-    <h3 class="centered-text horizontal-ruled">or</h3>
-
-    <div id="register-block">
-        <button class="active-btn btn-medium shadowed" ng-click="openLoginDialog()">Sign In</button>
-        <button class="active-btn btn-medium shadowed" ng-click="openRegisterDialog()">Register</button>
-    </div>
 </div>

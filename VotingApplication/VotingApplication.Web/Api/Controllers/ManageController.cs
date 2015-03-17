@@ -9,6 +9,7 @@ using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Controllers;
 using System.Collections.Generic;
 using System.Web.Configuration;
+using VotingApplication.Web.Api.Services;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -17,10 +18,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         private IMailSender _mailSender;
 
-        public ManageController() : base()
-        {
-            _mailSender = new MailSender();
-        }
+        public ManageController() : base() { }
 
         public ManageController(IContextFactory contextFactory, IMailSender mailSender) : base(contextFactory)
         {

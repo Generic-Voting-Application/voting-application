@@ -13,6 +13,7 @@ using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
 using VotingApplication.Web.Api.Models.DBViewModels;
+using VotingApplication.Web.Api.Services;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -66,7 +67,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
             mockContext.Setup(a => a.Tokens).Returns(_dummyTokens);
 
-            _controller = new ManageController(mockContextFactory.Object);
+            var mockMail = new Mock<IMailSender>();
+
+            _controller = new ManageController(mockContextFactory.Object, mockMail.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
