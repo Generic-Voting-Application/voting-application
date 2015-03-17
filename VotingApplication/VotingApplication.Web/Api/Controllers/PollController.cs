@@ -35,7 +35,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 MaxPerVote = poll.MaxPerVote,
                 InviteOnly = poll.InviteOnly,
                 NamedVoting = poll.NamedVoting,
-                RequireAuth = poll.RequireAuth,
                 ExpiryDate = poll.ExpiryDate,
                 OptionAdding = poll.OptionAdding,
                 Options = poll.Options

@@ -26,7 +26,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 InviteOnly = poll.InviteOnly,
                 Name = poll.Name,
                 NamedVoting = poll.NamedVoting,
-                RequireAuth = poll.RequireAuth,
                 ExpiryDate = poll.ExpiryDate,
                 OptionAdding = poll.OptionAdding
             };
@@ -105,7 +104,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 existingPoll.MaxPoints = updateRequest.MaxPoints;
                 existingPoll.Name = updateRequest.Name;
                 existingPoll.OptionAdding = updateRequest.OptionAdding;
-                existingPoll.RequireAuth = updateRequest.RequireAuth;
 
                 List<Option> newOptions = new List<Option>();
                 List<Option> oldOptions = new List<Option>();
