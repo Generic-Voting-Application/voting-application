@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VotingApplication.Data.Model
 {
@@ -28,8 +24,6 @@ namespace VotingApplication.Data.Model
 
         public bool InviteOnly { get; set; }
         public List<Token> Tokens { get; set; }
-
-        public List<ChatMessage> ChatMessages { get; set; }
 
         public bool NamedVoting { get; set; }
 
