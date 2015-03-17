@@ -50,7 +50,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 string userId = User.Identity.GetUserId();
 
-                IQueryable<Poll> userPolls = context.Polls.Where(p => p.CreatorIdentity == userId);
+                IQueryable<Poll> userPolls = context
+                    .Polls
+                    .Where(p => p.CreatorIdentity == userId)
+                    .OrderByDescending(p => p.CreatedDate);
 
                 return userPolls.Select(PollToModel).ToList();
             }
