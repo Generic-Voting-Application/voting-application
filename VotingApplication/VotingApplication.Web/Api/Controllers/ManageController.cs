@@ -23,13 +23,24 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             _mailSender = mailSender;
         }
 
+        private TokenRequestModel TokenToModel(Token token)
+        {
+            return new TokenRequestModel
+            {
+                Email = token.Email,
+                TokenGuid = token.TokenGuid
+            };
+        }
+
         private ManagePollRequestResponseModel PollToModel(Poll poll)
         {
+            List<TokenRequestModel> Voters = poll.Tokens.ConvertAll<TokenRequestModel>(TokenToModel);
+
             return new ManagePollRequestResponseModel
             {
                 UUID = poll.UUID,
                 Options = poll.Options,
-                Voters = poll.Tokens,
+                Voters = Voters,
                 VotingStrategy = poll.PollType.ToString(),
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,
@@ -151,13 +162,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 List<Token> redundantTokens = existingPoll.Tokens.ToList<Token>();
 
-                foreach (Token voter in updateRequest.Voters)
+                foreach (TokenRequestModel voter in updateRequest.Voters)
                 {
-                    if (voter.TokenGuid == Guid.Empty)
+                    if (voter.TokenGuid == null)
                     {
-                        voter.TokenGuid = Guid.NewGuid();
-                        existingPoll.Tokens.Add(voter);
-                        SendInvitation(existingPoll.UUID, voter);
+                        Token newToken = new Token { Email = voter.Email, TokenGuid = Guid.NewGuid() };
+                        existingPoll.Tokens.Add(newToken);
+                        SendInvitation(existingPoll.UUID, newToken);
                     }
                     else
                     {

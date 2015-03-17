@@ -133,7 +133,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             {
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
-                Voters = new List<Token>()
+                Voters = new List<TokenRequestModel>()
             };
 
             // Act
@@ -158,7 +158,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
                 Options = newOptions,
-                Voters = new List<Token>()
+                Voters = new List<TokenRequestModel>()
             };
             _controller.Put(_manageMainUUID, request);
 
@@ -176,7 +176,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
                 Options = newOptions,
-                Voters = new List<Token>()
+                Voters = new List<TokenRequestModel>()
             };
             _controller.Put(_manageMainUUID, request);
 
@@ -195,7 +195,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
                 Options = invalidOptions,
-                Voters = new List<Token>()
+                Voters = new List<TokenRequestModel>()
             };
             _controller.Put(_manageMainUUID, request);
         }
@@ -207,7 +207,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             {
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
-                Voters = new List<Token>()
+                Voters = new List<TokenRequestModel>()
             };
             _controller.Put(_manageMainUUID, request);
 
@@ -219,8 +219,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithNewEmailsGeneratesTokensForEmails()
         {
             // Arrange
-            Token newToken = new Token() {Email = "a@b.c"};
-            List<Token> newEmailTokens = new List<Token>() {newToken};
+            TokenRequestModel newToken = new TokenRequestModel() { Email = "a@b.c" };
+            List<TokenRequestModel> newEmailTokens = new List<TokenRequestModel>() { newToken };
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
             {
                 Voters = newEmailTokens
@@ -237,8 +237,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithNewEmailAddsToTokenListOfPoll()
         {
             // Arrange
-            Token newToken = new Token() { Email = "a@b.c" };
-            List<Token> newEmailTokens = new List<Token>() { newToken };
+            TokenRequestModel newToken = new TokenRequestModel() { Email = "a@b.c" };
+            List<TokenRequestModel> newEmailTokens = new List<TokenRequestModel>() { newToken };
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
             {
                 Voters = newEmailTokens
@@ -248,7 +248,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Put(_manageMainUUID, request);
 
             // Assert
-            CollectionAssert.AreEquivalent(newEmailTokens, _mainPoll.Tokens);
+            List<string> expectedEmails = new List<string> { "a@b.c" };
+            List<string> actualEmails = _mainPoll.Tokens.Select(s => s.Email).ToList<string>();
+            CollectionAssert.AreEquivalent(expectedEmails, actualEmails);
         }
 
         [TestMethod]
@@ -256,12 +258,13 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Arrange
             Token existingToken = new Token() { Email = "a@b.c", TokenGuid = Guid.NewGuid(), Id = 1 };
+            TokenRequestModel existingTokenRequest = new TokenRequestModel() { Email = existingToken.Email, TokenGuid = existingToken.TokenGuid };
             List<Token> emailTokens = new List<Token>() { existingToken };
             _mainPoll.Tokens = emailTokens;
 
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
             {
-                Voters = emailTokens
+                Voters = new List<TokenRequestModel>() { existingTokenRequest }
             };
 
             // Act
@@ -277,21 +280,23 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Arrange
             Token existingToken = new Token() { Email = "a@b.c", TokenGuid = Guid.NewGuid(), Id = 1 };
             Token obsoleteToken = new Token() { Email = "d@e.f", TokenGuid = Guid.NewGuid(), Id = 2 };
-            Token newToken = new Token() { Email = "g@h.i" };
-            List<Token> emailTokens = new List<Token>() { existingToken, obsoleteToken };
-            _mainPoll.Tokens = emailTokens;
+            TokenRequestModel existingTokenRequest = new TokenRequestModel { Email = existingToken.Email, TokenGuid = existingToken.TokenGuid };
+            TokenRequestModel newTokenRequest = new TokenRequestModel { Email = "g@h.i" };
+
+            _mainPoll.Tokens = new List<Token>() { existingToken, obsoleteToken };
 
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
             {
-                Voters = new List<Token>() { existingToken, newToken }
+                Voters = new List<TokenRequestModel>() { existingTokenRequest, newTokenRequest }
             };
 
             // Act
             _controller.Put(_manageMainUUID, request);
 
             // Assert
-            List<Token> expectedTokens = new List<Token>() { existingToken, newToken };
-            CollectionAssert.AreEquivalent(expectedTokens, _mainPoll.Tokens);
+            List<string> expectedEmails = new List<string> { "a@b.c", "g@h.i" };
+            List<string> actualEmails = _mainPoll.Tokens.Select(s => s.Email).ToList<string>();
+            CollectionAssert.AreEquivalent(expectedEmails, actualEmails);
         }
 
         #endregion
