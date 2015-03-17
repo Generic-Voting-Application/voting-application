@@ -20,7 +20,6 @@ namespace VotingApplication.Data.Model.Creation
                 InviteOnly = false,
                 NamedVoting = false,
                 RequireAuth = false,
-                Expires = false,
                 ExpiryDate = null,
                 OptionAdding = false,
 
