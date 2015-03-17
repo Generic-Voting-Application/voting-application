@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
@@ -16,7 +15,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         private IVoteValidatorFactory _voteValidatorFactory;
 
         public TokenPollVoteController() : base() { }
-        public TokenPollVoteController(IContextFactory contextFactory, IVoteValidatorFactory voteValidatorFactory) : base(contextFactory) 
+        public TokenPollVoteController(IContextFactory contextFactory, IVoteValidatorFactory voteValidatorFactory)
+            : base(contextFactory)
         {
             _voteValidatorFactory = voteValidatorFactory;
         }
@@ -96,7 +96,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     this.ThrowError(HttpStatusCode.NotFound, String.Format("Poll {0} not found", pollId));
                 }
 
-                if (poll.Expires && poll.ExpiryDate < DateTime.Now)
+                if (poll.ExpiryDate.HasValue && poll.ExpiryDate < DateTime.Now)
                 {
                     this.ThrowError(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", pollId));
                 }

@@ -19,8 +19,6 @@ namespace VotingApplication.Data.Model.Creation
                 MaxPerVote = 3,
                 InviteOnly = false,
                 NamedVoting = false,
-                RequireAuth = false,
-                Expires = false,
                 ExpiryDate = null,
                 OptionAdding = false,
 
