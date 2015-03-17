@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
@@ -190,18 +192,41 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         [TestMethod]
         public void PostWithAuthorizationSetsUsernameOfPollOwner()
         {
-            // Arrange
-            var identity = new System.Security.Principal.GenericIdentity("newUser@b.c");
-            var user = new System.Security.Principal.GenericPrincipal(identity, new string[0]);
-            _controller.User = user;
+            // Mocking of GetUserId() taken from http://stackoverflow.com/questions/22762338/how-do-i-mock-user-identity-getuserid
 
-            // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+
+            const string userId = "4AEAE121-D540-48BF-907A-AA454248C0C0";
+
+            var claim = new Claim("test", userId);
+            var mockIdentity = new Mock<ClaimsIdentity>();
+            mockIdentity
+                .Setup(ci => ci.FindFirst(It.IsAny<string>()))
+                .Returns(claim);
+
+            mockIdentity
+                .Setup(i => i.IsAuthenticated)
+                .Returns(true);
+
+            var principal = new Mock<IPrincipal>();
+            principal
+                .Setup(ip => ip.Identity)
+                .Returns(mockIdentity.Object);
+
+            _controller.User = principal.Object;
+
+
+            PollCreationRequestModel newPoll = new PollCreationRequestModel()
+            {
+                Name = "New Poll"
+            };
+
+
             _controller.Post(newPoll);
 
-            // Assert
+
             Poll createdPoll = _dummyPolls.Last();
-            Assert.AreEqual("newUser@b.c", createdPoll.CreatorIdentity);
+
+            Assert.AreEqual(userId, createdPoll.CreatorIdentity);
         }
 
         [TestMethod]
