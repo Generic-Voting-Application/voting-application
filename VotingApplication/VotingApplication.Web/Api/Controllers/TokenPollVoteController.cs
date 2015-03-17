@@ -54,7 +54,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region GET
 
-        public List<VoteRequestResponseModel> Get(Guid tokenGuid, Guid pollId)
+        public List<VoteRequestResponseModel> Get(Guid? tokenGuid, Guid pollId)
         {
 
             using (var context = _contextFactory.CreateContext())
@@ -76,7 +76,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region PUT
 
-        public void Put(Guid tokenGuid, Guid pollId, List<VoteRequestModel> voteRequests)
+        public void Put(Guid? tokenGuid, Guid pollId, List<VoteRequestModel> voteRequests)
         {
             using (var context = _contextFactory.CreateContext())
             {
