@@ -22,7 +22,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
         }
 
-        private PollRequestResponseModel PollToModel(Poll poll)
+        private PollRequestResponseModel CreateResponseFromModel(Poll poll)
         {
             return new PollRequestResponseModel
             {
@@ -50,27 +50,32 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 string userId = User.Identity.GetUserId();
 
-                IQueryable<Poll> userPolls = context
+                IEnumerable<PollRequestResponseModel> userPolls = context
                     .Polls
                     .Where(p => p.CreatorIdentity == userId)
-                    .OrderByDescending(p => p.CreatedDate);
+                    .OrderByDescending(p => p.CreatedDate)
+                    .Select(CreateResponseFromModel);
 
-                return userPolls.Select(PollToModel).ToList();
+                return userPolls.ToList();
             }
         }
 
         public PollRequestResponseModel Get(Guid id)
         {
-            using (var context = _contextFactory.CreateContext())
+            using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Poll poll = context.Polls.Where(s => s.UUID == id).Include(s => s.Options).FirstOrDefault();
+                Poll poll = context
+                    .Polls
+                    .Where(s => s.UUID == id)
+                    .Include(s => s.Options)
+                    .FirstOrDefault();
 
                 if (poll == null)
                 {
                     this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", id));
                 }
 
-                return PollToModel(poll);
+                return CreateResponseFromModel(poll);
             }
         }
 
