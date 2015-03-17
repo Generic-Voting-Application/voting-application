@@ -153,17 +153,17 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 foreach (Token voter in updateRequest.Voters)
                 {
-                    if (voter.TokenGuid.HasValue)
-                    {
-                        // Don't mark token as redundant if still in use
-                        Token token = redundantTokens.Find(t => t.TokenGuid == voter.TokenGuid);
-                        redundantTokens.Remove(token);
-                    }
-                    else
+                    if (voter.TokenGuid == Guid.Empty)
                     {
                         voter.TokenGuid = Guid.NewGuid();
                         existingPoll.Tokens.Add(voter);
                         SendInvitation(existingPoll.UUID, voter);
+                    }
+                    else
+                    {
+                        // Don't mark token as redundant if still in use
+                        Token token = redundantTokens.Find(t => t.TokenGuid == voter.TokenGuid);
+                        redundantTokens.Remove(token);
                     }
                 }
 
