@@ -199,9 +199,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
-
         private void SendInvitation(Guid UUID, Token token)
         {
+            if (string.IsNullOrEmpty(token.Email))
+            {
+                return;
+            }
+
             String hostUri = WebConfigurationManager.AppSettings["HostURI"];
             if (hostUri == String.Empty)
             {

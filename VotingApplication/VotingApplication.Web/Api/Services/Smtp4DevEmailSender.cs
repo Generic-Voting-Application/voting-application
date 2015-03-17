@@ -36,9 +36,11 @@ namespace VotingApplication.Web.Api.Services
             {
                 SmtpClient smtpClient = new SmtpClient("localhost");
                 smtpClient.Send(msg);
-            } catch (Exception) {
-
             }
+            catch 
+            {
+            }
+
 
             return Task.FromResult(0);
         }
