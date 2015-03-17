@@ -142,7 +142,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostIsAllowed()
         {
             // Act
-            _controller.Post(new PollCreationRequestModel() { Name = "New Poll" });
+            _controller.Post(new PollCreationRequestModel() { PollName = "New Poll" });
         }
 
         [TestMethod]
@@ -150,7 +150,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostRejectsPollWithInvalidInput()
         {
             // Arrange
-            _controller.ModelState.AddModelError("Name", "");
+            _controller.ModelState.AddModelError("PollName", "");
 
             // Act
             _controller.Post(new PollCreationRequestModel());
@@ -160,7 +160,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostAssignsPollUUID()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -171,7 +171,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostAssignsPollManageId()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -182,7 +182,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostAssignsPollManageIdDifferentFromPollId()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -217,7 +217,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             PollCreationRequestModel newPoll = new PollCreationRequestModel()
             {
-                Name = "New Poll"
+                PollName = "New Poll"
             };
 
 
@@ -233,7 +233,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostReturnsIDsOfNewPoll()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -245,7 +245,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostAddsNewPollToPolls()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
             var response = _controller.Post(newPoll);
 
             // Assert

@@ -83,11 +83,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 this.ThrowError(HttpStatusCode.BadRequest);
             }
 
-            if (pollCreationRequest.Expires && pollCreationRequest.ExpiryDate < DateTime.Now)
-            {
-                ModelState.AddModelError("ExpiryDate", "Invalid or unspecified ExpiryDate");
-            }
-
             if (!ModelState.IsValid)
             {
                 this.ThrowError(HttpStatusCode.BadRequest, ModelState);
@@ -116,8 +111,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         private Poll Create(PollCreationRequestModel pollCreationRequest)
         {
             Poll newPoll = PollCreationHelper.Create();
-            newPoll.Name = pollCreationRequest.Name;
-            newPoll.Creator = pollCreationRequest.Creator;
+            newPoll.Name = pollCreationRequest.PollName;
 
             if (User.Identity.IsAuthenticated)
             {
