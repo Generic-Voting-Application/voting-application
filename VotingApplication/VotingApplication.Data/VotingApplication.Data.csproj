@@ -70,6 +70,10 @@
     <Compile Include="Migrations\201503101435082_NullablePollDateTime.Designer.cs">
       <DependentUpon>201503101435082_NullablePollDateTime.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503171450452_tokensWithEmails.cs" />
+    <Compile Include="Migrations\201503171450452_tokensWithEmails.Designer.cs">
+      <DependentUpon>201503171450452_tokensWithEmails.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\ChatMessage.cs" />
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
@@ -100,6 +104,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503101435082_NullablePollDateTime.resx">
       <DependentUpon>201503101435082_NullablePollDateTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503171450452_tokensWithEmails.resx">
+      <DependentUpon>201503171450452_tokensWithEmails.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
