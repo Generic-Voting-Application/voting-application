@@ -55,6 +55,10 @@
         }
 
         function sendInvitations() {
+            // Parse anything still in the field
+            $scope.inviteString += ';';
+            emailUpdated()
+
             updatePoll();
             returnToManage();
         }
