@@ -46,11 +46,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         [Authorize]
         public List<PollRequestResponseModel> Get()
         {
-            using (var context = _contextFactory.CreateContext())
+            using (IVotingContext context = _contextFactory.CreateContext())
             {
-                var username = User.Identity.Name;
-                List<Poll> matchingPolls = context.Polls.Where(p => p.CreatorIdentity == username).ToList();
-                return matchingPolls.Select(PollToModel).ToList();
+                string userId = User.Identity.GetUserId();
+
+                IQueryable<Poll> userPolls = context.Polls.Where(p => p.CreatorIdentity == userId);
+
+                return userPolls.Select(PollToModel).ToList();
             }
         }
 
