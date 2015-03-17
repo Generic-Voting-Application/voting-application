@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
-using VotingApplication.Web.Api.Controllers;
-using System.Collections.Generic;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -28,8 +26,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 InviteOnly = poll.InviteOnly,
                 Name = poll.Name,
                 NamedVoting = poll.NamedVoting,
-                RequireAuth = poll.RequireAuth,
-                Expires = poll.Expires,
                 ExpiryDate = poll.ExpiryDate,
                 OptionAdding = poll.OptionAdding
             };
@@ -66,16 +62,16 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 this.ThrowError(HttpStatusCode.BadRequest);
             }
 
-            if (updateRequest.Expires && (updateRequest.ExpiryDate == null || updateRequest.ExpiryDate < DateTime.Now))
+            if (updateRequest.ExpiryDate.HasValue && updateRequest.ExpiryDate < DateTime.Now)
             {
-                ModelState.AddModelError("ExpiryDate", "Invalid or unspecified ExpiryDate");
+                ModelState.AddModelError("ExpiryDate", "Invalid ExpiryDate");
             }
 
-            if(updateRequest.Options != null)
+            if (updateRequest.Options != null)
             {
-                foreach(Option option in updateRequest.Options)
+                foreach (Option option in updateRequest.Options)
                 {
-                    if(option.Name == null || option.Name == String.Empty)
+                    if (option.Name == null || option.Name == String.Empty)
                     {
                         ModelState.AddModelError("Option.Name", "Invalid or unspecified Option Name");
                     }
@@ -102,14 +98,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 }
 
                 existingPoll.NamedVoting = updateRequest.NamedVoting;
-                existingPoll.Expires = updateRequest.Expires;
                 existingPoll.ExpiryDate = updateRequest.ExpiryDate;
                 existingPoll.InviteOnly = updateRequest.InviteOnly;
                 existingPoll.MaxPerVote = updateRequest.MaxPerVote;
                 existingPoll.MaxPoints = updateRequest.MaxPoints;
                 existingPoll.Name = updateRequest.Name;
                 existingPoll.OptionAdding = updateRequest.OptionAdding;
-                existingPoll.RequireAuth = updateRequest.RequireAuth;
 
                 List<Option> newOptions = new List<Option>();
                 List<Option> oldOptions = new List<Option>();

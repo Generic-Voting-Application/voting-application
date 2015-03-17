@@ -20,7 +20,7 @@
         PollService.getPoll(pollId, function (data) {
             $scope.pollName = data.Name;
 
-            if (data.Expires) {
+            if (data.ExpiryDate) {
                 $scope.pollExpiry = ExpiryStringService.timeStringForExpiry(new Date(data.ExpiryDate), calculateExpiry);
             }
         });

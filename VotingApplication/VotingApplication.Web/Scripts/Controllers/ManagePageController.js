@@ -45,7 +45,7 @@
         };
 
         function formatPollExpiryDate() {
-            if (!$scope.poll.Expires || !$scope.poll.ExpiryDate) {
+            if (!$scope.poll.ExpiryDate) {
                 return 'Never';
             }
 
@@ -58,7 +58,7 @@
         };
 
         var validateInput = function () {
-            if ($scope.poll.Expires && $scope.poll.ExpiryDate < new Date()) {
+            if ($scope.poll.ExpiryDate && $scope.poll.ExpiryDate < new Date()) {
                 $scope.invalidDate = true;
                 return false;
             }
