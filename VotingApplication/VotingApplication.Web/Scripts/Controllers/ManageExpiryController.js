@@ -12,7 +12,7 @@
         $scope.manageId = $routeParams.manageId;
         $scope.updatePoll = updatePollDetails;
         $scope.return = navigateToManagePage;
-        $scope.formatDate = formatDate;
+        $scope.formatExpiry = formatExpiry;
 
         activate();
         
@@ -22,9 +22,9 @@
             });
         }
 
-        function formatDate() {
+        function formatExpiry() {
             if ($scope.poll){
-                return moment($scope.poll.ExpiryDate).format("dddd, MMMM Do YYYY, h:mm:ss a");
+                return moment($scope.poll.ExpiryDate).format("dddd, MMMM Do YYYY, HH:mm");
             }
             return 'Never';
         }

@@ -1,14 +1,22 @@
 ﻿<div ng-app="GVA.Creation" ng-controller="ManageExpiryController">
-    <h2>
-        Poll Expiry
-    </h2>
-    <h3>
-        When will the poll end?
-    </h3>
     <div class="manage-area centered">
-        <date-picker ng-model="poll.ExpiryDate" update="updatePoll()" />
-    </div>
-    <div class="manage-section">
-        <button class="manage-btn" ng-click="return()">Back</button>
+        <h2>
+            Poll Expiry
+        </h2>
+        <h3>
+            When will the poll end?
+        </h3>
+        <div class="manage-section text-centered">
+            <em>{{formatExpiry()}}</em>
+        </div>
+        <div class="manage-section">
+            <date-picker ng-model="poll.ExpiryDate" update="updatePoll()" />
+        </div>
+        <div class="manage-section">
+            <time-picker ng-model="poll.ExpiryDate" update="updatePoll()" />
+        </div>
+        <div class="manage-section">
+            <button class="manage-btn" ng-click="return()">Back</button>
+        </div>
     </div>
 </div>

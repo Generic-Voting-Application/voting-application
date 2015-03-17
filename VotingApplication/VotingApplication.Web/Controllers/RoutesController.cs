@@ -99,6 +99,11 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
+        public ActionResult TimePicker()
+        {
+            return View();
+        }
+
         public ActionResult HomePage()
         {
             return View();

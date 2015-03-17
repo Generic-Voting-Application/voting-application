@@ -1,9 +1,9 @@
-﻿@Styles.Render("~/Bundles/DatePickerStyle")
+﻿@Styles.Render("~/Bundles/DateTimePickerStyle")
 <div class="dp-date-picker">
     <div class="dp-date-control">
-        <span class="glyphicon glyphicon-chevron-left dp-clickable" aria-hidden="true" ng-click="moveMonth(-1)"></span>
+        <span class="glyphicon glyphicon-chevron-left dtp-clickable dp-month-backwards" aria-hidden="true" ng-click="moveMonth(-1)"></span>
         <span class="dp-date-display">{{displayDate}}</span>
-        <span class="glyphicon glyphicon-chevron-right dp-clickable" aria-hidden="true" ng-click="moveMonth(1)"></span>
+        <span class="glyphicon glyphicon-chevron-right dtp-clickable dp-month-forwards" aria-hidden="true" ng-click="moveMonth(1)"></span>
     </div>
     <table class="dp-calendar">
         <thead>
@@ -13,7 +13,7 @@
         </thead>
         <tbody>
             <tr ng-repeat="row in rows">
-                <td class="dp-clickable dp-calendar-cell" ng-click="setModelDate(cell.date)" ng-class="{'dp-calendar-cell-selected' : cell.selected}" ng-repeat="cell in row">
+                <td class="dtp-clickable dp-calendar-cell" ng-click="setModelDate(cell.date)" ng-class="{'dp-calendar-cell-selected' : cell.selected}" ng-repeat="cell in row">
                     {{cell.date.date()}}
                 </td>
             </tr>

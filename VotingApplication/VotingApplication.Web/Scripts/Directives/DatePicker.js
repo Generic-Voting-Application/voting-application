@@ -11,6 +11,7 @@
 
         function link(scope, element, attrs) {
             scope.weekdays = moment.weekdaysShort();
+
             scope.setModelDate = setModelDate;
             scope.moveMonth = moveMonth;
 
