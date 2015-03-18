@@ -197,7 +197,7 @@ namespace VotingApplication.Web.Controllers
 
             var callbackUrl = Url.Content("~/#/Account/ResetPassword?email=") + HttpUtility.UrlEncode(user.Email) + "&code=" + HttpUtility.UrlEncode(code);
 
-            await UserManager.SendEmailAsync(user.Id, "Pollster Password Reset", "We heard you lost your password. You can <a href=\"" + callbackUrl + "\">reset your password</a> to get polling again.");
+            await UserManager.SendEmailAsync(user.Id, "Password Reset", "We heard you lost your password. You can <a href=\"" + callbackUrl + "\">reset your password</a> to get polling again.");
 
             return Ok();
         }
