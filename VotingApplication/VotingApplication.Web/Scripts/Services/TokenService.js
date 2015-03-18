@@ -3,9 +3,9 @@
         .module('GVA.Voting')
         .factory('TokenService', TokenService);
 
-    TokenService.$inject = ['$location', '$http', '$localStorage'];
+    TokenService.$inject = ['$location', '$http', '$localStorage', '$routeParams'];
 
-    function TokenService($location, $http, $localStorage) {
+    function TokenService($location, $http, $localStorage, $routeParams) {
 
         var service = {
             getToken: getTokenForPoll
@@ -17,6 +17,11 @@
 
             if (!pollId) {
                 return null;
+            }
+
+            if ($routeParams['tokenId']) {
+                callback($routeParams['tokenId']);
+                return;
             }
 
             if ($localStorage[pollId]) {

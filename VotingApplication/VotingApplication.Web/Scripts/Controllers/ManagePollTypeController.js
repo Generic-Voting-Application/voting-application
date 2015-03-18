@@ -27,16 +27,21 @@
         }
 
         function updateStrategy(strategy) {
-            openPollChangeDialog(function () {
+            if (existingVotes.length > 0) {
+                openPollChangeDialog(function () {
+                    $scope.poll.VotingStrategy = strategy;
+                    updatePoll();
+                });
+            } else {
                 $scope.poll.VotingStrategy = strategy;
                 updatePoll();
-            })
+            }
         }
 
         function activate() {
             ManageService.registerPollObserver(function () {
                 $scope.poll = ManageService.poll;
-            })
+            });
         }
 
         function openPollChangeDialog(callback) {

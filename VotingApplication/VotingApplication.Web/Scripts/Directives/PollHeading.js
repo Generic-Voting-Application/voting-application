@@ -6,7 +6,7 @@
     function pollHeading() {
         return {
             replace: true,
-            templateUrl: '../Routes/PollHeading'
+            templateUrl: '/Scripts/Directives/PollHeading.html'
         }
     }
 })();

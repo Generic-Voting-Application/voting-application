@@ -1,18 +1,19 @@
-﻿using System;
+﻿using FakeDbSet;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Web.Http;
-using FakeDbSet;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
 using VotingApplication.Web.Api.Models.DBViewModels;
+using VotingApplication.Web.Api.Services;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -37,11 +38,17 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             UUIDs = new[] { Guid.NewGuid(), Guid.NewGuid(), _templateUUID, Guid.NewGuid() };
             _mainPoll = new Poll() { UUID = UUIDs[0], ManageId = Guid.NewGuid() };
             _otherPoll = new Poll() { UUID = UUIDs[1], ManageId = Guid.NewGuid() };
-            
+
             _templateUUID = Guid.NewGuid();
             _templateCreatedDate = DateTime.Now.AddDays(-5);
-            _templatePoll = new Poll() { UUID = _templateUUID, ManageId = Guid.NewGuid(), CreatedDate = _templateCreatedDate,
-                Options = new List<Option>() { _redOption }, CreatorIdentity = "a@b.c" };
+            _templatePoll = new Poll()
+            {
+                UUID = _templateUUID,
+                ManageId = Guid.NewGuid(),
+                CreatedDate = _templateCreatedDate,
+                Options = new List<Option>() { _redOption },
+                CreatorIdentity = "a@b.c"
+            };
 
             _dummyPolls = new InMemoryDbSet<Poll>(true);
             _dummyPolls.Add(_mainPoll);
@@ -56,7 +63,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             var mockMailSender = new Mock<IMailSender>();
 
-            _controller = new PollController(mockContextFactory.Object, mockMailSender.Object);
+            _controller = new PollController(mockContextFactory.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -135,7 +142,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostIsAllowed()
         {
             // Act
-            _controller.Post(new PollCreationRequestModel() { Name = "New Poll" });
+            _controller.Post(new PollCreationRequestModel() { PollName = "New Poll" });
         }
 
         [TestMethod]
@@ -143,7 +150,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostRejectsPollWithInvalidInput()
         {
             // Arrange
-            _controller.ModelState.AddModelError("Name", "");
+            _controller.ModelState.AddModelError("PollName", "");
 
             // Act
             _controller.Post(new PollCreationRequestModel());
@@ -153,7 +160,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostAssignsPollUUID()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -164,7 +171,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostAssignsPollManageId()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -175,7 +182,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostAssignsPollManageIdDifferentFromPollId()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -185,25 +192,48 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         [TestMethod]
         public void PostWithAuthorizationSetsUsernameOfPollOwner()
         {
-            // Arrange
-            var identity = new System.Security.Principal.GenericIdentity("newUser@b.c");
-            var user = new System.Security.Principal.GenericPrincipal(identity, new string[0]);
-            _controller.User = user;
+            // Mocking of GetUserId() taken from http://stackoverflow.com/questions/22762338/how-do-i-mock-user-identity-getuserid
 
-            // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+
+            const string userId = "4AEAE121-D540-48BF-907A-AA454248C0C0";
+
+            var claim = new Claim("test", userId);
+            var mockIdentity = new Mock<ClaimsIdentity>();
+            mockIdentity
+                .Setup(ci => ci.FindFirst(It.IsAny<string>()))
+                .Returns(claim);
+
+            mockIdentity
+                .Setup(i => i.IsAuthenticated)
+                .Returns(true);
+
+            var principal = new Mock<IPrincipal>();
+            principal
+                .Setup(ip => ip.Identity)
+                .Returns(mockIdentity.Object);
+
+            _controller.User = principal.Object;
+
+
+            PollCreationRequestModel newPoll = new PollCreationRequestModel()
+            {
+                PollName = "New Poll"
+            };
+
+
             _controller.Post(newPoll);
 
-            // Assert
+
             Poll createdPoll = _dummyPolls.Last();
-            Assert.AreEqual("newUser@b.c", createdPoll.CreatorIdentity);
+
+            Assert.AreEqual(userId, createdPoll.CreatorIdentity);
         }
 
         [TestMethod]
         public void PostReturnsIDsOfNewPoll()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -215,7 +245,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostAddsNewPollToPolls()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { Name = "New Poll" };
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
             var response = _controller.Post(newPoll);
 
             // Assert

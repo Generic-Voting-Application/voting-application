@@ -1,12 +1,13 @@
-﻿(function () {
+﻿/// <reference path="AccountService.js" />
+(function () {
     angular
         .module('GVA.Poll')
         .factory('PollService', PollService);
 
 
-    PollService.$inject = ['$http'];
+    PollService.$inject = ['$http', 'AccountService'];
 
-    function PollService($http) {
+    function PollService($http, AccountService) {
 
         var service = {
             getPoll: getPoll,
@@ -40,27 +41,22 @@
         }
 
         function createPoll(question, successCallback) {
+            var token;
+            if (AccountService.account) {
+                token = AccountService.account.token;
+            }
+            else {
+                token = null;
+            }
+
             var request = {
                 method: 'POST',
                 url: 'api/poll',
                 headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'Authorization': 'Bearer ' + token
                 },
-                data: JSON.stringify({
-                    Name: question,
-                    Creator: 'Anonymous',
-                    Email: undefined,
-                    TemplateId: 0,
-                    VotingStrategy: 'Basic',
-                    MaxPoints: 7,
-                    MaxPerVote: 3,
-                    InviteOnly: false,
-                    NamedVoting: false,
-                    RequireAuth: false,
-                    Expires: false,
-                    ExpiryDate: undefined,
-                    OptionAdding: false
-                })
+                data: JSON.stringify({ PollName: question })
             };
 
             $http(request)

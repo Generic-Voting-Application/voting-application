@@ -19,8 +19,14 @@
                 .when('/Manage/:manageId/Voters', {
                     templateUrl: '../Routes/ManageVoters'
                 })
+                .when('/Manage/:manageId/Invitations', {
+                    templateUrl: '../Routes/ManageInvitations'
+                })
                 .when('/Manage/:manageId/PollType', {
                     templateUrl: '../Routes/ManagePollType'
+                })
+                .when('/Account/ResetPassword', {
+                    templateUrl: '../Routes/AccountResetPassword'
                 })
                .otherwise({
                    templateUrl: '../Routes/HomePage'

@@ -5,15 +5,15 @@
         .module('GVA.Creation')
         .controller('ManagePageController', ManagePageController);
 
-    ManagePageController.$inject = ['$scope', '$routeParams', 'AccountService', 'ManageService'];
+    ManagePageController.$inject = ['$scope', '$routeParams', 'ManageService'];
 
-    function ManagePageController($scope, $routeParams, AccountService, ManageService) {
+    function ManagePageController($scope, $routeParams, ManageService) {
         
         var manageId = $routeParams.manageId;
 
         $scope.poll = {};
+        $scope.voters = [];
         $scope.manageId = manageId;
-        $scope.openLoginDialog = showLoginDialog;
         $scope.updatePoll = updatePollDetails;
         $scope.formatPollExpiry = formatPollExpiryDate;
         $scope.selectText = selectTargetText;
@@ -33,10 +33,6 @@
             });
         }
 
-        function showLoginDialog() {
-            AccountService.openLoginDialog($scope);
-        };
-
         function updatePollDetails() {
             if (validateInput()) {
                 ManageService.poll = $scope.poll;
@@ -45,7 +41,7 @@
         };
 
         function formatPollExpiryDate() {
-            if (!$scope.poll.Expires || !$scope.poll.ExpiryDate) {
+            if (!$scope.poll.ExpiryDate) {
                 return 'Never';
             }
 
@@ -58,7 +54,7 @@
         };
 
         var validateInput = function () {
-            if ($scope.poll.Expires && $scope.poll.ExpiryDate < new Date()) {
+            if ($scope.poll.ExpiryDate && $scope.poll.ExpiryDate < new Date()) {
                 $scope.invalidDate = true;
                 return false;
             }

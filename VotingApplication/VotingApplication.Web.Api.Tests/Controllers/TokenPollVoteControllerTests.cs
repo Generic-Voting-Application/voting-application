@@ -1,20 +1,18 @@
-﻿using System;
+﻿using FakeDbSet;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
-using FakeDbSet;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+using System.Web.Http.ModelBinding;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Validators;
-using System.Web.Http.ModelBinding;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -52,11 +50,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _joeToken = new Token { TokenGuid = Guid.NewGuid() };
             _otherToken = new Token { TokenGuid = Guid.NewGuid() };
 
-            Poll mainPoll = new Poll() { UUID = _mainUUID, Expires = true, ExpiryDate = DateTime.Now.AddMinutes(30), Tokens = new List<Token>() { _bobToken, _joeToken, _otherToken } };
+            Poll mainPoll = new Poll() { UUID = _mainUUID, ExpiryDate = DateTime.Now.AddMinutes(30), Tokens = new List<Token>() { _bobToken, _joeToken, _otherToken } };
             Poll otherPoll = new Poll() { UUID = _otherUUID, Tokens = new List<Token>() { _otherToken } };
             Poll pointsPoll = new Poll() { UUID = _pointsUUID, PollType = PollType.Points, MaxPerVote = 5, MaxPoints = 3, Tokens = new List<Token>() { _otherToken } };
             Poll tokenPoll = new Poll() { UUID = _tokenUUID, Tokens = new List<Token>() { _validToken }, InviteOnly = true };
-            Poll timedPoll = new Poll() { UUID = _timedUUID, Expires = true, ExpiryDate = DateTime.Now.AddMinutes(-30) };
+            Poll timedPoll = new Poll() { UUID = _timedUUID, ExpiryDate = DateTime.Now.AddMinutes(-30) };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
             Option pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
