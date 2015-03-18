@@ -79,7 +79,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             return new PollRequestResponseModel
             {
                 UUID = poll.UUID,
-                ManageId = poll.ManageId,
                 Name = poll.Name,
                 Creator = poll.Creator,
                 VotingStrategy = poll.PollType.ToString(),
