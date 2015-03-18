@@ -47,7 +47,9 @@
         };
 
         function setDate(option) {
-            $scope.poll.ExpiryDate = moment().add(1, option);
+            var newDate = moment().add(1, option);
+            newDate.minutes(Math.ceil(newDate.minutes() / 5) * 5);
+            $scope.poll.ExpiryDate = newDate.toDate();
             $scope.timeOption = option;
         }
 
