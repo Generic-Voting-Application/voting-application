@@ -11,6 +11,9 @@
 
         $scope.account = AccountService.account;
         $scope.createPoll = createNewPoll;
+        $scope.getUserPolls = getUserPolls;
+
+        $scope.userPolls = {};
 
         activate();
 
@@ -28,6 +31,13 @@
 
         function createPollSuccessCallback(data) {
             window.location.href = '/#/Manage/' + data.ManageId;
+        }
+
+        function getUserPolls() {
+            PollService.getUserPolls()
+                .success(function(data) {
+                    $scope.userPolls = data;
+                });
         }
     }
 
