@@ -22,6 +22,8 @@
             AccountService.registerAccountObserver(function () {
                 $scope.account = AccountService.account;
             });
+
+            getUserPolls();
         }
 
 
@@ -35,7 +37,7 @@
 
         function getUserPolls() {
             PollService.getUserPolls()
-                .success(function(data) {
+                .success(function (data) {
                     $scope.userPolls = data;
                 });
         }

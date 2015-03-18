@@ -13,4 +13,19 @@
             <button type="submit" class="inactive-btn btn-medium shadowed" ng-disabled="quickPollForm.$invalid">Quick Poll</button>
         </div>
     </form>
+    <h2>Your polls</h2>
+    <div ng-repeat="poll in userPolls">
+
+        <div class="poll-panel">
+            <div class="poll-panel-header">
+                <span>{{ poll.Name }}</span>
+                <h4>{{ poll.CreatedDate }}</h4>
+            </div>
+            <div class="poll-panel-buttons">
+                <button class="poll-panel-button">Manage Poll</button>
+                <button class="manage-btn poll-panel-button">Repeat Poll</button>
+            </div>
+
+        </div>
+    </div>
 </div>
