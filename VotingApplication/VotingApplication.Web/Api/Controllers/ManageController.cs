@@ -163,7 +163,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 poll.Options = newOptions;
                 poll.LastUpdated = DateTime.Now;
 
-                if (updateRequest.VotingStrategy.ToLower() != poll.PollType.ToString().ToLower())
+                if (updateRequest.VotingStrategy != null && 
+                    updateRequest.VotingStrategy.ToLower() != poll.PollType.ToString().ToLower())
                 {
                     removedVotes.AddRange(context.Votes.Where(v => v.PollId == poll.UUID).ToList());
                     poll.PollType = (PollType)Enum.Parse(typeof(PollType), updateRequest.VotingStrategy, true);
