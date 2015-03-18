@@ -177,7 +177,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     {
                         Token newToken = new Token { Email = voter.Email, TokenGuid = Guid.NewGuid() };
                         poll.Tokens.Add(newToken);
-                        SendInvitation(poll.UUID, newToken);
+                        SendInvitation(poll.UUID, newToken, poll.Name);
                     }
                     else
                     {
@@ -211,7 +211,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
-        private void SendInvitation(Guid UUID, Token token)
+        private void SendInvitation(Guid UUID, Token token, string pollQuestion)
         {
             if (string.IsNullOrEmpty(token.Email))
             {
@@ -224,8 +224,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 return;
             }
 
-            string message = String.Join("\n\n", new List<string>() { "You've been invited to a poll on Pollster",
-            "Have your say at " + hostUri + "/Poll/#/Vote/" + UUID + "/" + token.TokenGuid });
+            var link = hostUri + "/Poll/#/Vote/" + UUID + "/" + token.TokenGuid;
+
+            string message = "You've been invited to Vote On '<a href=\""+link+"\">" + pollQuestion + "</a>'";
 
             _mailSender.SendMail(token.Email, "Have your say", message);
         }
