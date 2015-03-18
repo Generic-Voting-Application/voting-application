@@ -328,6 +328,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Controllers\PollTypeChangeController.js" />
     <Content Include="Scripts\Controllers\AccountRegisterController.js" />
     <Content Include="Scripts\Controllers\AccountLoginController.js" />
     <Content Include="Scripts\Controllers\ManagePollTypeController.js" />
@@ -345,6 +346,7 @@
     <Content Include="Scripts\Controllers\PollHeadingController.js" />
     <Content Include="Scripts\Controllers\ResultsPageController.js" />
     <Content Include="Scripts\Controllers\PointsVoteController.js" />
+    <Content Include="Scripts\Controllers\UnregisteredDashboardController.js" />
     <Content Include="Scripts\Controllers\UpDownVoteController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
     <Content Include="Scripts\Directives\PollHeading.js" />
@@ -386,6 +388,7 @@
     <Content Include="Views\Routes\ManageOptions.cshtml" />
     <Content Include="Views\Routes\ManagePollType.cshtml" />
     <Content Include="Views\Routes\ManageVoters.cshtml" />
+    <Content Include="Views\Routes\PollTypeChange.cshtml" />
     <Content Include="Scripts\Directives\UnlockableOption.html" />
     <Content Include="Scripts\Directives\PollHeading.html" />
     <Content Include="Views\Routes\Dashboard.cshtml" />
