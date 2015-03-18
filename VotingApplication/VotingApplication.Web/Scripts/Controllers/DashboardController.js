@@ -12,6 +12,7 @@
         $scope.account = AccountService.account;
         $scope.createPoll = createNewPoll;
         $scope.getUserPolls = getUserPolls;
+        $scope.navigateToManagePage = navigateToManagePage;
 
         $scope.userPolls = {};
 
@@ -32,7 +33,7 @@
         }
 
         function createPollSuccessCallback(data) {
-            window.location.href = '/#/Manage/' + data.ManageId;
+            navigateToManagePage(data.manageId);
         }
 
         function getUserPolls() {
@@ -41,6 +42,10 @@
                     $scope.userPolls = data;
                 });
         }
+
+        function navigateToManagePage(manageId) {
+            window.location.href = '/#/Manage/' + manageId;
+        };
     }
 
 })();
