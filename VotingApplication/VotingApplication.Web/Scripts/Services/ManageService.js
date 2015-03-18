@@ -30,7 +30,7 @@
 
         self.poll = null;
 
-        self.getPoll = function (manageId, callback) {
+        self.getPoll = function (manageId, callback, failureCallback) {
 
             if (!manageId) {
                 return null;

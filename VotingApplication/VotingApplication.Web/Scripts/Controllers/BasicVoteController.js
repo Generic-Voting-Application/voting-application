@@ -36,7 +36,10 @@
 
             function getTokenVotesSuccessCallback(voteData) {
 
-                // BUG: voteData[0] is undefined if the user hasn't voted yet.
+                if (!voteData || voteData.length == 0) {
+                    return;
+                }
+
                 var vote = voteData[0];
 
                 angular.forEach($scope.options, function (option) {

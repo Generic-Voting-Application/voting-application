@@ -209,3 +209,33 @@ body {
 #poll-link-go-btn {
     margin-top: 1.2em;
 }
+
+.pill-box {
+    margin-top: 10px;
+}
+
+.voter-pill {
+    border: 1px solid $BlueGrey100;
+    border-radius: 5px;
+    height: 25px;
+    display: inline-block;
+    font-size: 10pt;
+    margin: 2px;
+    overflow: hidden;
+
+    .voter-pill-text {
+        padding: 2px 5px;
+        float: left;
+    }
+
+    .voter-pill-delete {
+        float: right;
+        background-color: $Red500;
+        color: $White;
+        font-weight: bold;
+        padding: 5px 10px;
+        height: 25px;
+        top: 0px;
+        cursor: pointer;
+    }
+}

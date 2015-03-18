@@ -70,8 +70,20 @@
     <Compile Include="Migrations\201503101435082_NullablePollDateTime.Designer.cs">
       <DependentUpon>201503101435082_NullablePollDateTime.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503171450452_tokensWithEmails.cs" />
+    <Compile Include="Migrations\201503171450452_tokensWithEmails.Designer.cs">
+      <DependentUpon>201503171450452_tokensWithEmails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503170904294_RemoveChatMessages.cs" />
+    <Compile Include="Migrations\201503170904294_RemoveChatMessages.Designer.cs">
+      <DependentUpon>201503170904294_RemoveChatMessages.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503170926170_RemoveExpires.cs" />
+    <Compile Include="Migrations\201503170926170_RemoveExpires.Designer.cs">
+      <DependentUpon>201503170926170_RemoveExpires.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Model\ChatMessage.cs" />
+    <Compile Include="Model\Creation\PollCreationHelper.cs" />
     <Compile Include="Model\Option.cs" />
     <Compile Include="Model\Poll.cs" />
     <Compile Include="Model\Token.cs" />
@@ -99,6 +111,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503101435082_NullablePollDateTime.resx">
       <DependentUpon>201503101435082_NullablePollDateTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503171450452_tokensWithEmails.resx">
+      <DependentUpon>201503171450452_tokensWithEmails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503170904294_RemoveChatMessages.resx">
+      <DependentUpon>201503170904294_RemoveChatMessages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503170926170_RemoveExpires.resx">
+      <DependentUpon>201503170926170_RemoveExpires.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
