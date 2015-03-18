@@ -6,6 +6,7 @@
     function timePicker() {
 
         var modelDirty = false;
+        var time = moment();
 
         function link(scope, element, attrs) {
 
@@ -17,23 +18,46 @@
             activate();
 
             function formatTime() {
-                return moment(scope.ngModel).format('HH : mm');
+                return time.format('HH : mm');
             }
 
             function moveHour(offset) {
-                scope.ngModel = moment(scope.ngModel).add(offset, 'hours');
+                time.hours((time.hours() + offset) % 24);
+                modelDirty = true;
+                scope.ngModel = time;
             }
 
             function moveMinute(offset) {
-                scope.ngModel = moment(scope.ngModel).add(offset, 'minutes');
+                time.minutes((time.minutes() + offset) % 60);
+                modelDirty = true;
+                scope.ngModel = time;
             }
 
             function activate() {
+
+                var debounce = null;
+
                 scope.$watch("ngModel", function () {
-                    if (modelDirty) {
-                        scope.update();
-                        modelDirty = false;
+
+                    // Lock minutes to multiples of 5
+                    var roundedDate = scope.ngModel ? moment(scope.ngModel) : moment();
+                    roundedDate.minutes(Math.ceil((roundedDate.minutes()) / 5) * 5);
+                    
+                    time = moment(roundedDate);
+
+                    if (scope.update && modelDirty) {
+                        if (scope.debounce) {
+                            clearTimeout(debounce);
+                            debounce = setTimeout(function () {
+                                modelDirty = false;
+                                scope.update();
+                            }, parseInt(scope.debounce));
+                        } else {
+                            modelDirty = false;
+                            scope.update();
+                        }
                     }
+
                 });
             }
         }
@@ -42,7 +66,8 @@
             restrict: 'E',
             scope: {
                 ngModel: '=',
-                update: '&'
+                update: '&',
+                debounce: '@'
             },
             link: link,
             templateUrl: '../Routes/TimePicker'

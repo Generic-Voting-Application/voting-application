@@ -18,8 +18,8 @@
             activate();
 
             function setModelDate(date) {
-                scope.ngModel = date.toDate();
                 modelDirty = true;
+                scope.ngModel = date.toDate();
             }
 
             function moveMonth(offset) {
@@ -34,10 +34,10 @@
 
             function activate() {
                 scope.$watch("ngModel", function () {
-                    selectedDate = moment(scope.ngModel);
+                    selectedDate = scope.ngModel ? moment(scope.ngModel) : moment();
                     displayDate = moment(selectedDate);
                     updateDisplay(displayDate);
-                    if (modelDirty) {
+                    if (scope.update && modelDirty) {
                         scope.update();
                         modelDirty = false;
                     }
