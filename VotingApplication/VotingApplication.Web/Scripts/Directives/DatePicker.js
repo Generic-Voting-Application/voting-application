@@ -58,10 +58,10 @@
             var dateCounter = moment(startDateOfMonth);
 
             // Fill up empty date cells
-            rows[0] = [];
+            rows[rowCounter] = [];
 
             for (a = 0; a < cellCounter; a++) {
-                rows[0][a] = { date: '' };
+                rows[rowCounter][a] = { date: '' };
             }
 
             for (i = 1; i <= daysInMonth; i++) {

@@ -22,13 +22,13 @@
             }
 
             function moveHour(offset) {
-                time.hours((time.hours() + offset) % 24);
+                time.hours((time.hours() + offset + 24) % 24);
                 modelDirty = true;
                 scope.ngModel = time;
             }
 
             function moveMinute(offset) {
-                time.minutes((time.minutes() + offset) % 60);
+                time.minutes((time.minutes() + offset + 60) % 60);
                 modelDirty = true;
                 scope.ngModel = time;
             }
