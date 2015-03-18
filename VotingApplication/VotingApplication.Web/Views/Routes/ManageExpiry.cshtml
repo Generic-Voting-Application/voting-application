@@ -1,0 +1,33 @@
+﻿<div ng-app="GVA.Creation" ng-controller="ManageExpiryController">
+    <div class="manage-area centered">
+        <h2>
+            Poll Expiry
+        </h2>
+        <h3>
+            When will the poll end?
+        </h3>
+        <div class="manage-section text-centered">
+            <em>{{formatExpiry()}}</em>
+        </div>
+        <div class="manage-section">
+            <date-picker ng-model="poll.ExpiryDate" update="updatePoll()" />
+        </div>
+        <div class="manage-section">
+            <time-picker ng-model="poll.ExpiryDate" update="updatePoll()" debounce="1000"/>
+        </div>
+        <h3>
+            Fast options
+        </h3>
+        <div class="manage-section">
+            <div class="interlocked-btn-group">
+                <button class="inactive-btn" ng-click="setDate('hour');updatePoll()" ng-class="{'active-btn': timeOffset()=='hour'}">1 Hour</button>
+                <button class="inactive-btn" ng-click="setDate('day');updatePoll()" ng-class="{'active-btn': timeOffset()=='day'}">1 Day</button>
+                <button class="inactive-btn" ng-click="setDate('week');updatePoll()" ng-class="{'active-btn': timeOffset()=='week'}">1 Week</button>
+                <button class="inactive-btn" ng-click="removeExpiry();updatePoll()" ng-class="{'active-btn': !poll.ExpiryDate}">Never</button>
+            </div>
+        </div>
+        <div class="manage-section">
+            <button class="manage-btn" ng-click="return()">Back</button>
+        </div>
+    </div>
+</div>
