@@ -28,8 +28,6 @@
             observerCallbacks.push(callback);
         }
 
-        self.poll = null;
-
         self.getPoll = function (manageId, callback, failureCallback) {
 
             if (!manageId) {
@@ -46,6 +44,7 @@
         }
 
         self.updatePoll = function (manageId, poll, callback, failureCallback) {
+
             $http({
                 method: 'PUT',
                 url: '/api/manage/' + manageId,
@@ -53,6 +52,18 @@
             })
             .success(function (data) { if (callback) { callback(data) } })
             .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+
+        }
+
+        self.getVotes = function (pollId, callback, failureCallback) {
+
+            $http({
+                method: 'GET',
+                url: '/api/poll/' + pollId + '/vote'
+            })
+            .success(function (data) { if (callback) { callback(data) } })
+            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+
         }
 
         return self;
