@@ -2,11 +2,11 @@
 (function () {
     angular
         .module('GVA.Creation')
-        .controller('ManageExpiryController', ManageOptionController);
+        .controller('ManageExpiryController', ManageExpiryController);
 
-    ManageOptionController.$inject = ['$scope', '$routeParams', '$location', 'ManageService'];
+    ManageExpiryController.$inject = ['$scope', '$routeParams', '$location', 'ManageService'];
 
-    function ManageOptionController($scope, $routeParams, $location, ManageService) {
+    function ManageExpiryController($scope, $routeParams, $location, ManageService) {
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
