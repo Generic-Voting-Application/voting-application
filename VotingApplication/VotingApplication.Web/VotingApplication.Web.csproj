@@ -317,9 +317,6 @@
     </None>
     <Content Include="Content\Lib\Css\angular-toggle-switch.css" />
     <Content Include="Content\Lib\Css\bootstrap-glyphicons.css" />
-    <Content Include="Content\Lib\Css\ng-quick-date-default-theme.css" />
-    <Content Include="Content\Lib\Css\ng-quick-date-plus-default-theme.css" />
-    <Content Include="Content\Lib\Css\ng-quick-date.css" />
     <Content Include="Content\Lib\Css\ngDialog-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-theme-default-min.css" />
     <Content Include="Content\Scss\Site.scss" />
