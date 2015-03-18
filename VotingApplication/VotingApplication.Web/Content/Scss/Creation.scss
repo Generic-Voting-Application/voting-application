@@ -245,9 +245,9 @@ body {
 .poll-panel {
     background-color: $Blue100;
     border: 2px $Grey400 solid;
-    margin: 25px;
-    width: 305px;
-    height: 120px;
+    margin-bottom: 25px;
+    min-width: 260px;
+    min-height: 120px;
 }
 
 .poll-panel-header {
@@ -257,7 +257,7 @@ body {
 
 .poll-panel-button {
     @extend .manage-btn;
-    width: 138px;
+    width: 115px;
     height: 32px;
     font: normal 12pt 'Open Sans';
     box-shadow: none;
