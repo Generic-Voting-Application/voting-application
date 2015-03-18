@@ -70,6 +70,10 @@
     <Compile Include="Migrations\201503101435082_NullablePollDateTime.Designer.cs">
       <DependentUpon>201503101435082_NullablePollDateTime.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503171450452_tokensWithEmails.cs" />
+    <Compile Include="Migrations\201503171450452_tokensWithEmails.Designer.cs">
+      <DependentUpon>201503171450452_tokensWithEmails.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\201503170904294_RemoveChatMessages.cs" />
     <Compile Include="Migrations\201503170904294_RemoveChatMessages.Designer.cs">
       <DependentUpon>201503170904294_RemoveChatMessages.cs</DependentUpon>
@@ -107,6 +111,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503101435082_NullablePollDateTime.resx">
       <DependentUpon>201503101435082_NullablePollDateTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503171450452_tokensWithEmails.resx">
+      <DependentUpon>201503171450452_tokensWithEmails.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503170904294_RemoveChatMessages.resx">
       <DependentUpon>201503170904294_RemoveChatMessages.cs</DependentUpon>

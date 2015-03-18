@@ -13,6 +13,7 @@ using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
 using VotingApplication.Web.Api.Models.DBViewModels;
+using VotingApplication.Web.Api.Services;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -28,7 +29,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Poll _mainPoll;
         private InMemoryDbSet<Option> _dummyOptions;
         private InMemoryDbSet<Vote> _dummyVotes;
-        InMemoryDbSet<Poll> _dummyPolls;
+        private InMemoryDbSet<Poll> _dummyPolls;
+        private InMemoryDbSet<Token> _dummyTokens;
 
         [TestInitialize]
         public void setup()
@@ -49,10 +51,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _dummyVotes.Add(_burgerVote);
 
             _dummyPolls = new InMemoryDbSet<Poll>(true);
-            _mainPoll = new Poll() { UUID = mainUUID, ManageId = _manageMainUUID, Options = new List<Option>() { _burgerOption, _pizzaOption } };
-            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageId = _manageEmptyUUID, Options = new List<Option>() };
+            _mainPoll = new Poll() { UUID = mainUUID, ManageId = _manageMainUUID, Options = new List<Option>() { _burgerOption, _pizzaOption }, Tokens = new List<Token>() };
+            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageId = _manageEmptyUUID, Options = new List<Option>(), Tokens = new List<Token>() };
             _dummyPolls.Add(_mainPoll);
             _dummyPolls.Add(emptyPoll);
+
+            _dummyTokens = new InMemoryDbSet<Token>(true);
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
@@ -61,8 +65,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Polls).Returns(_dummyPolls);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
             mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
+            mockContext.Setup(a => a.Tokens).Returns(_dummyTokens);
 
-            _controller = new ManageController(mockContextFactory.Object);
+            var mockMail = new Mock<IMailSender>();
+
+            _controller = new ManageController(mockContextFactory.Object, mockMail.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -126,6 +133,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             {
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
+                Voters = new List<TokenRequestModel>()
             };
 
             // Act
@@ -149,7 +157,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             {
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
-                Options = newOptions
+                Options = newOptions,
+                Voters = new List<TokenRequestModel>()
             };
             _controller.Put(_manageMainUUID, request);
 
@@ -166,7 +175,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             {
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
-                Options = newOptions
+                Options = newOptions,
+                Voters = new List<TokenRequestModel>()
             };
             _controller.Put(_manageMainUUID, request);
 
@@ -184,7 +194,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             {
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
-                Options = invalidOptions
+                Options = invalidOptions,
+                Voters = new List<TokenRequestModel>()
             };
             _controller.Put(_manageMainUUID, request);
         }
@@ -195,12 +206,97 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
             {
                 Name = "Test",
-                VotingStrategy = PollType.Basic.ToString()
+                VotingStrategy = PollType.Basic.ToString(),
+                Voters = new List<TokenRequestModel>()
             };
             _controller.Put(_manageMainUUID, request);
 
             // Assert
             Assert.AreEqual(0, _mainPoll.Options.Count);
+        }
+
+        [TestMethod]
+        public void PutWithNewEmailsGeneratesTokensForEmails()
+        {
+            // Arrange
+            TokenRequestModel newToken = new TokenRequestModel() { Email = "a@b.c" };
+            List<TokenRequestModel> newEmailTokens = new List<TokenRequestModel>() { newToken };
+            ManagePollUpdateRequest request = new ManagePollUpdateRequest
+            {
+                Voters = newEmailTokens
+            };
+
+            // Act
+            _controller.Put(_manageMainUUID, request);
+
+            // Assert
+            Assert.AreNotEqual(Guid.Empty, newToken.TokenGuid);
+        }
+
+        [TestMethod]
+        public void PutWithNewEmailAddsToTokenListOfPoll()
+        {
+            // Arrange
+            TokenRequestModel newToken = new TokenRequestModel() { Email = "a@b.c" };
+            List<TokenRequestModel> newEmailTokens = new List<TokenRequestModel>() { newToken };
+            ManagePollUpdateRequest request = new ManagePollUpdateRequest
+            {
+                Voters = newEmailTokens
+            };
+
+            // Act
+            _controller.Put(_manageMainUUID, request);
+
+            // Assert
+            List<string> expectedEmails = new List<string> { "a@b.c" };
+            List<string> actualEmails = _mainPoll.Tokens.Select(s => s.Email).ToList<string>();
+            CollectionAssert.AreEquivalent(expectedEmails, actualEmails);
+        }
+
+        [TestMethod]
+        public void PutWithExistingTokenDoesNotModifyToken()
+        {
+            // Arrange
+            Token existingToken = new Token() { Email = "a@b.c", TokenGuid = Guid.NewGuid(), Id = 1 };
+            TokenRequestModel existingTokenRequest = new TokenRequestModel() { Email = existingToken.Email, TokenGuid = existingToken.TokenGuid };
+            List<Token> emailTokens = new List<Token>() { existingToken };
+            _mainPoll.Tokens = emailTokens;
+
+            ManagePollUpdateRequest request = new ManagePollUpdateRequest
+            {
+                Voters = new List<TokenRequestModel>() { existingTokenRequest }
+            };
+
+            // Act
+            _controller.Put(_manageMainUUID, request);
+
+            // Assert
+            CollectionAssert.AreEquivalent(emailTokens, _mainPoll.Tokens);
+        }
+
+        [TestMethod]
+        public void PutWithEmptyTokenListClearsObsoleteTokens()
+        {
+            // Arrange
+            Token existingToken = new Token() { Email = "a@b.c", TokenGuid = Guid.NewGuid(), Id = 1 };
+            Token obsoleteToken = new Token() { Email = "d@e.f", TokenGuid = Guid.NewGuid(), Id = 2 };
+            TokenRequestModel existingTokenRequest = new TokenRequestModel { Email = existingToken.Email, TokenGuid = existingToken.TokenGuid };
+            TokenRequestModel newTokenRequest = new TokenRequestModel { Email = "g@h.i" };
+
+            _mainPoll.Tokens = new List<Token>() { existingToken, obsoleteToken };
+
+            ManagePollUpdateRequest request = new ManagePollUpdateRequest
+            {
+                Voters = new List<TokenRequestModel>() { existingTokenRequest, newTokenRequest }
+            };
+
+            // Act
+            _controller.Put(_manageMainUUID, request);
+
+            // Assert
+            List<string> expectedEmails = new List<string> { "a@b.c", "g@h.i" };
+            List<string> actualEmails = _mainPoll.Tokens.Select(s => s.Email).ToList<string>();
+            CollectionAssert.AreEquivalent(expectedEmails, actualEmails);
         }
 
         #endregion

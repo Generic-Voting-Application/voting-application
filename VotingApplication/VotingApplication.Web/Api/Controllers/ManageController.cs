@@ -3,23 +3,44 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Web.Configuration;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
+using VotingApplication.Web.Api.Services;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
     public class ManageController : WebApiController
     {
+
+        private IMailSender _mailSender;
+
         public ManageController() : base() { }
-        public ManageController(IContextFactory contextFactory) : base(contextFactory) { }
+
+        public ManageController(IContextFactory contextFactory, IMailSender mailSender) : base(contextFactory)
+        {
+            _mailSender = mailSender;
+        }
+
+        private TokenRequestModel TokenToModel(Token token)
+        {
+            return new TokenRequestModel
+            {
+                Email = token.Email,
+                TokenGuid = token.TokenGuid
+            };
+        }
 
         private ManagePollRequestResponseModel PollToModel(Poll poll)
         {
+            List<TokenRequestModel> Voters = poll.Tokens.ConvertAll<TokenRequestModel>(TokenToModel);
+
             return new ManagePollRequestResponseModel
             {
                 UUID = poll.UUID,
                 Options = poll.Options,
+                Voters = Voters,
                 VotingStrategy = poll.PollType.ToString(),
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,
@@ -37,7 +58,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = context.Polls.Where(p => p.ManageId == manageId).Include(s => s.Options).FirstOrDefault();
+                Poll poll = context.Polls
+                    .Where(p => p.ManageId == manageId)
+                    .Include(p => p.Options)
+                    .Include(p => p.Tokens)
+                    .FirstOrDefault();
 
                 if (poll == null)
                 {
@@ -90,6 +115,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Poll existingPoll = context.Polls
                                            .Where(p => p.ManageId == manageId)
                                            .Include(p => p.Options)
+                                           .Include(p => p.Tokens)
                                            .SingleOrDefault();
 
                 if (existingPoll == null)
@@ -134,7 +160,30 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     newOptions.AddRange(updateRequest.Options);
                 }
 
+                List<Token> redundantTokens = existingPoll.Tokens.ToList<Token>();
 
+                foreach (TokenRequestModel voter in updateRequest.Voters)
+                {
+                    if (voter.TokenGuid == null)
+                    {
+                        Token newToken = new Token { Email = voter.Email, TokenGuid = Guid.NewGuid() };
+                        existingPoll.Tokens.Add(newToken);
+                        SendInvitation(existingPoll.UUID, newToken);
+                    }
+                    else
+                    {
+                        // Don't mark token as redundant if still in use
+                        Token token = redundantTokens.Find(t => t.TokenGuid == voter.TokenGuid);
+                        redundantTokens.Remove(token);
+                    }
+                }
+
+                // Clean up tokens which have been removed
+                foreach (Token token in redundantTokens)
+                {
+                    context.Tokens.Remove(token);
+                    existingPoll.Tokens.Remove(token);
+                }
 
                 existingPoll.Options = newOptions;
                 existingPoll.LastUpdated = DateTime.Now;
@@ -155,6 +204,24 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
+        private void SendInvitation(Guid UUID, Token token)
+        {
+            if (string.IsNullOrEmpty(token.Email))
+            {
+                return;
+            }
+
+            String hostUri = WebConfigurationManager.AppSettings["HostURI"];
+            if (hostUri == String.Empty)
+            {
+                return;
+            }
+
+            string message = String.Join("\n\n", new List<string>() { "You've been invited to a poll on Pollster",
+            "Have your say at " + hostUri + "/Poll/#/Vote/" + UUID + "/" + token.TokenGuid });
+
+            _mailSender.SendMail(token.Email, "Have your say", message);
+        }
         #endregion
     }
 }
