@@ -217,8 +217,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 return;
             }
 
-            string message = String.Join("\n\n", new List<string>() { "You've been invited to Vote On " + pollQuestion,
-            "Have your say at " + hostUri + "/Poll/#/Vote/" + UUID + "/" + token.TokenGuid });
+            var link = hostUri + "/Poll/#/Vote/" + UUID + "/" + token.TokenGuid;
+
+            string message = "You've been invited to Vote On '<a href=\""+link+"\">" + pollQuestion + "</a>'";
 
             _mailSender.SendMail(token.Email, "Have your say", message);
         }
