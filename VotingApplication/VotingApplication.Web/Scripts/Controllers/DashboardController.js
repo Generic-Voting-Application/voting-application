@@ -33,7 +33,7 @@
         }
 
         function createPollSuccessCallback(data) {
-            navigateToManagePage(data.manageId);
+            navigateToManagePage(data.ManageId);
         }
 
         function getUserPolls() {
