@@ -18,7 +18,7 @@
 
         function updatePoll() {
             ManageService.updatePoll($routeParams.manageId, $scope.poll, function () {
-                ManageService.getPoll($scope.manageId);
+                ManageService.getPoll();
             });
         }
 
@@ -27,21 +27,26 @@
         }
 
         function updateStrategy(strategy) {
-            if (existingVotes.length > 0) {
-                openPollChangeDialog(function () {
+
+            ManageService.getVotes($scope.poll.UUID, function (votes) {
+                if (votes.length > 0) {
+                    openPollChangeDialog(function () {
+                        $scope.poll.VotingStrategy = strategy;
+                        updatePoll();
+                    });
+                } else {
                     $scope.poll.VotingStrategy = strategy;
                     updatePoll();
-                });
-            } else {
-                $scope.poll.VotingStrategy = strategy;
-                updatePoll();
-            }
+                }
+            });
         }
 
         function activate() {
             ManageService.registerPollObserver(function () {
                 $scope.poll = ManageService.poll;
             });
+
+            ManageService.getPoll($scope.manageId);
         }
 
         function openPollChangeDialog(callback) {
