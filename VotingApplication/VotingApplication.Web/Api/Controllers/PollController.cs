@@ -22,7 +22,59 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
         }
 
-        private PollRequestResponseModel PollToModel(Poll poll)
+        [HttpGet]
+        [Authorize]
+        public List<DashboardPollResponseModel> Get()
+        {
+            using (IVotingContext context = _contextFactory.CreateContext())
+            {
+                string userId = User.Identity.GetUserId();
+
+                IEnumerable<DashboardPollResponseModel> userPolls = context
+                    .Polls
+                    .Where(p => p.CreatorIdentity == userId)
+                    .OrderByDescending(p => p.CreatedDate)
+                    .Select(CreateDashboardResponseFromModel);
+
+                return userPolls.ToList();
+            }
+        }
+
+        private static DashboardPollResponseModel CreateDashboardResponseFromModel(Poll poll)
+        {
+            return new DashboardPollResponseModel()
+            {
+                UUID = poll.UUID,
+                ManageId = poll.ManageId,
+                Name = poll.Name,
+                Creator = poll.Creator,
+                CreatedDate = poll.CreatedDate,
+                ExpiryDate = poll.ExpiryDate
+            };
+        }
+
+
+        [HttpGet]
+        public PollRequestResponseModel Get(Guid id)
+        {
+            using (IVotingContext context = _contextFactory.CreateContext())
+            {
+                Poll poll = context
+                    .Polls
+                    .Where(s => s.UUID == id)
+                    .Include(s => s.Options)
+                    .FirstOrDefault();
+
+                if (poll == null)
+                {
+                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", id));
+                }
+
+                return CreatePollResponseFromModel(poll);
+            }
+        }
+
+        private PollRequestResponseModel CreatePollResponseFromModel(Poll poll)
         {
             return new PollRequestResponseModel
             {
@@ -40,36 +92,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Options = poll.Options
             };
         }
-
-        #region Get
-
-        [Authorize]
-        public List<PollRequestResponseModel> Get()
-        {
-            using (var context = _contextFactory.CreateContext())
-            {
-                var username = User.Identity.Name;
-                List<Poll> matchingPolls = context.Polls.Where(p => p.CreatorIdentity == username).ToList();
-                return matchingPolls.Select(PollToModel).ToList();
-            }
-        }
-
-        public PollRequestResponseModel Get(Guid id)
-        {
-            using (var context = _contextFactory.CreateContext())
-            {
-                Poll poll = context.Polls.Where(s => s.UUID == id).Include(s => s.Options).FirstOrDefault();
-
-                if (poll == null)
-                {
-                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", id));
-                }
-
-                return PollToModel(poll);
-            }
-        }
-
-        #endregion
 
         [HttpPost]
         public PollCreationResponseModel Post(PollCreationRequestModel pollCreationRequest)

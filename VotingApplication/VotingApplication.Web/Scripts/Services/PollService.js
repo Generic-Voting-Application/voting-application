@@ -11,6 +11,7 @@
 
         var service = {
             getPoll: getPoll,
+            getUserPolls: getUserPolls,
             createPoll: createPoll
         };
 
@@ -37,6 +38,19 @@
                     failureCallback(data, status);
                 }
             });
+
+        }
+
+        function getUserPolls() {
+
+
+            var promise = $http({
+                method: 'GET',
+                url: '/api/poll/',
+                headers: { 'Authorization': 'Bearer ' + AccountService.account.token }
+            });
+
+            return promise;
 
         }
 

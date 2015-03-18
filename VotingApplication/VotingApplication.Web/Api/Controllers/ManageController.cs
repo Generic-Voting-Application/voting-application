@@ -112,33 +112,33 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             using (var context = _contextFactory.CreateContext())
             {
-                Poll existingPoll = context.Polls
+                Poll poll = context.Polls
                                            .Where(p => p.ManageId == manageId)
                                            .Include(p => p.Options)
                                            .Include(p => p.Tokens)
                                            .SingleOrDefault();
 
-                if (existingPoll == null)
+                if (poll == null)
                 {
                     this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll for manage id {0} not found", manageId));
                 }
 
-                existingPoll.NamedVoting = updateRequest.NamedVoting;
-                existingPoll.ExpiryDate = updateRequest.ExpiryDate;
-                existingPoll.InviteOnly = updateRequest.InviteOnly;
-                existingPoll.MaxPerVote = updateRequest.MaxPerVote;
-                existingPoll.MaxPoints = updateRequest.MaxPoints;
-                existingPoll.Name = updateRequest.Name;
-                existingPoll.OptionAdding = updateRequest.OptionAdding;
+                poll.NamedVoting = updateRequest.NamedVoting;
+                poll.ExpiryDate = updateRequest.ExpiryDate;
+                poll.InviteOnly = updateRequest.InviteOnly;
+                poll.MaxPerVote = updateRequest.MaxPerVote;
+                poll.MaxPoints = updateRequest.MaxPoints;
+                poll.Name = updateRequest.Name;
+                poll.OptionAdding = updateRequest.OptionAdding;
 
                 List<Option> newOptions = new List<Option>();
                 List<Option> oldOptions = new List<Option>();
-                List<Vote> oldVotes = new List<Vote>();
+                List<Vote> removedVotes = new List<Vote>();
 
                 if (updateRequest.Options != null && updateRequest.Options.Count > 0)
                 {
                     // Match up duplicates and clear out votes of options that are deleted
-                    foreach (Option option in existingPoll.Options)
+                    foreach (Option option in poll.Options)
                     {
                         Option duplicateRequestOption = updateRequest.Options.Find(o => o.Id == option.Id);
 
@@ -153,22 +153,31 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                         else
                         {
                             oldOptions.Add(option);
-                            oldVotes.AddRange(context.Votes.Where(v => v.OptionId == option.Id).ToList());
+                            removedVotes.AddRange(context.Votes.Where(v => v.OptionId == option.Id).ToList());
                         }
                     }
 
                     newOptions.AddRange(updateRequest.Options);
                 }
 
-                List<Token> redundantTokens = existingPoll.Tokens.ToList<Token>();
+                poll.Options = newOptions;
+                poll.LastUpdated = DateTime.Now;
+
+                if (updateRequest.VotingStrategy.ToLower() != poll.PollType.ToString().ToLower())
+                {
+                    removedVotes.AddRange(context.Votes.Where(v => v.PollId == poll.UUID).ToList());
+                    poll.PollType = (PollType)Enum.Parse(typeof(PollType), updateRequest.VotingStrategy, true);
+                }
+
+                List<Token> redundantTokens = poll.Tokens.ToList<Token>();
 
                 foreach (TokenRequestModel voter in updateRequest.Voters)
                 {
                     if (voter.TokenGuid == null)
                     {
                         Token newToken = new Token { Email = voter.Email, TokenGuid = Guid.NewGuid() };
-                        existingPoll.Tokens.Add(newToken);
-                        SendInvitation(existingPoll.UUID, newToken);
+                        poll.Tokens.Add(newToken);
+                        SendInvitation(poll.UUID, newToken, poll.Name);
                     }
                     else
                     {
@@ -182,29 +191,27 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 foreach (Token token in redundantTokens)
                 {
                     context.Tokens.Remove(token);
-                    existingPoll.Tokens.Remove(token);
+                    poll.Tokens.Remove(token);
                 }
 
-                existingPoll.Options = newOptions;
-                existingPoll.LastUpdated = DateTime.Now;
+                poll.Options = newOptions;
+                poll.LastUpdated = DateTime.Now;
 
                 foreach (Option oldOption in oldOptions)
                 {
                     context.Options.Remove(oldOption);
                 }
 
-                foreach (Vote oldVote in oldVotes)
+                foreach (Vote oldVote in removedVotes)
                 {
                     context.Votes.Remove(oldVote);
                 }
-
-                // Need code to handle poll type changed when enabaled.
 
                 context.SaveChanges();
             }
         }
 
-        private void SendInvitation(Guid UUID, Token token)
+        private void SendInvitation(Guid UUID, Token token, string pollQuestion)
         {
             if (string.IsNullOrEmpty(token.Email))
             {
@@ -217,8 +224,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 return;
             }
 
-            string message = String.Join("\n\n", new List<string>() { "You've been invited to a poll on Pollster",
-            "Have your say at " + hostUri + "/Poll/#/Vote/" + UUID + "/" + token.TokenGuid });
+            var link = hostUri + "/Poll/#/Vote/" + UUID + "/" + token.TokenGuid;
+
+            string message = "You've been invited to Vote On '<a href=\""+link+"\">" + pollQuestion + "</a>'";
 
             _mailSender.SendMail(token.Email, "Have your say", message);
         }

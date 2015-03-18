@@ -253,6 +253,7 @@
     <Compile Include="Api\Logging\NLogger.cs" />
     <Compile Include="Api\Models\AccountBindingModels.cs" />
     <Compile Include="Api\Models\AccountViewModels.cs" />
+    <Compile Include="Api\Models\DBViewModels\DashboardPollResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollRequestResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollUpdateRequest.cs" />
     <Compile Include="Api\Models\DBViewModels\OptionCreationRequestModel.cs" />
@@ -322,8 +323,11 @@
     <Content Include="Content\Scss\Site.scss" />
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
+    <Content Include="favicon.png" />
     <Content Include="Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Images\Logo.png" />
+    <Content Include="Scripts\Controllers\PollTypeChangeController.js" />
     <Content Include="Scripts\Controllers\AccountRegisterController.js" />
     <Content Include="Scripts\Controllers\AccountLoginController.js" />
     <Content Include="Scripts\Controllers\ManageExpiryController.js" />
@@ -392,6 +396,7 @@
     <Content Include="Content\Scss\DateTimePicker.scss" />
     <Content Include="Views\Routes\TimePicker.cshtml" />
     <None Include="Views\Routes\PollHeading.cshtml" />
+    <Content Include="Views\Routes\PollTypeChange.cshtml" />
     <Content Include="Scripts\Directives\UnlockableOption.html" />
     <Content Include="Scripts\Directives\PollHeading.html" />
     <Content Include="Views\Routes\Dashboard.cshtml" />

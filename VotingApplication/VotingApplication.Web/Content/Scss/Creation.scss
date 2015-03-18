@@ -34,8 +34,7 @@ body {
 #signin-header {
     font-size: 10pt;
     color: $Blue500;
-    margin-top: 5px;
-    margin-bottom: 20px;
+    margin-top: 25px;
     position: relative;
     left: 20px;
 
@@ -204,6 +203,14 @@ body {
 .poll-link-area {
     padding-right: 0.1em;
     overflow: hidden;
+}
+
+.poll-type-btn {
+    height: 48px;
+
+    .glyphicon {
+        margin-right: 10px;
+    }
 }
 
 #poll-link-go-btn {
