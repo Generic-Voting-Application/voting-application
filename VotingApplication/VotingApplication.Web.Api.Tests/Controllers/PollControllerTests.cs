@@ -13,13 +13,14 @@ using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
 using VotingApplication.Web.Api.Models.DBViewModels;
-using VotingApplication.Web.Api.Services;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
     [TestClass]
     public class PollControllerTests
     {
+        const string UserId = "4AEAE121-D540-48BF-907A-AA454248C0C0";
+
         private PollController _controller;
         private Poll _mainPoll;
         private Poll _otherPoll;
@@ -47,13 +48,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 ManageId = Guid.NewGuid(),
                 CreatedDate = _templateCreatedDate,
                 Options = new List<Option>() { _redOption },
-                CreatorIdentity = "a@b.c"
+                CreatorIdentity = UserId
             };
 
-            _dummyPolls = new InMemoryDbSet<Poll>(true);
-            _dummyPolls.Add(_mainPoll);
-            _dummyPolls.Add(_otherPoll);
-            _dummyPolls.Add(_templatePoll);
+            _dummyPolls = new InMemoryDbSet<Poll>(true) { _mainPoll, _otherPoll, _templatePoll };
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
@@ -61,11 +59,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Polls).Returns(_dummyPolls);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
-            var mockMailSender = new Mock<IMailSender>();
-
-            _controller = new PollController(mockContextFactory.Object);
-            _controller.Request = new HttpRequestMessage();
-            _controller.Configuration = new HttpConfiguration();
+            _controller = new PollController(mockContextFactory.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
         }
 
         private void SaveChanges()
@@ -88,16 +86,27 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         [TestMethod]
         public void GetWithAUserFetchesAllPollsByThatUser()
         {
-            // Arrange
-            var identity = new System.Security.Principal.GenericIdentity("a@b.c");
-            var user = new System.Security.Principal.GenericPrincipal(identity, new string[0]);
-            _controller.User = user;
+            var claim = new Claim("test", UserId);
+            var mockIdentity = new Mock<ClaimsIdentity>();
+            mockIdentity
+                .Setup(ci => ci.FindFirst(It.IsAny<string>()))
+                .Returns(claim);
 
-            // Act
-            var response = _controller.Get();
+            mockIdentity
+                .Setup(i => i.IsAuthenticated)
+                .Returns(true);
 
-            // Assert
-            var responsePoll = response.Single();
+            var principal = new Mock<IPrincipal>();
+            principal
+                .Setup(ip => ip.Identity)
+                .Returns(mockIdentity.Object);
+
+            _controller.User = principal.Object;
+
+
+            List<DashboardPollResponseModel> response = _controller.Get();
+            DashboardPollResponseModel responsePoll = response.Single();
+
             Assert.AreEqual(_templatePoll.UUID, responsePoll.UUID);
             Assert.AreEqual(_templatePoll.Creator, responsePoll.Creator);
             Assert.AreEqual(_templatePoll.CreatedDate, responsePoll.CreatedDate);
@@ -106,15 +115,27 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         [TestMethod]
         public void GetWithANewUserFetchesEmptyPollList()
         {
-            // Arrange
-            var identity = new System.Security.Principal.GenericIdentity("newUser@b.c");
-            var user = new System.Security.Principal.GenericPrincipal(identity, new string[0]);
-            _controller.User = user;
+            var claim = new Claim("test", "some new id that cannot exist");
+            var mockIdentity = new Mock<ClaimsIdentity>();
+            mockIdentity
+                .Setup(ci => ci.FindFirst(It.IsAny<string>()))
+                .Returns(claim);
 
-            // Act
+            mockIdentity
+                .Setup(i => i.IsAuthenticated)
+                .Returns(true);
+
+            var principal = new Mock<IPrincipal>();
+            principal
+                .Setup(ip => ip.Identity)
+                .Returns(mockIdentity.Object);
+
+            _controller.User = principal.Object;
+
+
             var response = _controller.Get();
 
-            // Assert
+
             CollectionAssert.AreEquivalent(new List<Poll>(), response);
         }
 
@@ -194,10 +215,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Mocking of GetUserId() taken from http://stackoverflow.com/questions/22762338/how-do-i-mock-user-identity-getuserid
 
-
-            const string userId = "4AEAE121-D540-48BF-907A-AA454248C0C0";
-
-            var claim = new Claim("test", userId);
+            var claim = new Claim("test", UserId);
             var mockIdentity = new Mock<ClaimsIdentity>();
             mockIdentity
                 .Setup(ci => ci.FindFirst(It.IsAny<string>()))
@@ -226,7 +244,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             Poll createdPoll = _dummyPolls.Last();
 
-            Assert.AreEqual(userId, createdPoll.CreatorIdentity);
+            Assert.AreEqual(UserId, createdPoll.CreatorIdentity);
         }
 
         [TestMethod]
