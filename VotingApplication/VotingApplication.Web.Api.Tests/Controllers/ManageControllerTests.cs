@@ -223,6 +223,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             List<TokenRequestModel> newEmailTokens = new List<TokenRequestModel>() { newToken };
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
             {
+                Name = "Test",
+                VotingStrategy = PollType.Basic.ToString(),
                 Voters = newEmailTokens
             };
 
@@ -241,6 +243,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             List<TokenRequestModel> newEmailTokens = new List<TokenRequestModel>() { newToken };
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
             {
+                Name = "Test",
+                VotingStrategy = PollType.Basic.ToString(),
                 Voters = newEmailTokens
             };
 
@@ -264,6 +268,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
             {
+                Name = "Test",
+                VotingStrategy = PollType.Basic.ToString(),
                 Voters = new List<TokenRequestModel>() { existingTokenRequest }
             };
 
@@ -287,6 +293,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
             {
+                Name = "Test",
+                VotingStrategy = PollType.Basic.ToString(),
                 Voters = new List<TokenRequestModel>() { existingTokenRequest, newTokenRequest }
             };
 
