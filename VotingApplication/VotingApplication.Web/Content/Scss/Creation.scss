@@ -1,0 +1,280 @@
+﻿@import '~/Content/Scss/Site.scss';
+
+$Blue100: #BBDEFB;
+$Blue200: #90CAF9;
+$Blue300: #64B5F6;
+$Blue500: #2196F3;
+$Blue700: #1976D2;
+$Red900: #B71C1C;
+$Red500: #f44336;
+$Grey400: #BDBDBD;
+$BlueGrey400: #78909C;
+$BlueGrey100: #CFD8DC;
+$Black: #000000;
+$White: #FFFFFF;
+
+h2 {
+    -webkit-margin-after: 0.2em;
+}
+
+body {
+    background-color: $Blue100;
+}
+
+.active-btn {
+    background-color: $Blue500;
+    border: 1px solid $Blue700;
+}
+
+.go-btn {
+    background-color: $Blue500;
+    border: 1px solid $Blue700;
+}
+
+#signin-header {
+    font-size: 10pt;
+    color: $Blue500;
+    margin-top: 25px;
+    position: relative;
+    left: 20px;
+
+
+    > i {
+        margin: 0px 2px;
+    }
+}
+
+#register-block {
+    width: 205px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#question-block {
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 300px;
+    font-size: 10pt;
+
+    > input {
+        width: 100%;
+    }
+}
+
+#quickpoll-block {
+    margin-top: 15px;
+    width: 100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.centered-text {
+    width: 100%;
+    text-align: center;
+}
+
+.shadowed {
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+
+.account-login {
+    max-width: 320px;
+}
+
+.account-register {
+    max-width: 320px;
+}
+
+.account-control-box {
+    position: absolute;
+    border-style: solid;
+    border-width: thin;
+    border-color: $BlueGrey400;
+    width: 100px;
+    right: 0;
+
+    > div {
+        border-top-style: solid;
+        border-top-width: thin;
+        border-top-color: $BlueGrey100;
+        padding: 3px;
+
+        &:first-of-type {
+            border-top: none;
+        }
+    }
+}
+
+// Horizontal rules
+
+.horizontal-ruled:before {
+    content: '';
+    background-color: $Grey400;
+    height: 1px;
+    display: block;
+    position: relative;
+    top: 12px;
+    left: 10%;
+    width: 30%;
+}
+
+.horizontal-ruled:after {
+    content: '';
+    background-color: $Grey400;
+    height: 1px;
+    display: block;
+    position: relative;
+    top: -12px;
+    left: 60%;
+    width: 30%;
+}
+
+// Manage page specific
+
+.icon-padded-left {
+    padding-left: 20px;
+}
+
+.manage-btn {
+    background-color: $Blue500;
+    color: $White;
+    border: none;
+    box-shadow: 1px 1px 4px 0px rgba($Black, 0.6);
+    padding: 5px;
+    min-width: 75px;
+    margin: 2px;
+
+    &:active {
+        background-color: $Blue300;
+        box-shadow: 0px 0px 4px 0px rgba($Black, 0.6);
+    }
+}
+
+.manage-area {
+    max-width: 300px;
+}
+
+.manage-section {
+    margin-top: 1.3em;
+}
+
+.manage-section-row {
+    margin-bottom: 5px;
+}
+
+.manage-name-input {
+    width: 90%;
+}
+
+.manage-voters-table {
+    td, th {
+        padding: 4px;
+    }
+
+    button {
+        width: 100px;
+        height: 75px;
+    }
+}
+
+.toggle-switch {
+    border-radius: 5px;
+    background-color: #f0f0f0;
+
+    .knob {
+        border-radius: 5px;
+    }
+}
+
+.toggle-switch-animate {
+    transition: left 0.2s;
+}
+
+.toggle-switch .switch-left {
+    background-color: $Blue500;
+}
+
+.quickdate-clear {
+    content: '';
+}
+
+.poll-link-area {
+    padding-right: 0.1em;
+    overflow: hidden;
+}
+
+.poll-type-btn {
+    height: 48px;
+
+    .glyphicon {
+        margin-right: 10px;
+    }
+}
+
+#poll-link-go-btn {
+    margin-top: 1.2em;
+}
+
+.pill-box {
+    margin-top: 10px;
+}
+
+.voter-pill {
+    border: 1px solid $BlueGrey100;
+    border-radius: 5px;
+    height: 25px;
+    display: inline-block;
+    font-size: 10pt;
+    margin: 2px;
+    overflow: hidden;
+
+    .voter-pill-text {
+        padding: 2px 5px;
+        float: left;
+    }
+
+    .voter-pill-delete {
+        float: right;
+        background-color: $Red500;
+        color: $White;
+        font-weight: bold;
+        padding: 5px 10px;
+        height: 25px;
+        top: 0px;
+        cursor: pointer;
+    }
+}
+
+// Dashboard specific
+
+.poll-panel {
+    background-color: $Blue100;
+    border: 2px $Grey400 solid;
+    margin-bottom: 25px;
+    min-width: 260px;
+    min-height: 120px;
+}
+
+.poll-panel-header {
+    padding-left: 14px;
+}
+
+
+.poll-panel-button {
+    @extend .manage-btn;
+    width: 115px;
+    height: 32px;
+    font: normal 12pt 'Open Sans';
+    box-shadow: none;
+}
+
+.poll-panel-buttons {
+    padding-left: 7px;
+    padding-bottom: 9px;
+}
+
+.poll-panel-pollName {
+    font: bold 14pt 'Roboto';
+}

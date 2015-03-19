@@ -1,0 +1,297 @@
+﻿@import url(https://fonts.googleapis.com/css?family=Roboto:700);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+@import url(../Lib/Css/bootstrap-glyphicons.css);
+
+$Grey400: #BDBDBD;
+$Grey600: #757575;
+$Red500: #f44336;
+$Red700: #D32F2F;
+$Red900: #B71C1C;
+$Black: #000000;
+$White: #FFFFFF;
+
+$Error: $Red900;
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font: normal 12pt 'Open Sans';
+}
+
+header {
+    margin-bottom: 20px;
+}
+
+.center-panel {
+    background-color: $White;
+    box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    min-height: 100vh;
+    min-width: 320px;
+    padding: 0px 10px;
+    position: relative;
+    width: 30%;
+}
+
+header {
+    height: 45px;
+    padding: 5px 20px;
+}
+
+footer {
+    padding: 20px 20px 0px 20px;
+    height: 50px;
+    background-color: $White;
+}
+
+.body-content {
+    flex: 1;
+    padding: 5px 20px;
+}
+
+h1, h2, h3, h4 {
+    font-weight: bold;
+    font-family: Roboto;
+}
+
+h4 {
+    margin-bottom: 5px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.btn {
+    border-radius: 5px;
+    font: bold 12pt Open Sans;
+    padding: 5px;
+    border-style: solid;
+    text-align: center;
+    outline: none;
+}
+
+.inactive-btn {
+    @extend .btn;
+    background-color: $White;
+    border-color: $Grey400;
+    border-width: 1px;
+    color: $Grey600;
+}
+
+.active-btn {
+    @extend .btn;
+    color: $White;
+}
+
+.error-btn {
+    @extend .btn;
+    color: $White;
+    background-color: $Red700;
+    border-color: $Red900;
+    border-width: 1px;
+}
+
+.go-btn {
+    @extend .btn;
+    color: $White;
+}
+
+.btn-medium {
+    min-width: 100px;
+}
+
+.btn-large {
+    padding: 12px 30px;
+    min-width: 200px;
+}
+
+.interlocked-btn-group {
+    padding-bottom: 1.7em;
+
+    button {
+        float: left;
+        display: inline-block;
+        margin-left: 0px;
+        margin-right: 0px;
+
+        &:not(:first-of-type):not(:last-of-type) {
+            border-radius: 0px;
+            border-right: none;
+        }
+
+        &:first-of-type {
+            border-right: none;
+            border-top-right-radius: 0px;
+            border-bottom-right-radius: 0px;
+        }
+
+        &:last-of-type {
+            border-top-left-radius: 0px;
+            border-bottom-left-radius: 0px;
+        }
+    }
+}
+
+:disabled {
+    opacity: 0.5;
+}
+
+.flexbox {
+    width: 100%;
+    display: flex;
+}
+
+.centered {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.text-centered {
+    text-align: center;
+}
+
+.inline {
+    display: inline-block;
+}
+
+hr {
+    width: 80%;
+    background-color: $Grey400;
+    border-style: none;
+    height: 1px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.pull-left {
+    float: left;
+}
+
+.pull-right {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
+
+.full-width {
+    width: 100%;
+    max-width: none;
+}
+
+.error {
+    color: $Error;
+}
+
+.form-input {
+    border-radius: 5px;
+    font-size: 12pt;
+    padding: 5px;
+    border: 1px solid $Grey600;
+    line-height: 21px;
+}
+
+.form-section {
+    margin-bottom: 10px;
+
+    > input {
+        margin-bottom: 3px;
+    }
+
+    > button {
+        margin-bottom: 3px;
+    }
+}
+
+.form-section-block {
+    @extend .form-section;
+
+    > label, input, button, small {
+        display: block;
+    }
+
+    label {
+        margin-bottom: 5px;
+    }
+}
+
+.form-section-inline {
+    @extend .form-section;
+
+    > label, input, button, small {
+        display: inline-block;
+    }
+}
+
+.form-error {
+    @extend .error;
+    font-size: small;
+    overflow: scroll;
+}
+
+.btn-group {
+    border: 1px solid;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 5px;
+
+    > button {
+        border-radius: 0px;
+        border-width: 0px;
+    }
+}
+
+.ngdialog-content {
+    padding: 0px !important;
+}
+
+.dialog-content {
+    padding: 1em;
+
+    > h1, h2, h3 {
+        margin-top: 5px;
+    }
+}
+
+.dialog-error-bar {
+    color: $White;
+    background-color: $Error;
+    display: block;
+    padding: 5px 1em 5px 1em;
+}
+
+.dialog-error-bar-top {
+    @extend .dialog-error-bar;
+
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.dialog-error-bar-bottom {
+    @extend .dialog-error-bar;
+
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}

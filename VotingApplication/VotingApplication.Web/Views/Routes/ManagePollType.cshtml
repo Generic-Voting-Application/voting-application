@@ -1,0 +1,46 @@
+﻿<div ng-app="GVA.Creation" ng-controller="ManagePollTypeController">
+    <div class="manage-area centered">
+        <h2>The Style</h2>
+        <h3>How will the voters vote?</h3>
+
+        <div class="manage-section">
+            <div class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.VotingStrategy=='Basic'}" ng-click="updateStrategy('Basic')">
+                <span class="pull-left">
+                    <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                    <span class="poll-type-text">Single Vote</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="manage-section">
+            <div class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.VotingStrategy=='Multi'}" ng-click="updateStrategy('Multi')">
+                <span class="pull-left">
+                    <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+                    <span class="poll-type-text">Multi Vote</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="manage-section">
+            <div class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.VotingStrategy=='UpDown'}" ng-click="updateStrategy('UpDown')">
+                <span class="pull-left">
+                    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                    <span class="poll-type-text">Up/Down Vote</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="manage-section">
+            <div class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.VotingStrategy=='Points'}" ng-click="updateStrategy('Points')">
+                <span class="pull-left">
+                    <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>
+                    <span class="poll-type-text">Points vote</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="manage-section">
+            <button class="manage-btn" ng-click="return()">Back</button>
+        </div>
+    </div>
+</div>

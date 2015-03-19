@@ -1,0 +1,79 @@
+﻿$Blue100: #BBDEFB;
+$Blue200: #90CAF9;
+$Blue300: #64B5F6;
+$Blue500: #2196F3;
+$Blue700: #1976D2;
+$Red900: #B71C1C;
+$Red500: #f44336;
+$Grey400: #BDBDBD;
+$BlueGrey400: #78909C;
+$BlueGrey100: #CFD8DC;
+$Black: #000000;
+$White: #FFFFFF;
+
+.dtp-clickable {
+    cursor: pointer;
+}
+
+.dp-date-picker {
+    width: 100%;
+}
+
+.dp-date-control {
+    text-align: center;
+    margin-bottom: 7px;
+}
+
+.dp-month-forwards {
+    float: right;
+    padding-right: 15px;
+}
+
+.dp-month-backwards {
+    float: left;
+    padding-left: 15px;
+}
+
+.dp-calendar {
+    width: 100%;
+}
+
+.dp-calendar-column {
+    width: percentage(1/7);
+}
+
+.dp-calendar-cell {
+    text-align: center;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.dp-calendar-cell-selected {
+    background-color: $Blue300;
+}
+
+.dt-time-picker {
+    max-width: 65px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.dt-time-display {
+    font-weight: bolder;
+    font-size: larger;
+    padding-left: 3px;
+}
+
+.dt-adjust-bar {
+    height: 1em;
+}
+
+.dt-hour-adjust {
+    float: left;
+    padding-left: 5px;
+}
+
+.dt-minute-adjust {
+    float: right;
+    padding-right: 5px;
+}
