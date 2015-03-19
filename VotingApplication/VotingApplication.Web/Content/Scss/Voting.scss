@@ -78,11 +78,6 @@ body {
     font-weight: bold;
 }
 
-.option-description {
-    float: left;
-    clear: left;
-}
-
 .option-buttons {
     float: right;
     width: 100px;
@@ -91,6 +86,7 @@ body {
 .option-buttons > * {
     display: block;
     text-align: center;
+    margin-bottom: 5px;
 }
 
 .btn-group-points {
@@ -123,9 +119,7 @@ body {
     height: 100%;
 }
 
-// Basic vote specific
-
-.basic-vote-description {
+.option-description {
     min-height: 2em;
 }
 
@@ -165,5 +159,5 @@ body {
 
 .multivote-option-description {
     @extend .option-description;
-    margin-left: 34px;
+    padding-left: 34px;
 }
