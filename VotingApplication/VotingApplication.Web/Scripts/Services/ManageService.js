@@ -26,7 +26,7 @@
             }
 
             observerCallbacks.push(callback);
-        }
+        };
 
         self.getPoll = function (manageId, callback, failureCallback) {
 
@@ -38,10 +38,10 @@
                 method: 'GET',
                 url: '/api/manage/' + manageId
             })
-            .success(function (data) { self.poll = data; notifyObservers(); if (callback) { callback(data) } })
-            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+            .success(function (data) { self.poll = data; notifyObservers(); if (callback) { callback(data); } })
+            .error(function (data, status) { if (failureCallback) { failureCallback(data, status); } });
 
-        }
+        };
 
         self.updatePoll = function (manageId, poll, callback, failureCallback) {
 
@@ -50,10 +50,10 @@
                 url: '/api/manage/' + manageId,
                 data: poll
             })
-            .success(function (data) { if (callback) { callback(data) } })
-            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+            .success(function (data) { if (callback) { callback(data); } })
+            .error(function (data, status) { if (failureCallback) { failureCallback(data, status); } });
 
-        }
+        };
 
         self.getVotes = function (pollId, callback, failureCallback) {
 
@@ -61,10 +61,10 @@
                 method: 'GET',
                 url: '/api/poll/' + pollId + '/vote'
             })
-            .success(function (data) { if (callback) { callback(data) } })
-            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+            .success(function (data) { if (callback) { callback(data); } })
+            .error(function (data, status) { if (failureCallback) { failureCallback(data, status); } });
 
-        }
+        };
 
         return self;
     }

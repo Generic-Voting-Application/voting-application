@@ -29,7 +29,7 @@
         function activate() {
             ManageService.registerPollObserver(function () {
                 $scope.poll = ManageService.poll;
-            })
+            });
         }
-    };
+    }
 })();

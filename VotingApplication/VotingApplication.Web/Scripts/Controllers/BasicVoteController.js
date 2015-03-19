@@ -32,11 +32,11 @@
                 token = tokenData;
 
                 VoteService.getTokenVotes(pollId, token, getTokenVotesSuccessCallback);
-            };
+            }
 
             function getTokenVotesSuccessCallback(voteData) {
 
-                if (!voteData || voteData.length == 0) {
+                if (!voteData || voteData.length === 0) {
                     return;
                 }
 
@@ -47,9 +47,9 @@
                         option.selected = true;
                     }
                 });
-            };
+            }
 
-        };
+        }
 
         function submitVote(option) {
             if (!option) {
@@ -77,7 +77,7 @@
             }
         }
 
-    };
+    }
 
 
 })();

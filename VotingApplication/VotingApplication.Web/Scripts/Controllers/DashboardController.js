@@ -45,7 +45,7 @@
 
         function navigateToManagePage(manageId) {
             window.location.href = '/#/Manage/' + manageId;
-        };
+        }
     }
 
 })();

@@ -42,7 +42,7 @@
             })
             .error(function (data, status) {
                 if (callback)
-                { callback(data, status) }
+                { callback(data, status); }
             });
         }
     }

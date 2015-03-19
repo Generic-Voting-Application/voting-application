@@ -24,11 +24,13 @@
         $scope.voteCount = 0;
 
         var drawChart = function (data) {
-            
+
             // Hack to fix insight's lack of data reloading
             document.getElementById('results-chart').innerHTML = '';
 
-            if (!data.length) return;
+            if (!data.length) {
+                return;
+            }
 
             var highestDataValue = data.reduce(function (prev, curr) {
                 return curr.Sum > prev.Sum ? curr : prev;
@@ -52,12 +54,13 @@
                 dataUnchanged = dataUnchanged &&
                     chart &&
                     chart.series().length > n &&
-                    JSON.stringify(data[n].Data) == JSON.stringify(chart.series()[n].data.rawData());
+                    JSON.stringify(data[n].Data) === JSON.stringify(chart.series()[n].data.rawData());
             }
 
             //Exit early if data has not changed
-            if (dataUnchanged)
+            if (dataUnchanged) {
                 return;
+            }
 
             // Fixed height for column chart, but scale to number of rows for bar charts
             var chartHeight = Math.min(data.length * 50 + 100, 600);
@@ -99,11 +102,11 @@
 
             // First parameter disables animation
             chart.draw(true);
-        }
+        };
 
         var reloadData = function () {
             VoteService.getResults(pollId, getResultsSuccessCallback);
-        }
+        };
 
         function getResultsSuccessCallback(data, status) {
 
@@ -116,7 +119,7 @@
             // Group together votes for the same options
             data.forEach(function (d) {
                 if (!(d.OptionName in groupedData)) {
-                    groupedData[d.OptionName] = { Value: 0, Voters: [] }
+                    groupedData[d.OptionName] = { Value: 0, Voters: [] };
                 }
 
                 groupedData[d.OptionName].Value += d.VoteValue;

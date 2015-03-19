@@ -36,15 +36,15 @@
 
         function navigateToManagePage() {
             $location.path('Manage/' + $scope.manageId);
-        };
+        }
 
         function updatePollDetails() {
             ManageService.updatePoll($routeParams.manageId, $scope.poll, updatePollSuccessCallback);
-        };
+        }
 
         function updatePollSuccessCallback() {
             ManageService.getPoll($scope.manageId);
-        };
+        }
 
         function setDate(option) {
             var newDate = moment().add(1, option);

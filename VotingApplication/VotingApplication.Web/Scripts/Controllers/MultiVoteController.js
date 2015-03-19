@@ -27,13 +27,13 @@
             $scope.options = pollData.Options;
 
             TokenService.getToken(pollId, getTokenSuccessCallback);
-        };
+        }
 
         function getTokenSuccessCallback(tokenData) {
             token = tokenData;
 
             VoteService.getTokenVotes(pollId, token, getTokenVotesSuccessCallback);
-        };
+        }
 
         function getTokenVotesSuccessCallback(voteData) {
             voteData.forEach(function (dataItem) {
@@ -45,9 +45,9 @@
                         option.voteValue = dataItem.VoteValue;
                         break;
                     }
-                };
+                }
             });
-        };
+        }
 
         function submiteVote(options) {
             if (!options) {
@@ -63,13 +63,13 @@
             else {
 
                 var votes = options
-                        .filter(function (option) { return option.voteValue })
+                        .filter(function (option) { return option.voteValue; })
                         .map(function (option) {
                             return {
                                 OptionId: option.Id,
                                 VoteValue: option.voteValue,
                                 VoterName: IdentityService.identity.name
-                            }
+                            };
                         });
 
                 VoteService.submitVote(pollId, votes, token, submitVoteSuccessCallback);
@@ -77,8 +77,8 @@
         }
 
         function openLoginDialogCallback() {
-            $scope.submitVote(options);
-        };
+            $scope.submitVote($scope.options);
+        }
 
         function submitVoteSuccessCallback(data) {
             window.location = $scope.$parent.resultsLink;

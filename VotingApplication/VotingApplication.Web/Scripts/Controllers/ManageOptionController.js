@@ -27,12 +27,12 @@
 
         function navigateToManagePage() {
             $location.path('Manage/' + $scope.manageId);
-        };
+        }
 
         function removePollOption(option) {
             $scope.poll.Options.splice($scope.poll.Options.indexOf(option), 1);
             $scope.updatePoll();
-        };
+        }
 
         function clearPollOption(form) {
             form.Name = '';
@@ -48,15 +48,15 @@
 
             $scope.poll.Options.push(newOption);
             $scope.updatePoll();
-        };
+        }
 
         function updatePollDetails() {
             ManageService.updatePoll($routeParams.manageId, $scope.poll, updatePollSuccessCallback);
-        };
+        }
 
         function updatePollSuccessCallback() {
             ManageService.getPoll($scope.manageId);
-        };
+        }
     }
 
 })();

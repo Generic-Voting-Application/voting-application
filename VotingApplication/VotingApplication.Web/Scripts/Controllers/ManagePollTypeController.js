@@ -57,5 +57,5 @@
                 data: { 'callback': callback }
             });
         }
-    };
+    }
 })();

@@ -33,6 +33,6 @@
                 })
                .otherwise({
                    templateUrl: '../Routes/HomePage'
-               })
+               });
         }]);
 })();

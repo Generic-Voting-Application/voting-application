@@ -3,7 +3,7 @@
         .module('GVA.Creation')
         .controller('PollTypeChangeController', PollTypeChangeController);
 
-    PollTypeChangeController.$inject = ['$scope']
+    PollTypeChangeController.$inject = ['$scope'];
 
     function PollTypeChangeController($scope) {
 
@@ -21,6 +21,6 @@
         function back() {
             $scope.closeThisDialog();
         }
-    };
+    }
 
 })();

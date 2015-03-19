@@ -47,7 +47,7 @@
 
         function calculateRowDates(date) {
 
-            rows = [];
+            var rows = [];
 
             var startDateOfMonth = date.date(1);
             var daysInMonth = date.daysInMonth();
@@ -60,11 +60,11 @@
             // Fill up empty date cells
             rows[rowCounter] = [];
 
-            for (a = 0; a < cellCounter; a++) {
+            for (var a = 0; a < cellCounter; a++) {
                 rows[rowCounter][a] = { date: '' };
             }
 
-            for (i = 1; i <= daysInMonth; i++) {
+            for (var i = 1; i <= daysInMonth; i++) {
 
                 if (!rows[rowCounter]) {
                     rows[rowCounter] = [];
@@ -93,7 +93,7 @@
             },
             link: link,
             templateUrl: '../Routes/DatePicker'
-        }
+        };
     }
 
 })();

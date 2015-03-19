@@ -6,9 +6,9 @@
     function UnlockableOption(AccountService) {
 
         function link(scope, element, attrs) {
-            scope.openLoginDialog = function() {
+            scope.openLoginDialog = function () {
                 AccountService.openLoginDialog(scope);
-            }
+            };
 
             scope.isLoggedIn = function () {
                 return (scope.$parent.account !== undefined);
@@ -22,6 +22,6 @@
             scope: {
                 optionPath: '@'
             }
-        }
+        };
     }
 })();
