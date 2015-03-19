@@ -8,8 +8,6 @@
     function pollHeading($routeParams, PollService, ExpiryStringService) {
 
         function link($scope) {
-            console.log($scope.gvaCallback);
-
             var pollId = $routeParams.pollId;
 
             function calculateExpiry(expiryDate) {
