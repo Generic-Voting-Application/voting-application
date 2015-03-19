@@ -13,7 +13,8 @@
         var service = {
             submitVote: submitVote,
             getResults: getResults,
-            getTokenVotes: getTokenVotes
+            getTokenVotes: getTokenVotes,
+            refreshLastChecked: refreshLastChecked
         };
 
         return service;
@@ -57,9 +58,9 @@
                 method: 'GET',
                 url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastCheckedTimestamps[pollId]
             })
-            .success(function (data) {
+            .success(function (data, status) {
                 if (callback) {
-                    callback(data);
+                    callback(data, status);
                 }
             })
             .error(function (data, status) {
@@ -92,7 +93,10 @@
                     failureCallback(data, status);
                 }
             });
+        }
 
+        function refreshLastChecked(pollId) {
+            lastCheckedTimestamps[pollId] = 0;
         }
     }
 })();

@@ -22,8 +22,15 @@
         //Whether or not we have an "s" on the end of "Winner"
         $scope.plural = '';
 
+        $scope.voteCount = 0;
+
         var drawChart = function (data) {
+            
+            // Hack to fix insight's lack of data reloading
+            document.getElementById('results-chart').innerHTML = '';
+
             if (!data.length) return;
+
             var highestDataValue = data.reduce(function (prev, curr) {
                 return curr.Sum > prev.Sum ? curr : prev;
             }).Sum;
@@ -52,9 +59,6 @@
             //Exit early if data has not changed
             if (dataUnchanged)
                 return;
-
-            // Hack to fix insight's lack of data reloading
-            document.getElementById('results-chart').innerHTML = '';
 
             // Fixed height for column chart, but scale to number of rows for bar charts
             var chartHeight = Math.min(data.length * 50 + 100, 600);
@@ -111,7 +115,12 @@
             VoteService.getResults(pollId, getResultsSuccessCallback);
         }
 
-        function getResultsSuccessCallback(data) {
+        function getResultsSuccessCallback(data, status) {
+
+            if (data) {
+                $scope.voteCount = data.length;
+            }
+
             var groupedData = {};
 
             // Group together votes for the same options
@@ -147,6 +156,7 @@
             drawChart(datapoints);
         }
 
+        VoteService.refreshLastChecked(pollId);
         reloadData();
         setInterval(reloadData, 3000);
     }
