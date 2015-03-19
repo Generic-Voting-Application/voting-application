@@ -16,9 +16,13 @@
         $scope.resultsLink = '#/Results/' + pollId + "/" + tokenId;
         $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
         $scope.logoutIdentity = IdentityService.clearIdentityName;
+        $scope.gvaExpiredCallback = redirectIfExpired;
 
         activate();
 
+        function redirectIfExpired() {
+            window.location.replace($scope.resultsLink);
+        }
 
         function activate() {
             // Angular won't auto update this so we need to use the observer pattern
