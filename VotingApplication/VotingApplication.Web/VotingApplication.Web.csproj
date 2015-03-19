@@ -342,7 +342,6 @@
     <Content Include="Scripts\Controllers\IdentityLoginController.js" />
     <Content Include="Scripts\Controllers\BasicVoteController.js" />
     <Content Include="Scripts\Controllers\MultiVoteController.js" />
-    <Content Include="Scripts\Controllers\PollHeadingController.js" />
     <Content Include="Scripts\Controllers\ResultsPageController.js" />
     <Content Include="Scripts\Controllers\PointsVoteController.js" />
     <Content Include="Scripts\Controllers\UnregisteredDashboardController.js" />
