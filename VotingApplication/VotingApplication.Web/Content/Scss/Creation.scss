@@ -246,3 +246,35 @@ body {
         cursor: pointer;
     }
 }
+
+// Dashboard specific
+
+.poll-panel {
+    background-color: $Blue100;
+    border: 2px $Grey400 solid;
+    margin-bottom: 25px;
+    min-width: 260px;
+    min-height: 120px;
+}
+
+.poll-panel-header {
+    padding-left: 14px;
+}
+
+
+.poll-panel-button {
+    @extend .manage-btn;
+    width: 115px;
+    height: 32px;
+    font: normal 12pt 'Open Sans';
+    box-shadow: none;
+}
+
+.poll-panel-buttons {
+    padding-left: 7px;
+    padding-bottom: 9px;
+}
+
+.poll-panel-pollName {
+    font: bold 14pt 'Roboto';
+}

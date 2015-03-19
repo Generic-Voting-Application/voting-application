@@ -352,8 +352,9 @@
     <Content Include="Scripts\Directives\TimePicker.js" />
     <Content Include="Scripts\Directives\DatePicker.js" />
     <Content Include="Scripts\Directives\PollHeading.js" />
-    <Content Include="Scripts\Lib\moment-min.js" />
     <Content Include="Scripts\Directives\UnlockableOption.js" />
+    <Content Include="Scripts\Filters\dateFilters.js" />
+    <Content Include="Scripts\Lib\moment-min.js" />
     <Content Include="Scripts\Modules\GVA-Common.js" />
     <Content Include="Scripts\Modules\GVA-Creation.js" />
     <Content Include="Scripts\Modules\GVA-Poll.js" />
