@@ -41,6 +41,13 @@ namespace VotingApplication.Web
             createStyle.Orderer = nullOrderer;
             bundles.Add(createStyle);
 
+            StyleBundle dateTimePickerStyle = new StyleBundle("~/Bundles/DateTimePickerStyle");
+            dateTimePickerStyle.Include("~/Content/Scss/DateTimePicker.scss");
+            dateTimePickerStyle.Builder = nullBuilder;
+            dateTimePickerStyle.Transforms.Add(styleTransformer);
+            dateTimePickerStyle.Orderer = nullOrderer;
+            bundles.Add(dateTimePickerStyle);
+
             ScriptBundle scriptLibBundle = new ScriptBundle("~/Bundles/ScriptLib");
             scriptLibBundle.IncludeDirectory("~/Scripts/Lib", "*.js");
             scriptLibBundle.IncludeDirectory("~/Scripts/Lib", "*.js.map");

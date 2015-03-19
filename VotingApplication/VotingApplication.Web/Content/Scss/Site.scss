@@ -111,6 +111,33 @@ a {
     min-width: 200px;
 }
 
+.interlocked-btn-group {
+    padding-bottom: 1.7em;
+
+    button {
+        float: left;
+        display: inline-block;
+        margin-left: 0px;
+        margin-right: 0px;
+
+        &:not(:first-of-type):not(:last-of-type) {
+            border-radius: 0px;
+            border-right: none;
+        }
+
+        &:first-of-type {
+            border-right: none;
+            border-top-right-radius: 0px;
+            border-bottom-right-radius: 0px;
+        }
+
+        &:last-of-type {
+            border-top-left-radius: 0px;
+            border-bottom-left-radius: 0px;
+        }
+    }
+}
+
 :disabled {
     opacity: 0.5;
 }
@@ -123,6 +150,10 @@ a {
 .centered {
     margin-right: auto;
     margin-left: auto;
+}
+
+.text-centered {
+    text-align: center;
 }
 
 .inline {

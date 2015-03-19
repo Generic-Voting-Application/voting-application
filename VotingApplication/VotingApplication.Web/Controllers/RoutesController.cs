@@ -94,12 +94,27 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
+        public ActionResult ManageExpiry()
+        {
+            return View();
+        }
+
         public ActionResult PollTypeChange()
         {
             return View();
         }
 
         public ActionResult Dashboard()
+        {
+            return View();
+        }
+
+        public ActionResult DatePicker()
+        {
+            return View();
+        }
+
+        public ActionResult TimePicker()
         {
             return View();
         }

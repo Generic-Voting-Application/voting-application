@@ -71,15 +71,11 @@
                 <h4 class="icon-padded-left">Expires:</h4>
             </div>
             <div>
-                <span ng-if="account" class="icon-padded-left">
-                    <quick-datepicker ng-model='poll.ExpiryDate' on-change="poll.Expires=(poll.ExpiryDate!=null);updatePoll()" placeholder="Never" date-format="dd/MM/yyyy" date-filter="dateFilter"></quick-datepicker>
-                </span>
-                <span ng-if="!account">
+                <span>
                     <span class="icon-padded-left">{{formatPollExpiry()}}</span>
-                    <span class="pull-right"><a href="javascript:;" ng-click="openLoginDialog()">Unlock</a></span>
+                    <span class="pull-right"><a href="#/Manage/{{manageId}}/Expiry">Edit</a></span>
                 </span>
             </div>
-            <small ng-show="invalidDate" class="icon-padded-left error">Expiry date can't be in the past</small>
         </div>
     </div>
 </div>
