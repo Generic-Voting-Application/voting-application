@@ -137,7 +137,7 @@
                 var key = keys[i];
                 datapoints.push({ Name: key, Sum: groupedData[key].Value, Voters: groupedData[key].Voters });
                 winningScore = Math.max(winningScore, groupedData[key].Value);
-            }
+            };
 
             var winners = datapoints.filter(function (d) {
                 return d.Sum === winningScore;
