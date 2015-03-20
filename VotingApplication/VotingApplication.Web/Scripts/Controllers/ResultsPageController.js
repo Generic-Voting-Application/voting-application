@@ -130,8 +130,11 @@
             var winningScore = 0;
 
             var datapoints = [];
+            var keys = Object.keys(groupedData);
+
             // Separate into datapoints
-            for (var key in groupedData) {
+            for (var i = 0; i < keys.length; i++) {
+                var key = keys[i];
                 datapoints.push({ Name: key, Sum: groupedData[key].Value, Voters: groupedData[key].Voters });
                 winningScore = Math.max(winningScore, groupedData[key].Value);
             }
