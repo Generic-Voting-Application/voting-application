@@ -254,6 +254,8 @@
     <Compile Include="Api\Logging\NLogger.cs" />
     <Compile Include="Api\Models\AccountBindingModels.cs" />
     <Compile Include="Api\Models\AccountViewModels.cs" />
+    <Compile Include="Api\Models\DBViewModels\CopyPollRequestModel.cs" />
+    <Compile Include="Api\Models\DBViewModels\CopyPollResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\DashboardPollResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollRequestResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollUpdateRequest.cs" />

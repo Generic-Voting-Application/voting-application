@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Controllers.API_Controllers;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers
@@ -51,19 +54,88 @@ namespace VotingApplication.Web.Api.Controllers
         }
 
 
-        // POST: api/Dashboard
-        public void Post([FromBody]string value)
+        [HttpPost]
+        [Authorize]
+        public CopyPollResponseModel Copy(CopyPollRequestModel pollCopyRequest)
         {
+            if (pollCopyRequest == null)
+            {
+                this.ThrowError(HttpStatusCode.BadRequest);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                this.ThrowError(HttpStatusCode.BadRequest, ModelState);
+            }
+
+            using (IVotingContext context = _contextFactory.CreateContext())
+            {
+                string userId = User.Identity.GetUserId();
+
+                Poll pollToCopy = context.Polls.SingleOrDefault(p => p.UUID == pollCopyRequest.UUIDToCopy);
+
+                if (pollToCopy == null || pollToCopy.CreatorIdentity != userId)
+                {
+                    this.ThrowError(HttpStatusCode.Forbidden);
+                }
+
+                Poll newPoll = CopyPoll(pollToCopy);
+
+                context.Polls.Add(newPoll);
+                context.SaveChanges();
+
+                return new CopyPollResponseModel()
+                {
+                    newPollId = newPoll.UUID,
+                    newManageId = newPoll.ManageId
+                };
+            }
         }
 
-        // PUT: api/Dashboard/5
-        public void Put(int id, [FromBody]string value)
+        private Poll CopyPoll(Poll pollToCopy)
         {
+            return new Poll()
+            {
+                UUID = Guid.NewGuid(),
+                ManageId = Guid.NewGuid(),
+                Name = "Copy of " + pollToCopy.Name,
+
+                Creator = pollToCopy.Creator,
+                CreatorIdentity = pollToCopy.CreatorIdentity,
+
+                PollType = pollToCopy.PollType,
+
+                MaxPoints = pollToCopy.MaxPoints,
+                MaxPerVote = pollToCopy.MaxPoints,
+
+                InviteOnly = pollToCopy.InviteOnly,
+                NamedVoting = pollToCopy.NamedVoting,
+                OptionAdding = pollToCopy.OptionAdding,
+
+                ExpiryDate = pollToCopy.ExpiryDate,
+                LastUpdated = DateTime.Now,
+                CreatedDate = DateTime.Now,
+
+
+                Options = CopyOptions(pollToCopy.Options)
+            };
         }
 
-        // DELETE: api/Dashboard/5
-        public void Delete(int id)
+        private static List<Option> CopyOptions(IEnumerable<Option> options)
         {
+            if (options == null)
+            {
+                return new List<Option>(0);
+            }
+
+            return options
+                .Select(o => new Option()
+                {
+                    Name = o.Name,
+                    Description = o.Description,
+                    Info = o.Info
+                })
+                .ToList();
         }
     }
 }
