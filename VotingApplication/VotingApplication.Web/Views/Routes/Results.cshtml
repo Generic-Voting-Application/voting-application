@@ -2,7 +2,7 @@
 <div ng-controller="ResultsPageController" ng-app="GVA.Voting">
     <poll-heading></poll-heading>
     <div class="flexbox">
-        <span ng-if="voteCount > 0" id="winner-label" class="centered"><b>Winner{{plural}}:</b> {{winner}}</span>
+        <span ng-if="voteCount > 0" id="winner-label" class="centered"><b>Leader{{plural}}:</b> {{winner}}</span>
         <span ng-if="voteCount == 0">No votes have currently been cast for this poll</span>
     </div>
 
