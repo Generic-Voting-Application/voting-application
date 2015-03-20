@@ -93,7 +93,7 @@
             },
             link: link,
             templateUrl: '../Routes/DatePicker'
-        }
+        };
     }
 
 })();

@@ -27,7 +27,7 @@
 
         function activate() {
             PollService.getPoll(pollId, pollServiceSuccessCallback);
-        };
+        }
 
         function pollServiceSuccessCallback(pollData) {
             $scope.options = pollData.Options;
@@ -57,7 +57,7 @@
                             option.voteValue = dataItem.VoteValue;
                             break;
                         }
-                    };
+                    }
                 });
             });
         }
@@ -78,18 +78,18 @@
             else {
 
                 var votes = options
-                    .filter(function (option) { return option.voteValue })
+                    .filter(function (option) { return option.voteValue; })
                     .map(function (option) {
-                        return {
-                            OptionId: option.Id,
-                            VoteValue: option.voteValue,
-                            VoterName: IdentityService.identity.name
-                        }
-                    });
+                    return {
+                        OptionId: option.Id,
+                        VoteValue: option.voteValue,
+                        VoterName: IdentityService.identity.name
+                    };
+                });
 
                 VoteService.submitVote(pollId, votes, token, submitVoteSuccessCallback);
             }
-        };
+        }
 
         function submitVoteSuccessCallback() {
             window.location = $scope.$parent.resultsLink;
@@ -103,10 +103,10 @@
             }
 
             return unallocatedPoints;
-        };
+        }
 
         function shouldAddPointsBeDisabled(pointValue) {
             return pointValue >= $scope.maxPointsPerOption || $scope.unallocatedPoints() === 0;
-        };
+        }
     }
 })();

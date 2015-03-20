@@ -24,7 +24,7 @@
         function dateFilter(date) {
             var startOfDay = new Date();
             startOfDay.setHours(0);
-            return date >= startOfDay
+            return date >= startOfDay;
         }
 
         function activate() {
@@ -36,7 +36,7 @@
         function updatePollDetails() {
             ManageService.poll = $scope.poll;
             ManageService.updatePoll($routeParams.manageId, $scope.poll);
-        };
+        }
 
         function formatPollExpiryDate() {
             if (!$scope.poll.ExpiryDate) {
@@ -44,11 +44,11 @@
             }
 
             var expiryDate = new Date($scope.poll.ExpiryDate);
-            return moment(expiryDate).format("ddd, MMM Do YYYY, HH:mm")
-        };
+            return moment(expiryDate).format("ddd, MMM Do YYYY, HH:mm");
+        }
 
         function selectTargetText($event) {
             $event.target.select();
-        };
+        }
     }
 })();

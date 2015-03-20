@@ -23,14 +23,14 @@
 
         $scope.voteCount = 0;
 
-        var drawChart = function (data) {
-            
+        var drawChart = function(data) {
+
             // Hack to fix insight's lack of data reloading
             document.getElementById('results-chart').innerHTML = '';
 
             if (!data.length) return;
 
-            var highestDataValue = data.reduce(function (prev, curr) {
+            var highestDataValue = data.reduce(function(prev, curr) {
                 return curr.Sum > prev.Sum ? curr : prev;
             }).Sum;
 
@@ -52,7 +52,7 @@
                 dataUnchanged = dataUnchanged &&
                     chart &&
                     chart.series().length > n &&
-                    JSON.stringify(data[n].Data) == JSON.stringify(chart.series()[n].data.rawData());
+                    JSON.stringify(data[n].Data) === JSON.stringify(chart.series()[n].data.rawData());
             }
 
             //Exit early if data has not changed
@@ -74,36 +74,36 @@
             chart.autoMargin(true);
 
             var allSeries = new insight.RowSeries('Results', new insight.DataSet(data), xAxis, yAxis)
-                    .keyFunction(function (d) {
-                        return d.Name;
-                    })
-                    .valueFunction(function (d) {
-                        return d.Sum;
-                    })
-                    .title('Results')
-                    .tooltipFunction(function (d) {
-                        var voterCount = d.Voters.length;
-                        var votersDisplay = d.Voters;
-                        var addition = "";
+                .keyFunction(function(d) {
+                    return d.Name;
+                })
+                .valueFunction(function(d) {
+                    return d.Sum;
+                })
+                .title('Results')
+                .tooltipFunction(function(d) {
+                    var voterCount = d.Voters.length;
+                    var votersDisplay = d.Voters;
+                    var addition = "";
 
-                        var maxToDisplay = 5;
-                        if (voterCount > maxToDisplay) {
-                            votersDisplay = d.Voters.slice(0, maxToDisplay);
-                            addition = "<br />+ " + (voterCount - maxToDisplay) + " others";
-                        }
+                    var maxToDisplay = 5;
+                    if (voterCount > maxToDisplay) {
+                        votersDisplay = d.Voters.slice(0, maxToDisplay);
+                        addition = "<br />+ " + (voterCount - maxToDisplay) + " others";
+                    }
 
-                        return "<b>" + d.Name + "</b>: " + d.Sum + " votes<br/><br/>" + votersDisplay.join("<br />") + addition;
-                    });
+                    return "<b>" + d.Name + "</b>: " + d.Sum + " votes<br/><br/>" + votersDisplay.join("<br />") + addition;
+                });
 
             chart.series([allSeries]);
 
             // First parameter disables animation
             chart.draw(true);
-        }
+        };
 
-        var reloadData = function () {
+        var reloadData = function() {
             VoteService.getResults(pollId, getResultsSuccessCallback);
-        }
+        };
 
         function getResultsSuccessCallback(data, status) {
 
@@ -116,7 +116,7 @@
             // Group together votes for the same options
             data.forEach(function (d) {
                 if (!(d.OptionName in groupedData)) {
-                    groupedData[d.OptionName] = { Value: 0, Voters: [] }
+                    groupedData[d.OptionName] = { Value: 0, Voters: [] };
                 }
 
                 groupedData[d.OptionName].Value += d.VoteValue;
@@ -129,8 +129,10 @@
             var datapoints = [];
             // Separate into datapoints
             for (var key in groupedData) {
-                datapoints.push({ Name: key, Sum: groupedData[key].Value, Voters: groupedData[key].Voters });
-                winningScore = Math.max(winningScore, groupedData[key].Value);
+                if (groupedData.hasOwnProperty(key)) {
+                    datapoints.push({ Name: key, Sum: groupedData[key].Value, Voters: groupedData[key].Voters });
+                    winningScore = Math.max(winningScore, groupedData[key].Value);
+                }
             }
 
             var winners = datapoints.filter(function (d) {
