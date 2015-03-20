@@ -27,12 +27,6 @@ namespace VotingApplication.Web
             );
 
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
-
-            config.Routes.MapHttpRoute(
                 name: "TokenPollVoteApiRoute",
                 routeTemplate: "api/token/{tokenGuid}/poll/{pollId}/vote/{voteId}",
                 defaults: new { controller = "TokenPollVote", voteId = RouteParameter.Optional }
@@ -72,6 +66,12 @@ namespace VotingApplication.Web
                 name: "PollTokenApiRoute",
                 routeTemplate: "api/poll/{pollId}/token/",
                 defaults: new { controller = "PollToken" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
             );
 
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));

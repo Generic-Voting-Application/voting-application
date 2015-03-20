@@ -17,6 +17,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         public PollController()
         {
         }
+
         public PollController(IContextFactory contextFactory)
             : base(contextFactory)
         {
