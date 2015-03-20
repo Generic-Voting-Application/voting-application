@@ -20,7 +20,7 @@ foreach ($testsuite in $testsuites.testsuites.testsuite) {
         $time = $testsuite.time
         if ($testcase.time) { $time = $testcase.time }
         if ($failed) {
-			$anyFailures = $TRUE
+            $anyFailures = $TRUE
 
             write-host "Failed   $($testcase.name) $($testcase.failure.message)"
             Add-AppveyorTest $testcase.name -Outcome Failed -FileName $testsuite.name -ErrorMessage $testcase.failure.message -Duration $time

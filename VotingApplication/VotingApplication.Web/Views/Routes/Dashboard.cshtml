@@ -1,0 +1,31 @@
+﻿<div ng-controller="DashboardController">
+    <div>
+        <h2>Welcome {{account.email}}</h2>
+    </div>
+
+    <form name="quickPollForm" ng-submit="createPoll(pollQuestion)">
+        <div id="question-block">
+            Your Question <br />
+            <input id="question" placeholder="E.g. Where should we go for lunch?" ng-model="pollQuestion" required />
+        </div>
+
+        <div id="quickpoll-block">
+            <button type="submit" class="inactive-btn btn-medium shadowed" ng-disabled="quickPollForm.$invalid">Create Poll</button>
+        </div>
+    </form>
+    <h2>Your polls</h2>
+    <div ng-repeat="poll in userPolls">
+
+        <div class="poll-panel">
+            <div class="poll-panel-header">
+                <span class="poll-panel-pollName">{{ poll.Name }}</span>
+                <h4>{{ poll.CreatedDate | momentFilter: 'Do MMM YYYY, h:mm a'}}</h4>
+            </div>
+            <div class="poll-panel-buttons">
+                <button class="poll-panel-button" ng-click="navigateToManagePage(poll.ManageId)">Manage</button>
+                <button class="poll-panel-button">Repeat</button>
+            </div>
+
+        </div>
+    </div>
+</div>

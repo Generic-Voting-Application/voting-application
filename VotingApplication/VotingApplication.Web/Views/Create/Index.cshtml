@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html ng-app="GVA.Creation" ng-controller="CreatePageController">
+<head>
+    <title>Vote On</title>
+    @Styles.Render("~/Bundles/StyleLib")
+    @Styles.Render("~/Bundles/CreateStyle")
+    <meta name="viewport" content="initial-scale=1">
+</head>
+<body>
+    <div class="center-panel">
+        <header>
+            <div class="pull-left" id="logo">
+                <a href="/"><img src="/Images/Logo.png" /></a>
+            </div>
+            <div class="pull-right" id="signin-header">
+                <span>
+                    <span ng-show="!account"><a href="#" ng-click="openLoginDialog()">Sign In</a></span>
+                    <span ng-show="account">{{account.email}}</span>
+                    <i class="glyphicon glyphicon-user"></i>
+                    <i class="glyphicon glyphicon-chevron-down" ng-click="toggleAccountControls=!toggleAccountControls"></i>
+                </span>
+                <div class="pull-right account-control-box" ng-show="toggleAccountControls && account">
+                    <div><a href="#">My Account</a></div>
+                    <div><a href="#" ng-click="toggleAccountControls=false;signOut()">Sign Out</a></div>
+                </div>
+            </div>
+        </header>
+        <div class="body-content">
+            <div ng-view></div>
+        </div>
+        <footer><a href="mailto:generic.voting@gmail.com">Contact us</a> | © 2015 – Scott Logic Ltd</footer>
+    </div>
+    @Scripts.Render("~/Bundles/ScriptLib")
+    @Scripts.Render("~/Bundles/Script")
+</body>
+</html>
