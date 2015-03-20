@@ -29,7 +29,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             [TestMethod]
             public void UserWithNoPolls_ReturnsEmptyPollList()
             {
-                var existingPolls = Enumerable.Empty<Poll>();
+                var existingPolls = new InMemoryDbSet<Poll>(clearDownExistingData: true);
 
                 IContextFactory mockContextFactory = CreateContextFactory(existingPolls);
                 DashboardController controller = CreateDashboardController(mockContextFactory);
@@ -46,7 +46,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             [TestMethod]
             public void UserWithPolls_ReturnsAllPolls()
             {
-                var existingPolls = new List<Poll>
+                var existingPolls = new InMemoryDbSet<Poll>(clearDownExistingData: true)
                 {
                     new Poll() { CreatorIdentity = UserId1 },
                     new Poll() { CreatorIdentity = UserId1 },
@@ -70,9 +70,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public class CopyTests : DashboardControllerTests
         {
             [TestMethod]
+            [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
             public void NoCopyPollRequest_ThrowsBadRequestException()
             {
-                var existingPolls = Enumerable.Empty<Poll>();
+                var existingPolls = new InMemoryDbSet<Poll>(clearDownExistingData: true);
 
                 IContextFactory mockContextFactory = CreateContextFactory(existingPolls);
                 DashboardController controller = CreateDashboardController(mockContextFactory);
@@ -80,23 +81,17 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.User = CreateAuthenticatedUser(UserId1);
 
 
-                try
-                {
-                    controller.Copy(null);
-                }
-                catch (HttpResponseException exception)
-                {
-                    Assert.AreEqual(HttpStatusCode.BadRequest, exception.Response.StatusCode);
-                }
+                controller.Copy(null);
             }
 
             [TestMethod]
+            [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
             public void UnknownPollToCopy_ThrowsBadRequestException()
             {
                 Guid pollId = new Guid("00DB2F1B-C4F5-44D3-960C-386CEB9690C4");
                 Guid unknownPollId = new Guid("F5F5AF58-4190-4275-8178-FED76105F6BB");
 
-                var existingPolls = new List<Poll>
+                var existingPolls = new InMemoryDbSet<Poll>(clearDownExistingData: true)
                 {
                     new Poll() { UUID = pollId }
                 };
@@ -108,23 +103,16 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
                 var request = new CopyPollRequestModel() { UUIDToCopy = unknownPollId };
 
-
-                try
-                {
-                    controller.Copy(request);
-                }
-                catch (HttpResponseException exception)
-                {
-                    Assert.AreEqual(HttpStatusCode.BadRequest, exception.Response.StatusCode);
-                }
+                controller.Copy(request);
             }
 
             [TestMethod]
+            [ExpectedHttpResponseException(HttpStatusCode.Forbidden)]
             public void PollDoesNotBelongToUser_ThrowsForbiddenException()
             {
                 Guid pollId = new Guid("00DB2F1B-C4F5-44D3-960C-386CEB9690C4");
 
-                var existingPolls = new List<Poll>()
+                var existingPolls = new InMemoryDbSet<Poll>(clearDownExistingData: true)
                 {
                     new Poll() { CreatorIdentity = UserId1, UUID = pollId }
                 };
@@ -136,29 +124,72 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
                 var request = new CopyPollRequestModel() { UUIDToCopy = pollId };
 
+                controller.Copy(request);
+            }
 
-                try
+            [TestMethod]
+            public void AddsNewPoll()
+            {
+                Guid pollId = new Guid("00DB2F1B-C4F5-44D3-960C-386CEB9690C4");
+
+                var existingPoll = new Poll() { CreatorIdentity = UserId1, UUID = pollId };
+
+                var dbPolls = new InMemoryDbSet<Poll>(clearDownExistingData: true)
                 {
-                    controller.Copy(request);
-                }
-                catch (HttpResponseException exception)
+                    existingPoll
+                };
+
+                IContextFactory mockContextFactory = CreateContextFactory(dbPolls);
+                DashboardController controller = CreateDashboardController(mockContextFactory);
+
+                controller.User = CreateAuthenticatedUser(UserId1);
+
+                var request = new CopyPollRequestModel() { UUIDToCopy = pollId };
+
+
+                controller.Copy(request);
+
+                Assert.AreEqual(2, dbPolls.Count());
+            }
+
+            [TestMethod]
+            public void NewPollNameIsOldPollNamePrependedWithCopyOf()
+            {
+                const string pollName = "Where shall we go today?";
+                const string copiedPollName = "Copy of Where shall we go today?";
+
+                Guid pollId = new Guid("00DB2F1B-C4F5-44D3-960C-386CEB9690C4");
+
+                var existingPoll = new Poll() { CreatorIdentity = UserId1, UUID = pollId, Name = pollName };
+
+                var dbPolls = new InMemoryDbSet<Poll>(clearDownExistingData: true)
                 {
-                    Assert.AreEqual(HttpStatusCode.Forbidden, exception.Response.StatusCode);
-                }
+                    existingPoll
+                };
+
+                IContextFactory mockContextFactory = CreateContextFactory(dbPolls);
+                DashboardController controller = CreateDashboardController(mockContextFactory);
+
+                controller.User = CreateAuthenticatedUser(UserId1);
+
+                var request = new CopyPollRequestModel() { UUIDToCopy = pollId };
+
+
+                controller.Copy(request);
+
+                List<Poll> polls = dbPolls.ToList();
+                Poll copiedPoll = polls[1];
+
+
+                Assert.AreEqual(copiedPollName, copiedPoll.Name);
             }
         }
 
-        private IContextFactory CreateContextFactory(IEnumerable<Poll> polls)
+        private IContextFactory CreateContextFactory(InMemoryDbSet<Poll> polls)
         {
-            var pollsToAdd = new InMemoryDbSet<Poll>(clearDownExistingData: true);
-            foreach (Poll poll in polls)
-            {
-                pollsToAdd.Add(poll);
-            }
-
             var mockContext = new Mock<IVotingContext>();
             mockContext.Setup(c => c.Polls)
-                .Returns(pollsToAdd);
+                .Returns(polls);
 
             var mockContextFactory = new Mock<IContextFactory>();
             mockContextFactory
