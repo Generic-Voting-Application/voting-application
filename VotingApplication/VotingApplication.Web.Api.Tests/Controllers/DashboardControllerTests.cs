@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -240,9 +241,104 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 Assert.AreEqual(expiryDate, copiedPoll.ExpiryDate);
                 Assert.AreEqual(optionAdding, copiedPoll.OptionAdding);
             }
+
+            [TestMethod]
+            public void CopiedPollHasSameOptionsAsOriginal()
+            {
+                Guid pollId = new Guid("00DB2F1B-C4F5-44D3-960C-386CEB9690C4");
+
+                var options = new List<Option>()
+                {
+                    new Option()
+                    {
+                        Name = "One",
+                        Description = "Option 1",
+                        Info = "This is number 1"
+                    },
+                    new Option()
+                    {
+                        Name = "Two",
+                        Description = "Option 2",
+                        Info = "This is number 2"
+                    },
+                    new Option()
+                    {
+                        Name = "Three",
+                        Description = "Option 3",
+                        Info = "This is number 3"
+                    }
+                };
+
+                var existingPoll = new Poll()
+                {
+                    UUID = pollId,
+                    CreatorIdentity = UserId1,
+                    Options = options
+                };
+
+                var dbPolls = new InMemoryDbSet<Poll>(clearDownExistingData: true)
+                {
+                    existingPoll
+                };
+
+                IContextFactory mockContextFactory = CreateContextFactory(dbPolls);
+                DashboardController controller = CreateDashboardController(mockContextFactory);
+
+                controller.User = CreateAuthenticatedUser(UserId1);
+
+                var request = new CopyPollRequestModel() { UUIDToCopy = pollId };
+
+
+                controller.Copy(request);
+
+                List<Poll> polls = dbPolls.ToList();
+                List<Option> originalPollOptions = polls[0].Options;
+                List<Option> copiedPollOptions = polls[1].Options;
+
+
+                Assert.AreEqual(originalPollOptions[0].Name, copiedPollOptions[0].Name);
+                Assert.AreEqual(originalPollOptions[0].Description, copiedPollOptions[0].Description);
+                Assert.AreEqual(originalPollOptions[0].Info, copiedPollOptions[0].Info);
+
+                Assert.AreEqual(originalPollOptions[1].Name, copiedPollOptions[1].Name);
+                Assert.AreEqual(originalPollOptions[1].Description, copiedPollOptions[1].Description);
+                Assert.AreEqual(originalPollOptions[1].Info, copiedPollOptions[1].Info);
+
+                Assert.AreEqual(originalPollOptions[2].Name, copiedPollOptions[2].Name);
+                Assert.AreEqual(originalPollOptions[2].Description, copiedPollOptions[2].Description);
+                Assert.AreEqual(originalPollOptions[2].Info, copiedPollOptions[2].Info);
+            }
+
+            [TestMethod]
+            public void ResponseContainsNewUUIDAndManageId()
+            {
+                Guid pollId = new Guid("00DB2F1B-C4F5-44D3-960C-386CEB9690C4");
+
+                var existingPoll = new Poll() { CreatorIdentity = UserId1, UUID = pollId };
+
+                var dbPolls = new InMemoryDbSet<Poll>(clearDownExistingData: true)
+                {
+                    existingPoll
+                };
+
+                IContextFactory mockContextFactory = CreateContextFactory(dbPolls);
+                DashboardController controller = CreateDashboardController(mockContextFactory);
+
+                controller.User = CreateAuthenticatedUser(UserId1);
+
+                var request = new CopyPollRequestModel() { UUIDToCopy = pollId };
+
+
+                CopyPollResponseModel response = controller.Copy(request);
+
+                Poll copiedPoll = dbPolls.ToList()[1];
+
+                Assert.AreEqual(copiedPoll.UUID, response.newPollId);
+                Assert.AreEqual(copiedPoll.ManageId, response.newManageId);
+            }
         }
 
-        private IContextFactory CreateContextFactory(InMemoryDbSet<Poll> polls)
+        private static IContextFactory CreateContextFactory(IDbSet<Poll> polls)
         {
             var mockContext = new Mock<IVotingContext>();
             mockContext.Setup(c => c.Polls)
@@ -256,7 +352,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             return mockContextFactory.Object;
         }
 
-        private DashboardController CreateDashboardController(IContextFactory contextFactory)
+        public DashboardController CreateDashboardController(IContextFactory contextFactory)
         {
             return new DashboardController(contextFactory)
             {
@@ -265,7 +361,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             };
         }
 
-        private IPrincipal CreateAuthenticatedUser(string userId)
+        public IPrincipal CreateAuthenticatedUser(string userId)
         {
             var claim = new Claim("test", userId);
             var mockIdentity = new Mock<ClaimsIdentity>();
