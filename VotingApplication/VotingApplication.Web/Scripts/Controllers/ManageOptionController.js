@@ -15,9 +15,9 @@
         $scope.remove = removePollOption;
         $scope.clear = clearPollOption;
         $scope.add = addPollOption;
+        $scope.catchDirtyInput = catchDirtyInput;
 
         activate();
-
 
         function activate() {
             ManageService.registerPollObserver(function () {
@@ -47,7 +47,12 @@
             };
 
             $scope.poll.Options.push(newOption);
-            $scope.updatePoll();
+        }
+
+        function catchDirtyInput() {
+            if ($scope.newOptionForm.$dirty && $scope.newOptionForm.$valid) {
+                addPollOption($scope.newOptionForm);
+            }
         }
 
         function updatePollDetails() {
