@@ -24,5 +24,5 @@
                 $scope.account = AccountService.account;
             });
         }
-    };
+    }
 })();

@@ -71,7 +71,7 @@
             },
             link: link,
             templateUrl: '../Routes/TimePicker'
-        }
+        };
     }
 
 })();

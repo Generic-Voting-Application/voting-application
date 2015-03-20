@@ -57,7 +57,7 @@
         function sendInvitations() {
             // Parse anything still in the field
             $scope.inviteString += ';';
-            emailUpdated()
+            emailUpdated();
 
             updatePoll();
             returnToManage();
@@ -78,17 +78,17 @@
         }
 
         function activate() {
-            ManageService.registerPollObserver(function () {
+            ManageService.registerPollObserver(function() {
                 $scope.poll = ManageService.poll;
-            })
+            });
 
             var inputField = document.getElementById("new-voter");
             inputField.addEventListener("keydown", function (e) {
-                if (e.keyCode == 13) { // User pressed "return key"
+                if (e.keyCode === 13) { // User pressed "return key"
                     $scope.inviteString += '\n';
                     emailUpdated();
                 }
             });
         }
-    };
+    }
 })();
