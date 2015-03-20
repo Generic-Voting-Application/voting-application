@@ -183,6 +183,63 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
                 Assert.AreEqual(copiedPollName, copiedPoll.Name);
             }
+
+            [TestMethod]
+            public void CopiedPollHasSameValuesAsOriginal()
+            {
+                Guid pollId = new Guid("00DB2F1B-C4F5-44D3-960C-386CEB9690C4");
+                const string creator = "Someone";
+                const PollType pollType = PollType.UpDown;
+                const int maxPoints = 9;
+                const int maxPerVote = 2;
+                const bool inviteOnly = true;
+                const bool namedVoting = true;
+                DateTimeOffset? expiryDate = new DateTimeOffset(2015, 6, 2, 14, 2, 56, new TimeSpan());
+                const bool optionAdding = true;
+
+                var existingPoll = new Poll()
+                {
+                    UUID = pollId,
+                    Creator = creator,
+                    CreatorIdentity = UserId1,
+                    PollType = pollType,
+                    MaxPoints = maxPoints,
+                    MaxPerVote = maxPerVote,
+                    InviteOnly = inviteOnly,
+                    NamedVoting = namedVoting,
+                    ExpiryDate = expiryDate,
+                    OptionAdding = optionAdding
+                };
+
+                var dbPolls = new InMemoryDbSet<Poll>(clearDownExistingData: true)
+                {
+                    existingPoll
+                };
+
+                IContextFactory mockContextFactory = CreateContextFactory(dbPolls);
+                DashboardController controller = CreateDashboardController(mockContextFactory);
+
+                controller.User = CreateAuthenticatedUser(UserId1);
+
+                var request = new CopyPollRequestModel() { UUIDToCopy = pollId };
+
+
+                controller.Copy(request);
+
+                List<Poll> polls = dbPolls.ToList();
+                Poll copiedPoll = polls[1];
+
+
+                Assert.AreEqual(creator, copiedPoll.Creator);
+                Assert.AreEqual(UserId1, copiedPoll.CreatorIdentity);
+                Assert.AreEqual(pollType, copiedPoll.PollType);
+                Assert.AreEqual(maxPoints, copiedPoll.MaxPoints);
+                Assert.AreEqual(maxPerVote, copiedPoll.MaxPerVote);
+                Assert.AreEqual(inviteOnly, copiedPoll.InviteOnly);
+                Assert.AreEqual(namedVoting, copiedPoll.NamedVoting);
+                Assert.AreEqual(expiryDate, copiedPoll.ExpiryDate);
+                Assert.AreEqual(optionAdding, copiedPoll.OptionAdding);
+            }
         }
 
         private IContextFactory CreateContextFactory(InMemoryDbSet<Poll> polls)

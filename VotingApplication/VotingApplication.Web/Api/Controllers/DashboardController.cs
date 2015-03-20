@@ -112,7 +112,7 @@ namespace VotingApplication.Web.Api.Controllers
                 PollType = pollToCopy.PollType,
 
                 MaxPoints = pollToCopy.MaxPoints,
-                MaxPerVote = pollToCopy.MaxPoints,
+                MaxPerVote = pollToCopy.MaxPerVote,
 
                 InviteOnly = pollToCopy.InviteOnly,
                 NamedVoting = pollToCopy.NamedVoting,
