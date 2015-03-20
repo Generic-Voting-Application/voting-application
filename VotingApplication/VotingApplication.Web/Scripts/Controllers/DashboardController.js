@@ -13,6 +13,7 @@
         $scope.createPoll = createNewPoll;
         $scope.getUserPolls = getUserPolls;
         $scope.navigateToManagePage = navigateToManagePage;
+        $scope.copyPoll = copyPoll;
 
         $scope.userPolls = {};
 
@@ -45,6 +46,13 @@
 
         function navigateToManagePage(manageId) {
             window.location.href = '/#/Manage/' + manageId;
+        }
+
+        function copyPoll(pollId) {
+            PollService.copyPoll(pollId)
+                .success(function (data) {
+                    navigateToManagePage(data.newManageId);
+                });
         }
     }
 

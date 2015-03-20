@@ -400,7 +400,6 @@
     <Content Include="Views\Routes\PollTypeChange.cshtml" />
     <Content Include="Scripts\Directives\UnlockableOption.html" />
     <Content Include="Scripts\Directives\PollHeading.html" />
-    <Content Include="Views\Routes\Dashboard.cshtml" />
     <Content Include="Views\Routes\HomePage.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
