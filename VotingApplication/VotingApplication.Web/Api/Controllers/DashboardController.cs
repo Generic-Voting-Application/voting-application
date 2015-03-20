@@ -74,7 +74,13 @@ namespace VotingApplication.Web.Api.Controllers
 
                 Poll pollToCopy = context.Polls.SingleOrDefault(p => p.UUID == pollCopyRequest.UUIDToCopy);
 
-                if (pollToCopy == null || pollToCopy.CreatorIdentity != userId)
+                if (pollToCopy == null)
+                {
+                    this.ThrowError(HttpStatusCode.BadRequest);
+                }
+
+
+                if (pollToCopy.CreatorIdentity != userId)
                 {
                     this.ThrowError(HttpStatusCode.Forbidden);
                 }
@@ -92,7 +98,7 @@ namespace VotingApplication.Web.Api.Controllers
             }
         }
 
-        private Poll CopyPoll(Poll pollToCopy)
+        private static Poll CopyPoll(Poll pollToCopy)
         {
             return new Poll()
             {

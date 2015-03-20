@@ -1,8 +1,10 @@
 ﻿using FakeDbSet;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -17,7 +19,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
     [TestClass]
     public class DashboardControllerTests
     {
-        const string UserId = "4AEAE121-D540-48BF-907A-AA454248C0C0";
+        const string UserId1 = "4AEAE121-D540-48BF-907A-AA454248C0C0";
+        const string UserId2 = "C9FB9965-98CD-4D1A-B530-10E8E8D26AFB";
+
 
         [TestClass]
         public class PollsTests : DashboardControllerTests
@@ -30,10 +34,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory mockContextFactory = CreateContextFactory(existingPolls);
                 DashboardController controller = CreateDashboardController(mockContextFactory);
 
-                controller.User = CreateAuthenticatedUser(userId: "some new id that cannot exist");
+                controller.User = CreateAuthenticatedUser(UserId1);
 
 
-                var response = controller.Polls();
+                List<DashboardPollResponseModel> response = controller.Polls();
 
 
                 CollectionAssert.AreEquivalent(new List<Poll>(), response);
@@ -44,21 +48,103 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             {
                 var existingPolls = new List<Poll>
                 {
-                    Mock.Of<Poll>(p => p.CreatorIdentity == UserId), 
-                    Mock.Of<Poll>(p => p.CreatorIdentity == UserId), 
-                    Mock.Of<Poll>(p => p.CreatorIdentity == UserId)
+                    new Poll() { CreatorIdentity = UserId1 },
+                    new Poll() { CreatorIdentity = UserId1 },
+                    new Poll() { CreatorIdentity = UserId1 }
                 };
 
                 IContextFactory mockContextFactory = CreateContextFactory(existingPolls);
                 DashboardController controller = CreateDashboardController(mockContextFactory);
 
-                controller.User = CreateAuthenticatedUser(UserId);
+                controller.User = CreateAuthenticatedUser(UserId1);
 
 
                 List<DashboardPollResponseModel> response = controller.Polls();
 
 
                 Assert.AreEqual(3, response.Count);
+            }
+        }
+
+        [TestClass]
+        public class CopyTests : DashboardControllerTests
+        {
+            [TestMethod]
+            public void NoCopyPollRequest_ThrowsBadRequestException()
+            {
+                var existingPolls = Enumerable.Empty<Poll>();
+
+                IContextFactory mockContextFactory = CreateContextFactory(existingPolls);
+                DashboardController controller = CreateDashboardController(mockContextFactory);
+
+                controller.User = CreateAuthenticatedUser(UserId1);
+
+
+                try
+                {
+                    controller.Copy(null);
+                }
+                catch (HttpResponseException exception)
+                {
+                    Assert.AreEqual(HttpStatusCode.BadRequest, exception.Response.StatusCode);
+                }
+            }
+
+            [TestMethod]
+            public void UnknownPollToCopy_ThrowsBadRequestException()
+            {
+                Guid pollId = new Guid("00DB2F1B-C4F5-44D3-960C-386CEB9690C4");
+                Guid unknownPollId = new Guid("F5F5AF58-4190-4275-8178-FED76105F6BB");
+
+                var existingPolls = new List<Poll>
+                {
+                    new Poll() { UUID = pollId }
+                };
+
+                IContextFactory mockContextFactory = CreateContextFactory(existingPolls);
+                DashboardController controller = CreateDashboardController(mockContextFactory);
+
+                controller.User = CreateAuthenticatedUser(UserId1);
+
+                var request = new CopyPollRequestModel() { UUIDToCopy = unknownPollId };
+
+
+                try
+                {
+                    controller.Copy(request);
+                }
+                catch (HttpResponseException exception)
+                {
+                    Assert.AreEqual(HttpStatusCode.BadRequest, exception.Response.StatusCode);
+                }
+            }
+
+            [TestMethod]
+            public void PollDoesNotBelongToUser_ThrowsForbiddenException()
+            {
+                Guid pollId = new Guid("00DB2F1B-C4F5-44D3-960C-386CEB9690C4");
+
+                var existingPolls = new List<Poll>()
+                {
+                    new Poll() { CreatorIdentity = UserId1, UUID = pollId }
+                };
+
+                IContextFactory mockContextFactory = CreateContextFactory(existingPolls);
+                DashboardController controller = CreateDashboardController(mockContextFactory);
+
+                controller.User = CreateAuthenticatedUser(UserId2);
+
+                var request = new CopyPollRequestModel() { UUIDToCopy = pollId };
+
+
+                try
+                {
+                    controller.Copy(request);
+                }
+                catch (HttpResponseException exception)
+                {
+                    Assert.AreEqual(HttpStatusCode.Forbidden, exception.Response.StatusCode);
+                }
             }
         }
 
