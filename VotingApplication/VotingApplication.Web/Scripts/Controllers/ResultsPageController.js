@@ -130,7 +130,6 @@
             var winningScore = 0;
 
             var datapoints = [];
-            var keys = Object.keys(groupedData);
 
             // Separate into datapoints
             for (var key in groupedData) {
