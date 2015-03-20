@@ -23,14 +23,14 @@
 
         $scope.voteCount = 0;
 
-        var drawChart = function(data) {
+        var drawChart = function (data) {
 
             // Hack to fix insight's lack of data reloading
             document.getElementById('results-chart').innerHTML = '';
 
-            if (!data.length) return;
+            if (!data.length) { return; }
 
-            var highestDataValue = data.reduce(function(prev, curr) {
+            var highestDataValue = data.reduce(function (prev, curr) {
                 return curr.Sum > prev.Sum ? curr : prev;
             }).Sum;
 
@@ -57,7 +57,7 @@
 
             //Exit early if data has not changed
             if (dataUnchanged)
-                return;
+            { return; }
 
             // Fixed height for column chart, but scale to number of rows for bar charts
             var chartHeight = Math.min(data.length * 50 + 100, 600);
@@ -74,14 +74,14 @@
             chart.autoMargin(true);
 
             var allSeries = new insight.RowSeries('Results', new insight.DataSet(data), xAxis, yAxis)
-                .keyFunction(function(d) {
+                .keyFunction(function (d) {
                     return d.Name;
                 })
-                .valueFunction(function(d) {
+                .valueFunction(function (d) {
                     return d.Sum;
                 })
                 .title('Results')
-                .tooltipFunction(function(d) {
+                .tooltipFunction(function (d) {
                     var voterCount = d.Voters.length;
                     var votersDisplay = d.Voters;
                     var addition = "";
@@ -101,7 +101,7 @@
             chart.draw(true);
         };
 
-        var reloadData = function() {
+        var reloadData = function () {
             VoteService.getResults(pollId, getResultsSuccessCallback);
         };
 
