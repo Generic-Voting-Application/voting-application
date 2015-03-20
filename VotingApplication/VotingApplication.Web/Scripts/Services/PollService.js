@@ -46,7 +46,7 @@
 
             var promise = $http({
                 method: 'GET',
-                url: '/api/poll/',
+                url: '/api/dashboard/polls',
                 headers: { 'Authorization': 'Bearer ' + AccountService.account.token }
             });
 

@@ -69,6 +69,12 @@ namespace VotingApplication.Web
             );
 
             config.Routes.MapHttpRoute(
+                name: "DashboardRoute",
+                routeTemplate: "api/dashboard/{action}/{id}",
+                defaults: new { controller = "Dashboard", id = RouteParameter.Optional }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
