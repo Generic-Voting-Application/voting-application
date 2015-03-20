@@ -29,7 +29,7 @@
 
         function formatExpiry() {
             if ($scope.poll && $scope.poll.ExpiryDate){
-                return moment($scope.poll.ExpiryDate).format("dddd, MMMM Do YYYY, HH:mm");
+                return moment($scope.poll.ExpiryDate).format('dddd, MMMM Do YYYY, HH:mm');
             }
             return 'Never';
         }

@@ -15,7 +15,7 @@
         var chart;
 
         // Turn "/#/results/abc/123" into "/#/voting/abc/123"
-        $scope.votingLink = '#/Vote/' + pollId + "/" + tokenId;
+        $scope.votingLink = '#/Vote/' + pollId + '/' + tokenId;
 
         $scope.winner = 'Lorem';
         //Whether or not we have an "s" on the end of "Winner"
@@ -87,15 +87,15 @@
                 .tooltipFunction(function (d) {
                     var voterCount = d.Voters.length;
                     var votersDisplay = d.Voters;
-                    var addition = "";
+                    var addition = '';
 
                     var maxToDisplay = 5;
                     if (voterCount > maxToDisplay) {
                         votersDisplay = d.Voters.slice(0, maxToDisplay);
-                        addition = "<br />+ " + (voterCount - maxToDisplay) + " others";
+                        addition = '<br />+ ' + (voterCount - maxToDisplay) + ' others';
                     }
 
-                    return "<b>" + d.Name + "</b>: " + d.Sum + " votes<br/><br/>" + votersDisplay.join("<br />") + addition;
+                    return '<b>' + d.Name + '</b>: ' + d.Sum + ' votes<br/><br/>' + votersDisplay.join('<br />') + addition;
                 });
 
             chart.series([allSeries]);
@@ -146,7 +146,7 @@
 
             $scope.winner = winners.map(function (d) {
                 return d.Name;
-            }).join(", ");
+            }).join(', ');
 
             $scope.plural = (winners.length > 1) ? 's (Draw)' : '';
 
