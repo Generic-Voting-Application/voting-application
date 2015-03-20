@@ -701,6 +701,7 @@
     <PreDefined>
       <string>angular</string>
       <string>insight</string>
+      <string>moment</string>
     </PreDefined>
   </JSLintOptions>
   <BuildFileTypes>JS</BuildFileTypes>

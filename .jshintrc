@@ -57,6 +57,7 @@
     "globals": {
         "angular": false,
         "$": false,
-        "insight": false
+        "insight": false,
+        "moment": false
     }
 }

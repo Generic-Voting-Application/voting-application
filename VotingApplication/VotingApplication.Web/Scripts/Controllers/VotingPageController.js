@@ -13,7 +13,7 @@
         var pollId = $routeParams['pollId'];
         var tokenId = $routeParams['tokenId'] || '';
 
-        $scope.resultsLink = '#/Results/' + pollId + "/" + tokenId;
+        $scope.resultsLink = '#/Results/' + pollId + '/' + tokenId;
         $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
         $scope.logoutIdentity = IdentityService.clearIdentityName;
         $scope.gvaExpiredCallback = redirectIfExpired;

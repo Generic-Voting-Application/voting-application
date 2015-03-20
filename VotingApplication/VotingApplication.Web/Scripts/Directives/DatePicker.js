@@ -33,7 +33,7 @@
             }
 
             function activate() {
-                scope.$watch("ngModel", function () {
+                scope.$watch('ngModel', function () {
                     selectedDate = scope.ngModel ? moment(scope.ngModel) : moment();
                     displayDate = moment(selectedDate);
                     updateDisplay(displayDate);

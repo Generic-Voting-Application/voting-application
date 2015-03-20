@@ -6,5 +6,4 @@
                 return moment(input).format(format);
             };
         });
-
 })();

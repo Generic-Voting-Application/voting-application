@@ -44,7 +44,7 @@
             }
 
             var expiryDate = new Date($scope.poll.ExpiryDate);
-            return moment(expiryDate).format("ddd, MMM Do YYYY, HH:mm");
+            return moment(expiryDate).format('ddd, MMM Do YYYY, HH:mm');
         }
 
         function selectTargetText($event) {
