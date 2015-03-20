@@ -78,7 +78,7 @@
         }
 
         function activate() {
-            ManageService.registerPollObserver(function () {
+            ManageService.registerPollObserver(function() {
                 $scope.poll = ManageService.poll;
             });
 

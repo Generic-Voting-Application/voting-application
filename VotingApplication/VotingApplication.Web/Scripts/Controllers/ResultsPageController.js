@@ -77,26 +77,26 @@
             chart.autoMargin(true);
 
             var allSeries = new insight.RowSeries('Results', new insight.DataSet(data), xAxis, yAxis)
-                    .keyFunction(function (d) {
-                        return d.Name;
-                    })
-                    .valueFunction(function (d) {
-                        return d.Sum;
-                    })
-                    .title('Results')
-                    .tooltipFunction(function (d) {
-                        var voterCount = d.Voters.length;
-                        var votersDisplay = d.Voters;
-                        var addition = "";
+                .keyFunction(function (d) {
+                    return d.Name;
+                })
+                .valueFunction(function (d) {
+                    return d.Sum;
+                })
+                .title('Results')
+                .tooltipFunction(function (d) {
+                    var voterCount = d.Voters.length;
+                    var votersDisplay = d.Voters;
+                    var addition = "";
 
-                        var maxToDisplay = 5;
-                        if (voterCount > maxToDisplay) {
-                            votersDisplay = d.Voters.slice(0, maxToDisplay);
-                            addition = "<br />+ " + (voterCount - maxToDisplay) + " others";
-                        }
+                    var maxToDisplay = 5;
+                    if (voterCount > maxToDisplay) {
+                        votersDisplay = d.Voters.slice(0, maxToDisplay);
+                        addition = "<br />+ " + (voterCount - maxToDisplay) + " others";
+                    }
 
-                        return "<b>" + d.Name + "</b>: " + d.Sum + " votes<br/><br/>" + votersDisplay.join("<br />") + addition;
-                    });
+                    return "<b>" + d.Name + "</b>: " + d.Sum + " votes<br/><br/>" + votersDisplay.join("<br />") + addition;
+                });
 
             chart.series([allSeries]);
 
@@ -133,11 +133,12 @@
             var keys = Object.keys(groupedData);
 
             // Separate into datapoints
-            for (var i = 0; i < keys.length; i++) {
-                var key = keys[i];
-                datapoints.push({ Name: key, Sum: groupedData[key].Value, Voters: groupedData[key].Voters });
-                winningScore = Math.max(winningScore, groupedData[key].Value);
-            };
+            for (var key in groupedData) {
+                if (groupedData.hasOwnProperty(key)) {
+                    datapoints.push({ Name: key, Sum: groupedData[key].Value, Voters: groupedData[key].Voters });
+                    winningScore = Math.max(winningScore, groupedData[key].Value);
+                }
+            }
 
             var winners = datapoints.filter(function (d) {
                 return d.Sum === winningScore;

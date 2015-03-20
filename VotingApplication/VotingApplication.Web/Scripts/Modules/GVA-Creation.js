@@ -31,8 +31,8 @@
                 .when('/Account/ResetPassword', {
                     templateUrl: '../Routes/AccountResetPassword'
                 })
-               .otherwise({
-                   templateUrl: '../Routes/HomePage'
-               });
+                .otherwise({
+                    templateUrl: '../Routes/HomePage'
+                });
         }]);
 })();
