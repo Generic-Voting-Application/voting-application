@@ -12,8 +12,6 @@ namespace VotingApplication.Data.Model
         public String VoterName { get; set; }
 
         public Poll Poll { get; set; }
-
-        public long TokenId { get; set; }
         public Token Token { get; set; }
     }
 }
