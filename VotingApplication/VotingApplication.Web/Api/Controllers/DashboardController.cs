@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -72,7 +73,10 @@ namespace VotingApplication.Web.Api.Controllers
             {
                 string userId = User.Identity.GetUserId();
 
-                Poll pollToCopy = context.Polls.SingleOrDefault(p => p.UUID == pollCopyRequest.UUIDToCopy);
+                Poll pollToCopy = context
+                    .Polls
+                    .Include(p => p.Options)
+                    .SingleOrDefault(p => p.UUID == pollCopyRequest.UUIDToCopy);
 
                 if (pollToCopy == null)
                 {
