@@ -4,16 +4,6 @@
             Poll Management
         </h2>
         <div class="manage-section">
-            <span id="poll-link-go-btn" class="pull-right"><a href="/Poll/#/Vote/{{poll.UUID}}"><button class="go-btn">Go</button></a></span>
-            <div class="poll-link-area">
-                <label for="poll-link">Poll Link</label>
-                <div>
-                    <input class="full-width" id="poll-link" ng-model="poll.UUID" ng-click="selectText($event)" />
-                </div>
-            </div>
-
-        </div>
-        <div class="manage-section">
             <div>
                 <span class="glyphicon glyphicon-question-sign pull-left" aria-hidden="true"></span>
                 <h4 class="icon-padded-left">Question:</h4>
@@ -75,6 +65,13 @@
                     <span class="icon-padded-left">{{formatPollExpiry()}}</span>
                     <span class="pull-right"><a href="#/Manage/{{manageId}}/Expiry">Edit</a></span>
                 </span>
+            </div>
+        </div>
+        <div class="manage-section flexbox">
+            <div class="centered">
+                <a href="/Poll/#/Vote/{{poll.UUID}}">
+                    <button class="active-btn btn-large">Go to poll</button>
+                </a>
             </div>
         </div>
     </div>

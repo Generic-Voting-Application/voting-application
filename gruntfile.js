@@ -9,7 +9,7 @@ module.exports = function(grunt) {
         ],
         options: {
             jshintrc: true,
-            force: true
+            force: false
         }
     }
 });

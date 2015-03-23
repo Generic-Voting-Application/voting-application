@@ -65,19 +65,19 @@
                 var votes = options
                         .filter(function (option) { return option.voteValue; })
                         .map(function (option) {
-                    return {
-                        OptionId: option.Id,
-                        VoteValue: option.voteValue,
-                        VoterName: IdentityService.identity.name
-                    };
-                });
+                            return {
+                                OptionId: option.Id,
+                                VoteValue: option.voteValue,
+                                VoterName: IdentityService.identity.name
+                            };
+                        });
 
                 VoteService.submitVote(pollId, votes, token, submitVoteSuccessCallback);
             }
         }
 
         function openLoginDialogCallback() {
-            $scope.submitVote(options);
+            $scope.submitVote($scope.options);
         }
 
         function submitVoteSuccessCallback(data) {

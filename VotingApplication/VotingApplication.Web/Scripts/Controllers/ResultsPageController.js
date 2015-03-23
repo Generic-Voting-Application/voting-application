@@ -15,7 +15,7 @@
         var chart;
 
         // Turn "/#/results/abc/123" into "/#/voting/abc/123"
-        $scope.votingLink = '#/Vote/' + pollId + "/" + tokenId;
+        $scope.votingLink = '#/Vote/' + pollId + '/' + tokenId;
 
         $scope.winner = 'Lorem';
         //Whether or not we have an "s" on the end of "Winner"
@@ -28,7 +28,9 @@
             // Hack to fix insight's lack of data reloading
             document.getElementById('results-chart').innerHTML = '';
 
-            if (!data.length) { return; }
+            if (!data.length) {
+                return;
+            }
 
             var highestDataValue = data.reduce(function (prev, curr) {
                 return curr.Sum > prev.Sum ? curr : prev;
@@ -56,8 +58,9 @@
             }
 
             //Exit early if data has not changed
-            if (dataUnchanged)
-            { return; }
+            if (dataUnchanged) {
+                return;
+            }
 
             // Fixed height for column chart, but scale to number of rows for bar charts
             var chartHeight = Math.min(data.length * 50 + 100, 600);
@@ -84,15 +87,15 @@
                 .tooltipFunction(function (d) {
                     var voterCount = d.Voters.length;
                     var votersDisplay = d.Voters;
-                    var addition = "";
+                    var addition = '';
 
                     var maxToDisplay = 5;
                     if (voterCount > maxToDisplay) {
                         votersDisplay = d.Voters.slice(0, maxToDisplay);
-                        addition = "<br />+ " + (voterCount - maxToDisplay) + " others";
+                        addition = '<br />+ ' + (voterCount - maxToDisplay) + ' others';
                     }
 
-                    return "<b>" + d.Name + "</b>: " + d.Sum + " votes<br/><br/>" + votersDisplay.join("<br />") + addition;
+                    return '<b>' + d.Name + '</b>: ' + d.Sum + ' votes<br/><br/>' + votersDisplay.join('<br />') + addition;
                 });
 
             chart.series([allSeries]);
@@ -127,6 +130,7 @@
             var winningScore = 0;
 
             var datapoints = [];
+
             // Separate into datapoints
             for (var key in groupedData) {
                 if (groupedData.hasOwnProperty(key)) {
@@ -141,7 +145,7 @@
 
             $scope.winner = winners.map(function (d) {
                 return d.Name;
-            }).join(", ");
+            }).join(', ');
 
             $scope.plural = (winners.length > 1) ? 's (Draw)' : '';
 

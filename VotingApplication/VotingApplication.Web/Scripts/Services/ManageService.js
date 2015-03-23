@@ -50,7 +50,6 @@
                         failureCallback(data, status);
                     }
                 });
-
         };
 
         self.updatePoll = function(manageId, poll, callback, failureCallback) {
@@ -89,7 +88,6 @@
                         failureCallback(data, status);
                     }
                 });
-
         };
 
         return self;
