@@ -18,7 +18,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public ManageController() : base() { }
 
-        public ManageController(IContextFactory contextFactory, IMailSender mailSender) : base(contextFactory)
+        public ManageController(IContextFactory contextFactory, IMailSender mailSender)
+            : base(contextFactory)
         {
             _mailSender = mailSender;
         }
@@ -165,7 +166,14 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (updateRequest.VotingStrategy.ToLower() != poll.PollType.ToString().ToLower())
                 {
-                    removedVotes.AddRange(context.Votes.Where(v => v.PollId == poll.UUID).ToList());
+                    removedVotes.AddRange(
+                        context
+                        .Votes
+                        .Include(v => v.Poll)
+                        .Where(v => v.Poll.UUID == poll.UUID)
+                        .ToList()
+                        );
+
                     poll.PollType = (PollType)Enum.Parse(typeof(PollType), updateRequest.VotingStrategy, true);
                 }
 
@@ -226,7 +234,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             var link = hostUri + "/Poll/#/Vote/" + UUID + "/" + token.TokenGuid;
 
-            string message = "You've been invited to Vote On '<a href=\""+link+"\">" + pollQuestion + "</a>'";
+            string message = "You've been invited to Vote On '<a href=\"" + link + "\">" + pollQuestion + "</a>'";
 
             _mailSender.SendMail(token.Email, "Have your say", message);
         }

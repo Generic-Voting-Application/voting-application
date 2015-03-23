@@ -27,7 +27,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 Option = option,
                 Poll = poll,
-                PollId = poll.UUID,
                 Token = token,
                 VoteValue = voteRequest.VoteValue,
                 VoterName = voteRequest.VoterName
@@ -65,7 +64,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
                 }
 
-                List<Vote> votes = context.Votes.Where(v => v.Token.TokenGuid == tokenGuid && v.PollId == pollId).Include(v => v.Option).ToList();
+                List<Vote> votes = context
+                    .Votes
+                    .Include(v => v.Poll)
+                    .Where(v => v.Token.TokenGuid == tokenGuid && v.Poll.UUID == pollId)
+                    .Include(v => v.Option)
+                    .ToList();
 
                 return votes.Select(v => VoteToModel(v, poll)).ToList();
             }
@@ -125,7 +129,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     this.ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
-                List<Vote> existingVotes = context.Votes.Where(v => v.Token.TokenGuid == tokenGuid && v.PollId == pollId).ToList<Vote>();
+                List<Vote> existingVotes = context
+                    .Votes
+                    .Include(v => v.Poll)
+                    .Where(v => v.Token.TokenGuid == tokenGuid && v.Poll.UUID == pollId)
+                    .ToList();
 
                 foreach (Vote contextVote in existingVotes)
                 {

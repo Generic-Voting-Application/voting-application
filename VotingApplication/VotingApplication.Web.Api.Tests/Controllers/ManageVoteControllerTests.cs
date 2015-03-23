@@ -10,7 +10,6 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
-using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -48,9 +47,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
 
-            _bobVote = new Vote() { Id = 1, OptionId = 1, PollId = mainUUID, Poll = _mainPoll, Option = burgerOption };
-            _joeVote = new Vote() { Id = 2, OptionId = 1, PollId = mainUUID, Poll = _mainPoll, Option = burgerOption };
-            _otherVote = new Vote() { Id = 3, OptionId = 1, PollId = otherUUID };
+            _bobVote = new Vote() { Id = 1, OptionId = 1, Poll = _mainPoll, Option = burgerOption };
+            _joeVote = new Vote() { Id = 2, OptionId = 1, Poll = _mainPoll, Option = burgerOption };
+            _otherVote = new Vote() { Id = 3, OptionId = 1, Poll = new Poll() { UUID = otherUUID } };
 
             _dummyVotes.Add(_bobVote);
             _dummyVotes.Add(_joeVote);

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Web;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
@@ -45,7 +43,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
-                List<Vote> votes = context.Votes.Where(v => v.PollId == poll.UUID).ToList();
+                List<Vote> votes = context
+                    .Votes
+                    .Include(v => v.Poll)
+                    .Where(v => v.Poll.UUID == poll.UUID)
+                    .ToList();
 
                 return votes.Select(VoteToModel).ToList();
             }
@@ -59,13 +61,18 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(s => s.ManageId == manageId).FirstOrDefault();
+                Poll matchingPoll = context.Polls.FirstOrDefault(s => s.ManageId == manageId);
                 if (matchingPoll == null)
                 {
                     this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
-                List<Vote> votesInManagedPoll = context.Votes.Where(v => v.PollId == matchingPoll.UUID).ToList();
+                List<Vote> votesInManagedPoll = context
+                    .Votes
+                    .Include(v => v.Poll)
+                    .Where(v => v.Poll.UUID == matchingPoll.UUID)
+                    .ToList();
+
                 foreach (Vote vote in votesInManagedPoll)
                 {
                     context.Votes.Remove(vote);
@@ -82,20 +89,21 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(s => s.ManageId == manageId).FirstOrDefault();
+                Poll matchingPoll = context.Polls.FirstOrDefault(s => s.ManageId == manageId);
                 if (matchingPoll == null)
                 {
                     this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
-                Vote matchingVote = context.Votes.Where(v => v.Id == voteId && v.PollId == matchingPoll.UUID).FirstOrDefault();
+                Vote matchingVote = context
+                    .Votes
+                    .Include(v => v.Poll)
+                    .FirstOrDefault(v => v.Id == voteId && v.Poll.UUID == matchingPoll.UUID);
 
                 context.Votes.Remove(matchingVote);
 
                 matchingPoll.LastUpdated = DateTime.Now;
                 context.SaveChanges();
-
-                return;
             }
         }
 

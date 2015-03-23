@@ -1,14 +1,12 @@
-﻿using System;
+﻿using FakeDbSet;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
-using FakeDbSet;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
@@ -51,10 +49,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
 
-            _bobVote = new Vote() { Id = 1, OptionId = 1, PollId = _mainUUID, Poll = mainPoll, Option = burgerOption, Token = new Token() };
-            _joeVote = new Vote() { Id = 2, OptionId = 1, PollId = _mainUUID, Poll = mainPoll, Option = burgerOption, Token = new Token() };
-            _otherVote = new Vote() { Id = 3, OptionId = 1, PollId = _otherUUID, Token = new Token() };
-            _anonymousVote = new Vote() { Id = 4, OptionId = 1, PollId = _anonymousUUID, Token = new Token() };
+            _bobVote = new Vote() { Id = 1, OptionId = 1, Poll = mainPoll, Option = burgerOption, Token = new Token() };
+            _joeVote = new Vote() { Id = 2, OptionId = 1, Poll = mainPoll, Option = burgerOption, Token = new Token() };
+            _otherVote = new Vote() { Id = 3, OptionId = 1, Poll = new Poll() { UUID = _otherUUID }, Token = new Token() };
+            _anonymousVote = new Vote() { Id = 4, OptionId = 1, Poll = new Poll() { UUID = _anonymousUUID }, Token = new Token() };
 
             _dummyVotes.Add(_bobVote);
             _dummyVotes.Add(_joeVote);

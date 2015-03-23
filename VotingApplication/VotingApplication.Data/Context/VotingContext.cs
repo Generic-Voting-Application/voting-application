@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
 using VotingApplication.Data.Model;
 
@@ -33,7 +32,6 @@ namespace VotingApplication.Data.Context
         public VoteConfiguration()
         {
             this.Property(v => v.OptionId).HasColumnName("OptionId");
-            this.Property(v => v.PollId).HasColumnName("PollId");
         }
     }
 }
