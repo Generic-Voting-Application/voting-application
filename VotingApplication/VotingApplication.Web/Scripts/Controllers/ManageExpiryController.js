@@ -4,9 +4,9 @@
         .module('GVA.Creation')
         .controller('ManageExpiryController', ManageExpiryController);
 
-    ManageExpiryController.$inject = ['$scope', '$routeParams', '$location', 'ManageService'];
+    ManageExpiryController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];
 
-    function ManageExpiryController($scope, $routeParams, $location, ManageService) {
+    function ManageExpiryController($scope, $routeParams, $location, ManageService, RoutingService) {
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
@@ -35,7 +35,7 @@
         }
 
         function navigateToManagePage() {
-            $location.path('Manage/' + $scope.manageId);
+            RoutingService.navigateToManagePage($scope.manageId);
         }
 
         function updatePollDetails() {

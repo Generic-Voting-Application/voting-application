@@ -6,16 +6,16 @@
         .module('GVA.Voting')
         .controller('ResultsPageController', ResultsPageController);
 
-    ResultsPageController.$inject = ['$scope', '$routeParams', 'IdentityService', 'VoteService'];
+    ResultsPageController.$inject = ['$scope', '$routeParams', 'IdentityService', 'VoteService', 'RoutingService'];
 
-    function ResultsPageController($scope, $routeParams, IdentityService, VoteService) {
+    function ResultsPageController($scope, $routeParams, IdentityService, VoteService, RoutingService) {
 
         var pollId = $routeParams.pollId;
         var tokenId = $routeParams['tokenId'] || '';
         var chart;
 
         // Turn "/#/results/abc/123" into "/#/voting/abc/123"
-        $scope.votingLink = '#/Vote/' + pollId + '/' + tokenId;
+        $scope.votingLink = RoutingService.getVotePageUrl(pollId, tokenId);
 
         $scope.winner = 'Lorem';
         //Whether or not we have an "s" on the end of "Winner"

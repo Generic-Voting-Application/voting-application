@@ -5,9 +5,9 @@
         .module('GVA.Creation')
         .controller('DashboardController', DashboardController);
 
-    DashboardController.$inject = ['$scope', 'AccountService', 'PollService'];
+    DashboardController.$inject = ['$scope', 'AccountService', 'PollService', 'RoutingService'];
 
-    function DashboardController($scope, AccountService, PollService) {
+    function DashboardController($scope, AccountService, PollService, RoutingService) {
 
         $scope.account = AccountService.account;
         $scope.createPoll = createNewPoll;
@@ -44,7 +44,7 @@
         }
 
         function navigateToManagePage(manageId) {
-            window.location.href = '/#/Manage/' + manageId;
+            RoutingService.navigateToManagePage(manageId);
         }
     }
 

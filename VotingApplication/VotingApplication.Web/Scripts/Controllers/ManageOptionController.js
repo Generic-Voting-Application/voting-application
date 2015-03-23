@@ -4,9 +4,9 @@
         .module('GVA.Creation')
         .controller('ManageOptionController', ManageOptionController);
 
-    ManageOptionController.$inject = ['$scope', '$routeParams', '$location', 'ManageService'];
+    ManageOptionController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];
 
-    function ManageOptionController($scope, $routeParams, $location, ManageService) {
+    function ManageOptionController($scope, $routeParams, $location, ManageService, RoutingService) {
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
@@ -26,7 +26,7 @@
         }
 
         function navigateToManagePage() {
-            $location.path('Manage/' + $scope.manageId);
+            RoutingService.navigateToManagePage($scope.manageId);
         }
 
         function removePollOption(option) {

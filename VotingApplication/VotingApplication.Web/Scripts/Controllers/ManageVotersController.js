@@ -3,10 +3,10 @@
         .module('GVA.Creation')
         .controller('ManageVotersController', ManageVotersController);
 
-    ManageVotersController.$inject = ['$scope', '$routeParams', '$location', 'ManageService'];
+    ManageVotersController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];
 
 
-    function ManageVotersController($scope, $routeParams, $location, ManageService) {
+    function ManageVotersController($scope, $routeParams, $location, ManageService, RoutingService) {
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
@@ -74,7 +74,7 @@
         }
 
         function returnToManage() {
-            $location.path('Manage/' + $scope.manageId);
+            RoutingService.navigateToManagePage($scope.manageId);
         }
 
         function activate() {
