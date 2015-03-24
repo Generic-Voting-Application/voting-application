@@ -1,14 +1,12 @@
-﻿using System;
+﻿using FakeDbSet;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
-using FakeDbSet;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
@@ -46,7 +44,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _dummyOptions.Add(_burgerOption);
             _dummyOptions.Add(_pizzaOption);
 
-            _burgerVote = new Vote() { Id = 1, Poll = new Poll() { UUID = mainUUID }, OptionId = 1 };
+            _burgerVote = new Vote() { Id = 1, Poll = new Poll() { UUID = mainUUID }, Option = new Option() { Id = 1 } };
             _dummyVotes = new InMemoryDbSet<Vote>(true);
             _dummyVotes.Add(_burgerVote);
 

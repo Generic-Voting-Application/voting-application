@@ -5,7 +5,6 @@ namespace VotingApplication.Data.Model
     {
         public long Id { get; set; }
 
-        public long OptionId { get; set; }
         public Option Option { get; set; }
 
         public int VoteValue { get; set; }

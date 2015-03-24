@@ -154,7 +154,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                         else
                         {
                             oldOptions.Add(option);
-                            removedVotes.AddRange(context.Votes.Where(v => v.OptionId == option.Id).ToList());
+                            removedVotes.AddRange(context.Votes.Where(v => v.Option.Id == option.Id).ToList());
                         }
                     }
 
