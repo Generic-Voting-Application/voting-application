@@ -12,7 +12,8 @@
         var service = {
             getPoll: getPoll,
             getUserPolls: getUserPolls,
-            createPoll: createPoll
+            createPoll: createPoll,
+            copyPoll: copyPoll
         };
 
         return service;
@@ -46,7 +47,7 @@
 
             var promise = $http({
                 method: 'GET',
-                url: '/api/poll/',
+                url: '/api/dashboard/polls',
                 headers: { 'Authorization': 'Bearer ' + AccountService.account.token }
             });
 
@@ -76,6 +77,20 @@
             $http(request)
                 .success(successCallback);
 
+        }
+
+        function copyPoll(pollId) {
+            var promise = $http({
+                method: 'POST',
+                url: '/api/dashboard/copy',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'Authorization': 'Bearer ' + AccountService.account.token
+                },
+                data: JSON.stringify({ UUIDToCopy: pollId })
+            });
+
+            return promise;
         }
     }
 })();
