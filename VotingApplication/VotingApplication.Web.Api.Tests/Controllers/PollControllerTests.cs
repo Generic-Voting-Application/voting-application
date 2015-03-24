@@ -77,69 +77,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         #region GET
 
         [TestMethod]
-        public void GetIsAllowed()
-        {
-            // Act
-            _controller.Get();
-        }
-
-        [TestMethod]
-        public void GetWithAUserFetchesAllPollsByThatUser()
-        {
-            var claim = new Claim("test", UserId);
-            var mockIdentity = new Mock<ClaimsIdentity>();
-            mockIdentity
-                .Setup(ci => ci.FindFirst(It.IsAny<string>()))
-                .Returns(claim);
-
-            mockIdentity
-                .Setup(i => i.IsAuthenticated)
-                .Returns(true);
-
-            var principal = new Mock<IPrincipal>();
-            principal
-                .Setup(ip => ip.Identity)
-                .Returns(mockIdentity.Object);
-
-            _controller.User = principal.Object;
-
-
-            List<DashboardPollResponseModel> response = _controller.Get();
-            DashboardPollResponseModel responsePoll = response.Single();
-
-            Assert.AreEqual(_templatePoll.UUID, responsePoll.UUID);
-            Assert.AreEqual(_templatePoll.Creator, responsePoll.Creator);
-            Assert.AreEqual(_templatePoll.CreatedDate, responsePoll.CreatedDate);
-        }
-
-        [TestMethod]
-        public void GetWithANewUserFetchesEmptyPollList()
-        {
-            var claim = new Claim("test", "some new id that cannot exist");
-            var mockIdentity = new Mock<ClaimsIdentity>();
-            mockIdentity
-                .Setup(ci => ci.FindFirst(It.IsAny<string>()))
-                .Returns(claim);
-
-            mockIdentity
-                .Setup(i => i.IsAuthenticated)
-                .Returns(true);
-
-            var principal = new Mock<IPrincipal>();
-            principal
-                .Setup(ip => ip.Identity)
-                .Returns(mockIdentity.Object);
-
-            _controller.User = principal.Object;
-
-
-            var response = _controller.Get();
-
-
-            CollectionAssert.AreEquivalent(new List<Poll>(), response);
-        }
-
-        [TestMethod]
         public void GetByIdIsAllowed()
         {
             // Act

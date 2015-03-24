@@ -27,12 +27,6 @@ namespace VotingApplication.Web
             );
 
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
-
-            config.Routes.MapHttpRoute(
                 name: "TokenPollVoteApiRoute",
                 routeTemplate: "api/token/{tokenGuid}/poll/{pollId}/vote/{voteId}",
                 defaults: new { controller = "TokenPollVote", voteId = RouteParameter.Optional }
@@ -48,12 +42,6 @@ namespace VotingApplication.Web
                 name: "PollOptionApiRoute",
                 routeTemplate: "api/poll/{pollId}/option/{optionId}",
                 defaults: new { controller = "PollOption", optionId = RouteParameter.Optional }
-            );
-
-            config.Routes.MapHttpRoute(
-                name: "PollChatMessageApiRoute",
-                routeTemplate: "api/poll/{pollId}/chat/{messageId}",
-                defaults: new { controller = "PollChatMessage", messageId = RouteParameter.Optional }
             );
 
             config.Routes.MapHttpRoute(
@@ -78,6 +66,18 @@ namespace VotingApplication.Web
                 name: "PollTokenApiRoute",
                 routeTemplate: "api/poll/{pollId}/token/",
                 defaults: new { controller = "PollToken" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "DashboardRoute",
+                routeTemplate: "api/dashboard/{action}/{id}",
+                defaults: new { controller = "Dashboard", id = RouteParameter.Optional }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
             );
 
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));

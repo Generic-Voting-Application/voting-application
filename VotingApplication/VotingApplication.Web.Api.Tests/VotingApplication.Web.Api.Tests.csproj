@@ -96,6 +96,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\DashboardControllerTests.cs" />
     <Compile Include="Controllers\ExpectedHttpExceptionAttribute.cs" />
     <Compile Include="Controllers\ManageControllerTests.cs" />
     <Compile Include="Controllers\ManageInvitationControllerTests.cs" />
