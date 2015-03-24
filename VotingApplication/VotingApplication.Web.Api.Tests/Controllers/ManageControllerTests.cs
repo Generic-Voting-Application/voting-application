@@ -63,7 +63,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Polls).Returns(_dummyPolls);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
             mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
-            mockContext.Setup(a => a.Tokens).Returns(_dummyTokens);
+            mockContext.Setup(a => a.Ballots).Returns(_dummyTokens);
 
             var mockMail = new Mock<IMailSender>();
 

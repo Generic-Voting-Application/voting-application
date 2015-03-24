@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
 using VotingApplication.Data.Model;
 
 namespace VotingApplication.Data.Context
@@ -11,7 +9,7 @@ namespace VotingApplication.Data.Context
         IDbSet<Option> Options { get; set; }
         IDbSet<Vote> Votes { get; set; }
         IDbSet<Poll> Polls { get; set; }
-        IDbSet<Ballot> Tokens { get; set; }
+        IDbSet<Ballot> Ballots { get; set; }
 
         int SaveChanges();
     }

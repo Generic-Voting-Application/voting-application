@@ -204,7 +204,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 // Clean up tokens which have been removed
                 foreach (Ballot token in redundantTokens)
                 {
-                    context.Tokens.Remove(token);
+                    context.Ballots.Remove(token);
                     poll.Tokens.Remove(token);
                 }
 
