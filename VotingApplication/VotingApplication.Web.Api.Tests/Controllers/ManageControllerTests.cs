@@ -49,8 +49,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _dummyVotes.Add(_burgerVote);
 
             _dummyPolls = new InMemoryDbSet<Poll>(true);
-            _mainPoll = new Poll() { UUID = mainUUID, ManageId = _manageMainUUID, Options = new List<Option>() { _burgerOption, _pizzaOption }, Tokens = new List<Ballot>() };
-            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageId = _manageEmptyUUID, Options = new List<Option>(), Tokens = new List<Ballot>() };
+            _mainPoll = new Poll() { UUID = mainUUID, ManageId = _manageMainUUID, Options = new List<Option>() { _burgerOption, _pizzaOption }, Ballots = new List<Ballot>() };
+            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageId = _manageEmptyUUID, Options = new List<Option>(), Ballots = new List<Ballot>() };
             _dummyPolls.Add(_mainPoll);
             _dummyPolls.Add(emptyPoll);
 
@@ -251,7 +251,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             List<string> expectedEmails = new List<string> { "a@b.c" };
-            List<string> actualEmails = _mainPoll.Tokens.Select(s => s.Email).ToList<string>();
+            List<string> actualEmails = _mainPoll.Ballots.Select(s => s.Email).ToList<string>();
             CollectionAssert.AreEquivalent(expectedEmails, actualEmails);
         }
 
@@ -262,7 +262,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Ballot existingBallot = new Ballot() { Email = "a@b.c", TokenGuid = Guid.NewGuid(), Id = 1 };
             TokenRequestModel existingTokenRequest = new TokenRequestModel() { Email = existingBallot.Email, TokenGuid = existingBallot.TokenGuid };
             List<Ballot> emailTokens = new List<Ballot>() { existingBallot };
-            _mainPoll.Tokens = emailTokens;
+            _mainPoll.Ballots = emailTokens;
 
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
             {
@@ -275,7 +275,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Put(_manageMainUUID, request);
 
             // Assert
-            CollectionAssert.AreEquivalent(emailTokens, _mainPoll.Tokens);
+            CollectionAssert.AreEquivalent(emailTokens, _mainPoll.Ballots);
         }
 
         [TestMethod]
@@ -287,7 +287,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             TokenRequestModel existingTokenRequest = new TokenRequestModel { Email = existingBallot.Email, TokenGuid = existingBallot.TokenGuid };
             TokenRequestModel newTokenRequest = new TokenRequestModel { Email = "g@h.i" };
 
-            _mainPoll.Tokens = new List<Ballot>() { existingBallot, obsoleteBallot };
+            _mainPoll.Ballots = new List<Ballot>() { existingBallot, obsoleteBallot };
 
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
             {
@@ -301,7 +301,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             List<string> expectedEmails = new List<string> { "a@b.c", "g@h.i" };
-            List<string> actualEmails = _mainPoll.Tokens.Select(s => s.Email).ToList<string>();
+            List<string> actualEmails = _mainPoll.Ballots.Select(s => s.Email).ToList<string>();
             CollectionAssert.AreEquivalent(expectedEmails, actualEmails);
         }
 

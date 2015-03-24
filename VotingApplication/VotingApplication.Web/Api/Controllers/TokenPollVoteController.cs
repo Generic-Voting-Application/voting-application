@@ -94,7 +94,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     this.ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
-                Poll poll = context.Polls.Where(p => p.UUID == pollId).Include(p => p.Tokens).Include(p => p.Options).SingleOrDefault();
+                Poll poll = context.Polls.Where(p => p.UUID == pollId).Include(p => p.Ballots).Include(p => p.Options).SingleOrDefault();
                 if (poll == null)
                 {
                     this.ThrowError(HttpStatusCode.NotFound, String.Format("Poll {0} not found", pollId));
@@ -105,7 +105,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     this.ThrowError(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", pollId));
                 }
 
-                Ballot ballot = poll.Tokens.SingleOrDefault(t => t.TokenGuid == tokenGuid);
+                Ballot ballot = poll.Ballots.SingleOrDefault(t => t.TokenGuid == tokenGuid);
 
                 if (ballot == null)
                 {

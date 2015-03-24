@@ -35,7 +35,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         private ManagePollRequestResponseModel PollToModel(Poll poll)
         {
-            List<TokenRequestModel> Voters = poll.Tokens.ConvertAll<TokenRequestModel>(TokenToModel);
+            List<TokenRequestModel> Voters = poll.Ballots.ConvertAll<TokenRequestModel>(TokenToModel);
 
             return new ManagePollRequestResponseModel
             {
@@ -62,7 +62,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Poll poll = context.Polls
                     .Where(p => p.ManageId == manageId)
                     .Include(p => p.Options)
-                    .Include(p => p.Tokens)
+                    .Include(p => p.Ballots)
                     .FirstOrDefault();
 
                 if (poll == null)
@@ -116,7 +116,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Poll poll = context.Polls
                                            .Where(p => p.ManageId == manageId)
                                            .Include(p => p.Options)
-                                           .Include(p => p.Tokens)
+                                           .Include(p => p.Ballots)
                                            .SingleOrDefault();
 
                 if (poll == null)
@@ -183,14 +183,14 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     poll.PollType = (PollType)Enum.Parse(typeof(PollType), updateRequest.VotingStrategy, true);
                 }
 
-                List<Ballot> redundantTokens = poll.Tokens.ToList<Ballot>();
+                List<Ballot> redundantTokens = poll.Ballots.ToList<Ballot>();
 
                 foreach (TokenRequestModel voter in updateRequest.Voters)
                 {
                     if (voter.TokenGuid == null)
                     {
                         Ballot newBallot = new Ballot { Email = voter.Email, TokenGuid = Guid.NewGuid() };
-                        poll.Tokens.Add(newBallot);
+                        poll.Ballots.Add(newBallot);
                         SendInvitation(poll.UUID, newBallot, poll.Name);
                     }
                     else
@@ -205,7 +205,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 foreach (Ballot token in redundantTokens)
                 {
                     context.Ballots.Remove(token);
-                    poll.Tokens.Remove(token);
+                    poll.Ballots.Remove(token);
                 }
 
                 poll.Options = newOptions;

@@ -30,8 +30,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             _mainUUID = Guid.NewGuid();
             _inviteOnlyUUID = Guid.NewGuid();
-            _mainPoll = new Poll() { ManageId = _mainUUID, Tokens = new List<Ballot>() };
-            _inviteOnlyPoll = new Poll() { ManageId = _inviteOnlyUUID, InviteOnly = true, Tokens = new List<Ballot>() };
+            _mainPoll = new Poll() { ManageId = _mainUUID, Ballots = new List<Ballot>() };
+            _inviteOnlyPoll = new Poll() { ManageId = _inviteOnlyUUID, InviteOnly = true, Ballots = new List<Ballot>() };
 
             InMemoryDbSet<Poll> dummyPolls = new InMemoryDbSet<Poll>(true);
             dummyPolls.Add(_mainPoll);
@@ -73,7 +73,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Post(_mainUUID, new List<string>());
 
             // Assert
-            Assert.AreEqual(0, _mainPoll.Tokens.Count);
+            Assert.AreEqual(0, _mainPoll.Ballots.Count);
         }
 
         [TestMethod]
@@ -84,7 +84,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Post(_inviteOnlyUUID, invitations);
 
             // Assert
-            Assert.AreEqual(3, _inviteOnlyPoll.Tokens.Count);
+            Assert.AreEqual(3, _inviteOnlyPoll.Ballots.Count);
         }
 
         [TestMethod]
@@ -95,7 +95,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Post(_inviteOnlyUUID, invitations);
 
             // Assert
-            Assert.AreEqual(0, _inviteOnlyPoll.Tokens.Count);
+            Assert.AreEqual(0, _inviteOnlyPoll.Ballots.Count);
         }
 
         #endregion

@@ -33,7 +33,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(p => p.ManageId == manageId).Include(p => p.Tokens).FirstOrDefault();
+                Poll matchingPoll = context.Polls.Where(p => p.ManageId == manageId).Include(p => p.Ballots).FirstOrDefault();
                 if (matchingPoll == null)
                 {
                     this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
@@ -75,7 +75,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 {
                     Ballot ballot = new Ballot() { TokenGuid = Guid.NewGuid() };
                     tokenString = "/" + ballot.TokenGuid;
-                    poll.Tokens.Add(ballot);
+                    poll.Ballots.Add(ballot);
                 }
 
                 string message = String.Join("\n\n", new List<string>()

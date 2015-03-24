@@ -50,10 +50,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _joeBallot = new Ballot { TokenGuid = Guid.NewGuid() };
             _otherBallot = new Ballot { TokenGuid = Guid.NewGuid() };
 
-            Poll mainPoll = new Poll() { UUID = _mainUUID, ExpiryDate = DateTime.Now.AddMinutes(30), Tokens = new List<Ballot>() { _bobBallot, _joeBallot, _otherBallot } };
-            Poll otherPoll = new Poll() { UUID = _otherUUID, Tokens = new List<Ballot>() { _otherBallot } };
-            Poll pointsPoll = new Poll() { UUID = _pointsUUID, PollType = PollType.Points, MaxPerVote = 5, MaxPoints = 3, Tokens = new List<Ballot>() { _otherBallot } };
-            Poll tokenPoll = new Poll() { UUID = _tokenUUID, Tokens = new List<Ballot>() { _validBallot }, InviteOnly = true };
+            Poll mainPoll = new Poll() { UUID = _mainUUID, ExpiryDate = DateTime.Now.AddMinutes(30), Ballots = new List<Ballot>() { _bobBallot, _joeBallot, _otherBallot } };
+            Poll otherPoll = new Poll() { UUID = _otherUUID, Ballots = new List<Ballot>() { _otherBallot } };
+            Poll pointsPoll = new Poll() { UUID = _pointsUUID, PollType = PollType.Points, MaxPerVote = 5, MaxPoints = 3, Ballots = new List<Ballot>() { _otherBallot } };
+            Poll tokenPoll = new Poll() { UUID = _tokenUUID, Ballots = new List<Ballot>() { _validBallot }, InviteOnly = true };
             Poll timedPoll = new Poll() { UUID = _timedUUID, ExpiryDate = DateTime.Now.AddMinutes(-30) };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };

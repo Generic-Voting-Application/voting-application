@@ -72,7 +72,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Get(_mainUUID);
 
             // Assert
-            Assert.AreEqual(1, _mainPoll.Tokens.Count);
+            Assert.AreEqual(1, _mainPoll.Ballots.Count);
         }
 
         [TestMethod]

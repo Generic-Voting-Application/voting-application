@@ -37,12 +37,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 Guid newTokenGuid = Guid.NewGuid();
 
-                if(poll.Tokens == null)
+                if(poll.Ballots == null)
                 {
-                    poll.Tokens = new List<Ballot>();
+                    poll.Ballots = new List<Ballot>();
                 }
 
-                poll.Tokens.Add(new Ballot { TokenGuid = newTokenGuid });
+                poll.Ballots.Add(new Ballot { TokenGuid = newTokenGuid });
 
                 context.SaveChanges();
 
