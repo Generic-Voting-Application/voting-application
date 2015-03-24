@@ -3,10 +3,10 @@
         .module('GVA.Creation')
         .controller('ManageInvitationsController', ManageInvitationsController);
 
-    ManageInvitationsController.$inject = ['$scope', '$routeParams', '$location', 'ManageService'];
+    ManageInvitationsController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];
 
 
-    function ManageInvitationsController($scope, $routeParams, $location, ManageService) {
+    function ManageInvitationsController($scope, $routeParams, $location, ManageService, RoutingService) {
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
@@ -23,7 +23,7 @@
         }
 
         function returnToManage() {
-            $location.path('Manage/' + $scope.manageId);
+            RoutingService.navigateToManagePage($scope.manageId);
         }
 
         function activate() {

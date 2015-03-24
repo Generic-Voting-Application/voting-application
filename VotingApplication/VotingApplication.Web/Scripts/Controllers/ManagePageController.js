@@ -5,9 +5,9 @@
         .module('GVA.Creation')
         .controller('ManagePageController', ManagePageController);
 
-    ManagePageController.$inject = ['$scope', '$routeParams', 'ManageService'];
+    ManagePageController.$inject = ['$scope', '$routeParams', 'ManageService', 'RoutingService'];
 
-    function ManagePageController($scope, $routeParams, ManageService) {
+    function ManagePageController($scope, $routeParams, ManageService, RoutingService) {
 
         var manageId = $routeParams.manageId;
 
@@ -18,6 +18,8 @@
         $scope.formatPollExpiry = formatPollExpiryDate;
         $scope.selectText = selectTargetText;
         $scope.dateFilter = dateFilter;
+        $scope.pollUrl = pollUrl;
+        $scope.manageSubPageUrl = manageSubPageUrl;
 
         activate();
 
@@ -49,6 +51,14 @@
 
         function selectTargetText($event) {
             $event.target.select();
+        }
+
+        function pollUrl() {
+            return RoutingService.getVotePageUrl($scope.poll.UUID);
+        }
+
+        function manageSubPageUrl(subPage) {
+            return RoutingService.getManagePageUrl($scope.manageId, subPage);
         }
     }
 })();

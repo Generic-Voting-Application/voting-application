@@ -3,9 +3,9 @@
         .module('GVA.Creation')
         .controller('ManagePollTypeController', ManageVotersController);
 
-    ManageVotersController.$inject = ['$scope', '$routeParams', '$location', 'ngDialog', 'ManageService'];
+    ManageVotersController.$inject = ['$scope', '$routeParams', '$location', 'ngDialog', 'ManageService', 'RoutingService'];
 
-    function ManageVotersController($scope, $routeParams, $location, ngDialog, ManageService) {
+    function ManageVotersController($scope, $routeParams, $location, ngDialog, ManageService, RoutingService) {
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
@@ -23,7 +23,7 @@
         }
 
         function returnToManage() {
-            $location.path('Manage/' + $scope.manageId);
+            RoutingService.navigateToManagePage($scope.manageId);
         }
 
         function updateStrategy(strategy) {

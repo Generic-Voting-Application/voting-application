@@ -19,7 +19,7 @@
             </div>
             <div>
                 <span class="icon-padded-left">{{poll.Options.length}} Options</span>
-                <span class="pull-right"><a href="#/Manage/{{manageId}}/Options">Edit</a></span>
+                <span class="pull-right"><a href="{{manageSubPageUrl('Options')}}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section">
@@ -63,13 +63,13 @@
             <div>
                 <span>
                     <span class="icon-padded-left">{{formatPollExpiry()}}</span>
-                    <span class="pull-right"><a href="#/Manage/{{manageId}}/Expiry">Edit</a></span>
+                    <span class="pull-right"><a href="{{manageSubPageUrl('Expiry')}}">Edit</a></span>
                 </span>
             </div>
         </div>
         <div class="manage-section flexbox">
             <div class="centered">
-                <a href="/Poll/#/Vote/{{poll.UUID}}">
+                <a href="{{pollUrl()}}">
                     <button class="active-btn btn-large">Go to poll</button>
                 </a>
             </div>
