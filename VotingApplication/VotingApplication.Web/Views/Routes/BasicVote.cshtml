@@ -5,15 +5,11 @@
             <div class="option-block-row">
                 <div class="option-buttons">
                     <button class="active-btn btn-medium" ng-click="submitVote(option)">Vote</button>
-                    <button class="inactive-btn btn-medium" ng-click="descriptionToggle=!descriptionToggle">{{descriptionToggle ? 'Hide' : 'Show'}} Details</button>
                 </div>
                 <h4>{{option.Name}}</h4>
             </div>
             <div class="option-block-row">
-                <p class="option-description" ng-hide="descriptionToggle">
-                </p>
-                <p class="option-description" ng-show="descriptionToggle">
-                    {{option.Description}}
+                <p truncated-text ng-model="option.Description" max-chars="60" class="option-description">
                 </p>
             </div>
         </div>
