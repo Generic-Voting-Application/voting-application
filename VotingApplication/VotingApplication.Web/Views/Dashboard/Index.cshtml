@@ -14,10 +14,10 @@
             </div>
             <div class="pull-right" id="signin-header">
                 <span>
-                    <span ng-show="!account"><a href="javascript:;" ng-click="openLoginDialog()">Sign In</a></span>
-                    <span ng-show="account">{{account.email}}</span>
+                    <span ng-if="!account"><a href="javascript:;" ng-click="openLoginDialog()">Sign In</a> | <a href="javascript:;" ng-click="openRegisterDialog()">Register</a></span>
+                    <span ng-if="account">{{account.email}}</span>
                     <i class="glyphicon glyphicon-user"></i>
-                    <i class="glyphicon glyphicon-chevron-down" ng-click="toggleAccountControls=!toggleAccountControls"></i>
+                    <i ng-show="account" class="glyphicon glyphicon-chevron-down" ng-click="toggleAccountControls=!toggleAccountControls"></i>
                 </span>
                 <div class="pull-right account-control-box" ng-show="toggleAccountControls && account">
                     <div><a href="javascript:;">My Account</a></div>

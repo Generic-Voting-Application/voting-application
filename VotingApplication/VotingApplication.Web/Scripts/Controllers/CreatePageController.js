@@ -10,13 +10,17 @@
 
         $scope.account = AccountService.account;
         $scope.openLoginDialog = showLoginDialog;
+        $scope.openRegisterDialog = openRegisterDialog;
         $scope.signOut = AccountService.clearAccount;
         
         activate();
 
-
         function showLoginDialog() {
             AccountService.openLoginDialog($scope);
+        }
+
+        function openRegisterDialog() {
+            AccountService.openRegisterDialog($scope);
         }
 
         function activate() {
