@@ -28,7 +28,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private InMemoryDbSet<Option> _dummyOptions;
         private InMemoryDbSet<Vote> _dummyVotes;
         private InMemoryDbSet<Poll> _dummyPolls;
-        private InMemoryDbSet<Token> _dummyTokens;
+        private InMemoryDbSet<Ballot> _dummyTokens;
 
         [TestInitialize]
         public void setup()
@@ -49,12 +49,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _dummyVotes.Add(_burgerVote);
 
             _dummyPolls = new InMemoryDbSet<Poll>(true);
-            _mainPoll = new Poll() { UUID = mainUUID, ManageId = _manageMainUUID, Options = new List<Option>() { _burgerOption, _pizzaOption }, Tokens = new List<Token>() };
-            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageId = _manageEmptyUUID, Options = new List<Option>(), Tokens = new List<Token>() };
+            _mainPoll = new Poll() { UUID = mainUUID, ManageId = _manageMainUUID, Options = new List<Option>() { _burgerOption, _pizzaOption }, Tokens = new List<Ballot>() };
+            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageId = _manageEmptyUUID, Options = new List<Option>(), Tokens = new List<Ballot>() };
             _dummyPolls.Add(_mainPoll);
             _dummyPolls.Add(emptyPoll);
 
-            _dummyTokens = new InMemoryDbSet<Token>(true);
+            _dummyTokens = new InMemoryDbSet<Ballot>(true);
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
@@ -259,9 +259,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithExistingTokenDoesNotModifyToken()
         {
             // Arrange
-            Token existingToken = new Token() { Email = "a@b.c", TokenGuid = Guid.NewGuid(), Id = 1 };
-            TokenRequestModel existingTokenRequest = new TokenRequestModel() { Email = existingToken.Email, TokenGuid = existingToken.TokenGuid };
-            List<Token> emailTokens = new List<Token>() { existingToken };
+            Ballot existingBallot = new Ballot() { Email = "a@b.c", TokenGuid = Guid.NewGuid(), Id = 1 };
+            TokenRequestModel existingTokenRequest = new TokenRequestModel() { Email = existingBallot.Email, TokenGuid = existingBallot.TokenGuid };
+            List<Ballot> emailTokens = new List<Ballot>() { existingBallot };
             _mainPoll.Tokens = emailTokens;
 
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
@@ -282,12 +282,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithEmptyTokenListClearsObsoleteTokens()
         {
             // Arrange
-            Token existingToken = new Token() { Email = "a@b.c", TokenGuid = Guid.NewGuid(), Id = 1 };
-            Token obsoleteToken = new Token() { Email = "d@e.f", TokenGuid = Guid.NewGuid(), Id = 2 };
-            TokenRequestModel existingTokenRequest = new TokenRequestModel { Email = existingToken.Email, TokenGuid = existingToken.TokenGuid };
+            Ballot existingBallot = new Ballot() { Email = "a@b.c", TokenGuid = Guid.NewGuid(), Id = 1 };
+            Ballot obsoleteBallot = new Ballot() { Email = "d@e.f", TokenGuid = Guid.NewGuid(), Id = 2 };
+            TokenRequestModel existingTokenRequest = new TokenRequestModel { Email = existingBallot.Email, TokenGuid = existingBallot.TokenGuid };
             TokenRequestModel newTokenRequest = new TokenRequestModel { Email = "g@h.i" };
 
-            _mainPoll.Tokens = new List<Token>() { existingToken, obsoleteToken };
+            _mainPoll.Tokens = new List<Ballot>() { existingBallot, obsoleteBallot };
 
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
             {

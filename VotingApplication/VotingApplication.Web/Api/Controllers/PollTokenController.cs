@@ -39,10 +39,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if(poll.Tokens == null)
                 {
-                    poll.Tokens = new List<Token>();
+                    poll.Tokens = new List<Ballot>();
                 }
 
-                poll.Tokens.Add(new Token { TokenGuid = newTokenGuid });
+                poll.Tokens.Add(new Ballot { TokenGuid = newTokenGuid });
 
                 context.SaveChanges();
 

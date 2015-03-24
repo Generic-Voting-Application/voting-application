@@ -98,7 +98,7 @@
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
     <Compile Include="Model\Option.cs" />
     <Compile Include="Model\Poll.cs" />
-    <Compile Include="Model\Token.cs" />
+    <Compile Include="Model\Ballot.cs" />
     <Compile Include="Model\Vote.cs" />
     <Compile Include="Model\PollType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

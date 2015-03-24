@@ -23,7 +23,7 @@ namespace VotingApplication.Data.Model
         public int MaxPerVote { get; set; }
 
         public bool InviteOnly { get; set; }
-        public List<Token> Tokens { get; set; }
+        public List<Ballot> Tokens { get; set; }
 
         public bool NamedVoting { get; set; }
 

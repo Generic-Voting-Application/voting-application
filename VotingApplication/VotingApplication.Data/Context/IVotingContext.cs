@@ -11,7 +11,7 @@ namespace VotingApplication.Data.Context
         IDbSet<Option> Options { get; set; }
         IDbSet<Vote> Votes { get; set; }
         IDbSet<Poll> Polls { get; set; }
-        IDbSet<Token> Tokens { get; set; }
+        IDbSet<Ballot> Tokens { get; set; }
 
         int SaveChanges();
     }
