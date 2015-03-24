@@ -36,15 +36,27 @@
         }
 
         function getVotePageUrl(pollId, tokenId) {
-            return '/Poll/#/Vote/' + pollId + (tokenId ? '/' + tokenId : '');
+            var url = '/Poll/#/Vote/' + pollId;
+            if (tokenId) {
+                url += '/' + tokenId;
+            }
+            return url;
         }
 
         function getResultsPageUrl(pollId, tokenId) {
-            return '/Poll/#/Results/' + pollId + (tokenId ? '/' + tokenId : '');
+            var url = '/Poll/#/Results/' + pollId;
+            if (tokenId) {
+                url += '/' + tokenId;
+            }
+            return url;
         }
 
         function getManagePageUrl(manageId, subPage) {
-            return '/Create/#/Manage/' + manageId + (subPage ? '/' + subPage : '');
+            var url = '/Create/#/Manage/' + manageId;
+            if (subPage) {
+                url += '/' + subPage;
+            }
+            return url;
         }
     }
 })();
