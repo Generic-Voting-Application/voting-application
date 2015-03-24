@@ -28,8 +28,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Option = option,
                 Poll = poll,
                 Token = token,
-                VoteValue = voteRequest.VoteValue,
-                VoterName = voteRequest.VoterName
+                VoteValue = voteRequest.VoteValue
             };
 
         }
@@ -42,7 +41,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 model.OptionId = vote.Option.Id;
                 model.OptionName = vote.Option.Name;
-                model.VoterName = vote.VoterName;
+                model.VoterName = vote.Token.VoterName;
             }
 
             model.VoteValue = vote.VoteValue;
@@ -69,6 +68,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     .Include(v => v.Poll)
                     .Where(v => v.Token.TokenGuid == tokenGuid && v.Poll.UUID == pollId)
                     .Include(v => v.Option)
+                    .Include(v => v.Token)
                     .ToList();
 
                 return votes.Select(v => VoteToModel(v, poll)).ToList();
@@ -105,7 +105,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     this.ThrowError(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", pollId));
                 }
 
-                Token token = poll.Tokens.Where(t => t.TokenGuid == tokenGuid).SingleOrDefault();
+                Token token = poll.Tokens.SingleOrDefault(t => t.TokenGuid == tokenGuid);
 
                 if (token == null)
                 {
@@ -147,6 +147,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                                                   token,
                                                   context.Options.Single(o => o.Id == voteRequest.OptionId),
                                                   context.Polls.Single(p => p.UUID == pollId)));
+
+                    // TODO: refactor the voteRequest model to be a ballotRequest instead. => only one voterName.
+                    token.VoterName = voteRequest.VoterName;
                 }
 
                 poll.LastUpdated = DateTime.Now;

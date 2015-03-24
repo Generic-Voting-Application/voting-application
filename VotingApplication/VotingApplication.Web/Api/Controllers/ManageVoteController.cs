@@ -24,7 +24,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 model.OptionName = vote.Option.Name;
             }
 
-            model.VoterName = vote.VoterName;
+            model.VoterName = vote.Token.VoterName;
             model.VoteValue = vote.VoteValue;
 
             return model;
@@ -46,6 +46,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 List<Vote> votes = context
                     .Votes
                     .Include(v => v.Poll)
+                    .Include(v => v.Token)
                     .Where(v => v.Poll.UUID == poll.UUID)
                     .ToList();
 

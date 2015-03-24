@@ -47,9 +47,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
 
-            _bobVote = new Vote() { Id = 1, Poll = _mainPoll, Option = burgerOption };
-            _joeVote = new Vote() { Id = 2, Poll = _mainPoll, Option = burgerOption };
-            _otherVote = new Vote() { Id = 3, Poll = new Poll() { UUID = otherUUID }, Option = new Option() { Id = 1 } };
+            _bobVote = new Vote() { Id = 1, Poll = _mainPoll, Option = burgerOption, Token = new Token() };
+            _joeVote = new Vote() { Id = 2, Poll = _mainPoll, Option = burgerOption, Token = new Token() };
+            _otherVote = new Vote() { Id = 3, Poll = new Poll() { UUID = otherUUID }, Option = new Option() { Id = 1 }, Token = new Token() };
 
             _dummyVotes.Add(_bobVote);
             _dummyVotes.Add(_joeVote);
