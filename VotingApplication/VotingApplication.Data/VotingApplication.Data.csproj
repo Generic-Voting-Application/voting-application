@@ -94,6 +94,10 @@
     <Compile Include="Migrations\201503241035125_MoveVoterName.Designer.cs">
       <DependentUpon>201503241035125_MoveVoterName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503241114004_RenameTokenToBallot.cs" />
+    <Compile Include="Migrations\201503241114004_RenameTokenToBallot.Designer.cs">
+      <DependentUpon>201503241114004_RenameTokenToBallot.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
     <Compile Include="Model\Option.cs" />
@@ -141,6 +145,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503241035125_MoveVoterName.resx">
       <DependentUpon>201503241035125_MoveVoterName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503241114004_RenameTokenToBallot.resx">
+      <DependentUpon>201503241114004_RenameTokenToBallot.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
