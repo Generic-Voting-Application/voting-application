@@ -1,0 +1,18 @@
+namespace VotingApplication.Data.Migrations
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class RemovePollIdFromVote : DbMigration
+    {
+        public override void Up()
+        {
+            DropColumn("dbo.Votes", "PollId");
+        }
+        
+        public override void Down()
+        {
+            AddColumn("dbo.Votes", "PollId", c => c.Guid(nullable: false));
+        }
+    }
+}
