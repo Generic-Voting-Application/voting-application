@@ -29,7 +29,7 @@
             </div>
             <div>
                 <span class="icon-padded-left">{{poll.Voters.length}} Voters</span>
-                <gva-unlockable-option option-path="{{manageId}}/Voters"></gva-unlockable-option>
+                <span class="pull-right"><a href="{{manageSubPageUrl('Voters')}}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section">
@@ -42,7 +42,7 @@
                 <span class="icon-padded-left" ng-if="!poll.InviteOnly">Open Voting, </span>
                 <span ng-if="poll.NamedVoting">Named Voters</span>
                 <span ng-if="!poll.NamedVoting">Anonymous Voters</span>
-                <gva-unlockable-option option-path="{{manageId}}/Invitations"></gva-unlockable-option>
+                <span class="pull-right"><a href="{{manageSubPageUrl('Invitations')}}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section">
@@ -52,7 +52,7 @@
             </div>
             <div>
                 <span class="icon-padded-left">{{poll.VotingStrategy}}</span>
-                <gva-unlockable-option option-path="{{manageId}}/PollType"></gva-unlockable-option>
+                <span class="pull-right"><a href="{{manageSubPageUrl('PollType')}}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section">
