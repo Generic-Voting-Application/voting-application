@@ -80,10 +80,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             dummyPolls.Add(tokenPoll);
             dummyPolls.Add(timedPoll);
 
-            _bobVote = new Vote() { Id = 1, OptionId = 1, PollId = _mainUUID, Token = _bobToken, Option = burgerOption, Poll = mainPoll };
+            _bobVote = new Vote() { Id = 1, Token = _bobToken, Option = burgerOption, Poll = mainPoll };
             _dummyVotes.Add(_bobVote);
 
-            _joeVote = new Vote() { Id = 2, OptionId = 1, PollId = _mainUUID, Token = _joeToken };
+            _joeVote = new Vote() { Id = 2, Poll = mainPoll, Option = new Option() { Id = 1 }, Token = _joeToken };
             _dummyVotes.Add(_joeVote);
 
             var mockContextFactory = new Mock<IContextFactory>();
@@ -210,7 +210,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Put(_bobToken.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1, VoteValue = 0 } });
 
             // Assert
-            Assert.AreEqual(0, _dummyVotes.Local.Single(v => v.Token.TokenGuid == _bobToken.TokenGuid && v.PollId == _mainUUID).VoteValue);
+            Assert.AreEqual(0, _dummyVotes.Local.Single(v => v.Token.TokenGuid == _bobToken.TokenGuid && v.Poll.UUID == _mainUUID).VoteValue);
         }
 
         [TestMethod]
@@ -226,7 +226,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutOnAnExpiredPollNotAllowed()
         {
             // Arrange
-            var newVote = new Vote() { OptionId = 1, PollId = _timedUUID };
+            var newVote = new Vote() { Option = new Option() { Id = 1 }, Poll = new Poll() { UUID = _timedUUID } };
 
             // Act
             _controller.Put(_bobToken.TokenGuid, _timedUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } });

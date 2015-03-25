@@ -29,7 +29,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 model.OptionName = vote.Option.Name;
             }
 
-            model.VoterName = poll.NamedVoting ? vote.VoterName : "Anonymous User";
+            model.VoterName = poll.NamedVoting ? vote.Token.VoterName : "Anonymous User";
             model.VoteValue = vote.VoteValue;
 
             return model;
@@ -42,8 +42,17 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = context.Polls.Where(s => s.UUID == pollId).FirstOrDefault();
-                List<Vote> votes = context.Votes.Where(v => v.PollId == pollId).Include(v => v.Option).Include(v => v.Token).ToList();
+                Poll poll = context
+                    .Polls
+                    .FirstOrDefault(s => s.UUID == pollId);
+
+                List<Vote> votes = context
+                    .Votes
+                    .Include(v => v.Poll)
+                    .Where(v => v.Poll.UUID == pollId)
+                    .Include(v => v.Option)
+                    .Include(v => v.Token)
+                    .ToList();
 
                 if (poll == null)
                 {
