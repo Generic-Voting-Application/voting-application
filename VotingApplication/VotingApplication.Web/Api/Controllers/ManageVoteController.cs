@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
@@ -11,53 +12,70 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
     public class ManageVoteController : WebApiController
     {
-        public ManageVoteController() : base() { }
-        public ManageVoteController(IContextFactory contextFactory) : base(contextFactory) { }
-
-        private VoteRequestResponseModel VoteToModel(Vote vote)
+        public ManageVoteController()
         {
-            VoteRequestResponseModel model = new VoteRequestResponseModel();
+        }
 
-            if (vote.Option != null)
+        public ManageVoteController(IContextFactory contextFactory)
+            : base(contextFactory)
+        {
+        }
+
+        [HttpGet]
+        public List<ManageVoteResponseModel> Get(Guid manageId)
+        {
+            using (var context = _contextFactory.CreateContext())
             {
-                model.OptionId = vote.Option.Id;
-                model.OptionName = vote.Option.Name;
-            }
+                Poll poll = context
+                    .Polls
+                    .Include(p => p.Ballots)
+                    .Include(p => p.Ballots.Select(b => b.Votes))
+                    .Include(p => p.Ballots.Select(b => b.Votes.Select(v => v.Option)))
+                    .SingleOrDefault(s => s.ManageId == manageId);
 
-            model.VoterName = vote.Ballot.VoterName;
-            model.VoteValue = vote.VoteValue;
+                if (poll == null)
+                {
+                    string errorMessage = String.Format("Poll {0} not found", manageId);
+                    this.ThrowError(HttpStatusCode.NotFound, errorMessage);
+                }
+
+                if (poll.Ballots.Any())
+                {
+                    List<ManageVoteResponseModel> response = poll
+                        .Ballots
+                        .Where(b => b.Votes.Any())
+                        .Select(CreateManageVoteResponse)
+                        .ToList();
+
+                    return response;
+                }
+
+                return new List<ManageVoteResponseModel>(0);
+            }
+        }
+
+        private static ManageVoteResponseModel CreateManageVoteResponse(Ballot ballot)
+        {
+            var model = new ManageVoteResponseModel
+            {
+                VoterName = ballot.VoterName,
+                Votes = new List<VoteResponse>()
+            };
+
+            foreach (Vote vote in ballot.Votes)
+            {
+                var voteResponse = new VoteResponse
+                {
+                    Value = vote.VoteValue,
+                    OptionName = vote.Option.Name
+                };
+                model.Votes.Add(voteResponse);
+            }
 
             return model;
         }
 
-        #region GET
-
-        public List<VoteRequestResponseModel> Get(Guid manageId)
-        {
-            using (var context = _contextFactory.CreateContext())
-            {
-                Poll poll = context.Polls.Where(s => s.ManageId == manageId).Include(s => s.Options).SingleOrDefault();
-
-                if (poll == null)
-                {
-                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
-                }
-
-                List<Vote> votes = context
-                    .Votes
-                    .Include(v => v.Poll)
-                    .Include(v => v.Ballot)
-                    .Where(v => v.Poll.UUID == poll.UUID)
-                    .ToList();
-
-                return votes.Select(VoteToModel).ToList();
-            }
-        }
-
-        #endregion
-
-        #region DELETE
-
+        [HttpDelete]
         public void Delete(Guid manageId)
         {
             using (var context = _contextFactory.CreateContext())
@@ -81,11 +99,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 matchingPoll.LastUpdated = DateTime.Now;
                 context.SaveChanges();
-
-                return;
             }
         }
 
+        [HttpDelete]
         public void Delete(Guid manageId, long voteId)
         {
             using (var context = _contextFactory.CreateContext())
@@ -107,7 +124,5 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 context.SaveChanges();
             }
         }
-
-        #endregion
     }
 }

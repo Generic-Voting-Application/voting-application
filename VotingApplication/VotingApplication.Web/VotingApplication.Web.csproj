@@ -259,6 +259,7 @@
     <Compile Include="Api\Models\DBViewModels\DashboardPollResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollRequestResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollUpdateRequest.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManageVoteResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\OptionCreationRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\OptionRequestResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\PollCreationRequestModel.cs" />

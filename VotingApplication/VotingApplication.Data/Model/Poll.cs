@@ -5,6 +5,11 @@ namespace VotingApplication.Data.Model
 {
     public class Poll
     {
+        public Poll()
+        {
+            Ballots = new List<Ballot>();
+        }
+
         public long Id { get; set; }
 
         public Guid UUID { get; set; }
