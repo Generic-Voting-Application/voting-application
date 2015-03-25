@@ -295,7 +295,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\CreateController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\RoutesController.cs" />
     <Compile Include="Controllers\PollController.cs" />
     <Compile Include="Global.asax.cs">
@@ -336,13 +336,13 @@
     <Content Include="Scripts\Controllers\ManageExpiryController.js" />
     <Content Include="Scripts\Controllers\ManagePollTypeController.js" />
     <Content Include="Scripts\Controllers\AccountResetPasswordController.js" />
-    <Content Include="Scripts\Controllers\DashboardController.js" />
+    <Content Include="Scripts\Controllers\RegisteredDashboardController.js" />
     <Content Include="Scripts\Controllers\HomepageController.js" />
     <Content Include="Scripts\Controllers\ManageVotersController.js" />
     <Content Include="Scripts\Controllers\ManageInvitationsController.js" />
     <Content Include="Scripts\Controllers\ManageOptionController.js" />
     <Content Include="Scripts\Controllers\ManagePageController.js" />
-    <Content Include="Scripts\Controllers\CreatePageController.js" />
+    <Content Include="Scripts\Controllers\DashboardController.js" />
     <Content Include="Scripts\Controllers\IdentityLoginController.js" />
     <Content Include="Scripts\Controllers\BasicVoteController.js" />
     <Content Include="Scripts\Controllers\MultiVoteController.js" />
@@ -395,7 +395,7 @@
     <Content Include="Views\Routes\ManageVoters.cshtml" />
     <Content Include="Views\Routes\ManageExpiry.cshtml" />
     <Content Include="Views\Routes\DatePicker.cshtml" />
-    <Content Include="Views\Routes\Dashboard.cshtml" />
+    <Content Include="Views\Routes\RegisteredDashboard.cshtml" />
     <Content Include="Views\Routes\HomePage.cshtml" />
     <Content Include="Content\Scss\DateTimePicker.scss" />
     <Content Include="Views\Routes\TimePicker.cshtml" />

@@ -104,7 +104,7 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
-        public ActionResult Dashboard()
+        public ActionResult RegisteredDashboard()
         {
             return View();
         }
