@@ -1,5 +1,6 @@
 ﻿/// <reference path="../Services/AccountService.js" />
 /// <reference path="../Services/ManageService.js" />
+/// <reference path="../Services/RoutingService.js" />
 (function () {
     angular
         .module('GVA.Creation')
