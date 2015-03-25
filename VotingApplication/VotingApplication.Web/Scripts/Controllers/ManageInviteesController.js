@@ -1,18 +1,18 @@
 ﻿(function () {
     angular
         .module('GVA.Creation')
-        .controller('ManageVotersController', ManageVotersController);
+        .controller('ManageInviteesController', ManageInviteesController);
 
-    ManageVotersController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];
+    ManageInviteesController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];
 
 
-    function ManageVotersController($scope, $routeParams, $location, ManageService, RoutingService) {
+    function ManageInviteesController($scope, $routeParams, $location, ManageService, RoutingService) {
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
 
         $scope.emailUpdated = emailUpdated;
-        $scope.deleteVoter = deleteVoter;
+        $scope.deleteInvitee = deleteInvitee;
         $scope.sendInvitations = sendInvitations;
         $scope.inviteString = '';
 
@@ -48,10 +48,10 @@
             }
         }
 
-        function deleteVoter(voter) {
-            var indexOfVoter = $scope.poll.Voters.indexOf(voter);
+        function deleteInvitee(invitee) {
+            var indexOfInvitee = $scope.poll.Voters.indexOf(invitee);
 
-            $scope.poll.Voters.splice(indexOfVoter, 1);
+            $scope.poll.Voters.splice(indexOfInvitee, 1);
         }
 
         function sendInvitations() {
@@ -78,7 +78,7 @@
         }
 
         function activate() {
-            ManageService.registerPollObserver(function() {
+            ManageService.registerPollObserver(function () {
                 $scope.poll = ManageService.poll;
             });
 

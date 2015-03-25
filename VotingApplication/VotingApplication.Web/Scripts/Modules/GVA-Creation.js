@@ -17,7 +17,7 @@
                     templateUrl: '../Routes/ManageOptions'
                 })
                 .when('/Manage/:manageId/Voters', {
-                    templateUrl: '../Routes/ManageVoters'
+                    templateUrl: '../Routes/ManageInvitees'
                 })
                 .when('/Manage/:manageId/Invitations', {
                     templateUrl: '../Routes/ManageInvitations'

@@ -338,7 +338,7 @@
     <Content Include="Scripts\Controllers\AccountResetPasswordController.js" />
     <Content Include="Scripts\Controllers\RegisteredDashboardController.js" />
     <Content Include="Scripts\Controllers\HomepageController.js" />
-    <Content Include="Scripts\Controllers\ManageVotersController.js" />
+    <Content Include="Scripts\Controllers\ManageInviteesController.js" />
     <Content Include="Scripts\Controllers\ManageInvitationsController.js" />
     <Content Include="Scripts\Controllers\ManageOptionController.js" />
     <Content Include="Scripts\Controllers\ManagePageController.js" />
@@ -392,7 +392,7 @@
     <Content Include="Views\Routes\MultiVote.cshtml" />
     <Content Include="Views\Routes\ManageOptions.cshtml" />
     <Content Include="Views\Routes\ManagePollType.cshtml" />
-    <Content Include="Views\Routes\ManageVoters.cshtml" />
+    <Content Include="Views\Routes\ManageInvitees.cshtml" />
     <Content Include="Views\Routes\ManageExpiry.cshtml" />
     <Content Include="Views\Routes\DatePicker.cshtml" />
     <Content Include="Views\Routes\RegisteredDashboard.cshtml" />

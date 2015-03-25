@@ -79,7 +79,7 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
-        public ActionResult ManageVoters()
+        public ActionResult ManageInvitees()
         {
             return View();
         }
