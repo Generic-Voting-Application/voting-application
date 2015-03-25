@@ -339,7 +339,7 @@
     <Content Include="Scripts\Controllers\RegisteredDashboardController.js" />
     <Content Include="Scripts\Controllers\HomepageController.js" />
     <Content Include="Scripts\Controllers\ManageInviteesController.js" />
-    <Content Include="Scripts\Controllers\ManageInvitationsController.js" />
+    <Content Include="Scripts\Controllers\ManageInvitationStyleController.js" />
     <Content Include="Scripts\Controllers\ManageOptionController.js" />
     <Content Include="Scripts\Controllers\ManagePageController.js" />
     <Content Include="Scripts\Controllers\DashboardController.js" />
@@ -399,6 +399,7 @@
     <Content Include="Views\Routes\HomePage.cshtml" />
     <Content Include="Content\Scss\DateTimePicker.scss" />
     <Content Include="Views\Routes\TimePicker.cshtml" />
+    <Content Include="Views\Routes\ManageVoters.cshtml" />
     <None Include="Views\Routes\PollHeading.cshtml" />
     <Content Include="Views\Routes\PollTypeChange.cshtml" />
     <Content Include="Scripts\Directives\UnlockableOption.html" />
@@ -416,7 +417,7 @@
     <Content Include="Views\Routes\IdentityLogin.cshtml" />
     <Content Include="Views\Routes\UpDownVote.cshtml" />
     <Content Include="Views\Poll\Index.cshtml" />
-    <Content Include="Views\Routes\ManageInvitations.cshtml" />
+    <Content Include="Views\Routes\ManageInvitationStyle.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

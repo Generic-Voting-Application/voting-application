@@ -1,12 +1,12 @@
 ﻿(function () {
     angular
         .module('GVA.Creation')
-        .controller('ManageInvitationsController', ManageInvitationsController);
+        .controller('ManageInvitationStyleController', ManageInvitationStyleController);
 
-    ManageInvitationsController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];
+    ManageInvitationStyleController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];
 
 
-    function ManageInvitationsController($scope, $routeParams, $location, ManageService, RoutingService) {
+    function ManageInvitationStyleController($scope, $routeParams, $location, ManageService, RoutingService) {
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
