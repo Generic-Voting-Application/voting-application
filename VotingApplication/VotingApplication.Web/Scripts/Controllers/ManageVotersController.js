@@ -1,4 +1,5 @@
 ﻿/// <reference path="../Services/ManageService.js" />
+/// <reference path="../Services/RoutingService.js" />
 (function () {
     angular
         .module('GVA.Creation')
@@ -9,16 +10,43 @@
 
     function ManageVotersController($scope, $routeParams, $location, ManageService, RoutingService) {
 
+        var manageId = $routeParams.manageId;
+
         $scope.voters = {};
-        $scope.manageId = $routeParams.manageId;
+
+        $scope.removeAllVotes = removeAllVotes;
+
+        $scope.removeVote = removeVote;
+        $scope.removeBallot = removeBallot;
+
+        $scope.returnWithoutDelete = returnWithoutDelete;
+        $scope.confirmDeleteAndReturn = confirmDeleteAndReturn;
 
         activate();
 
         function activate() {
-            ManageService.getVoters($scope.manageId)
+            ManageService.getVoters(manageId)
             .success(function (data) {
                 $scope.voters = data;
             });
+        }
+
+        function removeAllVotes() {
+
+        }
+
+        function removeVote(vote, ballot) {
+        }
+
+        function removeBallot(ballot) {
+        }
+
+        function returnWithoutDelete() {
+            RoutingService.navigateToManagePage(manageId);
+        }
+
+        function confirmDeleteAndReturn() {
+            RoutingService.navigateToManagePage(manageId);
         }
     }
 })();

@@ -4,15 +4,13 @@
 
         <div class="manage-section">
             <div class="centered">
-                <div class="error-btn btn-large clickable">
+                <div class="error-btn btn-large clickable" ng-click="removeAllVotes()">
                     Reset All Votes
                 </div>
             </div>
         </div>
 
         <div class="manage-section">
-
-
             <table class="manage-voters-table">
                 <tbody ng-repeat="ballot in voters" class="manage-voters-body">
 
@@ -24,19 +22,23 @@
                             <span> {{ ballot.VoterName }} </span>
                         </td>
                         <td>
-                            <span class="clickable pull-right glyphicon glyphicon-remove glyphicon-larger"></span>
+                            <span class="clickable pull-right glyphicon glyphicon-remove glyphicon-larger" ng-click="removeBallot(ballot)"></span>
                         </td>
                     </tr>
 
                     <tr ng-repeat="vote in ballot.Votes" ng-show="votesVisible">
                         <td class="manage-voters-vote"> {{ vote.OptionName }} </td>
                         <td>
-                            <span class="clickable pull-right glyphicon glyphicon-remove"></span>
+                            <span class="clickable pull-right glyphicon glyphicon-remove" ng-click="removeVote(vote, ballot)"></span>
                         </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
 
+        <div class="manage-section">
+            <button class="manage-btn" ng-click="confirmDeleteAndReturn()">Confirm</button>
+            <button class="manage-btn" ng-click="returnWithoutDelete()">Cancel</button>
         </div>
     </div>
 </div>
