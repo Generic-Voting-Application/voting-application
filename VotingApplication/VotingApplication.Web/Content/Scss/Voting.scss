@@ -118,12 +118,28 @@ body {
 
 // Results
 
-.series-0 {
-    fill: $Green500;
+.negative.bar {
+    fill: #D32F2F;
+}
+
+.positive.bar {
+    fill: $Green500
 }
 
 #winner-label {
     font-size: 18pt;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: $Black;
+    shape-rendering: crispEdges;
+}
+
+.y.axis path,
+.y.axis line {
+    stroke: none;
 }
 
 // Up/Down vote specific

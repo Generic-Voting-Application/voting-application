@@ -23,6 +23,86 @@
 
         $scope.voteCount = 0;
 
+        var canvas = document.createElement("canvas");
+
+        var textWidth = function (text) {
+            var context = canvas.getContext("2d");
+            context.font = "16px Open Sans";
+            var metrics = context.measureText(text);
+            return metrics.width;
+        }
+
+        var drawD3Chart = function (data) {
+            // Hack to fix lack of data reloading
+            document.getElementById('results-chart').innerHTML = '';
+
+            var chartHeight = Math.min(data.length * 50 + 100, 600);
+            var chartWidth = Math.min(600, document.getElementById('results-chart').offsetWidth);
+
+            var longestTextWidth = d3.max(data, function (d) { return textWidth(d.Name); });
+
+            var margin = { top: 30, right: 10, bottom: 10, left: longestTextWidth + 10};
+            var width = chartWidth - margin.left - margin.right;
+            var height = chartHeight - margin.top - margin.bottom;
+
+            var minX = d3.min(data, function(d) { return d.Sum; });
+            var maxX = d3.max(data, function(d) { return d.Sum; });
+
+            var x = d3.scale.linear()
+                .range([0, width])
+                .domain([Math.min(0, minX), maxX]).nice();
+
+            var dataRange = x.domain()[1] - x.domain()[0];
+            var tickFrequency = Math.max((Math.pow(10, (Math.round(Math.log(dataRange) / Math.log(10)) - 1))), 1);
+
+            var y = d3.scale.ordinal()
+                .rangeRoundBands([0, height], .2)
+                .domain(data.map(function(d) { return d.Name; }));
+
+            var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("top")
+                .ticks(dataRange / tickFrequency); // Ticks is *how many* ticks we display, not the frequency...
+
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left");
+
+            var chart = d3.select("#results-chart")
+                .append("svg")
+                    .attr("width", chartWidth)
+                    .attr("height", chartHeight)
+                .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            chart.append("g")
+                .attr("class", "x axis")
+                .call(xAxis);
+
+            chart.append("g")
+                .attr("class", "y axis")
+                .call(yAxis)
+                .append("line")
+                .attr("x1", x(0))
+                .attr("x2", x(0))
+                .attr("y2", height);
+
+            chart.selectAll(".bar")
+                .data(data)
+                .enter().append("rect")
+                .attr("class", function (d) { return d.Sum < 0 ? "bar negative" : "bar positive"; })
+                .attr("x", function (d) {
+                    return x(Math.min(0, d.Sum));
+                })
+                .attr("y", function (d) {
+                    return y(d.Name);
+                })
+                .attr("width", function (d) {
+                    return Math.abs(x(-d.Sum) - x(0));
+                })
+                .attr("height", 50);
+        }
+
         var drawChart = function (data) {
 
             // Hack to fix insight's lack of data reloading
@@ -149,7 +229,7 @@
 
             $scope.plural = (winners.length > 1) ? 's (Draw)' : '';
 
-            drawChart(datapoints);
+            drawD3Chart(datapoints);
         }
 
         VoteService.refreshLastChecked(pollId);
