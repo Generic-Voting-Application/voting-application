@@ -82,7 +82,7 @@
                 $scope.poll = ManageService.poll;
             });
 
-            var inputField = document.getElementById('new-voter');
+            var inputField = document.getElementById('new-invitee');
             inputField.addEventListener('keydown', function (e) {
                 if (e.keyCode === 13) { // User pressed "return key"
                     $scope.inviteString += '\n';

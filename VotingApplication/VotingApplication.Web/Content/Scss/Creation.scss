@@ -221,7 +221,7 @@ body {
     margin-top: 10px;
 }
 
-.voter-pill {
+.invitee-pill {
     border: 1px solid $BlueGrey100;
     border-radius: 5px;
     height: 25px;
@@ -230,12 +230,12 @@ body {
     margin: 2px;
     overflow: hidden;
 
-    .voter-pill-text {
+    .invitee-pill-text {
         padding: 2px 5px;
         float: left;
     }
 
-    .voter-pill-delete {
+    .invitee-pill-delete {
         float: right;
         background-color: $Red500;
         color: $White;

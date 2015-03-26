@@ -2,12 +2,12 @@
     <div class="centered">
         <h2>Poll Invitees</h2>
         <h4>Email to Invite</h4>
-        <input id="new-voter" name="new-voter" ng-model="inviteString" ng-change="emailUpdated()" ng-trim="false" />
+        <input id="new-invitee" name="new-invitee" ng-model="inviteString" ng-change="emailUpdated()" ng-trim="false" />
 
         <div class="pill-box">
-            <div class="voter-pill" ng-repeat="invitee in poll.Voters">
-                <span class="voter-pill-text">{{invitee.Email}}</span>
-                <span class="glyphicon glyphicon-remove voter-pill-delete" ng-click="deleteInvitee(invitee)" aria-hidden="true"></span>
+            <div class="invitee-pill" ng-repeat="invitee in poll.Voters">
+                <span class="invitee-pill-text">{{invitee.Email}}</span>
+                <span class="glyphicon glyphicon-remove invitee-pill-delete" ng-click="deleteInvitee(invitee)" aria-hidden="true"></span>
             </div>
         </div>
 
