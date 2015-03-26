@@ -319,6 +319,7 @@
     <None Include="ClearScript.V8\v8-x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="Api\Resources\EmailTemplate.html" />
     <Content Include="Content\Lib\Css\angular-toggle-switch.css" />
     <Content Include="Content\Lib\Css\bootstrap-glyphicons.css" />
     <Content Include="Content\Lib\Css\ngDialog-min.css" />

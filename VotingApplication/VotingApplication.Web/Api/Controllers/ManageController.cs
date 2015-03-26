@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Web.Configuration;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
@@ -227,6 +229,18 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region Email Sending
 
+        private string HtmlFromFile(string path)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            using (Stream stream = assembly.GetManifestResourceStream(path))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+
         private void SendInvitation(Guid UUID, Token token, string pollQuestion)
         {
             if (string.IsNullOrEmpty(token.Email))
@@ -234,42 +248,19 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 return;
             }
 
-            String hostUri = WebConfigurationManager.AppSettings["HostURI"];
+            string hostUri = WebConfigurationManager.AppSettings["HostURI"];
             if (hostUri == String.Empty)
             {
                 return;
             }
 
-            var link = hostUri + "/Poll/#/Vote/" + UUID + "/" + token.TokenGuid;
+            string link = hostUri + "/Poll/#/Vote/" + UUID + "/" + token.TokenGuid;
 
-            string emailCss = @"
-<style type='text/css'>
-    button{background-color:#4caf50;border:1px solid #388e3c;padding:5px 10px;color:#fff;border-radius:5px;font-size:12pt;font-weight:700}html{position:absolute;top:0;bottom:0}body{border-color:#C8E6C9;border-style:solid;border-width:0 10px;max-width:400px;font-family:'open sans';text-align:center;margin:0}div{margin:auto;width:95%;background-color:#fff}.left{float:left;margin-left:20px}.right{float:right;margin-right:20px}.clear{clear:both;margin-bottom:30px}span{font-weight:700}hr{width:80%;background-color:#bbb;margin-top:15px;margin-bottom:30px;border-style:none;height:1px}h2{margin-top:5px}.smalltext{font-size:8pt;color:#888}.smalltext a{color:#888}
-</style>";
+            string htmlMessage = HtmlFromFile("VotingApplication.Web.Api.Resources.EmailTemplate.html");
+            htmlMessage = htmlMessage.Replace("__VOTEURI__", link);
+            htmlMessage = htmlMessage.Replace("__HOSTURI__", hostUri);
+            htmlMessage = htmlMessage.Replace("__POLLQUESTION__", pollQuestion);
 
-            string message = @"
-<div>
-    <a class='left' href='" + hostUri + @"'><img alt='Vote On' src='http://votingapp.azurewebsites.net/Images/Logo.png' /></a>
-    <p class='clear'></p>
-    <div>
-        You've been invited to Vote On
-        <h2>Where shall we go for lunch?</h2>
-        <a href='" + link + @"'><button>Vote Now</button></a>
-        <hr />
-    </div>
-    <p class='smalltext'>
-        You have been invited to vote on this question, using the main portal site.
-        If you decide not to vote, the poll will still go ahead but you'll miss your chance to express an opinion.
-        Some polls are time-limited, so the sooner you respond, the better.
-        <br />
-        <br />
-        Your email will not be used for marketing purposes,
-        only for this poll. The 'Vote On' name and brand is an unregistered trademark, and the property of <a href='http://www.scottlogic.com'>Scott Logic Ltd</a>.
-    </p>
-</div>
-<div style='clear: both;'></div>";
-
-            string htmlMessage = "<html><head>" + emailCss + "</head><body>" + message + "</body></html>";
             _mailSender.SendMail(token.Email, "Have your say", htmlMessage);
         }
 
