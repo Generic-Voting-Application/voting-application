@@ -4,32 +4,39 @@
             Poll Options
         </h2>
         <div class="manage-section" ng-repeat="option in poll.Options">
-            <form ng-submit="editToggle=false;updatePoll()">
+            <form ng-submit="editOptionToggle=false;$parent.editToggle=false;updatePoll()">
                 <div>
                     <span class="glyphicon glyphicon-remove pull-right clickable" aria-hidden="true" ng-click="remove(option)"></span>
-                    <span class="glyphicon glyphicon-pencil pull-left clickable" ng-if="!editToggle" aria-hidden="true" ng-click="$parent.editToggle=true"></span>
-                    <span class="glyphicon glyphicon-ok pull-left clickable" ng-if="editToggle" aria-hidden="true" ng-click="editToggle=false;updatePoll()"></span>
-                    <h4 class="icon-padded-left" ng-if="!editToggle">{{option.Name}}</h4>
-                    <h4 class="icon-padded-left" ng-if="editToggle"><input ng-model="option.Name" autofocus /></h4>
+                    <span class="glyphicon glyphicon-pencil pull-left clickable" ng-if="!editOptionToggle && !$parent.editToggle" aria-hidden="true" ng-click="$parent.editOptionToggle=true;$parent.$parent.editToggle=true"></span>
+                    <span class="glyphicon glyphicon-ok pull-left clickable" ng-if="editOptionToggle" aria-hidden="true" ng-click="editOptionToggle=false;$parent.$parent.editToggle=false;updatePoll()"></span>
+                    <h4 class="icon-padded-left" ng-if="!editOptionToggle">{{option.Name}}</h4>
+                    <h4 class="icon-padded-left" ng-if="editOptionToggle"><input ng-model="option.Name" autofocus /></h4>
                 </div>
                 <div>
-                    <span class="icon-padded-left" ng-if="!editToggle">{{option.Description}}</span>
-                    <span class="icon-padded-left" ng-if="editToggle"><input ng-model="option.Description" /></span>
+                    <span class="icon-padded-left" ng-if="!editOptionToggle">
+                        <span ng-if="!option.Description" ng-click="$parent.$parent.editOptionToggle=true"><a class="clickable">Add a description</a></span>
+                        <span ng-if="option.Description">{{option.Description}}</span>
+                    </span>
+                    <span class="icon-padded-left" ng-if="editOptionToggle"><input ng-model="option.Description" /></span>
                     @*Angular requires a button for submission. Go figure.*@
                     <button type="submit" hidden></button>
                 </div>
             </form>
         </div>
-        <div class="manage-section">
-            <form name="newOptionForm" ng-submit="add(newOptionForm);clear(newOptionForm);updatePoll();">
+        <div class="manage-section highlighted">
+            <strong class="icon-padded-left spacing-bottom">New option</strong>
+            <form name="newOptionForm" ng-submit="add(newOptionForm);clear(newOptionForm);descriptionToggle=false;updatePoll();">
                 <div>
-                    <span class="glyphicon glyphicon-plus pull-right clickable" aria-hidden="true" ng-hide="newOptionForm.$invalid" ng-click="add(newOptionForm);clear(newOptionForm);updatePoll();"></span>
-                    <h4 class="icon-padded-left"><input ng-model="newOptionForm.Name" placeholder="Option Name" required autofocus /></h4>
+                    <span class="glyphicon glyphicon-plus pull-right clickable" aria-hidden="true" ng-hide="newOptionForm.$invalid" ng-click="add(newOptionForm);clear(newOptionForm);descriptionToggle=false;updatePoll();"></span>
+                    <span class="icon-padded-left"><input ng-model="newOptionForm.Name" placeholder="Option Name" required autofocus /></span>
                 </div>
-                <div>
+                <div ng-if="descriptionToggle">
                     <span class="icon-padded-left"><input ng-model="newOptionForm.Description" placeholder="Option Description" /></span>
                     @*Angular requires a button for submission. Go figure.*@
                     <button type="submit" hidden></button>
+                </div>
+                <div ng-if="!descriptionToggle">
+                    <span class="icon-padded-left" ng-click="$parent.descriptionToggle=true"><a class="clickable">Add a description</a></span>
                 </div>
             </form>
         </div>
