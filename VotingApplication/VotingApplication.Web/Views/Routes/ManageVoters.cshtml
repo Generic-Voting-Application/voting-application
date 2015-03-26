@@ -13,22 +13,22 @@
         <div class="manage-section">
 
 
-            <table width="100%">
-                <tbody ng-repeat="ballot in voters">
-                    <tr>
-                        <td>
+            <table class="manage-voters-table">
+                <tbody ng-repeat="ballot in voters" class="manage-voters-body">
+                    <tr class="manage-voters-voter">
+                        <td class="clickable" ng-click="votesVisible = !votesVisible">
+                            <span class="clickable glyphicon glyphicon-chevron-right" ng-show="!votesVisible"></span>
+                            <span class="clickable glyphicon glyphicon-chevron-down" ng-show="votesVisible"></span>
                             <span>{{ballot.VoterName}}</span>
-                            <span class="clickable" ng-click="votesVisible = !votesVisible" ng-show="!votesVisible">+</span>
-                            <span class="clickable" ng-click="votesVisible = !votesVisible" ng-show="votesVisible">-</span>
                         </td>
                         <td>
-                            <span class="pull-right clickable">Delete</span>
+                            <span class="clickable pull-right glyphicon glyphicon-remove glyphicon-larger"></span>
                         </td>
                     </tr>
                     <tr ng-repeat="vote in ballot.Votes" ng-show="votesVisible">
                         <td style="padding-left: 20px;">{{vote.OptionName}}</td>
                         <td>
-                            <span class="pull-right clickable">Delete</span>
+                            <span class="pull-right clickable glyphicon glyphicon-remove"></span>
                         </td>
                     </tr>
                 </tbody>

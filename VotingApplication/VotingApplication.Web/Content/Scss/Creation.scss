@@ -168,17 +168,6 @@ body {
     width: 90%;
 }
 
-.manage-voters-table {
-    td, th {
-        padding: 4px;
-    }
-
-    button {
-        width: 100px;
-        height: 75px;
-    }
-}
-
 .toggle-switch {
     border-radius: 5px;
     background-color: #f0f0f0;
@@ -278,3 +267,22 @@ body {
 .poll-panel-pollName {
     font: bold 14pt 'Roboto';
 }
+
+// Manage Voters
+.manage-voters-table {
+    width: 100%;
+}
+
+.manage-voters-body {
+    border-bottom: 1px solid $BlueGrey100;
+    border-top: 1px solid $BlueGrey100;
+}
+
+.manage-voters-voter {
+    border-bottom: 1px solid $BlueGrey100;
+}
+
+.glyphicon-larger {
+    font-size: 1.4em;
+}
+
