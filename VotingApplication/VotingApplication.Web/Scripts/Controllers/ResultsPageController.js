@@ -23,14 +23,14 @@
 
         $scope.voteCount = 0;
 
-        var canvas = document.createElement("canvas");
+        var canvas = document.createElement('canvas');
 
         var textWidth = function (text) {
-            var context = canvas.getContext("2d");
-            context.font = "16px Open Sans";
+            var context = canvas.getContext('2d');
+            context.font = '16px Open Sans';
             var metrics = context.measureText(text);
             return metrics.width;
-        }
+        };
 
         var drawD3Chart = function (data) {
             // Hack to fix lack of data reloading
@@ -41,12 +41,12 @@
 
             var longestTextWidth = d3.max(data, function (d) { return textWidth(d.Name); });
 
-            var margin = { top: 30, right: 10, bottom: 10, left: longestTextWidth + 10};
+            var margin = { top: 30, right: 10, bottom: 10, left: longestTextWidth + 10 };
             var width = chartWidth - margin.left - margin.right;
             var height = chartHeight - margin.top - margin.bottom;
 
-            var minX = d3.min(data, function(d) { return d.Sum; });
-            var maxX = d3.max(data, function(d) { return d.Sum; });
+            var minX = d3.min(data, function (d) { return d.Sum; });
+            var maxX = d3.max(data, function (d) { return d.Sum; });
 
             var x = d3.scale.linear()
                 .range([0, width])
@@ -56,132 +56,51 @@
             var tickFrequency = Math.max((Math.pow(10, (Math.round(Math.log(dataRange) / Math.log(10)) - 1))), 1);
 
             var y = d3.scale.ordinal()
-                .rangeRoundBands([0, height], .2)
-                .domain(data.map(function(d) { return d.Name; }));
+                .rangeRoundBands([0, height], 0.2)
+                .domain(data.map(function (d) { return d.Name; }));
 
             var xAxis = d3.svg.axis()
                 .scale(x)
-                .orient("top")
+                .orient('top')
                 .ticks(dataRange / tickFrequency); // Ticks is *how many* ticks we display, not the frequency...
 
             var yAxis = d3.svg.axis()
                 .scale(y)
-                .orient("left");
+                .orient('left');
 
-            var chart = d3.select("#results-chart")
-                .append("svg")
-                    .attr("width", chartWidth)
-                    .attr("height", chartHeight)
-                .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            var chart = d3.select('#results-chart')
+                .append('svg')
+                    .attr('width', chartWidth)
+                    .attr('height', chartHeight)
+                .append('g')
+                    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-            chart.append("g")
-                .attr("class", "x axis")
+            chart.append('g')
+                .attr('class', 'x axis')
                 .call(xAxis);
 
-            chart.append("g")
-                .attr("class", "y axis")
+            chart.append('g')
+                .attr('class', 'y axis')
                 .call(yAxis)
-                .append("line")
-                .attr("x1", x(0))
-                .attr("x2", x(0))
-                .attr("y2", height);
+                .append('line')
+                .attr('x1', x(0))
+                .attr('x2', x(0))
+                .attr('y2', height);
 
-            chart.selectAll(".bar")
+            chart.selectAll('.bar')
                 .data(data)
-                .enter().append("rect")
-                .attr("class", function (d) { return d.Sum < 0 ? "bar negative" : "bar positive"; })
-                .attr("x", function (d) {
+                .enter().append('rect')
+                .attr('class', function (d) { return d.Sum < 0 ? 'bar negative' : 'bar positive'; })
+                .attr('x', function (d) {
                     return x(Math.min(0, d.Sum));
                 })
-                .attr("y", function (d) {
+                .attr('y', function (d) {
                     return y(d.Name);
                 })
-                .attr("width", function (d) {
+                .attr('width', function (d) {
                     return Math.abs(x(-d.Sum) - x(0));
                 })
-                .attr("height", 50);
-        }
-
-        var drawChart = function (data) {
-
-            // Hack to fix insight's lack of data reloading
-            document.getElementById('results-chart').innerHTML = '';
-
-            if (!data.length) {
-                return;
-            }
-
-            var highestDataValue = data.reduce(function (prev, curr) {
-                return curr.Sum > prev.Sum ? curr : prev;
-            }).Sum;
-
-            var tickFrequency = Math.max((Math.pow(10, (Math.round(Math.log(highestDataValue) / Math.log(10)) - 1))), 1);
-
-            var xAxis = new insight
-                .Axis('', insight.scales.linear)
-                .tickFrequency(tickFrequency);
-
-            var yAxis = new insight
-                .Axis('', insight.scales.ordinal)
-                .isOrdered(true);
-
-            var dataUnchanged = chart && data.length === chart.series().length;
-
-            var barCount = 0;
-            for (var n = 0; n < data.length; n++) {
-                barCount++;
-                dataUnchanged = dataUnchanged &&
-                    chart &&
-                    chart.series().length > n &&
-                    JSON.stringify(data[n].Data) === JSON.stringify(chart.series()[n].data.rawData());
-            }
-
-            //Exit early if data has not changed
-            if (dataUnchanged) {
-                return;
-            }
-
-            // Fixed height for column chart, but scale to number of rows for bar charts
-            var chartHeight = Math.min(data.length * 50 + 100, 600);
-            var chartWidth = Math.min(600, document.getElementById('results-chart').offsetWidth);
-
-            chart = new insight
-                .Chart('', '#results-chart')
-                .width(chartWidth)
-                .height(chartHeight);
-
-            chart.xAxis(xAxis);
-            chart.yAxis(yAxis);
-
-            chart.autoMargin(true);
-
-            var allSeries = new insight.RowSeries('Results', new insight.DataSet(data), xAxis, yAxis)
-                .keyFunction(function (d) {
-                    return d.Name;
-                })
-                .valueFunction(function (d) {
-                    return d.Sum;
-                })
-                .title('Results')
-                .tooltipFunction(function (d) {
-                    var voterCount = d.Voters.length;
-                    var votersDisplay = d.Voters;
-                    var addition = '';
-
-                    var maxToDisplay = 5;
-                    if (voterCount > maxToDisplay) {
-                        votersDisplay = d.Voters.slice(0, maxToDisplay);
-                        addition = '<br />+ ' + (voterCount - maxToDisplay) + ' others';
-                    }
-
-                    return '<b>' + d.Name + '</b>: ' + d.Sum + ' votes<br/><br/>' + votersDisplay.join('<br />') + addition;
-                });
-
-            chart.series([allSeries]);
-
-            // First parameter disables animation
-            chart.draw(true);
+                .attr('height', 50);
         };
 
         var reloadData = function () {

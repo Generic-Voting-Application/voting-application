@@ -700,7 +700,7 @@
     <FindTodos>false</FindTodos>
     <PreDefined>
       <string>angular</string>
-      <string>insight</string>
+      <string>d3</string>
       <string>moment</string>
     </PreDefined>
   </JSLintOptions>
