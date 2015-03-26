@@ -5,6 +5,11 @@ namespace VotingApplication.Data.Model
 {
     public class Poll
     {
+        public Poll()
+        {
+            Ballots = new List<Ballot>();
+        }
+
         public long Id { get; set; }
 
         public Guid UUID { get; set; }
@@ -23,7 +28,7 @@ namespace VotingApplication.Data.Model
         public int MaxPerVote { get; set; }
 
         public bool InviteOnly { get; set; }
-        public List<Token> Tokens { get; set; }
+        public List<Ballot> Ballots { get; set; }
 
         public bool NamedVoting { get; set; }
 

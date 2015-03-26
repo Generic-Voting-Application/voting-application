@@ -24,18 +24,18 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             _mailSender = mailSender;
         }
 
-        private TokenRequestModel TokenToModel(Token token)
+        private TokenRequestModel TokenToModel(Ballot ballot)
         {
             return new TokenRequestModel
             {
-                Email = token.Email,
-                TokenGuid = token.TokenGuid
+                Email = ballot.Email,
+                TokenGuid = ballot.TokenGuid
             };
         }
 
         private ManagePollRequestResponseModel PollToModel(Poll poll)
         {
-            List<TokenRequestModel> Voters = poll.Tokens.ConvertAll<TokenRequestModel>(TokenToModel);
+            List<TokenRequestModel> Voters = poll.Ballots.ConvertAll<TokenRequestModel>(TokenToModel);
 
             return new ManagePollRequestResponseModel
             {
@@ -62,7 +62,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Poll poll = context.Polls
                     .Where(p => p.ManageId == manageId)
                     .Include(p => p.Options)
-                    .Include(p => p.Tokens)
+                    .Include(p => p.Ballots)
                     .FirstOrDefault();
 
                 if (poll == null)
@@ -116,7 +116,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Poll poll = context.Polls
                                            .Where(p => p.ManageId == manageId)
                                            .Include(p => p.Options)
-                                           .Include(p => p.Tokens)
+                                           .Include(p => p.Ballots)
                                            .SingleOrDefault();
 
                 if (poll == null)
@@ -183,29 +183,29 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     poll.PollType = (PollType)Enum.Parse(typeof(PollType), updateRequest.VotingStrategy, true);
                 }
 
-                List<Token> redundantTokens = poll.Tokens.ToList<Token>();
+                List<Ballot> redundantTokens = poll.Ballots.ToList<Ballot>();
 
                 foreach (TokenRequestModel voter in updateRequest.Voters)
                 {
                     if (voter.TokenGuid == null)
                     {
-                        Token newToken = new Token { Email = voter.Email, TokenGuid = Guid.NewGuid() };
-                        poll.Tokens.Add(newToken);
-                        SendInvitation(poll.UUID, newToken, poll.Name);
+                        Ballot newBallot = new Ballot { Email = voter.Email, TokenGuid = Guid.NewGuid() };
+                        poll.Ballots.Add(newBallot);
+                        SendInvitation(poll.UUID, newBallot, poll.Name);
                     }
                     else
                     {
                         // Don't mark token as redundant if still in use
-                        Token token = redundantTokens.Find(t => t.TokenGuid == voter.TokenGuid);
-                        redundantTokens.Remove(token);
+                        Ballot ballot = redundantTokens.Find(t => t.TokenGuid == voter.TokenGuid);
+                        redundantTokens.Remove(ballot);
                     }
                 }
 
                 // Clean up tokens which have been removed
-                foreach (Token token in redundantTokens)
+                foreach (Ballot token in redundantTokens)
                 {
-                    context.Tokens.Remove(token);
-                    poll.Tokens.Remove(token);
+                    context.Ballots.Remove(token);
+                    poll.Ballots.Remove(token);
                 }
 
                 poll.Options = newOptions;
@@ -225,9 +225,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
-        private void SendInvitation(Guid UUID, Token token, string pollQuestion)
+        private void SendInvitation(Guid UUID, Ballot ballot, string pollQuestion)
         {
-            if (string.IsNullOrEmpty(token.Email))
+            if (string.IsNullOrEmpty(ballot.Email))
             {
                 return;
             }
@@ -238,11 +238,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 return;
             }
 
-            var link = hostUri + "/Poll/#/Vote/" + UUID + "/" + token.TokenGuid;
+            var link = hostUri + "/Poll/#/Vote/" + UUID + "/" + ballot.TokenGuid;
 
             string message = "You've been invited to Vote On '<a href=\"" + link + "\">" + pollQuestion + "</a>'";
 
-            _mailSender.SendMail(token.Email, "Have your say", message);
+            _mailSender.SendMail(ballot.Email, "Have your say", message);
         }
         #endregion
     }
