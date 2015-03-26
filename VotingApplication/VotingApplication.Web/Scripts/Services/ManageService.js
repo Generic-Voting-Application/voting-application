@@ -90,14 +90,14 @@
                 });
         };
 
-        self.getVoters = function (manageId) {
+        self.getVoters = function(manageId) {
             var request = $http({
                 method: 'GET',
                 url: '/api/manage/' + manageId + '/vote'
             });
 
             return request;
-        }
+        };
 
         return self;
     }

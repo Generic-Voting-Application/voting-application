@@ -22,6 +22,9 @@
                 .when('/Manage/:manageId/InvitationStyle', {
                     templateUrl: '../Routes/ManageInvitationStyle'
                 })
+                .when('/Manage/:manageId/Voters', {
+                    templateUrl: '../Routes/ManageVoters'
+                })
                 .when('/Manage/:manageId/PollType', {
                     templateUrl: '../Routes/ManagePollType'
                 })

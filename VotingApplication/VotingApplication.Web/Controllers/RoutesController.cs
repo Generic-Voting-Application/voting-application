@@ -99,6 +99,11 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
+        public ActionResult ManageVoters()
+        {
+            return View();
+        }
+
         public ActionResult PollTypeChange()
         {
             return View();

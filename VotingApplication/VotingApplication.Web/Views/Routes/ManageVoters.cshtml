@@ -1,0 +1,35 @@
+﻿<div ng-app="GVA.Creation" ng-controller="ManageVotersController">
+    <div class="manage-area centered">
+        <h2>Poll Voters</h2>
+
+        <div class="manage-section">
+            <div class="centered">
+                <div class="error-btn btn-large clickable">
+                    Reset All Votes
+                </div>
+            </div>
+        </div>
+
+        <div class="manage-section">
+
+
+            <table width="100%">
+                <tbody ng-repeat="ballot in voters">
+                    <tr>
+                        <td>{{ballot.VoterName}}</td>
+                        <td>
+                            <span class="pull-right">Delete</span>
+                        </td>
+                    </tr>
+                <tr ng-repeat="vote in ballot.Votes">
+                    <td style="padding-left: 20px;">{{vote.OptionName}}</td>
+                    <td>
+                        <span class="pull-right">Delete</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
