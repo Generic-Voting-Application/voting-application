@@ -36,6 +36,8 @@
             // Hack to fix lack of data reloading
             document.getElementById('results-chart').innerHTML = '';
 
+            data = data.sort(function (a, b) { return b.Sum - a.Sum; });
+
             var chartHeight = Math.min(data.length * 50 + 100, 600);
             var chartWidth = Math.min(600, document.getElementById('results-chart').offsetWidth);
 
