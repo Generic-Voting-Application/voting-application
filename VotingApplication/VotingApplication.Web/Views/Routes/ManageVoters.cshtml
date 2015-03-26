@@ -16,17 +16,21 @@
             <table width="100%">
                 <tbody ng-repeat="ballot in voters">
                     <tr>
-                        <td>{{ballot.VoterName}}</td>
                         <td>
-                            <span class="pull-right">Delete</span>
+                            <span>{{ballot.VoterName}}</span>
+                            <span class="clickable" ng-click="votesVisible = !votesVisible" ng-show="!votesVisible">+</span>
+                            <span class="clickable" ng-click="votesVisible = !votesVisible" ng-show="votesVisible">-</span>
+                        </td>
+                        <td>
+                            <span class="pull-right clickable">Delete</span>
                         </td>
                     </tr>
-                <tr ng-repeat="vote in ballot.Votes">
-                    <td style="padding-left: 20px;">{{vote.OptionName}}</td>
-                    <td>
-                        <span class="pull-right">Delete</span>
-                    </td>
-                </tr>
+                    <tr ng-repeat="vote in ballot.Votes" ng-show="votesVisible">
+                        <td style="padding-left: 20px;">{{vote.OptionName}}</td>
+                        <td>
+                            <span class="pull-right clickable">Delete</span>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 
