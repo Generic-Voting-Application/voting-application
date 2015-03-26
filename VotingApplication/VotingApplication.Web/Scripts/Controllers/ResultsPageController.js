@@ -38,7 +38,7 @@
 
             data = data.sort(function (a, b) { return b.Sum - a.Sum; });
 
-            var chartHeight = Math.min(data.length * 50 + 100, 600);
+            var chartHeight = Math.min(data.length * 60, 600);
             var chartWidth = Math.min(600, document.getElementById('results-chart').offsetWidth);
 
             var longestTextWidth = d3.max(data, function (d) { return textWidth(d.Name); });
@@ -58,7 +58,7 @@
             var tickFrequency = Math.max((Math.pow(10, (Math.round(Math.log(dataRange) / Math.log(10)) - 1))), 1);
 
             var y = d3.scale.ordinal()
-                .rangeRoundBands([0, height], 0.2)
+                .rangeRoundBands([0, height], 0.1)
                 .domain(data.map(function (d) { return d.Name; }));
 
             var xAxis = d3.svg.axis()
@@ -102,7 +102,7 @@
                 .attr('width', function (d) {
                     return Math.abs(x(-d.Sum) - x(0));
                 })
-                .attr('height', 50);
+                .attr('height', y.rangeBand());
         };
 
         var reloadData = function () {
