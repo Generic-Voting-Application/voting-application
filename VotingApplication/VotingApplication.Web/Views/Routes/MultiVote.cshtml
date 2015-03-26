@@ -6,9 +6,9 @@
                 <input class="pull-left option-checkbox" type="checkbox" ng-model="option.voteValue" ng-true-value="1" ng-false-value="0" ng-click="$event.stopPropagation()" />
                 <h4>{{option.Name}}</h4>
             </div>
-            <div class="option-block-row">
+            <div ng-if="option.Description" class="option-block-row checkbox-padded-left">
                 <p truncated-text ng-model="option.Description" max-chars="60" class="option-description"></p>
-            </div>
+            </div ng-if>
         </div>
         <hr />
     </div>

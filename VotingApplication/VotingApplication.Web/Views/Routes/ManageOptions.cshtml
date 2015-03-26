@@ -1,20 +1,20 @@
-﻿<div ng-app="GVA.Creation" ng-controller="ManageOptionController">
+﻿<div ng-app="GVA.Creation" ng-controller="ManageOptionController as vm">
     <div class="manage-area centered">
         <h2>
             Poll Options
         </h2>
         <div class="manage-section" ng-repeat="option in poll.Options">
-            <form ng-submit="editOptionToggle=false;$parent.editToggle=false;updatePoll()">
+            <form ng-submit="editOptionToggle=false;vm.editToggle=false;updatePoll()">
                 <div>
                     <span class="glyphicon glyphicon-remove pull-right clickable" aria-hidden="true" ng-click="remove(option)"></span>
-                    <span class="glyphicon glyphicon-pencil pull-left clickable" ng-if="!editOptionToggle && !$parent.editToggle" aria-hidden="true" ng-click="$parent.editOptionToggle=true;$parent.$parent.editToggle=true"></span>
-                    <span class="glyphicon glyphicon-ok pull-left clickable" ng-if="editOptionToggle" aria-hidden="true" ng-click="editOptionToggle=false;$parent.$parent.editToggle=false;updatePoll()"></span>
+                    <span class="glyphicon glyphicon-pencil pull-left clickable" ng-if="!editOptionToggle && !vm.editToggle" aria-hidden="true" ng-click="$parent.editOptionToggle=true;vm.editToggle=true"></span>
+                    <span class="glyphicon glyphicon-ok pull-left clickable" ng-if="editOptionToggle" aria-hidden="true" ng-click="editOptionToggle=false;vm.editToggle=false;updatePoll()"></span>
                     <h4 class="icon-padded-left" ng-if="!editOptionToggle">{{option.Name}}</h4>
                     <h4 class="icon-padded-left" ng-if="editOptionToggle"><input ng-model="option.Name" autofocus /></h4>
                 </div>
                 <div>
                     <span class="icon-padded-left" ng-if="!editOptionToggle">
-                        <span ng-if="!option.Description" ng-click="$parent.$parent.editOptionToggle=true"><a class="clickable">Add a description</a></span>
+                        <span ng-if="!option.Description" ng-click="$parent.$parent.editOptionToggle=true;vm.editToggle=true"><a class="clickable">Add a description</a></span>
                         <span ng-if="option.Description">{{option.Description}}</span>
                     </span>
                     <span class="icon-padded-left" ng-if="editOptionToggle"><input ng-model="option.Description" /></span>
