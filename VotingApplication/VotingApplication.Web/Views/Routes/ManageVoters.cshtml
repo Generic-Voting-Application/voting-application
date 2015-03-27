@@ -1,19 +1,44 @@
 ﻿<div ng-app="GVA.Creation" ng-controller="ManageVotersController">
-    <div class="centered">
+    <div class="manage-area centered">
         <h2>Poll Voters</h2>
-        <h4>Email to Invite</h4>
-        <input id="new-voter" name="new-voter" ng-model="inviteString" ng-change="emailUpdated()" ng-trim="false" />
 
-        <div class="pill-box">
-            <div class="voter-pill" ng-repeat="voter in poll.Voters">
-                <span class="voter-pill-text">{{voter.Email}}</span>
-                <span class="glyphicon glyphicon-remove voter-pill-delete" ng-click="deleteVoter(voter)" aria-hidden="true"></span>
+        <div class="manage-section">
+            <div class="centered">
+                <div class="error-btn btn-large clickable" ng-click="removeAllVotes()">
+                    Reset All Votes
+                </div>
             </div>
         </div>
 
         <div class="manage-section">
-            <button class="manage-btn" ng-click="sendInvitations()">Invite voters</button>
-            <button class="manage-btn" ng-click="return()">Back</button>
+            <table class="manage-voters-table">
+                <tbody ng-repeat="ballot in voters" class="manage-voters-body">
+
+                    <tr class="manage-voters-voter">
+                        <td class="clickable" ng-click="votesVisible = !votesVisible">
+                            <span class="clickable glyphicon glyphicon-chevron-right" ng-show="!votesVisible"></span>
+                            <span class="clickable glyphicon glyphicon-chevron-down" ng-show="votesVisible"></span>
+
+                            <span> {{ ballot.VoterName }} </span>
+                        </td>
+                        <td>
+                            <span class="clickable pull-right glyphicon glyphicon-remove glyphicon-larger" ng-click="removeBallot(ballot)"></span>
+                        </td>
+                    </tr>
+
+                    <tr ng-repeat="vote in ballot.Votes" ng-show="votesVisible">
+                        <td class="manage-voters-vote"> {{ vote.OptionName }} </td>
+                        <td>
+                            <span class="clickable pull-right glyphicon glyphicon-remove" ng-click="removeVote(vote, ballot)"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="manage-section">
+            <button class="manage-btn" ng-click="confirmDeleteAndReturn()">Confirm</button>
+            <button class="manage-btn" ng-click="returnWithoutDelete()">Cancel</button>
         </div>
     </div>
 </div>

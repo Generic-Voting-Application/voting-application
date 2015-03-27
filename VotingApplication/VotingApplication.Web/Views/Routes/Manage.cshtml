@@ -25,11 +25,11 @@
         <div class="manage-section">
             <div>
                 <span class="glyphicon glyphicon-user pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Voters:</h4>
+                <h4 class="icon-padded-left">Invitees:</h4>
             </div>
             <div>
-                <span class="icon-padded-left">{{poll.Voters.length}} Voters</span>
-                <span class="pull-right"><a href="{{manageSubPageUrl('Voters')}}">Edit</a></span>
+                <span class="icon-padded-left">{{poll.Voters.length}} Invitees</span>
+                <span class="pull-right"><a href="{{manageSubPageUrl('Invitees')}}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section">
@@ -42,7 +42,7 @@
                 <span class="icon-padded-left" ng-if="!poll.InviteOnly">Open Voting, </span>
                 <span ng-if="poll.NamedVoting">Named Voters</span>
                 <span ng-if="!poll.NamedVoting">Anonymous Voters</span>
-                <span class="pull-right"><a href="{{manageSubPageUrl('Invitations')}}">Edit</a></span>
+                <span class="pull-right"><a href="{{manageSubPageUrl('InvitationStyle')}}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section">

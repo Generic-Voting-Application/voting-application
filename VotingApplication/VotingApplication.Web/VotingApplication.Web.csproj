@@ -259,6 +259,7 @@
     <Compile Include="Api\Models\DBViewModels\DashboardPollResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollRequestResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollUpdateRequest.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManageVoteResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\OptionCreationRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\OptionRequestResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\PollCreationRequestModel.cs" />
@@ -319,6 +320,7 @@
     <None Include="ClearScript.V8\v8-x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="Api\Resources\EmailTemplate.html" />
     <Content Include="Content\Lib\Css\angular-toggle-switch.css" />
     <Content Include="Content\Lib\Css\bootstrap-glyphicons.css" />
     <Content Include="Content\Lib\Css\ngDialog-min.css" />
@@ -329,6 +331,7 @@
     <Content Include="Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\Logo.png" />
+    <Content Include="Scripts\Controllers\ManageVotersController.js" />
     <Content Include="Scripts\Controllers\PollTypeChangeController.js" />
     <Content Include="Scripts\Controllers\AccountRegisterController.js" />
     <Content Include="Scripts\Controllers\AccountLoginController.js" />
@@ -337,8 +340,8 @@
     <Content Include="Scripts\Controllers\AccountResetPasswordController.js" />
     <Content Include="Scripts\Controllers\RegisteredDashboardController.js" />
     <Content Include="Scripts\Controllers\HomepageController.js" />
-    <Content Include="Scripts\Controllers\ManageVotersController.js" />
-    <Content Include="Scripts\Controllers\ManageInvitationsController.js" />
+    <Content Include="Scripts\Controllers\ManageInviteesController.js" />
+    <Content Include="Scripts\Controllers\ManageInvitationStyleController.js" />
     <Content Include="Scripts\Controllers\ManageOptionController.js" />
     <Content Include="Scripts\Controllers\ManagePageController.js" />
     <Content Include="Scripts\Controllers\DashboardController.js" />
@@ -391,18 +394,18 @@
     <Content Include="Views\Routes\MultiVote.cshtml" />
     <Content Include="Views\Routes\ManageOptions.cshtml" />
     <Content Include="Views\Routes\ManagePollType.cshtml" />
-    <Content Include="Views\Routes\ManageVoters.cshtml" />
+    <Content Include="Views\Routes\ManageInvitees.cshtml" />
     <Content Include="Views\Routes\ManageExpiry.cshtml" />
     <Content Include="Views\Routes\DatePicker.cshtml" />
     <Content Include="Views\Routes\RegisteredDashboard.cshtml" />
     <Content Include="Views\Routes\HomePage.cshtml" />
     <Content Include="Content\Scss\DateTimePicker.scss" />
     <Content Include="Views\Routes\TimePicker.cshtml" />
+    <Content Include="Views\Routes\ManageVoters.cshtml" />
     <None Include="Views\Routes\PollHeading.cshtml" />
     <Content Include="Views\Routes\PollTypeChange.cshtml" />
     <Content Include="Scripts\Directives\UnlockableOption.html" />
     <Content Include="Scripts\Directives\PollHeading.html" />
-    <Content Include="Views\Routes\HomePage.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -416,7 +419,7 @@
     <Content Include="Views\Routes\IdentityLogin.cshtml" />
     <Content Include="Views\Routes\UpDownVote.cshtml" />
     <Content Include="Views\Poll\Index.cshtml" />
-    <Content Include="Views\Routes\ManageInvitations.cshtml" />
+    <Content Include="Views\Routes\ManageInvitationStyle.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
