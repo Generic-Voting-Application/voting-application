@@ -96,7 +96,14 @@
                 .attr('class', 'd3-tip')
                 .offset([-10, 0])
                 .html(function (d) {
-                    return "<b>" + d.Name + "</b>: " + d.Sum + " votes<br /><br />" + d.Voters.join("<br />");
+                    var voterNames = d.Voters.slice(0, 5);
+                    var tooltipText = "<b>" + d.Name + "</b>: " + d.Sum + " votes<br /><br />" + voterNames.join("<br />");
+                    // Clip for more than 5 voters
+                    if (d.Voters.length > 5) {
+                        tooltipText += "<br />+ " + (d.Voters.length - 5) + " others";
+                    }
+
+                    return tooltipText
                 });
 
             chart.call(tooltip);
