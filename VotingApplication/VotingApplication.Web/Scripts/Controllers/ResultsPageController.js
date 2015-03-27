@@ -32,6 +32,21 @@
             return metrics.width;
         };
 
+        var tickFrequencyForRange = function (range) {
+            var tickFrequency = 1;
+            var step = 0;
+
+            while (range / tickFrequency >= 10) {
+                // Multiply by: 2x, 5x, 10x, 20x, 50x, 100x, etc.
+                var multiplier = (step % 3 === 1) ? 2.5 : 2;
+                tickFrequency = tickFrequency * multiplier;
+
+                step++;
+            }
+
+            return tickFrequency;
+        }
+
         var drawD3Chart = function (data) {
             // Hack to fix lack of data reloading
             document.getElementById('results-chart').innerHTML = '';
@@ -55,7 +70,7 @@
                 .domain([Math.min(0, minX), maxX]).nice();
 
             var dataRange = x.domain()[1] - x.domain()[0];
-            var tickFrequency = Math.max((Math.pow(10, (Math.round(Math.log(dataRange) / Math.log(10)) - 1))), 1);
+            var tickFrequency = tickFrequencyForRange(dataRange);
 
             var y = d3.scale.ordinal()
                 .rangeRoundBands([0, height], 0.1)
