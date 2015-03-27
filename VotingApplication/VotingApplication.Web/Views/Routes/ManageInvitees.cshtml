@@ -1,0 +1,19 @@
+﻿<div ng-app="GVA.Creation" ng-controller="ManageInviteesController">
+    <div class="centered">
+        <h2>Poll Invitees</h2>
+        <h4>Email to Invite</h4>
+        <input id="new-invitee" name="new-invitee" ng-model="inviteString" ng-change="emailUpdated()" ng-trim="false" />
+
+        <div class="pill-box">
+            <div class="invitee-pill" ng-repeat="invitee in poll.Voters">
+                <span class="invitee-pill-text">{{invitee.Email}}</span>
+                <span class="glyphicon glyphicon-remove invitee-pill-delete" ng-click="deleteInvitee(invitee)" aria-hidden="true"></span>
+            </div>
+        </div>
+
+        <div class="manage-section">
+            <button class="manage-btn" ng-click="sendInvitations()">Invite</button>
+            <button class="manage-btn" ng-click="return()">Back</button>
+        </div>
+    </div>
+</div>

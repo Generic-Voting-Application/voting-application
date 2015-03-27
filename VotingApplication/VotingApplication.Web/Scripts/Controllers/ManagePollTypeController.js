@@ -1,11 +1,11 @@
 ﻿(function () {
     angular
         .module('GVA.Creation')
-        .controller('ManagePollTypeController', ManageVotersController);
+        .controller('ManagePollTypeController', ManagePollTypeController);
 
-    ManageVotersController.$inject = ['$scope', '$routeParams', '$location', 'ngDialog', 'ManageService', 'RoutingService'];
+    ManagePollTypeController.$inject = ['$scope', '$routeParams', '$location', 'ngDialog', 'ManageService', 'RoutingService'];
 
-    function ManageVotersController($scope, $routeParams, $location, ngDialog, ManageService, RoutingService) {
+    function ManagePollTypeController($scope, $routeParams, $location, ngDialog, ManageService, RoutingService) {
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;

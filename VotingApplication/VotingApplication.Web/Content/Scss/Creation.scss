@@ -168,17 +168,6 @@ body {
     width: 90%;
 }
 
-.manage-voters-table {
-    td, th {
-        padding: 4px;
-    }
-
-    button {
-        width: 100px;
-        height: 75px;
-    }
-}
-
 .toggle-switch {
     border-radius: 5px;
     background-color: #f0f0f0;
@@ -221,7 +210,7 @@ body {
     margin-top: 10px;
 }
 
-.voter-pill {
+.invitee-pill {
     border: 1px solid $BlueGrey100;
     border-radius: 5px;
     height: 25px;
@@ -230,12 +219,12 @@ body {
     margin: 2px;
     overflow: hidden;
 
-    .voter-pill-text {
+    .invitee-pill-text {
         padding: 2px 5px;
         float: left;
     }
 
-    .voter-pill-delete {
+    .invitee-pill-delete {
         float: right;
         background-color: $Red500;
         color: $White;
@@ -277,4 +266,26 @@ body {
 
 .poll-panel-pollName {
     font: bold 14pt 'Roboto';
+}
+
+// Manage Voters
+.manage-voters-table {
+    width: 100%;
+}
+
+.manage-voters-body {
+    border-bottom: 1px solid $BlueGrey100;
+    border-top: 1px solid $BlueGrey100;
+}
+
+.manage-voters-voter {
+    border-bottom: 1px solid $BlueGrey100;
+}
+
+.manage-voters-vote {
+    padding-left: 24px;
+}
+
+.glyphicon-larger {
+    font-size: 1.4em;
 }
