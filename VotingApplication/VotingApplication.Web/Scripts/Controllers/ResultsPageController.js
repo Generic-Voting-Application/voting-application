@@ -67,7 +67,7 @@
 
             var x = d3.scale.linear()
                 .range([0, width])
-                .domain([Math.min(0, minX), maxX]).nice();
+                .domain([Math.min(0, minX), Math.max(0, maxX)]).nice();
 
             var dataRange = x.domain()[1] - x.domain()[0];
             var tickFrequency = tickFrequencyForRange(dataRange);
