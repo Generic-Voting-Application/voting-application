@@ -77,6 +77,15 @@
                 .append('g')
                     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
+            var tooltip = d3.tip()
+                .attr('class', 'd3-tip')
+                .offset([-10, 0])
+                .html(function (d) {
+                    return "<b>" + d.Name + "</b>: " + d.Sum + " votes<br /><br />" + d.Voters.join("<br />");
+                });
+
+            chart.call(tooltip);
+
             chart.append('g')
                 .attr('class', 'x axis')
                 .call(xAxis);
@@ -102,7 +111,9 @@
                 .attr('width', function (d) {
                     return Math.abs(x(-d.Sum) - x(0));
                 })
-                .attr('height', y.rangeBand());
+                .attr('height', y.rangeBand())
+                .on('mouseover', tooltip.show)
+                .on('mouseout', tooltip.hide);
         };
 
         var reloadData = function () {
