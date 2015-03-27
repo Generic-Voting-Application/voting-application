@@ -34,8 +34,12 @@
 
                 scope.$watch('ngModel', function () {
                     scope.fullText = scope.ngModel;
-                    scope.truncatedText = truncateText(scope.fullText, scope.maxChars);
-                    scope.truncated = scope.fullText !== scope.truncatedText;
+                    if (scope.fullText) {
+                        scope.truncatedText = truncateText(scope.fullText, scope.maxChars);
+                        scope.truncated = scope.fullText !== scope.truncatedText;
+                    } else {
+                        scope.truncated = false;
+                    }
                 });
             }
         }
