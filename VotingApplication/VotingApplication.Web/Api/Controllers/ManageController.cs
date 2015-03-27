@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Web.Configuration;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
@@ -225,6 +227,20 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
+        #region Email Sending
+
+        private string HtmlFromFile(string path)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            using (Stream stream = assembly.GetManifestResourceStream(path))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+
         private void SendInvitation(Guid UUID, Ballot ballot, string pollQuestion)
         {
             if (string.IsNullOrEmpty(ballot.Email))
@@ -232,18 +248,24 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 return;
             }
 
-            String hostUri = WebConfigurationManager.AppSettings["HostURI"];
+            string hostUri = WebConfigurationManager.AppSettings["HostURI"];
             if (hostUri == String.Empty)
             {
                 return;
             }
 
-            var link = hostUri + "/Poll/#/Vote/" + UUID + "/" + ballot.TokenGuid;
+            string link = hostUri + "/Poll/#/Vote/" + UUID + "/" + ballot.TokenGuid;
 
-            string message = "You've been invited to Vote On '<a href=\"" + link + "\">" + pollQuestion + "</a>'";
+            string htmlMessage = HtmlFromFile("VotingApplication.Web.Api.Resources.EmailTemplate.html");
+            htmlMessage = htmlMessage.Replace("__VOTEURI__", link);
+            htmlMessage = htmlMessage.Replace("__HOSTURI__", hostUri);
+            htmlMessage = htmlMessage.Replace("__POLLQUESTION__", pollQuestion);
 
-            _mailSender.SendMail(ballot.Email, "Have your say", message);
+            _mailSender.SendMail(ballot.Email, "Have your say", htmlMessage);
         }
+
+        #endregion
+
         #endregion
     }
 }
