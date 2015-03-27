@@ -1,30 +1,32 @@
-﻿<div ng-app="GVA.Creation" ng-controller="ManageOptionController">
+﻿<div ng-app="GVA.Creation" ng-controller="ManageOptionController as vm">
     <div class="manage-area centered">
         <h2>
             Poll Options
         </h2>
         <div class="manage-section" ng-repeat="option in poll.Options">
-            <form ng-submit="editToggle=false;updatePoll()">
+            <form ng-submit="editOptionToggle=false;vm.editToggle=false;updatePoll()">
                 <div>
                     <span class="glyphicon glyphicon-remove pull-right clickable" aria-hidden="true" ng-click="remove(option)"></span>
-                    <span class="glyphicon glyphicon-pencil pull-left clickable" ng-if="!editToggle" aria-hidden="true" ng-click="$parent.editToggle=true"></span>
-                    <span class="glyphicon glyphicon-ok pull-left clickable" ng-if="editToggle" aria-hidden="true" ng-click="editToggle=false;updatePoll()"></span>
-                    <h4 class="icon-padded-left" ng-if="!editToggle">{{option.Name}}</h4>
-                    <h4 class="icon-padded-left" ng-if="editToggle"><input ng-model="option.Name" autofocus /></h4>
+                    <span class="glyphicon glyphicon-pencil pull-left clickable" ng-if="!editOptionToggle && !vm.editToggle" aria-hidden="true" ng-click="$parent.editOptionToggle=true;vm.editToggle=true"></span>
+                    <span class="glyphicon glyphicon-ok pull-left clickable" ng-if="editOptionToggle" aria-hidden="true" ng-click="editOptionToggle=false;vm.editToggle=false;updatePoll()"></span>
+                    <h4 class="icon-padded-left" ng-if="!editOptionToggle">{{option.Name}}</h4>
+                    <h4 class="icon-padded-left" ng-if="editOptionToggle"><input ng-model="option.Name" autofocus /></h4>
                 </div>
                 <div>
-                    <span class="icon-padded-left" ng-if="!editToggle">{{option.Description}}</span>
-                    <span class="icon-padded-left" ng-if="editToggle"><input ng-model="option.Description" /></span>
+                    <div class="icon-padded-left" ng-if="!editOptionToggle">
+                        {{option.Description}}
+                    </div>
+                    <span class="icon-padded-left" ng-if="editOptionToggle"><input ng-model="option.Description" /></span>
                     @*Angular requires a button for submission. Go figure.*@
                     <button type="submit" hidden></button>
                 </div>
             </form>
         </div>
         <div class="manage-section">
-            <form name="newOptionForm" ng-submit="add(newOptionForm);clear(newOptionForm);updatePoll();">
-                <div>
-                    <span class="glyphicon glyphicon-plus pull-right clickable" aria-hidden="true" ng-hide="newOptionForm.$invalid" ng-click="add(newOptionForm);clear(newOptionForm);updatePoll();"></span>
-                    <h4 class="icon-padded-left"><input ng-model="newOptionForm.Name" placeholder="Option Name" required autofocus /></h4>
+            <form name="newOptionForm" ng-submit="add(newOptionForm);clear(newOptionForm);descriptionToggle=false;updatePoll();">
+                <div class="spacing-bottom">
+                    <span class="glyphicon glyphicon-plus pull-right clickable" aria-hidden="true" ng-hide="newOptionForm.$invalid" ng-click="add(newOptionForm);clear(newOptionForm);descriptionToggle=false;updatePoll();"></span>
+                    <span class="icon-padded-left"><input ng-model="newOptionForm.Name" placeholder="Option Name" required autofocus /></span>
                 </div>
                 <div>
                     <span class="icon-padded-left"><input ng-model="newOptionForm.Description" placeholder="Option Description" /></span>
