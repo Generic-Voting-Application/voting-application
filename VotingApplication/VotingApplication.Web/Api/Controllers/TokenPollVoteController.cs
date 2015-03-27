@@ -115,8 +115,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     }
                     else
                     {
-                        token = new Token() { TokenGuid = tokenGuid };
-                        poll.Tokens.Add(token);
+                        ballot = new Ballot() { TokenGuid = tokenGuid };
+                        poll.Ballots.Add(ballot);
                     }
                 }
 
