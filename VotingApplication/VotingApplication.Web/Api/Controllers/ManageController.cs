@@ -31,7 +31,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             return new TokenRequestModel
             {
                 Email = ballot.Email,
-                TokenGuid = ballot.TokenGuid
+                TokenGuid = ballot.TokenGuid,
+                Name = ballot.VoterName
             };
         }
 
