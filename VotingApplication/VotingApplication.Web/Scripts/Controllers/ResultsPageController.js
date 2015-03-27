@@ -96,7 +96,7 @@
                 .attr('class', 'd3-tip')
                 .offset([-10, 0])
                 .html(function (d) {
-                    var voterNames = d.Voters.slice(0, 5).map(function(d) { return d.Name + " (" + d.Value + ")";});
+                    var voterNames = d.Voters.slice(0, 5).map(function(d) { return d.Name + ' (' + d.Value + ')';});
                     var tooltipText = '<b>' + d.Name + '</b>: ' + d.Sum + ' votes<br /><br />' + voterNames.join('<br />');
                     // Clip for more than 5 voters
                     if (d.Voters.length > 5) {
@@ -157,7 +157,7 @@
                 }
 
                 groupedData[d.OptionName].Value += d.VoteValue;
-                var optionVote = { Name: d.VoterName, Value: d.VoteValue }
+                var optionVote = { Name: d.VoterName, Value: d.VoteValue };
                 groupedData[d.OptionName].Voters.push(optionVote);
 
             });
