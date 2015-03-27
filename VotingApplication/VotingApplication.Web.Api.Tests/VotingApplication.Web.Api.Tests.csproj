@@ -107,6 +107,8 @@
     <Compile Include="Controllers\PollVoteControllerTests.cs" />
     <Compile Include="Controllers\TokenPollVoteControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestHelpers\ContextFactoryTestHelper.cs" />
+    <Compile Include="TestHelpers\DbSetTestHelper.cs" />
     <Compile Include="Validators\BasicVoteValidatorTests.cs" />
     <Compile Include="Validators\PointsVoteValidatorTests.cs" />
     <Compile Include="Validators\RankedVoteValidatorTests.cs" />

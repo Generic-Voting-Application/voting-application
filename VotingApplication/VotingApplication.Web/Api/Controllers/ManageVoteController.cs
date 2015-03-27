@@ -78,26 +78,31 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         [HttpDelete]
         public void Delete(Guid manageId)
         {
-            using (var context = _contextFactory.CreateContext())
+            using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.FirstOrDefault(s => s.ManageId == manageId);
-                if (matchingPoll == null)
+                Poll poll = context
+                    .Polls
+                    .FirstOrDefault(s => s.ManageId == manageId);
+
+                if (poll == null)
                 {
                     this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
-                List<Vote> votesInManagedPoll = context
-                    .Votes
-                    .Include(v => v.Poll)
-                    .Where(v => v.Poll.UUID == matchingPoll.UUID)
-                    .ToList();
-
-                foreach (Vote vote in votesInManagedPoll)
+                foreach (Ballot ballot in poll.Ballots.ToList())
                 {
-                    context.Votes.Remove(vote);
+                    foreach (Vote vote in ballot.Votes.ToList())
+                    {
+                        context.Votes.Remove(vote);
+                    }
+
+                    ballot.Votes.Clear();
+                    context.Ballots.Remove(ballot);
                 }
 
-                matchingPoll.LastUpdated = DateTime.Now;
+                poll.Ballots.Clear();
+                poll.LastUpdated = DateTime.Now;
+
                 context.SaveChanges();
             }
         }
