@@ -13,6 +13,9 @@
                 <span class="glyphicon glyphicon-remove invitee-pill-delete" ng-click="deleteInvitee(invitee)" aria-hidden="true"></span>
             </div>
         </div>
+        <div class="manage-section" ng-if="pendingUsers.length > 0">
+            <button class="manage-btn" ng-click="addInvitee(inviteString); sendInvitations();">Invite</button>
+        </div>
 
         <h4>Invited</h4>
         <p ng-if="invitedUsers.length === 0">You haven't invited anybody yet</p>
@@ -24,7 +27,6 @@
         </div>
 
         <div class="manage-section">
-            <button class="manage-btn" ng-click="addInvitee(inviteString); sendInvitations();">Invite</button>
             <button class="manage-btn" ng-click="return()">Done</button>
         </div>
     </div>
