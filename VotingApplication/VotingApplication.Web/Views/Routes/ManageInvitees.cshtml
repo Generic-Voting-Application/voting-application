@@ -3,7 +3,7 @@
         <h2>Poll Invitees</h2>
         <h4>Email to Invite</h4>
         <input id="new-invitee" name="new-invitee" ng-model="inviteString" ng-change="emailUpdated()" ng-trim="false" />
-        <span class="glyphicon glyphicon-plus" ng-click="sendInvitations();"></span>
+        <span class="glyphicon glyphicon-plus" ng-click="addInvitee(inviteString);"></span>
         
         <h4>Invited users</h4>
         <p ng-if="poll.Voters.length === 0">You haven't invited anybody yet</p>
@@ -15,8 +15,8 @@
         </div>
 
         <div class="manage-section">
-            <button class="manage-btn" ng-click="sendInvitations(); return();">Invite</button>
-            <button class="manage-btn" ng-click="return()">Back</button>
+            <button class="manage-btn" ng-click="addInvitee(inviteString); sendInvitations(); return();">Invite</button>
+            <button class="manage-btn" ng-click="return()">Done</button>
         </div>
     </div>
 </div>

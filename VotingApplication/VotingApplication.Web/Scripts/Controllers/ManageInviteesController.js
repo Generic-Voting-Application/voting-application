@@ -12,8 +12,9 @@
         $scope.manageId = $routeParams.manageId;
 
         $scope.emailUpdated = emailUpdated;
+        $scope.addInvitee = addInvitee;
         $scope.deleteInvitee = deleteInvitee;
-        $scope.sendInvitations = sendInvitations;
+        $scope.sendInvitations = updatePoll;
         $scope.inviteString = '';
 
         $scope.updatePoll = updatePoll;
@@ -42,8 +43,10 @@
                         return { Email: d.match(emailRegex)[0] };
                     });
 
-                $scope.poll.Voters = $scope.poll.Voters.concat(newEmails);
-                $scope.inviteString = remainingText;
+                for (var i = 0; i < newEmails.length; i++) {
+                    addInvitee(newEmails[i].Email);
+                }
+
                 $scope.$apply();
             }
         }
@@ -54,12 +57,28 @@
             $scope.poll.Voters.splice(indexOfInvitee, 1);
         }
 
-        function sendInvitations() {
-            // Parse anything still in the field
-            $scope.inviteString += ';';
-            emailUpdated();
+        function addInvitee(invitee) {
+            if (!invitee.match(emailRegex)) {
+                return;
+            }
 
-            updatePoll();
+            // Avoid duplicate invitations
+            var existingEmails = $scope.poll.Voters.filter(function (d) {
+                return (d.Email === invitee);
+            });
+
+            if (existingEmails.length === 0) {
+                $scope.poll.Voters.push({ Email: invitee });
+            }
+
+
+            // if inviteString.endsWith(invitee). Curse your obsfucation, Javascript!
+            if ($scope.inviteString.indexOf(invitee, $scope.inviteString.length - invitee.length) !== 1) {
+                $scope.inviteString = '';
+            }
+            else {
+                $scope.inviteString = $scope.inviteeString.split(invitee)[1];
+            }
         }
 
         function hasTerminatingCharacter(value) {
