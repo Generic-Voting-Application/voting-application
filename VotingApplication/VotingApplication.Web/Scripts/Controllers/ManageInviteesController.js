@@ -60,7 +60,6 @@
             emailUpdated();
 
             updatePoll();
-            returnToManage();
         }
 
         function hasTerminatingCharacter(value) {
