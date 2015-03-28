@@ -99,14 +99,22 @@
             return request;
         };
 
-        self.sendInvitations = function (manageId) {
-            var request = $http({
+        self.sendInvitations = function (manageId, callback, failureCallback) {
+            $http({
                 method: 'POST',
                 url: '/api/manage/' + manageId + '/invitation'
+            })
+            .success(function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            })
+            .error(function (data, status) {
+                if (failureCallback) {
+                    failureCallback(data, status);
+                }
             });
-
-            return request;
-        };
+        }
 
         return self;
     }

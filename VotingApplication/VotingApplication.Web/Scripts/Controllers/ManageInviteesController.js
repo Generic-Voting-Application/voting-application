@@ -20,6 +20,9 @@
         $scope.updatePoll = updatePoll;
         $scope.return = returnToManage;
 
+        $scope.pendingUsers = [];
+        $scope.invitedUsers = [];
+
         activate();
 
         var splitterTest = /[\n\s;>]+/;
@@ -68,7 +71,9 @@
             });
 
             if (existingEmails.length === 0) {
-                $scope.poll.Voters.push({ Email: invitee, EmailSent: false });
+                var newInvitee = { Email: invitee, EmailSent: false }
+                $scope.poll.Voters.push(newInvitee);
+                $scope.pendingUsers.push(newInvitee);
             }
 
 
@@ -79,6 +84,8 @@
             else {
                 $scope.inviteString = $scope.inviteeString.split(invitee)[1];
             }
+
+            updatePoll();
         }
 
         function hasTerminatingCharacter(value) {
@@ -86,7 +93,9 @@
         }
 
         function sendInvitations() {
-            ManageService.sendInvitations($routeParams.manageId);
+            ManageService.sendInvitations($routeParams.manageId, function() {
+                ManageService.getPoll($scope.manageId);
+            });
         }
 
         function updatePoll() {
@@ -95,15 +104,37 @@
             });
         }
 
+        function filterUsersByPending() {
+            $scope.pendingUsers = [];
+            $scope.invitedUsers = [];
+
+            if ($scope.poll === null) {
+                return;
+            }
+
+            for (var i = 0; i < $scope.poll.Voters.length; i++) {
+                var voter = $scope.poll.Voters[i];
+                
+                if (voter.EmailSent) {
+                    $scope.invitedUsers.push(voter);
+                }
+                else {
+                    $scope.pendingUsers.push(voter);
+                }
+            }
+        }
+
         function returnToManage() {
-            updatePoll();
             RoutingService.navigateToManagePage($scope.manageId);
         }
 
         function activate() {
             ManageService.registerPollObserver(function () {
                 $scope.poll = ManageService.poll;
+                filterUsersByPending();
             });
+
+            filterUsersByPending();
 
             var inputField = document.getElementById('new-invitee');
             inputField.addEventListener('keydown', function (e) {
