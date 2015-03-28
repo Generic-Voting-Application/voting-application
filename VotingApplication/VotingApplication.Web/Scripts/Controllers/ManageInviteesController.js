@@ -40,11 +40,11 @@
                     }).map(function (d) {
                         // Parse to extract the email-like section. 
                         // E.g. Turns "Joe Bloggs <jbloggs@example.com>" into "jbloggs@example.com
-                        return { Email: d.match(emailRegex)[0] };
+                        return d.match(emailRegex)[0];
                     });
 
                 for (var i = 0; i < newEmails.length; i++) {
-                    addInvitee(newEmails[i].Email);
+                    addInvitee(newEmails[i]);
                 }
 
                 $scope.$apply();
@@ -68,7 +68,7 @@
             });
 
             if (existingEmails.length === 0) {
-                $scope.poll.Voters.push({ Email: invitee });
+                $scope.poll.Voters.push({ Email: invitee, EmailSent: false });
             }
 
 

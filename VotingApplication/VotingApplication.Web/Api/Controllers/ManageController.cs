@@ -31,7 +31,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             return new TokenRequestModel
             {
                 Email = ballot.Email,
-                TokenGuid = ballot.TokenGuid
+                EmailSent = (ballot.TokenGuid != null)
             };
         }
 
@@ -189,7 +189,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 foreach (TokenRequestModel voter in updateRequest.Voters)
                 {
-                    if (voter.TokenGuid == null)
+                    if (!voter.EmailSent)
                     {
                         Ballot newBallot = new Ballot { Email = voter.Email, TokenGuid = Guid.NewGuid() };
                         poll.Ballots.Add(newBallot);
@@ -198,7 +198,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     else
                     {
                         // Don't mark token as redundant if still in use
-                        Ballot ballot = redundantTokens.Find(t => t.TokenGuid == voter.TokenGuid);
+                        Ballot ballot = redundantTokens.Find(t => t.Email == voter.Email);
                         redundantTokens.Remove(ballot);
                     }
                 }
