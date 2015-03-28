@@ -99,6 +99,15 @@
             return request;
         };
 
+        self.sendInvitations = function (manageId) {
+            var request = $http({
+                method: 'POST',
+                url: '/api/manage/' + manageId + '/invitation'
+            });
+
+            return request;
+        };
+
         return self;
     }
 })();

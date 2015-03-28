@@ -14,7 +14,7 @@
         $scope.emailUpdated = emailUpdated;
         $scope.addInvitee = addInvitee;
         $scope.deleteInvitee = deleteInvitee;
-        $scope.sendInvitations = updatePoll;
+        $scope.sendInvitations = sendInvitations;
         $scope.inviteString = '';
 
         $scope.updatePoll = updatePoll;
@@ -85,6 +85,10 @@
             return splitterTest.test(value);
         }
 
+        function sendInvitations() {
+            ManageService.sendInvitations($routeParams.manageId);
+        }
+
         function updatePoll() {
             ManageService.updatePoll($routeParams.manageId, $scope.poll, function () {
                 ManageService.getPoll($scope.manageId);
@@ -92,6 +96,7 @@
         }
 
         function returnToManage() {
+            updatePoll();
             RoutingService.navigateToManagePage($scope.manageId);
         }
 
