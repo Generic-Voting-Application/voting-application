@@ -9,7 +9,7 @@
         <p ng-if="poll.Voters.length === 0">You haven't invited anybody yet</p>
         <div class="pill-box">
             <div class="invitee-pill" ng-repeat="invitee in poll.Voters">
-                <span class="invitee-pill-text">{{invitee.Email}}</span>
+                <span class="invitee-pill-text">{{invitee.Name || invitee.Email}}</span>
                 <span class="glyphicon glyphicon-remove invitee-pill-delete" ng-click="deleteInvitee(invitee)" aria-hidden="true"></span>
             </div>
         </div>

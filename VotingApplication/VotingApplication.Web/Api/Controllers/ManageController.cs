@@ -31,7 +31,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             return new TokenRequestModel
             {
                 Email = ballot.Email,
-                EmailSent = (ballot.TokenGuid != null)
+                EmailSent = (ballot.TokenGuid != null),
+                Name = ballot.VoterName
             };
         }
 
@@ -119,6 +120,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                                            .Where(p => p.ManageId == manageId)
                                            .Include(p => p.Options)
                                            .Include(p => p.Ballots)
+                                           .Include(p => p.Ballots.Select(b => b.Votes))
                                            .SingleOrDefault();
 
                 if (poll == null)
@@ -206,6 +208,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 // Clean up tokens which have been removed
                 foreach (Ballot token in redundantTokens)
                 {
+                    foreach (Vote redundantVote in token.Votes.ToList())
+                    {
+                        removedVotes.Add(redundantVote);
+                        token.Votes.Remove(redundantVote);
+                    }
+
                     context.Ballots.Remove(token);
                     poll.Ballots.Remove(token);
                 }
