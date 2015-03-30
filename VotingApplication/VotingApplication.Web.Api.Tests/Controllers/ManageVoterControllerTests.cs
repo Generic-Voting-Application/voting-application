@@ -15,12 +15,12 @@ using VotingApplication.Web.Api.Tests.TestHelpers;
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
     [TestClass]
-    public class ManageVoteControllerTests
+    public class ManageVoterControllerTests
     {
         public readonly Guid PollManageGuid = new Guid("EBDE4ED9-D014-4145-B998-13B5A247BB4B");
 
         [TestClass]
-        public class GetTests : ManageVoteControllerTests
+        public class GetTests : ManageVoterControllerTests
         {
             [TestMethod]
             [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
@@ -29,7 +29,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
 
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
                 controller.Get(PollManageGuid);
             }
@@ -48,7 +48,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
 
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 List<ManageVoteResponseModel> response = controller.Get(PollManageGuid);
@@ -76,7 +76,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 existingPolls.Add(poll);
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
 
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 List<ManageVoteResponseModel> response = controller.Get(pollManageGuid);
@@ -121,7 +121,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 existingPolls.Add(poll);
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 List<ManageVoteResponseModel> response = controller.Get(PollManageGuid);
@@ -182,7 +182,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 List<ManageVoteResponseModel> response = controller.Get(PollManageGuid);
@@ -202,7 +202,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestClass]
-        public class DeleteAllTests : ManageVoteControllerTests
+        public class DeleteAllTests : ManageVoterControllerTests
         {
             [TestMethod]
             [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
@@ -211,7 +211,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 controller.Delete(PollManageGuid);
@@ -248,7 +248,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 polls.Add(poll);
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots);
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 controller.Delete(PollManageGuid);
@@ -305,7 +305,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 polls.Add(poll);
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes);
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 controller.Delete(PollManageGuid);
@@ -383,7 +383,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 polls.Add(poll2);
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes);
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 controller.Delete(PollManageGuid);
@@ -398,7 +398,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestClass]
-        public class DeleteBallotTests : ManageVoteControllerTests
+        public class DeleteBallotTests : ManageVoterControllerTests
         {
             public readonly Guid ManageBallotGuid = new Guid("F4819B59-46A1-47D3-BD23-DB791032A099");
 
@@ -409,7 +409,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 controller.Delete(PollManageGuid, ManageBallotGuid);
@@ -423,7 +423,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 polls.Add(new Poll() { UUID = PollManageGuid });
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 controller.Delete(PollManageGuid, ManageBallotGuid);
@@ -441,7 +441,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots);
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 controller.Delete(PollManageGuid, ManageBallotGuid);
@@ -470,7 +470,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 polls.Add(poll);
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots);
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 controller.Delete(PollManageGuid, ManageBallotGuid);
@@ -501,7 +501,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 polls.Add(poll);
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots);
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 controller.Delete(PollManageGuid, ManageBallotGuid);
@@ -542,7 +542,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 polls.Add(poll);
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots);
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 controller.Delete(PollManageGuid, ManageBallotGuid);
@@ -578,7 +578,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 polls.Add(poll);
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes);
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 controller.Delete(PollManageGuid, ManageBallotGuid);
@@ -614,7 +614,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 polls.Add(poll);
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes);
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 controller.Delete(PollManageGuid, ManageBallotGuid);
@@ -652,7 +652,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 polls.Add(poll);
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes);
-                ManageVoteController controller = CreateManageVoteController(contextFactory);
+                ManageVoterController controller = CreateManageVoteController(contextFactory);
 
 
                 controller.Delete(PollManageGuid, ManageBallotGuid);
@@ -662,9 +662,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             }
         }
 
-        public static ManageVoteController CreateManageVoteController(IContextFactory contextFactory)
+        public static ManageVoterController CreateManageVoteController(IContextFactory contextFactory)
         {
-            return new ManageVoteController(contextFactory)
+            return new ManageVoterController(contextFactory)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()

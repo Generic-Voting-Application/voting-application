@@ -47,7 +47,7 @@ namespace VotingApplication.Web
             config.Routes.MapHttpRoute(
                 name: "ManageVotersApiRoute",
                 routeTemplate: "api/manage/{manageId}/voters/{ballotManageId}",
-                defaults: new { controller = "ManageVote", ballotManageId = RouteParameter.Optional }
+                defaults: new { controller = "ManageVoter", ballotManageId = RouteParameter.Optional }
             );
 
             config.Routes.MapHttpRoute(

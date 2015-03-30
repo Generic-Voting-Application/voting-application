@@ -10,13 +10,13 @@ using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
-    public class ManageVoteController : WebApiController
+    public class ManageVoterController : WebApiController
     {
-        public ManageVoteController()
+        public ManageVoterController()
         {
         }
 
-        public ManageVoteController(IContextFactory contextFactory)
+        public ManageVoterController(IContextFactory contextFactory)
             : base(contextFactory)
         {
         }
