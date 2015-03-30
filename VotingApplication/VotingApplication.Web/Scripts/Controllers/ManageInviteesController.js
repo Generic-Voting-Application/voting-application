@@ -55,9 +55,13 @@
         }
 
         function deleteInvitee(invitee) {
-            var indexOfInvitee = $scope.poll.Voters.indexOf(invitee);
+            var matchingUser = $scope.poll.Voters.filter(function (d) {
+                return d.Email === invitee.Email;
+            });
+            var indexOfInvitee = $scope.poll.Voters.indexOf(matchingUser[0]);
 
             $scope.poll.Voters.splice(indexOfInvitee, 1);
+            updatePoll();
         }
 
         function addInvitee(invitee) {
