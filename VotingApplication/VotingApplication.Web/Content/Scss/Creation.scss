@@ -137,6 +137,10 @@ body {
     padding-left: 20px;
 }
 
+.form-aligned-top {
+    margin-top: 4px;
+}
+
 .manage-btn {
     background-color: $Blue500;
     color: $White;
@@ -165,7 +169,7 @@ body {
 }
 
 .manage-name-input {
-    width: 90%;
+    width: 80%;
 }
 
 .toggle-switch {

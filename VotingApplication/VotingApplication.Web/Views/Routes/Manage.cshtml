@@ -9,7 +9,18 @@
                 <h4 class="icon-padded-left">Question:</h4>
             </div>
             <div>
-                <span class="icon-padded-left"><input class="manage-name-input" ng-model="poll.Name" required ng-model-options="{debounce: 1000}" ng-change="updatePoll()" /></span>
+                <form ng-submit="toggleNameEdit=false;updatePoll()">
+                    <span class="icon-padded-left">
+                        <span ng-if="!toggleNameEdit">
+                            {{poll.Name}}
+                            <span class="pull-right"><a class="clickable" ng-click="$parent.toggleNameEdit=true">Edit</a></span>
+                        </span>
+                        <span ng-if="toggleNameEdit">
+                            <input class="manage-name-input" ng-model="poll.Name" required />
+                            <span class="glyphicon glyphicon-ok pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.updatePoll()"></span>
+                        </span>
+                    </span>
+                </form>
             </div>
         </div>
         <div class="manage-section">

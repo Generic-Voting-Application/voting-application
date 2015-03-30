@@ -12,7 +12,7 @@
         $scope.manageId = $routeParams.manageId;
         $scope.timeOption = null;
 
-        $scope.updatePoll = updatePollDetails;
+        $scope.updatePoll = updatePoll;
         $scope.return = navigateToManagePage;
         $scope.formatExpiry = formatExpiry;
         $scope.removeExpiry = removeExpiry;
@@ -34,16 +34,12 @@
             return 'Never';
         }
 
+        function updatePoll() {
+            ManageService.updatePoll($routeParams.manageId, $scope.poll, navigateToManagePage);
+        }
+
         function navigateToManagePage() {
             RoutingService.navigateToManagePage($scope.manageId);
-        }
-
-        function updatePollDetails() {
-            ManageService.updatePoll($routeParams.manageId, $scope.poll, updatePollSuccessCallback);
-        }
-
-        function updatePollSuccessCallback() {
-            ManageService.getPoll($scope.manageId);
         }
 
         function setDate(option) {
