@@ -13,7 +13,8 @@
             getPoll: getPoll,
             getUserPolls: getUserPolls,
             createPoll: createPoll,
-            copyPoll: copyPoll
+            copyPoll: copyPoll,
+            setVisited: setVisited
         };
 
         return service;
@@ -91,6 +92,10 @@
             });
 
             return promise;
+        }
+
+        function setVisited(pollId) {
+
         }
     }
 })();

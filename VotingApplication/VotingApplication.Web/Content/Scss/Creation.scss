@@ -10,6 +10,7 @@ $Red500: #f44336;
 $Grey400: #BDBDBD;
 $BlueGrey400: #78909C;
 $BlueGrey100: #CFD8DC;
+$DeepOrange500: #FF5722;
 $Black: #000000;
 $White: #FFFFFF;
 
@@ -162,6 +163,13 @@ body {
 
 .manage-section-row {
     margin-bottom: 5px;
+}
+
+.warn-box {
+    background-color: $DeepOrange500;
+    color: $White;
+    border-radius: 5px;
+    padding: 10px;
 }
 
 .manage-name-input {
