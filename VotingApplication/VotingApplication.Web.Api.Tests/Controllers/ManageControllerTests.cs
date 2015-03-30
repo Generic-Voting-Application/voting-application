@@ -214,7 +214,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PutWithNewEmailsGeneratesTokensForEmails()
+        public void PutWithNewEmailsDoesNotInitiallySendEmail()
         {
             // Arrange
             TokenRequestModel newToken = new TokenRequestModel() { Email = "a@b.c" };
@@ -230,7 +230,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Put(_manageMainUUID, request);
 
             // Assert
-            Assert.AreNotEqual(Guid.Empty, newToken.TokenGuid);
+            Assert.IsFalse(newToken.EmailSent);
         }
 
         [TestMethod]
@@ -260,7 +260,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Arrange
             Ballot existingBallot = new Ballot() { Email = "a@b.c", TokenGuid = Guid.NewGuid(), Id = 1 };
-            TokenRequestModel existingTokenRequest = new TokenRequestModel() { Email = existingBallot.Email, TokenGuid = existingBallot.TokenGuid };
+            TokenRequestModel existingTokenRequest = new TokenRequestModel() { Email = existingBallot.Email, EmailSent = true };
             List<Ballot> emailTokens = new List<Ballot>() { existingBallot };
             _mainPoll.Ballots = emailTokens;
 
@@ -284,7 +284,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Arrange
             Ballot existingBallot = new Ballot() { Email = "a@b.c", TokenGuid = Guid.NewGuid(), Id = 1 };
             Ballot obsoleteBallot = new Ballot() { Email = "d@e.f", TokenGuid = Guid.NewGuid(), Id = 2 };
-            TokenRequestModel existingTokenRequest = new TokenRequestModel { Email = existingBallot.Email, TokenGuid = existingBallot.TokenGuid };
+            TokenRequestModel existingTokenRequest = new TokenRequestModel { Email = existingBallot.Email };
             TokenRequestModel newTokenRequest = new TokenRequestModel { Email = "g@h.i" };
 
             _mainPoll.Ballots = new List<Ballot>() { existingBallot, obsoleteBallot };

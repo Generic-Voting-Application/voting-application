@@ -71,7 +71,7 @@
             });
 
             if (existingEmails.length === 0) {
-                var newInvitee = { Email: invitee, EmailSent: false }
+                var newInvitee = { Email: invitee, EmailSent: false };
                 $scope.poll.Voters.push(newInvitee);
                 $scope.pendingUsers.push(newInvitee);
             }

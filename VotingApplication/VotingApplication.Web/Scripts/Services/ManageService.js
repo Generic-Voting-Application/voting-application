@@ -114,7 +114,7 @@
                     failureCallback(data, status);
                 }
             });
-        }
+        };
 
         return self;
     }
