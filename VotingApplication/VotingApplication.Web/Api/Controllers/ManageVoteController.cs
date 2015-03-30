@@ -111,24 +111,38 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         }
 
         [HttpDelete]
-        public void Delete(Guid manageId, long voteId)
+        public void Delete(Guid manageId, Guid ballotManageId)
         {
-            using (var context = _contextFactory.CreateContext())
+            using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.FirstOrDefault(s => s.ManageId == manageId);
-                if (matchingPoll == null)
+                Poll poll = context
+                    .Polls
+                    .SingleOrDefault(p => p.ManageId == manageId);
+
+                if (poll == null)
                 {
-                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
+                    this.ThrowError(HttpStatusCode.NotFound, String.Format("Poll {0} not found", manageId));
                 }
 
-                Vote matchingVote = context
-                    .Votes
-                    .Include(v => v.Poll)
-                    .FirstOrDefault(v => v.Id == voteId && v.Poll.UUID == matchingPoll.UUID);
+                Ballot ballot = poll
+                    .Ballots
+                    .SingleOrDefault(b => b.ManageGuid == ballotManageId);
 
-                context.Votes.Remove(matchingVote);
+                if (ballot == null)
+                {
+                    this.ThrowError(HttpStatusCode.NotFound, String.Format("Ballot {0} not found", ballotManageId));
+                }
 
-                matchingPoll.LastUpdated = DateTime.Now;
+                foreach (Vote vote in ballot.Votes)
+                {
+                    context.Votes.Remove(vote);
+                }
+
+                ballot.Votes.Clear();
+
+                poll.Ballots.Remove(ballot);
+                context.Ballots.Remove(ballot);
+
                 context.SaveChanges();
             }
         }

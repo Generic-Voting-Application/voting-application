@@ -1,6 +1,4 @@
-﻿using FakeDbSet;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -19,161 +17,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
     [TestClass]
     public class ManageVoteControllerTests
     {
-        private ManageVoteController _controller;
-        private Vote _bobVote;
-        private Vote _joeVote;
-        private Vote _otherVote;
-        private Guid _manageMainUUID;
-        private Guid _manageOtherUUID;
-        private Guid _manageEmptyUUID;
-        private Poll _mainPoll;
-        private InMemoryDbSet<Vote> _dummyVotes;
-
-        [TestInitialize]
-        public void setup()
-        {
-            _dummyVotes = new InMemoryDbSet<Vote>(true);
-            InMemoryDbSet<Option> dummyOptions = new InMemoryDbSet<Option>(true);
-            InMemoryDbSet<Poll> dummyPolls = new InMemoryDbSet<Poll>(true);
-
-            Guid mainUUID = Guid.NewGuid();
-            Guid otherUUID = Guid.NewGuid();
-            Guid emptyUUID = Guid.NewGuid();
-
-            _manageMainUUID = Guid.NewGuid();
-            _manageOtherUUID = Guid.NewGuid();
-            _manageEmptyUUID = Guid.NewGuid();
-
-            _mainPoll = new Poll() { UUID = mainUUID, ManageId = _manageMainUUID, LastUpdated = new DateTime(100) };
-            Poll otherPoll = new Poll() { UUID = otherUUID, ManageId = _manageOtherUUID };
-            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageId = _manageEmptyUUID };
-
-            Option burgerOption = new Option { Id = 1, Name = "Burger King" };
-
-            _bobVote = new Vote() { Id = 1, Poll = _mainPoll, Option = burgerOption, Ballot = new Ballot() };
-            _joeVote = new Vote() { Id = 2, Poll = _mainPoll, Option = burgerOption, Ballot = new Ballot() };
-            _otherVote = new Vote() { Id = 3, Poll = new Poll() { UUID = otherUUID }, Option = new Option() { Id = 1 }, Ballot = new Ballot() };
-
-            _dummyVotes.Add(_bobVote);
-            _dummyVotes.Add(_joeVote);
-            _dummyVotes.Add(_otherVote);
-
-            dummyOptions.Add(burgerOption);
-
-            dummyPolls.Add(_mainPoll);
-            dummyPolls.Add(otherPoll);
-            dummyPolls.Add(emptyPoll);
-
-            var mockContextFactory = new Mock<IContextFactory>();
-            var mockContext = new Mock<IVotingContext>();
-            mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
-            mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
-            mockContext.Setup(a => a.Options).Returns(dummyOptions);
-            mockContext.Setup(a => a.Polls).Returns(dummyPolls);
-
-            _controller = new ManageVoteController(mockContextFactory.Object);
-            _controller.Request = new HttpRequestMessage();
-            _controller.Configuration = new HttpConfiguration();
-        }
-
-        #region DELETE
-
-        [TestMethod]
-        public void DeleteOnlyRemovesVotesFromMatchingPoll()
-        {
-            // Act
-            _controller.Delete(_manageMainUUID);
-
-            // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            expectedVotes.Add(_otherVote);
-            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
-        }
-
-
-        [TestMethod]
-        public void DeleteByIdIsAllowed()
-        {
-            // Act
-            _controller.Delete(_manageMainUUID, 1);
-        }
-
-        [TestMethod]
-        public void DeleteByIdRemovesMatchingVote()
-        {
-            // Act
-            _controller.Delete(_manageMainUUID, 2);
-
-            // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            expectedVotes.Add(_bobVote);
-            expectedVotes.Add(_otherVote);
-            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
-        }
-
-        [TestMethod]
-        public void DeleteByIdOnMissingVoteIsAllowed()
-        {
-            // Act
-            _controller.Delete(_manageMainUUID, 99);
-        }
-
-        [TestMethod]
-        public void DeleteByIdOnMissingVoteDoesNotModifyVotes()
-        {
-            // Act
-            _controller.Delete(_manageMainUUID, 99);
-
-            // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            expectedVotes.Add(_bobVote);
-            expectedVotes.Add(_joeVote);
-            expectedVotes.Add(_otherVote);
-            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
-        }
-
-        [TestMethod]
-        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
-        public void DeleteByIdOnMissingPollIsNotFound()
-        {
-            // Act
-            Guid newGuid = Guid.NewGuid();
-            _controller.Delete(newGuid, 1);
-        }
-
-        [TestMethod]
-        public void DeleteByIdOnVoteInOtherPollIsAllowed()
-        {
-            // Act
-            _controller.Delete(_manageEmptyUUID, 1);
-        }
-
-        [TestMethod]
-        public void DeleteByIdOnVoteInOtherPollDoesNotRemoveOtherVote()
-        {
-            // Act
-            _controller.Delete(_manageEmptyUUID, 1);
-
-            // Assert
-            List<Vote> expectedVotes = new List<Vote>();
-            expectedVotes.Add(_bobVote);
-            expectedVotes.Add(_joeVote);
-            expectedVotes.Add(_otherVote);
-            CollectionAssert.AreEquivalent(expectedVotes, _dummyVotes.Local);
-        }
-
-        [TestMethod]
-        public void DeleteSingleVoteUpdatesLastUpdatedTime()
-        {
-            // Act
-            _controller.Delete(_manageMainUUID, 1);
-
-            // Assert
-            Assert.AreNotEqual(new DateTime(100), _mainPoll.LastUpdated);
-        }
-
-        #endregion
-
         public readonly Guid PollManageGuid = new Guid("EBDE4ED9-D014-4145-B998-13B5A247BB4B");
 
         [TestClass]
@@ -359,7 +202,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestClass]
-        public class DeleteTests : ManageVoteControllerTests
+        public class DeleteAllTests : ManageVoteControllerTests
         {
             [TestMethod]
             [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
@@ -551,6 +394,271 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 Assert.AreEqual(2, votes.Count());
                 Assert.AreEqual(5, votes.First().Id);
                 Assert.AreEqual(6, votes.Last().Id);
+            }
+        }
+
+        [TestClass]
+        public class DeleteBallotTests : ManageVoteControllerTests
+        {
+            public readonly Guid ManageBallotGuid = new Guid("F4819B59-46A1-47D3-BD23-DB791032A099");
+
+            [TestMethod]
+            [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
+            public void NoMatchingPoll_ThrowsNotFound()
+            {
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
+                ManageVoteController controller = CreateManageVoteController(contextFactory);
+
+
+                controller.Delete(PollManageGuid, ManageBallotGuid);
+            }
+
+            [TestMethod]
+            [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
+            public void MatchingPoll_NoMatchingBallot_ThrowsNotFound()
+            {
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                polls.Add(new Poll() { UUID = PollManageGuid });
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
+                ManageVoteController controller = CreateManageVoteController(contextFactory);
+
+
+                controller.Delete(PollManageGuid, ManageBallotGuid);
+            }
+
+            [TestMethod]
+            [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
+            public void BallotDoesNotBelongToPoll_ThrowsNotFound()
+            {
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                polls.Add(new Poll() { ManageId = PollManageGuid });
+
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                ballots.Add(new Ballot() { ManageGuid = ManageBallotGuid });
+
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots);
+                ManageVoteController controller = CreateManageVoteController(contextFactory);
+
+
+                controller.Delete(PollManageGuid, ManageBallotGuid);
+            }
+
+            [TestMethod]
+            public void BallotIsRemoved()
+            {
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var poll = new Poll()
+                {
+                    ManageId = PollManageGuid
+                };
+
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                var ballot = new Ballot()
+                {
+                    ManageGuid = ManageBallotGuid,
+                    VoterName = "Derek"
+                };
+
+
+                poll.Ballots.Add(ballot);
+
+                ballots.Add(ballot);
+                polls.Add(poll);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots);
+                ManageVoteController controller = CreateManageVoteController(contextFactory);
+
+
+                controller.Delete(PollManageGuid, ManageBallotGuid);
+
+                Assert.AreEqual(0, ballots.Count());
+            }
+
+            [TestMethod]
+            public void BallotIsRemovedFromPoll()
+            {
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var poll = new Poll()
+                {
+                    ManageId = PollManageGuid
+                };
+
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                var ballot = new Ballot()
+                {
+                    ManageGuid = ManageBallotGuid,
+                    VoterName = "Derek"
+                };
+
+
+                poll.Ballots.Add(ballot);
+
+                ballots.Add(ballot);
+                polls.Add(poll);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots);
+                ManageVoteController controller = CreateManageVoteController(contextFactory);
+
+
+                controller.Delete(PollManageGuid, ManageBallotGuid);
+
+                Assert.AreEqual(0, poll.Ballots.Count());
+            }
+
+            [TestMethod]
+            public void OtherBallotsAreNotRemoved()
+            {
+                var otherManageGuid = new Guid("7C9FCB6E-ACC2-4170-8A3E-AE18D6AA9061");
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var poll = new Poll()
+                {
+                    ManageId = PollManageGuid
+                };
+
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                var ballot1 = new Ballot()
+                {
+                    ManageGuid = ManageBallotGuid,
+                    VoterName = "Derek"
+                };
+
+                var ballot2 = new Ballot()
+                {
+                    ManageGuid = otherManageGuid,
+                    VoterName = "Mavis"
+                };
+
+
+                poll.Ballots.Add(ballot1);
+                poll.Ballots.Add(ballot2);
+
+                ballots.Add(ballot1);
+                ballots.Add(ballot2);
+                polls.Add(poll);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots);
+                ManageVoteController controller = CreateManageVoteController(contextFactory);
+
+
+                controller.Delete(PollManageGuid, ManageBallotGuid);
+
+                Assert.AreEqual(1, ballots.Count());
+                Assert.AreEqual(otherManageGuid, ballots.Single().ManageGuid);
+            }
+
+            [TestMethod]
+            public void VotesAreRemoved()
+            {
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var poll = new Poll()
+                {
+                    ManageId = PollManageGuid
+                };
+
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                var ballot = new Ballot()
+                {
+                    ManageGuid = ManageBallotGuid,
+                    VoterName = "Derek"
+                };
+
+                IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
+                var vote = new Vote();
+
+                ballot.Votes.Add(vote);
+                poll.Ballots.Add(ballot);
+
+                votes.Add(vote);
+                ballots.Add(ballot);
+                polls.Add(poll);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes);
+                ManageVoteController controller = CreateManageVoteController(contextFactory);
+
+
+                controller.Delete(PollManageGuid, ManageBallotGuid);
+
+
+                Assert.AreEqual(0, votes.Count());
+            }
+
+            [TestMethod]
+            public void VotesAreRemovedFromBallot()
+            {
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var poll = new Poll()
+                {
+                    ManageId = PollManageGuid
+                };
+
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                var ballot = new Ballot()
+                {
+                    ManageGuid = ManageBallotGuid,
+                    VoterName = "Derek"
+                };
+
+                IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
+                var vote = new Vote();
+
+                ballot.Votes.Add(vote);
+                poll.Ballots.Add(ballot);
+
+                votes.Add(vote);
+                ballots.Add(ballot);
+                polls.Add(poll);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes);
+                ManageVoteController controller = CreateManageVoteController(contextFactory);
+
+
+                controller.Delete(PollManageGuid, ManageBallotGuid);
+
+
+                Assert.AreEqual(0, ballot.Votes.Count);
+            }
+
+            [TestMethod]
+            public void OtherVotesAreNotRemoved()
+            {
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var poll = new Poll()
+                {
+                    ManageId = PollManageGuid
+                };
+
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                var ballot = new Ballot()
+                {
+                    ManageGuid = ManageBallotGuid,
+                    VoterName = "Derek"
+                };
+
+                IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
+                var vote1 = new Vote();
+                var vote2 = new Vote();
+
+                ballot.Votes.Add(vote1);
+                poll.Ballots.Add(ballot);
+
+                votes.Add(vote1);
+                votes.Add(vote2);
+                ballots.Add(ballot);
+                polls.Add(poll);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes);
+                ManageVoteController controller = CreateManageVoteController(contextFactory);
+
+
+                controller.Delete(PollManageGuid, ManageBallotGuid);
+
+
+                Assert.AreEqual(1, votes.Count());
             }
         }
 
