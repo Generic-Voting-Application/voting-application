@@ -9,6 +9,7 @@ using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Services;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -52,8 +53,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                     ballot.TokenGuid = Guid.NewGuid();
 
-                    Thread emailThread = new Thread(new ThreadStart(() => SendInvitation(matchingPoll.UUID, ballot, matchingPoll.Name)));
-                    emailThread.Start();
+                    Task.Run(() =>SendInvitation(matchingPoll.UUID, ballot, matchingPoll.Name));
                 }
 
                 context.SaveChanges();
