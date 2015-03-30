@@ -106,6 +106,10 @@
     <Compile Include="Migrations\201503301037064_RemoveInfoFromOption.Designer.cs">
       <DependentUpon>201503301037064_RemoveInfoFromOption.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503301039230_AddPollOptionNumber.cs" />
+    <Compile Include="Migrations\201503301039230_AddPollOptionNumber.Designer.cs">
+      <DependentUpon>201503301039230_AddPollOptionNumber.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
     <Compile Include="Model\Option.cs" />
@@ -162,6 +166,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503301037064_RemoveInfoFromOption.resx">
       <DependentUpon>201503301037064_RemoveInfoFromOption.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503301039230_AddPollOptionNumber.resx">
+      <DependentUpon>201503301039230_AddPollOptionNumber.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
