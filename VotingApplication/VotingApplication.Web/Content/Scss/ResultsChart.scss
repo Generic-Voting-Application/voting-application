@@ -1,0 +1,27 @@
+﻿$Green500: #4CAF50;
+$Red700: #D32F2F;
+$Black: #000000;
+
+gva-results-chart {
+    display: block;
+}
+
+.negative.bar {
+    fill: $Red700;
+}
+
+.positive.bar {
+    fill: $Green500;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: $Black;
+    shape-rendering: crispEdges;
+}
+
+.y.axis path,
+.y.axis line {
+    stroke: none;
+}

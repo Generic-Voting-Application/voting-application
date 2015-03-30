@@ -11,7 +11,7 @@
             var canvas = document.createElement('canvas');
 
             $scope.$watch('data', function (newVal, oldVal) {
-                if (oldVal !== newVal) {
+                if ((JSON.stringify(newVal) !== JSON.stringify(oldVal))) {
                     drawChart();
                 }
             });
@@ -40,12 +40,13 @@
 
             function drawChart() {
                 // Hack to fix lack of data reloading
-                element[0].innerHTML = '';
+                var chartElement = document.getElementById('inner-chart');
+                chartElement.innerHTML = '';
 
                 var data = $scope.data.sort(function (a, b) { return b.Sum - a.Sum; });
 
                 var chartHeight = Math.min(data.length * 60, 600);
-                var chartWidth = Math.min(600, element[0].offsetWidth);
+                var chartWidth = Math.min(600, chartElement.offsetWidth);
 
                 var longestTextWidth = d3.max(data, function (d) { return textWidth(d.Name); });
 
@@ -91,7 +92,7 @@
                         return tooltipText;
                     });
 
-                var chart = d3.select(element[0])
+                var chart = d3.select(chartElement)
                     .append('svg')
                         .attr('width', chartWidth)
                         .attr('height', chartHeight)
@@ -137,7 +138,8 @@
             scope: {
                 data: '='
             },
-            link: link
+            link: link,
+            templateUrl: '/Scripts/Directives/ResultsChart.html'
         };
     }
 })();
