@@ -67,7 +67,8 @@
 
             var x = d3.scale.linear()
                 .range([0, width])
-                .domain([Math.min(0, minX), Math.max(0, maxX)]).nice();
+                .domain([Math.min(0, minX), Math.max(0, maxX)])
+                .nice();
 
             var dataRange = x.domain()[1] - x.domain()[0];
             var tickFrequency = tickFrequencyForRange(dataRange);
@@ -85,18 +86,11 @@
                 .scale(y)
                 .orient('left');
 
-            var chart = d3.select('#results-chart')
-                .append('svg')
-                    .attr('width', chartWidth)
-                    .attr('height', chartHeight)
-                .append('g')
-                    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
             var tooltip = d3.tip()
                 .attr('class', 'd3-tip')
                 .offset([-10, 0])
                 .html(function (d) {
-                    var voterNames = d.Voters.slice(0, 5).map(function(d) { return d.Name + ' (' + d.Value + ')';});
+                    var voterNames = d.Voters.slice(0, 5).map(function (d) { return d.Name + ' (' + d.Value + ')'; });
                     var tooltipText = '<b>' + d.Name + '</b>: ' + d.Sum + ' votes<br /><br />' + voterNames.join('<br />');
                     // Clip for more than 5 voters
                     if (d.Voters.length > 5) {
@@ -106,7 +100,12 @@
                     return tooltipText;
                 });
 
-            chart.call(tooltip);
+            var chart = d3.select('#results-chart')
+                .append('svg')
+                    .attr('width', chartWidth)
+                    .attr('height', chartHeight)
+                .append('g')
+                    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
             chart.append('g')
                 .attr('class', 'x axis')
@@ -116,26 +115,29 @@
                 .attr('class', 'y axis')
                 .call(yAxis)
                 .append('line')
-                .attr('x1', x(0))
-                .attr('x2', x(0))
-                .attr('y2', height);
+                    .attr('x1', x(0))
+                    .attr('x2', x(0))
+                    .attr('y2', height);
 
             chart.selectAll('.bar')
                 .data(data)
-                .enter().append('rect')
-                .attr('class', function (d) { return d.Sum < 0 ? 'bar negative' : 'bar positive'; })
-                .attr('x', function (d) {
-                    return x(Math.min(0, d.Sum));
-                })
-                .attr('y', function (d) {
-                    return y(d.Name);
-                })
-                .attr('width', function (d) {
-                    return Math.abs(x(-d.Sum) - x(0));
-                })
-                .attr('height', y.rangeBand())
-                .on('mouseover', tooltip.show)
-                .on('mouseout', tooltip.hide);
+                .enter()
+                .append('rect')
+                    .attr('class', function (d) { return d.Sum < 0 ? 'bar negative' : 'bar positive'; })
+                    .attr('x', function (d) {
+                        return x(Math.min(0, d.Sum));
+                    })
+                    .attr('y', function (d) {
+                        return y(d.Name);
+                    })
+                    .attr('width', function (d) {
+                        return Math.abs(x(-d.Sum) - x(0));
+                    })
+                    .attr('height', y.rangeBand())
+                    .on('mouseover', tooltip.show)
+                    .on('mouseout', tooltip.hide);
+
+            chart.call(tooltip);
         };
 
         var reloadData = function () {
