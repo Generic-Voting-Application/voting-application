@@ -85,7 +85,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     .Polls
                     .Include(p => p.Ballots)
                     .Include(p => p.Ballots.Select(b => b.Votes))
-                    .FirstOrDefault(s => s.ManageId == manageId);
+                    .SingleOrDefault(s => s.ManageId == manageId);
 
                 if (poll == null)
                 {
@@ -117,6 +117,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 Poll poll = context
                     .Polls
+                    .Include(p => p.Ballots)
+                    .Include(p => p.Ballots.Select(b => b.Votes))
                     .SingleOrDefault(p => p.ManageId == manageId);
 
                 if (poll == null)
@@ -133,7 +135,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     this.ThrowError(HttpStatusCode.NotFound, String.Format("Ballot {0} not found", ballotManageId));
                 }
 
-                foreach (Vote vote in ballot.Votes)
+                foreach (Vote vote in ballot.Votes.ToList())
                 {
                     context.Votes.Remove(vote);
                 }

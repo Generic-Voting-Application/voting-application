@@ -33,17 +33,19 @@
                 .success(loadVoters());
         }
 
+        function removeVote(vote, ballot) {
+        }
+
+        function removeBallot(ballot) {
+            ManageService.resetBallot(manageId, ballot.BallotManageGuid)
+                .success(loadVoters());
+        }
+
         function loadVoters() {
             ManageService.getVoters(manageId)
                 .success(function (data) {
                     $scope.voters = data;
                 });
-        }
-
-        function removeVote(vote, ballot) {
-        }
-
-        function removeBallot(ballot) {
         }
 
         function returnWithoutDelete() {
