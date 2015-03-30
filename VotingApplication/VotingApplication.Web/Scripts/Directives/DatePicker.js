@@ -28,7 +28,7 @@
             }
 
             function updateDisplay(date) {
-                scope.rows = calculateRowDates(date);
+                scope.rows = calculateRowDates(date, scope.filter());
                 scope.displayDate = date.format('MMMM YYYY');
             }
 
@@ -45,7 +45,7 @@
             }
         }
 
-        function calculateRowDates(date) {
+        function calculateRowDates(date, filter) {
 
             var rows = [];
 
@@ -75,7 +75,12 @@
                 var startOfCellDate = moment(cellDate).startOf('day');
                 var selected = startOfCellDate.isSame(startOfSelectedDate);
 
-                rows[rowCounter][cellCounter] = { date: cellDate, selected: selected };
+                if (filter && !filter(cellDate)) {
+                    rows[rowCounter][cellCounter] = { date: cellDate, enabled: false };
+                } else {
+                    rows[rowCounter][cellCounter] = { date: cellDate, selected: selected, enabled: true };
+                }
+
                 dateCounter.add(1, 'days');
 
                 rowCounter = Math.floor((firstDayOfMonth + i) / 7);
@@ -89,7 +94,8 @@
             restrict: 'E',
             scope: {
                 ngModel: '=',
-                update: '&'
+                update: '&?',
+                filter: '&?'
             },
             link: link,
             templateUrl: '../Routes/DatePicker'
