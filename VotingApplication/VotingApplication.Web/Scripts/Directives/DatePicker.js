@@ -76,9 +76,9 @@
                 var selected = startOfCellDate.isSame(startOfSelectedDate);
 
                 if (filter && !filter(cellDate)) {
-                    rows[rowCounter][cellCounter] = { date: '' };
+                    rows[rowCounter][cellCounter] = { date: cellDate, enabled: false };
                 } else {
-                    rows[rowCounter][cellCounter] = { date: cellDate, selected: selected };
+                    rows[rowCounter][cellCounter] = { date: cellDate, selected: selected, enabled: true };
                 }
 
                 dateCounter.add(1, 'days');

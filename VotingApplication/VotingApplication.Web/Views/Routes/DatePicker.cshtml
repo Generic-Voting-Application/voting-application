@@ -14,7 +14,10 @@
         <tbody>
             <tr ng-repeat="row in rows">
                 <td ng-repeat="cell in row">
-                    <div class="dtp-clickable dp-calendar-cell" ng-show="cell.date" ng-click="setModelDate(cell.date)" ng-class="{'dp-calendar-cell-selected' : cell.selected}">
+                    <div class="dtp-clickable dp-calendar-cell" ng-if="cell.enabled" ng-click="setModelDate(cell.date)" ng-class="{'dp-calendar-cell-selected' : cell.selected}">
+                        {{cell.date.date()}}
+                    </div>
+                    <div class="dp-disabled dp-calendar-cell" ng-if="!cell.enabled">
                         {{cell.date.date()}}
                     </div>
                 </td>
