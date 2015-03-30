@@ -238,7 +238,7 @@
     <Compile Include="Api\Controllers\DashboardController.cs" />
     <Compile Include="Api\Controllers\ManageController.cs" />
     <Compile Include="Api\Controllers\ManageInvitationController.cs" />
-    <Compile Include="Api\Controllers\ManageVoteController.cs" />
+    <Compile Include="Api\Controllers\ManageVoterController.cs" />
     <Compile Include="Api\Controllers\PollController.cs" />
     <Compile Include="Api\Controllers\PollOptionController.cs" />
     <Compile Include="Api\Controllers\PollTokenController.cs" />

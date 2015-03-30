@@ -25,20 +25,27 @@
         activate();
 
         function activate() {
-            ManageService.getVoters(manageId)
-            .success(function (data) {
-                $scope.voters = data;
-            });
+            loadVoters();
         }
 
         function removeAllVotes() {
-
+            ManageService.resetAllVotes(manageId)
+                .success(loadVoters());
         }
 
         function removeVote(vote, ballot) {
         }
 
         function removeBallot(ballot) {
+            ManageService.resetBallot(manageId, ballot.BallotManageGuid)
+                .success(loadVoters());
+        }
+
+        function loadVoters() {
+            ManageService.getVoters(manageId)
+                .success(function (data) {
+                    $scope.voters = data;
+                });
         }
 
         function returnWithoutDelete() {

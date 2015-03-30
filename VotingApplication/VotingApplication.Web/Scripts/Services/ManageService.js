@@ -90,11 +90,23 @@
                 });
         };
 
-        self.getVoters = function(manageId) {
+        self.getVoters = function (manageId) {
             var request = $http({
                 method: 'GET',
-                url: '/api/manage/' + manageId + '/vote'
+                url: '/api/manage/' + manageId + '/voters'
             });
+
+            return request;
+        };
+
+        self.resetAllVotes = function (manageId) {
+            var request = $http.delete('/api/manage/' + manageId + '/voters');
+
+            return request;
+        };
+
+        self.resetBallot = function (manageId, ballotManageGuid) {
+            var request = $http.delete('api/manage/' + manageId + '/voters/' + ballotManageGuid);
 
             return request;
         };
