@@ -196,7 +196,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     else
                     {
                         // Don't mark token as redundant if still in use
-                        Ballot ballot = redundantTokens.Find(t => t.Email == voter.Email);
+                        Ballot ballot = redundantTokens.Find(t => t.Email.Equals(voter.Email, StringComparison.OrdinalIgnoreCase));
                         redundantTokens.Remove(ballot);
                     }
                 }
