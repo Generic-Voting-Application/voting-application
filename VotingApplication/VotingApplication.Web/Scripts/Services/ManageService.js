@@ -34,10 +34,7 @@
                 return null;
             }
 
-            $http({
-                method: 'GET',
-                url: '/api/manage/' + manageId
-            })
+            $http.get('/api/manage/' + manageId)
                 .success(function (data) {
                     self.poll = data;
                     notifyObservers();
@@ -74,10 +71,7 @@
 
         self.getVotes = function (pollId, callback, failureCallback) {
 
-            $http({
-                method: 'GET',
-                url: '/api/poll/' + pollId + '/vote'
-            })
+            $http.get('/api/poll/' + pollId + '/vote')
                 .success(function (data) {
                     if (callback) {
                         callback(data);
@@ -91,29 +85,23 @@
         };
 
         self.getVoters = function(manageId) {
-            var request = $http({
-                method: 'GET',
-                url: '/api/manage/' + manageId + '/vote'
-            });
+            var request = $http.get('/api/manage/' + manageId + '/vote');
 
             return request;
         };
 
         self.sendInvitations = function (manageId, callback, failureCallback) {
-            $http({
-                method: 'POST',
-                url: '/api/manage/' + manageId + '/invitation'
-            })
-            .success(function (data) {
-                if (callback) {
-                    callback(data);
-                }
-            })
-            .error(function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
-            });
+            $http.post('/api/manage/' + manageId + '/invitation')
+                .success(function (data) {
+                    if (callback) {
+                        callback(data);
+                    }
+                })
+                .error(function (data, status) {
+                    if (failureCallback) {
+                        failureCallback(data, status);
+                    }
+                });
         };
 
         return self;
