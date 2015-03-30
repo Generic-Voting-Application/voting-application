@@ -84,7 +84,7 @@
                 });
         };
 
-        self.getVoters = function(manageId) {
+        self.getVoters = function (manageId) {
             var request = $http.get('/api/manage/' + manageId + '/vote');
 
             return request;
@@ -102,6 +102,18 @@
                         failureCallback(data, status);
                     }
                 });
+        };
+
+        self.resetAllVotes = function (manageId) {
+            var request = $http.delete('/api/manage/' + manageId + '/voters');
+
+            return request;
+        };
+
+        self.resetBallot = function (manageId, ballotManageGuid) {
+            var request = $http.delete('api/manage/' + manageId + '/voters/' + ballotManageGuid);
+
+            return request;
         };
 
         return self;
