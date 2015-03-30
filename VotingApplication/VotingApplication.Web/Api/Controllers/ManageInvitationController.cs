@@ -16,15 +16,18 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     public class ManageInvitationController : WebApiController
     {
         private IMailSender _mailSender;
+        private string _htmlTemplate;
 
         public ManageInvitationController(IMailSender mailSender)
             : base()
         {
             _mailSender = mailSender;
+            _htmlTemplate = HtmlFromFile("VotingApplication.Web.Api.Resources.EmailTemplate.html");
         }
         public ManageInvitationController(IContextFactory contextFactory, IMailSender mailSender) : base(contextFactory)
         {
             _mailSender = mailSender;
+            _htmlTemplate = HtmlFromFile("VotingApplication.Web.Api.Resources.EmailTemplate.html");
         }
 
         #region POST
@@ -53,7 +56,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                     ballot.TokenGuid = Guid.NewGuid();
 
-                    Task.Run(() =>SendInvitation(matchingPoll.UUID, ballot, matchingPoll.Name));
+                    SendInvitation(matchingPoll.UUID, ballot, matchingPoll.Name);
                 }
 
                 context.SaveChanges();
@@ -89,7 +92,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             string link = hostUri + "/Poll/#/Vote/" + UUID + "/" + ballot.TokenGuid;
 
-            string htmlMessage = HtmlFromFile("VotingApplication.Web.Api.Resources.EmailTemplate.html");
+            string htmlMessage = (string)_htmlTemplate.Clone();
             htmlMessage = htmlMessage.Replace("__VOTEURI__", link);
             htmlMessage = htmlMessage.Replace("__HOSTURI__", hostUri);
             htmlMessage = htmlMessage.Replace("__POLLQUESTION__", pollQuestion);
