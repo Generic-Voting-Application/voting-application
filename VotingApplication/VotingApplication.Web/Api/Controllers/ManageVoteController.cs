@@ -82,6 +82,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 Poll poll = context
                     .Polls
+                    .Include(p => p.Ballots)
+                    .Include(p => p.Ballots.Select(b => b.Votes))
                     .FirstOrDefault(s => s.ManageId == manageId);
 
                 if (poll == null)

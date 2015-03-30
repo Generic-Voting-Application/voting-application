@@ -90,11 +90,17 @@
                 });
         };
 
-        self.getVoters = function(manageId) {
+        self.getVoters = function (manageId) {
             var request = $http({
                 method: 'GET',
                 url: '/api/manage/' + manageId + '/vote'
             });
+
+            return request;
+        };
+
+        self.resetAllVotes = function(manageId) {
+            var request = $http.delete('/api/manage/' + manageId + '/vote');
 
             return request;
         };
