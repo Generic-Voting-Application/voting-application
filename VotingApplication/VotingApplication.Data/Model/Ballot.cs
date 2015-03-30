@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VotingApplication.Data.Model
 {
@@ -11,6 +13,11 @@ namespace VotingApplication.Data.Model
         }
 
         public long Id { get; set; }
+
+        [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public Guid ManageGuid { get; set; }
+
         public Guid TokenGuid { get; set; }
         public string Email { get; set; }
         public String VoterName { get; set; }
