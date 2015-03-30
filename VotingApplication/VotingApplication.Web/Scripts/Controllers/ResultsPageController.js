@@ -19,7 +19,7 @@
         $scope.winner = 'Lorem';
         $scope.plural = '';
         $scope.voteCount = 0;
-        $scope.isExpired = false;
+        $scope.hasExpired = false;
 
         activate();
 
@@ -155,7 +155,7 @@
 
         function getPollSuccessCallback(pollData) {
             if (pollData.ExpiryDate) {
-                $scope.isExpired = moment(pollData.ExpiryDate).isBefore(moment());
+                $scope.hasExpired = moment(pollData.ExpiryDate).isBefore(moment());
             }
         }
 
