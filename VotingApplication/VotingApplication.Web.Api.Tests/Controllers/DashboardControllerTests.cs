@@ -252,20 +252,17 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                     new Option()
                     {
                         Name = "One",
-                        Description = "Option 1",
-                        Info = "This is number 1"
+                        Description = "Option 1"
                     },
                     new Option()
                     {
                         Name = "Two",
-                        Description = "Option 2",
-                        Info = "This is number 2"
+                        Description = "Option 2"
                     },
                     new Option()
                     {
                         Name = "Three",
-                        Description = "Option 3",
-                        Info = "This is number 3"
+                        Description = "Option 3"
                     }
                 };
 
@@ -298,15 +295,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
                 Assert.AreEqual(originalPollOptions[0].Name, copiedPollOptions[0].Name);
                 Assert.AreEqual(originalPollOptions[0].Description, copiedPollOptions[0].Description);
-                Assert.AreEqual(originalPollOptions[0].Info, copiedPollOptions[0].Info);
 
                 Assert.AreEqual(originalPollOptions[1].Name, copiedPollOptions[1].Name);
                 Assert.AreEqual(originalPollOptions[1].Description, copiedPollOptions[1].Description);
-                Assert.AreEqual(originalPollOptions[1].Info, copiedPollOptions[1].Info);
 
                 Assert.AreEqual(originalPollOptions[2].Name, copiedPollOptions[2].Name);
                 Assert.AreEqual(originalPollOptions[2].Description, copiedPollOptions[2].Description);
-                Assert.AreEqual(originalPollOptions[2].Info, copiedPollOptions[2].Info);
             }
 
             [TestMethod]

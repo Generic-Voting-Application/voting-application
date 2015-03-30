@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
@@ -21,7 +20,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 Id = option.Id,
                 Name = option.Name,
-                Info = option.Info,
                 Description = option.Description
             };
         }
@@ -31,7 +29,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             return new Option
             {
                 Name = model.Name,
-                Info = model.Info,
                 Description = model.Description
             };
         }
