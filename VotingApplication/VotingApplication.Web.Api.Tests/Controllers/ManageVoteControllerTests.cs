@@ -245,6 +245,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             [TestMethod]
             public void PollWithBallotsWithVotes_ReturnsAll()
             {
+                var manageGuid = new Guid("A76287F6-BC56-421C-9294-A477D1E9C4B3");
                 const string voterName = "Derek";
                 const string optionName = "Value?";
                 const int optionValue = 23;
@@ -257,6 +258,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
                 var ballot = new Ballot()
                 {
+                    ManageGuid = manageGuid,
                     VoterName = voterName,
                     TokenGuid = new Guid("1AC3FABB-A077-4EF3-84DC-62074BA8FDF1")
                 };
@@ -286,6 +288,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
                 ManageVoteResponseModel responseBallot = response[0];
 
+                Assert.AreEqual(manageGuid, responseBallot.BallotManageGuid);
                 Assert.AreEqual(voterName, responseBallot.VoterName);
                 Assert.AreEqual(1, responseBallot.Votes.Count);
 
