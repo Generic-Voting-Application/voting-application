@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
+using System.Web.Configuration;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
@@ -14,6 +17,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     {
 
         private IMailSender _mailSender;
+        private string _htmlTemplate = HtmlFromFile("VotingApplication.Web.Api.Resources.EmailTemplate.html");
 
         public ManageController() : base() { }
 
@@ -188,16 +192,24 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 foreach (TokenRequestModel voter in updateRequest.Voters)
                 {
-                    if (!voter.EmailSent)
+                    Ballot ballot = redundantTokens.Find(t => t.Email.Equals(voter.Email, StringComparison.OrdinalIgnoreCase));
+
+                    // Don't mark token as redundant if still in use
+                    if (ballot != null)
                     {
-                        Ballot newBallot = new Ballot { Email = voter.Email };
-                        poll.Ballots.Add(newBallot);
-                    }
-                    else
-                    {
-                        // Don't mark token as redundant if still in use
-                        Ballot ballot = redundantTokens.Find(t => t.Email.Equals(voter.Email, StringComparison.OrdinalIgnoreCase));
                         redundantTokens.Remove(ballot);
+                    }
+                    else 
+                    {
+                        ballot = new Ballot { Email = voter.Email, ManageGuid = Guid.NewGuid() };
+                        poll.Ballots.Add(ballot);
+                    }
+
+                    // Marked as needing to send email, but not yet sent
+                    if (ballot.TokenGuid == Guid.Empty && voter.EmailSent)
+                    {
+                        ballot.TokenGuid = Guid.NewGuid();
+                        SendInvitation(poll.UUID, ballot, poll.Name);
                     }
                 }
 
@@ -230,6 +242,45 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 context.SaveChanges();
             }
         }
+
+        #region Email Sending
+
+        private static string HtmlFromFile(string path)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            using (Stream stream = assembly.GetManifestResourceStream(path))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+
+        private void SendInvitation(Guid UUID, Ballot ballot, string pollQuestion)
+        {
+            if (string.IsNullOrEmpty(ballot.Email))
+            {
+                return;
+            }
+
+            string hostUri = WebConfigurationManager.AppSettings["HostURI"];
+            if (hostUri == String.Empty)
+            {
+                return;
+            }
+
+            string link = hostUri + "/Poll/#/Vote/" + UUID + "/" + ballot.TokenGuid;
+
+            string htmlMessage = (string)_htmlTemplate.Clone();
+            htmlMessage = htmlMessage.Replace("__VOTEURI__", link);
+            htmlMessage = htmlMessage.Replace("__HOSTURI__", hostUri);
+            htmlMessage = htmlMessage.Replace("__POLLQUESTION__", pollQuestion);
+
+            _mailSender.SendMail(ballot.Email, "Have your say", htmlMessage);
+        }
+
+        #endregion
 
         #endregion
     }

@@ -305,6 +305,74 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             CollectionAssert.AreEquivalent(expectedEmails, actualEmails);
         }
 
+        [TestMethod]
+        public void PutWithNewPendingEmailDoesNotCreateToken()
+        {
+            // Arrange
+            ManagePollUpdateRequest request = new ManagePollUpdateRequest
+            {
+                Name = "Test",
+                VotingStrategy = PollType.Basic.ToString(),
+                Voters = new List<TokenRequestModel>() { new TokenRequestModel { Email = "a@b.c", EmailSent = false } }
+            };
+            _mainPoll.Ballots = new List<Ballot>();
+            
+
+            // Act
+            _controller.Put(_manageMainUUID, request);
+
+            // Assert
+            Ballot firstBallot = _mainPoll.Ballots[0];
+            Assert.AreEqual("a@b.c", firstBallot.Email);
+            Assert.AreEqual(Guid.Empty, firstBallot.TokenGuid);
+        }
+
+        [TestMethod]
+        public void PutWithNewInvitedEmailCreatesToken()
+        {
+            // Arrange
+            ManagePollUpdateRequest request = new ManagePollUpdateRequest
+            {
+                Name = "Test",
+                VotingStrategy = PollType.Basic.ToString(),
+                Voters = new List<TokenRequestModel>() { new TokenRequestModel { Email = "a@b.c", EmailSent = true } }
+            };
+            _mainPoll.Ballots = new List<Ballot>();
+
+
+            // Act
+            _controller.Put(_manageMainUUID, request);
+
+            // Assert
+            Ballot firstBallot = _mainPoll.Ballots[0];
+            Assert.AreEqual("a@b.c", firstBallot.Email);
+            Assert.AreNotEqual(Guid.Empty, firstBallot.TokenGuid);
+        }
+
+        [TestMethod]
+        public void PutWithExistingInvitedEmailDoesNotCreateToken()
+        {
+            // Arrange
+            Guid existingGuid = Guid.NewGuid();
+            Ballot existingBallot = new Ballot() { TokenGuid = existingGuid, Email = "a@b.c" };
+            ManagePollUpdateRequest request = new ManagePollUpdateRequest
+            {
+                Name = "Test",
+                VotingStrategy = PollType.Basic.ToString(),
+                Voters = new List<TokenRequestModel>() { new TokenRequestModel { Email = existingBallot.Email, EmailSent = true } }
+            };
+            _mainPoll.Ballots = new List<Ballot>() { existingBallot };
+
+
+            // Act
+            _controller.Put(_manageMainUUID, request);
+
+            // Assert
+            Ballot firstBallot = _mainPoll.Ballots[0];
+            Assert.AreEqual("a@b.c", firstBallot.Email);
+            Assert.AreEqual(existingGuid, firstBallot.TokenGuid);
+        }
+        
         #endregion
     }
 }
