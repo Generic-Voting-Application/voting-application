@@ -12,12 +12,16 @@
         $scope.manageId = $routeParams.manageId;
 
         $scope.emailUpdated = emailUpdated;
+        $scope.addInvitee = addInvitee;
         $scope.deleteInvitee = deleteInvitee;
         $scope.sendInvitations = sendInvitations;
         $scope.inviteString = '';
 
         $scope.updatePoll = updatePoll;
         $scope.return = returnToManage;
+
+        $scope.pendingUsers = [];
+        $scope.invitedUsers = [];
 
         activate();
 
@@ -39,38 +43,89 @@
                     }).map(function (d) {
                         // Parse to extract the email-like section. 
                         // E.g. Turns "Joe Bloggs <jbloggs@example.com>" into "jbloggs@example.com
-                        return { Email: d.match(emailRegex)[0] };
+                        return d.match(emailRegex)[0];
                     });
 
-                $scope.poll.Voters = $scope.poll.Voters.concat(newEmails);
-                $scope.inviteString = remainingText;
+                for (var i = 0; i < newEmails.length; i++) {
+                    addInvitee(newEmails[i]);
+                }
+
                 $scope.$apply();
             }
         }
 
         function deleteInvitee(invitee) {
-            var indexOfInvitee = $scope.poll.Voters.indexOf(invitee);
+            var matchingUser = $scope.poll.Voters.filter(function (d) {
+                return d.Email === invitee.Email;
+            });
+            var indexOfInvitee = $scope.poll.Voters.indexOf(matchingUser[0]);
 
             $scope.poll.Voters.splice(indexOfInvitee, 1);
+            updatePoll();
         }
 
-        function sendInvitations() {
-            // Parse anything still in the field
-            $scope.inviteString += ';';
-            emailUpdated();
+        function addInvitee(invitee) {
+            if (!invitee.match(emailRegex)) {
+                return;
+            }
+
+            // Avoid duplicate invitations
+            var existingEmails = $scope.poll.Voters.filter(function (d) {
+                return (d.Email === invitee);
+            });
+
+            if (existingEmails.length === 0) {
+                var newInvitee = { Email: invitee, EmailSent: false };
+                $scope.poll.Voters.push(newInvitee);
+                $scope.pendingUsers.push(newInvitee);
+            }
+
+
+            // if inviteString.endsWith(invitee). Curse your obsfucation, Javascript!
+            if ($scope.inviteString.indexOf(invitee, $scope.inviteString.length - invitee.length) !== 1) {
+                $scope.inviteString = '';
+            }
+            else {
+                $scope.inviteString = $scope.inviteeString.split(invitee)[1];
+            }
 
             updatePoll();
-            returnToManage();
         }
 
         function hasTerminatingCharacter(value) {
             return splitterTest.test(value);
         }
 
+        function sendInvitations() {
+            ManageService.sendInvitations($routeParams.manageId, function() {
+                ManageService.getPoll($scope.manageId);
+            });
+        }
+
         function updatePoll() {
             ManageService.updatePoll($routeParams.manageId, $scope.poll, function () {
                 ManageService.getPoll($scope.manageId);
             });
+        }
+
+        function filterUsersByPending() {
+            $scope.pendingUsers = [];
+            $scope.invitedUsers = [];
+
+            if ($scope.poll === null) {
+                return;
+            }
+
+            for (var i = 0; i < $scope.poll.Voters.length; i++) {
+                var voter = $scope.poll.Voters[i];
+                
+                if (voter.EmailSent) {
+                    $scope.invitedUsers.push(voter);
+                }
+                else {
+                    $scope.pendingUsers.push(voter);
+                }
+            }
         }
 
         function returnToManage() {
@@ -80,7 +135,10 @@
         function activate() {
             ManageService.registerPollObserver(function () {
                 $scope.poll = ManageService.poll;
+                filterUsersByPending();
             });
+
+            filterUsersByPending();
 
             var inputField = document.getElementById('new-invitee');
             inputField.addEventListener('keydown', function (e) {

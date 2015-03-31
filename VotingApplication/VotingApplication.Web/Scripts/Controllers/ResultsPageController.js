@@ -6,24 +6,29 @@
         .module('GVA.Voting')
         .controller('ResultsPageController', ResultsPageController);
 
-    ResultsPageController.$inject = ['$scope', '$routeParams', 'IdentityService', 'VoteService', 'RoutingService'];
+    ResultsPageController.$inject = ['$scope', '$routeParams', 'IdentityService', 'VoteService', 'RoutingService', 'PollService'];
 
-    function ResultsPageController($scope, $routeParams, IdentityService, VoteService, RoutingService) {
+    function ResultsPageController($scope, $routeParams, IdentityService, VoteService, RoutingService, PollService) {
 
         var pollId = $routeParams.pollId;
         var tokenId = $routeParams['tokenId'] || '';
         var chart;
+        var pollExpiryDate = null;
 
-        // Turn "/#/results/abc/123" into "/#/voting/abc/123"
         $scope.votingLink = RoutingService.getVotePageUrl(pollId, tokenId);
-
         $scope.winner = 'Lorem';
-        //Whether or not we have an "s" on the end of "Winner"
         $scope.plural = '';
-
         $scope.voteCount = 0;
+        $scope.hasExpired = false;
+        $scope.gvaExpiredCallback = expire;
 
-        var drawChart = function (data) {
+        activate();
+
+        function expire() {
+            $scope.hasExpired = true;
+        }
+
+        function drawChart (data) {
 
             // Hack to fix insight's lack of data reloading
             document.getElementById('results-chart').innerHTML = '';
@@ -102,11 +107,11 @@
 
             // First parameter disables animation
             chart.draw(true);
-        };
+        }
 
-        var reloadData = function () {
+        function reloadData (){
             VoteService.getResults(pollId, getResultsSuccessCallback);
-        };
+        }
 
         function getResultsSuccessCallback(data, status) {
 
@@ -152,8 +157,21 @@
             drawChart(datapoints);
         }
 
-        VoteService.refreshLastChecked(pollId);
-        reloadData();
-        setInterval(reloadData, 3000);
+
+        function getPollSuccessCallback(pollData) {
+            if (pollData.ExpiryDate) {
+                $scope.hasExpired = moment(pollData.ExpiryDate).isBefore(moment());
+            }
+        }
+
+        function activate() {
+
+            PollService.getPoll(pollId, getPollSuccessCallback);
+
+            VoteService.refreshLastChecked(pollId);
+            reloadData();
+            setInterval(reloadData, 3000);
+        }
+
     }
 })();

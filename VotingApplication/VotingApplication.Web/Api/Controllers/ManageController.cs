@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
-using System.Web.Configuration;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
@@ -31,7 +28,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             return new TokenRequestModel
             {
                 Email = ballot.Email,
-                TokenGuid = ballot.TokenGuid
+                EmailSent = (ballot.TokenGuid != null && ballot.TokenGuid != Guid.Empty),
+                Name = ballot.VoterName
             };
         }
 
@@ -119,6 +117,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                                            .Where(p => p.ManageId == manageId)
                                            .Include(p => p.Options)
                                            .Include(p => p.Ballots)
+                                           .Include(p => p.Ballots.Select(b => b.Votes))
                                            .SingleOrDefault();
 
                 if (poll == null)
@@ -189,16 +188,15 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 foreach (TokenRequestModel voter in updateRequest.Voters)
                 {
-                    if (voter.TokenGuid == null)
+                    if (!voter.EmailSent)
                     {
-                        Ballot newBallot = new Ballot { Email = voter.Email, TokenGuid = Guid.NewGuid() };
+                        Ballot newBallot = new Ballot { Email = voter.Email };
                         poll.Ballots.Add(newBallot);
-                        SendInvitation(poll.UUID, newBallot, poll.Name);
                     }
                     else
                     {
                         // Don't mark token as redundant if still in use
-                        Ballot ballot = redundantTokens.Find(t => t.TokenGuid == voter.TokenGuid);
+                        Ballot ballot = redundantTokens.Find(t => t.Email.Equals(voter.Email, StringComparison.OrdinalIgnoreCase));
                         redundantTokens.Remove(ballot);
                     }
                 }
@@ -206,6 +204,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 // Clean up tokens which have been removed
                 foreach (Ballot token in redundantTokens)
                 {
+                    foreach (Vote redundantVote in token.Votes.ToList())
+                    {
+                        removedVotes.Add(redundantVote);
+                        token.Votes.Remove(redundantVote);
+                    }
+
                     context.Ballots.Remove(token);
                     poll.Ballots.Remove(token);
                 }
@@ -226,45 +230,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 context.SaveChanges();
             }
         }
-
-        #region Email Sending
-
-        private string HtmlFromFile(string path)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            using (Stream stream = assembly.GetManifestResourceStream(path))
-            {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-        }
-
-        private void SendInvitation(Guid UUID, Ballot ballot, string pollQuestion)
-        {
-            if (string.IsNullOrEmpty(ballot.Email))
-            {
-                return;
-            }
-
-            string hostUri = WebConfigurationManager.AppSettings["HostURI"];
-            if (hostUri == String.Empty)
-            {
-                return;
-            }
-
-            string link = hostUri + "/Poll/#/Vote/" + UUID + "/" + ballot.TokenGuid;
-
-            string htmlMessage = HtmlFromFile("VotingApplication.Web.Api.Resources.EmailTemplate.html");
-            htmlMessage = htmlMessage.Replace("__VOTEURI__", link);
-            htmlMessage = htmlMessage.Replace("__HOSTURI__", hostUri);
-            htmlMessage = htmlMessage.Replace("__POLLQUESTION__", pollQuestion);
-
-            _mailSender.SendMail(ballot.Email, "Have your say", htmlMessage);
-        }
-
-        #endregion
 
         #endregion
     }
