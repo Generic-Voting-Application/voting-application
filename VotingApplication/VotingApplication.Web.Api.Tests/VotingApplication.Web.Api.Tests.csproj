@@ -99,7 +99,6 @@
     <Compile Include="Controllers\DashboardControllerTests.cs" />
     <Compile Include="Controllers\ExpectedHttpExceptionAttribute.cs" />
     <Compile Include="Controllers\ManageControllerTests.cs" />
-    <Compile Include="Controllers\ManageInvitationControllerTests.cs" />
     <Compile Include="Controllers\ManageVoterControllerTests.cs" />
     <Compile Include="Controllers\PollControllerTests.cs" />
     <Compile Include="Controllers\PollTokenControllerTests.cs" />
