@@ -246,6 +246,29 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             pointsValidator.Verify(a => a.Validate(It.IsAny<List<VoteRequestModel>>(), It.IsAny<Poll>(), It.IsAny<ModelStateDictionary>()));
         }
 
+        [TestMethod]
+        [ExpectedHttpResponseException(HttpStatusCode.Forbidden)]
+        public void PutOnInviteOnlyPollWithUnrecognisedTokenIsForbidden()
+        {
+            // Arrange
+            var newVote = new Vote() { Option = new Option() { Id = 1 }, Poll = new Poll() { UUID = _tokenUUID } };
+            var voteRequests = new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } };
+
+            // Act
+            _controller.Put(Guid.NewGuid(), _tokenUUID, voteRequests);
+        }
+
+        [TestMethod]
+        public void PutOnOpenPollWithUnrecognisedTokenIsAllowed()
+        {
+            // Arrange
+            var newVote = new Vote() { Option = new Option() { Id = 1 }, Poll = new Poll() { UUID = _mainUUID } };
+            var voteRequests = new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } };
+
+            // Act
+            _controller.Put(Guid.NewGuid(), _mainUUID, voteRequests);
+        }
+
         #endregion
     }
 }

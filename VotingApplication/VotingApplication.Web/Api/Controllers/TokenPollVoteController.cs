@@ -109,7 +109,15 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (ballot == null)
                 {
-                    this.ThrowError(HttpStatusCode.Forbidden, String.Format("Token {0} not valid for this poll", tokenGuid));
+                    if (poll.InviteOnly)
+                    {
+                        this.ThrowError(HttpStatusCode.Forbidden, String.Format("Token {0} not valid for this poll", tokenGuid));
+                    }
+                    else
+                    {
+                        ballot = new Ballot() { TokenGuid = tokenGuid };
+                        poll.Ballots.Add(ballot);
+                    }
                 }
 
                 foreach (VoteRequestModel voteRequest in voteRequests)

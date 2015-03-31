@@ -1,5 +1,4 @@
-﻿@import url(https://cdnjs.cloudflare.com/ajax/libs/insightjs/1.3.0/insight.min.css);
-@import '~/Content/Scss/Site.scss';
+﻿@import '~/Content/Scss/Site.scss';
 
 $Green100: #C8E6C9;
 $Green200: #A5D6A7;
@@ -121,10 +120,6 @@ body {
 }
 
 // Results
-
-.series-0 {
-    fill: $Green500;
-}
 
 #winner-label {
     font-size: 18pt;
