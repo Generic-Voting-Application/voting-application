@@ -1,6 +1,6 @@
 ﻿@Styles.Render("~/Bundles/VotingStyle")
 <div ng-controller="ResultsPageController" ng-app="GVA.Voting">
-    <poll-heading></poll-heading>
+    <poll-heading gva-expired-callback="gvaExpiredCallback()"></poll-heading>
     <div class="flexbox">
         <span ng-if="voteCount > 0" id="winner-label" class="centered"><b>Leader{{plural}}:</b> {{winner}}</span>
         <span ng-if="voteCount == 0">No votes have currently been cast for this poll</span>
@@ -10,7 +10,7 @@
 
     <br />
 
-    <div class="flexbox">
+    <div ng-hide="hasExpired" class="flexbox">
         <a class="btn inactive-btn centered" ng-href="{{votingLink}}">Go to poll</a>
     </div>
 </div>

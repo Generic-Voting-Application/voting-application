@@ -34,10 +34,7 @@
                 return null;
             }
 
-            $http({
-                method: 'GET',
-                url: '/api/manage/' + manageId
-            })
+            $http.get('/api/manage/' + manageId)
                 .success(function (data) {
                     self.poll = data;
                     notifyObservers();
@@ -74,10 +71,7 @@
 
         self.getVotes = function (pollId, callback, failureCallback) {
 
-            $http({
-                method: 'GET',
-                url: '/api/poll/' + pollId + '/vote'
-            })
+            $http.get('/api/poll/' + pollId + '/vote')
                 .success(function (data) {
                     if (callback) {
                         callback(data);
@@ -91,14 +85,10 @@
         };
 
         self.getVoters = function (manageId) {
-            var request = $http({
-                method: 'GET',
-                url: '/api/manage/' + manageId + '/voters'
-            });
+            var request = $http.get('/api/manage/' + manageId + '/vote');
 
             return request;
         };
-
 
         self.setVisited = function (manageId) {
             $localStorage[manageId] = { visited: true };
@@ -109,6 +99,20 @@
                 return false;
             }
             return $localStorage[manageId].visited;
+        };
+
+        self.sendInvitations = function (manageId, callback, failureCallback) {
+            $http.post('/api/manage/' + manageId + '/invitation')
+                .success(function (data) {
+                    if (callback) {
+                        callback(data);
+                    }
+                })
+                .error(function (data, status) {
+                    if (failureCallback) {
+                        failureCallback(data, status);
+                    }
+                });
         };
 
         self.resetAllVotes = function (manageId) {
