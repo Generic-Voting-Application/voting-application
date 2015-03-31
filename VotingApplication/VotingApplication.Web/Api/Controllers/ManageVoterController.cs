@@ -77,8 +77,23 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         }
 
         [HttpDelete]
-        public void Delete(Guid manageId)
+        public void Delete(Guid manageId, DeleteVotersRequestModel request)
         {
+            if (request == null)
+            {
+                this.ThrowError(HttpStatusCode.BadRequest);
+            }
+
+            if (!request.BallotDeleteRequests.Any())
+            {
+                this.ThrowError(HttpStatusCode.BadRequest);
+            }
+
+            if (request.BallotDeleteRequests.Any(b => !b.VoteDeleteRequests.Any()))
+            {
+                this.ThrowError(HttpStatusCode.BadRequest);
+            }
+
             using (IVotingContext context = _contextFactory.CreateContext())
             {
                 Poll poll = context
@@ -89,61 +104,51 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (poll == null)
                 {
-                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
-                }
-
-                foreach (Ballot ballot in poll.Ballots.ToList())
-                {
-                    foreach (Vote vote in ballot.Votes.ToList())
-                    {
-                        context.Votes.Remove(vote);
-                    }
-
-                    ballot.Votes.Clear();
-                    context.Ballots.Remove(ballot);
-                }
-
-                poll.Ballots.Clear();
-                poll.LastUpdated = DateTime.Now;
-
-                context.SaveChanges();
-            }
-        }
-
-        [HttpDelete]
-        public void Delete(Guid manageId, Guid ballotManageId)
-        {
-            using (IVotingContext context = _contextFactory.CreateContext())
-            {
-                Poll poll = context
-                    .Polls
-                    .Include(p => p.Ballots)
-                    .Include(p => p.Ballots.Select(b => b.Votes))
-                    .SingleOrDefault(p => p.ManageId == manageId);
-
-                if (poll == null)
-                {
                     this.ThrowError(HttpStatusCode.NotFound, String.Format("Poll {0} not found", manageId));
                 }
 
-                Ballot ballot = poll
+                List<Guid> requestBallotGuids = request
+                    .BallotDeleteRequests
+                    .Select(b => b.BallotManageGuid)
+                    .ToList();
+
+                List<Guid> pollBallotGuids = poll
                     .Ballots
-                    .SingleOrDefault(b => b.ManageGuid == ballotManageId);
+                    .Select(b => b.ManageGuid)
+                    .ToList();
 
-                if (ballot == null)
+                if (requestBallotGuids.Except(pollBallotGuids).Any())
                 {
-                    this.ThrowError(HttpStatusCode.NotFound, String.Format("Ballot {0} not found", ballotManageId));
+                    this.ThrowError(HttpStatusCode.NotFound, String.Format("Ballots requested for delete do not all belong to poll {0}", manageId));
                 }
 
-                foreach (Vote vote in ballot.Votes.ToList())
+                List<Ballot> ballots = poll.Ballots.ToList();
+
+                foreach (DeleteBallotRequestModel ballotRequest in request.BallotDeleteRequests)
                 {
-                    context.Votes.Remove(vote);
+                    Ballot ballot = ballots.Single(b => b.ManageGuid == ballotRequest.BallotManageGuid);
+
+                    foreach (DeleteVoteRequestModel voteRequest in ballotRequest.VoteDeleteRequests)
+                    {
+                        Vote vote = ballot.Votes.ToList().SingleOrDefault(v => v.Option.PollOptionNumber == voteRequest.OptionNumber);
+
+                        if (vote == null)
+                        {
+                            this.ThrowError(HttpStatusCode.NotFound, String.Format("Ballot {0} does not contain an option {1}", ballotRequest.BallotManageGuid, voteRequest.OptionNumber));
+                        }
+
+                        ballot.Votes.Remove(vote);
+                        context.Votes.Remove(vote);
+                    }
+
+                    if (!ballot.Votes.Any())
+                    {
+                        poll.Ballots.Remove(ballot);
+                        context.Ballots.Remove(ballot);
+                    }
                 }
 
-                ballot.Votes.Clear();
-
-                poll.Ballots.Remove(ballot);
-                context.Ballots.Remove(ballot);
+                poll.LastUpdated = DateTime.Now;
 
                 context.SaveChanges();
             }
