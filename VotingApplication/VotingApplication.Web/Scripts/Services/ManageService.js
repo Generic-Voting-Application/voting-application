@@ -93,11 +93,12 @@
         self.getVoters = function (manageId) {
             var request = $http({
                 method: 'GET',
-                url: '/api/manage/' + manageId + '/vote'
+                url: '/api/manage/' + manageId + '/voters'
             });
 
             return request;
         };
+
 
         self.setVisited = function (manageId) {
             $localStorage[manageId] = { visited: true };
@@ -108,6 +109,18 @@
                 return false;
             }
             return $localStorage[manageId].visited;
+        }
+
+        self.resetAllVotes = function (manageId) {
+            var request = $http.delete('/api/manage/' + manageId + '/voters');
+
+            return request;
+        };
+
+        self.resetBallot = function (manageId, ballotManageGuid) {
+            var request = $http.delete('api/manage/' + manageId + '/voters/' + ballotManageGuid);
+
+            return request;
         };
 
         return self;
