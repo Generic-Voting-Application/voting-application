@@ -58,6 +58,15 @@
         "angular": false,
         "$": false,
         "d3": false,
-        "moment": false
+        "moment": false,
+		/* Jasmine */
+		"jasmine"    : false,
+		"describe"   : false,
+		"it"         : false,
+		"expect"     : false,
+		"before"     : false,
+		"beforeEach" : false,
+		"after"      : false,
+		"afterEach"  : false
     }
 }

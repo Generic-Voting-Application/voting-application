@@ -1,7 +1,6 @@
 ﻿{
     "Framework": "jasmine",
-    "TestHarnessReferenceMode": "AMD",
     "Tests": [
-        { "Path": "lib", "Exclude": "*.js" }
+        { "Path": "Scripts", "Include": "*.js" }
     ]
 }

@@ -702,6 +702,15 @@
       <string>angular</string>
       <string>d3</string>
       <string>moment</string>
+	  <!-- Jasmine -->
+	  <string>jasmine</string>
+	  <string>describe</string>
+	  <string>it</string>
+	  <string>expect</string>
+	  <string>before</string>
+	  <string>beforeEach</string>
+	  <string>after</string>
+	  <string>afterEach</string>
     </PreDefined>
   </JSLintOptions>
   <BuildFileTypes>JS</BuildFileTypes>
