@@ -16,6 +16,7 @@
         $scope.voters = [];
         $scope.manageId = manageId;
         $scope.updatePoll = updatePollDetails;
+        $scope.discardNameChanges = discardNameChanges;
         $scope.formatPollExpiry = formatPollExpiryDate;
         $scope.selectText = selectTargetText;
         $scope.dateFilter = dateFilter;
@@ -44,6 +45,12 @@
         function updatePollDetails() {
             ManageService.poll = $scope.poll;
             ManageService.updatePoll($routeParams.manageId, $scope.poll);
+        }
+
+        function discardNameChanges() {
+            ManageService.getPoll(manageId, function (data) {
+                $scope.poll = data;
+            });
         }
 
         function formatPollExpiryDate() {
