@@ -21,6 +21,7 @@
         $scope.dateFilter = dateFilter;
         $scope.pollUrl = pollUrl;
         $scope.manageSubPageUrl = manageSubPageUrl;
+        $scope.visited = false;
 
         activate();
 
@@ -34,6 +35,10 @@
             ManageService.getPoll(manageId, function (data) {
                 $scope.poll = data;
             });
+            $scope.visited = ManageService.getVisited(manageId);
+            if (!$scope.visited) {
+                ManageService.setVisited(manageId);
+            }
         }
 
         function updatePollDetails() {
