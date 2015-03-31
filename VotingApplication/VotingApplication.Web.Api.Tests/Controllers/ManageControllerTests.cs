@@ -305,6 +305,32 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             CollectionAssert.AreEquivalent(expectedEmails, actualEmails);
         }
 
+        [TestMethod]
+        public void PutWithNullEmailClearsTokenByName()
+        {
+            // Arrange
+            Ballot existingBallot = new Ballot() { Email = null, VoterName = "123", TokenGuid = Guid.NewGuid() };
+            Ballot obsoleteBallot = new Ballot() { Email = null, VoterName = "ABC", TokenGuid = Guid.NewGuid() };
+            TokenRequestModel existingTokenRequest = new TokenRequestModel { Name = "123", EmailSent = true };
+
+            _mainPoll.Ballots = new List<Ballot>() { existingBallot, obsoleteBallot };
+
+            ManagePollUpdateRequest request = new ManagePollUpdateRequest
+            {
+                Name = existingTokenRequest.Name,
+                VotingStrategy = PollType.Basic.ToString(),
+                Voters = new List<TokenRequestModel>() { existingTokenRequest }
+            };
+
+            // Act
+            _controller.Put(_manageMainUUID, request);
+
+            // Assert
+            List<string> expectedVoters = new List<string> { "123" };
+            List<string> actualVoters = _mainPoll.Ballots.Select(s => s.VoterName).ToList<string>();
+            CollectionAssert.AreEquivalent(expectedVoters, actualVoters);
+        }
+
         #endregion
     }
 }
