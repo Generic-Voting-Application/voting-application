@@ -20,8 +20,13 @@
         $scope.plural = '';
         $scope.voteCount = 0;
         $scope.hasExpired = false;
+        $scope.gvaExpiredCallback = expire;
 
         activate();
+
+        function expire() {
+            $scope.hasExpired = true;
+        }
 
         function drawChart (data) {
 
