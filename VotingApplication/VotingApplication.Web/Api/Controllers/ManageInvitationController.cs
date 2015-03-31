@@ -1,92 +1,106 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Reflection;
+using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Web.Configuration;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Services;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
     public class ManageInvitationController : WebApiController
     {
         private IMailSender _mailSender;
+        private string _htmlTemplate;
 
         public ManageInvitationController(IMailSender mailSender)
             : base()
         {
             _mailSender = mailSender;
+            _htmlTemplate = HtmlFromFile("VotingApplication.Web.Api.Resources.EmailTemplate.html");
         }
         public ManageInvitationController(IContextFactory contextFactory, IMailSender mailSender) : base(contextFactory)
         {
             _mailSender = mailSender;
+            _htmlTemplate = HtmlFromFile("VotingApplication.Web.Api.Resources.EmailTemplate.html");
         }
 
         #region POST
 
-        public void Post(Guid manageId, List<string> invitationEmails)
+        public void Post(Guid manageId)
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(p => p.ManageId == manageId).Include(p => p.Ballots).FirstOrDefault();
+                Poll matchingPoll = context.Polls
+                                        .Where(p => p.ManageId == manageId)
+                                        .Include(p => p.Ballots)
+                                        .FirstOrDefault();
+
                 if (matchingPoll == null)
                 {
                     this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
-                SendVoteEmails(matchingPoll, invitationEmails);
-                context.SaveChanges();
+                foreach (Ballot ballot in matchingPoll.Ballots)
+                {
+                    // Already sent email
+                    if (ballot.TokenGuid != null && ballot.TokenGuid != Guid.Empty)
+                    {
+                        continue;
+                    }
 
-                return;
+                    ballot.TokenGuid = Guid.NewGuid();
+
+                    SendInvitation(matchingPoll.UUID, ballot, matchingPoll.Name);
+                }
+
+                context.SaveChanges();
             }
         }
 
-        private void SendVoteEmails(Poll poll, List<string> invitationEmails)
+        #region Email Sending
+
+        private string HtmlFromFile(string path)
         {
-            String hostUri = WebConfigurationManager.AppSettings["HostURI"];
+            var assembly = Assembly.GetExecutingAssembly();
+            using (Stream stream = assembly.GetManifestResourceStream(path))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+
+        private void SendInvitation(Guid UUID, Ballot ballot, string pollQuestion)
+        {
+            if (string.IsNullOrEmpty(ballot.Email))
+            {
+                return;
+            }
+
+            string hostUri = WebConfigurationManager.AppSettings["HostURI"];
             if (hostUri == String.Empty)
             {
                 return;
             }
 
-            foreach (string targetEmailAddress in invitationEmails)
-            {
-                if (String.IsNullOrEmpty(targetEmailAddress))
-                {
-                    continue;
-                }
+            string link = hostUri + "/Poll/#/Vote/" + UUID + "/" + ballot.TokenGuid;
 
-                //Remove leading/trailing whitespace
-                var emailAddress = targetEmailAddress.Trim();
-                //Check email is correctly formed to avoid costly sending of invalid emails, potentially dropping our SendGrid reputation
-                if (!Regex.IsMatch(emailAddress, @"^[\w._%+-]+@\w+(\.\w+)+$", RegexOptions.IgnoreCase))
-                {
-                    continue;
-                }
+            string htmlMessage = (string)_htmlTemplate.Clone();
+            htmlMessage = htmlMessage.Replace("__VOTEURI__", link);
+            htmlMessage = htmlMessage.Replace("__HOSTURI__", hostUri);
+            htmlMessage = htmlMessage.Replace("__POLLQUESTION__", pollQuestion);
 
-
-                string tokenString = "";
-                if (poll.InviteOnly)
-                {
-                    Ballot ballot = new Ballot() { TokenGuid = Guid.NewGuid() };
-                    tokenString = "/" + ballot.TokenGuid;
-                    poll.Ballots.Add(ballot);
-                }
-
-                string message = String.Join("\n\n", new List<string>()
-                {"You've been invited by " + poll.Creator + " to vote on " + poll.Name,
-                 "Have your say at: " + hostUri + "/Poll/Index/" + poll.UUID + tokenString});
-
-                Thread newThread = new Thread(new ThreadStart(() => _mailSender.SendMail(emailAddress, "Have your say!", message)));
-                newThread.Start();
-            }
+            _mailSender.SendMail(ballot.Email, "Have your say", htmlMessage);
         }
 
+        #endregion
         #endregion
 
     }
