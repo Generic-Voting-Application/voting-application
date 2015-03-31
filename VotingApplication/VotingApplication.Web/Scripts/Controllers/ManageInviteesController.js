@@ -13,7 +13,8 @@
 
         $scope.emailUpdated = emailUpdated;
         $scope.addInvitee = addInvitee;
-        $scope.deleteInvitee = deleteInvitee;
+        $scope.deletePendingVoter = deletePendingVoter;
+        $scope.deleteInvitedVoter = deleteInvitedVoter;
         $scope.sendInvitations = sendInvitations;
         $scope.inviteString = '';
 
@@ -54,14 +55,14 @@
             }
         }
 
-        function deleteInvitee(invitee) {
-            var matchingUser = $scope.poll.Voters.filter(function (d) {
-                return d.Email === invitee.Email;
-            });
-            var indexOfInvitee = $scope.poll.Voters.indexOf(matchingUser[0]);
+        function deletePendingVoter(pending) {
+            var indexOfInvitee = $scope.pendingUsers.indexOf(pending);
+            $scope.pendingUsers.splice(indexOfInvitee, 1);
+        }
 
-            $scope.poll.Voters.splice(indexOfInvitee, 1);
-            updatePoll();
+        function deleteInvitedVoter(invitee) {
+            var indexOfInvitee = $scope.invitedUsers.indexOf(invitee);
+            $scope.invitedUsers.splice(indexOfInvitee, 1);
         }
 
         function addInvitee(invitee) {
@@ -69,14 +70,14 @@
                 return;
             }
 
+            var allEmails = $scope.pendingUsers.concat($scope.invitedUsers);
             // Avoid duplicate invitations
-            var existingEmails = $scope.poll.Voters.filter(function (d) {
+            var existingEmails = allEmails.filter(function (d) {
                 return (d.Email === invitee);
             });
 
             if (existingEmails.length === 0) {
                 var newInvitee = { Email: invitee, EmailSent: false };
-                $scope.poll.Voters.push(newInvitee);
                 $scope.pendingUsers.push(newInvitee);
             }
 
@@ -88,8 +89,6 @@
             else {
                 $scope.inviteString = $scope.inviteeString.split(invitee)[1];
             }
-
-            updatePoll();
         }
 
         function hasTerminatingCharacter(value) {
@@ -97,12 +96,21 @@
         }
 
         function sendInvitations() {
-            ManageService.sendInvitations($routeParams.manageId, function() {
-                ManageService.getPoll($scope.manageId);
-            });
+            $scope.invitedUsers = $scope.invitedUsers.concat($scope.pendingUsers);
+            $scope.pendingUsers = [];
         }
 
         function updatePoll() {
+            $scope.pendingUsers.forEach(function (d) {
+                d.EmailSent = false;
+            });
+
+            $scope.invitedUsers.forEach(function (d) {
+                d.EmailSent = true;
+            });
+
+            $scope.poll.Voters = $scope.invitedUsers.concat($scope.pendingUsers);
+
             ManageService.updatePoll($routeParams.manageId, $scope.poll, function () {
                 ManageService.getPoll($scope.manageId);
             });

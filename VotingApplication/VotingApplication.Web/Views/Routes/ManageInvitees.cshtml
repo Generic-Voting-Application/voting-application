@@ -8,9 +8,9 @@
         <h4>Pending</h4>
         <p ng-if="pendingUsers.length === 0">No pending users</p>
         <div class="pill-box">
-            <div class="invitee-pill" ng-repeat="invitee in pendingUsers">
-                <span class="invitee-pill-text">{{invitee.Name || invitee.Email}}</span>
-                <span class="glyphicon glyphicon-remove invitee-pill-delete" ng-click="deleteInvitee(invitee)" aria-hidden="true"></span>
+            <div class="invitee-pill" ng-repeat="pending in pendingUsers">
+                <span class="invitee-pill-text">{{pending.Email}}</span>
+                <span class="glyphicon glyphicon-remove invitee-pill-delete" ng-click="deletePendingVoter(pending)" aria-hidden="true"></span>
             </div>
         </div>
         <div class="manage-section" ng-if="pendingUsers.length > 0">
@@ -22,12 +22,13 @@
         <div class="pill-box">
             <div class="invitee-pill" ng-repeat="invitee in invitedUsers">
                 <span class="invitee-pill-text">{{invitee.Name || invitee.Email}}</span>
-                <span class="glyphicon glyphicon-remove invitee-pill-delete" ng-click="deleteInvitee(invitee)" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-remove invitee-pill-delete" ng-click="deleteInvitedVoter(invitee)" aria-hidden="true"></span>
             </div>
         </div>
 
         <div class="manage-section">
-            <button class="manage-btn" ng-click="return()">Done</button>
+            <button class="manage-btn" ng-click="updatePoll();return()">Save</button>
+            <button class="inactive-btn" ng-click="return()">Cancel</button>
         </div>
     </div>
 </div>
