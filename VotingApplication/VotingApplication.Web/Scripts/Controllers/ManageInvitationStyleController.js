@@ -12,17 +12,15 @@
         $scope.manageId = $routeParams.manageId;
 
         $scope.updatePoll = updatePoll;
-        $scope.return = returnToManage;
+        $scope.return = navigateToManagePage;
 
         activate();
 
         function updatePoll() {
-            ManageService.updatePoll($routeParams.manageId, $scope.poll, function () {
-                ManageService.getPoll($scope.manageId);
-            });
+            ManageService.updatePoll($routeParams.manageId, $scope.poll, navigateToManagePage);
         }
 
-        function returnToManage() {
+        function navigateToManagePage() {
             RoutingService.navigateToManagePage($scope.manageId);
         }
 

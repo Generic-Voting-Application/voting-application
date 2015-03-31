@@ -11,18 +11,16 @@
         $scope.manageId = $routeParams.manageId;
 
         $scope.updatePoll = updatePoll;
-        $scope.return = returnToManage;
+        $scope.return = navigateToManagePage;
         $scope.updateStrategy = updateStrategy;
 
         activate();
 
         function updatePoll() {
-            ManageService.updatePoll($routeParams.manageId, $scope.poll, function () {
-                ManageService.getPoll();
-            });
+            ManageService.updatePoll($routeParams.manageId, $scope.poll, navigateToManagePage);
         }
 
-        function returnToManage() {
+        function navigateToManagePage() {
             RoutingService.navigateToManagePage($scope.manageId);
         }
 
@@ -32,11 +30,9 @@
                 if (votes.length > 0) {
                     openPollChangeDialog(function () {
                         $scope.poll.VotingStrategy = strategy;
-                        updatePoll();
                     });
                 } else {
                     $scope.poll.VotingStrategy = strategy;
-                    updatePoll();
                 }
             });
         }
