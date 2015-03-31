@@ -109,7 +109,7 @@
                 return false;
             }
             return $localStorage[manageId].visited;
-        }
+        };
 
         self.resetAllVotes = function (manageId) {
             var request = $http.delete('/api/manage/' + manageId + '/voters');
