@@ -13,8 +13,7 @@
             getPoll: getPoll,
             getUserPolls: getUserPolls,
             createPoll: createPoll,
-            copyPoll: copyPoll,
-            setVisited: setVisited
+            copyPoll: copyPoll
         };
 
         return service;
