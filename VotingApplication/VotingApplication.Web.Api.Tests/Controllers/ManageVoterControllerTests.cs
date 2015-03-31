@@ -90,6 +90,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             {
                 var manageGuid = new Guid("A76287F6-BC56-421C-9294-A477D1E9C4B3");
                 const string voterName = "Derek";
+
+                const int optionNumber = 1;
                 const string optionName = "Value?";
                 const int optionValue = 23;
 
@@ -110,6 +112,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 {
                     Option = new Option()
                     {
+                        PollOptionNumber = optionNumber,
                         Name = optionName
                     },
                     VoteValue = optionValue
@@ -139,6 +142,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
                 Assert.AreEqual(optionName, responseVote.OptionName);
                 Assert.AreEqual(optionValue, responseVote.Value);
+                Assert.AreEqual(optionNumber, responseVote.OptionNumber);
             }
 
             [TestMethod]
@@ -150,11 +154,15 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 const string otherVoterName = "Someone else voting";
 
 
+
                 const string expectedOptionName = "SomeOption";
-                var expectedOption = new Option() { Name = expectedOptionName };
+                const int expectedOptionNumber = 3;
+
+                var expectedOption = new Option() { PollOptionNumber = expectedOptionNumber, Name = expectedOptionName };
                 const int expectedVoteValue = 42;
 
-                var otherOption = new Option() { Name = "Some Other Option" };
+                const int otherOptionNumber = 1;
+                var otherOption = new Option() { PollOptionNumber = otherOptionNumber, Name = "Some Other Option" };
                 const int otherVoteValue = 16;
 
 
@@ -197,7 +205,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 VoteResponse responseVote = responseBallot.Votes[0];
 
                 Assert.AreEqual(expectedOptionName, responseVote.OptionName);
-                Assert.AreEqual(42, responseVote.Value);
+                Assert.AreEqual(expectedVoteValue, responseVote.Value);
+                Assert.AreEqual(expectedOptionNumber, responseVote.OptionNumber);
             }
         }
 

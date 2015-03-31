@@ -67,6 +67,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 var voteResponse = new VoteResponse
                 {
+                    OptionNumber = vote.Option.PollOptionNumber,
                     Value = vote.VoteValue,
                     OptionName = vote.Option.Name
                 };
