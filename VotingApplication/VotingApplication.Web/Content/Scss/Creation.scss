@@ -108,6 +108,10 @@ body {
     }
 }
 
+.btn-group-points {
+    border-color: $Blue500;
+}
+
 // Horizontal rules
 
 .horizontal-ruled:before {
@@ -164,6 +168,7 @@ body {
 
 .manage-section {
     margin-top: 1.3em;
+    min-height: 50px;
 }
 
 .manage-section-row {

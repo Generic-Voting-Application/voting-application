@@ -86,19 +86,7 @@ body {
 }
 
 .btn-group-points {
-    @extend .btn-group;
     border-color: $Green500;
-    width: 100px;
-
-    > button {
-        width: 29px;
-    }
-}
-
-.points-label {
-    float: left;
-    padding: 7px 0 0 0;
-    width: 40px;
 }
 
 .progress {

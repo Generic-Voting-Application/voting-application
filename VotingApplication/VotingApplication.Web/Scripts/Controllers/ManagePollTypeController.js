@@ -13,6 +13,10 @@
         $scope.updatePoll = updatePoll;
         $scope.return = navigateToManagePage;
         $scope.updateStrategy = updateStrategy;
+        $scope.canIncrementMPV = canIncrementMPV;
+        $scope.canDecrementMPV = canDecrementMPV;
+        $scope.canIncrementMP = canIncrementMP;
+        $scope.canDecrementMP = canDecrementMP;
 
         activate();
 
@@ -33,16 +37,100 @@
                     });
                 } else {
                     $scope.poll.VotingStrategy = strategy;
+
+                    switch (strategy) {
+                        case 'Basic':
+                            $scope.poll.MaxPerVote = 1;
+                            $scope.poll.MaxPoints = 1;
+                            break;
+                        case 'Points':
+                            $scope.poll.MaxPerVote = 3;
+                            $scope.poll.MaxPoints = 7;
+                            break;
+                        case 'UpDown':
+                            $scope.poll.MaxPerVote = 1;
+                            $scope.poll.MaxPoints = $scope.poll.Options ? $scope.poll.Options.length : 1;
+                            break;
+                        case 'Multi':
+                            $scope.poll.MaxPerVote = 1;
+                            $scope.poll.MaxPoints = $scope.poll.Options ? $scope.poll.Options.length : 1;
+                            break;
+                    }
                 }
             });
         }
 
-        function activate() {
-            ManageService.registerPollObserver(function () {
-                $scope.poll = ManageService.poll;
-            });
+        // Points per vote
+        function incrementMPV() {
+            if (canIncrementMPV) {
+                $scope.poll.MaxPerVote++;
+            }
+        }
 
-            ManageService.getPoll($scope.manageId);
+        function decrementMPV() {
+            if (canDecrementMPV) {
+                $scope.poll.MaxPerVote--;
+            }
+        }
+
+        function canIncrementMPV() {
+            if (!$scope.poll) {
+                return false;
+            }
+
+            return $scope.poll.VotingStrategy === 'Points' && $scope.poll.MaxPerVote < $scope.poll.MaxPoints;
+        }
+
+        function canDecrementMPV() {
+            if (!$scope.poll) {
+                return false;
+            }
+
+            return $scope.poll.VotingStrategy === 'Points' && $scope.poll.MaxPerVote > 1;
+        }
+
+        // Max points
+        function incrementMP() {
+            if (canIncrementMP) {
+                $scope.poll.MaxPoints++;
+            }
+        }
+
+        function decrementMP() {
+            if (canDecrementMP) {
+                $scope.poll.MaxPoints--;
+            }
+        }
+
+        function canIncrementMP() {
+            if (!$scope.poll) {
+                return false;
+            }
+
+            return $scope.poll.VotingStrategy === 'Points' ||
+                   $scope.poll.VotingStrategy === 'UpDown' ||
+                   $scope.poll.VotingStrategy === 'Multi';
+        }
+
+        function canDecrementMP() {
+            if (!$scope.poll) {
+                return false;
+            }
+
+            var maxPoints = $scope.poll.MaxPoints;
+            var maxPerVote = $scope.poll.MaxPerVote;
+
+            switch ($scope.poll.VotingStrategy) {
+                case 'Basic':
+                    return false;
+                case 'Points':
+                    return maxPoints > 1 && maxPoints > maxPerVote;
+                case 'UpDown':
+                case 'Multi':
+                    return maxPoints > 1;
+                default:
+                    return false;
+            }
         }
 
         function openPollChangeDialog(callback) {
@@ -52,6 +140,14 @@
                 'scope': $scope,
                 data: { 'callback': callback }
             });
+        }
+
+        function activate() {
+            ManageService.registerPollObserver(function () {
+                $scope.poll = ManageService.poll;
+            });
+
+            ManageService.getPoll($scope.manageId);
         }
     }
 })();
