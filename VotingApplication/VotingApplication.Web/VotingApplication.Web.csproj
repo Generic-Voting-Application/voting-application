@@ -257,6 +257,7 @@
     <Compile Include="Api\Models\DBViewModels\CopyPollRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\CopyPollResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\DashboardPollResponseModel.cs" />
+    <Compile Include="Api\Models\DBViewModels\DeleteVotersRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollRequestResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollUpdateRequest.cs" />
     <Compile Include="Api\Models\DBViewModels\ManageVoteResponseModel.cs" />

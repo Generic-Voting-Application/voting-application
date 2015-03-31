@@ -142,8 +142,7 @@ namespace VotingApplication.Web.Api.Controllers
                 .Select(o => new Option()
                 {
                     Name = o.Name,
-                    Description = o.Description,
-                    Info = o.Info
+                    Description = o.Description
                 })
                 .ToList();
         }
