@@ -24,6 +24,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Poll _mainPoll;
         private Guid _inviteOnlyUUID;
         private Poll _inviteOnlyPoll;
+        private Mock<IMailSender> _mockMailSender;
 
         [TestInitialize]
         public void setup()
@@ -42,9 +43,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
             mockContext.Setup(a => a.Polls).Returns(dummyPolls);
 
-            var mockMailSender = new Mock<IMailSender>();
+            _mockMailSender = new Mock<IMailSender>();
 
-            _controller = new ManageInvitationController(mockContextFactory.Object, mockMailSender.Object);
+            _controller = new ManageInvitationController(mockContextFactory.Object, _mockMailSender.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -55,7 +56,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostIsAllowed()
         {
             // Act
-            _controller.Post(_mainUUID, new List<string>());
+            _controller.Post(_mainUUID);
         }
 
         [TestMethod]
@@ -63,14 +64,14 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostWithInvalidPollIdIsRejected()
         {
             // Act
-            _controller.Post(Guid.NewGuid(), new List<string>());
+            _controller.Post(Guid.NewGuid());
         }
 
         [TestMethod]
         public void PostDoesNotCreatesNewTokensForOpenPoll()
         {
             // Act
-            _controller.Post(_mainUUID, new List<string>());
+            _controller.Post(_mainUUID);
 
             // Assert
             Assert.AreEqual(0, _mainPoll.Ballots.Count);
@@ -79,23 +80,44 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         [TestMethod]
         public void PostCreatesNewTokensForInviteOnlyPoll()
         {
+            // Arrange
+            var pendingInvitation = new Ballot() { Email = "a@b.c", TokenGuid = Guid.Empty };
+            _inviteOnlyPoll.Ballots = new List<Ballot> { pendingInvitation };
+
             // Act
-            var invitations = new List<string>() { "a@b.c", "d@e.f", @"    is@an.email  " };
-            _controller.Post(_inviteOnlyUUID, invitations);
+            _controller.Post(_inviteOnlyUUID);
 
             // Assert
-            Assert.AreEqual(3, _inviteOnlyPoll.Ballots.Count);
+            Assert.AreNotEqual(Guid.Empty, pendingInvitation.TokenGuid);
         }
 
         [TestMethod]
-        public void PostDoesNotCreatesNewTokensForMalformedEmailsInInviteOnlyPoll()
+        public void PostSendsEmailForPendingInvitation()
         {
+            // Arrange
+            var pendingInvitation = new Ballot() { Email = "a@b.c", TokenGuid = Guid.Empty };
+            _inviteOnlyPoll.Ballots = new List<Ballot> { pendingInvitation };
+
             // Act
-            var invitations = new List<string>() { @"notAnEmail", "also@notAnEmail", @"neither@is.this." };
-            _controller.Post(_inviteOnlyUUID, invitations);
+            _controller.Post(_inviteOnlyUUID);
 
             // Assert
-            Assert.AreEqual(0, _inviteOnlyPoll.Ballots.Count);
+            _mockMailSender.Verify(ms => ms.SendMail("a@b.c", It.IsAny<string>(), It.IsAny<string>()));
+        }
+
+        [TestMethod]
+        public void PostDoesNotCreatesNewTokensForInvitationsWithExistingTokens()
+        {
+            // Arrange
+            Guid existingToken = Guid.NewGuid();
+            var sentInvitation = new Ballot() { Email = "d@e.f", TokenGuid = existingToken };
+            _inviteOnlyPoll.Ballots = new List<Ballot> { sentInvitation };
+
+            // Act
+            _controller.Post(_inviteOnlyUUID);
+
+            // Assert
+            Assert.AreEqual(existingToken, sentInvitation.TokenGuid);
         }
 
         #endregion

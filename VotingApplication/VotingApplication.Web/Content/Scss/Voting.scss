@@ -68,6 +68,10 @@ body {
     margin-bottom: 15px;
 }
 
+.checkbox-padded-left {
+    padding-left: 33px;
+}
+
 // Points-voting specific
 
 .option-buttons {
@@ -112,7 +116,7 @@ body {
 }
 
 .option-description {
-    min-height: 2em;
+    min-height: 1em;
 }
 
 // Results

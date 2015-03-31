@@ -18,6 +18,7 @@
         $scope.removeExpiry = removeExpiry;
         $scope.setDate = setDate;
         $scope.timeOffset = timeOffset;
+        $scope.dateFilter = dateFilter;
 
         activate();
         
@@ -56,6 +57,10 @@
         function removeExpiry() {
             $scope.poll.ExpiryDate = null;
             $scope.timeOption = null;
+        }
+
+        function dateFilter(date) {
+            return moment(date).isAfter(moment());
         }
 
         function timeOffset() {
