@@ -22,6 +22,7 @@
                         </span>
                         <span ng-if="toggleNameEdit">
                             <input class="manage-name-input" ng-model="poll.Name" required />
+                            <span class="glyphicon glyphicon-remove pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.discardNameChanges()"></span>
                             <span class="glyphicon glyphicon-ok pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.updatePoll()"></span>
                         </span>
                     </span>
