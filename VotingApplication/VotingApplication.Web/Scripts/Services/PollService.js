@@ -93,9 +93,5 @@
 
             return promise;
         }
-
-        function setVisited(pollId) {
-
-        }
     }
 })();
