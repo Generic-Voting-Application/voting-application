@@ -53,6 +53,7 @@ namespace VotingApplication.Web.Api.App_Start
             container.Bind<IVotingContext>().To<VotingContext>();
             container.Bind<IVoteValidatorFactory>().To<VoteValidatorFactory>();
             container.Bind<ILogger>().To<NLogger>();
+            container.Bind<IInvitationService>().To<InvitationService>();
 
             ConfigureMailSender(container);
         }
