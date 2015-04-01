@@ -9,7 +9,7 @@
         <p ng-if="pendingUsers.length === 0">No pending users</p>
         <div class="pill-box">
             <div class="invitee-pill" ng-repeat="invitee in pendingUsers">
-                <span class="invitee-pill-text">{{invitee.Name || invitee.Email}}</span>
+                <span class="invitee-pill-text">{{invitee.Email}}</span>
                 <span class="glyphicon glyphicon-remove invitee-pill-delete" ng-click="deleteInvitee(invitee)" aria-hidden="true"></span>
             </div>
         </div>
@@ -21,7 +21,7 @@
         <p ng-if="invitedUsers.length === 0">You haven't invited anybody yet</p>
         <div class="pill-box">
             <div class="invitee-pill" ng-repeat="invitee in invitedUsers">
-                <span class="invitee-pill-text">{{invitee.Name || invitee.Email}}</span>
+                <span class="invitee-pill-text">{{invitee.Email}}</span>
                 <span class="glyphicon glyphicon-remove invitee-pill-delete" ng-click="deleteInvitee(invitee)" aria-hidden="true"></span>
             </div>
         </div>
