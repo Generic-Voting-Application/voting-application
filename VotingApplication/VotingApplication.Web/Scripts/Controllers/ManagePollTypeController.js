@@ -37,25 +37,6 @@
                     });
                 } else {
                     $scope.poll.VotingStrategy = strategy;
-
-                    //switch (strategy) {
-                    //    case 'Basic':
-                    //        $scope.poll.MaxPerVote = 1;
-                    //        $scope.poll.MaxPoints = 1;
-                    //        break;
-                    //    case 'Points':
-                    //        $scope.poll.MaxPerVote = 3;
-                    //        $scope.poll.MaxPoints = 7;
-                    //        break;
-                    //    case 'UpDown':
-                    //        $scope.poll.MaxPerVote = 1;
-                    //        $scope.poll.MaxPoints = $scope.poll.Options ? $scope.poll.Options.length : 1;
-                    //        break;
-                    //    case 'Multi':
-                    //        $scope.poll.MaxPerVote = 1;
-                    //        $scope.poll.MaxPoints = $scope.poll.Options ? $scope.poll.Options.length : 1;
-                    //        break;
-                    //}
                 }
             });
         }
