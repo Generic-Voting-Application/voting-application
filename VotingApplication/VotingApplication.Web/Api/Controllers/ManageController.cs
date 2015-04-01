@@ -184,7 +184,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     poll.PollType = (PollType)Enum.Parse(typeof(PollType), updateRequest.VotingStrategy, true);
                 }
 
-                List<Ballot> redundantTokens = poll.Ballots.ToList<Ballot>();
+                List<Ballot> redundantTokens = poll.Ballots.Where(b => b.Email != null).ToList<Ballot>();
 
                 foreach (TokenRequestModel voter in updateRequest.Voters)
                 {
@@ -196,10 +196,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     else
                     {
                         // Don't mark token as redundant if still in use
-                        Ballot ballot = redundantTokens.Find(t => 
-                            (t.Email == null && voter.Email == null && t.VoterName == voter.Name) ||
-                            (t.Email != null && t.Email.Equals(voter.Email, StringComparison.OrdinalIgnoreCase))
-                        );
+                        Ballot ballot = redundantTokens.Find(t => t.Email.Equals(voter.Email, StringComparison.OrdinalIgnoreCase));
                         redundantTokens.Remove(ballot);
                     }
                 }
