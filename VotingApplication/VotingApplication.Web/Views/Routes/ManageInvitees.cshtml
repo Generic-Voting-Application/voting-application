@@ -27,8 +27,8 @@
         </div>
 
         <div class="manage-section">
-            <button class="manage-btn" ng-click="updatePoll(); return()">Save</button>
-            <button class="manage-btn" ng-click="return()">Cancel</button>
+            <button class="manage-btn" ng-disabled="isSaving" ng-click="saveChanges()">Save</button>
+            <button class="manage-btn" ng-click="discardChanges()">Cancel</button>
         </div>
     </div>
 </div>

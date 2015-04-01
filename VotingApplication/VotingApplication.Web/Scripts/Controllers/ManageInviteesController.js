@@ -18,8 +18,10 @@
         $scope.sendInvitations = sendInvitations;
         $scope.inviteString = '';
 
-        $scope.updatePoll = updatePoll;
-        $scope.return = returnToManage;
+        $scope.saveChanges = updatePoll;
+        $scope.discardChanges = returnToManage;
+
+        $scope.isSaving = false;
 
         $scope.pendingUsers = [];
         $scope.invitedUsers = [];
@@ -101,6 +103,8 @@
         }
 
         function updatePoll() {
+            $scope.isSaving = true;
+
             $scope.pendingUsers.forEach(function (d) {
                 d.EmailSent = false;
             });
@@ -113,6 +117,7 @@
 
             ManageService.updatePoll($routeParams.manageId, $scope.poll, function () {
                 ManageService.getPoll($scope.manageId);
+                returnToManage();
             });
         }
 
