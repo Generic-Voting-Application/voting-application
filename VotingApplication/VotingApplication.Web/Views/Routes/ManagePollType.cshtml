@@ -39,22 +39,30 @@
                     </span>
                 </div>
                 <div class="content">
-                    <div>
-                        <span class="pull-left"><small>Points per poll</small></span>
-                        <span class="pull-right"><small>Points per vote</small></span>
+                    <div class="pull-left text-centered">
+                        <small>Points per poll</small><br />
+                        <span class="btn-group-points" ng-class="{'selected':poll.VotingStrategy=='Points'}">
+                            <button class=" active-btn pull-left" ng-disabled="!canDecrementMP()" ng-click="(poll.MaxPoints = poll.MaxPoints - 1)">
+                                -
+                            </button>
+                            <label class="points-label text-centered">{{poll.MaxPoints}}</label>
+                            <button class="active-btn pull-right" ng-disabled="!canIncrementMP()" ng-click="(poll.MaxPoints = poll.MaxPoints + 1)">
+                                +
+                            </button>
+                        </span>
                     </div>
-                    <span class="btn-group-points pull-left clear" ng-class="{'selected':poll.VotingStrategy=='Points'}">
-                        <button class=" active-btn pull-left" ng-disabled="!canDecrementMP()" ng-click="(poll.MaxPoints = poll.MaxPoints - 1)">
-                        -</button>
-                        <label class="points-label text-centered">{{poll.MaxPoints}}</label>
-                        <button class="active-btn pull-right" ng-disabled="!canIncrementMP()" ng-click="(poll.MaxPoints = poll.MaxPoints + 1)">+</button>
-                    </span>
-                    <span class="btn-group-points pull-right" ng-class="{'selected':poll.VotingStrategy=='Points'}">
-                        <button class=" active-btn pull-left" ng-disabled="!canDecrementMPV()" ng-click="(poll.MaxPerVote = poll.MaxPerVote - 1)">
-                        -</button>
-                        <label class="points-label text-centered">{{poll.MaxPerVote}}</label>
-                        <button class="active-btn pull-right" ng-disabled="!canIncrementMPV()" ng-click="(poll.MaxPerVote = poll.MaxPerVote + 1)">+</button>
-                    </span>
+                    <div class="pull-right text-centered">
+                        <small>Points per vote</small><br />
+                        <span class="btn-group-points" ng-class="{'selected':poll.VotingStrategy=='Points'}">
+                            <button class=" active-btn pull-left" ng-disabled="!canDecrementMPV()" ng-click="(poll.MaxPerVote = poll.MaxPerVote - 1)">
+                                -
+                            </button>
+                            <label class="points-label text-centered">{{poll.MaxPerVote}}</label>
+                            <button class="active-btn pull-right" ng-disabled="!canIncrementMPV()" ng-click="(poll.MaxPerVote = poll.MaxPerVote + 1)">
+                                +
+                            </button>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

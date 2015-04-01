@@ -109,6 +109,7 @@ body {
 }
 
 .btn-group-points {
+    display: flex;
     border-color: $Grey400;
 
     &.selected {
