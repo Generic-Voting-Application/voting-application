@@ -30,7 +30,7 @@ namespace VotingApplication.Web.Api.Services
 
         public void SendInvitation(Guid UUID, Ballot ballot, string pollQuestion)
         {
-            if (string.IsNullOrEmpty(ballot.Email))
+            if (string.IsNullOrWhiteSpace(ballot.Email))
             {
                 return;
             }
