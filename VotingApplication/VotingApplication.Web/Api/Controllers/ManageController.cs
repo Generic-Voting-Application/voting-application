@@ -16,15 +16,14 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     public class ManageController : WebApiController
     {
 
-        private IMailSender _mailSender;
-        private string _htmlTemplate = HtmlFromFile("VotingApplication.Web.Api.Resources.EmailTemplate.html");
+        private IInvitationService _invitationService;
 
         public ManageController() : base() { }
 
-        public ManageController(IContextFactory contextFactory, IMailSender mailSender)
+        public ManageController(IContextFactory contextFactory, IInvitationService invitationService)
             : base(contextFactory)
         {
-            _mailSender = mailSender;
+            _invitationService = invitationService;
         }
 
         private TokenRequestModel TokenToModel(Ballot ballot)
@@ -212,7 +211,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     if (ballot.TokenGuid == Guid.Empty && voter.EmailSent)
                     {
                         ballot.TokenGuid = Guid.NewGuid();
-                        SendInvitation(poll.UUID, ballot, poll.Name);
+                        _invitationService.SendInvitation(poll.UUID, ballot, poll.Name);
                     }
                 }
 
@@ -245,45 +244,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 context.SaveChanges();
             }
         }
-
-        #region Email Sending
-
-        private static string HtmlFromFile(string path)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            using (Stream stream = assembly.GetManifestResourceStream(path))
-            {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-        }
-
-        private void SendInvitation(Guid UUID, Ballot ballot, string pollQuestion)
-        {
-            if (string.IsNullOrEmpty(ballot.Email))
-            {
-                return;
-            }
-
-            string hostUri = WebConfigurationManager.AppSettings["HostURI"];
-            if (hostUri == String.Empty)
-            {
-                return;
-            }
-
-            string link = hostUri + "/Poll/#/Vote/" + UUID + "/" + ballot.TokenGuid;
-
-            string htmlMessage = (string)_htmlTemplate.Clone();
-            htmlMessage = htmlMessage.Replace("__VOTEURI__", link);
-            htmlMessage = htmlMessage.Replace("__HOSTURI__", hostUri);
-            htmlMessage = htmlMessage.Replace("__POLLQUESTION__", pollQuestion);
-
-            _mailSender.SendMail(ballot.Email, "Have your say", htmlMessage);
-        }
-
-        #endregion
 
         #endregion
     }

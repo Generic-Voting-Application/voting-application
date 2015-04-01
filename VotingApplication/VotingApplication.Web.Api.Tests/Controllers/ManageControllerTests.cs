@@ -65,9 +65,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
             mockContext.Setup(a => a.Ballots).Returns(_dummyTokens);
 
-            var mockMail = new Mock<IMailSender>();
+            var mockInvitation = new Mock<IInvitationService>();
 
-            _controller = new ManageController(mockContextFactory.Object, mockMail.Object);
+            _controller = new ManageController(mockContextFactory.Object, mockInvitation.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }

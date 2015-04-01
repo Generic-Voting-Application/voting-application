@@ -274,6 +274,8 @@
     <Compile Include="Api\Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Api\Results\ChallengeResult.cs" />
     <Compile Include="Api\Services\EmailService.cs" />
+    <Compile Include="Api\Services\IInvitationService.cs" />
+    <Compile Include="Api\Services\InvitationService.cs" />
     <Compile Include="Api\Services\SendMailEmailSender.cs" />
     <Compile Include="Api\Services\Smtp4DevEmailSender.cs" />
     <Compile Include="Api\Services\IMailSender.cs">
