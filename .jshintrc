@@ -59,14 +59,16 @@
         "$": false,
         "d3": false,
         "moment": false,
-		/* Jasmine */
-		"jasmine"    : false,
-		"describe"   : false,
-		"it"         : false,
-		"expect"     : false,
-		"before"     : false,
-		"beforeEach" : false,
-		"after"      : false,
-		"afterEach"  : false
+        /* Jasmine */
+        "jasmine"    : false,
+        "describe"   : false,
+        "it"         : false,
+        "expect"     : false,
+        "before"     : false,
+        "beforeEach" : false,
+        "after"      : false,
+        "afterEach"  : false,
+        /* angular-mocks 8/
+        "inject": false
     }
 }
