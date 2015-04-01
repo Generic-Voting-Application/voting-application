@@ -108,6 +108,15 @@ body {
     }
 }
 
+.btn-group-points {
+    display: flex;
+    border-color: $Grey400;
+
+    &.selected {
+        border-color: $Blue500;
+    }
+}
+
 // Horizontal rules
 
 .horizontal-ruled:before {
@@ -198,10 +207,6 @@ body {
     background-color: $Blue500;
 }
 
-.quickdate-clear {
-    content: '';
-}
-
 .poll-link-area {
     padding-right: 0.1em;
     overflow: hidden;
@@ -212,6 +217,28 @@ body {
 
     .glyphicon {
         margin-right: 10px;
+    }
+}
+
+.poll-type-btn-extended {
+    @extend .manage-section;
+    border: 1px solid;
+    border-color: $Grey400;
+    border-radius: 7px;
+
+    > .poll-type-btn {
+        border-top: none;
+        border-right: none;
+        border-left: none;
+    }
+
+    > .content {
+        padding: 5px 15px 5px 15px;
+        min-height: 70px;
+    }
+
+    &.selected {
+        border-color: $Blue700;
     }
 }
 

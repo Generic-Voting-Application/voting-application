@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
+using System.Web.Configuration;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
@@ -13,14 +16,14 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     public class ManageController : WebApiController
     {
 
-        private IMailSender _mailSender;
+        private IInvitationService _invitationService;
 
         public ManageController() : base() { }
 
-        public ManageController(IContextFactory contextFactory, IMailSender mailSender)
+        public ManageController(IContextFactory contextFactory, IInvitationService invitationService)
             : base(contextFactory)
         {
-            _mailSender = mailSender;
+            _invitationService = invitationService;
         }
 
         private TokenRequestModel TokenToModel(Ballot ballot)
@@ -188,16 +191,27 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 foreach (TokenRequestModel voter in updateRequest.Voters)
                 {
-                    if (!voter.EmailSent)
+                    Ballot ballot = redundantTokens.Find(t =>
+                        (t.Email == null && voter.Email == null && t.VoterName == voter.Name) ||
+                        (t.Email != null && t.Email.Equals(voter.Email, StringComparison.OrdinalIgnoreCase))
+                    );
+
+                    // Don't mark token as redundant if still in use
+                    if (ballot != null)
                     {
-                        Ballot newBallot = new Ballot { Email = voter.Email };
-                        poll.Ballots.Add(newBallot);
-                    }
-                    else
-                    {
-                        // Don't mark token as redundant if still in use
-                        Ballot ballot = redundantTokens.Find(t => t.Email.Equals(voter.Email, StringComparison.OrdinalIgnoreCase));
                         redundantTokens.Remove(ballot);
+                    }
+                    else 
+                    {
+                        ballot = new Ballot { Email = voter.Email, ManageGuid = Guid.NewGuid() };
+                        poll.Ballots.Add(ballot);
+                    }
+
+                    // Marked as needing to send email, but not yet sent
+                    if (ballot.TokenGuid == Guid.Empty && voter.EmailSent)
+                    {
+                        ballot.TokenGuid = Guid.NewGuid();
+                        _invitationService.SendInvitation(poll.UUID, ballot, poll.Name);
                     }
                 }
 
