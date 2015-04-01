@@ -69,6 +69,7 @@ namespace VotingApplication.Web
             scriptBundle.IncludeDirectory("~/Scripts/Services", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Controllers", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Filters", "*.js");
+            scriptBundle.IncludeDirectory("~/Scripts/Interceptors", "*.js");
             scriptBundle.Builder = nullBuilder;
             scriptBundle.Transforms.Add(scriptTransformer);
             scriptBundle.Orderer = nullOrderer;

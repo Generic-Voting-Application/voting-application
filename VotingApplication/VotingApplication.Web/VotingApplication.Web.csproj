@@ -362,6 +362,7 @@
     <Content Include="Scripts\Directives\TruncatedText.js" />
     <Content Include="Scripts\Directives\UnlockableOption.js" />
     <Content Include="Scripts\Filters\dateFilters.js" />
+    <Content Include="Scripts\Interceptors\ErrorInterceptor.js" />
     <Content Include="Scripts\Lib\d3-tip-min.js" />
     <Content Include="Scripts\Lib\moment-min.js" />
     <Content Include="Scripts\Modules\GVA-Common.js" />
