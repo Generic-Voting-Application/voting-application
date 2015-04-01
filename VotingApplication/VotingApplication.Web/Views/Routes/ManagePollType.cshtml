@@ -31,36 +31,33 @@
         </div>
 
         <div class="manage-section">
-            <div class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.VotingStrategy=='Points'}" ng-click="updateStrategy('Points')">
-                <span class="pull-left">
-                    <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>
-                    <span class="poll-type-text">Points vote</span>
-                </span>
+            <div class="poll-type-btn-extended" ng-class="{'selected':poll.VotingStrategy=='Points'}">
+                <div class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.VotingStrategy=='Points'}" ng-click="updateStrategy('Points')">
+                    <span class="pull-left">
+                        <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>
+                        <span class="poll-type-text">Points vote</span>
+                    </span>
+                </div>
+                <div class="content">
+                    <div>
+                        <span class="pull-left"><small>Points per poll</small></span>
+                        <span class="pull-right"><small>Points per vote</small></span>
+                    </div>
+                    <span class="btn-group-points pull-left clear" ng-class="{'selected':poll.VotingStrategy=='Points'}">
+                        <button class=" active-btn pull-left" ng-disabled="!canDecrementMP()" ng-click="(poll.MaxPoints = poll.MaxPoints - 1)">
+                        -</button>
+                        <label class="points-label text-centered">{{poll.MaxPoints}}</label>
+                        <button class="active-btn pull-right" ng-disabled="!canIncrementMP()" ng-click="(poll.MaxPoints = poll.MaxPoints + 1)">+</button>
+                    </span>
+                    <span class="btn-group-points pull-right" ng-class="{'selected':poll.VotingStrategy=='Points'}">
+                        <button class=" active-btn pull-left" ng-disabled="!canDecrementMPV()" ng-click="(poll.MaxPerVote = poll.MaxPerVote - 1)">
+                        -</button>
+                        <label class="points-label text-centered">{{poll.MaxPerVote}}</label>
+                        <button class="active-btn pull-right" ng-disabled="!canIncrementMPV()" ng-click="(poll.MaxPerVote = poll.MaxPerVote + 1)">+</button>
+                    </span>
+                </div>
             </div>
         </div>
-
-        <div class="manage-section">
-            <div>
-                <span class="pull-left"><small>Max points per vote</small></span>
-                <span class="pull-right"><small>Max per poll</small></span>
-            </div>
-            <div>
-                <span class="btn-group-points pull-left clear">
-                    <button class="active-btn pull-left" ng-disabled="!canDecrementMPV()" ng-click="(poll.MaxPerVote = poll.MaxPerVote - 1)">-</button>
-                    <label class="points-label text-centered">{{poll.MaxPerVote}}</label>
-                    <button class="active-btn pull-right" ng-disabled="!canIncrementMPV()" ng-click="(poll.MaxPerVote = poll.MaxPerVote + 1)">+</button>
-                </span>
-
-                <span class="btn-group-points pull-right">
-                    <button class="active-btn pull-left" ng-disabled="!canDecrementMP()" ng-click="(poll.MaxPoints = poll.MaxPoints - 1)">-</button>
-                    <label class="points-label text-centered">{{poll.MaxPoints}}</label>
-                    <button class="active-btn pull-right" ng-disabled="!canIncrementMP()" ng-click="(poll.MaxPoints = poll.MaxPoints + 1)">+</button>
-                </span>
-            </div>
-
-        </div>
-
-
         <div class="manage-section">
             <button class="manage-btn" ng-click="return()">Cancel</button>
             <button class="manage-btn" ng-click="updatePoll()">Save</button>
