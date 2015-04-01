@@ -10,10 +10,10 @@
             <em>{{formatExpiry()}}</em>
         </div>
         <div class="manage-section">
-            <date-picker ng-model="poll.ExpiryDate" />
+            <date-picker ng-model="poll.ExpiryDate" filter="dateFilter" />
         </div>
         <div class="manage-section">
-            <time-picker ng-model="poll.ExpiryDate" debounce="1000" />
+            <time-picker ng-model="poll.ExpiryDate" debounce="1000"/>
         </div>
         <h3>
             Fast options

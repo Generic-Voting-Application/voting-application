@@ -13,6 +13,10 @@
         $scope.updatePoll = updatePoll;
         $scope.return = navigateToManagePage;
         $scope.updateStrategy = updateStrategy;
+        $scope.canIncrementMPV = canIncrementMPV;
+        $scope.canDecrementMPV = canDecrementMPV;
+        $scope.canIncrementMP = canIncrementMP;
+        $scope.canDecrementMP = canDecrementMP;
 
         activate();
 
@@ -37,12 +41,38 @@
             });
         }
 
-        function activate() {
-            ManageService.registerPollObserver(function () {
-                $scope.poll = ManageService.poll;
-            });
+        // Points per vote
+        function canIncrementMPV() {
+            if (!$scope.poll) {
+                return false;
+            }
 
-            ManageService.getPoll($scope.manageId);
+            return $scope.poll.VotingStrategy === 'Points' && $scope.poll.MaxPerVote < $scope.poll.MaxPoints;
+        }
+
+        function canDecrementMPV() {
+            if (!$scope.poll) {
+                return false;
+            }
+
+            return $scope.poll.VotingStrategy === 'Points' && $scope.poll.MaxPerVote > 1;
+        }
+
+        // Max points
+        function canIncrementMP() {
+            if (!$scope.poll) {
+                return false;
+            }
+
+            return $scope.poll.VotingStrategy === 'Points';
+        }
+
+        function canDecrementMP() {
+            if (!$scope.poll) {
+                return false;
+            }
+
+            return $scope.poll.VotingStrategy === 'Points' && $scope.poll.MaxPoints > 1 && $scope.poll.MaxPoints > $scope.poll.MaxPerVote;
         }
 
         function openPollChangeDialog(callback) {
@@ -52,6 +82,14 @@
                 'scope': $scope,
                 data: { 'callback': callback }
             });
+        }
+
+        function activate() {
+            ManageService.registerPollObserver(function () {
+                $scope.poll = ManageService.poll;
+            });
+
+            ManageService.getPoll($scope.manageId);
         }
     }
 })();

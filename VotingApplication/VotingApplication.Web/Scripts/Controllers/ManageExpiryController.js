@@ -56,7 +56,7 @@
         }
 
         function dateFilter(date) {
-            return moment(date).isAfter(moment());
+            return moment(date).isAfter(moment().startOf('Day'));
         }
 
         function timeOffset() {
