@@ -98,8 +98,15 @@
         }
 
         function sendInvitations() {
-            $scope.invitedUsers = $scope.invitedUsers.concat($scope.pendingUsers);
-            $scope.pendingUsers = [];
+            $scope.sendingInvitations = true;
+
+            ManageService.sendInvitations($scope.manageId, $scope.pendingUsers, function () {
+                ManageService.getPoll($scope.manageId);
+                filterUsersByPending();
+                $scope.sendingInvitations = false;
+            }, function () {
+                $scope.sendingInvitations = false;
+            });
         }
 
         function updatePoll() {
