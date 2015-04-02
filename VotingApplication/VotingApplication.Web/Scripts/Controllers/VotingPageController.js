@@ -14,17 +14,17 @@
         // Turn "/#/voting/abc/123" into "/#/results/abc/123"
         var pollId = $routeParams['pollId'];
         var tokenId = $routeParams['tokenId'] || '';
+        var resultsLink = RoutingService.getResultsPageUrl(pollId, tokenId);
 
-        $scope.resultsLink = RoutingService.getResultsPageUrl(pollId, tokenId);
         $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
         $scope.logoutIdentity = IdentityService.clearIdentityName;
         $scope.gvaExpiredCallback = redirectIfExpired;
-        $scope.submitVotes = submitVotes;
+        $scope.submitVote = submitVote;
 
         activate();
 
         function redirectIfExpired() {
-            window.location.replace($scope.resultsLink);
+            window.location.replace(resultsLink);
         }
 
         function activate() {
@@ -38,7 +38,7 @@
             });
         }
 
-        function submitVotes(options) {
+        function submitVote(options) {
             if (!options) {
                 return null;
             }
@@ -54,10 +54,10 @@
                 });
             }
 
-            var votes = $scope.getVotes(options);
+            var votes = this.getVotes(options);
 
             VoteService.submitVote(pollId, votes, tokenId, function () {
-                window.location = $scope.$parent.resultsLink;
+                window.location = resultsLink;
             });
         }
     }
