@@ -1,6 +1,8 @@
 ﻿/// <reference path="../Services/ManageService.js" />
 /// <reference path="../Services/RoutingService.js" />
 (function () {
+    "use strict";
+
     angular
         .module('GVA.Creation')
         .controller('ManageVotersController', ManageVotersController);

@@ -1,4 +1,6 @@
 ﻿(function () {
+    "use strict";
+
     angular
         .module('GVA.Creation')
         .controller('ManageInvitationStyleController', ManageInvitationStyleController);

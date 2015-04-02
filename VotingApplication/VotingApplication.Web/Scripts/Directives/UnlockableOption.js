@@ -1,4 +1,6 @@
-﻿(function() {
+﻿(function () {
+    "use strict";
+
     angular
     .module('GVA.Common')
     .directive('gvaUnlockableOption', ['AccountService', UnlockableOption]);

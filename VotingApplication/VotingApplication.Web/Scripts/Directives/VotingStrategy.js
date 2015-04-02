@@ -1,5 +1,7 @@
 ﻿/// <reference path="../Services/PollService.js" />
 (function () {
+    "use strict";
+
     angular
         .module('GVA.Voting')
         .directive('votingStrategy', votingStrategy);

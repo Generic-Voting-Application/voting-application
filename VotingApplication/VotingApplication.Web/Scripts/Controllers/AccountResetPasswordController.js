@@ -1,6 +1,8 @@
 ﻿/// <reference path="../Services/AccountService.js" />
 /// <reference path="../Services/ErrorService.js" />
 (function () {
+    "use strict";
+
     angular
         .module('GVA.Common')
         .controller('AccountResetPasswordController', AccountResetPasswordController);

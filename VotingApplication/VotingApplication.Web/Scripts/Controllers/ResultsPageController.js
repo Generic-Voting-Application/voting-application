@@ -2,6 +2,8 @@
 /// <reference path="../Services/PollService.js" />
 /// <reference path="../Services/VoteService.js" />
 (function () {
+    "use strict";
+
     angular
         .module('GVA.Voting')
         .controller('ResultsPageController', ResultsPageController);

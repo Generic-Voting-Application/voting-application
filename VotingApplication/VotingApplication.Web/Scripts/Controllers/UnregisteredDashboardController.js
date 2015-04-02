@@ -1,6 +1,8 @@
 ﻿/// <reference path="../Services/AccountService.js" />
 /// <reference path="../Services/PollService.js" />
 (function () {
+    "use strict";
+
     angular
         .module('GVA.Creation')
         .controller('UnregisteredDashboardController', UnregisteredDashboardController);

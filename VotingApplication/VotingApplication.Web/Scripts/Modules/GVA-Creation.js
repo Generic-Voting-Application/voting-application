@@ -1,4 +1,6 @@
 ﻿(function () {
+    "use strict";
+
     angular
         .module('GVA.Creation', ['ngRoute', 'ngDialog', 'ngStorage', 'toggle-switch', 'GVA.Common', 'GVA.Poll'])
         .config(['$routeProvider',

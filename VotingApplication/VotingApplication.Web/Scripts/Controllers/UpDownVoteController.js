@@ -3,6 +3,8 @@
 /// <reference path="../Services/TokenService.js" />
 /// <reference path="../Services/VoteService.js" />
 (function () {
+    "use strict";
+
     angular
         .module('GVA.Voting')
         .controller('UpDownVoteController', UpDownVoteController);
