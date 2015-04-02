@@ -17,7 +17,7 @@
         activate();
 
 
-        $scope.submitVote = submitVote;
+        $scope.getVotes = getVotes;
 
         function activate() {
             PollService.getPoll(pollId, getPollSuccessCallback);
@@ -51,33 +51,12 @@
 
         }
 
-        function submitVote(option) {
-            if (!option) {
-                return null;
-            }
-
-            if (!token) {
-                // Probably invite only, tell the user
-            }
-            else if (!IdentityService.identity) {
-                IdentityService.openLoginDialog($scope, function () {
-                    $scope.submitVote(option);
-                });
-            }
-            else {
-                var votes = [{
-                    OptionId: option.Id,
-                    VoteValue: 1,
-                    VoterName: IdentityService.identity.name
-                }];
-
-                VoteService.submitVote(pollId, votes, token, function () {
-                    window.location = $scope.$parent.resultsLink;
-                });
-            }
+        function getVotes(option) {
+            return [{
+                OptionId: option.Id,
+                VoteValue: 1,
+                VoterName: IdentityService.identity.name
+            }];
         }
-
     }
-
-
 })();

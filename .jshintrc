@@ -11,7 +11,7 @@
     "latedef": "nofunc",
     "newcap": true,
     "noarg": true,
-    "noempty": false,
+    "noempty": true,
     "nonbsp": true,
     "nonew": true,
     "plusplus": false,

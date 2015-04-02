@@ -18,7 +18,7 @@
         $scope.totalPointsAvailable = 0;
         $scope.maxPointsPerOption = 0;
 
-        $scope.submitVote = submitVote;
+        $scope.getVotes = getVotes;
         $scope.unallocatedPoints = calculateUnallocatedPoints;
         $scope.disabledAddPoints = shouldAddPointsBeDisabled;
 
@@ -62,37 +62,16 @@
             });
         }
 
-        function submitVote(options) {
-            if (!options) {
-                return null;
-            }
-
-            if (!token) {
-                // Probably invite only, tell the user
-            }
-            else if (!IdentityService.identity) {
-                IdentityService.openLoginDialog($scope, function () {
-                    $scope.submitVote(options);
+        function getVotes(options) {
+            return options
+                .filter(function (option) { return option.voteValue; })
+                .map(function (option) {
+                    return {
+                        OptionId: option.Id,
+                        VoteValue: option.voteValue,
+                        VoterName: IdentityService.identity.name
+                    };
                 });
-            }
-            else {
-
-                var votes = options
-                    .filter(function (option) { return option.voteValue; })
-                    .map(function (option) {
-                        return {
-                            OptionId: option.Id,
-                            VoteValue: option.voteValue,
-                            VoterName: IdentityService.identity.name
-                        };
-                    });
-
-                VoteService.submitVote(pollId, votes, token, submitVoteSuccessCallback);
-            }
-        }
-
-        function submitVoteSuccessCallback() {
-            window.location = $scope.$parent.resultsLink;
         }
 
         function calculateUnallocatedPoints() {

@@ -14,7 +14,7 @@
         var pollId = $routeParams.pollId;
         var token = null;
 
-        $scope.submitVote = submiteVote;
+        $scope.getVotes = getVotes;
 
         activate();
 
@@ -49,40 +49,16 @@
             });
         }
 
-        function submiteVote(options) {
-            if (!options) {
-                return null;
-            }
-
-            if (!token) {
-                // Probably invite only, tell the user
-            }
-            else if (!IdentityService.identity) {
-                IdentityService.openLoginDialog($scope, openLoginDialogCallback);
-            }
-            else {
-
-                var votes = options
-                        .filter(function (option) { return option.voteValue; })
-                        .map(function (option) {
-                            return {
-                                OptionId: option.Id,
-                                VoteValue: option.voteValue,
-                                VoterName: IdentityService.identity.name
-                            };
-                        });
-
-                VoteService.submitVote(pollId, votes, token, submitVoteSuccessCallback);
-            }
-        }
-
-        function openLoginDialogCallback() {
-            $scope.submitVote($scope.options);
-        }
-
-        function submitVoteSuccessCallback() {
-            window.location = $scope.$parent.resultsLink;
+        function getVotes(options) {
+            return options
+                .filter(function (option) { return option.voteValue; })
+                .map(function (option) {
+                    return {
+                        OptionId: option.Id,
+                        VoteValue: option.voteValue,
+                        VoterName: IdentityService.identity.name
+                    };
+                });
         }
     }
-
 })();
