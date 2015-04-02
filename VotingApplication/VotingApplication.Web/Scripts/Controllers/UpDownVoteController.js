@@ -16,10 +16,10 @@
         var pollId = $routeParams.pollId;
         var token = null;
 
-        $scope.getVotes = getVotes;
+        // Register our getVotes strategy with the parent controller
+        $scope.setVoteCallback(getVotes);
 
         activate();
-
 
         function activate() {
             PollService.getPoll(pollId, getPollSuccessCallback);

@@ -20,9 +20,11 @@
         $scope.totalPointsAvailable = 0;
         $scope.maxPointsPerOption = 0;
 
-        $scope.getVotes = getVotes;
         $scope.unallocatedPoints = calculateUnallocatedPoints;
         $scope.disabledAddPoints = shouldAddPointsBeDisabled;
+
+        // Register our getVotes strategy with the parent controller
+        $scope.setVoteCallback(getVotes);
 
         activate();
 
