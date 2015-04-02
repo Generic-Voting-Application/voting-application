@@ -14,15 +14,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     public class ManageController : WebApiController
     {
 
-        private IInvitationService _invitationService;
-
         public ManageController() : base() { }
 
-        public ManageController(IContextFactory contextFactory, IInvitationService invitationService)
-            : base(contextFactory)
-        {
-            _invitationService = invitationService;
-        }
+        public ManageController(IContextFactory contextFactory) : base(contextFactory) { }
 
         [HttpGet]
         public ManagePollRequestResponseModel Get(Guid manageId)
@@ -205,13 +199,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     {
                         ballot = new Ballot { Email = voter.Email, ManageGuid = Guid.NewGuid() };
                         poll.Ballots.Add(ballot);
-                    }
-
-                    // Marked as needing to send email, but not yet sent
-                    if (ballot.TokenGuid == Guid.Empty && voter.EmailSent)
-                    {
-                        ballot.TokenGuid = Guid.NewGuid();
-                        _invitationService.SendInvitation(poll.UUID, ballot, poll.Name);
                     }
                 }
 
