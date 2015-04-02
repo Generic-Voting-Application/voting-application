@@ -25,7 +25,7 @@
         <div class="manage-section">
             <button class="manage-btn" ng-click="discardChanges()">Cancel</button>
             <button class="manage-btn" ng-disabled="isSaving || sendingInvitations" ng-click="saveChanges()">Save</button>
-            <button class="manage-btn" ng-disabled="isSaving || sendingInvitations" ng-click="addInvitee(inviteString); sendInvitations();" ng-if="pendingUsers.length > 0">Invite Pending</button>
+            <button class="manage-btn" ng-disabled="isSaving || sendingInvitations" ng-click="addInvitee(inviteString); sendInvitations();" ng-if="pendingUsers.length > 0 || inviteString.length > 0">Invite Pending</button>
         </div>
     </div>
 </div>
