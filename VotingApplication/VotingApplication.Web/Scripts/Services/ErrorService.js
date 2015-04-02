@@ -10,6 +10,7 @@
             bindModelStateToForm: bindModelState
         };
 
+
         return service;
 
         function bindModelState(modelState, form, displayGenericError) {
