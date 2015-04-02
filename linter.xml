@@ -700,6 +700,7 @@
     <FindTodos>false</FindTodos>
     <PreDefined>
       <string>angular</string>
+	  <string>$q</string>
       <string>d3</string>
       <string>moment</string>
 	  <!-- Jasmine -->
@@ -711,6 +712,7 @@
 	  <string>beforeEach</string>
 	  <string>after</string>
 	  <string>afterEach</string>
+	  <string>spyOn</string>
 	  <!-- angular-mocks -->
 	  <string>inject</string>
     </PreDefined>

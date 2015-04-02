@@ -12,7 +12,8 @@
 
         var manageId = $routeParams.manageId;
 
-        $scope.voters = {};
+        $scope.voters = [];
+        $scope.votersToRemove = [];
 
         $scope.removeAllVotes = removeAllVotes;
 
@@ -29,6 +30,41 @@
         }
 
         function removeAllVotes() {
+            $scope.voters.forEach(function (ballotToRemove) {
+
+                var existingVoterToRemove = $scope.votersToRemove.filter(filterBallotByGuid(ballotToRemove));
+
+                if (existingVoterToRemove.length === 0) {
+                    $scope.votersToRemove.push(ballotToRemove);
+                }
+                else {
+                    // Existing ballot, add votes to it.
+
+                    ballotToRemove.Votes.forEach(function (vote) {
+
+                        console.log(vote);
+                        var votes = existingVoterToRemove[0].Votes.filter(filterVoteByOptionNumber(vote));
+
+                        console.log(votes);
+
+                        if (votes.length === 0) {
+                            existingVoterToRemove[0].Votes.push(vote);
+                            console.log(existingVoterToRemove[0].Votes);
+                        }
+                    });
+                }
+            });
+
+
+            $scope.voters = [];
+        }
+
+        function filterBallotByGuid(item) {
+            return function (value) { return value.BallotManageGuid === item.BallotManageGuid; };
+        }
+
+        function filterVoteByOptionNumber(item) {
+            return function (value) { return value.OptionNumber === item.OptionNumber; };
         }
 
         function removeVote(vote, ballot) {
@@ -39,7 +75,7 @@
 
         function loadVoters() {
             ManageService.getVoters(manageId)
-                .success(function (data) {
+                .then(function (data) {
                     $scope.voters = data;
                 });
         }

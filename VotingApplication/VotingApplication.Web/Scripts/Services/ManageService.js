@@ -4,9 +4,9 @@
         .factory('ManageService', ManageService);
 
 
-    ManageService.$inject = ['$location', '$http', '$routeParams', '$localStorage'];
+    ManageService.$inject = ['$location', '$http', '$routeParams', '$localStorage', '$q'];
 
-    function ManageService($location, $http, $routeParams, $localStorage) {
+    function ManageService($location, $http, $routeParams, $localStorage, $q) {
         var self = this;
 
         var observerCallbacks = [];
@@ -85,9 +85,13 @@
         };
 
         self.getVoters = function (manageId) {
-            var request = $http.get('/api/manage/' + manageId + '/vote');
+            var deferred = $q.defer();
 
-            return request;
+            $http
+                .get('/api/manage/' + manageId + '/voters')
+                .success(function (data) { deferred.resolve(data); });
+
+            return deferred.promise;
         };
 
         self.setVisited = function (manageId) {
