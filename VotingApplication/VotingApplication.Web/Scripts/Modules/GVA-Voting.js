@@ -1,5 +1,5 @@
 ﻿(function () {
-    "use strict";
+    'use strict';
 
     angular
         .module('GVA.Voting', ['ngRoute', 'ngDialog', 'ngStorage', 'GVA.Common', 'GVA.Poll'])

@@ -1,6 +1,6 @@
 ﻿/// <reference path="AccountService.js" />
 (function () {
-    "use strict";
+    'use strict';
 
     angular
         .module('GVA.Poll')

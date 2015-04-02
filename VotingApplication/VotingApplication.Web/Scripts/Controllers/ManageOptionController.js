@@ -1,6 +1,6 @@
 ﻿/// <reference path="../Services/ManageService.js" />
 (function () {
-    "use strict";
+    'use strict';
 
     angular
         .module('GVA.Creation')

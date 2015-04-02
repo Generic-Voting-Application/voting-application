@@ -2,7 +2,7 @@
 /// <reference path="../Services/ManageService.js" />
 /// <reference path="../Services/RoutingService.js" />
 (function () {
-    "use strict";
+    'use strict';
 
     angular
         .module('GVA.Creation')

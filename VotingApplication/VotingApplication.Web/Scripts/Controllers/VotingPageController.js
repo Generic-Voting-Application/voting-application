@@ -1,6 +1,6 @@
 ﻿/// <reference path="../Services/IdentityService.js" />
 (function () {
-    "use strict";
+    'use strict';
 
     angular
         .module('GVA.Voting')
