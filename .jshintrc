@@ -28,7 +28,7 @@
     "asi": false,
     "boss": false,
     "debug": false,
-    "eqnull": true,
+    "eqnull": false,
     "esnext": false,
     "evil": false,
     "expr": false,

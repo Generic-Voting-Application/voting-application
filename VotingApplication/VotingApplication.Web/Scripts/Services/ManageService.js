@@ -21,7 +21,7 @@
 
         self.registerPollObserver = function (callback) {
 
-            if (self.poll == null) {
+            if (self.poll === null) {
                 self.getPoll($routeParams.manageId);
             }
 

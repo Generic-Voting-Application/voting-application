@@ -16,10 +16,10 @@
 
         function activate() {
             AccountService.registerAccountObserver(function () {
-                $scope.isLoggedIn = (AccountService.account != null);
+                $scope.isLoggedIn = (AccountService.account !== null);
             });
 
-            $scope.isLoggedIn = (AccountService.account != null);
+            $scope.isLoggedIn = (AccountService.account !== null);
         }
     }
 
