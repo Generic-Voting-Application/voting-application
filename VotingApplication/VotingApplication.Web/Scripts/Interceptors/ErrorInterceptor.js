@@ -16,6 +16,10 @@
 
         function errorInterceptor(rejection) {
 
+            if (rejection.status < 400) {
+                return $q.reject(rejection);
+            }
+
             $rootScope.error = rejection;
             $rootScope.error.readableMessage = '';
 
