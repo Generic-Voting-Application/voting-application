@@ -30,33 +30,9 @@
         }
 
         function removeAllVotes() {
-            $scope.voters.forEach(function (ballotToRemove) {
+            var clone = $scope.voters.slice(0);
 
-                var existingVoterToRemove = $scope.votersToRemove.filter(filterBallotByGuid(ballotToRemove));
-
-                if (existingVoterToRemove.length === 0) {
-                    $scope.votersToRemove.push(ballotToRemove);
-                }
-                else {
-                    // Existing ballot, add votes to it.
-
-                    ballotToRemove.Votes.forEach(function (vote) {
-
-                        console.log(vote);
-                        var votes = existingVoterToRemove[0].Votes.filter(filterVoteByOptionNumber(vote));
-
-                        console.log(votes);
-
-                        if (votes.length === 0) {
-                            existingVoterToRemove[0].Votes.push(vote);
-                            console.log(existingVoterToRemove[0].Votes);
-                        }
-                    });
-                }
-            });
-
-
-            $scope.voters = [];
+            clone.forEach(removeBallot);
         }
 
         function filterBallotByGuid(item) {
@@ -70,7 +46,24 @@
         function removeVote(vote, ballot) {
         }
 
-        function removeBallot(ballot) {
+        function removeBallot(ballotToRemove) {
+            var existingVoterToRemove = $scope.votersToRemove.filter(filterBallotByGuid(ballotToRemove));
+
+            if (existingVoterToRemove.length === 0) {
+                $scope.votersToRemove.push(ballotToRemove);
+            }
+            else {
+                ballotToRemove.Votes.forEach(function (vote) {
+                    var votes = existingVoterToRemove[0].Votes.filter(filterVoteByOptionNumber(vote));
+
+                    if (votes.length === 0) {
+                        existingVoterToRemove[0].Votes.push(vote);
+                    }
+                });
+            }
+
+            var index = $scope.voters.indexOf(ballotToRemove);
+            $scope.voters.splice(index, 1);
         }
 
         function loadVoters() {

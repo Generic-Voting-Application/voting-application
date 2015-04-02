@@ -1,4 +1,4 @@
-﻿describe("ManageVotersController Tests", function () {
+﻿describe("ManageVotersController", function () {
 
     beforeEach(module("GVA.Creation"));
 
@@ -55,9 +55,9 @@
         expect(scope.votersToRemove).toEqual([]);
     });
 
+    describe("Remove All Votes", function () {
 
-    describe("Remove All Votes Tests", function () {
-        it("Remove All Votes adds all ballots and votes to be removed to VotersToRemove", function () {
+        it("Adds all ballots and votes to be removed to VotersToRemove", function () {
             var voters = [
                 {
                     BallotManageGuid: "275B1FF3-F37A-41F9-B91E-983F6D11429A",
@@ -95,13 +95,16 @@
                 }
             ];
             scope.voters = voters;
+            var expectedVotersToRemove = voters.slice(0);
+
 
             scope.removeAllVotes();
 
-            expect(scope.votersToRemove).toEqual(voters);
+
+            expect(scope.votersToRemove).toEqual(expectedVotersToRemove);
         });
 
-        it("Remove All Votes removes all ballots and votes from Voters", function () {
+        it("Removes all ballots and votes from Voters", function () {
             scope.voters = [
                 {
                     BallotManageGuid: "275B1FF3-F37A-41F9-B91E-983F6D11429A",
@@ -144,7 +147,7 @@
             expect(scope.voters).toEqual([]);
         });
 
-        it("Remove All Votes with existing ballots and votes to remove, adds remaining ballots and votes", function () {
+        it("Given existing ballots and votes to remove the remaining ballots and votes are added to VotersToRemove", function () {
             var voters = [
                 {
                     BallotManageGuid: "275B1FF3-F37A-41F9-B91E-983F6D11429A",
@@ -206,7 +209,7 @@
             expect(scope.votersToRemove).toEqual(expectedVotersToRemove);
         });
 
-        it("Remove All Votes with existing ballots and votes to remove does not duplicate ballots and votes to remove", function () {
+        it("Given existing ballots and votes to remove, it does not duplicate ballots and votes to remove", function () {
             var voter1 = {
                 BallotManageGuid: "275B1FF3-F37A-41F9-B91E-983F6D11429A",
                 VoterName: "Derek",
@@ -248,12 +251,16 @@
             scope.voters = voters;
             scope.votersToRemove = existingVotersToRemove;
 
+            var expectedVotersToRemove = voters.slice(0);
+
+
             scope.removeAllVotes();
 
-            expect(scope.votersToRemove).toEqual(voters);
+
+            expect(scope.votersToRemove).toEqual(expectedVotersToRemove);
         });
 
-        it("Remove All Votes with a ballot partially added for removal, adds remaining votes to VotersToRemove", function () {
+        it("Given a ballot partially added for removal the remaining votes are added to VotersToRemove", function () {
             var voterManageGuid = "D0F070A6-596A-4350-A3B3-ED542525D871";
             var voterName = "Barbara";
             var voterVote1 = {
@@ -297,6 +304,170 @@
 
 
             scope.removeAllVotes();
+
+
+            expect(scope.votersToRemove).toEqual(expectedVotersToRemove);
+        });
+    });
+
+    describe("Remove Ballot", function () {
+
+        it("Adds ballot and votes to VotersToRemove", function () {
+            var ballotToRemove = {
+                BallotManageGuid: "D0F070A6-596A-4350-A3B3-ED542525D871",
+                VoterName: "Barbara",
+                Votes: [
+                {
+                    OptionNumber: 3,
+                    OptionName: "Three",
+                    Value: 2
+                },
+                {
+                    OptionNumber: 7,
+                    OptionName: "Seven",
+                    Value: 0
+                }]
+            };
+            var expectedVotersToRemove = [ballotToRemove];
+
+            scope.voters = [ballotToRemove];
+            scope.votersToRemove = [];
+
+
+            scope.removeBallot(ballotToRemove);
+
+
+            expect(scope.votersToRemove).toEqual(expectedVotersToRemove);
+        });
+
+        it("Removes ballot and votes from Voters", function () {
+            var ballotToRemove = {
+                BallotManageGuid: "D0F070A6-596A-4350-A3B3-ED542525D871",
+                VoterName: "Barbara",
+                Votes: [
+                {
+                    OptionNumber: 3,
+                    OptionName: "Three",
+                    Value: 2
+                },
+                {
+                    OptionNumber: 7,
+                    OptionName: "Seven",
+                    Value: 0
+                }]
+            };
+            var voters = [ballotToRemove];
+
+            scope.voters = voters;
+            scope.votersToRemove = [];
+
+
+            scope.removeBallot(ballotToRemove);
+
+
+            expect(scope.voters).toEqual([]);
+        });
+
+        it("Does not affect other ballots in Voters", function () {
+            var ballotToRemove = {
+                BallotManageGuid: "D0F070A6-596A-4350-A3B3-ED542525D871",
+                VoterName: "Barbara",
+                Votes: [
+                {
+                    OptionNumber: 3,
+                    OptionName: "Three",
+                    Value: 2
+                },
+                {
+                    OptionNumber: 7,
+                    OptionName: "Seven",
+                    Value: 0
+                }]
+            };
+            var unaffectedBallot = {
+                BallotManageGuid: "275B1FF3-F37A-41F9-B91E-983F6D11429A",
+                VoterName: "Derek",
+                Votes: [
+                {
+                    OptionNumber: 1,
+                    OptionName: "One",
+                    Value: 5
+                },
+                {
+                    OptionNumber: 2,
+                    OptionName: "Two",
+                    Value: 1
+                }]
+            };
+            var voters = [ballotToRemove, unaffectedBallot];
+
+            scope.voters = voters;
+            scope.votersToRemove = [];
+
+
+            scope.removeBallot(ballotToRemove);
+
+
+            expect(scope.voters).toEqual([unaffectedBallot]);
+        });
+
+        it("Given votes added for removal, removing the ballot does not duplicate votes", function () {
+            var ballotToRemove = {
+                BallotManageGuid: "275B1FF3-F37A-41F9-B91E-983F6D11429A",
+                VoterName: "Derek",
+                Votes: [
+                {
+                    OptionNumber: 12,
+                    OptionName: "Twelve",
+                    Value: 12
+                }]
+            };
+            var votesAlreadyAddedForRemoval = {
+                BallotManageGuid: "275B1FF3-F37A-41F9-B91E-983F6D11429A",
+                VoterName: "Derek",
+                Votes: [
+                {
+                    OptionNumber: 1,
+                    OptionName: "One",
+                    Value: 5
+                },
+                {
+                    OptionNumber: 2,
+                    OptionName: "Two",
+                    Value: 1
+                }]
+            };
+            var voters = [ballotToRemove];
+
+            var expectedVotersToRemove = [
+                {
+                    BallotManageGuid: "275B1FF3-F37A-41F9-B91E-983F6D11429A",
+                    VoterName: "Derek",
+                    Votes: [
+                        {
+                            OptionNumber: 1,
+                            OptionName: "One",
+                            Value: 5
+                        },
+                        {
+                            OptionNumber: 2,
+                            OptionName: "Two",
+                            Value: 1
+                        },
+                        {
+                            OptionNumber: 12,
+                            OptionName: "Twelve",
+                            Value: 12
+                        }
+                    ]
+                }
+            ];
+
+            scope.voters = voters;
+            scope.votersToRemove = [votesAlreadyAddedForRemoval];
+
+
+            scope.removeBallot(ballotToRemove);
 
 
             expect(scope.votersToRemove).toEqual(expectedVotersToRemove);
