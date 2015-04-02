@@ -187,7 +187,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     poll.PollType = (PollType)Enum.Parse(typeof(PollType), updateRequest.VotingStrategy, true);
                 }
 
-                List<Ballot> redundantTokens = poll.Ballots.ToList<Ballot>();
+                List<Ballot> redundantTokens = poll.Ballots.Where(b => b.Email != null).ToList<Ballot>();
 
                 foreach (TokenRequestModel voter in updateRequest.Voters)
                 {

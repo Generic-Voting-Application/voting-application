@@ -131,6 +131,10 @@
 
             for (var i = 0; i < $scope.poll.Voters.length; i++) {
                 var voter = $scope.poll.Voters[i];
+
+                if (voter.Email == null) {
+                    continue;
+                }
                 
                 if (voter.EmailSent) {
                     $scope.invitedUsers.push(voter);
