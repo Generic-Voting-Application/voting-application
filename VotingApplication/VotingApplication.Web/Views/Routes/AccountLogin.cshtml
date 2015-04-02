@@ -11,4 +11,4 @@
         <button class="inactive-btn" type="button" ng-click="forgottenPassword(loginForm)">Forgot Password?</button>
     </form>
 </div>
-<span class="dialog-error-bar-bottom" ng-show="$root.error">{{$root.error.readableMessage}}</span>
+<span class="dialog-error-bar-bottom" ng-show="displayError">{{displayError}}</span>

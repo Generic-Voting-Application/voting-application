@@ -5,9 +5,9 @@
         .module('GVA.Common')
         .controller('AccountLoginController', AccountLoginController);
 
-    AccountLoginController.$inject = ['$scope', 'AccountService', 'ErrorService'];
+    AccountLoginController.$inject = ['$scope', '$rootScope', 'AccountService', 'ErrorService'];
 
-    function AccountLoginController($scope, AccountService, ErrorService) {
+    function AccountLoginController($scope, $rootScope, AccountService, ErrorService) {
 
         $scope.loginAccount = loginAccount;
         $scope.forgottenPassword = forgottenPassword;
@@ -54,13 +54,8 @@
         }
 
         function loginFailureCallback(form, data, status) {
-            // Bad request
-            if (status === 400 && data.ModelState) {
-                ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
-            }
-            else {
-                displayError(data.Message || data.error_description);
-            }
+            $scope.displayError = $rootScope.error.readableMessage;
+            $rootScope.error = null;
         }
 
         function displayError(errorMessage) {
