@@ -8,7 +8,7 @@
         var modelDirty = false;
         var time = moment();
 
-        function link(scope, element, attrs) {
+        function link(scope) {
 
             scope.formatTime = formatTime;
 

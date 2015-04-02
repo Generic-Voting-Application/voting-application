@@ -32,14 +32,14 @@
                 return;
             }
 
-            AccountService.forgotPassword(form.email).success(function (data) {
+            AccountService.forgotPassword(form.email).success(function () {
                 $scope.closeThisDialog();
 
                 if ($scope.ngDialogData.callback) {
                     $scope.ngDialogData.callback();
                 }
             })
-            .error(function (data, status) {
+            .error(function (data) {
                 displayError(data.Message || data.error_description);
             });
         }

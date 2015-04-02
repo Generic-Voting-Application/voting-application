@@ -32,11 +32,9 @@
         var emailRegex = /[\w._%+-]+@\w+(\.\w+)+/;
 
         function emailUpdated() {
-            var lastCharacter = $scope.inviteString.slice(-1);
             if (hasTerminatingCharacter($scope.inviteString)) {
                 var allEmails = $scope.inviteString.trimLeft().split(splitterTest);
 
-                var remainingText = allEmails.slice(-1);
                 var newEmails = allEmails.slice(0, -1);
 
                 newEmails = newEmails

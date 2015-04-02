@@ -5,9 +5,8 @@
 
     function resultsChart() {
 
-        function link($scope, element, attrs) {
+        function link($scope) {
 
-            var chart;
             var canvas = document.createElement('canvas');
 
             $scope.$watch('data', function (newVal, oldVal) {

@@ -80,7 +80,7 @@
             $scope.submitVote($scope.options);
         }
 
-        function submitVoteSuccessCallback(data) {
+        function submitVoteSuccessCallback() {
             window.location = $scope.$parent.resultsLink;
         }
     }

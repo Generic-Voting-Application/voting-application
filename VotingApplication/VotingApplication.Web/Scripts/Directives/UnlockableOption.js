@@ -5,7 +5,7 @@
 
     function UnlockableOption(AccountService) {
 
-        function link(scope, element, attrs) {
+        function link(scope) {
             scope.openLoginDialog = function () {
                 AccountService.openLoginDialog(scope);
             };

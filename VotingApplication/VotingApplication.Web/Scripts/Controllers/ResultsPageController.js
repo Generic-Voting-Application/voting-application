@@ -12,7 +12,6 @@
 
         var pollId = $routeParams.pollId;
         var tokenId = $routeParams['tokenId'] || '';
-        var pollExpiryDate = null;
 
         $scope.votingLink = RoutingService.getVotePageUrl(pollId, tokenId);
         $scope.winner = 'Lorem';
@@ -34,7 +33,7 @@
             VoteService.getResults(pollId, getResultsSuccessCallback);
         }
 
-        function getResultsSuccessCallback(data, status) {
+        function getResultsSuccessCallback(data) {
 
             if (data) {
                 $scope.voteCount = data.length;

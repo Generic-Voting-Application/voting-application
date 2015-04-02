@@ -31,10 +31,10 @@
         function removeAllVotes() {
         }
 
-        function removeVote(vote, ballot) {
+        function removeVote() {
         }
 
-        function removeBallot(ballot) {
+        function removeBallot() {
         }
 
         function loadVoters() {

@@ -9,7 +9,7 @@
         var selectedDate = null;
         var modelDirty = false;
 
-        function link(scope, element, attrs) {
+        function link(scope) {
             scope.weekdays = moment.weekdaysShort();
 
             scope.setModelDate = setModelDate;

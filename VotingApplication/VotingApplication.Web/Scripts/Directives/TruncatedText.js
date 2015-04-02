@@ -5,7 +5,7 @@
 
     truncatedText.$inject = ['$parse'];
 
-    function truncatedText($parse) {
+    function truncatedText() {
 
         function truncateText(text, limit) {
 
@@ -22,7 +22,7 @@
             return truncatedtext;
         }
 
-        function link(scope, element, attrs) {
+        function link(scope) {
 
             activate();
 
