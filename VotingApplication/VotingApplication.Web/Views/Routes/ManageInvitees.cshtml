@@ -1,0 +1,34 @@
+﻿<div ng-app="GVA.Creation" ng-controller="ManageInviteesController">
+    <div class="centered">
+        <h2>Poll Invitees</h2>
+        <h4>Email to Invite</h4>
+        <input id="new-invitee" name="new-invitee" ng-model="inviteString" ng-change="emailUpdated()" ng-trim="false" />
+        <span class="glyphicon glyphicon-plus" ng-click="addInvitee(inviteString);"></span>
+        
+        <h4>Pending</h4>
+        <p ng-if="pendingUsers.length === 0">No pending users</p>
+        <div class="pill-box">
+            <div class="invitee-pill" ng-repeat="pending in pendingUsers">
+                <span class="invitee-pill-text">{{pending.Email}}</span>
+                <span class="glyphicon glyphicon-remove invitee-pill-delete" ng-click="deletePendingVoter(pending)" aria-hidden="true"></span>
+            </div>
+        </div>
+        <div class="manage-section" ng-if="pendingUsers.length > 0">
+            <button class="manage-btn" ng-click="addInvitee(inviteString); sendInvitations();">Invite</button>
+        </div>
+
+        <h4>Invited</h4>
+        <p ng-if="invitedUsers.length === 0">You haven't invited anybody yet</p>
+        <div class="pill-box">
+            <div class="invitee-pill" ng-repeat="invitee in invitedUsers">
+                <span class="invitee-pill-text">{{invitee.Email}}</span>
+                <span class="glyphicon glyphicon-remove invitee-pill-delete" ng-click="deleteInvitedVoter(invitee)" aria-hidden="true"></span>
+            </div>
+        </div>
+
+        <div class="manage-section">
+            <button class="manage-btn" ng-disabled="isSaving" ng-click="saveChanges()">Save</button>
+            <button class="manage-btn" ng-click="discardChanges()">Cancel</button>
+        </div>
+    </div>
+</div>

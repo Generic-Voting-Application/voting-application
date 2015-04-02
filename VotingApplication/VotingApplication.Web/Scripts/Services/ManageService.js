@@ -4,9 +4,9 @@
         .factory('ManageService', ManageService);
 
 
-    ManageService.$inject = ['$location', '$http', '$routeParams'];
+    ManageService.$inject = ['$location', '$http', '$routeParams', '$localStorage'];
 
-    function ManageService($location, $http, $routeParams) {
+    function ManageService($location, $http, $routeParams, $localStorage) {
         var self = this;
 
         var observerCallbacks = [];
@@ -26,7 +26,7 @@
             }
 
             observerCallbacks.push(callback);
-        }
+        };
 
         self.getPoll = function (manageId, callback, failureCallback) {
 
@@ -34,14 +34,20 @@
                 return null;
             }
 
-            $http({
-                method: 'GET',
-                url: '/api/manage/' + manageId
-            })
-            .success(function (data) { self.poll = data; notifyObservers(); if (callback) { callback(data) } })
-            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
-
-        }
+            $http.get('/api/manage/' + manageId)
+                .success(function (data) {
+                    self.poll = data;
+                    notifyObservers();
+                    if (callback) {
+                        callback(data);
+                    }
+                })
+                .error(function (data, status) {
+                    if (failureCallback) {
+                        failureCallback(data, status);
+                    }
+                });
+        };
 
         self.updatePoll = function (manageId, poll, callback, failureCallback) {
 
@@ -50,21 +56,64 @@
                 url: '/api/manage/' + manageId,
                 data: poll
             })
-            .success(function (data) { if (callback) { callback(data) } })
-            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+                .success(function (data) {
+                    if (callback) {
+                        callback(data);
+                    }
+                })
+                .error(function (data, status) {
+                    if (failureCallback) {
+                        failureCallback(data, status);
+                    }
+                });
 
-        }
+        };
 
         self.getVotes = function (pollId, callback, failureCallback) {
 
-            $http({
-                method: 'GET',
-                url: '/api/poll/' + pollId + '/vote'
-            })
-            .success(function (data) { if (callback) { callback(data) } })
-            .error(function (data, status) { if (failureCallback) { failureCallback(data, status) } });
+            $http.get('/api/poll/' + pollId + '/vote')
+                .success(function (data) {
+                    if (callback) {
+                        callback(data);
+                    }
+                })
+                .error(function (data, status) {
+                    if (failureCallback) {
+                        failureCallback(data, status);
+                    }
+                });
+        };
 
-        }
+        self.getVoters = function (manageId) {
+            var request = $http.get('/api/manage/' + manageId + '/vote');
+
+            return request;
+        };
+
+        self.setVisited = function (manageId) {
+            $localStorage[manageId] = { visited: true };
+        };
+
+        self.getVisited = function (manageId) {
+            if (!$localStorage[manageId]) {
+                return false;
+            }
+            return $localStorage[manageId].visited;
+        };
+
+        self.sendInvitations = function (manageId, callback, failureCallback) {
+            $http.post('/api/manage/' + manageId + '/invitation')
+                .success(function (data) {
+                    if (callback) {
+                        callback(data);
+                    }
+                })
+                .error(function (data, status) {
+                    if (failureCallback) {
+                        failureCallback(data, status);
+                    }
+                });
+        };
 
         return self;
     }

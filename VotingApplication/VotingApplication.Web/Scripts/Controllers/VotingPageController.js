@@ -5,15 +5,15 @@
         .controller('VotingPageController', VotingPageController);
 
 
-    VotingPageController.$inject = ['$scope', '$routeParams', 'IdentityService'];
+    VotingPageController.$inject = ['$scope', '$routeParams', 'IdentityService', 'RoutingService'];
 
-    function VotingPageController($scope, $routeParams, IdentityService) {
+    function VotingPageController($scope, $routeParams, IdentityService, RoutingService) {
 
         // Turn "/#/voting/abc/123" into "/#/results/abc/123"
         var pollId = $routeParams['pollId'];
         var tokenId = $routeParams['tokenId'] || '';
 
-        $scope.resultsLink = '#/Results/' + pollId + "/" + tokenId;
+        $scope.resultsLink = RoutingService.getResultsPageUrl(pollId, tokenId);
         $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
         $scope.logoutIdentity = IdentityService.clearIdentityName;
         $scope.gvaExpiredCallback = redirectIfExpired;

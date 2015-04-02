@@ -10,6 +10,7 @@ $Red500: #f44336;
 $Grey400: #BDBDBD;
 $BlueGrey400: #78909C;
 $BlueGrey100: #CFD8DC;
+$DeepOrange500: #FF5722;
 $Black: #000000;
 $White: #FFFFFF;
 
@@ -107,6 +108,15 @@ body {
     }
 }
 
+.btn-group-points {
+    display: flex;
+    border-color: $Grey400;
+
+    &.selected {
+        border-color: $Blue500;
+    }
+}
+
 // Horizontal rules
 
 .horizontal-ruled:before {
@@ -137,6 +147,11 @@ body {
     padding-left: 20px;
 }
 
+.form-aligned-top {
+    margin-top: 4px;
+    margin-left: 5px;
+}
+
 .manage-btn {
     background-color: $Blue500;
     color: $White;
@@ -164,19 +179,15 @@ body {
     margin-bottom: 5px;
 }
 
-.manage-name-input {
-    width: 90%;
+.warn-box {
+    background-color: $DeepOrange500;
+    color: $White;
+    border-radius: 5px;
+    padding: 10px;
 }
 
-.manage-voters-table {
-    td, th {
-        padding: 4px;
-    }
-
-    button {
-        width: 100px;
-        height: 75px;
-    }
+.manage-name-input {
+    width: 75%;
 }
 
 .toggle-switch {
@@ -196,10 +207,6 @@ body {
     background-color: $Blue500;
 }
 
-.quickdate-clear {
-    content: '';
-}
-
 .poll-link-area {
     padding-right: 0.1em;
     overflow: hidden;
@@ -213,6 +220,28 @@ body {
     }
 }
 
+.poll-type-btn-extended {
+    @extend .manage-section;
+    border: 1px solid;
+    border-color: $Grey400;
+    border-radius: 7px;
+
+    > .poll-type-btn {
+        border-top: none;
+        border-right: none;
+        border-left: none;
+    }
+
+    > .content {
+        padding: 5px 15px 5px 15px;
+        min-height: 70px;
+    }
+
+    &.selected {
+        border-color: $Blue700;
+    }
+}
+
 #poll-link-go-btn {
     margin-top: 1.2em;
 }
@@ -221,7 +250,7 @@ body {
     margin-top: 10px;
 }
 
-.voter-pill {
+.invitee-pill {
     border: 1px solid $BlueGrey100;
     border-radius: 5px;
     height: 25px;
@@ -230,12 +259,12 @@ body {
     margin: 2px;
     overflow: hidden;
 
-    .voter-pill-text {
+    .invitee-pill-text {
         padding: 2px 5px;
         float: left;
     }
 
-    .voter-pill-delete {
+    .invitee-pill-delete {
         float: right;
         background-color: $Red500;
         color: $White;
@@ -245,6 +274,11 @@ body {
         top: 0px;
         cursor: pointer;
     }
+}
+
+.spacing-bottom {
+    margin-bottom: 5px;
+    display: block;
 }
 
 // Dashboard specific
@@ -277,4 +311,26 @@ body {
 
 .poll-panel-pollName {
     font: bold 14pt 'Roboto';
+}
+
+// Manage Voters
+.manage-voters-table {
+    width: 100%;
+}
+
+.manage-voters-body {
+    border-bottom: 1px solid $BlueGrey100;
+    border-top: 1px solid $BlueGrey100;
+}
+
+.manage-voters-voter {
+    border-bottom: 1px solid $BlueGrey100;
+}
+
+.manage-voters-vote {
+    padding-left: 24px;
+}
+
+.glyphicon-larger {
+    font-size: 1.4em;
 }

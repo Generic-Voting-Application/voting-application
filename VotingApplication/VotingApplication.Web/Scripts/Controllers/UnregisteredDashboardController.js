@@ -27,7 +27,7 @@
         }
 
         function createPollSuccessCallback(data) {
-            window.location.href = "/#/Manage/" + data.ManageId;
+            window.location.href = '/#/Manage/' + data.ManageId;
         }
     }
 

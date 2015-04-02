@@ -1,29 +1,31 @@
 ﻿(function () {
     angular
         .module('GVA.Creation')
-        .controller('ManagePollTypeController', ManageVotersController);
+        .controller('ManagePollTypeController', ManagePollTypeController);
 
-    ManageVotersController.$inject = ['$scope', '$routeParams', '$location', 'ngDialog', 'ManageService'];
+    ManagePollTypeController.$inject = ['$scope', '$routeParams', '$location', 'ngDialog', 'ManageService', 'RoutingService'];
 
-    function ManageVotersController($scope, $routeParams, $location, ngDialog, ManageService) {
+    function ManagePollTypeController($scope, $routeParams, $location, ngDialog, ManageService, RoutingService) {
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
 
         $scope.updatePoll = updatePoll;
-        $scope.return = returnToManage;
+        $scope.return = navigateToManagePage;
         $scope.updateStrategy = updateStrategy;
+        $scope.canIncrementMPV = canIncrementMPV;
+        $scope.canDecrementMPV = canDecrementMPV;
+        $scope.canIncrementMP = canIncrementMP;
+        $scope.canDecrementMP = canDecrementMP;
 
         activate();
 
         function updatePoll() {
-            ManageService.updatePoll($routeParams.manageId, $scope.poll, function () {
-                ManageService.getPoll();
-            });
+            ManageService.updatePoll($routeParams.manageId, $scope.poll, navigateToManagePage);
         }
 
-        function returnToManage() {
-            $location.path('Manage/' + $scope.manageId);
+        function navigateToManagePage() {
+            RoutingService.navigateToManagePage($scope.manageId);
         }
 
         function updateStrategy(strategy) {
@@ -32,21 +34,45 @@
                 if (votes.length > 0) {
                     openPollChangeDialog(function () {
                         $scope.poll.VotingStrategy = strategy;
-                        updatePoll();
                     });
                 } else {
                     $scope.poll.VotingStrategy = strategy;
-                    updatePoll();
                 }
             });
         }
 
-        function activate() {
-            ManageService.registerPollObserver(function () {
-                $scope.poll = ManageService.poll;
-            });
+        // Points per vote
+        function canIncrementMPV() {
+            if (!$scope.poll) {
+                return false;
+            }
 
-            ManageService.getPoll($scope.manageId);
+            return $scope.poll.VotingStrategy === 'Points' && $scope.poll.MaxPerVote < $scope.poll.MaxPoints;
+        }
+
+        function canDecrementMPV() {
+            if (!$scope.poll) {
+                return false;
+            }
+
+            return $scope.poll.VotingStrategy === 'Points' && $scope.poll.MaxPerVote > 1;
+        }
+
+        // Max points
+        function canIncrementMP() {
+            if (!$scope.poll) {
+                return false;
+            }
+
+            return $scope.poll.VotingStrategy === 'Points';
+        }
+
+        function canDecrementMP() {
+            if (!$scope.poll) {
+                return false;
+            }
+
+            return $scope.poll.VotingStrategy === 'Points' && $scope.poll.MaxPoints > 1 && $scope.poll.MaxPoints > $scope.poll.MaxPerVote;
         }
 
         function openPollChangeDialog(callback) {
@@ -57,5 +83,13 @@
                 data: { 'callback': callback }
             });
         }
-    };
+
+        function activate() {
+            ManageService.registerPollObserver(function () {
+                $scope.poll = ManageService.poll;
+            });
+
+            ManageService.getPoll($scope.manageId);
+        }
+    }
 })();

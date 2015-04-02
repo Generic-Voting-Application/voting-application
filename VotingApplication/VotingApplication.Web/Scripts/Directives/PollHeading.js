@@ -42,6 +42,6 @@
             scope: {
                 gvaExpiredCallback: '&'
             }
-        }
+        };
     }
 })();

@@ -3,19 +3,12 @@
     <div ng-repeat="option in options">
         <div class="option-block" ng-class="{'selected-option': option.voteValue }" ng-click="option.voteValue=option.voteValue?0:1">
             <div class="option-block-row">
-                <div class="option-buttons">
-                    <button class="inactive-btn btn-medium" ng-click="descriptionToggle=!descriptionToggle;$event.stopPropagation()">{{descriptionToggle ? 'Hide' : 'Show'}} Details</button>
-                </div>
                 <input class="pull-left option-checkbox" type="checkbox" ng-model="option.voteValue" ng-true-value="1" ng-false-value="0" ng-click="$event.stopPropagation()" />
                 <h4>{{option.Name}}</h4>
             </div>
-            <div class="option-block-row">
-                <p class="multivote-option-description" ng-hide="descriptionToggle">
-                </p>
-                <p class="multivote-option-description" ng-show="descriptionToggle">
-                    {{option.Description}}
-                </p>
-            </div>
+            <div ng-if="option.Description" class="option-block-row checkbox-padded-left">
+                <p truncated-text ng-model="option.Description" max-chars="60" class="option-description"></p>
+            </div ng-if>
         </div>
         <hr />
     </div>

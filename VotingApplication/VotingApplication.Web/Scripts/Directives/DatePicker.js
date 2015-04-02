@@ -28,12 +28,12 @@
             }
 
             function updateDisplay(date) {
-                scope.rows = calculateRowDates(date);
+                scope.rows = calculateRowDates(date, scope.filter());
                 scope.displayDate = date.format('MMMM YYYY');
             }
 
             function activate() {
-                scope.$watch("ngModel", function () {
+                scope.$watch('ngModel', function () {
                     selectedDate = scope.ngModel ? moment(scope.ngModel) : moment();
                     displayDate = moment(selectedDate);
                     updateDisplay(displayDate);
@@ -45,9 +45,9 @@
             }
         }
 
-        function calculateRowDates(date) {
+        function calculateRowDates(date, filter) {
 
-            rows = [];
+            var rows = [];
 
             var startDateOfMonth = date.date(1);
             var daysInMonth = date.daysInMonth();
@@ -60,11 +60,11 @@
             // Fill up empty date cells
             rows[rowCounter] = [];
 
-            for (a = 0; a < cellCounter; a++) {
+            for (var a = 0; a < cellCounter; a++) {
                 rows[rowCounter][a] = { date: '' };
             }
 
-            for (i = 1; i <= daysInMonth; i++) {
+            for (var i = 1; i <= daysInMonth; i++) {
 
                 if (!rows[rowCounter]) {
                     rows[rowCounter] = [];
@@ -75,7 +75,12 @@
                 var startOfCellDate = moment(cellDate).startOf('day');
                 var selected = startOfCellDate.isSame(startOfSelectedDate);
 
-                rows[rowCounter][cellCounter] = { date: cellDate, selected: selected };
+                if (filter && !filter(cellDate)) {
+                    rows[rowCounter][cellCounter] = { date: cellDate, enabled: false };
+                } else {
+                    rows[rowCounter][cellCounter] = { date: cellDate, selected: selected, enabled: true };
+                }
+
                 dateCounter.add(1, 'days');
 
                 rowCounter = Math.floor((firstDayOfMonth + i) / 7);
@@ -89,11 +94,12 @@
             restrict: 'E',
             scope: {
                 ngModel: '=',
-                update: '&'
+                update: '&?',
+                filter: '&?'
             },
             link: link,
             templateUrl: '../Routes/DatePicker'
-        }
+        };
     }
 
 })();

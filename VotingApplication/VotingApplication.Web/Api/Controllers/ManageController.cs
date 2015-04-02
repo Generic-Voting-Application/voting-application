@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Web.Configuration;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
@@ -14,27 +16,29 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     public class ManageController : WebApiController
     {
 
-        private IMailSender _mailSender;
+        private IInvitationService _invitationService;
 
         public ManageController() : base() { }
 
-        public ManageController(IContextFactory contextFactory, IMailSender mailSender) : base(contextFactory)
+        public ManageController(IContextFactory contextFactory, IInvitationService invitationService)
+            : base(contextFactory)
         {
-            _mailSender = mailSender;
+            _invitationService = invitationService;
         }
 
-        private TokenRequestModel TokenToModel(Token token)
+        private TokenRequestModel TokenToModel(Ballot ballot)
         {
             return new TokenRequestModel
             {
-                Email = token.Email,
-                TokenGuid = token.TokenGuid
+                Email = ballot.Email,
+                EmailSent = (ballot.TokenGuid != null && ballot.TokenGuid != Guid.Empty),
+                Name = ballot.VoterName
             };
         }
 
         private ManagePollRequestResponseModel PollToModel(Poll poll)
         {
-            List<TokenRequestModel> Voters = poll.Tokens.ConvertAll<TokenRequestModel>(TokenToModel);
+            List<TokenRequestModel> Voters = poll.Ballots.ConvertAll<TokenRequestModel>(TokenToModel);
 
             return new ManagePollRequestResponseModel
             {
@@ -61,7 +65,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Poll poll = context.Polls
                     .Where(p => p.ManageId == manageId)
                     .Include(p => p.Options)
-                    .Include(p => p.Tokens)
+                    .Include(p => p.Ballots)
                     .FirstOrDefault();
 
                 if (poll == null)
@@ -115,7 +119,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Poll poll = context.Polls
                                            .Where(p => p.ManageId == manageId)
                                            .Include(p => p.Options)
-                                           .Include(p => p.Tokens)
+                                           .Include(p => p.Ballots)
+                                           .Include(p => p.Ballots.Select(b => b.Votes))
                                            .SingleOrDefault();
 
                 if (poll == null)
@@ -153,7 +158,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                         else
                         {
                             oldOptions.Add(option);
-                            removedVotes.AddRange(context.Votes.Where(v => v.OptionId == option.Id).ToList());
+                            IEnumerable<Vote> votes = context
+                                .Votes
+                                .Include(v => v.Option)
+                                .Where(v => v.Option.Id == option.Id)
+                                .ToList();
+
+                            removedVotes.AddRange(votes);
                         }
                     }
 
@@ -165,33 +176,56 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (updateRequest.VotingStrategy.ToLower() != poll.PollType.ToString().ToLower())
                 {
-                    removedVotes.AddRange(context.Votes.Where(v => v.PollId == poll.UUID).ToList());
+                    removedVotes.AddRange(
+                        context
+                        .Votes
+                        .Include(v => v.Poll)
+                        .Where(v => v.Poll.UUID == poll.UUID)
+                        .ToList()
+                        );
+
                     poll.PollType = (PollType)Enum.Parse(typeof(PollType), updateRequest.VotingStrategy, true);
                 }
 
-                List<Token> redundantTokens = poll.Tokens.ToList<Token>();
+                List<Ballot> redundantTokens = poll.Ballots.Where(b => b.Email != null).ToList<Ballot>();
 
                 foreach (TokenRequestModel voter in updateRequest.Voters)
                 {
-                    if (voter.TokenGuid == null)
+                    Ballot ballot = redundantTokens.Find(t =>
+                        (t.Email == null && voter.Email == null && t.VoterName == voter.Name) ||
+                        (t.Email != null && t.Email.Equals(voter.Email, StringComparison.OrdinalIgnoreCase))
+                    );
+
+                    // Don't mark token as redundant if still in use
+                    if (ballot != null)
                     {
-                        Token newToken = new Token { Email = voter.Email, TokenGuid = Guid.NewGuid() };
-                        poll.Tokens.Add(newToken);
-                        SendInvitation(poll.UUID, newToken, poll.Name);
+                        redundantTokens.Remove(ballot);
                     }
-                    else
+                    else 
                     {
-                        // Don't mark token as redundant if still in use
-                        Token token = redundantTokens.Find(t => t.TokenGuid == voter.TokenGuid);
-                        redundantTokens.Remove(token);
+                        ballot = new Ballot { Email = voter.Email, ManageGuid = Guid.NewGuid() };
+                        poll.Ballots.Add(ballot);
+                    }
+
+                    // Marked as needing to send email, but not yet sent
+                    if (ballot.TokenGuid == Guid.Empty && voter.EmailSent)
+                    {
+                        ballot.TokenGuid = Guid.NewGuid();
+                        _invitationService.SendInvitation(poll.UUID, ballot, poll.Name);
                     }
                 }
 
                 // Clean up tokens which have been removed
-                foreach (Token token in redundantTokens)
+                foreach (Ballot token in redundantTokens)
                 {
-                    context.Tokens.Remove(token);
-                    poll.Tokens.Remove(token);
+                    foreach (Vote redundantVote in token.Votes.ToList())
+                    {
+                        removedVotes.Add(redundantVote);
+                        token.Votes.Remove(redundantVote);
+                    }
+
+                    context.Ballots.Remove(token);
+                    poll.Ballots.Remove(token);
                 }
 
                 poll.Options = newOptions;
@@ -211,25 +245,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             }
         }
 
-        private void SendInvitation(Guid UUID, Token token, string pollQuestion)
-        {
-            if (string.IsNullOrEmpty(token.Email))
-            {
-                return;
-            }
-
-            String hostUri = WebConfigurationManager.AppSettings["HostURI"];
-            if (hostUri == String.Empty)
-            {
-                return;
-            }
-
-            var link = hostUri + "/Poll/#/Vote/" + UUID + "/" + token.TokenGuid;
-
-            string message = "You've been invited to Vote On '<a href=\""+link+"\">" + pollQuestion + "</a>'";
-
-            _mailSender.SendMail(token.Email, "Have your say", message);
-        }
         #endregion
     }
 }

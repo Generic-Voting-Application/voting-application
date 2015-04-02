@@ -13,16 +13,11 @@
                         <label class="points-label">{{option.voteValue}}/{{maxPointsPerOption}}</label>
                         <button class="active-btn pull-right" ng-disabled="(disabledAddPoints(option.voteValue))" ng-click="(option.voteValue = option.voteValue+1)">+</button>
                     </span>
-                    <button class="inactive-btn btn-medium" ng-click="descriptionToggle=!descriptionToggle">{{descriptionToggle ? 'Hide' : 'Show'}} Details</button>
                 </div>
                 <h4>{{option.Name}}</h4>
             </div>
-            <div class="option-block-row">
-                <p class="option-description" ng-hide="descriptionToggle">
-                </p>
-                <p class="option-description" ng-show="descriptionToggle">
-                    {{option.Description}}
-                </p>
+            <div ng-if="option.Description" class="option-block-row">
+                <p truncated-text ng-model="option.Description" max-chars="60" class="option-description"></p>
             </div>
         </div>
         <hr />

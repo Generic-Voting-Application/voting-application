@@ -16,11 +16,14 @@
                 .when('/Manage/:manageId/Options', {
                     templateUrl: '../Routes/ManageOptions'
                 })
+                .when('/Manage/:manageId/Invitees', {
+                    templateUrl: '../Routes/ManageInvitees'
+                })
+                .when('/Manage/:manageId/InvitationStyle', {
+                    templateUrl: '../Routes/ManageInvitationStyle'
+                })
                 .when('/Manage/:manageId/Voters', {
                     templateUrl: '../Routes/ManageVoters'
-                })
-                .when('/Manage/:manageId/Invitations', {
-                    templateUrl: '../Routes/ManageInvitations'
                 })
                 .when('/Manage/:manageId/PollType', {
                     templateUrl: '../Routes/ManagePollType'
@@ -31,8 +34,8 @@
                 .when('/Account/ResetPassword', {
                     templateUrl: '../Routes/AccountResetPassword'
                 })
-               .otherwise({
-                   templateUrl: '../Routes/HomePage'
-               })
+                .otherwise({
+                    templateUrl: '../Routes/HomePage'
+                });
         }]);
 })();

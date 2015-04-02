@@ -82,11 +82,39 @@
     <Compile Include="Migrations\201503170926170_RemoveExpires.Designer.cs">
       <DependentUpon>201503170926170_RemoveExpires.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503231510145_RemovePollIdFromVote.cs" />
+    <Compile Include="Migrations\201503231510145_RemovePollIdFromVote.Designer.cs">
+      <DependentUpon>201503231510145_RemovePollIdFromVote.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503240828417_RemoveOptionIdFromVote.cs" />
+    <Compile Include="Migrations\201503240828417_RemoveOptionIdFromVote.Designer.cs">
+      <DependentUpon>201503240828417_RemoveOptionIdFromVote.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503241035125_MoveVoterName.cs" />
+    <Compile Include="Migrations\201503241035125_MoveVoterName.Designer.cs">
+      <DependentUpon>201503241035125_MoveVoterName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503241114004_RenameTokenToBallot.cs" />
+    <Compile Include="Migrations\201503241114004_RenameTokenToBallot.Designer.cs">
+      <DependentUpon>201503241114004_RenameTokenToBallot.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503300852057_AddManageGuidToBallot.cs" />
+    <Compile Include="Migrations\201503300852057_AddManageGuidToBallot.Designer.cs">
+      <DependentUpon>201503300852057_AddManageGuidToBallot.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503301037064_RemoveInfoFromOption.cs" />
+    <Compile Include="Migrations\201503301037064_RemoveInfoFromOption.Designer.cs">
+      <DependentUpon>201503301037064_RemoveInfoFromOption.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503301039230_AddPollOptionNumber.cs" />
+    <Compile Include="Migrations\201503301039230_AddPollOptionNumber.Designer.cs">
+      <DependentUpon>201503301039230_AddPollOptionNumber.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
     <Compile Include="Model\Option.cs" />
     <Compile Include="Model\Poll.cs" />
-    <Compile Include="Model\Token.cs" />
+    <Compile Include="Model\Ballot.cs" />
     <Compile Include="Model\Vote.cs" />
     <Compile Include="Model\PollType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -120,6 +148,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503170926170_RemoveExpires.resx">
       <DependentUpon>201503170926170_RemoveExpires.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503231510145_RemovePollIdFromVote.resx">
+      <DependentUpon>201503231510145_RemovePollIdFromVote.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503240828417_RemoveOptionIdFromVote.resx">
+      <DependentUpon>201503240828417_RemoveOptionIdFromVote.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503241035125_MoveVoterName.resx">
+      <DependentUpon>201503241035125_MoveVoterName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503241114004_RenameTokenToBallot.resx">
+      <DependentUpon>201503241114004_RenameTokenToBallot.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503300852057_AddManageGuidToBallot.resx">
+      <DependentUpon>201503300852057_AddManageGuidToBallot.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503301037064_RemoveInfoFromOption.resx">
+      <DependentUpon>201503301037064_RemoveInfoFromOption.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503301039230_AddPollOptionNumber.resx">
+      <DependentUpon>201503301039230_AddPollOptionNumber.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -4,20 +4,21 @@
         .module('GVA.Creation')
         .controller('ManageExpiryController', ManageExpiryController);
 
-    ManageExpiryController.$inject = ['$scope', '$routeParams', '$location', 'ManageService'];
+    ManageExpiryController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];
 
-    function ManageExpiryController($scope, $routeParams, $location, ManageService) {
+    function ManageExpiryController($scope, $routeParams, $location, ManageService, RoutingService) {
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
         $scope.timeOption = null;
 
-        $scope.updatePoll = updatePollDetails;
+        $scope.updatePoll = updatePoll;
         $scope.return = navigateToManagePage;
         $scope.formatExpiry = formatExpiry;
         $scope.removeExpiry = removeExpiry;
         $scope.setDate = setDate;
         $scope.timeOffset = timeOffset;
+        $scope.dateFilter = dateFilter;
 
         activate();
         
@@ -29,22 +30,18 @@
 
         function formatExpiry() {
             if ($scope.poll && $scope.poll.ExpiryDate){
-                return moment($scope.poll.ExpiryDate).format("dddd, MMMM Do YYYY, HH:mm");
+                return moment($scope.poll.ExpiryDate).format('dddd, MMMM Do YYYY, HH:mm');
             }
             return 'Never';
         }
 
+        function updatePoll() {
+            ManageService.updatePoll($routeParams.manageId, $scope.poll, navigateToManagePage);
+        }
+
         function navigateToManagePage() {
-            $location.path('Manage/' + $scope.manageId);
-        };
-
-        function updatePollDetails() {
-            ManageService.updatePoll($routeParams.manageId, $scope.poll, updatePollSuccessCallback);
-        };
-
-        function updatePollSuccessCallback() {
-            ManageService.getPoll($scope.manageId);
-        };
+            RoutingService.navigateToManagePage($scope.manageId);
+        }
 
         function setDate(option) {
             var newDate = moment().add(1, option);
@@ -56,6 +53,10 @@
         function removeExpiry() {
             $scope.poll.ExpiryDate = null;
             $scope.timeOption = null;
+        }
+
+        function dateFilter(date) {
+            return moment(date).isAfter(moment().startOf('Day'));
         }
 
         function timeOffset() {

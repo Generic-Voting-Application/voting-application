@@ -27,12 +27,6 @@ namespace VotingApplication.Web
             );
 
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
-
-            config.Routes.MapHttpRoute(
                 name: "TokenPollVoteApiRoute",
                 routeTemplate: "api/token/{tokenGuid}/poll/{pollId}/vote/{voteId}",
                 defaults: new { controller = "TokenPollVote", voteId = RouteParameter.Optional }
@@ -51,15 +45,9 @@ namespace VotingApplication.Web
             );
 
             config.Routes.MapHttpRoute(
-                name: "PollChatMessageApiRoute",
-                routeTemplate: "api/poll/{pollId}/chat/{messageId}",
-                defaults: new { controller = "PollChatMessage", messageId = RouteParameter.Optional }
-            );
-
-            config.Routes.MapHttpRoute(
-                name: "ManageVoteApiRoute",
-                routeTemplate: "api/manage/{manageId}/vote/{voteId}",
-                defaults: new { controller = "ManageVote", voteId = RouteParameter.Optional }
+                name: "ManageVotersApiRoute",
+                routeTemplate: "api/manage/{manageId}/voters/{ballotManageId}",
+                defaults: new { controller = "ManageVoter", ballotManageId = RouteParameter.Optional }
             );
 
             config.Routes.MapHttpRoute(
@@ -69,15 +57,21 @@ namespace VotingApplication.Web
             );
 
             config.Routes.MapHttpRoute(
-                name: "ManageInvitationApiRoute",
-                routeTemplate: "api/manage/{manageId}/invitation/{invitationId}",
-                defaults: new { controller = "ManageInvitation", invitationId = RouteParameter.Optional }
-            );
-
-            config.Routes.MapHttpRoute(
                 name: "PollTokenApiRoute",
                 routeTemplate: "api/poll/{pollId}/token/",
                 defaults: new { controller = "PollToken" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "DashboardRoute",
+                routeTemplate: "api/dashboard/{action}/{id}",
+                defaults: new { controller = "Dashboard", id = RouteParameter.Optional }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
             );
 
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));

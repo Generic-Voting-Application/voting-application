@@ -1,4 +1,4 @@
-﻿<div ng-controller="DashboardController">
+﻿<div ng-controller="RegisteredDashboardController">
     <div>
         <h2>Welcome {{account.email}}</h2>
     </div>
@@ -23,7 +23,7 @@
             </div>
             <div class="poll-panel-buttons">
                 <button class="poll-panel-button" ng-click="navigateToManagePage(poll.ManageId)">Manage</button>
-                <button class="poll-panel-button">Repeat</button>
+                <button class="poll-panel-button" ng-click="copyPoll(poll.UUID)">Repeat Poll</button>
             </div>
 
         </div>

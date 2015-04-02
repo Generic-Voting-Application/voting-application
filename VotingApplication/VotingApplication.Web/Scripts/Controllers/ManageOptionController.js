@@ -4,9 +4,9 @@
         .module('GVA.Creation')
         .controller('ManageOptionController', ManageOptionController);
 
-    ManageOptionController.$inject = ['$scope', '$routeParams', '$location', 'ManageService'];
+    ManageOptionController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];
 
-    function ManageOptionController($scope, $routeParams, $location, ManageService) {
+    function ManageOptionController($scope, $routeParams, $location, ManageService, RoutingService) {
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
@@ -15,9 +15,9 @@
         $scope.remove = removePollOption;
         $scope.clear = clearPollOption;
         $scope.add = addPollOption;
+        $scope.catchDirtyInput = catchDirtyInput;
 
         activate();
-
 
         function activate() {
             ManageService.registerPollObserver(function () {
@@ -26,13 +26,13 @@
         }
 
         function navigateToManagePage() {
-            $location.path('Manage/' + $scope.manageId);
-        };
+            RoutingService.navigateToManagePage($scope.manageId);
+        }
 
         function removePollOption(option) {
             $scope.poll.Options.splice($scope.poll.Options.indexOf(option), 1);
             $scope.updatePoll();
-        };
+        }
 
         function clearPollOption(form) {
             form.Name = '';
@@ -47,16 +47,21 @@
             };
 
             $scope.poll.Options.push(newOption);
-            $scope.updatePoll();
-        };
+        }
+
+        function catchDirtyInput() {
+            if ($scope.newOptionForm.$dirty && $scope.newOptionForm.$valid) {
+                addPollOption($scope.newOptionForm);
+            }
+        }
 
         function updatePollDetails() {
             ManageService.updatePoll($routeParams.manageId, $scope.poll, updatePollSuccessCallback);
-        };
+        }
 
         function updatePollSuccessCallback() {
             ManageService.getPoll($scope.manageId);
-        };
+        }
     }
 
 })();

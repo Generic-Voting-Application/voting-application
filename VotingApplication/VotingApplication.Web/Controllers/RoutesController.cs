@@ -79,12 +79,12 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
-        public ActionResult ManageVoters()
+        public ActionResult ManageInvitees()
         {
             return View();
         }
 
-        public ActionResult ManageInvitations()
+        public ActionResult ManageInvitationStyle()
         {
             return View();
         }
@@ -99,12 +99,17 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
+        public ActionResult ManageVoters()
+        {
+            return View();
+        }
+
         public ActionResult PollTypeChange()
         {
             return View();
         }
 
-        public ActionResult Dashboard()
+        public ActionResult RegisteredDashboard()
         {
             return View();
         }

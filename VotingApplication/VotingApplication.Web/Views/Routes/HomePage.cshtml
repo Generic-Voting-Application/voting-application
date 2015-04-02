@@ -1,7 +1,7 @@
 ﻿<div ng-controller="HomepageController">
     <div ng-switch on="isLoggedIn">
         <div ng-switch-when="true">
-            <div ng-include="'Routes/Dashboard'"></div>
+            <div ng-include="'Routes/RegisteredDashboard'"></div>
         </div>
         <div ng-switch-when="false">
             <div ng-include="'Routes/UnregisteredDashboard'"></div>

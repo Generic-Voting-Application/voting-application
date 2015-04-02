@@ -37,7 +37,7 @@
 
                 var debounce = null;
 
-                scope.$watch("ngModel", function () {
+                scope.$watch('ngModel', function () {
 
                     // Lock minutes to multiples of 5
                     var roundedDate = scope.ngModel ? moment(scope.ngModel) : moment();
@@ -71,7 +71,7 @@
             },
             link: link,
             templateUrl: '../Routes/TimePicker'
-        }
+        };
     }
 
 })();

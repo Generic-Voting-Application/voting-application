@@ -1,25 +1,32 @@
 ﻿<div ng-app="GVA.Creation" ng-controller="ManagePageController">
+    <div class="manage-section warn-box text-centered" ng-hide="visited || account">
+        <strong>You are not currently signed in.<br /></strong>
+        You should bookmark this page to avoid losing your poll.
+    </div>
     <div class="manage-area centered">
+
         <h2>
             Poll Management
         </h2>
-        <div class="manage-section">
-            <span id="poll-link-go-btn" class="pull-right"><a href="/Poll/#/Vote/{{poll.UUID}}"><button class="go-btn">Go</button></a></span>
-            <div class="poll-link-area">
-                <label for="poll-link">Poll Link</label>
-                <div>
-                    <input class="full-width" id="poll-link" ng-model="poll.UUID" ng-click="selectText($event)" />
-                </div>
-            </div>
-
-        </div>
         <div class="manage-section">
             <div>
                 <span class="glyphicon glyphicon-question-sign pull-left" aria-hidden="true"></span>
                 <h4 class="icon-padded-left">Question:</h4>
             </div>
             <div>
-                <span class="icon-padded-left"><input class="manage-name-input" ng-model="poll.Name" required ng-model-options="{debounce: 1000}" ng-change="updatePoll()" /></span>
+                <form ng-submit="toggleNameEdit=false;updatePoll()">
+                    <span class="icon-padded-left">
+                        <span ng-if="!toggleNameEdit">
+                            {{poll.Name}}
+                            <span class="pull-right"><a class="clickable" ng-click="$parent.toggleNameEdit=true">Edit</a></span>
+                        </span>
+                        <span ng-if="toggleNameEdit">
+                            <input class="manage-name-input" ng-model="poll.Name" required />
+                            <span class="glyphicon glyphicon-remove pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.discardNameChanges()"></span>
+                            <span class="glyphicon glyphicon-ok pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.updatePoll()"></span>
+                        </span>
+                    </span>
+                </form>
             </div>
         </div>
         <div class="manage-section">
@@ -29,17 +36,17 @@
             </div>
             <div>
                 <span class="icon-padded-left">{{poll.Options.length}} Options</span>
-                <span class="pull-right"><a href="#/Manage/{{manageId}}/Options">Edit</a></span>
+                <span class="pull-right"><a href="{{manageSubPageUrl('Options')}}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section">
             <div>
                 <span class="glyphicon glyphicon-user pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Voters:</h4>
+                <h4 class="icon-padded-left">Invitees:</h4>
             </div>
             <div>
-                <span class="icon-padded-left">{{poll.Voters.length}} Voters</span>
-                <gva-unlockable-option option-path="{{manageId}}/Voters"></gva-unlockable-option>
+                <span class="icon-padded-left">{{poll.Voters.length}} Invitees</span>
+                <span class="pull-right"><a href="{{manageSubPageUrl('Invitees')}}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section">
@@ -52,7 +59,7 @@
                 <span class="icon-padded-left" ng-if="!poll.InviteOnly">Open Voting, </span>
                 <span ng-if="poll.NamedVoting">Named Voters</span>
                 <span ng-if="!poll.NamedVoting">Anonymous Voters</span>
-                <gva-unlockable-option option-path="{{manageId}}/Invitations"></gva-unlockable-option>
+                <span class="pull-right"><a href="{{manageSubPageUrl('InvitationStyle')}}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section">
@@ -62,7 +69,7 @@
             </div>
             <div>
                 <span class="icon-padded-left">{{poll.VotingStrategy}}</span>
-                <gva-unlockable-option option-path="{{manageId}}/PollType"></gva-unlockable-option>
+                <span class="pull-right"><a href="{{manageSubPageUrl('PollType')}}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section">
@@ -73,8 +80,15 @@
             <div>
                 <span>
                     <span class="icon-padded-left">{{formatPollExpiry()}}</span>
-                    <span class="pull-right"><a href="#/Manage/{{manageId}}/Expiry">Edit</a></span>
+                    <span class="pull-right"><a href="{{manageSubPageUrl('Expiry')}}">Edit</a></span>
                 </span>
+            </div>
+        </div>
+        <div class="manage-section flexbox">
+            <div class="centered">
+                <a href="{{pollUrl()}}">
+                    <button class="active-btn btn-large">Go to poll</button>
+                </a>
             </div>
         </div>
     </div>
