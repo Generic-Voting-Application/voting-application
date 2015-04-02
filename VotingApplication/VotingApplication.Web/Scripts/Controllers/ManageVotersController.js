@@ -35,15 +35,38 @@
             clone.forEach(removeBallot);
         }
 
-        function filterBallotByGuid(item) {
-            return function (value) { return value.BallotManageGuid === item.BallotManageGuid; };
-        }
-
-        function filterVoteByOptionNumber(item) {
-            return function (value) { return value.OptionNumber === item.OptionNumber; };
-        }
-
         function removeVote(vote, ballot) {
+
+            var existingBallotToRemove = $scope.votersToRemove.filter(filterBallotByGuid(ballot));
+
+            if (existingBallotToRemove.length === 0) {
+                var newBallot = createNewBallotFromExisting(ballot);
+
+                newBallot.Votes.push(vote);
+
+                $scope.votersToRemove.push(newBallot);
+            }
+            else {
+                existingBallotToRemove[0].Votes.push(vote);
+            }
+
+            var index = ballot.Votes.indexOf(vote);
+            ballot.Votes.splice(index, 1);
+
+            if (ballot.Votes.length === 0) {
+                var index = $scope.voters.indexOf(ballot);
+                $scope.voters.splice(index, 1);
+            }
+        }
+
+        function createNewBallotFromExisting(ballot) {
+            var newBallot = {
+                BallotManageGuid: ballot.BallotManageGuid,
+                VoterName: ballot.VoterName,
+                Votes: []
+            };
+
+            return newBallot;
         }
 
         function removeBallot(ballotToRemove) {
@@ -64,6 +87,14 @@
 
             var index = $scope.voters.indexOf(ballotToRemove);
             $scope.voters.splice(index, 1);
+        }
+
+        function filterBallotByGuid(item) {
+            return function (value) { return value.BallotManageGuid === item.BallotManageGuid; };
+        }
+
+        function filterVoteByOptionNumber(item) {
+            return function (value) { return value.OptionNumber === item.OptionNumber; };
         }
 
         function loadVoters() {

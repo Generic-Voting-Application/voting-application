@@ -473,4 +473,144 @@
             expect(scope.votersToRemove).toEqual(expectedVotersToRemove);
         });
     });
+
+    describe("Remove Vote", function () {
+
+        it("Given no votes to remove, adds ballot and vote to VotersToRemove", function () {
+            var voteToRemove = {
+                OptionNumber: 3,
+                OptionName: "Three",
+                Value: 2
+            };
+            var ballot = {
+                BallotManageGuid: "D0F070A6-596A-4350-A3B3-ED542525D871",
+                VoterName: "Barbara",
+                Votes: [voteToRemove]
+            };
+
+            var expectedVotersToRemove = [{
+                BallotManageGuid: "D0F070A6-596A-4350-A3B3-ED542525D871",
+                VoterName: "Barbara",
+                Votes: [voteToRemove]
+            }];
+
+            scope.voters = [ballot];
+            scope.votersToRemove = [];
+
+
+            scope.removeVote(voteToRemove, ballot);
+
+
+            expect(scope.votersToRemove).toEqual(expectedVotersToRemove);
+        });
+
+        it("Removes vote from Voters", function () {
+            var voteToRemove = {
+                OptionNumber: 3,
+                OptionName: "Three",
+                Value: 2
+            };
+            var voteToRemain = {
+                OptionNumber: 2,
+                OptionName: "Two",
+                Value: 1
+            };
+
+            var ballot = {
+                BallotManageGuid: "D0F070A6-596A-4350-A3B3-ED542525D871",
+                VoterName: "Barbara",
+                Votes: [voteToRemove, voteToRemain]
+            };
+            var expectedVotersToRemove = [
+            {
+
+                BallotManageGuid: "D0F070A6-596A-4350-A3B3-ED542525D871",
+                VoterName: "Barbara",
+                Votes: [voteToRemain]
+
+            }];
+
+            scope.voters = [ballot];
+            scope.votersToRemove = [];
+
+
+            scope.removeVote(voteToRemove, ballot);
+
+
+            expect(scope.voters).toEqual(expectedVotersToRemove);
+        });
+
+        it("Removes ballot from Voters if it is the last vote in the ballot", function () {
+            var vote = {
+                OptionNumber: 3,
+                OptionName: "Three",
+                Value: 2
+            };
+
+            var ballot = {
+                BallotManageGuid: "D0F070A6-596A-4350-A3B3-ED542525D871",
+                VoterName: "Barbara",
+                Votes: [vote]
+            };
+
+            scope.voters = [ballot];
+            scope.votersToRemove = [];
+
+
+            scope.removeVote(vote, ballot);
+
+
+            expect(scope.voters).toEqual([]);
+        });
+
+        it("Adds vote to ballot in VotersToRemove", function () {
+            var voteToRemove = {
+                OptionNumber: 3,
+                OptionName: "Three",
+                Value: 2
+            };
+            var ballot = {
+                BallotManageGuid: "D0F070A6-596A-4350-A3B3-ED542525D871",
+                VoterName: "Barbara",
+                Votes: [
+                    voteToRemove,
+                    {
+                        OptionNumber: 56,
+                        OptionName: "Fifty-six",
+                        Value: 23
+                    }]
+            };
+
+            var existingBallot = {
+                BallotManageGuid: "D0F070A6-596A-4350-A3B3-ED542525D871",
+                VoterName: "Barbara",
+                Votes: [
+                {
+                    OptionNumber: 1,
+                    OptionName: "One",
+                    Value: 5
+                }]
+            };
+
+            var expectedVotersToRemove = [{
+                BallotManageGuid: "D0F070A6-596A-4350-A3B3-ED542525D871",
+                VoterName: "Barbara",
+                Votes: [
+                    {
+                        OptionNumber: 1,
+                        OptionName: "One",
+                        Value: 5
+                    },
+                voteToRemove]
+            }];
+
+            scope.voters = [ballot];
+            scope.votersToRemove = [existingBallot];
+
+            scope.removeVote(voteToRemove, ballot);
+
+
+            expect(scope.votersToRemove).toEqual(expectedVotersToRemove);
+        });
+    });
 });
