@@ -69,8 +69,8 @@
         "after"      : false,
         "afterEach"  : false,
         "spyOn"      : false,
-        "xit"      : false,
-        /* angular-mocks 8/
-        "inject": false
+        "xit"        : false,
+        /* angular-mocks */
+        "inject"     : false
     }
 }
