@@ -1,6 +1,8 @@
 ﻿/// <reference path="../Services/AccountService.js" />
 /// <reference path="../Services/PollService.js" />
 (function () {
+    'use strict';
+
     angular
         .module('GVA.Creation')
         .controller('HomepageController', HomepageController);
@@ -16,10 +18,10 @@
 
         function activate() {
             AccountService.registerAccountObserver(function () {
-                $scope.isLoggedIn = (AccountService.account != null);
+                $scope.isLoggedIn = (AccountService.account !== null);
             });
 
-            $scope.isLoggedIn = (AccountService.account != null);
+            $scope.isLoggedIn = (AccountService.account !== null);
         }
     }
 

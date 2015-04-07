@@ -138,6 +138,36 @@ a {
     }
 }
 
+
+.btn-group {
+    border: 1px solid;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 5px;
+
+    > button {
+        border-radius: 0px;
+        border-width: 0px;
+    }
+}
+
+.btn-group-points {
+    @extend .btn-group;
+    width: 100px;
+
+    > button {
+        width: 29px;
+    }
+
+    > .points-label {
+        float: left;
+        padding: 7px 0 0 0;
+        width: 40px;
+    }
+}
+
+
+
 :disabled {
     opacity: 0.5;
 }
@@ -234,18 +264,6 @@ hr {
     @extend .error;
     font-size: small;
     overflow: scroll;
-}
-
-.btn-group {
-    border: 1px solid;
-    border-radius: 5px;
-    overflow: hidden;
-    margin-bottom: 5px;
-
-    > button {
-        border-radius: 0px;
-        border-width: 0px;
-    }
 }
 
 .ngdialog-content {

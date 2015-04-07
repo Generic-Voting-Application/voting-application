@@ -1,5 +1,7 @@
 ﻿/// <reference path="../Services/PollService.js" />
 (function () {
+    'use strict';
+
     angular
         .module('GVA.Voting')
         .directive('votingStrategy', votingStrategy);
@@ -25,7 +27,7 @@
 
         return {
             replace: true,
-            link: function (scope, element, attrs) {
+            link: function (scope) {
                 scope.votingTemplate = votingTemplate;
             },
 

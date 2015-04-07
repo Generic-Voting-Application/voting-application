@@ -2,6 +2,8 @@
 /// <reference path="../Services/PollService.js" />
 /// <reference path="../Services/VoteService.js" />
 (function () {
+    'use strict';
+
     angular
         .module('GVA.Voting')
         .controller('ResultsPageController', ResultsPageController);
@@ -41,7 +43,7 @@
             }
         }
 
-        function getResultsSuccessCallback(data, status) {
+        function getResultsSuccessCallback(data) {
 
             if (data) {
                 $scope.voteCount = data.length;

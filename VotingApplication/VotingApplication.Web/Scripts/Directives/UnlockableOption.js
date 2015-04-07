@@ -1,11 +1,13 @@
-﻿(function() {
+﻿(function () {
+    'use strict';
+
     angular
     .module('GVA.Common')
     .directive('gvaUnlockableOption', ['AccountService', UnlockableOption]);
 
     function UnlockableOption(AccountService) {
 
-        function link(scope, element, attrs) {
+        function link(scope) {
             scope.openLoginDialog = function () {
                 AccountService.openLoginDialog(scope);
             };

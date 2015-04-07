@@ -65,9 +65,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
             mockContext.Setup(a => a.Ballots).Returns(_dummyTokens);
 
-            var mockMail = new Mock<IMailSender>();
+            var mockInvitation = new Mock<IInvitationService>();
 
-            _controller = new ManageController(mockContextFactory.Object, mockMail.Object);
+            _controller = new ManageController(mockContextFactory.Object, mockInvitation.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -306,18 +306,18 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public void PutWithNullEmailClearsTokenByName()
+        public void PutDoesNotClearOutExistingBallots()
+
         {
             // Arrange
-            Ballot existingBallot = new Ballot() { Email = null, VoterName = "123", TokenGuid = Guid.NewGuid() };
-            Ballot obsoleteBallot = new Ballot() { Email = null, VoterName = "ABC", TokenGuid = Guid.NewGuid() };
-            TokenRequestModel existingTokenRequest = new TokenRequestModel { Name = "123", EmailSent = true };
+            Ballot existingBallot = new Ballot() { Email = "a@b.c", VoterName = "123", TokenGuid = Guid.NewGuid() };
+            TokenRequestModel existingTokenRequest = new TokenRequestModel { Email = "a@b.c", Name = "123", EmailSent = true };
 
-            _mainPoll.Ballots = new List<Ballot>() { existingBallot, obsoleteBallot };
+            _mainPoll.Ballots = new List<Ballot>() { existingBallot };
 
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
             {
-                Name = existingTokenRequest.Name,
+                Name = existingTokenRequest.Name + "abc",
                 VotingStrategy = PollType.Basic.ToString(),
                 Voters = new List<TokenRequestModel>() { existingTokenRequest }
             };
@@ -326,11 +326,34 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Put(_manageMainUUID, request);
 
             // Assert
-            List<string> expectedVoters = new List<string> { "123" };
-            List<string> actualVoters = _mainPoll.Ballots.Select(s => s.VoterName).ToList<string>();
-            CollectionAssert.AreEquivalent(expectedVoters, actualVoters);
+            List<Ballot> expectedBallots = new List<Ballot> { existingBallot };
+            List<Ballot> actualBallots = _mainPoll.Ballots.ToList<Ballot>();
+            CollectionAssert.AreEquivalent(expectedBallots, actualBallots);
         }
 
+        [TestMethod]
+        public void PutWithExistingInvitedEmailDoesNotCreateToken()
+        {
+            // Arrange
+            Guid existingGuid = Guid.NewGuid();
+            Ballot existingBallot = new Ballot() { TokenGuid = existingGuid, Email = "a@b.c" };
+            ManagePollUpdateRequest request = new ManagePollUpdateRequest
+            {
+                Name = "Test",
+                VotingStrategy = PollType.Basic.ToString(),
+                Voters = new List<TokenRequestModel>() { new TokenRequestModel { Email = existingBallot.Email, EmailSent = true } }
+            };
+            _mainPoll.Ballots = new List<Ballot>() { existingBallot };
+
+
+            // Act
+            _controller.Put(_manageMainUUID, request);
+
+            // Assert
+            Ballot firstBallot = _mainPoll.Ballots[0];
+            Assert.AreEqual("a@b.c", firstBallot.Email);
+            Assert.AreEqual(existingGuid, firstBallot.TokenGuid);
+        }
         #endregion
     }
 }

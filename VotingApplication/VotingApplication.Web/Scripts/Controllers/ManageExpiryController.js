@@ -1,5 +1,7 @@
 ﻿/// <reference path="../Services/ManageService.js" />
 (function () {
+    'use strict';
+
     angular
         .module('GVA.Creation')
         .controller('ManageExpiryController', ManageExpiryController);
@@ -56,7 +58,7 @@
         }
 
         function dateFilter(date) {
-            return moment(date).isAfter(moment());
+            return moment(date).isAfter(moment().startOf('Day'));
         }
 
         function timeOffset() {
