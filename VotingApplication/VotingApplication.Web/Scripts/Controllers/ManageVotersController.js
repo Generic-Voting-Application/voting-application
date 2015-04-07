@@ -37,7 +37,7 @@
             clone.forEach(removeBallot);
         }
 
-        function removeVote() {
+        function removeVote(vote, ballot) {
 
             var existingBallotToRemove = $scope.votersToRemove.filter(filterBallotByGuid(ballot));
 
