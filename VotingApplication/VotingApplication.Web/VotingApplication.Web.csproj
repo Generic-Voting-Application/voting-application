@@ -327,6 +327,7 @@
     <Content Include="Content\Lib\Css\bootstrap-glyphicons.css" />
     <Content Include="Content\Lib\Css\ngDialog-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-theme-default-min.css" />
+    <None Include="Content\Scss\ErrorBar.scss" />
     <Content Include="Content\Scss\Site.scss" />
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
@@ -355,6 +356,7 @@
     <Content Include="Scripts\Controllers\UnregisteredDashboardController.js" />
     <Content Include="Scripts\Controllers\UpDownVoteController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
+    <Content Include="Scripts\Directives\ErrorBar.js" />
     <Content Include="Scripts\Directives\ResultsChart.html" />
     <Content Include="Scripts\Directives\ResultsChart.js" />
     <Content Include="Scripts\Directives\TimePicker.js" />
@@ -363,6 +365,7 @@
     <Content Include="Scripts\Directives\TruncatedText.js" />
     <Content Include="Scripts\Directives\UnlockableOption.js" />
     <Content Include="Scripts\Filters\dateFilters.js" />
+    <Content Include="Scripts\Interceptors\ErrorInterceptor.js" />
     <Content Include="Scripts\Lib\d3-tip-min.js" />
     <Content Include="Scripts\Lib\moment-min.js" />
     <Content Include="Scripts\Modules\GVA-Common.js" />
@@ -406,6 +409,7 @@
     <Content Include="Views\Routes\TimePicker.cshtml" />
     <Content Include="Views\Routes\ManageVoters.cshtml" />
     <Content Include="Content\Scss\ResultsChart.scss" />
+    <Content Include="Views\Routes\ErrorBar.cshtml" />
     <None Include="Views\Routes\PollHeading.cshtml" />
     <Content Include="Views\Routes\PollTypeChange.cshtml" />
     <Content Include="Scripts\Directives\UnlockableOption.html" />
