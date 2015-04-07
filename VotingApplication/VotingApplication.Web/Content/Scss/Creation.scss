@@ -32,6 +32,10 @@ body {
     border: 1px solid $Blue700;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 #signin-header {
     font-size: 10pt;
     color: $Blue500;
