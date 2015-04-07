@@ -102,6 +102,9 @@
             $http
                 .delete('/api/manage/' + manageId + '/voters',
                {
+                   headers: {
+                       'Content-Type': 'application/json; charset=utf-8'
+                   },
                    data: {
                        votersToRemove: votersToRemove
                    }
