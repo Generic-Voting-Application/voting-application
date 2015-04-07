@@ -3,9 +3,9 @@
         .module('GVA.Common')
         .factory('ErrorInterceptor', ErrorInterceptor);
 
-    ErrorInterceptor.$inject = ['$q', '$rootScope'];
+    ErrorInterceptor.$inject = ['$q', '$rootScope', 'ErrorService'];
 
-    function ErrorInterceptor($q, $rootScope) {
+    function ErrorInterceptor($q, $rootScope, ErrorService) {
 
         var interceptor = {
             'responseError': errorInterceptor,
@@ -21,22 +21,28 @@
             }
 
             $rootScope.error = rejection;
-            $rootScope.error.readableMessage = '';
+            
+
+            var readableMessage = '';
 
             if (rejection.data && rejection.data.ModelState) {
                 // Handle model state errors
                 var firstError = rejection.data.ModelState[Object.keys(rejection.data.ModelState)[0]];
-                $rootScope.error.readableMessage = firstError[0];
+                readableMessage = firstError[0];
             } else if (rejection.data && rejection.data.error_description) {
                 // Handle authentication errors
-                $rootScope.error.readableMessage = rejection.data.error_description;
+               readableMessage = rejection.data.error_description;
             } else if (rejection.statusText) {
                 // Handle generic server messages
-                $rootScope.error.readableMessage = rejection.statusText;
+                readableMessage = rejection.statusText;
             } else {
                 // Catch all for anything else
-                $rootScope.error.readableMessage = rejection.data ? rejection.data.Message : "An error has occured";
+                readableMessage = rejection.data ? rejection.data.Message : "An error has occured";
             }
+
+            readableMessage = ErrorService.createReadableString(readableMessage);
+
+            $rootScope.error.readableMessage = readableMessage;
 
             return $q.reject(rejection);
         }

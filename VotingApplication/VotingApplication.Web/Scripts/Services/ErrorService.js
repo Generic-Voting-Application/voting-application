@@ -6,10 +6,17 @@
 
     function ErrorService() {
 
-        var service = {
-            bindModelStateToForm: bindModelState
-        };
+        var stringReplacements = {
+            'Poll .{8}-.{4}-.{4}-.{4}-.{12}': 'This poll',
+            'Invalid ExpiryDate': 'Expiry date must be in the future',
+            'Invalid or unspecified': 'Empty',
+            'Option Name' : 'option name'
+        }
 
+        var service = {
+            bindModelStateToForm: bindModelState,
+            createReadableString: createReadableString
+        };
 
         return service;
 
@@ -28,6 +35,17 @@
                     }
                 }
             }
+        }
+
+        function createReadableString(string) {
+            var readableString = string;
+
+            for (var replacement in stringReplacements) {
+                var regEx = new RegExp(replacement, 'g');
+                readableString = readableString.replace(regEx, stringReplacements[replacement]);
+            }
+
+            return readableString;
         }
     }
 })();
