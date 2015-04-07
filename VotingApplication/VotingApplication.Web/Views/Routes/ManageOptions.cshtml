@@ -8,7 +8,7 @@
                 <div>
                     <span class="glyphicon glyphicon-remove pull-right clickable" aria-hidden="true" ng-click="remove(option)"></span>
                     <span class="glyphicon glyphicon-pencil pull-left clickable" ng-if="!editOptionToggle && !vm.editToggle" aria-hidden="true" ng-click="$parent.editOptionToggle=true;vm.editToggle=true"></span>
-                    <span class="glyphicon glyphicon-ok pull-left clickable" ng-if="editOptionToggle" aria-hidden="true" ng-click="editOptionToggle=false;vm.editToggle=false;updatePoll()"></span>
+                    <span class="glyphicon glyphicon-ok pull-left clickable" ng-if="editOptionToggle" aria-hidden="true" ng-click="editOptionToggle=false;vm.editToggle=false"></span>
                     <h4 class="icon-padded-left" ng-if="!editOptionToggle">{{option.Name}}</h4>
                     <h4 class="icon-padded-left" ng-if="editOptionToggle"><input ng-model="option.Name" autofocus /></h4>
                 </div>
@@ -23,7 +23,7 @@
             </form>
         </div>
         <div class="manage-section">
-            <form name="newOptionForm" ng-submit="add(newOptionForm);clear(newOptionForm);descriptionToggle=false;updatePoll();">
+            <form name="newOptionForm" ng-submit="add(newOptionForm);clear(newOptionForm);descriptionToggle=false;">
                 <div class="spacing-bottom">
                     <span class="glyphicon glyphicon-plus pull-right clickable" aria-hidden="true" ng-hide="newOptionForm.$invalid" ng-click="add(newOptionForm);clear(newOptionForm);descriptionToggle=false;updatePoll();"></span>
                     <span class="icon-padded-left"><input ng-model="newOptionForm.Name" placeholder="Option Name" required autofocus /></span>
@@ -36,7 +36,8 @@
             </form>
         </div>
         <div class="manage-section">
-            <button class="manage-btn" ng-click="catchDirtyInput();updatePoll();return()">Done</button>
+            <button class="manage-btn" ng-click="return();">Cancel</button>
+            <button class="manage-btn" ng-click="catchDirtyInput(); updatePoll()">Save</button>
         </div>
     </div>
 </div>
