@@ -4,24 +4,33 @@
 
     var scope;
     var manageServiceMock;
-
     var manageGetVotersPromise;
+    var manageDeleteVotersPromise;
+
+
+    var routingServiceMock;
+
 
     beforeEach(inject(function ($rootScope, $q, $controller) {
 
         scope = $rootScope.$new();
         scope.voters = [];
         scope.votersToRemove = [];
+
         manageServiceMock = {
-            getVoters: function () { }
+            getVoters: function () { },
+            deleteVoters: function (votersToRemove) { }
         };
-
-
         manageGetVotersPromise = $q.defer();
+        manageDeleteVotersPromise = $q.defer();
+        spyOn(manageServiceMock, "getVoters").and.callFake(function () { return manageGetVotersPromise.promise; });
+        spyOn(manageServiceMock, "deleteVoters").and.callFake(function () { return manageDeleteVotersPromise.promise; });
 
-        spyOn(manageServiceMock, 'getVoters').and.callFake(function () { return manageGetVotersPromise.promise; });
+        routingServiceMock = { navigateToManagePage: function () { } };
+        spyOn(routingServiceMock, "navigateToManagePage");
 
-        $controller("ManageVotersController", { $scope: scope, ManageService: manageServiceMock });
+
+        $controller("ManageVotersController", { $scope: scope, ManageService: manageServiceMock, RoutingService: routingServiceMock });
     }));
 
     it("Loads Voters from service", function () {
@@ -611,6 +620,52 @@
 
 
             expect(scope.votersToRemove).toEqual(expectedVotersToRemove);
+        });
+    });
+
+    describe("Return Without Delete", function () {
+
+        it("Does not make service call to delete voters", function () {
+            scope.returnWithoutDelete();
+
+            expect(manageServiceMock.deleteVoters.calls.any()).toEqual(false);
+        });
+
+        it("Makes service call to navigateToManagePage", function () {
+            scope.returnWithoutDelete();
+
+            expect(routingServiceMock.navigateToManagePage.calls.any()).toEqual(true);
+        });
+    });
+
+    describe("ConfirmDeleteAndReturn", function () {
+
+        it("Makes service call to delete voters", function () {
+            scope.confirmDeleteAndReturn();
+
+            expect(manageServiceMock.deleteVoters.calls.any()).toEqual(true);
+        });
+
+        it("Makes service call to Navigate To Manage Page when delete service call succeeds", function () {
+            manageDeleteVotersPromise.resolve();
+
+
+            scope.confirmDeleteAndReturn();
+
+
+            scope.$apply();
+            expect(routingServiceMock.navigateToManagePage.calls.any()).toEqual(true);
+        });
+
+        it("Does not make service call to Navigate To Manage Page if delete service call fails", function () {
+            manageDeleteVotersPromise.reject();
+
+
+            scope.confirmDeleteAndReturn();
+
+
+            scope.$apply();
+            expect(routingServiceMock.navigateToManagePage.calls.any()).toEqual(false);
         });
     });
 });

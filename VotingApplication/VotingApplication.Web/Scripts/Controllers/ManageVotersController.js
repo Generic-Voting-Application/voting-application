@@ -54,8 +54,8 @@
             ballot.Votes.splice(index, 1);
 
             if (ballot.Votes.length === 0) {
-                var index = $scope.voters.indexOf(ballot);
-                $scope.voters.splice(index, 1);
+                var voteIndex = $scope.voters.indexOf(ballot);
+                $scope.voters.splice(voteIndex, 1);
             }
         }
 
@@ -109,7 +109,8 @@
         }
 
         function confirmDeleteAndReturn() {
-            RoutingService.navigateToManagePage(manageId);
+            ManageService.deleteVoters(manageId, $scope.votersToRemove)
+                .then(function () { RoutingService.navigateToManagePage(manageId); });
         }
     }
 })();

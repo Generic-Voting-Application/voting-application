@@ -94,6 +94,21 @@
             return deferred.promise;
         };
 
+        self.deleteVoters = function (manageId, votersToRemove) {
+            var deferred = $q.defer();
+
+            $http
+                .delete('/api/manage/' + manageId + '/voters',
+               {
+                   data: {
+                       votersToRemove: votersToRemove
+                   }
+               }
+                ).success(function (data) { deferred.resolve(data); });
+
+            return deferred.promise;
+        };
+
         self.setVisited = function (manageId) {
             $localStorage[manageId] = { visited: true };
         };
