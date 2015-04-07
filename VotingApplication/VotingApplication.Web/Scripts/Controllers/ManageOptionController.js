@@ -33,7 +33,6 @@
 
         function removePollOption(option) {
             $scope.poll.Options.splice($scope.poll.Options.indexOf(option), 1);
-            $scope.updatePoll();
         }
 
         function clearPollOption(form) {
