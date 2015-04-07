@@ -14,7 +14,6 @@
 
         var pollId = $routeParams.pollId;
         var tokenId = $routeParams['tokenId'] || '';
-        var pollExpiryDate = null;
         var reloadInterval = null;
 
         $scope.votingLink = RoutingService.getVotePageUrl(pollId, tokenId);

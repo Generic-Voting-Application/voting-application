@@ -7,13 +7,9 @@
         .module('GVA.Common')
         .controller('AccountRegisterController', AccountRegisterController);
 
-    AccountRegisterController.$inject = ['$scope', '$rootScope', 'AccountService', 'ErrorService'];
+    AccountRegisterController.$inject = ['$scope', '$rootScope', 'AccountService'];
 
-    function AccountRegisterController($scope, $rootScope, AccountService, ErrorService) {
-
-        var displayError = function (errorMessage) {
-            $scope.errorMessage = errorMessage;
-        };
+    function AccountRegisterController($scope, $rootScope, AccountService) {
 
         $scope.registerAccount = function (form) {
             AccountService.register(form.email, form.password).success(function () {
@@ -27,7 +23,7 @@
                 }
             }).error(loginFailureCallback);
 
-            function loginFailureCallback(form, data, status) {
+            function loginFailureCallback() {
                 $scope.displayError = $rootScope.error.readableMessage;
                 $rootScope.error = null;
             }
