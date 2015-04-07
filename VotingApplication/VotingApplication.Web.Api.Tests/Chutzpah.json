@@ -1,7 +1,15 @@
 ﻿{
     "Framework": "jasmine",
-    "TestHarnessReferenceMode": "AMD",
     "Tests": [
-        { "Path": "lib", "Exclude": "*.js" }
+        { "Path": "Scripts", "Include": "*.js" },
+        { "Path": "Scripts/Lib", "Exclude": "*.js" }
+    ],
+    "References": [
+        { "Path": "../VotingApplication.Web/Scripts/Lib", "Include": "*.js" },
+        { "Path": "Scripts/Lib", "Include": "*.js" },
+        { "Path": "../VotingApplication.Web/Scripts/Modules", "Include": "*.js" },
+        { "Path": "../VotingApplication.Web/Scripts/Services", "Include": "*.js" },
+        { "Path": "../VotingApplication.Web/Scripts/Controllers", "Include": "*.js" }
+
     ]
 }

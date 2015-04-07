@@ -7,16 +7,12 @@
         .module('GVA.Common')
         .controller('AccountRegisterController', AccountRegisterController);
 
-    AccountRegisterController.$inject = ['$scope', 'AccountService', 'ErrorService'];
+    AccountRegisterController.$inject = ['$scope', '$rootScope', 'AccountService'];
 
-    function AccountRegisterController($scope, AccountService, ErrorService) {
-
-        var displayError = function (errorMessage) {
-            $scope.errorMessage = errorMessage;
-        };
+    function AccountRegisterController($scope, $rootScope, AccountService) {
 
         $scope.registerAccount = function (form) {
-            AccountService.register(form.email, form.password).success(function() {
+            AccountService.register(form.email, form.password).success(function () {
                 return AccountService.getAccessToken(form.email, form.password);
             }).success(function (data) {
                 AccountService.setAccount(data.access_token, form.email);
@@ -25,14 +21,12 @@
                 if ($scope.ngDialogData.callback) {
                     $scope.ngDialogData.callback();
                 }
-            }).error(function (data, status) {
-                // Bad request
-                if (status === 400 && data.ModelState) {
-                    ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
-                } else {
-                    displayError(data.Message || data.error_description);
-                }
-            });
+            }).error(loginFailureCallback);
+
+            function loginFailureCallback() {
+                $scope.displayError = $rootScope.error.readableMessage;
+                $rootScope.error = null;
+            }
         };
 
     }

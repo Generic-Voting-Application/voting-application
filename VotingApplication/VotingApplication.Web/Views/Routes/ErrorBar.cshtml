@@ -1,0 +1,8 @@
+﻿@Styles.Render("~/Bundles/ErrorBarStyle")
+<div class="eb-error-bar-container" ng-show="$root.error">
+    <div class="eb-error-bar">
+        <div class="eb-error-bar-text">
+            {{$root.error.readableMessage}}
+        </div>
+    </div>
+</div>
