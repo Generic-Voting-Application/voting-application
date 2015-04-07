@@ -2,10 +2,11 @@ module.exports = function(grunt) {
     grunt.initConfig({
     jshint: {
         all: [
-            'VotingApplication/VotingApplication.Web/Scripts/Controllers/**/*.js',
-            'VotingApplication/VotingApplication.Web/Scripts/Directives/**/*.js',
-            'VotingApplication/VotingApplication.Web/Scripts/Modules/**/*.js',
-            'VotingApplication/VotingApplication.Web/Scripts/Services/**/*.js'
+            'VotingApplication/VotingApplication.Web/Scripts/**/*.js',
+            '!VotingApplication/VotingApplication.Web/Scripts/Lib/**/*.js',
+			'VotingApplication.Web.Api.Tests/Scripts/**/*.js',
+			'!VotingApplication.Web.Api.Tests/Scripts/Lib/**/*.js'
+			
         ],
         options: {
             jshintrc: true,
