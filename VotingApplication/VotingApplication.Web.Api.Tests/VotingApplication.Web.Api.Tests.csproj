@@ -114,7 +114,6 @@
     <Compile Include="Validators\RankedVoteValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".jshintrc" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
