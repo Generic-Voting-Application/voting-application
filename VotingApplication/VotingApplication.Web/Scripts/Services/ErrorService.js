@@ -7,7 +7,8 @@
     function ErrorService() {
 
         var stringReplacements = {
-            'Poll .{8}-.{4}-.{4}-.{4}-.{12}': 'This poll',
+            'Poll .{8}-.{4}-.{4}-.{4}-.{12} not found' : 'Poll does not exist',
+            'Poll .{8}-.{4}-.{4}-.{4}-.{12} is invite only': 'This poll is invite only',
             'Invalid ExpiryDate': 'Expiry date must be in the future',
             'Invalid or unspecified': 'Empty',
             'Option Name' : 'option name'

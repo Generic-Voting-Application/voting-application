@@ -9,7 +9,7 @@
 
         var interceptor = {
             'responseError': errorInterceptor,
-            'response': responseInterceptor
+            'request': requestInterceptor
         };
 
         return interceptor;
@@ -37,7 +37,7 @@
                 readableMessage = rejection.statusText;
             } else {
                 // Catch all for anything else
-                readableMessage = rejection.data ? rejection.data.Message : "An error has occured";
+                readableMessage = rejection.data ? rejection.data.Message : 'An error has occured';
             }
 
             readableMessage = ErrorService.createReadableString(readableMessage);
@@ -47,11 +47,11 @@
             return $q.reject(rejection);
         }
 
-        function responseInterceptor(response) {
+        function requestInterceptor(config) {
 
             $rootScope.error = null;
 
-            return response;
+            return config;
         }
     }
 })();
