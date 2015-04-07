@@ -14,7 +14,8 @@
 
         var manageId = $routeParams.manageId;
 
-        $scope.voters = {};
+        $scope.voters = [];
+        $scope.votersToRemove = [];
 
         $scope.removeAllVotes = removeAllVotes;
 
@@ -31,17 +32,76 @@
         }
 
         function removeAllVotes() {
+            var clone = $scope.voters.slice(0);
+
+            clone.forEach(removeBallot);
         }
 
-        function removeVote() {
+        function removeVote(vote, ballot) {
+
+            var existingBallotToRemove = $scope.votersToRemove.filter(filterBallotByGuid(ballot));
+
+            if (existingBallotToRemove.length === 0) {
+                var newBallot = createNewBallotFromExisting(ballot);
+
+                newBallot.Votes.push(vote);
+
+                $scope.votersToRemove.push(newBallot);
+            }
+            else {
+                existingBallotToRemove[0].Votes.push(vote);
+            }
+
+            var index = ballot.Votes.indexOf(vote);
+            ballot.Votes.splice(index, 1);
+
+            if (ballot.Votes.length === 0) {
+                var voteIndex = $scope.voters.indexOf(ballot);
+                $scope.voters.splice(voteIndex, 1);
+            }
         }
 
-        function removeBallot() {
+        function createNewBallotFromExisting(ballot) {
+            var newBallot = {
+                BallotManageGuid: ballot.BallotManageGuid,
+                VoterName: ballot.VoterName,
+                Votes: []
+            };
+
+            return newBallot;
+        }
+
+        function removeBallot(ballotToRemove) {
+            var existingVoterToRemove = $scope.votersToRemove.filter(filterBallotByGuid(ballotToRemove));
+
+            if (existingVoterToRemove.length === 0) {
+                $scope.votersToRemove.push(ballotToRemove);
+            }
+            else {
+                ballotToRemove.Votes.forEach(function (vote) {
+                    var votes = existingVoterToRemove[0].Votes.filter(filterVoteByOptionNumber(vote));
+
+                    if (votes.length === 0) {
+                        existingVoterToRemove[0].Votes.push(vote);
+                    }
+                });
+            }
+
+            var index = $scope.voters.indexOf(ballotToRemove);
+            $scope.voters.splice(index, 1);
+        }
+
+        function filterBallotByGuid(item) {
+            return function (value) { return value.BallotManageGuid === item.BallotManageGuid; };
+        }
+
+        function filterVoteByOptionNumber(item) {
+            return function (value) { return value.OptionNumber === item.OptionNumber; };
         }
 
         function loadVoters() {
             ManageService.getVoters(manageId)
-                .success(function (data) {
+                .then(function (data) {
                     $scope.voters = data;
                 });
         }
@@ -51,7 +111,8 @@
         }
 
         function confirmDeleteAndReturn() {
-            RoutingService.navigateToManagePage(manageId);
+            ManageService.deleteVoters(manageId, $scope.votersToRemove)
+                .then(function () { RoutingService.navigateToManagePage(manageId); });
         }
     }
 })();
