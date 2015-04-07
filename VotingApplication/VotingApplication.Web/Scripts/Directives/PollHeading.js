@@ -1,4 +1,6 @@
 ﻿(function () {
+    'use strict';
+
     angular
         .module('GVA.Voting')
         .directive('pollHeading', pollHeading);

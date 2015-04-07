@@ -3,6 +3,8 @@
 /// <reference path="../Services/TokenService.js" />
 /// <reference path="../Services/VoteService.js" />
 (function () {
+    'use strict';
+
     angular
         .module('GVA.Voting')
         .controller('BasicVoteController', BasicVoteController);
@@ -14,10 +16,10 @@
         var pollId = $routeParams.pollId;
         var token = null;
 
+        // Register our getVotes strategy with the parent controller
+        $scope.setVoteCallback(getVotes);
+
         activate();
-
-
-        $scope.submitVote = submitVote;
 
         function activate() {
             PollService.getPoll(pollId, getPollSuccessCallback);
@@ -51,33 +53,12 @@
 
         }
 
-        function submitVote(option) {
-            if (!option) {
-                return null;
-            }
-
-            if (!token) {
-                // Probably invite only, tell the user
-            }
-            else if (!IdentityService.identity) {
-                IdentityService.openLoginDialog($scope, function () {
-                    $scope.submitVote(option);
-                });
-            }
-            else {
-                var votes = [{
-                    OptionId: option.Id,
-                    VoteValue: 1,
-                    VoterName: IdentityService.identity.name
-                }];
-
-                VoteService.submitVote(pollId, votes, token, function () {
-                    window.location = $scope.$parent.resultsLink;
-                });
-            }
+        function getVotes(option) {
+            return [{
+                OptionId: option.Id,
+                VoteValue: 1,
+                VoterName: IdentityService.identity.name
+            }];
         }
-
     }
-
-
 })();

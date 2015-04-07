@@ -1,5 +1,7 @@
 ﻿/// <reference path="../Services/ManageService.js" />
 (function () {
+    'use strict';
+
     angular
         .module('GVA.Creation')
         .controller('ManageOptionController', ManageOptionController);

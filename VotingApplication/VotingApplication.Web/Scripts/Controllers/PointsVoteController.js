@@ -3,6 +3,8 @@
 /// <reference path="../Services/TokenService.js" />
 /// <reference path="../Services/VoteService.js" />
 (function () {
+    'use strict';
+
     angular
         .module('GVA.Voting')
         .controller('PointsVoteController', PointsVoteController);
@@ -18,9 +20,11 @@
         $scope.totalPointsAvailable = 0;
         $scope.maxPointsPerOption = 0;
 
-        $scope.submitVote = submitVote;
         $scope.unallocatedPoints = calculateUnallocatedPoints;
         $scope.disabledAddPoints = shouldAddPointsBeDisabled;
+
+        // Register our getVotes strategy with the parent controller
+        $scope.setVoteCallback(getVotes);
 
         activate();
 
@@ -62,37 +66,16 @@
             });
         }
 
-        function submitVote(options) {
-            if (!options) {
-                return null;
-            }
-
-            if (!token) {
-                // Probably invite only, tell the user
-            }
-            else if (!IdentityService.identity) {
-                IdentityService.openLoginDialog($scope, function () {
-                    $scope.submitVote(options);
+        function getVotes(options) {
+            return options
+                .filter(function (option) { return option.voteValue; })
+                .map(function (option) {
+                    return {
+                        OptionId: option.Id,
+                        VoteValue: option.voteValue,
+                        VoterName: IdentityService.identity.name
+                    };
                 });
-            }
-            else {
-
-                var votes = options
-                    .filter(function (option) { return option.voteValue; })
-                    .map(function (option) {
-                        return {
-                            OptionId: option.Id,
-                            VoteValue: option.voteValue,
-                            VoterName: IdentityService.identity.name
-                        };
-                    });
-
-                VoteService.submitVote(pollId, votes, token, submitVoteSuccessCallback);
-            }
-        }
-
-        function submitVoteSuccessCallback() {
-            window.location = $scope.$parent.resultsLink;
         }
 
         function calculateUnallocatedPoints() {

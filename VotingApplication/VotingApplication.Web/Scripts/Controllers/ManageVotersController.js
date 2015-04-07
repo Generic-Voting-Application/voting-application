@@ -1,6 +1,8 @@
 ﻿/// <reference path="../Services/ManageService.js" />
 /// <reference path="../Services/RoutingService.js" />
 (function () {
+    'use strict';
+
     angular
         .module('GVA.Creation')
         .controller('ManageVotersController', ManageVotersController);
@@ -31,10 +33,10 @@
         function removeAllVotes() {
         }
 
-        function removeVote(vote, ballot) {
+        function removeVote() {
         }
 
-        function removeBallot(ballot) {
+        function removeBallot() {
         }
 
         function loadVoters() {
