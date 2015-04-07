@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -12,6 +13,7 @@ using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Services;
+using VotingApplication.Web.Api.Tests.TestHelpers;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -131,7 +133,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             {
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
-                Voters = new List<TokenRequestModel>()
+                Voters = new List<ManagePollBallotRequestModel>()
             };
 
             // Act
@@ -156,7 +158,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
                 Options = newOptions,
-                Voters = new List<TokenRequestModel>()
+                Voters = new List<ManagePollBallotRequestModel>()
             };
             _controller.Put(_manageMainUUID, request);
 
@@ -174,7 +176,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
                 Options = newOptions,
-                Voters = new List<TokenRequestModel>()
+                Voters = new List<ManagePollBallotRequestModel>()
             };
             _controller.Put(_manageMainUUID, request);
 
@@ -193,7 +195,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
                 Options = invalidOptions,
-                Voters = new List<TokenRequestModel>()
+                Voters = new List<ManagePollBallotRequestModel>()
             };
             _controller.Put(_manageMainUUID, request);
         }
@@ -205,7 +207,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             {
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
-                Voters = new List<TokenRequestModel>()
+                Voters = new List<ManagePollBallotRequestModel>()
             };
             _controller.Put(_manageMainUUID, request);
 
@@ -217,8 +219,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithNewEmailsDoesNotInitiallySendEmail()
         {
             // Arrange
-            TokenRequestModel newToken = new TokenRequestModel() { Email = "a@b.c" };
-            List<TokenRequestModel> newEmailTokens = new List<TokenRequestModel>() { newToken };
+            ManagePollBallotRequestModel newToken = new ManagePollBallotRequestModel() { Email = "a@b.c" };
+            List<ManagePollBallotRequestModel> newEmailTokens = new List<ManagePollBallotRequestModel>() { newToken };
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
             {
                 Name = "Test",
@@ -237,8 +239,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithNewEmailAddsToTokenListOfPoll()
         {
             // Arrange
-            TokenRequestModel newToken = new TokenRequestModel() { Email = "a@b.c" };
-            List<TokenRequestModel> newEmailTokens = new List<TokenRequestModel>() { newToken };
+            ManagePollBallotRequestModel newToken = new ManagePollBallotRequestModel() { Email = "a@b.c" };
+            List<ManagePollBallotRequestModel> newEmailTokens = new List<ManagePollBallotRequestModel>() { newToken };
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
             {
                 Name = "Test",
@@ -260,7 +262,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Arrange
             Ballot existingBallot = new Ballot() { Email = "a@b.c", TokenGuid = Guid.NewGuid(), Id = 1 };
-            TokenRequestModel existingTokenRequest = new TokenRequestModel() { Email = existingBallot.Email, EmailSent = true };
+            ManagePollBallotRequestModel existingTokenRequest = new ManagePollBallotRequestModel() { Email = existingBallot.Email, EmailSent = true };
             List<Ballot> emailTokens = new List<Ballot>() { existingBallot };
             _mainPoll.Ballots = emailTokens;
 
@@ -268,7 +270,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             {
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
-                Voters = new List<TokenRequestModel>() { existingTokenRequest }
+                Voters = new List<ManagePollBallotRequestModel>() { existingTokenRequest }
             };
 
             // Act
@@ -284,8 +286,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Arrange
             Ballot existingBallot = new Ballot() { Email = "a@b.c", TokenGuid = Guid.NewGuid(), Id = 1 };
             Ballot obsoleteBallot = new Ballot() { Email = "d@e.f", TokenGuid = Guid.NewGuid(), Id = 2 };
-            TokenRequestModel existingTokenRequest = new TokenRequestModel { Email = existingBallot.Email };
-            TokenRequestModel newTokenRequest = new TokenRequestModel { Email = "g@h.i" };
+            ManagePollBallotRequestModel existingTokenRequest = new ManagePollBallotRequestModel { Email = existingBallot.Email };
+            ManagePollBallotRequestModel newTokenRequest = new ManagePollBallotRequestModel { Email = "g@h.i" };
 
             _mainPoll.Ballots = new List<Ballot>() { existingBallot, obsoleteBallot };
 
@@ -293,7 +295,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             {
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
-                Voters = new List<TokenRequestModel>() { existingTokenRequest, newTokenRequest }
+                Voters = new List<ManagePollBallotRequestModel>() { existingTokenRequest, newTokenRequest }
             };
 
             // Act
@@ -307,11 +309,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         [TestMethod]
         public void PutDoesNotClearOutExistingBallots()
-
         {
             // Arrange
             Ballot existingBallot = new Ballot() { Email = "a@b.c", VoterName = "123", TokenGuid = Guid.NewGuid() };
-            TokenRequestModel existingTokenRequest = new TokenRequestModel { Email = "a@b.c", Name = "123", EmailSent = true };
+            ManagePollBallotRequestModel existingTokenRequest = new ManagePollBallotRequestModel { Email = "a@b.c", Name = "123", EmailSent = true };
 
             _mainPoll.Ballots = new List<Ballot>() { existingBallot };
 
@@ -319,7 +320,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             {
                 Name = existingTokenRequest.Name + "abc",
                 VotingStrategy = PollType.Basic.ToString(),
-                Voters = new List<TokenRequestModel>() { existingTokenRequest }
+                Voters = new List<ManagePollBallotRequestModel>() { existingTokenRequest }
             };
 
             // Act
@@ -341,7 +342,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             {
                 Name = "Test",
                 VotingStrategy = PollType.Basic.ToString(),
-                Voters = new List<TokenRequestModel>() { new TokenRequestModel { Email = existingBallot.Email, EmailSent = true } }
+                Voters = new List<ManagePollBallotRequestModel>() { new ManagePollBallotRequestModel { Email = existingBallot.Email, EmailSent = true } }
             };
             _mainPoll.Ballots = new List<Ballot>() { existingBallot };
 
@@ -355,5 +356,99 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Assert.AreEqual(existingGuid, firstBallot.TokenGuid);
         }
         #endregion
+
+        [TestClass]
+        public class GetTests
+        {
+            [TestMethod]
+            public void BallotWithVotes_IsReturned()
+            {
+                var pollManageGuid = new Guid("992E252C-56DB-4E9D-9A31-F5BBA3FA5361");
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var poll = new Poll()
+                {
+                    ManageId = pollManageGuid
+                };
+
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                var ballot = new Ballot()
+                {
+                    ManageGuid = new Guid("96ADD6EF-DFE4-4160-84C5-63EDC3076A1B")
+                };
+
+                IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
+                var vote = new Vote()
+                {
+                    Option = new Option()
+                    {
+                        PollOptionNumber = 1,
+
+                    },
+                    VoteValue = 1
+                };
+
+                poll.Ballots.Add(ballot);
+                ballot.Votes.Add(vote);
+
+                votes.Add(vote);
+                ballots.Add(ballot);
+                polls.Add(poll);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes);
+                ManageController controller = CreateManageController(contextFactory);
+
+
+                ManagePollRequestResponseModel response = controller.Get(pollManageGuid);
+
+
+                Assert.AreEqual(1, response.Voters.Count);
+            }
+
+            [TestMethod]
+            public void BallotWithNoVotes_IsNotReturned()
+            {
+                var pollManageGuid = new Guid("992E252C-56DB-4E9D-9A31-F5BBA3FA5361");
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var poll = new Poll()
+                {
+                    ManageId = pollManageGuid
+                };
+
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                var ballot = new Ballot()
+                {
+                    ManageGuid = new Guid("96ADD6EF-DFE4-4160-84C5-63EDC3076A1B")
+                };
+
+                IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
+
+                poll.Ballots.Add(ballot);
+
+                ballots.Add(ballot);
+                polls.Add(poll);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes);
+                ManageController controller = CreateManageController(contextFactory);
+
+
+                ManagePollRequestResponseModel response = controller.Get(pollManageGuid);
+
+
+                Assert.AreEqual(0, response.Voters.Count);
+            }
+
+            public static ManageController CreateManageController(IContextFactory contextFactory)
+            {
+                var mockInvitationService = Mock.Of<IInvitationService>();
+
+                return new ManageController(contextFactory, mockInvitationService)
+                {
+                    Request = new HttpRequestMessage(),
+                    Configuration = new HttpConfiguration()
+                };
+            }
+        }
     }
 }

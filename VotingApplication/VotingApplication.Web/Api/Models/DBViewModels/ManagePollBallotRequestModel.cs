@@ -5,7 +5,7 @@ using System.Web;
 
 namespace VotingApplication.Web.Api.Models.DBViewModels
 {
-    public class TokenRequestModel
+    public class ManagePollBallotRequestModel
     {
         public Boolean EmailSent { get; set; }
         public string Email { get; set; }
