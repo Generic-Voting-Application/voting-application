@@ -74,7 +74,7 @@
         }
 
         function fullPollUrl() {
-            return location.host + pollUrl();
+            return location.protocol + '//' + location.host + pollUrl();
         }
 
         function manageSubPageUrl(subPage) {
