@@ -58,11 +58,10 @@
         }
 
         function updatePollDetails() {
-            ManageService.updatePoll($routeParams.manageId, $scope.poll, updatePollSuccessCallback);
-        }
-
-        function updatePollSuccessCallback() {
-            ManageService.getPoll($scope.manageId);
+            ManageService.updatePoll($routeParams.manageId, $scope.poll, function () {
+                ManageService.getPoll($scope.manageId);
+                navigateToManagePage();
+            });
         }
     }
 
