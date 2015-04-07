@@ -1,5 +1,7 @@
 ﻿/// <reference path="../Services/AccountService.js" />
 (function () {
+    'use strict';
+
     angular
         .module('GVA.Creation')
         .controller('DashboardController', DashboardController);

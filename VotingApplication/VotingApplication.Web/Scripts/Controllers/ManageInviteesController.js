@@ -1,4 +1,6 @@
 ﻿(function () {
+    'use strict';
+
     angular
         .module('GVA.Creation')
         .controller('ManageInviteesController', ManageInviteesController);
@@ -32,11 +34,9 @@
         var emailRegex = /[\w._%+-]+@\w+(\.\w+)+/;
 
         function emailUpdated() {
-            var lastCharacter = $scope.inviteString.slice(-1);
             if (hasTerminatingCharacter($scope.inviteString)) {
                 var allEmails = $scope.inviteString.trimLeft().split(splitterTest);
 
-                var remainingText = allEmails.slice(-1);
                 var newEmails = allEmails.slice(0, -1);
 
                 newEmails = newEmails
@@ -132,7 +132,7 @@
             for (var i = 0; i < $scope.poll.Voters.length; i++) {
                 var voter = $scope.poll.Voters[i];
 
-                if (voter.Email == null) {
+                if (voter.Email === null) {
                     continue;
                 }
                 

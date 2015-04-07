@@ -3,6 +3,8 @@
 /// <reference path="../Services/TokenService.js" />
 /// <reference path="../Services/VoteService.js" />
 (function () {
+    'use strict';
+
     angular
         .module('GVA.Voting')
         .controller('UpDownVoteController', UpDownVoteController);
@@ -14,10 +16,10 @@
         var pollId = $routeParams.pollId;
         var token = null;
 
-        $scope.submitVote = submitVote;
+        // Register our getVotes strategy with the parent controller
+        $scope.setVoteCallback(getVotes);
 
         activate();
-
 
         function activate() {
             PollService.getPoll(pollId, getPollSuccessCallback);
@@ -49,35 +51,16 @@
             });
         }
 
-        function submitVote(options) {
-            if (!options) {
-                return null;
-            }
-
-            if (!token) {
-                // Probably invite only, tell the user
-            }
-            else if (!IdentityService.identity) {
-                IdentityService.openLoginDialog($scope, function () {
-                    $scope.submitVote(options);
+        function getVotes(options) {
+            return options
+                .filter(function (option) { return option.voteValue; })
+                .map(function (option) {
+                    return {
+                        OptionId: option.Id,
+                        VoteValue: option.voteValue,
+                        VoterName: IdentityService.identity.name
+                    };
                 });
-            }
-            else {
-
-                var votes = options
-                    .filter(function (option) { return option.voteValue; })
-                    .map(function (option) {
-                        return {
-                            OptionId: option.Id,
-                            VoteValue: option.voteValue,
-                            VoterName: IdentityService.identity.name
-                        };
-                    });
-
-                VoteService.submitVote(pollId, votes, token, function (data) {
-                    window.location = $scope.$parent.resultsLink;
-                });
-            }
         }
     }
 

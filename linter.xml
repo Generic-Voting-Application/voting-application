@@ -157,7 +157,7 @@
           <string>eqnull</string>
         </key>
         <value>
-          <boolean>true</boolean>
+          <boolean>false</boolean>
         </value>
       </item>
       <item>
@@ -229,7 +229,7 @@
           <string>funcscope</string>
         </key>
         <value>
-          <boolean>false</boolean>
+          <boolean>true</boolean>
         </value>
       </item>
       <item>
@@ -357,7 +357,7 @@
           <string>noempty</string>
         </key>
         <value>
-          <boolean>false</boolean>
+          <boolean>true</boolean>
         </value>
       </item>
       <item>
@@ -557,7 +557,7 @@
           <string>strict</string>
         </key>
         <value>
-          <boolean>false</boolean>
+          <boolean>true</boolean>
         </value>
       </item>
       <item>
@@ -597,7 +597,7 @@
           <string>unused</string>
         </key>
         <value>
-          <boolean>false</boolean>
+          <boolean>true</boolean>
         </value>
       </item>
       <item>

@@ -2,6 +2,8 @@
 /// <reference path="../Services/PollService.js" />
 /// <reference path="../Services/VoteService.js" />
 (function () {
+    'use strict';
+
     angular
         .module('GVA.Voting')
         .controller('ResultsPageController', ResultsPageController);
@@ -12,7 +14,6 @@
 
         var pollId = $routeParams.pollId;
         var tokenId = $routeParams['tokenId'] || '';
-        var pollExpiryDate = null;
 
         $scope.votingLink = RoutingService.getVotePageUrl(pollId, tokenId);
         $scope.winner = 'Lorem';
@@ -34,7 +35,7 @@
             VoteService.getResults(pollId, getResultsSuccessCallback);
         }
 
-        function getResultsSuccessCallback(data, status) {
+        function getResultsSuccessCallback(data) {
 
             if (data) {
                 $scope.voteCount = data.length;
