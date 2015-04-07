@@ -23,24 +23,24 @@
             $rootScope.error = rejection;
             
 
-            var readableMessage = '';
+            var errorMessage = '';
 
             if (rejection.data && rejection.data.ModelState) {
                 // Handle model state errors
                 var firstError = rejection.data.ModelState[Object.keys(rejection.data.ModelState)[0]];
-                readableMessage = firstError[0];
+                errorMessage = firstError[0];
             } else if (rejection.data && rejection.data.error_description) {
                 // Handle authentication errors
-               readableMessage = rejection.data.error_description;
+                errorMessage = rejection.data.error_description;
             } else if (rejection.statusText) {
                 // Handle generic server messages
-                readableMessage = rejection.statusText;
+                errorMessage = rejection.statusText;
             } else {
                 // Catch all for anything else
-                readableMessage = rejection.data ? rejection.data.Message : 'An error has occured';
+                errorMessage = rejection.data ? rejection.data.Message : 'An error has occured';
             }
 
-            readableMessage = ErrorService.createReadableString(readableMessage);
+            var readableMessage = ErrorService.createReadableString(errorMessage);
 
             $rootScope.error.readableMessage = readableMessage;
 
