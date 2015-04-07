@@ -7,12 +7,12 @@
     function ErrorService() {
 
         var stringReplacements = {
-            'Poll .{8}-.{4}-.{4}-.{4}-.{12} not found' : 'Poll does not exist',
+            'Poll .{8}-.{4}-.{4}-.{4}-.{12} not found': 'Poll does not exist',
             'Poll .{8}-.{4}-.{4}-.{4}-.{12} is invite only': 'This poll is invite only',
             'Invalid ExpiryDate': 'Expiry date must be in the future',
             'Invalid or unspecified': 'Empty',
-            'Option Name' : 'option name'
-        }
+            'Option Name': 'option name'
+        };
 
         var service = {
             bindModelStateToForm: bindModelState,
@@ -42,8 +42,10 @@
             var readableString = string;
 
             for (var replacement in stringReplacements) {
-                var regEx = new RegExp(replacement, 'g');
-                readableString = readableString.replace(regEx, stringReplacements[replacement]);
+                if (stringReplacements.hasOwnProperty(replacement)) {
+                    var regEx = new RegExp(replacement, 'g');
+                    readableString = readableString.replace(regEx, stringReplacements[replacement]);
+                }
             }
 
             return readableString;
