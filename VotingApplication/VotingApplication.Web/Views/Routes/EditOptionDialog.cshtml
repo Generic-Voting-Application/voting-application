@@ -1,0 +1,15 @@
+﻿<div class="account-login dialog-content centered">
+    <form name="editOptionForm" ng-submit="updateOption()">
+        <h2>Edit Option</h2>
+        <div class="form-section-block centered">
+            <label for="name">Name</label>
+            <input autofocus class="form-input" id="name" ng-model="name">
+
+            <label for="description">Description</label>
+            <input class="form-input" id="description" ng-model="description">
+        </div>
+        <button class="active-btn" ng-disabled="name == null" ng-click="updateOption()" type="submit">Update</button>
+        <button class="inactive-btn" ng-click="dismiss()">Cancel</button>
+    </form>
+</div>
+<span class="dialog-error-bar-bottom" ng-show="displayError">{{displayError}}</span>

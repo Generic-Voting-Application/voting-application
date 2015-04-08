@@ -12,7 +12,7 @@
         $scope.dismiss = dismiss;
 
         function addOption(form) {
-            if (form.name == null) {
+            if (form.name === null) {
                 return;
             }
 

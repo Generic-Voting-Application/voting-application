@@ -6,6 +6,8 @@
         <p ng-if="poll.Options.length === 0">No options have been added.</p>
 
         <div class="manage-section" ng-repeat="option in poll.Options">
+            <span class="glyphicon glyphicon-trash pull-right clickable form-aligned-top" ng-click="remove(option)"></span>
+            <span class="glyphicon glyphicon-pencil pull-right clickable form-aligned-top" ng-click="edit(option)"></span>
             <div ng-if="!option.editOptionToggle" aria-hidden="true">
                 <h4>{{option.Name}}</h4>
                 <div>
@@ -14,8 +16,9 @@
             </div>
         </div>
 
-
-        <a class="icon-padded-left" ng-click="openAddOptionDialog()">+ New Option</a>
+        <p>
+            <a class="icon-padded-left" ng-click="add()">+ New Option</a>
+        </p>
 
         <div class="manage-section">
             <button class="manage-btn" ng-click="return();">Cancel</button>
