@@ -8,7 +8,7 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
     {
         public Guid UUID { get; set; }
         public List<Option> Options { get; set; }
-        public List<TokenRequestModel> Voters { get; set; }
+        public List<ManagePollBallotRequestModel> Voters { get; set; }
         public string VotingStrategy { get; set; }
         public int MaxPoints { get; set; }
         public int MaxPerVote { get; set; }

@@ -1,17 +1,12 @@
-﻿using System.Reflection;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web.Configuration;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
-using VotingApplication.Web.Api.Services;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using VotingApplication.Web.Api.Models.DBViewModels;
-using System.Collections.Generic;
+using VotingApplication.Web.Api.Services;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -32,7 +27,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region POST
 
-        public void Post(Guid manageId, List<TokenRequestModel> invitees)
+        public void Post(Guid manageId, List<ManagePollBallotRequestModel> invitees)
         {
             if (invitees == null)
             {
@@ -51,7 +46,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
-                foreach (TokenRequestModel invitee in invitees)
+                foreach (ManagePollBallotRequestModel invitee in invitees)
                 {
                     Ballot matchingBallot = matchingPoll.Ballots.SingleOrDefault(b => b.Email != null && b.Email.Equals(invitee.Email, StringComparison.OrdinalIgnoreCase));
 
