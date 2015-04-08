@@ -7,9 +7,9 @@
         .module('GVA.Creation')
         .controller('UnregisteredDashboardController', UnregisteredDashboardController);
 
-    UnregisteredDashboardController.$inject = ['$scope', 'AccountService', 'PollService'];
+    UnregisteredDashboardController.$inject = ['$scope', 'AccountService', 'RoutingService', 'TokenService', 'PollService'];
 
-    function UnregisteredDashboardController($scope, AccountService, PollService) {
+    function UnregisteredDashboardController($scope, AccountService, RoutingService, TokenService, PollService) {
 
         $scope.openLoginDialog = showLoginDialog;
         $scope.openRegisterDialog = showRegisterDialog;
@@ -29,7 +29,9 @@
         }
 
         function createPollSuccessCallback(data) {
-            window.location.href = '/#/Manage/' + data.ManageId;
+            TokenService.setToken(data.UUID, data.CreatorBallot.TokenGuid);
+            RoutingService.navigateToManagePage(data.manageId);
+            
         }
     }
 

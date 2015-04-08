@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -79,17 +80,26 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             #endregion
 
             Poll newPoll = Create(pollCreationRequest);
+            Ballot creatorBallot = new Ballot
+            {
+                TokenGuid = Guid.NewGuid(),
+                ManageGuid = Guid.NewGuid()
+            };
 
             using (var context = _contextFactory.CreateContext())
             {
                 context.Polls.Add(newPoll);
+                newPoll.Ballots.Add(creatorBallot);
+
                 context.SaveChanges();
+
             }
 
             PollCreationResponseModel response = new PollCreationResponseModel
             {
                 UUID = newPoll.UUID,
-                ManageId = newPoll.ManageId
+                ManageId = newPoll.ManageId,
+                CreatorBallot = creatorBallot
             };
 
             return response;
