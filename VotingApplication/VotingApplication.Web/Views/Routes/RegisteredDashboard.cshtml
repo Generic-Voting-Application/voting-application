@@ -22,7 +22,9 @@
                 <h4>{{ poll.CreatedDate | momentFilter: 'Do MMM YYYY, h:mm a'}}</h4>
             </div>
             <div class="poll-panel-buttons">
-                <button class="poll-panel-button" ng-click="navigateToManagePage(poll.ManageId)">Manage</button>
+                <a href="{{manageUrl(poll.ManageId)}}">
+                    <button class="poll-panel-button">Manage</button>
+                </a>
                 <button class="poll-panel-button" ng-click="copyPoll(poll.UUID)">Repeat Poll</button>
             </div>
 
