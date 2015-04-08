@@ -101,18 +101,36 @@
 
             $http
                 .delete('/api/manage/' + manageId + '/voters',
-               {
-                   headers: {
-                       'Content-Type': 'application/json; charset=utf-8'
-                   },
-                   data: {
-                       votersToRemove: votersToRemove
-                   }
-               }
-                ).success(function (data) { deferred.resolve(data); });
+                   {
+                       headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                       data: { BallotDeleteRequests: createDeleteRequest(votersToRemove) }
+                   })
+                .success(function (data) { deferred.resolve(data); });
 
             return deferred.promise;
         };
+
+        function createDeleteRequest(votersToRemove) {
+
+            var deleteRequests = [];
+
+            votersToRemove.forEach(function (item) {
+
+                var deleteBallotRequest = {
+                    BallotManageGuid: item.BallotManageGuid,
+                    VoteDeleteRequests: []
+                };
+
+                item.Votes.forEach(function (vote) {
+                    deleteBallotRequest.VoteDeleteRequests.push({ OptionNumber: vote.OptionNumber });
+
+                });
+
+                deleteRequests.push(deleteBallotRequest);
+            });
+
+            return deleteRequests;
+        }
 
         self.setVisited = function (manageId) {
             $localStorage[manageId] = { visited: true };
