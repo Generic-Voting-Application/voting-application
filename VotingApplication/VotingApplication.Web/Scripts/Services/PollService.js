@@ -46,7 +46,6 @@
 
         function getUserPolls() {
 
-
             var promise = $http({
                 method: 'GET',
                 url: '/api/dashboard/polls',
