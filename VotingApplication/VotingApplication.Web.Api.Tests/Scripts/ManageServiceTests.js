@@ -41,9 +41,6 @@ describe("ManageService", function () {
             manageService.deleteVoters(pollManageGuid, []);
 
             httpBackend.flush();
-
-
-            //supressJasmineNoSpecMessage();
         });
 
         it("Creates correct DeleteBallotRequestModel", function () {
@@ -109,10 +106,6 @@ describe("ManageService", function () {
             manageService.deleteVoters(pollManageGuid, votersToDelete);
 
             httpBackend.flush();
-
-            //supressJasmineNoSpecMessage();
         });
-
-
     });
 });
