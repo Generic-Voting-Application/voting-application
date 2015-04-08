@@ -14,7 +14,7 @@
         $scope.account = AccountService.account;
         $scope.createPoll = createNewPoll;
         $scope.getUserPolls = getUserPolls;
-        $scope.navigateToManagePage = navigateToManagePage;
+        $scope.manageUrl = manageUrl;
         $scope.copyPoll = copyPoll;
 
         $scope.userPolls = {};
@@ -47,7 +47,11 @@
         }
 
         function navigateToManagePage(manageId) {
-            RoutingService.navigateToManagePage(manageId);
+            return RoutingService.navigateToManagePage(manageId);
+        }
+
+        function manageUrl(manageId) {
+            return RoutingService.getManagePageUrl(manageId);
         }
 
         function copyPoll(pollId) {
