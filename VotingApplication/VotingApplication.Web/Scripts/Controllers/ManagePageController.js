@@ -23,6 +23,7 @@
         $scope.selectText = selectTargetText;
         $scope.dateFilter = dateFilter;
         $scope.pollUrl = pollUrl;
+        $scope.fullPollUrl = fullPollUrl;
         $scope.manageSubPageUrl = manageSubPageUrl;
         $scope.visited = false;
 
@@ -73,6 +74,10 @@
 
         function pollUrl() {
             return RoutingService.getVotePageUrl($scope.poll.UUID);
+        }
+
+        function fullPollUrl() {
+            return location.protocol + '//' + location.host + pollUrl();
         }
 
         function manageSubPageUrl(subPage) {
