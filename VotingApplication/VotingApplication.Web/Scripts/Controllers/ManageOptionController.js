@@ -6,9 +6,9 @@
         .module('GVA.Creation')
         .controller('ManageOptionController', ManageOptionController);
 
-    ManageOptionController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];
+    ManageOptionController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService', 'ngDialog'];
 
-    function ManageOptionController($scope, $routeParams, $location, ManageService, RoutingService) {
+    function ManageOptionController($scope, $routeParams, $location, ManageService, RoutingService, ngDialog) {
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
@@ -16,8 +16,8 @@
         $scope.return = navigateToManagePage;
         $scope.remove = removePollOption;
         $scope.add = addPollOption;
-        $scope.catchDirtyInput = catchDirtyInput;
         $scope.edit = editPollOption;
+        $scope.openAddOptionDialog = openAddOptionDialog;
 
         activate();
 
@@ -58,10 +58,13 @@
             });
         }
 
-        function catchDirtyInput() {
-            if ($scope.newOptionForm.$dirty && $scope.newOptionForm.$valid) {
-                addPollOption($scope.newOptionForm);
-            }
+        function openAddOptionDialog() {
+            ngDialog.open({
+                template: '/Routes/AddOptionDialog',
+                controller: 'AddOptionDialogController',
+                'scope': $scope
+                //data: { 'callback': callback }
+            });
         }
 
         function updatePollDetails() {
