@@ -6,7 +6,7 @@
                 <div class="option-buttons">
                     <button class="active-btn btn-medium" ng-click="submitVote(option)">Vote</button>
                 </div>
-                <h4>{{option.Name}}</h4>
+                <strong>{{option.Name}}</strong>
             </div>
             <div ng-if="option.Description" class="option-block-row">
                 <p truncated-text ng-model="option.Description" max-chars="60" class="option-description"></p>
