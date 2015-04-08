@@ -8,7 +8,7 @@
             <label for="description">Description</label>
             <input class="form-input" id="description" ng-model="description">
         </div>
-        <button class="active-btn" ng-disabled="name == null" ng-click="updateOption()" type="submit">Update</button>
+        <button class="active-btn" ng-disabled="!name || name.length === 0" ng-click="updateOption()" type="submit">Update</button>
         <button class="inactive-btn" ng-click="dismiss()">Cancel</button>
     </form>
 </div>
