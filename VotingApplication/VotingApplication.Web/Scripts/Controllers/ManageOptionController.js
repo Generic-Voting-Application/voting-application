@@ -15,7 +15,6 @@
         $scope.updatePoll = updatePollDetails;
         $scope.return = navigateToManagePage;
         $scope.remove = removePollOption;
-        $scope.clear = clearPollOption;
         $scope.add = addPollOption;
         $scope.catchDirtyInput = catchDirtyInput;
 
@@ -48,6 +47,8 @@
             };
 
             $scope.poll.Options.push(newOption);
+
+            clearPollOption(optionForm);
         }
 
         function catchDirtyInput() {
