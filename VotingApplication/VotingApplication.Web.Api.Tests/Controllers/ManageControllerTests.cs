@@ -12,7 +12,6 @@ using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
 using VotingApplication.Web.Api.Models.DBViewModels;
-using VotingApplication.Web.Api.Services;
 using VotingApplication.Web.Api.Tests.TestHelpers;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
@@ -439,9 +438,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             public static ManageController CreateManageController(IContextFactory contextFactory)
             {
-                var mockInvitationService = Mock.Of<IInvitationService>();
-
-                return new ManageController(contextFactory, mockInvitationService)
+                return new ManageController(contextFactory)
                 {
                     Request = new HttpRequestMessage(),
                     Configuration = new HttpConfiguration()

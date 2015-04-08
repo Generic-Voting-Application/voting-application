@@ -93,7 +93,7 @@ describe("ManageService", function () {
                         VoteDeleteRequests: [{ OptionNumber: 1 }, { OptionNumber: 3 }]
                     }
                 ]
-            }
+            };
 
 
             httpBackend
