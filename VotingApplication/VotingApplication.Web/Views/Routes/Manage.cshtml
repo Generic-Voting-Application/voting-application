@@ -84,6 +84,19 @@
                 </span>
             </div>
         </div>
+        <div class="manage-section" ng-show="!poll.InviteOnly">
+            <div>
+                <span class="glyphicon glyphicon-link pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Share:</h4>
+            </div>
+            <div>
+                <div class="icon-padded-left">
+                    <a href="mailto:&amp;body={{fullPollUrl()}}"><i class="fa fa-envelope-square fa-lg"></i></a>
+                    <i class="fa fa-facebook-square fa-lg"></i>
+                    <i class="fa fa-google-plus-square fa-lg"></i>
+                </div>
+            </div>
+        </div>
         <div class="manage-section flexbox">
             <div class="centered">
                 <a href="{{pollUrl()}}">
