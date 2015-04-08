@@ -1,4 +1,5 @@
 ﻿using System;
+using VotingApplication.Data.Model;
 
 namespace VotingApplication.Web.Api.Models.DBViewModels
 {
@@ -6,5 +7,6 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
     {
         public Guid UUID { get; set; }
         public Guid ManageId { get; set; }
+        public Ballot CreatorBallot { get; set; }
     }
 }

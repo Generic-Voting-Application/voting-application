@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('GVA.Voting')
+        .module('GVA.Common')
         .factory('TokenService', TokenService);
 
     TokenService.$inject = ['$location', '$http', '$localStorage', '$routeParams'];
@@ -10,10 +10,15 @@
     function TokenService($location, $http, $localStorage, $routeParams) {
 
         var service = {
-            getToken: getTokenForPoll
+            getToken: getTokenForPoll,
+            setToken: setTokenForPoll
         };
 
         return service;
+
+        function setTokenForPoll(pollId, token) {
+            $localStorage[pollId] = token;
+        }
 
         function getTokenForPoll(pollId, callback) {
 
@@ -37,7 +42,7 @@
             })
             .success(function (data, status) {
                 var token = data.replace(/\"/g, '');
-                $localStorage[pollId] = token;
+                setTokenForPoll(pollId, token);
                 if (callback) {
                     callback(token, status);
                 }
