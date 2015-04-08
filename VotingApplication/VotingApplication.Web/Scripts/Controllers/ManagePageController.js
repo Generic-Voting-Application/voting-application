@@ -15,7 +15,7 @@
         var manageId = $routeParams.manageId;
 
         $scope.poll = {};
-        $scope.voters = [];
+        $scope.invitees = [];
         $scope.manageId = manageId;
         $scope.updatePoll = updatePollDetails;
         $scope.discardNameChanges = discardNameChanges;
@@ -38,6 +38,9 @@
         function activate() {
             ManageService.getPoll(manageId, function (data) {
                 $scope.poll = data;
+                $scope.invitees = data.Voters.filter(function (voter) {
+                    return voter.Email !== null;
+                });
             });
             $scope.visited = ManageService.getVisited(manageId);
             if (!$scope.visited) {
