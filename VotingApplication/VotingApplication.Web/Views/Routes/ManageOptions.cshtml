@@ -2,27 +2,22 @@
     <div class="manage-area centered">
         <h2>
             Poll Options
-            <span ng-if="!vm.editToggle" aria-hidden="true">
-                <span class="glyphicon glyphicon-pencil pull-right clickable form-aligned-top" ng-click="vm.editToggle=true"></span>
-            </span>
-            <span ng-if="vm.editToggle" aria-hidden="true">
-                <span class="glyphicon glyphicon-ban-circle pull-right clickable form-aligned-top" ng-click="vm.editToggle=false"></span>
-                <span class="glyphicon glyphicon-ok pull-right clickable form-aligned-top" ng-click="vm.editToggle=false"></span>
-            </span>
         </h2>
         <p ng-if="poll.Options.length === 0">No options have been added.</p>
         <div class="manage-section" ng-repeat="option in poll.Options">
-            <form ng-submit="editOptionToggle=false;vm.editToggle=false">
-                <div ng-if="!vm.editToggle" aria-hidden="true">
-                    <span class="glyphicon glyphicon-trash pull-left clickable" ng-click="remove(option)"></span>
-                    <h4 class="icon-padded-left">{{option.Name}}</h4>
-                    <div class="icon-padded-left">
+            <form ng-submit="option.editOptionToggle=false">
+                <div ng-if="!option.editOptionToggle" aria-hidden="true">
+                    <span class="glyphicon glyphicon-trash pull-right clickable" ng-click="remove(option)"></span>
+                    <span class="glyphicon glyphicon-pencil pull-right clickable" ng-click="edit(option)"></span>
+                    <h4>{{option.Name}}</h4>
+                    <div>
                         {{option.Description}}
                     </div>
                 </div>
-                <div ng-if="vm.editToggle" aria-hidden="true">
+                <div ng-if="option.editOptionToggle" aria-hidden="true">
+                    <span class="glyphicon glyphicon-ban-circle pull-right clickable form-aligned-top" ng-click="option.editOptionToggle=false"></span>
+                    <span class="glyphicon glyphicon-ok pull-right clickable form-aligned-top" ng-click="option.editOptionToggle=false"></span>
                     <h4><input class="wide-input" ng-model="option.Name" autofocus /></h4>
-
                     <span><input class="wide-input" ng-model="option.Description" /></span>
                 </div>
                 @*Angular requires a button for submission. Go figure.*@

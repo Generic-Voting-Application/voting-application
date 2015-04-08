@@ -17,6 +17,7 @@
         $scope.remove = removePollOption;
         $scope.add = addPollOption;
         $scope.catchDirtyInput = catchDirtyInput;
+        $scope.edit = editPollOption;
 
         activate();
 
@@ -49,6 +50,12 @@
             $scope.poll.Options.push(newOption);
 
             clearPollOption(optionForm);
+        }
+
+        function editPollOption(option) {
+            $scope.poll.Options.forEach(function (d) {
+                d.editOptionToggle = (option === d);
+            });
         }
 
         function catchDirtyInput() {
