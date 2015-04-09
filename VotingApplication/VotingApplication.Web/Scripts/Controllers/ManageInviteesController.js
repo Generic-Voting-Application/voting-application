@@ -115,21 +115,10 @@
             // Apply pending change
             addInvitee($scope.inviteString);
 
-            $scope.isSaving = true;
+            var invitations = $scope.invitedUsers.concat($scope.pendingUsers);
 
-            $scope.pendingUsers.forEach(function (d) {
-                d.EmailSent = false;
-            });
-
-            $scope.invitedUsers.forEach(function (d) {
-                d.EmailSent = true;
-            });
-
-            $scope.poll.Voters = $scope.invitedUsers.concat($scope.pendingUsers);
-
-            ManageService.updatePoll($routeParams.manageId, $scope.poll, function () {
-                ManageService.getPoll($scope.manageId);
-            returnToManage();
+            ManageService.sendInvitations($scope.manageId, invitations, function () {
+                returnToManage();
             });
         }
 
@@ -137,12 +126,12 @@
             $scope.pendingUsers = [];
             $scope.invitedUsers = [];
 
-            if ($scope.poll === null) {
+            if ($scope.Invitations === undefined) {
                 return;
             }
 
-            for (var i = 0; i < $scope.poll.Voters.length; i++) {
-                var voter = $scope.poll.Voters[i];
+            for (var i = 0; i < $scope.Invitations.length; i++) {
+                var voter = $scope.Invitations[i];
 
                 if (voter.Email === null) {
                     continue;
@@ -162,13 +151,9 @@
         }
 
         function activate() {
-            ManageService.registerPollObserver(function () {
-                $scope.poll = ManageService.poll;
-
-                ManageService.getInvitations($scope.manageId, function (data) {
-                    $scope.poll.Voters = data;
-                    filterUsersByPending();
-                });
+            ManageService.getInvitations($routeParams.manageId, function (data) {
+                $scope.Invitations = data;
+                filterUsersByPending();
             });
 
             filterUsersByPending();

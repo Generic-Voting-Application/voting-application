@@ -91,6 +91,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     {
                         matchingBallot = new Ballot() { Email = invitee.Email, ManageGuid = Guid.NewGuid() };
                         matchingPoll.Ballots.Add(matchingBallot);
+                        context.Ballots.Add(matchingBallot);
                     }
                     else
                     {
@@ -115,7 +116,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                         context.Votes.Remove(redundantVote);
                     }
 
-                    //context.Ballots.Remove(redundantBallot);
+                    context.Ballots.Remove(redundantBallot);
                     matchingPoll.Ballots.Remove(redundantBallot);
                 }
 
