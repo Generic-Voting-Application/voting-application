@@ -16,6 +16,39 @@ namespace VotingApplication.Web.Api.Controllers
 
         public ManageOptionController(IContextFactory contextFactory) : base(contextFactory) { }
 
+        [HttpGet]
+        public List<ManageOptionResponseModel> Get(Guid manageId)
+        {
+            using (IVotingContext context = _contextFactory.CreateContext())
+            {
+                Poll poll = context
+                    .Polls
+                    .Where(p => p.ManageId == manageId)
+                    .Include(p => p.Options)
+                    .SingleOrDefault();
+
+                if (poll == null)
+                {
+                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll for manage id {0} not found", manageId));
+                }
+
+                return poll
+                    .Options
+                    .Select(CreateOptionResponseModel)
+                    .ToList();
+            }
+        }
+
+        public ManageOptionResponseModel CreateOptionResponseModel(Option option)
+        {
+            return new ManageOptionResponseModel()
+            {
+                OptionNumber = option.PollOptionNumber,
+                Name = option.Name,
+                Description = option.Description
+            };
+        }
+
         [HttpPut]
         public void Put(Guid manageId, ManageOptionUpdateRequest request)
         {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -16,42 +17,129 @@ namespace VotingApplication.Web.Api.Tests.Controllers
     [TestClass]
     public class ManageOptionControllerTests
     {
+        public readonly Guid PollManageGuid = new Guid("3D8E2C96-2B1B-43E2-94AF-A6E48E2B3BBD");
+
         [TestClass]
-        public class PutTests
+        public class GetTests : ManageOptionControllerTests
+        {
+            [TestMethod]
+            [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
+            public void UnknownManageId_ReturnsNotFound()
+            {
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
+
+                ManageOptionController controller = CreateManageOptionController(contextFactory);
+
+                controller.Get(PollManageGuid);
+            }
+
+            [TestMethod]
+            public void PollWithNoOptions_ReturnsEmptyList()
+            {
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                Poll poll = new Poll() { ManageId = PollManageGuid };
+                polls.Add(poll);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
+
+                ManageOptionController controller = CreateManageOptionController(contextFactory);
+
+                List<ManageOptionResponseModel> response = controller.Get(PollManageGuid);
+
+                CollectionAssert.AreEqual(new List<ManageOptionResponseModel>(), response);
+            }
+
+            [TestMethod]
+            public void PollWithOptions_ReturnsAll()
+            {
+                const int option1OptionNumber = 1;
+                const string option1Name = "Option 1";
+                const string option1Description = "Description 1";
+
+                const int option2OptionNumber = 2;
+                const string option2Name = "Option 2";
+                const string option2Description = "Description 2";
+
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                IDbSet<Option> options = DbSetTestHelper.CreateMockDbSet<Option>();
+
+                Poll poll = new Poll() { ManageId = PollManageGuid };
+                polls.Add(poll);
+
+                Option option1 = new Option()
+                {
+                    Name = option1Name,
+                    Description = option1Description,
+                    PollOptionNumber = option1OptionNumber
+                };
+                Option option2 = new Option()
+                {
+                    Name = option2Name,
+                    Description = option2Description,
+                    PollOptionNumber = option2OptionNumber
+                };
+
+                options.Add(option1);
+                options.Add(option2);
+
+                poll.Options.Add(option1);
+                poll.Options.Add(option2);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, options);
+
+                ManageOptionController controller = CreateManageOptionController(contextFactory);
+
+                IEnumerable<ManageOptionResponseModel> response = controller.Get(PollManageGuid);
+
+                Assert.AreEqual(2, response.Count());
+
+                ManageOptionResponseModel responseOption1 = response.First();
+                Assert.AreEqual(option1OptionNumber, responseOption1.OptionNumber);
+                Assert.AreEqual(option1Name, responseOption1.Name);
+                Assert.AreEqual(option1Description, responseOption1.Description);
+
+                ManageOptionResponseModel responseOption2 = response.Last();
+                Assert.AreEqual(option2OptionNumber, responseOption2.OptionNumber);
+                Assert.AreEqual(option2Name, responseOption2.Name);
+                Assert.AreEqual(option2Description, responseOption2.Description);
+
+            }
+        }
+
+        [TestClass]
+        public class PutTests : ManageOptionControllerTests
         {
             [TestMethod]
             [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
             public void NullUpdateRequest_ThrowsError()
             {
-                var pollManageGuid = new Guid("433A8D8F-0FD7-4A44-94A7-10ECCD893400");
-
                 var controller = new ManageOptionController();
 
-                controller.Put(pollManageGuid, null);
+                controller.Put(PollManageGuid, null);
             }
 
             [TestMethod]
             [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
             public void UnknownPollManageGuid_ThrowsNotFound()
             {
-                var pollManageGuid = new Guid("433A8D8F-0FD7-4A44-94A7-10ECCD893400");
                 var request = new ManageOptionUpdateRequest();
 
                 var controller = new ManageOptionController();
 
-                controller.Put(pollManageGuid, request);
+                controller.Put(PollManageGuid, request);
             }
 
             [TestMethod]
             public void OptionWithNoPollOptionNumber_IsAddedToOptions()
             {
-                var pollManageGuid = new Guid("433A8D8F-0FD7-4A44-94A7-10ECCD893400");
                 const string optionName = "Some Option";
                 const string optionDescription = "Some Description";
 
 
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
-                polls.Add(new Poll() { ManageId = pollManageGuid });
+                polls.Add(new Poll() { ManageId = PollManageGuid });
 
                 IDbSet<Option> options = DbSetTestHelper.CreateMockDbSet<Option>();
 
@@ -72,7 +160,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 ManageOptionController controller = CreateManageOptionController(contextFactory);
 
 
-                controller.Put(pollManageGuid, request);
+                controller.Put(PollManageGuid, request);
 
                 Assert.AreEqual(1, options.Count());
                 Assert.AreEqual(optionName, options.First().Name);
@@ -82,7 +170,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             [TestMethod]
             public void OptionWithNoPollOptionNumber_IsAddedToPoll()
             {
-                var pollManageGuid = new Guid("433A8D8F-0FD7-4A44-94A7-10ECCD893400");
                 const string optionName = "Some Option";
                 const string optionDescription = "Some Description";
 
@@ -90,7 +177,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 IDbSet<Option> options = DbSetTestHelper.CreateMockDbSet<Option>();
 
-                var poll = new Poll() { ManageId = pollManageGuid };
+                var poll = new Poll() { ManageId = PollManageGuid };
                 polls.Add(poll);
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, options);
@@ -109,7 +196,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 ManageOptionController controller = CreateManageOptionController(contextFactory);
 
 
-                controller.Put(pollManageGuid, request);
+                controller.Put(PollManageGuid, request);
 
                 Assert.AreEqual(1, poll.Options.Count());
             }
@@ -117,7 +204,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             [TestMethod]
             public void OptionWithPollOptionNumber_IsUpdated()
             {
-                var pollManageGuid = new Guid("433A8D8F-0FD7-4A44-94A7-10ECCD893400");
                 const string optionName = "Some Option";
                 const string optionDescription = "Some Description";
                 const int pollOptionNumber = 2;
@@ -129,7 +215,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var poll = new Poll()
                 {
-                    ManageId = pollManageGuid
+                    ManageId = PollManageGuid
                 };
 
 
@@ -163,7 +249,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 ManageOptionController controller = CreateManageOptionController(contextFactory);
 
 
-                controller.Put(pollManageGuid, request);
+                controller.Put(PollManageGuid, request);
 
 
                 Assert.AreEqual(newOptionName, options.First().Name);
@@ -174,7 +260,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
             public void OptionWithUnknownPollOptionNumber_ThrowsNotFound()
             {
-                var pollManageGuid = new Guid("433A8D8F-0FD7-4A44-94A7-10ECCD893400");
                 const string optionName = "Some Option";
                 const string optionDescription = "Some Description";
                 const int pollOptionNumber = 2;
@@ -183,7 +268,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var poll = new Poll()
                 {
-                    ManageId = pollManageGuid
+                    ManageId = PollManageGuid
                 };
 
                 IDbSet<Option> options = DbSetTestHelper.CreateMockDbSet<Option>();
@@ -214,13 +299,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 ManageOptionController controller = CreateManageOptionController(contextFactory);
 
 
-                controller.Put(pollManageGuid, request);
+                controller.Put(PollManageGuid, request);
             }
 
             [TestMethod]
             public void OptionWithPollOptionNumber_DoesNotAddNewOption()
             {
-                var pollManageGuid = new Guid("433A8D8F-0FD7-4A44-94A7-10ECCD893400");
                 const string optionName = "Some Option";
                 const string optionDescription = "Some Description";
                 const int pollOptionNumber = 2;
@@ -232,7 +316,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var poll = new Poll()
                 {
-                    ManageId = pollManageGuid
+                    ManageId = PollManageGuid
                 };
 
 
@@ -266,7 +350,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 ManageOptionController controller = CreateManageOptionController(contextFactory);
 
 
-                controller.Put(pollManageGuid, request);
+                controller.Put(PollManageGuid, request);
 
 
                 Assert.AreEqual(1, options.Count());
@@ -275,7 +359,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             [TestMethod]
             public void OptionNotInRequest_RemovesOptionAndVotes()
             {
-                var pollManageGuid = new Guid("433A8D8F-0FD7-4A44-94A7-10ECCD893400");
                 const string optionName = "Some Option";
                 const string optionDescription = "Some Description";
                 const int pollOptionNumber = 2;
@@ -284,7 +367,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var poll = new Poll()
                 {
-                    ManageId = pollManageGuid
+                    ManageId = PollManageGuid
                 };
 
 
@@ -319,7 +402,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 ManageOptionController controller = CreateManageOptionController(contextFactory);
 
 
-                controller.Put(pollManageGuid, request);
+                controller.Put(PollManageGuid, request);
 
 
                 Assert.AreEqual(0, poll.Options.Count());
@@ -331,8 +414,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             [TestMethod]
             public void MultipleRequests()
             {
-                var pollManageGuid = new Guid("433A8D8F-0FD7-4A44-94A7-10ECCD893400");
-
                 const string optionRemoveName = "Some Option to remove";
                 const string optionRemoveDescription = "Some Description to remove";
                 const int optionRemoveNumber = 2;
@@ -354,7 +435,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
                 var poll = new Poll()
                 {
-                    ManageId = pollManageGuid
+                    ManageId = PollManageGuid
                 };
                 polls.Add(poll);
 
@@ -405,7 +486,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 ManageOptionController controller = CreateManageOptionController(contextFactory);
 
 
-                controller.Put(pollManageGuid, request);
+                controller.Put(PollManageGuid, request);
 
 
                 Assert.AreEqual(2, poll.Options.Count());

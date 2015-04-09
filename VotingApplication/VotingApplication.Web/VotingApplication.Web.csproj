@@ -238,6 +238,7 @@
     <Compile Include="Api\Controllers\ManageController.cs" />
     <Compile Include="Api\Controllers\ManageInvitationController.cs" />
     <Compile Include="Api\Controllers\ManageOptionController.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManageOptionResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManageOptionUpdateRequest.cs" />
     <Compile Include="Api\Controllers\ManageVoterController.cs" />
     <Compile Include="Api\Controllers\PollController.cs" />
