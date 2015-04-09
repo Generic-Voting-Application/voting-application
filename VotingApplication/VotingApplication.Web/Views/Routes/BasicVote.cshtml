@@ -1,17 +1,19 @@
 ﻿<div ng-controller="BasicVoteController" ng-app="GVA.Voting" class="voting-area">
-    <h3>Options</h3>
-    <div ng-repeat="option in options">
-        <div class="option-block" ng-class="{'selected-option': option.selected }">
-            <div class="option-block-row">
-                <div class="option-buttons">
-                    <button class="active-btn btn-medium" ng-click="submitVote(option)">Vote</button>
+    <div class="option-area">
+        <h3>Options</h3>
+        <div ng-repeat="option in options">
+            <div class="option-block" ng-class="{'selected-option': option.selected }">
+                <div class="option-block-row">
+                    <div class="option-buttons">
+                        <button class="active-btn btn-medium" ng-click="submitVote(option)">Vote</button>
+                    </div>
+                    <strong>{{option.Name}}</strong>
                 </div>
-                <strong>{{option.Name}}</strong>
-            </div>
-            <div ng-if="option.Description" class="option-block-row">
-                <p truncated-text ng-model="option.Description" max-chars="60" class="option-description"></p>
+                <div ng-if="option.Description" class="option-block-row">
+                    <span truncated-text ng-model="option.Description" max-chars="60" class="option-description"></span>
+                </div>
+                <hr>
             </div>
         </div>
-        <hr>
     </div>
 </div>

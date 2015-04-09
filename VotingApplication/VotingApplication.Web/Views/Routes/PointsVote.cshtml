@@ -3,24 +3,26 @@
     <div class="progress" id="progress-bar">
         <div style="width: {{unallocatedPoints()/totalPointsAvailable * 100}}%" class="progress-bar" role="progressbar"></div>
     </div>
-    <h3>Options</h3>
-    <div ng-repeat="option in options">
-        <div class="option-block">
-            <div class="option-block-row">
-                <div class="option-buttons">
-                    <span class="btn-group-points">
-                        <button class="active-btn pull-left" ng-disabled="(option.voteValue <= 0)" ng-click="(option.voteValue = option.voteValue-1)">-</button>
-                        <label class="points-label">{{option.voteValue}}/{{maxPointsPerOption}}</label>
-                        <button class="active-btn pull-right" ng-disabled="(disabledAddPoints(option.voteValue))" ng-click="(option.voteValue = option.voteValue+1)">+</button>
-                    </span>
+    <div class="option-area">
+        <h3>Options</h3>
+        <div ng-repeat="option in options">
+            <div class="option-block">
+                <div class="option-block-row">
+                    <div class="option-buttons">
+                        <span class="btn-group-points">
+                            <button class="active-btn pull-left" ng-disabled="(option.voteValue <= 0)" ng-click="(option.voteValue = option.voteValue-1)">-</button>
+                            <label class="points-label">{{option.voteValue}}/{{maxPointsPerOption}}</label>
+                            <button class="active-btn pull-right" ng-disabled="(disabledAddPoints(option.voteValue))" ng-click="(option.voteValue = option.voteValue+1)">+</button>
+                        </span>
+                    </div>
+                    <strong>{{option.Name}}</strong>
                 </div>
-                <strong>{{option.Name}}</strong>
+                <div ng-if="option.Description" class="option-block-row">
+                    <span truncated-text ng-model="option.Description" max-chars="60" class="option-description"></span>
+                </div>
             </div>
-            <div ng-if="option.Description" class="option-block-row">
-                <p truncated-text ng-model="option.Description" max-chars="60" class="option-description"></p>
-            </div>
+            <hr />
         </div>
-        <hr />
     </div>
     <div class="flexbox">
         <button class="active-btn btn-medium centered" ng-click="submitVote(options)">Vote</button>

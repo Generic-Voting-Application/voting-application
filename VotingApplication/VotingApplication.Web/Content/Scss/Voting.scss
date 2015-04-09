@@ -49,11 +49,15 @@ body {
     &:last-of-type {
         margin-bottom: 5px;
     }
+
+    .option-block .option-block-row {
+        flex-direction: row;
+        margin-bottom: 5px;
+    }
 }
 
-.option-block .option-block-row {
-    flex-direction: row;
-    margin-bottom: 15px;
+.option-area {
+    margin-bottom: 10px;
 }
 
 .selected-option {
