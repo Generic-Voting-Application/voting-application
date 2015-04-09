@@ -101,6 +101,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     .Polls
                     .Include(p => p.Ballots)
                     .Include(p => p.Ballots.Select(b => b.Votes))
+                    .Include(p => p.Ballots.Select(b => b.Votes.Select(v => v.Option)))
                     .SingleOrDefault(s => s.ManageId == manageId);
 
                 if (poll == null)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
@@ -17,19 +18,34 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public ManageController(IContextFactory contextFactory) : base(contextFactory) { }
 
-        private TokenRequestModel TokenToModel(Ballot ballot)
+        [HttpGet]
+        public ManagePollRequestResponseModel Get(Guid manageId)
         {
-            return new TokenRequestModel
+            using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Email = ballot.Email,
-                EmailSent = (ballot.TokenGuid != null && ballot.TokenGuid != Guid.Empty),
-                Name = ballot.VoterName
-            };
+                Poll poll = context.Polls
+                    .Where(p => p.ManageId == manageId)
+                    .Include(p => p.Options)
+                    .Include(p => p.Ballots)
+                    .Include(p => p.Ballots.Select(b => b.Votes))
+                    .FirstOrDefault();
+
+                if (poll == null)
+                {
+                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll for manage id {0} not found", manageId));
+                }
+
+                return CreateResponseModelFromPoll(poll);
+            }
         }
 
-        private ManagePollRequestResponseModel PollToModel(Poll poll)
+        private ManagePollRequestResponseModel CreateResponseModelFromPoll(Poll poll)
         {
-            List<TokenRequestModel> Voters = poll.Ballots.ConvertAll<TokenRequestModel>(TokenToModel);
+            List<ManagePollBallotRequestModel> Voters = poll
+                .Ballots
+                .Where(b => b.Votes.Any())
+                .Select(CreateManagePollRequestResponseModel)
+                .ToList();
 
             return new ManagePollRequestResponseModel
             {
@@ -47,28 +63,15 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             };
         }
 
-        #region GET
-
-        public ManagePollRequestResponseModel Get(Guid manageId)
+        private ManagePollBallotRequestModel CreateManagePollRequestResponseModel(Ballot ballot)
         {
-            using (var context = _contextFactory.CreateContext())
+            return new ManagePollBallotRequestModel
             {
-                Poll poll = context.Polls
-                    .Where(p => p.ManageId == manageId)
-                    .Include(p => p.Options)
-                    .Include(p => p.Ballots)
-                    .FirstOrDefault();
-
-                if (poll == null)
-                {
-                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll for manage id {0} not found", manageId));
-                }
-
-                return PollToModel(poll);
-            }
+                Email = ballot.Email,
+                EmailSent = (ballot.TokenGuid != null && ballot.TokenGuid != Guid.Empty),
+                Name = ballot.VoterName
+            };
         }
-
-        #endregion
 
         #region Put
 
@@ -180,7 +183,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 List<Ballot> redundantTokens = poll.Ballots.Where(b => b.Email != null).ToList<Ballot>();
 
-                foreach (TokenRequestModel voter in updateRequest.Voters)
+                foreach (ManagePollBallotRequestModel voter in updateRequest.Voters)
                 {
                     Ballot ballot = redundantTokens.Find(t =>
                         (t.Email == null && voter.Email == null && t.VoterName == voter.Name) ||
@@ -192,7 +195,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     {
                         redundantTokens.Remove(ballot);
                     }
-                    else 
+                    else
                     {
                         ballot = new Ballot { Email = voter.Email, ManageGuid = Guid.NewGuid() };
                         poll.Ballots.Add(ballot);

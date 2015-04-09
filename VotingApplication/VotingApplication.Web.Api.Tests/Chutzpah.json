@@ -8,6 +8,7 @@
         { "Path": "../VotingApplication.Web/Scripts/Lib", "Include": "*.js" },
         { "Path": "Scripts/Lib", "Include": "*.js" },
         { "Path": "../VotingApplication.Web/Scripts/Modules", "Include": "*.js" },
+        { "Path": "../VotingApplication.Web/Scripts/Interceptors", "Include": "*.js" },
         { "Path": "../VotingApplication.Web/Scripts/Services", "Include": "*.js" },
         { "Path": "../VotingApplication.Web/Scripts/Controllers", "Include": "*.js" }
 

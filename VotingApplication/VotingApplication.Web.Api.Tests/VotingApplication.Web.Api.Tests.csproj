@@ -115,7 +115,6 @@
     <Compile Include="Validators\RankedVoteValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".jshintrc" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -144,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\Lib\angular-mocks.js" />
+    <Content Include="Scripts\ManageServiceTests.js" />
     <Content Include="Scripts\ManageVotersControllerTests.js" />
   </ItemGroup>
   <ItemGroup />

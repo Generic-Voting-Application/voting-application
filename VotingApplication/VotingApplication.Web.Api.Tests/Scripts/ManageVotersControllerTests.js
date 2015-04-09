@@ -1,4 +1,6 @@
-﻿describe("ManageVotersController", function () {
+﻿'use strict';
+
+describe("ManageVotersController", function () {
 
     beforeEach(module("GVA.Creation"));
 
@@ -19,7 +21,7 @@
 
         manageServiceMock = {
             getVoters: function () { },
-            deleteVoters: function (votersToRemove) { }
+            deleteVoters: function () { }
         };
         manageGetVotersPromise = $q.defer();
         manageDeleteVotersPromise = $q.defer();
