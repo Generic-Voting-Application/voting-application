@@ -52,8 +52,8 @@ namespace VotingApplication.Web
 
             config.Routes.MapHttpRoute(
                 name: "ManageOptionApiRoute",
-                routeTemplate: "api/manage/{manageId}/option/{optionId}",
-                defaults: new { controller = "ManageOption", optionId = RouteParameter.Optional }
+                routeTemplate: "api/manage/{manageId}/option",
+                defaults: new { controller = "ManageOption" }
             );
 
             config.Routes.MapHttpRoute(
