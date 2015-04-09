@@ -328,7 +328,7 @@
     <Content Include="Content\Lib\Css\font-awesome-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-theme-default-min.css" />
-    <None Include="Content\Scss\ErrorBar.scss" />
+    <Content Include="Content\Scss\ErrorBar.scss" />
     <Content Include="Content\Scss\Site.scss" />
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
