@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -31,8 +33,21 @@ namespace VotingApplication.Web.Api.Controllers
                     ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
-                poll.PollType = (PollType)Enum.Parse(typeof(PollType), updateRequest.PollType, true);
-                poll.MaxPerVote = updateRequest.MaxPerVote;
+                if (updateRequest.PollType.ToLower() != poll.PollType.ToString().ToLower())
+                {
+                    List<Vote> removedVotes = context.Votes.Include(v => v.Poll)
+                                                            .Where(v => v.Poll.UUID == poll.UUID)
+                                                            .ToList();
+                    foreach (Vote oldVote in removedVotes)
+                    {
+                        context.Votes.Remove(oldVote);
+                    }
+
+                    poll.PollType = (PollType)Enum.Parse(typeof(PollType), updateRequest.PollType, true);
+                    poll.MaxPerVote = updateRequest.MaxPerVote;
+                }
+
+
                 poll.MaxPoints = updateRequest.MaxPoints;
 
                 poll.LastUpdated = DateTime.Now;
