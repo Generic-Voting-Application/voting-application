@@ -9,7 +9,6 @@
 
     function EditOptionDialogController($scope) {
         $scope.updateOption = updateOption;
-        $scope.dismiss = dismiss;
 
         $scope.name = $scope.ngDialogData.option.Name;
         $scope.description = $scope.ngDialogData.option.Description;
@@ -22,10 +21,6 @@
             $scope.ngDialogData.option.Name = $scope.name;
             $scope.ngDialogData.option.Description = $scope.description;
 
-            dismiss();
-        }
-
-        function dismiss() {
             $scope.closeThisDialog();
         }
     }
