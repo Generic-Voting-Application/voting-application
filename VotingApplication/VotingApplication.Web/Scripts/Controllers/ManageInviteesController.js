@@ -100,7 +100,19 @@
         function sendInvitations() {
             $scope.sendingInvitations = true;
 
-            ManageService.sendInvitations($scope.manageId, $scope.pendingUsers, function () {
+            var existingInvitations = $scope.Invitations.map(function (d) {
+                d.SendInvitation = false;
+                return d;
+            });
+
+            var newInvitations = $scope.pendingUsers.map(function (d) {
+                d.SendInvitation = true;
+                return d;
+            });
+
+            var invitations = existingInvitations.concat(newInvitations);
+
+            ManageService.sendInvitations($scope.manageId, invitations, function () {
                 $scope.sendingInvitations = false;
 
                 // We don't just do ManageService.getPoll, because we want to maintain any deleted "Invited" voters which have not yet been saved
