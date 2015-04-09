@@ -25,9 +25,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             _invitationService = invitationService;
         }
 
-        private ManagePollBallotRequestModel BallotToModel(Ballot ballot)
+        private ManageInvitationResponseModel BallotToModel(Ballot ballot)
         {
-            return new ManagePollBallotRequestModel
+            return new ManageInvitationResponseModel
             {
                 Email = ballot.Email,
                 EmailSent = (ballot.TokenGuid != null && ballot.TokenGuid != Guid.Empty),
@@ -37,7 +37,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region GET
 
-        public List<ManagePollBallotRequestModel> Get(Guid manageId)
+        public List<ManageInvitationResponseModel> Get(Guid manageId)
         {
             using (var context = _contextFactory.CreateContext())
             {
@@ -54,7 +54,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 return matchingPoll.Ballots
                     .Where(b => !String.IsNullOrWhiteSpace(b.Email))
                     .Select(b => BallotToModel(b))
-                    .ToList<ManagePollBallotRequestModel>();
+                    .ToList<ManageInvitationResponseModel>();
             }
         }
 
@@ -62,7 +62,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         #region POST
 
-        public void Post(Guid manageId, List<ManagePollBallotRequestModel> invitees)
+        public void Post(Guid manageId, List<ManageInvitationRequestModel> invitees)
         {
             if (invitees == null)
             {
@@ -81,22 +81,42 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
-                foreach (ManagePollBallotRequestModel invitee in invitees)
+                List<Ballot> redundantBallots = matchingPoll.Ballots.ToList<Ballot>();
+
+                foreach (ManageInvitationRequestModel invitee in invitees)
                 {
-                    Ballot matchingBallot = matchingPoll.Ballots.SingleOrDefault(b => b.Email != null && b.Email.Equals(invitee.Email, StringComparison.OrdinalIgnoreCase));
+                    Ballot matchingBallot = matchingPoll.Ballots.SingleOrDefault(b => b.ManageGuid == invitee.ManageToken);
 
                     if (matchingBallot == null)
                     {
                         matchingBallot = new Ballot() { Email = invitee.Email, ManageGuid = Guid.NewGuid() };
                         matchingPoll.Ballots.Add(matchingBallot);
                     }
-
-                    if (matchingBallot.TokenGuid == Guid.Empty)
+                    else
                     {
-                        matchingBallot.TokenGuid = Guid.NewGuid();
+                        redundantBallots.Remove(matchingBallot);
                     }
 
-                    _invitationService.SendInvitation(matchingPoll.UUID, matchingBallot, matchingPoll.Name);
+                    if (invitee.SendInvitation)
+                    {
+                        if (matchingBallot.TokenGuid == Guid.Empty)
+                        {
+                            matchingBallot.TokenGuid = Guid.NewGuid();
+                        }
+
+                        _invitationService.SendInvitation(matchingPoll.UUID, matchingBallot, matchingPoll.Name);
+                    }
+                }
+                
+                foreach (Ballot redundantBallot in redundantBallots)
+                {
+                    foreach (Vote redundantVote in redundantBallot.Votes)
+                    {
+                        context.Votes.Remove(redundantVote);
+                    }
+
+                    //context.Ballots.Remove(redundantBallot);
+                    matchingPoll.Ballots.Remove(redundantBallot);
                 }
 
                 context.SaveChanges();

@@ -25,6 +25,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Guid _inviteOnlyPollID;
         private Poll _inviteOnlyPoll;
         private Mock<IInvitationService> _mockInvitationService;
+        private InMemoryDbSet<Vote> _dummyVotes;
+        private InMemoryDbSet<Ballot> _dummyBallots;
 
         [TestInitialize]
         public void setup()
@@ -32,17 +34,22 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _mainManageID = Guid.NewGuid();
             _inviteOnlyManageID = Guid.NewGuid();
             _inviteOnlyPollID = Guid.NewGuid();
-            _mainPoll = new Poll() { ManageId = _mainManageID, Ballots = new List<Ballot>() };
+            _mainPoll = new Poll() { ManageId = _mainManageID, Name = "Main Poll", UUID = Guid.NewGuid(), Ballots = new List<Ballot>() };
             _inviteOnlyPoll = new Poll() { ManageId = _inviteOnlyManageID, UUID = _inviteOnlyPollID, InviteOnly = true, Ballots = new List<Ballot>() };
 
             InMemoryDbSet<Poll> dummyPolls = new InMemoryDbSet<Poll>(true);
             dummyPolls.Add(_mainPoll);
             dummyPolls.Add(_inviteOnlyPoll);
 
+            _dummyVotes = new InMemoryDbSet<Vote>(true);
+            _dummyBallots = new InMemoryDbSet<Ballot>(true);
+
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
             mockContext.Setup(a => a.Polls).Returns(dummyPolls);
+            mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
+            mockContext.Setup(a => a.Ballots).Returns(_dummyBallots);
 
             _mockInvitationService = new Mock<IInvitationService>();
 
@@ -76,7 +83,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _mainPoll.Ballots.Add(mainPollBallot);
 
             // Act
-            List<ManagePollBallotRequestModel> responseBallots = _controller.Get(_mainManageID);
+            List<ManageInvitationResponseModel> responseBallots = _controller.Get(_mainManageID);
             List<Guid> expectedManageTokens = new List<Guid> { ballotToken };
             List<Guid> actualManageTokens = responseBallots.Select(b => b.ManageToken).ToList<Guid>();
             CollectionAssert.AreEquivalent(expectedManageTokens, actualManageTokens);
@@ -90,7 +97,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _mainPoll.Ballots.Add(mainPollBallot);
 
             // Act
-            List<ManagePollBallotRequestModel> responseBallots = _controller.Get(_inviteOnlyManageID);
+            List<ManageInvitationResponseModel> responseBallots = _controller.Get(_inviteOnlyManageID);
             List<Guid> expectedManageTokens = new List<Guid>();
             List<Guid> actualManageTokens = responseBallots.Select(b => b.ManageToken).ToList<Guid>();
             CollectionAssert.AreEquivalent(expectedManageTokens, actualManageTokens);
@@ -104,7 +111,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _mainPoll.Ballots.Add(mainPollBallot);
 
             // Act
-            List<ManagePollBallotRequestModel> responseBallots = _controller.Get(_mainManageID);
+            List<ManageInvitationResponseModel> responseBallots = _controller.Get(_mainManageID);
             List<Guid> expectedManageTokens = new List<Guid>();
             List<Guid> actualManageTokens = responseBallots.Select(b => b.ManageToken).ToList<Guid>();
             CollectionAssert.AreEquivalent(expectedManageTokens, actualManageTokens);
@@ -118,7 +125,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _mainPoll.Ballots.Add(mainPollBallot);
 
             // Act
-            List<ManagePollBallotRequestModel> responseBallots = _controller.Get(_mainManageID);
+            List<ManageInvitationResponseModel> responseBallots = _controller.Get(_mainManageID);
             List<Guid> expectedManageTokens = new List<Guid>();
             List<Guid> actualManageTokens = responseBallots.Select(b => b.ManageToken).ToList<Guid>();
             CollectionAssert.AreEquivalent(expectedManageTokens, actualManageTokens);
@@ -132,7 +139,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostIsAllowed()
         {
             // Act		
-            _controller.Post(_mainManageID, new List<ManagePollBallotRequestModel>());
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel>());
         }
 
         [TestMethod]
@@ -140,7 +147,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PostWithInvalidPollIdIsRejected()
         {
             // Act		
-            _controller.Post(Guid.NewGuid(), new List<ManagePollBallotRequestModel>());
+            _controller.Post(Guid.NewGuid(), new List<ManageInvitationRequestModel>());
         }
 
         [TestMethod]
@@ -153,106 +160,258 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
 
         [TestMethod]
-        public void PostDoesNotCreatesNewTokensForOpenPoll()
-        {
-            // Act		
-            _controller.Post(_mainManageID, new List<ManagePollBallotRequestModel>());
-
-            // Assert		
-            Assert.AreEqual(0, _mainPoll.Ballots.Count);
-        }
-
-        [TestMethod]
         public void PostCanHandleBallotsWithoutEmails()
         {
             // Arrange		
             Ballot nullEmailBallot = new Ballot() { Email = null, TokenGuid = Guid.Empty };
             _inviteOnlyPoll.Ballots = new List<Ballot> { nullEmailBallot };
-            var request = new ManagePollBallotRequestModel { Email = "a@b.c" };
+            var request = new ManageInvitationRequestModel { Email = "a@b.c" };
 
             // Act		
-            _controller.Post(_inviteOnlyManageID, new List<ManagePollBallotRequestModel> { request });
+            _controller.Post(_inviteOnlyManageID, new List<ManageInvitationRequestModel> { request });
 
             // Assert - No error thrown
         }
 
         [TestMethod]
-        public void PostCreatesNewTokensForInviteOnlyPoll()
+        public void PostOfPendingNewEmailIsSavedAsPendingBallot()
         {
-            // Arrange		
-            Ballot pendingInvitation = new Ballot() { Email = "a@b.c", TokenGuid = Guid.Empty };
-            _inviteOnlyPoll.Ballots = new List<Ballot> { pendingInvitation };
-            var request = new ManagePollBallotRequestModel { Email = pendingInvitation.Email };
+            // Arrange
+            var request = new ManageInvitationRequestModel { Email = "a@b.c", SendInvitation = false };
 
-            // Act		
-            _controller.Post(_inviteOnlyManageID, new List<ManagePollBallotRequestModel> { request });
-
-            // Assert		
-            Assert.AreNotEqual(Guid.Empty, pendingInvitation.TokenGuid);
-        }
-
-        [TestMethod]
-        public void PostCreatesNewBallotIfNoMatchingEmailExists()
-        {
-            // Arrange		
-            _inviteOnlyPoll.Ballots = new List<Ballot> { };
-            var request = new ManagePollBallotRequestModel { Email = "a@b.c" };
-
-            // Act		
-            _controller.Post(_inviteOnlyManageID, new List<ManagePollBallotRequestModel> { request });
-
-            // Assert		
-            List<string> expectedEmails = new List<string> { "a@b.c" };
-            List<string> actualEmails = _inviteOnlyPoll.Ballots.Select(s => s.Email).ToList<string>();
-            CollectionAssert.AreEquivalent(expectedEmails, actualEmails);
-        }
-
-        [TestMethod]
-        public void PostSendsEmailForPendingInvitation()
-        {
-            // Arrange		
-            Ballot pendingInvitation = new Ballot() { Email = "a@b.c", TokenGuid = Guid.Empty };
-            _inviteOnlyPoll.Ballots = new List<Ballot> { pendingInvitation };
-            var request = new ManagePollBallotRequestModel { Email = pendingInvitation.Email };
-
-            // Act		
-            _controller.Post(_inviteOnlyManageID, new List<ManagePollBallotRequestModel> { request });
-
-            // Assert		
-            _mockInvitationService.Verify(mis => mis.SendInvitation(_inviteOnlyPollID, pendingInvitation, _inviteOnlyPoll.Name));
-        }
-
-        [TestMethod]
-        public void PostSetsUpTokensForNewBallot()
-        {
-            // Arrange		
-            var request = new ManagePollBallotRequestModel { Email = "a@b.c" };
-
-            // Act		
-            _controller.Post(_mainManageID, new List<ManagePollBallotRequestModel> { request });
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
 
             // Assert
-            Ballot enteredBallot = _mainPoll.Ballots.First();
-            Assert.AreNotEqual(Guid.Empty, enteredBallot.TokenGuid);
-            Assert.AreNotEqual(Guid.Empty, enteredBallot.ManageGuid);
+            Ballot newBallot = _mainPoll.Ballots.FirstOrDefault();
+            Assert.IsNotNull(newBallot);
+            Assert.AreNotEqual(Guid.Empty, newBallot.ManageGuid);
+            Assert.AreEqual(Guid.Empty, newBallot.TokenGuid);
+            Assert.AreEqual("a@b.c", newBallot.Email);
         }
 
         [TestMethod]
-        public void PostDoesNotCreatesNewTokensForInvitationsWithExistingTokens()
+        public void PostOfNewEmailIsSavedAsInvitedBallot()
         {
-            // Arrange		
-            Guid existingToken = Guid.NewGuid();
-            Ballot sentInvitation = new Ballot() { Email = "d@e.f", TokenGuid = existingToken };
-            _inviteOnlyPoll.Ballots = new List<Ballot> { sentInvitation };
-            var request = new ManagePollBallotRequestModel { Email = sentInvitation.Email };
+            // Arrange
+            var request = new ManageInvitationRequestModel { Email = "a@b.c", SendInvitation = true };
 
-            // Act		
-            _controller.Post(_inviteOnlyManageID, new List<ManagePollBallotRequestModel> { request });
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
 
-            // Assert		
-            Assert.AreEqual(existingToken, sentInvitation.TokenGuid);
+            // Assert
+            Ballot newBallot = _mainPoll.Ballots.FirstOrDefault();
+            Assert.IsNotNull(newBallot);
+            Assert.AreNotEqual(Guid.Empty, newBallot.ManageGuid);
+            Assert.AreNotEqual(Guid.Empty, newBallot.TokenGuid);
+            Assert.AreEqual("a@b.c", newBallot.Email);
         }
 
+        [TestMethod]
+        public void PostOfNewEmailIsSentAnInvitation()
+        {
+            // Arrange
+            var request = new ManageInvitationRequestModel { Email = "a@b.c", SendInvitation = true };
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
+
+            // Assert
+            Ballot newBallot = _mainPoll.Ballots.FirstOrDefault();
+            _mockInvitationService.Verify(mis => mis.SendInvitation(_mainPoll.UUID, newBallot, _mainPoll.Name));
+        }
+
+        [TestMethod]
+        public void PostOfExistingPendingEmailIsLeftAsPending()
+        {
+            // Arrange
+            Guid manageToken = Guid.NewGuid();
+            Ballot pendingBallot = new Ballot() { Email = "a@b.c", ManageGuid = manageToken };
+            _dummyBallots.Add(pendingBallot);
+            _mainPoll.Ballots.Add(pendingBallot);
+            var request = new ManageInvitationRequestModel { Email = "a@b.c", SendInvitation = false, ManageToken = manageToken };
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
+
+            // Assert
+            Ballot newBallot = _mainPoll.Ballots.FirstOrDefault();
+            Assert.IsNotNull(newBallot);
+            Assert.AreEqual(manageToken, newBallot.ManageGuid);
+            Assert.AreEqual(Guid.Empty, newBallot.TokenGuid);
+            Assert.AreEqual("a@b.c", newBallot.Email);
+        }
+
+        [TestMethod]
+        public void PostOfExistingEmailIsSavedAsInvitedBallot()
+        {
+            // Arrange
+            Guid manageToken = Guid.NewGuid();
+            Ballot pendingBallot = new Ballot() { Email = "a@b.c", ManageGuid = manageToken };
+            _dummyBallots.Add(pendingBallot);
+            _mainPoll.Ballots.Add(pendingBallot);
+            var request = new ManageInvitationRequestModel { Email = "a@b.c", SendInvitation = true, ManageToken = manageToken };
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
+
+            // Assert
+            Ballot newBallot = _mainPoll.Ballots.FirstOrDefault();
+            Assert.IsNotNull(newBallot);
+            Assert.AreEqual(manageToken, newBallot.ManageGuid);
+            Assert.AreNotEqual(Guid.Empty, newBallot.TokenGuid);
+            Assert.AreEqual("a@b.c", newBallot.Email);
+        }
+
+        [TestMethod]
+        public void PostOfExistingEmailIsSentAnInvitation()
+        {
+            // Arrange
+            Guid manageToken = Guid.NewGuid();
+            Ballot pendingBallot = new Ballot() { Email = "a@b.c", ManageGuid = manageToken };
+            _dummyBallots.Add(pendingBallot);
+            _mainPoll.Ballots.Add(pendingBallot);
+            var request = new ManageInvitationRequestModel { Email = "a@b.c", SendInvitation = true, ManageToken = manageToken };
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
+
+            // Assert
+            _mockInvitationService.Verify(mis => mis.SendInvitation(_mainPoll.UUID, pendingBallot, _mainPoll.Name));
+        }
+
+        [TestMethod]
+        public void PostWithoutExistingPendingBallotDeletesTheExistingBallot()
+        {
+            // Arrange
+            Guid manageToken = Guid.NewGuid();
+            Ballot pendingBallot = new Ballot() { Email = "a@b.c", ManageGuid = manageToken };
+            _dummyBallots.Add(pendingBallot);
+            _mainPoll.Ballots.Add(pendingBallot);
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel>());
+
+            // Assert
+            CollectionAssert.AreEquivalent(new List<Ballot>(), _mainPoll.Ballots);
+        }
+
+        [TestMethod]
+        public void PostWithoutExistingPendingBallotDeletesTheVotesOfThatBallot()
+        {
+            // Arrange
+            Guid manageToken = Guid.NewGuid();
+            Vote voteToRemove = new Vote();
+            Ballot pendingBallot = new Ballot() { Email = "a@b.c", ManageGuid = manageToken, Votes = new List<Vote> { voteToRemove }};
+            _dummyBallots.Add(pendingBallot);
+            _mainPoll.Ballots.Add(pendingBallot);
+            _dummyVotes.Add(voteToRemove);
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel>());
+
+            // Assert
+            CollectionAssert.AreEquivalent(new List<Vote>(), _dummyVotes.Local);
+        }
+
+        [TestMethod]
+        public void PostOfExistingInvitedEmailIsLeftAsInvited()
+        {
+            // Arrange
+            Guid manageToken = Guid.NewGuid();
+            Guid ballotToken = Guid.NewGuid();
+            Ballot existingBallot = new Ballot() { Email = "a@b.c", ManageGuid = manageToken, TokenGuid = ballotToken };
+            _dummyBallots.Add(existingBallot);
+            _mainPoll.Ballots.Add(existingBallot);
+            var request = new ManageInvitationRequestModel { Email = "a@b.c", SendInvitation = false, ManageToken = manageToken };
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
+
+            // Assert
+            Ballot newBallot = _mainPoll.Ballots.FirstOrDefault();
+            Assert.IsNotNull(newBallot);
+            Assert.AreEqual(manageToken, newBallot.ManageGuid);
+            Assert.AreEqual(ballotToken, newBallot.TokenGuid);
+            Assert.AreEqual("a@b.c", newBallot.Email);
+        }
+
+        [TestMethod]
+        public void PostOfExistingInvitedEmailIsUntouchedByNewInvitation()
+        {
+            // Arrange
+            Guid manageToken = Guid.NewGuid();
+            Guid ballotToken = Guid.NewGuid();
+            Ballot existingBallot = new Ballot() { Email = "a@b.c", ManageGuid = manageToken, TokenGuid = ballotToken };
+            _dummyBallots.Add(existingBallot);
+            _mainPoll.Ballots.Add(existingBallot);
+            var request = new ManageInvitationRequestModel { Email = "a@b.c", SendInvitation = true, ManageToken = manageToken };
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
+
+            // Assert
+            Ballot newBallot = _mainPoll.Ballots.FirstOrDefault();
+            Assert.IsNotNull(newBallot);
+            Assert.AreEqual(manageToken, newBallot.ManageGuid);
+            Assert.AreEqual(ballotToken, newBallot.TokenGuid);
+            Assert.AreEqual("a@b.c", newBallot.Email);
+        }
+
+        [TestMethod]
+        public void PostOfExistingInvitedEmailIsReissuedAnInvitation()
+        {
+            // Arrange
+            Guid manageToken = Guid.NewGuid();
+            Guid ballotToken = Guid.NewGuid();
+            Ballot existingBallot = new Ballot() { Email = "a@b.c", ManageGuid = manageToken, TokenGuid = ballotToken };
+            _dummyBallots.Add(existingBallot);
+            _mainPoll.Ballots.Add(existingBallot);
+            var request = new ManageInvitationRequestModel { Email = "a@b.c", SendInvitation = true, ManageToken = manageToken };
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
+
+            // Assert
+            _mockInvitationService.Verify(mis => mis.SendInvitation(_mainPoll.UUID, existingBallot, _mainPoll.Name));
+        }
+
+        [TestMethod]
+        public void PostWithoutExistingInvitedBallotDeletesTheExistingBallot()
+        {
+            // Arrange
+            Guid manageToken = Guid.NewGuid();
+            Guid ballotToken = Guid.NewGuid();
+            Ballot existingBallot = new Ballot() { Email = "a@b.c", ManageGuid = manageToken, TokenGuid = ballotToken };
+            _dummyBallots.Add(existingBallot);
+            _mainPoll.Ballots.Add(existingBallot);
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel>());
+
+            // Assert
+            CollectionAssert.AreEquivalent(new List<Ballot>(), _mainPoll.Ballots);
+        }
+
+        [TestMethod]
+        public void PostWithoutExistingInvitedBallotDeletesTheVotesOfThatBallot()
+        {
+            // Arrange
+            Guid manageToken = Guid.NewGuid();
+            Guid ballotToken = Guid.NewGuid();
+            Vote voteToRemove = new Vote();
+            Ballot existingBallot = new Ballot() { Email = "a@b.c", ManageGuid = manageToken, TokenGuid = ballotToken, Votes = new List<Vote> { voteToRemove } };
+            _dummyBallots.Add(existingBallot);
+            _mainPoll.Ballots.Add(existingBallot);
+            _dummyVotes.Add(voteToRemove);
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel>());
+
+            // Assert
+            CollectionAssert.AreEquivalent(new List<Vote>(), _dummyVotes.Local);
+        }
+        
         #endregion
     }
 }

@@ -40,7 +40,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         private ManagePollRequestResponseModel CreateResponseModelFromPoll(Poll poll)
         {
-            List<ManagePollBallotRequestModel> Voters = poll
+            List<ManageInvitationResponseModel> Voters = poll
                 .Ballots
                 .Where(b => b.Votes.Any())
                 .Select(CreateManagePollRequestResponseModel)
@@ -68,9 +68,9 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             };
         }
 
-        private ManagePollBallotRequestModel CreateManagePollRequestResponseModel(Ballot ballot)
+        private ManageInvitationResponseModel CreateManagePollRequestResponseModel(Ballot ballot)
         {
-            return new ManagePollBallotRequestModel
+            return new ManageInvitationResponseModel
             {
                 Email = ballot.Email,
                 EmailSent = (ballot.TokenGuid != null && ballot.TokenGuid != Guid.Empty),
@@ -184,37 +184,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                         );
 
                     poll.PollType = (PollType)Enum.Parse(typeof(PollType), updateRequest.VotingStrategy, true);
-                }
-
-                List<Ballot> redundantTokens = poll.Ballots.Where(b => b.Email != null).ToList<Ballot>();
-
-                foreach (ManagePollBallotRequestModel voter in updateRequest.Voters)
-                {
-                    Ballot ballot = redundantTokens.Find(t => t.ManageGuid == voter.ManageToken);
-
-                    // Don't mark token as redundant if still in use
-                    if (ballot != null)
-                    {
-                        redundantTokens.Remove(ballot);
-                    }
-                    else
-                    {
-                        ballot = new Ballot { Email = voter.Email, ManageGuid = Guid.NewGuid() };
-                        poll.Ballots.Add(ballot);
-                    }
-                }
-
-                // Clean up tokens which have been removed
-                foreach (Ballot token in redundantTokens)
-                {
-                    foreach (Vote redundantVote in token.Votes.ToList())
-                    {
-                        removedVotes.Add(redundantVote);
-                        token.Votes.Remove(redundantVote);
-                    }
-
-                    context.Ballots.Remove(token);
-                    poll.Ballots.Remove(token);
                 }
 
                 poll.Options = newOptions;
