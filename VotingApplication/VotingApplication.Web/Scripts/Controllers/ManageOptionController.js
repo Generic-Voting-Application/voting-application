@@ -10,8 +10,9 @@
 
     function ManageOptionController($scope, $routeParams, $location, ManageService, RoutingService, ngDialog) {
 
+        var manageId = $routeParams.manageId;
+
         $scope.poll = ManageService.poll;
-        $scope.manageId = $routeParams.manageId;
         $scope.updatePoll = updatePollDetails;
         $scope.return = navigateToManagePage;
         $scope.remove = removePollOption;
@@ -27,7 +28,7 @@
         }
 
         function navigateToManagePage() {
-            RoutingService.navigateToManagePage($scope.manageId);
+            RoutingService.navigateToManagePage(manageId);
         }
 
         function removePollOption(option) {
@@ -52,8 +53,8 @@
         }
 
         function updatePollDetails() {
-            ManageService.updatePoll($routeParams.manageId, $scope.poll, function () {
-                ManageService.getPoll($scope.manageId);
+            ManageService.updatePoll(manageId, $scope.poll, function () {
+                ManageService.getPoll(manageId);
                 navigateToManagePage();
             });
         }
