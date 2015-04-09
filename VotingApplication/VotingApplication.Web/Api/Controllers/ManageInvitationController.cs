@@ -51,7 +51,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
-                return matchingPoll.Ballots.Select(b => BallotToModel(b)).ToList<ManagePollBallotRequestModel>();
+                return matchingPoll.Ballots
+                    .Where(b => !String.IsNullOrWhiteSpace(b.Email))
+                    .Select(b => BallotToModel(b))
+                    .ToList<ManagePollBallotRequestModel>();
             }
         }
 

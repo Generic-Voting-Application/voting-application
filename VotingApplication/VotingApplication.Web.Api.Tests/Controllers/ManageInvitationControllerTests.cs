@@ -72,12 +72,54 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetReturnsAllBallotsForMatchingPoll()
         {
             Guid ballotToken = Guid.NewGuid();
-            Ballot mainPollBallot = new Ballot() { ManageGuid = ballotToken };
+            Ballot mainPollBallot = new Ballot() { ManageGuid = ballotToken, Email = "a@b.c" };
             _mainPoll.Ballots.Add(mainPollBallot);
 
             // Act
             List<ManagePollBallotRequestModel> responseBallots = _controller.Get(_mainManageID);
             List<Guid> expectedManageTokens = new List<Guid> { ballotToken };
+            List<Guid> actualManageTokens = responseBallots.Select(b => b.ManageToken).ToList<Guid>();
+            CollectionAssert.AreEquivalent(expectedManageTokens, actualManageTokens);
+        }
+
+        [TestMethod]
+        public void GetIgnoresBallotsFromOtherPolls()
+        {
+            Guid ballotToken = Guid.NewGuid();
+            Ballot mainPollBallot = new Ballot() { ManageGuid = ballotToken, Email = "a@b.c" };
+            _mainPoll.Ballots.Add(mainPollBallot);
+
+            // Act
+            List<ManagePollBallotRequestModel> responseBallots = _controller.Get(_inviteOnlyManageID);
+            List<Guid> expectedManageTokens = new List<Guid>();
+            List<Guid> actualManageTokens = responseBallots.Select(b => b.ManageToken).ToList<Guid>();
+            CollectionAssert.AreEquivalent(expectedManageTokens, actualManageTokens);
+        }
+
+        [TestMethod]
+        public void GetIgnoresBallotsWithoutEmails()
+        {
+            Guid ballotToken = Guid.NewGuid();
+            Ballot mainPollBallot = new Ballot() { ManageGuid = ballotToken, Email = null };
+            _mainPoll.Ballots.Add(mainPollBallot);
+
+            // Act
+            List<ManagePollBallotRequestModel> responseBallots = _controller.Get(_mainManageID);
+            List<Guid> expectedManageTokens = new List<Guid>();
+            List<Guid> actualManageTokens = responseBallots.Select(b => b.ManageToken).ToList<Guid>();
+            CollectionAssert.AreEquivalent(expectedManageTokens, actualManageTokens);
+        }
+
+        [TestMethod]
+        public void GetIgnoresBallotsWithEmptyEmails()
+        {
+            Guid ballotToken = Guid.NewGuid();
+            Ballot mainPollBallot = new Ballot() { ManageGuid = ballotToken, Email = null };
+            _mainPoll.Ballots.Add(mainPollBallot);
+
+            // Act
+            List<ManagePollBallotRequestModel> responseBallots = _controller.Get(_mainManageID);
+            List<Guid> expectedManageTokens = new List<Guid>();
             List<Guid> actualManageTokens = responseBallots.Select(b => b.ManageToken).ToList<Guid>();
             CollectionAssert.AreEquivalent(expectedManageTokens, actualManageTokens);
         }
