@@ -234,7 +234,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Controllers\AccountController.cs" />
-    <Compile Include="Api\Controllers\ApiControllerExtensions.cs" />
     <Compile Include="Api\Controllers\DashboardController.cs" />
     <Compile Include="Api\Controllers\ManageController.cs" />
     <Compile Include="Api\Controllers\ManageInvitationController.cs" />

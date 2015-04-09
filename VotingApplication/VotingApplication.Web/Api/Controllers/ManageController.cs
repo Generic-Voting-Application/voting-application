@@ -7,7 +7,6 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
-using VotingApplication.Web.Api.Services;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -32,7 +31,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (poll == null)
                 {
-                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll for manage id {0} not found", manageId));
+                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll for manage id {0} not found", manageId));
                 }
 
                 return CreateResponseModelFromPoll(poll);
@@ -82,7 +81,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             if (updateRequest == null)
             {
-                this.ThrowError(HttpStatusCode.BadRequest);
+                ThrowError(HttpStatusCode.BadRequest);
             }
 
             if (updateRequest.ExpiryDate.HasValue && updateRequest.ExpiryDate < DateTime.Now)
@@ -103,7 +102,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             if (!ModelState.IsValid)
             {
-                this.ThrowError(HttpStatusCode.BadRequest, ModelState);
+                ThrowError(HttpStatusCode.BadRequest, ModelState);
             }
 
             #endregion
@@ -119,7 +118,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (poll == null)
                 {
-                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll for manage id {0} not found", manageId));
+                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll for manage id {0} not found", manageId));
                 }
 
                 poll.NamedVoting = updateRequest.NamedVoting;
