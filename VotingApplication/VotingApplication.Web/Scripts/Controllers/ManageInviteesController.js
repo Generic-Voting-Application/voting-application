@@ -162,9 +162,13 @@
         }
 
         function activate() {
-            ManageService.getInvitations($scope.manageId, function (data) {
-                $scope.poll.Voters = data;
-                filterUsersByPending();
+            ManageService.registerPollObserver(function () {
+                $scope.poll = ManageService.poll;
+
+                ManageService.getInvitations($scope.manageId, function (data) {
+                    $scope.poll.Voters = data;
+                    filterUsersByPending();
+                });
             });
 
             filterUsersByPending();
