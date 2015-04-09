@@ -8,6 +8,7 @@ namespace VotingApplication.Data.Model
         public Poll()
         {
             Ballots = new List<Ballot>();
+            Options = new List<Option>();
         }
 
         public long Id { get; set; }
