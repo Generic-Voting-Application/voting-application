@@ -119,6 +119,23 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             CollectionAssert.AreEqual(new string[] { "Burger King", "Pizza Hut" }, response.Options.Select(r => r.Name).ToArray());
         }
 
+        [TestMethod]
+        public void GetWithInviteesReturnsCountOfInvitees()
+        {
+            // Arrange
+            Ballot emailBallot = new Ballot() { Email = "a@b.c" };
+            Ballot nullBallot = new Ballot() { Email = null };
+            Ballot emptyBallot = new Ballot() { Email = "" };
+
+            _mainPoll.Ballots = new List<Ballot> { emailBallot, nullBallot, emptyBallot };
+
+            // Act
+            var response = _controller.Get(_manageMainUUID);
+
+            // Assert
+            Assert.AreEqual(1, response.InviteeCount);
+        }
+        
         #endregion
 
         #region PUT

@@ -46,11 +46,17 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 .Select(CreateManagePollRequestResponseModel)
                 .ToList();
 
+            List<Ballot> Invitees = poll
+                .Ballots
+                .Where(b => !String.IsNullOrWhiteSpace(b.Email))
+                .ToList<Ballot>();
+
             return new ManagePollRequestResponseModel
             {
                 UUID = poll.UUID,
                 Options = poll.Options,
                 Voters = Voters,
+                InviteeCount = Invitees.Count,
                 VotingStrategy = poll.PollType.ToString(),
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,
