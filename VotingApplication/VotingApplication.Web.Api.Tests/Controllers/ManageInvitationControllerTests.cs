@@ -223,6 +223,21 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         [TestMethod]
+        public void PostSetsUpTokensForNewBallot()
+        {
+            // Arrange		
+            var request = new ManagePollBallotRequestModel { Email = "a@b.c" };
+
+            // Act		
+            _controller.Post(_mainManageID, new List<ManagePollBallotRequestModel> { request });
+
+            // Assert
+            Ballot enteredBallot = _mainPoll.Ballots.First();
+            Assert.AreNotEqual(Guid.Empty, enteredBallot.TokenGuid);
+            Assert.AreNotEqual(Guid.Empty, enteredBallot.ManageGuid);
+        }
+
+        [TestMethod]
         public void PostDoesNotCreatesNewTokensForInvitationsWithExistingTokens()
         {
             // Arrange		
