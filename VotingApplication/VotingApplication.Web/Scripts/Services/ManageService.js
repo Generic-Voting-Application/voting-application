@@ -88,6 +88,24 @@
             });
         };
 
+        self.updatePollType = function (manageId, pollTypeConfig, callback, failureCallback) {
+            $http({
+                method: 'PUT',
+                url: '/api/manage/' + manageId + '/pollType/',
+                data: pollTypeConfig
+            })
+            .success(function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            })
+            .error(function (data, status) {
+                if (failureCallback) {
+                    failureCallback(data, status);
+                }
+            });
+        };
+
         self.getVotes = function (pollId, callback, failureCallback) {
 
             $http.get('/api/poll/' + pollId + '/vote')
