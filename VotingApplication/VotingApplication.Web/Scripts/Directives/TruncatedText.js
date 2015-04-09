@@ -55,7 +55,7 @@
             link: link,
             template: '<span ng-if="!truncated">{{fullText}}</span>' +
                       '<span ng-if="truncated">{{truncatedText}}</span>' +
-                      '<span ng-show="truncated">... <a style="cursor:pointer" ng-click="truncated=false">Show More</a></span>'
+                      '<span ng-show="truncated">... <a style="cursor:pointer" ng-click="truncated=false;$event.stopPropagation();">Show More</a></span>'
         };
     }
 })();

@@ -42,18 +42,22 @@ body {
 
 .option-block {
     flex-direction: column;
-    min-height: 80px;
+    min-height: 50px;
     border-radius: 5px;
     padding: 5px;
 
     &:last-of-type {
         margin-bottom: 5px;
     }
+
+    .option-block .option-block-row {
+        flex-direction: row;
+        margin-bottom: 5px;
+    }
 }
 
-.option-block .option-block-row {
-    flex-direction: row;
-    margin-bottom: 15px;
+.option-area {
+    margin-bottom: 10px;
 }
 
 .selected-option {

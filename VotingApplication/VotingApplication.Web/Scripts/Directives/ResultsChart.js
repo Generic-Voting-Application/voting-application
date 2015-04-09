@@ -46,8 +46,8 @@
 
                 var data = $scope.data.sort(function (a, b) { return b.Sum - a.Sum; });
 
-                var chartHeight = Math.min(data.length * 60, 600);
-                var chartWidth = Math.min(600, chartElement.offsetWidth);
+                var chartHeight = Math.min(data.length * 60 + 30, 600);
+                var chartWidth = chartElement.parentElement.parentElement.offsetWidth;
 
                 var longestTextWidth = d3.max(data, function (d) { return textWidth(d.Name); });
 
