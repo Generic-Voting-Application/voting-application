@@ -20,14 +20,16 @@
                     <i ng-show="account" class="glyphicon glyphicon-chevron-down" ng-click="toggleAccountControls=!toggleAccountControls"></i>
                 </span>
                 <div class="pull-right account-control-box" ng-show="toggleAccountControls && account">
-                    <div><a href="javascript:;">My Account</a></div>
+                    <div><a href="/">My Account</a></div>
                     <div><a href="javascript:;" ng-click="toggleAccountControls=false;signOut()">Sign Out</a></div>
                 </div>
             </div>
         </header>
+
         <div class="body-content">
             <div ng-view></div>
         </div>
+        <div error-bar></div>
         <footer><a href="mailto:generic.voting@gmail.com">Email Us</a> | © 2015 – Scott Logic Ltd</footer>
     </div>
     @Scripts.Render("~/Bundles/ScriptLib")

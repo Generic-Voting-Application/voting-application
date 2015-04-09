@@ -2,6 +2,8 @@
 /// <reference path="../Services/PollService.js" />
 /// <reference path="../Services/VoteService.js" />
 (function () {
+    'use strict';
+
     angular
         .module('GVA.Voting')
         .controller('ResultsPageController', ResultsPageController);
@@ -12,7 +14,7 @@
 
         var pollId = $routeParams.pollId;
         var tokenId = $routeParams['tokenId'] || '';
-        var pollExpiryDate = null;
+        var reloadInterval = null;
 
         $scope.votingLink = RoutingService.getVotePageUrl(pollId, tokenId);
         $scope.winner = 'Lorem';
@@ -31,10 +33,16 @@
         }
 
         function reloadData (){
-            VoteService.getResults(pollId, getResultsSuccessCallback);
+            VoteService.getResults(pollId, getResultsSuccessCallback, getResultsFailureCallback);
         }
 
-        function getResultsSuccessCallback(data, status) {
+        function getResultsFailureCallback(data, status) {
+            if (status >= 400 && reloadInterval) {
+                clearInterval(reloadInterval);
+            }
+        }
+
+        function getResultsSuccessCallback(data) {
 
             if (data) {
                 $scope.voteCount = data.length;
@@ -92,7 +100,7 @@
 
             VoteService.refreshLastChecked(pollId);
             reloadData();
-            setInterval(reloadData, 3000);
+            reloadInterval = setInterval(reloadData, 3000);
         }
 
     }

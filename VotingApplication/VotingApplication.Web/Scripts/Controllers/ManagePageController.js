@@ -2,6 +2,8 @@
 /// <reference path="../Services/ManageService.js" />
 /// <reference path="../Services/RoutingService.js" />
 (function () {
+    'use strict';
+
     angular
         .module('GVA.Creation')
         .controller('ManagePageController', ManagePageController);
@@ -13,7 +15,7 @@
         var manageId = $routeParams.manageId;
 
         $scope.poll = {};
-        $scope.voters = [];
+        $scope.invitees = [];
         $scope.manageId = manageId;
         $scope.updatePoll = updatePollDetails;
         $scope.discardNameChanges = discardNameChanges;
@@ -21,6 +23,7 @@
         $scope.selectText = selectTargetText;
         $scope.dateFilter = dateFilter;
         $scope.pollUrl = pollUrl;
+        $scope.fullPollUrl = fullPollUrl;
         $scope.manageSubPageUrl = manageSubPageUrl;
         $scope.visited = false;
 
@@ -35,6 +38,9 @@
         function activate() {
             ManageService.getPoll(manageId, function (data) {
                 $scope.poll = data;
+                $scope.invitees = data.Voters.filter(function (voter) {
+                    return voter.Email !== null;
+                });
             });
             $scope.visited = ManageService.getVisited(manageId);
             if (!$scope.visited) {
@@ -68,6 +74,10 @@
 
         function pollUrl() {
             return RoutingService.getVotePageUrl($scope.poll.UUID);
+        }
+
+        function fullPollUrl() {
+            return location.protocol + '//' + location.host + pollUrl();
         }
 
         function manageSubPageUrl(subPage) {

@@ -1,6 +1,7 @@
 ﻿@import url(https://fonts.googleapis.com/css?family=Roboto:700);
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
 @import url(../Lib/Css/bootstrap-glyphicons.css);
+@import url(../Lib/Css/font-awesome-min.css);
 
 $Grey400: #BDBDBD;
 $Grey600: #757575;
@@ -35,7 +36,7 @@ header {
     min-width: 320px;
     padding: 0px 10px;
     position: relative;
-    width: 30%;
+    width: 50%;
 }
 
 header {
@@ -195,8 +196,8 @@ hr {
     background-color: $Grey400;
     border-style: none;
     height: 1px;
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .pull-left {
@@ -268,6 +269,7 @@ hr {
 
 .ngdialog-content {
     padding: 0px !important;
+    width: 320px !important;
 }
 
 .dialog-content {

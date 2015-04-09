@@ -157,7 +157,7 @@
           <string>eqnull</string>
         </key>
         <value>
-          <boolean>true</boolean>
+          <boolean>false</boolean>
         </value>
       </item>
       <item>
@@ -229,7 +229,7 @@
           <string>funcscope</string>
         </key>
         <value>
-          <boolean>false</boolean>
+          <boolean>true</boolean>
         </value>
       </item>
       <item>
@@ -357,7 +357,7 @@
           <string>noempty</string>
         </key>
         <value>
-          <boolean>false</boolean>
+          <boolean>true</boolean>
         </value>
       </item>
       <item>
@@ -557,7 +557,7 @@
           <string>strict</string>
         </key>
         <value>
-          <boolean>false</boolean>
+          <boolean>true</boolean>
         </value>
       </item>
       <item>
@@ -597,7 +597,7 @@
           <string>unused</string>
         </key>
         <value>
-          <boolean>false</boolean>
+          <boolean>true</boolean>
         </value>
       </item>
       <item>
@@ -700,8 +700,22 @@
     <FindTodos>false</FindTodos>
     <PreDefined>
       <string>angular</string>
+	  <string>$q</string>
       <string>d3</string>
       <string>moment</string>
+	  <!-- Jasmine -->
+	  <string>jasmine</string>
+	  <string>describe</string>
+	  <string>it</string>
+	  <string>expect</string>
+	  <string>before</string>
+	  <string>beforeEach</string>
+	  <string>after</string>
+	  <string>afterEach</string>
+	  <string>spyOn</string>
+	  <string>xit</string>
+	  <!-- angular-mocks -->
+	  <string>inject</string>
     </PreDefined>
   </JSLintOptions>
   <BuildFileTypes>JS</BuildFileTypes>

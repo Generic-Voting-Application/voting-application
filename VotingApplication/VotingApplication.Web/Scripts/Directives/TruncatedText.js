@@ -1,11 +1,13 @@
 ﻿(function () {
+    'use strict';
+
     angular
         .module('GVA.Common')
         .directive('truncatedText', truncatedText);
 
     truncatedText.$inject = ['$parse'];
 
-    function truncatedText($parse) {
+    function truncatedText() {
 
         function truncateText(text, limit) {
 
@@ -22,7 +24,7 @@
             return truncatedtext;
         }
 
-        function link(scope, element, attrs) {
+        function link(scope) {
 
             activate();
 
@@ -53,7 +55,7 @@
             link: link,
             template: '<span ng-if="!truncated">{{fullText}}</span>' +
                       '<span ng-if="truncated">{{truncatedText}}</span>' +
-                      '<span ng-show="truncated">... <a style="cursor:pointer" ng-click="truncated=false">Show More</a></span>'
+                      '<span ng-show="truncated">... <a style="cursor:pointer" ng-click="truncated=false;$event.stopPropagation();">Show More</a></span>'
         };
     }
 })();

@@ -1,13 +1,15 @@
 ﻿/// <reference path="../Services/AccountService.js" />
 /// <reference path="../Services/ErrorService.js" />
 (function () {
+    'use strict';
+
     angular
         .module('GVA.Common')
         .controller('AccountLoginController', AccountLoginController);
 
-    AccountLoginController.$inject = ['$scope', 'AccountService', 'ErrorService'];
+    AccountLoginController.$inject = ['$scope', '$rootScope', 'AccountService'];
 
-    function AccountLoginController($scope, AccountService, ErrorService) {
+    function AccountLoginController($scope, $rootScope, AccountService) {
 
         $scope.loginAccount = loginAccount;
         $scope.forgottenPassword = forgottenPassword;
@@ -32,14 +34,14 @@
                 return;
             }
 
-            AccountService.forgotPassword(form.email).success(function (data) {
+            AccountService.forgotPassword(form.email).success(function () {
                 $scope.closeThisDialog();
 
                 if ($scope.ngDialogData.callback) {
                     $scope.ngDialogData.callback();
                 }
             })
-            .error(function (data, status) {
+            .error(function (data) {
                 displayError(data.Message || data.error_description);
             });
         }
@@ -53,14 +55,9 @@
             }
         }
 
-        function loginFailureCallback(form, data, status) {
-            // Bad request
-            if (status === 400 && data.ModelState) {
-                ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
-            }
-            else {
-                displayError(data.Message || data.error_description);
-            }
+        function loginFailureCallback() {
+            $scope.displayError = $rootScope.error.readableMessage;
+            $rootScope.error = null;
         }
 
         function displayError(errorMessage) {

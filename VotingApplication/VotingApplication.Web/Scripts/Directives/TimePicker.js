@@ -1,4 +1,6 @@
 ﻿(function () {
+    'use strict';
+
     angular
         .module('GVA.Creation')
         .directive('timePicker', timePicker);
@@ -8,7 +10,7 @@
         var modelDirty = false;
         var time = moment();
 
-        function link(scope, element, attrs) {
+        function link(scope) {
 
             scope.formatTime = formatTime;
 

@@ -21,7 +21,7 @@
                             <span class="pull-right"><a class="clickable" ng-click="$parent.toggleNameEdit=true">Edit</a></span>
                         </span>
                         <span ng-if="toggleNameEdit">
-                            <input class="manage-name-input" ng-model="poll.Name" required />
+                            <input class="wide-input" ng-model="poll.Name" required />
                             <span class="glyphicon glyphicon-remove pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.discardNameChanges()"></span>
                             <span class="glyphicon glyphicon-ok pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.updatePoll()"></span>
                         </span>
@@ -45,7 +45,7 @@
                 <h4 class="icon-padded-left">Invitees:</h4>
             </div>
             <div>
-                <span class="icon-padded-left">{{poll.Voters.length}} Invitees</span>
+                <span class="icon-padded-left">{{invitees.length}} Invitees</span>
                 <span class="pull-right"><a href="{{manageSubPageUrl('Invitees')}}">Edit</a></span>
             </div>
         </div>
@@ -82,6 +82,29 @@
                     <span class="icon-padded-left">{{formatPollExpiry()}}</span>
                     <span class="pull-right"><a href="{{manageSubPageUrl('Expiry')}}">Edit</a></span>
                 </span>
+            </div>
+        </div>
+        <div class="manage-section">
+            <div>
+                <span class="glyphicon glyphicon-tasks pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Voters:</h4>
+            </div>
+            <div>
+                <span class="icon-padded-left">{{ poll.Voters.length }} Voters</span>
+                <span class="pull-right"><a href="{{ manageSubPageUrl('Voters') }}">Edit</a></span>
+            </div>
+        </div>
+        <div class="manage-section" ng-show="!poll.InviteOnly">
+            <div>
+                <span class="glyphicon glyphicon-link pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Share:</h4>
+            </div>
+            <div>
+                <div class="icon-padded-left">
+                    <a href="mailto:&amp;body={{fullPollUrl()}}"><i class="fa fa-envelope-square fa-lg"></i></a>
+                    <i class="fa fa-facebook-square fa-lg"></i>
+                    <i class="fa fa-google-plus-square fa-lg"></i>
+                </div>
             </div>
         </div>
         <div class="manage-section flexbox">

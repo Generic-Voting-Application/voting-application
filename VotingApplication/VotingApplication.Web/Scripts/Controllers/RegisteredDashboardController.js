@@ -1,18 +1,20 @@
 ﻿/// <reference path="../Services/AccountService.js" />
 /// <reference path="../Services/PollService.js" />
 (function () {
+    'use strict';
+
     angular
         .module('GVA.Creation')
         .controller('RegisteredDashboardController', RegisteredDashboardController);
 
-    RegisteredDashboardController.$inject = ['$scope', 'AccountService', 'PollService', 'RoutingService'];
+    RegisteredDashboardController.$inject = ['$scope', 'AccountService', 'PollService', 'RoutingService', 'TokenService'];
 
-    function RegisteredDashboardController($scope, AccountService, PollService, RoutingService) {
+    function RegisteredDashboardController($scope, AccountService, PollService, RoutingService, TokenService) {
 
         $scope.account = AccountService.account;
         $scope.createPoll = createNewPoll;
         $scope.getUserPolls = getUserPolls;
-        $scope.navigateToManagePage = navigateToManagePage;
+        $scope.manageUrl = manageUrl;
         $scope.copyPoll = copyPoll;
 
         $scope.userPolls = {};
@@ -34,6 +36,7 @@
         }
 
         function createPollSuccessCallback(data) {
+            TokenService.setToken(data.UUID, data.CreatorBallot.TokenGuid);
             navigateToManagePage(data.ManageId);
         }
 
@@ -45,7 +48,11 @@
         }
 
         function navigateToManagePage(manageId) {
-            RoutingService.navigateToManagePage(manageId);
+            return RoutingService.navigateToManagePage(manageId);
+        }
+
+        function manageUrl(manageId) {
+            return RoutingService.getManagePageUrl(manageId);
         }
 
         function copyPoll(pollId) {

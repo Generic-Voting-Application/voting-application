@@ -1,12 +1,14 @@
 ﻿(function () {
+    'use strict';
+
     angular
         .module('GVA.Creation')
         .factory('ManageService', ManageService);
 
 
-    ManageService.$inject = ['$location', '$http', '$routeParams', '$localStorage'];
+    ManageService.$inject = ['$location', '$http', '$routeParams', '$localStorage', '$q'];
 
-    function ManageService($location, $http, $routeParams, $localStorage) {
+    function ManageService($location, $http, $routeParams, $localStorage, $q) {
         var self = this;
 
         var observerCallbacks = [];
@@ -21,7 +23,7 @@
 
         self.registerPollObserver = function (callback) {
 
-            if (self.poll == null) {
+            if (self.poll === null) {
                 self.getPoll($routeParams.manageId);
             }
 
@@ -85,10 +87,50 @@
         };
 
         self.getVoters = function (manageId) {
-            var request = $http.get('/api/manage/' + manageId + '/vote');
+            var deferred = $q.defer();
 
-            return request;
+            $http
+                .get('/api/manage/' + manageId + '/voters')
+                .success(function (data) { deferred.resolve(data); });
+
+            return deferred.promise;
         };
+
+        self.deleteVoters = function (manageId, votersToRemove) {
+            var deferred = $q.defer();
+
+            $http
+                .delete('/api/manage/' + manageId + '/voters',
+                   {
+                       headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                       data: { BallotDeleteRequests: createDeleteRequest(votersToRemove) }
+                   })
+                .success(function (data) { deferred.resolve(data); });
+
+            return deferred.promise;
+        };
+
+        function createDeleteRequest(votersToRemove) {
+
+            var deleteRequests = [];
+
+            votersToRemove.forEach(function (item) {
+
+                var deleteBallotRequest = {
+                    BallotManageGuid: item.BallotManageGuid,
+                    VoteDeleteRequests: []
+                };
+
+                item.Votes.forEach(function (vote) {
+                    deleteBallotRequest.VoteDeleteRequests.push({ OptionNumber: vote.OptionNumber });
+
+                });
+
+                deleteRequests.push(deleteBallotRequest);
+            });
+
+            return deleteRequests;
+        }
 
         self.setVisited = function (manageId) {
             $localStorage[manageId] = { visited: true };
@@ -101,9 +143,12 @@
             return $localStorage[manageId].visited;
         };
 
-        self.sendInvitations = function (manageId, callback, failureCallback) {
-            $http.post('/api/manage/' + manageId + '/invitation')
-                .success(function (data) {
+        self.sendInvitations = function (manageId, invitees, callback, failureCallback) {
+            $http({
+                method: 'POST',
+                url: '/api/manage/' + manageId + '/invitation',
+                data: invitees
+            }).success(function (data) {
                     if (callback) {
                         callback(data);
                     }

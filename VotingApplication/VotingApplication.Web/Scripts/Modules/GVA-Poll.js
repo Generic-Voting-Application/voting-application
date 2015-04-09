@@ -1,4 +1,6 @@
 ﻿(function () {
+    'use strict';
+
     angular
-        .module('GVA.Poll', []);
+        .module('GVA.Poll', ['GVA.Common']);
 })();

@@ -234,9 +234,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Controllers\AccountController.cs" />
-    <Compile Include="Api\Controllers\ApiControllerExtensions.cs" />
     <Compile Include="Api\Controllers\DashboardController.cs" />
     <Compile Include="Api\Controllers\ManageController.cs" />
+    <Compile Include="Api\Controllers\ManageInvitationController.cs" />
     <Compile Include="Api\Controllers\ManageVoterController.cs" />
     <Compile Include="Api\Controllers\PollController.cs" />
     <Compile Include="Api\Controllers\PollOptionController.cs" />
@@ -265,7 +265,7 @@
     <Compile Include="Api\Models\DBViewModels\PollCreationRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\PollCreationResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\PollRequestResponseModel.cs" />
-    <Compile Include="Api\Models\DBViewModels\TokenRequestModel.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManagePollBallotRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\VoteRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\VoteRequestResponseModel.cs" />
     <Compile Include="Api\Models\IdentityModels.cs" />
@@ -325,14 +325,19 @@
     <EmbeddedResource Include="Api\Resources\EmailTemplate.html" />
     <Content Include="Content\Lib\Css\angular-toggle-switch.css" />
     <Content Include="Content\Lib\Css\bootstrap-glyphicons.css" />
+    <Content Include="Content\Lib\Css\font-awesome-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-theme-default-min.css" />
+    <Content Include="Content\Scss\ErrorBar.scss" />
     <Content Include="Content\Scss\Site.scss" />
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
+    <Content Include="Fonts\fontawesome-webfont.svg" />
     <Content Include="Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\Logo.png" />
+    <Content Include="Scripts\Controllers\EditOptionDialogController.js" />
+    <Content Include="Scripts\Controllers\AddOptionDialogController.js" />
     <Content Include="Scripts\Controllers\ManageVotersController.js" />
     <Content Include="Scripts\Controllers\PollTypeChangeController.js" />
     <Content Include="Scripts\Controllers\AccountRegisterController.js" />
@@ -355,14 +360,15 @@
     <Content Include="Scripts\Controllers\UnregisteredDashboardController.js" />
     <Content Include="Scripts\Controllers\UpDownVoteController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
+    <Content Include="Scripts\Directives\ErrorBar.js" />
     <Content Include="Scripts\Directives\ResultsChart.html" />
     <Content Include="Scripts\Directives\ResultsChart.js" />
     <Content Include="Scripts\Directives\TimePicker.js" />
     <Content Include="Scripts\Directives\DatePicker.js" />
     <Content Include="Scripts\Directives\PollHeading.js" />
     <Content Include="Scripts\Directives\TruncatedText.js" />
-    <Content Include="Scripts\Directives\UnlockableOption.js" />
     <Content Include="Scripts\Filters\dateFilters.js" />
+    <Content Include="Scripts\Interceptors\ErrorInterceptor.js" />
     <Content Include="Scripts\Lib\d3-tip-min.js" />
     <Content Include="Scripts\Lib\moment-min.js" />
     <Content Include="Scripts\Modules\GVA-Common.js" />
@@ -406,9 +412,15 @@
     <Content Include="Views\Routes\TimePicker.cshtml" />
     <Content Include="Views\Routes\ManageVoters.cshtml" />
     <Content Include="Content\Scss\ResultsChart.scss" />
+    <Content Include="Fonts\fontawesome-webfont.eot" />
+    <Content Include="Fonts\fontawesome-webfont.ttf" />
+    <Content Include="Fonts\fontawesome-webfont.woff" />
+    <Content Include="Fonts\FontAwesome.otf" />
+    <Content Include="Views\Routes\ErrorBar.cshtml" />
+    <Content Include="Views\Routes\AddOptionDialog.cshtml" />
+    <Content Include="Views\Routes\EditOptionDialog.cshtml" />
     <None Include="Views\Routes\PollHeading.cshtml" />
     <Content Include="Views\Routes\PollTypeChange.cshtml" />
-    <Content Include="Scripts\Directives\UnlockableOption.html" />
     <Content Include="Scripts\Directives\PollHeading.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

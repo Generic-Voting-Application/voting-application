@@ -1,5 +1,7 @@
 ﻿/// <reference path="AccountService.js" />
 (function () {
+    'use strict';
+
     angular
         .module('GVA.Poll')
         .factory('PollService', PollService);
@@ -43,7 +45,6 @@
         }
 
         function getUserPolls() {
-
 
             var promise = $http({
                 method: 'GET',
