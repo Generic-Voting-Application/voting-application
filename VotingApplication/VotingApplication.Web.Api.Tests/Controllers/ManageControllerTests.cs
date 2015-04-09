@@ -281,9 +281,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithEmptyTokenListClearsObsoleteTokens()
         {
             // Arrange
-            Ballot existingBallot = new Ballot() { Email = "a@b.c", TokenGuid = Guid.NewGuid(), Id = 1 };
-            Ballot obsoleteBallot = new Ballot() { Email = "d@e.f", TokenGuid = Guid.NewGuid(), Id = 2 };
-            ManagePollBallotRequestModel existingTokenRequest = new ManagePollBallotRequestModel { Email = existingBallot.Email };
+            Guid existingBallotToken = Guid.NewGuid();
+            Ballot existingBallot = new Ballot() { Email = "a@b.c", TokenGuid = Guid.NewGuid(), Id = 1, ManageGuid = existingBallotToken };
+            Ballot obsoleteBallot = new Ballot() { Email = "d@e.f", TokenGuid = Guid.NewGuid(), Id = 2, ManageGuid = Guid.NewGuid() };
+            ManagePollBallotRequestModel existingTokenRequest = new ManagePollBallotRequestModel { Email = existingBallot.Email, ManageToken = existingBallotToken };
             ManagePollBallotRequestModel newTokenRequest = new ManagePollBallotRequestModel { Email = "g@h.i" };
 
             _mainPoll.Ballots = new List<Ballot>() { existingBallot, obsoleteBallot };
@@ -308,14 +309,15 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutDoesNotClearOutExistingBallots()
         {
             // Arrange
-            Ballot existingBallot = new Ballot() { Email = "a@b.c", VoterName = "123", TokenGuid = Guid.NewGuid() };
-            ManagePollBallotRequestModel existingTokenRequest = new ManagePollBallotRequestModel { Email = "a@b.c", Name = "123", EmailSent = true };
+            Guid existingBallotToken = Guid.NewGuid();
+            Ballot existingBallot = new Ballot() { Email = "a@b.c", VoterName = "123", TokenGuid = Guid.NewGuid(), ManageGuid = existingBallotToken };
+            ManagePollBallotRequestModel existingTokenRequest = new ManagePollBallotRequestModel { Email = "a@b.c", ManageToken = existingBallotToken, EmailSent = true };
 
             _mainPoll.Ballots = new List<Ballot>() { existingBallot };
 
             ManagePollUpdateRequest request = new ManagePollUpdateRequest
             {
-                Name = existingTokenRequest.Name + "abc",
+                Name = "abc",
                 VotingStrategy = PollType.Basic.ToString(),
                 Voters = new List<ManagePollBallotRequestModel>() { existingTokenRequest }
             };

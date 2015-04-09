@@ -129,7 +129,7 @@
 
             ManageService.updatePoll($routeParams.manageId, $scope.poll, function () {
                 ManageService.getPoll($scope.manageId);
-                returnToManage();
+            returnToManage();
             });
         }
 
@@ -162,8 +162,8 @@
         }
 
         function activate() {
-            ManageService.registerPollObserver(function () {
-                $scope.poll = ManageService.poll;
+            ManageService.getInvitations($scope.manageId, function (data) {
+                $scope.poll.Voters = data;
                 filterUsersByPending();
             });
 

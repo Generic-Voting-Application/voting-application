@@ -25,6 +25,38 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             _invitationService = invitationService;
         }
 
+        private ManagePollBallotRequestModel BallotToModel(Ballot ballot)
+        {
+            return new ManagePollBallotRequestModel
+            {
+                Email = ballot.Email,
+                EmailSent = (ballot.TokenGuid != null && ballot.TokenGuid != Guid.Empty),
+                ManageToken = ballot.ManageGuid
+            };
+        }
+
+        #region GET
+
+        public List<ManagePollBallotRequestModel> Get(Guid manageId)
+        {
+            using (var context = _contextFactory.CreateContext())
+            {
+                Poll matchingPoll = context.Polls
+                                            .Where(p => p.ManageId == manageId)
+                                            .Include(p => p.Ballots)
+                                            .FirstOrDefault();
+
+                if (matchingPoll == null)
+                {
+                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
+                }
+
+                return matchingPoll.Ballots.Select(b => BallotToModel(b)).ToList<ManagePollBallotRequestModel>();
+            }
+        }
+
+        #endregion
+
         #region POST
 
         public void Post(Guid manageId, List<ManagePollBallotRequestModel> invitees)

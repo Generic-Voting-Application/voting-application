@@ -9,6 +9,6 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
     {
         public Boolean EmailSent { get; set; }
         public string Email { get; set; }
-        public string Name { get; set; }
+        public Guid ManageToken { get; set; }
     }
 }

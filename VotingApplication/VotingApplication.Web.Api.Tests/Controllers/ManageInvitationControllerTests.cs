@@ -51,6 +51,39 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Configuration = new HttpConfiguration();
         }
 
+        #region GET
+
+        [TestMethod]
+        public void GetIsAllowed()
+        {
+            // Act
+            _controller.Get(_mainManageID);
+        }
+
+        [TestMethod]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
+        public void GetRejectsUnrecognisedPollId()
+        {
+            // Act
+            _controller.Get(Guid.NewGuid());
+        }
+
+        [TestMethod]
+        public void GetReturnsAllBallotsForMatchingPoll()
+        {
+            Guid ballotToken = Guid.NewGuid();
+            Ballot mainPollBallot = new Ballot() { ManageGuid = ballotToken };
+            _mainPoll.Ballots.Add(mainPollBallot);
+
+            // Act
+            List<ManagePollBallotRequestModel> responseBallots = _controller.Get(_mainManageID);
+            List<Guid> expectedManageTokens = new List<Guid> { ballotToken };
+            List<Guid> actualManageTokens = responseBallots.Select(b => b.ManageToken).ToList<Guid>();
+            CollectionAssert.AreEquivalent(expectedManageTokens, actualManageTokens);
+        }
+
+        #endregion
+
         #region POST
 
         [TestMethod]
