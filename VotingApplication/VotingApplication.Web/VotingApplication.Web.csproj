@@ -336,6 +336,8 @@
     <Content Include="Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\Logo.png" />
+    <Content Include="Scripts\Controllers\EditOptionDialogController.js" />
+    <Content Include="Scripts\Controllers\AddOptionDialogController.js" />
     <Content Include="Scripts\Controllers\ManageVotersController.js" />
     <Content Include="Scripts\Controllers\PollTypeChangeController.js" />
     <Content Include="Scripts\Controllers\AccountRegisterController.js" />
@@ -415,6 +417,8 @@
     <Content Include="Fonts\fontawesome-webfont.woff" />
     <Content Include="Fonts\FontAwesome.otf" />
     <Content Include="Views\Routes\ErrorBar.cshtml" />
+    <Content Include="Views\Routes\AddOptionDialog.cshtml" />
+    <Content Include="Views\Routes\EditOptionDialog.cshtml" />
     <None Include="Views\Routes\PollHeading.cshtml" />
     <Content Include="Views\Routes\PollTypeChange.cshtml" />
     <Content Include="Scripts\Directives\PollHeading.html" />

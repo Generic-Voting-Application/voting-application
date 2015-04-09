@@ -133,5 +133,15 @@ namespace VotingApplication.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult AddOptionDialog()
+        {
+            return View();
+        }
+
+        public ActionResult EditOptionDialog()
+        {
+            return View();
+        }
     }
 }
