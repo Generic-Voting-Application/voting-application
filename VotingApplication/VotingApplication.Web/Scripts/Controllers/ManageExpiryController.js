@@ -38,7 +38,7 @@
         }
 
         function updatePoll() {
-            ManageService.updatePoll($routeParams.manageId, $scope.poll, navigateToManagePage);
+            ManageService.updatePollExpiry($routeParams.manageId, $scope.poll.ExpiryDate, navigateToManagePage);
         }
 
         function navigateToManagePage() {

@@ -58,17 +58,34 @@
                 url: '/api/manage/' + manageId,
                 data: poll
             })
-                .success(function (data) {
-                    if (callback) {
-                        callback(data);
-                    }
-                })
-                .error(function (data, status) {
-                    if (failureCallback) {
-                        failureCallback(data, status);
-                    }
-                });
+            .success(function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            })
+            .error(function (data, status) {
+                if (failureCallback) {
+                    failureCallback(data, status);
+                }
+            });
+        };
 
+        self.updatePollExpiry = function (manageId, expiryDate, callback, failureCallback) {
+            $http({
+                method: 'PUT',
+                url: '/api/manage/' + manageId + '/expiry/',
+                data: { ExpiryDate: expiryDate }
+            })
+            .success(function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            })
+            .error(function (data, status) {
+                if (failureCallback) {
+                    failureCallback(data, status);
+                }
+            });
         };
 
         self.getVotes = function (pollId, callback, failureCallback) {
@@ -149,10 +166,10 @@
                 url: '/api/manage/' + manageId + '/invitation',
                 data: invitees
             }).success(function (data) {
-                    if (callback) {
-                        callback(data);
-                    }
-                })
+                if (callback) {
+                    callback(data);
+                }
+            })
                 .error(function (data, status) {
                     if (failureCallback) {
                         failureCallback(data, status);
