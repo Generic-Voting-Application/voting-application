@@ -16,6 +16,16 @@ namespace VotingApplication.Web.Api.Tests.TestHelpers
             return CreateMockFactory(mockContext);
         }
 
+        public static IContextFactory CreateContextFactory(IDbSet<Poll> polls, IDbSet<Option> options)
+        {
+            Mock<IVotingContext> mockContext = CreateMockContext();
+
+            MockOutPolls(mockContext, polls);
+            MockOutOptions(mockContext, options);
+
+            return CreateMockFactory(mockContext);
+        }
+
         public static IContextFactory CreateContextFactory(IDbSet<Poll> polls, IDbSet<Ballot> ballots)
         {
             Mock<IVotingContext> mockContext = CreateMockContext();
@@ -32,7 +42,19 @@ namespace VotingApplication.Web.Api.Tests.TestHelpers
 
             MockOutPolls(mockContext, polls);
             MockOutBallots(mockContext, ballots);
-            MockOutBallots(mockContext, votes);
+            MockOutVotes(mockContext, votes);
+
+            return CreateMockFactory(mockContext);
+        }
+
+        public static IContextFactory CreateContextFactory(IDbSet<Poll> polls, IDbSet<Ballot> ballots, IDbSet<Vote> votes, IDbSet<Option> options)
+        {
+            Mock<IVotingContext> mockContext = CreateMockContext();
+
+            MockOutPolls(mockContext, polls);
+            MockOutBallots(mockContext, ballots);
+            MockOutVotes(mockContext, votes);
+            MockOutOptions(mockContext, options);
 
             return CreateMockFactory(mockContext);
         }
@@ -56,11 +78,18 @@ namespace VotingApplication.Web.Api.Tests.TestHelpers
                 .Returns(ballots);
         }
 
-        private static void MockOutBallots(Mock<IVotingContext> mockContext, IDbSet<Vote> votes)
+        private static void MockOutVotes(Mock<IVotingContext> mockContext, IDbSet<Vote> votes)
         {
             mockContext
                 .Setup(p => p.Votes)
                 .Returns(votes);
+        }
+
+        private static void MockOutOptions(Mock<IVotingContext> mockContext, IDbSet<Option> options)
+        {
+            mockContext
+                .Setup(p => p.Options)
+                .Returns(options);
         }
 
         private static IContextFactory CreateMockFactory(Mock<IVotingContext> mockContext)
