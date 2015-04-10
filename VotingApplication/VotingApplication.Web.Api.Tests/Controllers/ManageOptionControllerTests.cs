@@ -115,7 +115,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
             public void NullUpdateRequest_ThrowsError()
             {
-                var controller = new ManageOptionController();
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
+
+                ManageOptionController controller = CreateManageOptionController(contextFactory);
 
                 controller.Put(PollManageGuid, null);
             }
@@ -124,9 +127,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
             public void UnknownPollManageGuid_ThrowsNotFound()
             {
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
+
                 var request = new ManageOptionUpdateRequest();
 
-                var controller = new ManageOptionController();
+                ManageOptionController controller = CreateManageOptionController(contextFactory);
 
                 controller.Put(PollManageGuid, request);
             }
