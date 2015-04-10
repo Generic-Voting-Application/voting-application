@@ -114,6 +114,10 @@
     <Compile Include="Migrations\201504100818360_AddPollOptionNumberTrigger.Designer.cs">
       <DependentUpon>201504100818360_AddPollOptionNumberTrigger.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504101434122_RemovePollOptionNumberCheckConstraint.cs" />
+    <Compile Include="Migrations\201504101434122_RemovePollOptionNumberCheckConstraint.Designer.cs">
+      <DependentUpon>201504101434122_RemovePollOptionNumberCheckConstraint.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
     <Compile Include="Model\Option.cs" />
@@ -176,6 +180,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504100818360_AddPollOptionNumberTrigger.resx">
       <DependentUpon>201504100818360_AddPollOptionNumberTrigger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504101434122_RemovePollOptionNumberCheckConstraint.resx">
+      <DependentUpon>201504101434122_RemovePollOptionNumberCheckConstraint.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
