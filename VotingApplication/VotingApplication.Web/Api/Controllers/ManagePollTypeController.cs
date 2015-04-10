@@ -28,6 +28,12 @@ namespace VotingApplication.Web.Api.Controllers
                     ThrowError(HttpStatusCode.NotFound, string.Format("Poll for manage id {0} not found", manageId));
                 }
 
+                PollType pollType;
+                if (!Enum.TryParse<PollType>(updateRequest.PollType, true, out pollType))
+                {
+                    ModelState.AddModelError("PollType", "Invalid PollType");
+                }
+
                 if (!ModelState.IsValid)
                 {
                     ThrowError(HttpStatusCode.BadRequest, ModelState);
@@ -43,10 +49,9 @@ namespace VotingApplication.Web.Api.Controllers
                         context.Votes.Remove(oldVote);
                     }
 
-
                 }
 
-                poll.PollType = (PollType)Enum.Parse(typeof(PollType), updateRequest.PollType, true);
+                poll.PollType = pollType;
                 poll.MaxPerVote = updateRequest.MaxPerVote;
 
                 poll.MaxPoints = updateRequest.MaxPoints;
