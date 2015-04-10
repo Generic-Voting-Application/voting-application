@@ -12,7 +12,9 @@ namespace VotingApplication.Web.Api.Controllers
 {
     public class ManageOptionController : WebApiController
     {
-        public ManageOptionController() : base() { }
+        public ManageOptionController()
+        {
+        }
 
         public ManageOptionController(IContextFactory contextFactory) : base(contextFactory) { }
 
@@ -83,7 +85,7 @@ namespace VotingApplication.Web.Api.Controllers
 
                 List<OptionUpdate> optionUpdatesToAdd = request
                     .Options
-                    .Where(o => o.PollOptionNumber.HasValue == false)
+                    .Where(o => o.OptionNumber.HasValue == false)
                     .ToList();
 
                 AddNewOptions(context, poll, optionUpdatesToAdd);
@@ -129,13 +131,13 @@ namespace VotingApplication.Web.Api.Controllers
         {
             List<int> requestPollOptionNumbers = request
                 .Options
-                .Where(o => o.PollOptionNumber.HasValue)
-                .Select(o => o.PollOptionNumber.Value)
+                .Where(o => o.OptionNumber.HasValue)
+                .Select(o => o.OptionNumber.Value)
                 .ToList();
             return requestPollOptionNumbers;
         }
 
-        private static void RemoveOptions(IVotingContext context, Poll poll, List<int> optionsToRemove)
+        private static void RemoveOptions(IVotingContext context, Poll poll, IEnumerable<int> optionsToRemove)
         {
             foreach (int pollOptionNumber in optionsToRemove)
             {
@@ -146,22 +148,26 @@ namespace VotingApplication.Web.Api.Controllers
                 poll.Options.Remove(option);
                 context.Options.Remove(option);
 
-                Vote vote = context
+                List<Vote> votes = context
                     .Votes
+                    .Include(v => v.Option)
                     .Where(v => v.Option.PollOptionNumber == pollOptionNumber)
-                    .Single();
+                    .ToList();
 
-                Ballot ballot = context
-                    .Ballots
-                    .Where(b => b.Votes.Contains(vote))
-                    .Single();
+                foreach (Vote vote in votes)
+                {
+                    Ballot ballot = context
+                        .Ballots
+                        .Include(b => b.Votes)
+                        .Single(b => b.Votes.Contains(vote));
 
-                ballot.Votes.Remove(vote);
-                context.Votes.Remove(vote);
+                    ballot.Votes.Remove(vote);
+                    context.Votes.Remove(vote);
+                }
             }
         }
 
-        private static void UpdateOptions(ManageOptionUpdateRequest request, Poll poll, List<int> optionsToUpdate)
+        private static void UpdateOptions(ManageOptionUpdateRequest request, Poll poll, IEnumerable<int> optionsToUpdate)
         {
             foreach (int pollOptionNumber in optionsToUpdate)
             {
@@ -171,20 +177,22 @@ namespace VotingApplication.Web.Api.Controllers
 
                 OptionUpdate update = request
                     .Options
-                    .Single(o => o.PollOptionNumber == pollOptionNumber);
+                    .Single(o => o.OptionNumber == pollOptionNumber);
 
                 option.Name = update.Name;
                 option.Description = update.Description;
             }
         }
 
-        private static void AddNewOptions(IVotingContext context, Poll poll, List<OptionUpdate> optionUpdatesToAdd)
+        private static void AddNewOptions(IVotingContext context, Poll poll, IEnumerable<OptionUpdate> optionUpdatesToAdd)
         {
             foreach (OptionUpdate optionRequest in optionUpdatesToAdd)
             {
-                var option = new Option();
-                option.Name = optionRequest.Name;
-                option.Description = optionRequest.Description;
+                var option = new Option
+                {
+                    Name = optionRequest.Name,
+                    Description = optionRequest.Description
+                };
 
                 poll.Options.Add(option);
                 context.Options.Add(option);

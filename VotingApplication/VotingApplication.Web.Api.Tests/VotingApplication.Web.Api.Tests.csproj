@@ -146,6 +146,7 @@
     <Content Include="Scripts\HomepageControllerTests.js" />
     <Content Include="Scripts\Lib\angular-mocks.js" />
     <Content Include="Scripts\ManageServiceTests.js" />
+    <Content Include="Scripts\ManageOptionControllerTests.js" />
     <Content Include="Scripts\ManageVotersControllerTests.js" />
   </ItemGroup>
   <ItemGroup />

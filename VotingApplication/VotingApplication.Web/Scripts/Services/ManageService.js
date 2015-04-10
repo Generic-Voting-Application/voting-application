@@ -149,15 +149,37 @@
                 url: '/api/manage/' + manageId + '/invitation',
                 data: invitees
             }).success(function (data) {
-                    if (callback) {
-                        callback(data);
-                    }
-                })
+                if (callback) {
+                    callback(data);
+                }
+            })
                 .error(function (data, status) {
                     if (failureCallback) {
                         failureCallback(data, status);
                     }
                 });
+        };
+
+        self.getOptions = function (manageId) {
+            var deferred = $q.defer();
+
+            $http
+                .get('/api/manage/' + manageId + '/option')
+                .success(function (data) { deferred.resolve(data); });
+
+            return deferred.promise;
+        };
+
+        self.updateOptions = function (manageId, options) {
+            var deferred = $q.defer();
+
+            $http.put('/api/manage/' + manageId + '/option',
+                {
+                    Options: options
+                })
+            .success(function (data) { deferred.resolve(data); });
+
+            return deferred.promise;
         };
 
         return self;

@@ -1,4 +1,5 @@
 ﻿/// <reference path="../Services/ManageService.js" />
+/// <reference path="../Services/RoutingService.js" />
 (function () {
     'use strict';
 
@@ -12,30 +13,32 @@
 
         var manageId = $routeParams.manageId;
 
-        $scope.poll = ManageService.poll;
-        $scope.updatePoll = updatePollDetails;
-        $scope.return = navigateToManagePage;
-        $scope.remove = removePollOption;
-        $scope.add = addPollOption;
-        $scope.edit = editPollOption;
+        $scope.options = [];
+
+        $scope.addOption = addOption;
+        $scope.editOption = editOption;
+        $scope.removeOption = removeOption;
+
+        $scope.saveOptionsAndReturn = saveOptionsAndReturn;
+        $scope.returnWithoutSave = returnWithoutSave;
+
 
         activate();
 
         function activate() {
-            ManageService.registerPollObserver(function () {
-                $scope.poll = ManageService.poll;
-            });
+            //ManageService.registerPollObserver(loadOptions);
+
+            loadOptions();
         }
 
-        function navigateToManagePage() {
-            RoutingService.navigateToManagePage(manageId);
+        function loadOptions() {
+            ManageService.getOptions(manageId)
+                .then(function (data) {
+                    $scope.options = data;
+                });
         }
 
-        function removePollOption(option) {
-            $scope.poll.Options.splice($scope.poll.Options.indexOf(option), 1);
-        }
-
-        function addPollOption() {
+        function addOption() {
             ngDialog.open({
                 template: '/Routes/AddOptionDialog',
                 controller: 'AddOptionDialogController',
@@ -43,7 +46,7 @@
             });
         }
 
-        function editPollOption(option) {
+        function editOption(option) {
             ngDialog.open({
                 template: '/Routes/EditOptionDialog',
                 controller: 'EditOptionDialogController',
@@ -52,11 +55,17 @@
             });
         }
 
-        function updatePollDetails() {
-            ManageService.updatePoll(manageId, $scope.poll, function () {
-                ManageService.getPoll(manageId);
-                navigateToManagePage();
-            });
+        function removeOption(option) {
+            $scope.options.splice($scope.options.indexOf(option), 1);
+        }
+
+        function returnWithoutSave() {
+            RoutingService.navigateToManagePage(manageId);
+        }
+
+        function saveOptionsAndReturn() {
+            ManageService.updateOptions(manageId, $scope.options)
+                .then(function () { RoutingService.navigateToManagePage(manageId); });
         }
     }
 

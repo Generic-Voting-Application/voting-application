@@ -16,6 +16,6 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public int? PollOptionNumber { get; set; }
+        public int? OptionNumber { get; set; }
     }
 }

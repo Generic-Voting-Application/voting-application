@@ -152,7 +152,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 {
                     Name = optionName,
                     Description = optionDescription,
-                    PollOptionNumber = null
+                    OptionNumber = null
                 };
                 request.Options.Add(optionRequest);
 
@@ -188,7 +188,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 {
                     Name = optionName,
                     Description = optionDescription,
-                    PollOptionNumber = null
+                    OptionNumber = null
                 };
                 request.Options.Add(optionRequest);
 
@@ -241,7 +241,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 {
                     Name = newOptionName,
                     Description = newOptionDescription,
-                    PollOptionNumber = pollOptionNumber
+                    OptionNumber = pollOptionNumber
                 };
                 request.Options.Add(optionRequest);
 
@@ -291,7 +291,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 {
                     Name = optionName,
                     Description = optionDescription,
-                    PollOptionNumber = unknownPollOptionNumber
+                    OptionNumber = unknownPollOptionNumber
                 };
                 request.Options.Add(optionRequest);
 
@@ -342,7 +342,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 {
                     Name = newOptionName,
                     Description = newOptionDescription,
-                    PollOptionNumber = pollOptionNumber
+                    OptionNumber = pollOptionNumber
                 };
                 request.Options.Add(optionRequest);
 
@@ -380,17 +380,23 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 };
 
                 IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
-                var ballot = new Ballot();
+                var ballot1 = new Ballot();
+                var ballot2 = new Ballot();
 
                 IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
-                var vote = new Vote();
+                var vote1 = new Vote();
+                var vote2 = new Vote();
 
-                vote.Option = option;
-                ballot.Votes.Add(vote);
+                vote1.Option = option;
+                vote2.Option = option;
+                ballot1.Votes.Add(vote1);
+                ballot2.Votes.Add(vote2);
                 poll.Options.Add(option);
 
-                votes.Add(vote);
-                ballots.Add(ballot);
+                votes.Add(vote1);
+                votes.Add(vote2);
+                ballots.Add(ballot1);
+                ballots.Add(ballot2);
                 options.Add(option);
                 polls.Add(poll);
 
@@ -408,7 +414,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 Assert.AreEqual(0, poll.Options.Count());
                 Assert.AreEqual(0, options.Count());
                 Assert.AreEqual(0, votes.Count());
-                Assert.AreEqual(0, ballot.Votes.Count());
+                Assert.AreEqual(0, ballot1.Votes.Count());
+                Assert.AreEqual(0, ballot2.Votes.Count());
             }
 
             [TestMethod]
@@ -472,13 +479,13 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 {
                     Name = updatedName,
                     Description = updatedDescription,
-                    PollOptionNumber = optionUpdateNumber
+                    OptionNumber = optionUpdateNumber
                 };
                 var addOption = new OptionUpdate()
                 {
                     Name = addName,
                     Description = addDescription,
-                    PollOptionNumber = null
+                    OptionNumber = null
                 };
                 request.Options.Add(updateOption);
                 request.Options.Add(addOption);
