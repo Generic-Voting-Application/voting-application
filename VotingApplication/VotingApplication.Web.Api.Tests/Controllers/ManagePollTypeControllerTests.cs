@@ -78,6 +78,31 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             }
 
             [TestMethod]
+            [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
+            public void InvalidPollType_ReturnsBadRequest()
+            {
+                IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                Poll existingPoll = CreatePoll();
+                existingPolls.Add(existingPoll);
+
+                Vote testVote = new Vote() { Poll = existingPoll };
+
+                IDbSet<Ballot> existingBallots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+
+                IDbSet<Vote> existingVotes = DbSetTestHelper.CreateMockDbSet<Vote>();
+                existingVotes.Add(testVote);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, existingBallots, existingVotes);
+                ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "NotAnOption", MaxPerVote = 1, MaxPoints = 1 };
+
+                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory);
+
+                controller.Put(PollManageGuid, request);
+
+                Assert.AreEqual(0, existingVotes.Local.Count);
+            }
+
+            [TestMethod]
             public void ChangedPollType_ClearsVotes()
             {
                 IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
