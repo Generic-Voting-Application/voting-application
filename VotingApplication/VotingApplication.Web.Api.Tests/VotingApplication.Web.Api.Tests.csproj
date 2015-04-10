@@ -104,6 +104,7 @@
     <Compile Include="Controllers\ManagePollTypeControllerTests.cs" />
     <Compile Include="Controllers\ManageExpiryControllerTests.cs" />
     <Compile Include="Controllers\ManageInvitationControllerTests.cs" />
+    <Compile Include="Controllers\ManageMiscControllerTests.cs" />
     <Compile Include="Controllers\ManageVoterControllerTests.cs" />
     <Compile Include="Controllers\PollControllerTests.cs" />
     <Compile Include="Controllers\PollTokenControllerTests.cs" />

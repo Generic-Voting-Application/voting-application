@@ -124,6 +124,24 @@
             });
         };
         
+        self.updatePollMisc = function (manageId, miscConfig, callback, failureCallback) {
+            $http({
+                method: 'PUT',
+                url: '/api/manage/' + manageId + '/misc/',
+                data: miscConfig
+            })
+            .success(function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            })
+            .error(function (data, status) {
+                if (failureCallback) {
+                    failureCallback(data, status);
+                }
+            });
+        };
+
         self.getVotes = function (pollId, callback, failureCallback) {
 
             $http.get('/api/poll/' + pollId + '/vote')
