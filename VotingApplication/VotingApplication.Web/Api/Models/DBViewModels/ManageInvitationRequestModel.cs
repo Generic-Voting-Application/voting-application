@@ -5,10 +5,10 @@ using System.Web;
 
 namespace VotingApplication.Web.Api.Models.DBViewModels
 {
-    public class ManagePollBallotRequestModel
+    public class ManageInvitationRequestModel
     {
-        public Boolean EmailSent { get; set; }
+        public Boolean SendInvitation { get; set; }
         public string Email { get; set; }
-        public string Name { get; set; }
+        public Guid ManageToken { get; set; }
     }
 }
