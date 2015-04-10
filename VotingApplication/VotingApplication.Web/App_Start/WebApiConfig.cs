@@ -75,6 +75,12 @@ namespace VotingApplication.Web
             );
 
             config.Routes.MapHttpRoute(
+                name: "ManageQuestionApiRoute",
+                routeTemplate: "api/manage/{manageId}/question/",
+                defaults: new { controller = "ManageQuestion" }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "ManageMiscApiRoute",
                 routeTemplate: "api/manage/{manageId}/misc/",
                 defaults: new { controller = "ManageMisc" }

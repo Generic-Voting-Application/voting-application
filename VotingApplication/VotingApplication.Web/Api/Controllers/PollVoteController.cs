@@ -56,11 +56,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (poll == null)
                 {
-                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
+                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
                 }
 
                 DateTime clientLastUpdated = DateTime.MinValue;
-                if (this.Request.RequestUri != null && this.Request.RequestUri.Query != null)
+                if (Request.RequestUri != null && Request.RequestUri.Query != null)
                 {
                     NameValueCollection queryMap = HttpUtility.ParseQueryString(this.Request.RequestUri.Query);
                     string lastPolledDate = queryMap["lastPoll"];

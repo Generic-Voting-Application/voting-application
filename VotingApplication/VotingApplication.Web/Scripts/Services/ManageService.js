@@ -106,6 +106,24 @@
             });
         };
 
+        self.updateQuestion = function (manageId, question, callback, failureCallback) {
+            $http({
+                method: 'PUT',
+                url: '/api/manage/' + manageId + '/question/',
+                data: { Question: question }
+            })
+            .success(function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            })
+            .error(function (data, status) {
+                if (failureCallback) {
+                    failureCallback(data, status);
+                }
+            });
+        };
+        
         self.updatePollMisc = function (manageId, miscConfig, callback, failureCallback) {
             $http({
                 method: 'PUT',

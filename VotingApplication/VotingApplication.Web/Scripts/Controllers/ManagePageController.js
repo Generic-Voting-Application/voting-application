@@ -16,7 +16,7 @@
 
         $scope.poll = {};
         $scope.manageId = manageId;
-        $scope.updatePoll = updatePollDetails;
+        $scope.updateQuestion = updateQuestion;
         $scope.discardNameChanges = discardNameChanges;
         $scope.formatPollExpiry = formatPollExpiryDate;
         $scope.selectText = selectTargetText;
@@ -37,6 +37,7 @@
         function activate() {
             ManageService.getPoll(manageId, function (data) {
                 $scope.poll = data;
+                $scope.Question = data.Name;
             });
             $scope.visited = ManageService.getVisited(manageId);
             if (!$scope.visited) {
@@ -44,9 +45,16 @@
             }
         }
 
-        function updatePollDetails() {
-            ManageService.poll = $scope.poll;
-            ManageService.updatePoll($routeParams.manageId, $scope.poll);
+        function updateQuestion() {
+            var successCallback = function () {
+                $scope.poll.Name = $scope.Question;
+            };
+
+            var failureCallback = function () {
+                $scope.Question = $scope.poll.Name;
+            };
+
+            ManageService.updateQuestion($routeParams.manageId, $scope.Question, successCallback, failureCallback);
         }
 
         function discardNameChanges() {

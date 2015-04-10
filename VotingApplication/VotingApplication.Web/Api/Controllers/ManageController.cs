@@ -132,7 +132,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 poll.InviteOnly = updateRequest.InviteOnly;
                 poll.MaxPerVote = updateRequest.MaxPerVote;
                 poll.MaxPoints = updateRequest.MaxPoints;
-                poll.Name = updateRequest.Name;
                 poll.OptionAdding = updateRequest.OptionAdding;
 
                 List<Option> newOptions = new List<Option>();

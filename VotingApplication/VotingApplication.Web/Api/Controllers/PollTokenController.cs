@@ -27,12 +27,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (poll == null)
                 {
-                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
+                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
                 }
 
                 if (poll.InviteOnly)
                 {
-                    this.ThrowError(HttpStatusCode.Forbidden, string.Format("Poll {0} is invite only", pollId));
+                    ThrowError(HttpStatusCode.Forbidden, string.Format("Poll {0} is invite only", pollId));
                 }
 
                 Guid newTokenGuid = Guid.NewGuid();

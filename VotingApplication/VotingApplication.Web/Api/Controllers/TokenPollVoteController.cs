@@ -60,7 +60,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Poll poll = context.Polls.Where(s => s.UUID == pollId).FirstOrDefault();
                 if (poll == null)
                 {
-                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
+                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
                 }
 
                 List<Vote> votes = context
@@ -86,23 +86,23 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 if (voteRequests == null)
                 {
-                    this.ThrowError(HttpStatusCode.BadRequest);
+                    ThrowError(HttpStatusCode.BadRequest);
                 }
 
                 if (!ModelState.IsValid)
                 {
-                    this.ThrowError(HttpStatusCode.BadRequest, ModelState);
+                    ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
                 Poll poll = context.Polls.Where(p => p.UUID == pollId).Include(p => p.Ballots).Include(p => p.Options).SingleOrDefault();
                 if (poll == null)
                 {
-                    this.ThrowError(HttpStatusCode.NotFound, String.Format("Poll {0} not found", pollId));
+                    ThrowError(HttpStatusCode.NotFound, String.Format("Poll {0} not found", pollId));
                 }
 
                 if (poll.ExpiryDate.HasValue && poll.ExpiryDate < DateTime.Now)
                 {
-                    this.ThrowError(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", pollId));
+                    ThrowError(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", pollId));
                 }
 
                 Ballot ballot = poll.Ballots.SingleOrDefault(t => t.TokenGuid == tokenGuid);
@@ -111,7 +111,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 {
                     if (poll.InviteOnly)
                     {
-                        this.ThrowError(HttpStatusCode.Forbidden, String.Format("Token {0} not valid for this poll", tokenGuid));
+                        ThrowError(HttpStatusCode.Forbidden, String.Format("Token {0} not valid for this poll", tokenGuid));
                     }
                     else
                     {
@@ -134,7 +134,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (!ModelState.IsValid)
                 {
-                    this.ThrowError(HttpStatusCode.BadRequest, ModelState);
+                    ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
                 List<Vote> existingVotes = context
