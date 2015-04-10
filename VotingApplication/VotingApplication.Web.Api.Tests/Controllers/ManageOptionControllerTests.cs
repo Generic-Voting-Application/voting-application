@@ -384,8 +384,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 var ballot2 = new Ballot();
 
                 IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
-                var vote1 = new Vote();
-                var vote2 = new Vote();
+                var vote1 = new Vote() { Id = 1 };
+                var vote2 = new Vote() { Id = 2 };
 
                 vote1.Option = option;
                 vote2.Option = option;

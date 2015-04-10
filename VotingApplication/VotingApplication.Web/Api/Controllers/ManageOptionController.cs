@@ -78,6 +78,7 @@ namespace VotingApplication.Web.Api.Controllers
 
                 List<int> optionsToUpdate = existingPollOptionNumbers
                     .Intersect(requestPollOptionNumbers)
+                    .Except(optionsToRemove)
                     .ToList();
 
                 UpdateOptions(request, poll, optionsToUpdate);
@@ -159,7 +160,7 @@ namespace VotingApplication.Web.Api.Controllers
                     Ballot ballot = context
                         .Ballots
                         .Include(b => b.Votes)
-                        .Single(b => b.Votes.Contains(vote));
+                        .Single(b => b.Votes.Any(v => v.Id == vote.Id));
 
                     ballot.Votes.Remove(vote);
                     context.Votes.Remove(vote);
