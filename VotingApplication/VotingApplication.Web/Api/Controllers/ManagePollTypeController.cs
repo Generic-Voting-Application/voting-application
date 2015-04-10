@@ -43,10 +43,11 @@ namespace VotingApplication.Web.Api.Controllers
                         context.Votes.Remove(oldVote);
                     }
 
-                    poll.PollType = (PollType)Enum.Parse(typeof(PollType), updateRequest.PollType, true);
-                    poll.MaxPerVote = updateRequest.MaxPerVote;
+
                 }
 
+                poll.PollType = (PollType)Enum.Parse(typeof(PollType), updateRequest.PollType, true);
+                poll.MaxPerVote = updateRequest.MaxPerVote;
 
                 poll.MaxPoints = updateRequest.MaxPoints;
 
