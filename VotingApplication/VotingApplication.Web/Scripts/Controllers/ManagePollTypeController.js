@@ -23,7 +23,12 @@
         activate();
 
         function updatePoll() {
-            ManageService.updatePoll($routeParams.manageId, $scope.poll, navigateToManagePage);
+            var pollTypeConfig = {
+                PollType: $scope.poll.VotingStrategy,
+                MaxPerVote: $scope.poll.MaxPerVote,
+                MaxPoints: $scope.poll.MaxPoints
+            };
+            ManageService.updatePollType($routeParams.manageId, pollTypeConfig, navigateToManagePage);
         }
 
         function navigateToManagePage() {
