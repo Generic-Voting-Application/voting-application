@@ -1,25 +1,27 @@
 ﻿<div ng-controller="UpDownVoteController" ng-app="GVA.Voting" class="voting-area">
-    <h3>Options</h3>
-    <div ng-repeat="option in options">
-        <div class="option-block">
-            <div class="option-block-row">
-                <div class="option-buttons">
-                    <span class="btn-group-updown">
-                        <button class="inactive-btn pull-left" ng-class="{'active-btn': option.voteValue==-1}" ng-click="(option.voteValue=(option.voteValue!=-1?-1:0))">
-                            <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
-                        </button>
-                        <button class="inactive-btn pull-right" ng-class="{'active-btn': option.voteValue==1}" ng-click="(option.voteValue=(option.voteValue!=1?1:0))">
-                            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
-                        </button>
-                    </span>
+    <div class="option-area">
+        <h3>Options</h3>
+        <div ng-repeat="option in options">
+            <div class="option-block">
+                <div class="option-block-row">
+                    <div class="option-buttons">
+                        <span class="btn-group-updown">
+                            <button class="inactive-btn pull-left" ng-class="{'active-btn': option.voteValue==-1}" ng-click="(option.voteValue=(option.voteValue!=-1?-1:0))">
+                                <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+                            </button>
+                            <button class="inactive-btn pull-right" ng-class="{'active-btn': option.voteValue==1}" ng-click="(option.voteValue=(option.voteValue!=1?1:0))">
+                                <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                            </button>
+                        </span>
+                    </div>
+                    <strong>{{option.Name}}</strong>
                 </div>
-                <h4>{{option.Name}}</h4>
+                <div ng-if="option.Description" class="option-block-row">
+                    <span truncated-text ng-model="option.Description" max-chars="60" class="option-description"></span>
+                </div>
             </div>
-            <div ng-if="option.Description" class="option-block-row">
-                <p truncated-text ng-model="option.Description" max-chars="60" class="option-description"></p>
-            </div>
+            <hr />
         </div>
-        <hr />
     </div>
     <div class="flexbox">
         <button class="active-btn btn-medium centered" ng-click="submitVote(options)">Vote</button>

@@ -236,6 +236,8 @@
     <Compile Include="Api\Controllers\AccountController.cs" />
     <Compile Include="Api\Controllers\DashboardController.cs" />
     <Compile Include="Api\Controllers\ManageController.cs" />
+    <Compile Include="Api\Controllers\ManagePollTypeController.cs" />
+    <Compile Include="Api\Controllers\ManageExpiryController.cs" />
     <Compile Include="Api\Controllers\ManageInvitationController.cs" />
     <Compile Include="Api\Controllers\ManageVoterController.cs" />
     <Compile Include="Api\Controllers\PollController.cs" />
@@ -258,6 +260,8 @@
     <Compile Include="Api\Models\DBViewModels\DashboardPollResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\DeleteVotersRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManageInvitationResponseModel.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManagePollTypeRequest.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManagePollExpiryRequest.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollRequestResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollUpdateRequest.cs" />
     <Compile Include="Api\Models\DBViewModels\ManageVoteResponseModel.cs" />
@@ -329,7 +333,7 @@
     <Content Include="Content\Lib\Css\font-awesome-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-theme-default-min.css" />
-    <None Include="Content\Scss\ErrorBar.scss" />
+    <Content Include="Content\Scss\ErrorBar.scss" />
     <Content Include="Content\Scss\Site.scss" />
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
