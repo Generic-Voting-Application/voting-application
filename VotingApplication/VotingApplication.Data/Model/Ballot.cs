@@ -15,7 +15,6 @@ namespace VotingApplication.Data.Model
         public long Id { get; set; }
 
         [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public Guid ManageGuid { get; set; }
 
         public Guid TokenGuid { get; set; }
