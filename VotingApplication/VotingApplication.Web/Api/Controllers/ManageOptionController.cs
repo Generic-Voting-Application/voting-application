@@ -78,7 +78,6 @@ namespace VotingApplication.Web.Api.Controllers
 
                 List<int> optionsToUpdate = existingPollOptionNumbers
                     .Intersect(requestPollOptionNumbers)
-                    .Except(optionsToRemove)
                     .ToList();
 
                 UpdateOptions(request, poll, optionsToUpdate);
