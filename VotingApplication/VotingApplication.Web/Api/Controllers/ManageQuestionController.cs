@@ -25,7 +25,7 @@ namespace VotingApplication.Web.Api.Controllers
 
                 if (String.IsNullOrWhiteSpace(request.Question))
                 {
-                    this.ThrowError(HttpStatusCode.BadRequest, "Question cannot be null or empty");
+                    ThrowError(HttpStatusCode.BadRequest, "Question cannot be null or empty");
                 }
 
                 poll.Name = request.Question;
@@ -39,7 +39,7 @@ namespace VotingApplication.Web.Api.Controllers
         {
             if (request == null)
             {
-                this.ThrowError(HttpStatusCode.BadRequest, "Question request cannot be null");
+                ThrowError(HttpStatusCode.BadRequest, "Question request cannot be null");
             }
         }
 
@@ -51,7 +51,7 @@ namespace VotingApplication.Web.Api.Controllers
 
             if (matchingPoll == null)
             {
-                this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
+                ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
             }
 
             return matchingPoll;

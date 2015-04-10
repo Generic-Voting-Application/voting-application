@@ -48,7 +48,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (matchingPoll == null)
                 {
-                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
+                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
                 }
 
                 return matchingPoll.Ballots
@@ -100,7 +100,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             if (request == null)
             {
-                this.ThrowError(HttpStatusCode.BadRequest, "List of invitees cannot be null");
+                ThrowError(HttpStatusCode.BadRequest, "List of invitees cannot be null");
             }
         }
 
@@ -113,7 +113,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             if (matchingPoll == null)
             {
-                this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
+                ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
             }
 
             return matchingPoll;
