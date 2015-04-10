@@ -1,9 +1,9 @@
 ﻿'use strict';
 
-describe("ManageService", function () {
+describe('ManageService', function () {
 
-    beforeEach(module("GVA.Creation"));
-    beforeEach(module("GVA.Common"));
+    beforeEach(module('GVA.Creation'));
+    beforeEach(module('GVA.Common'));
 
     var manageService;
     var httpBackend;
@@ -21,13 +21,13 @@ describe("ManageService", function () {
         expect('Suppress SPEC HAS NO EXPECTATIONS').toBeDefined();
     });
 
-    describe("Delete Voters", function () {
+    describe('Delete Voters', function () {
 
-        it("Contains the correct Content-Type header", function () {
+        it('Contains the correct Content-Type header', function () {
 
             var pollManageGuid = '091EA404-5AAE-4AA4-A5EF-E0625ACC33D4';
             var expectedUrl = '/api/manage/' + pollManageGuid + '/voters';
-            var expectedData = { "BallotDeleteRequests": [] };
+            var expectedData = { 'BallotDeleteRequests': [] };
 
             httpBackend.expect(
                     'DELETE',
@@ -43,38 +43,38 @@ describe("ManageService", function () {
             httpBackend.flush();
         });
 
-        it("Creates correct DeleteBallotRequestModel", function () {
+        it('Creates correct DeleteBallotRequestModel', function () {
 
             var pollManageGuid = '091EA404-5AAE-4AA4-A5EF-E0625ACC33D4';
             var expectedUrl = '/api/manage/' + pollManageGuid + '/voters';
 
             var votersToDelete = [{
-                BallotManageGuid: "275B1FF3-F37A-41F9-B91E-983F6D11429A",
-                VoterName: "Derek",
+                BallotManageGuid: '275B1FF3-F37A-41F9-B91E-983F6D11429A',
+                VoterName: 'Derek',
                 Votes: [
                     {
                         OptionNumber: 1,
-                        OptionName: "One",
+                        OptionName: 'One',
                         Value: 5
                     },
                     {
                         OptionNumber: 2,
-                        OptionName: "Two",
+                        OptionName: 'Two',
                         Value: 1
                     }]
             },
                 {
-                    BallotManageGuid: "4F63A474-1136-4E8D-879C-881299A19207",
-                    VoterName: "Betty",
+                    BallotManageGuid: '4F63A474-1136-4E8D-879C-881299A19207',
+                    VoterName: 'Betty',
                     Votes: [
                         {
                             OptionNumber: 1,
-                            OptionName: "One",
+                            OptionName: 'One',
                             Value: 1
                         },
                         {
                             OptionNumber: 3,
-                            OptionName: "Three",
+                            OptionName: 'Three',
                             Value: 1
                         }]
                 }];

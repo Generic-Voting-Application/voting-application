@@ -58,17 +58,70 @@
                 url: '/api/manage/' + manageId,
                 data: poll
             })
-                .success(function (data) {
-                    if (callback) {
-                        callback(data);
-                    }
-                })
-                .error(function (data, status) {
-                    if (failureCallback) {
-                        failureCallback(data, status);
-                    }
-                });
+            .success(function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            })
+            .error(function (data, status) {
+                if (failureCallback) {
+                    failureCallback(data, status);
+                }
+            });
+        };
 
+        self.updatePollExpiry = function (manageId, expiryDate, callback, failureCallback) {
+            $http({
+                method: 'PUT',
+                url: '/api/manage/' + manageId + '/expiry/',
+                data: { ExpiryDate: expiryDate }
+            })
+            .success(function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            })
+            .error(function (data, status) {
+                if (failureCallback) {
+                    failureCallback(data, status);
+                }
+            });
+        };
+
+        self.updatePollType = function (manageId, pollTypeConfig, callback, failureCallback) {
+            $http({
+                method: 'PUT',
+                url: '/api/manage/' + manageId + '/pollType/',
+                data: pollTypeConfig
+            })
+            .success(function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            })
+            .error(function (data, status) {
+                if (failureCallback) {
+                    failureCallback(data, status);
+                }
+            });
+        };
+
+        self.updatePollMisc = function (manageId, miscConfig, callback, failureCallback) {
+            $http({
+                method: 'PUT',
+                url: '/api/manage/' + manageId + '/misc/',
+                data: miscConfig
+            })
+            .success(function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            })
+            .error(function (data, status) {
+                if (failureCallback) {
+                    failureCallback(data, status);
+                }
+            });
         };
 
         self.getVotes = function (pollId, callback, failureCallback) {
@@ -141,6 +194,19 @@
                 return false;
             }
             return $localStorage[manageId].visited;
+        };
+
+        self.getInvitations = function (manageId, callback, failureCallback) {
+            $http.get('/api/manage/' + manageId + '/invitation')
+                .success(function (data) {
+                    if (callback) {
+                        callback(data);
+                    }})
+                .error(function (data) {
+                    if (failureCallback) {
+                        failureCallback(data);
+                    }
+                });
         };
 
         self.sendInvitations = function (manageId, invitees, callback, failureCallback) {

@@ -236,6 +236,9 @@
     <Compile Include="Api\Controllers\AccountController.cs" />
     <Compile Include="Api\Controllers\DashboardController.cs" />
     <Compile Include="Api\Controllers\ManageController.cs" />
+    <Compile Include="Api\Controllers\ManageMiscController.cs" />
+    <Compile Include="Api\Controllers\ManagePollTypeController.cs" />
+    <Compile Include="Api\Controllers\ManageExpiryController.cs" />
     <Compile Include="Api\Controllers\ManageInvitationController.cs" />
     <Compile Include="Api\Controllers\ManageOptionController.cs" />
     <Compile Include="Api\Models\DBViewModels\ManageOptionResponseModel.cs" />
@@ -260,6 +263,10 @@
     <Compile Include="Api\Models\DBViewModels\CopyPollResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\DashboardPollResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\DeleteVotersRequestModel.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManagePollMiscRequest.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManageInvitationResponseModel.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManagePollTypeRequest.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManagePollExpiryRequest.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollRequestResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollUpdateRequest.cs" />
     <Compile Include="Api\Models\DBViewModels\ManageVoteResponseModel.cs" />
@@ -268,7 +275,7 @@
     <Compile Include="Api\Models\DBViewModels\PollCreationRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\PollCreationResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\PollRequestResponseModel.cs" />
-    <Compile Include="Api\Models\DBViewModels\ManagePollBallotRequestModel.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManageInvitationRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\VoteRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\VoteRequestResponseModel.cs" />
     <Compile Include="Api\Models\IdentityModels.cs" />

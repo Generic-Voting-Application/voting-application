@@ -63,6 +63,24 @@ namespace VotingApplication.Web
             );
 
             config.Routes.MapHttpRoute(
+                name: "ManageExpiryApiRoute",
+                routeTemplate: "api/manage/{manageId}/expiry/",
+                defaults: new { controller = "ManageExpiry" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "ManagePollTypeApiRoute",
+                routeTemplate: "api/manage/{manageId}/pollType/",
+                defaults: new { controller = "ManagePollType" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "ManageMiscApiRoute",
+                routeTemplate: "api/manage/{manageId}/misc/",
+                defaults: new { controller = "ManageMisc" }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "PollTokenApiRoute",
                 routeTemplate: "api/poll/{pollId}/token/",
                 defaults: new { controller = "PollToken" }

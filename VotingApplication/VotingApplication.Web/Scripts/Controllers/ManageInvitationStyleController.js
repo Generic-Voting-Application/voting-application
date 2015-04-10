@@ -19,7 +19,11 @@
         activate();
 
         function updatePoll() {
-            ManageService.updatePoll($routeParams.manageId, $scope.poll, navigateToManagePage);
+            var miscConfig = {
+                InviteOnly: $scope.poll.InviteOnly,
+                NamedVoting: $scope.poll.NamedVoting,
+            };
+            ManageService.updatePollMisc($routeParams.manageId, miscConfig, navigateToManagePage);
         }
 
         function navigateToManagePage() {

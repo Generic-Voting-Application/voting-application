@@ -40,17 +40,23 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         private ManagePollRequestResponseModel CreateResponseModelFromPoll(Poll poll)
         {
-            List<ManagePollBallotRequestModel> Voters = poll
+            List<ManageInvitationResponseModel> Voters = poll
                 .Ballots
                 .Where(b => b.Votes.Any())
                 .Select(CreateManagePollRequestResponseModel)
                 .ToList();
+
+            List<Ballot> Invitees = poll
+                .Ballots
+                .Where(b => !String.IsNullOrWhiteSpace(b.Email))
+                .ToList<Ballot>();
 
             return new ManagePollRequestResponseModel
             {
                 UUID = poll.UUID,
                 Options = poll.Options,
                 Voters = Voters,
+                InviteeCount = Invitees.Count,
                 VotingStrategy = poll.PollType.ToString(),
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,
@@ -62,13 +68,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             };
         }
 
-        private ManagePollBallotRequestModel CreateManagePollRequestResponseModel(Ballot ballot)
+        private ManageInvitationResponseModel CreateManagePollRequestResponseModel(Ballot ballot)
         {
-            return new ManagePollBallotRequestModel
+            return new ManageInvitationResponseModel
             {
                 Email = ballot.Email,
                 EmailSent = (ballot.TokenGuid != null && ballot.TokenGuid != Guid.Empty),
-                Name = ballot.VoterName
+                ManageToken = ballot.ManageGuid
             };
         }
 
@@ -178,40 +184,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                         );
 
                     poll.PollType = (PollType)Enum.Parse(typeof(PollType), updateRequest.VotingStrategy, true);
-                }
-
-                List<Ballot> redundantTokens = poll.Ballots.Where(b => b.Email != null).ToList<Ballot>();
-
-                foreach (ManagePollBallotRequestModel voter in updateRequest.Voters)
-                {
-                    Ballot ballot = redundantTokens.Find(t =>
-                        (t.Email == null && voter.Email == null && t.VoterName == voter.Name) ||
-                        (t.Email != null && t.Email.Equals(voter.Email, StringComparison.OrdinalIgnoreCase))
-                    );
-
-                    // Don't mark token as redundant if still in use
-                    if (ballot != null)
-                    {
-                        redundantTokens.Remove(ballot);
-                    }
-                    else
-                    {
-                        ballot = new Ballot { Email = voter.Email, ManageGuid = Guid.NewGuid() };
-                        poll.Ballots.Add(ballot);
-                    }
-                }
-
-                // Clean up tokens which have been removed
-                foreach (Ballot token in redundantTokens)
-                {
-                    foreach (Vote redundantVote in token.Votes.ToList())
-                    {
-                        removedVotes.Add(redundantVote);
-                        token.Votes.Remove(redundantVote);
-                    }
-
-                    context.Ballots.Remove(token);
-                    poll.Ballots.Remove(token);
                 }
 
                 poll.Options = newOptions;
