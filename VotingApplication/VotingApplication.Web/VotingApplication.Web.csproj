@@ -236,6 +236,7 @@
     <Compile Include="Api\Controllers\AccountController.cs" />
     <Compile Include="Api\Controllers\DashboardController.cs" />
     <Compile Include="Api\Controllers\ManageController.cs" />
+    <Compile Include="Api\Controllers\ManageQuestionController.cs" />
     <Compile Include="Api\Controllers\ManagePollTypeController.cs" />
     <Compile Include="Api\Controllers\ManageExpiryController.cs" />
     <Compile Include="Api\Controllers\ManageInvitationController.cs" />
@@ -260,6 +261,7 @@
     <Compile Include="Api\Models\DBViewModels\DashboardPollResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\DeleteVotersRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManageInvitationResponseModel.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManageQuestionRequest.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollTypeRequest.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollExpiryRequest.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollRequestResponseModel.cs" />
