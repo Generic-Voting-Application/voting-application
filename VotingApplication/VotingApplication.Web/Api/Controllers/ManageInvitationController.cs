@@ -53,8 +53,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 return matchingPoll.Ballots
                     .Where(b => !String.IsNullOrWhiteSpace(b.Email))
-                    .Select(b => BallotToModel(b))
-                    .ToList<ManageInvitationResponseModel>();
+                    .Select(BallotToModel)
+                    .ToList();
             }
         }
 
@@ -64,28 +64,18 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public void Post(Guid manageId, List<ManageInvitationRequestModel> invitees)
         {
-            if (invitees == null)
-            {
-                this.ThrowError(HttpStatusCode.BadRequest, "List of invitees cannot be null");
-            }
+            ValidateRequest(invitees);
 
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls
-                                        .Where(p => p.ManageId == manageId)
-                                        .Include(p => p.Ballots)
-                                        .FirstOrDefault();
-
-                if (matchingPoll == null)
-                {
-                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
-                }
+                Poll matchingPoll = GetPoll(context, manageId);
 
                 List<Ballot> redundantBallots = matchingPoll.Ballots.ToList<Ballot>();
 
                 foreach (ManageInvitationRequestModel invitee in invitees)
                 {
                     Ballot matchingBallot = matchingPoll.Ballots.SingleOrDefault(b => b.ManageGuid == invitee.ManageToken);
+                    redundantBallots.RemoveAll(b => b == matchingBallot);
 
                     if (matchingBallot == null)
                     {
@@ -93,35 +83,61 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                         matchingPoll.Ballots.Add(matchingBallot);
                         context.Ballots.Add(matchingBallot);
                     }
-                    else
-                    {
-                        redundantBallots.Remove(matchingBallot);
-                    }
 
                     if (invitee.SendInvitation)
                     {
-                        if (matchingBallot.TokenGuid == Guid.Empty)
-                        {
-                            matchingBallot.TokenGuid = Guid.NewGuid();
-                        }
-
-                        _invitationService.SendInvitation(matchingPoll.UUID, matchingBallot, matchingPoll.Name);
+                        SendInvitation(matchingBallot, matchingPoll);
                     }
                 }
-                
-                foreach (Ballot redundantBallot in redundantBallots)
-                {
-                    foreach (Vote redundantVote in redundantBallot.Votes)
-                    {
-                        context.Votes.Remove(redundantVote);
-                    }
 
-                    context.Ballots.Remove(redundantBallot);
-                    matchingPoll.Ballots.Remove(redundantBallot);
-                }
+                redundantBallots.ForEach(b => DeleteBallot(context, b, matchingPoll));
 
                 context.SaveChanges();
             }
+        }
+
+        private void ValidateRequest(List<ManageInvitationRequestModel> request)
+        {
+            if (request == null)
+            {
+                this.ThrowError(HttpStatusCode.BadRequest, "List of invitees cannot be null");
+            }
+        }
+
+        private Poll GetPoll(IVotingContext context, Guid manageId)
+        {
+            Poll matchingPoll = context.Polls
+                                        .Where(p => p.ManageId == manageId)
+                                        .Include(p => p.Ballots)
+                                        .FirstOrDefault();
+
+            if (matchingPoll == null)
+            {
+                this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
+            }
+
+            return matchingPoll;
+        }
+
+        private void SendInvitation(Ballot ballot, Poll poll)
+        {
+            if (ballot.TokenGuid == Guid.Empty)
+            {
+                ballot.TokenGuid = Guid.NewGuid();
+            }
+
+            _invitationService.SendInvitation(poll.UUID, ballot, poll.Name);
+        }
+
+        private void DeleteBallot(IVotingContext context, Ballot ballot, Poll poll)
+        {
+            foreach (Vote redundantVote in ballot.Votes)
+            {
+                context.Votes.Remove(redundantVote);
+            }
+
+            context.Ballots.Remove(ballot);
+            poll.Ballots.Remove(ballot);
         }
 
         #endregion
