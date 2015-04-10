@@ -135,7 +135,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Assert
             Assert.AreEqual(1, response.InviteeCount);
         }
-        
+
         #endregion
 
         #region PUT
@@ -276,7 +276,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 ManagePollRequestResponseModel response = controller.Get(pollManageGuid);
 
 
-                Assert.AreEqual(1, response.Voters.Count);
+                Assert.AreEqual(1, response.VotersCount);
             }
 
             [TestMethod]
@@ -310,7 +310,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 ManagePollRequestResponseModel response = controller.Get(pollManageGuid);
 
 
-                Assert.AreEqual(0, response.Voters.Count);
+                Assert.AreEqual(0, response.VotersCount);
             }
 
             public static ManageController CreateManageController(IContextFactory contextFactory)
