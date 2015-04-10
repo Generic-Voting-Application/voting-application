@@ -445,7 +445,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\ManageExpiry\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
