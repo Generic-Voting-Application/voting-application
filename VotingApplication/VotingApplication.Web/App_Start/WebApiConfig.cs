@@ -75,6 +75,12 @@ namespace VotingApplication.Web
             );
 
             config.Routes.MapHttpRoute(
+                name: "ManageMiscApiRoute",
+                routeTemplate: "api/manage/{manageId}/misc/",
+                defaults: new { controller = "ManageMisc" }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "PollTokenApiRoute",
                 routeTemplate: "api/poll/{pollId}/token/",
                 defaults: new { controller = "PollToken" }
