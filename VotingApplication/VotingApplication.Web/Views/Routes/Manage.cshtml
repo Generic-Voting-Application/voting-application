@@ -41,12 +41,12 @@
         </div>
         <div class="manage-section">
             <div>
-                <span class="glyphicon glyphicon-user pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Invitees:</h4>
+                <span class="glyphicon glyphicon-check pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Poll Style:</h4>
             </div>
             <div>
-                <span class="icon-padded-left">{{poll.InviteeCount}} Invitees</span>
-                <span class="pull-right"><a href="{{manageSubPageUrl('Invitees')}}">Edit</a></span>
+                <span class="icon-padded-left">{{poll.VotingStrategy}}</span>
+                <span class="pull-right"><a href="{{manageSubPageUrl('PollType')}}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section">
@@ -64,16 +64,6 @@
         </div>
         <div class="manage-section">
             <div>
-                <span class="glyphicon glyphicon-check pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Poll Style:</h4>
-            </div>
-            <div>
-                <span class="icon-padded-left">{{poll.VotingStrategy}}</span>
-                <span class="pull-right"><a href="{{manageSubPageUrl('PollType')}}">Edit</a></span>
-            </div>
-        </div>
-        <div class="manage-section">
-            <div>
                 <span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>
                 <h4 class="icon-padded-left">Expires:</h4>
             </div>
@@ -82,6 +72,16 @@
                     <span class="icon-padded-left">{{formatPollExpiry()}}</span>
                     <span class="pull-right"><a href="{{manageSubPageUrl('Expiry')}}">Edit</a></span>
                 </span>
+            </div>
+        </div>
+        <div class="manage-section">
+            <div>
+                <span class="glyphicon glyphicon-user pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Invitees:</h4>
+            </div>
+            <div>
+                <span class="icon-padded-left">{{poll.InviteeCount}} Invitees</span>
+                <span class="pull-right"><a href="{{manageSubPageUrl('Invitees')}}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section">
