@@ -27,13 +27,11 @@
         activate();
 
         function activate() {
-            PollService.getPoll(pollId, getPollSuccessCallback);
-        }
+            $scope.$watch('poll', function () {
+                $scope.options = $scope.poll ? $scope.poll.Options : [];
+            });
 
-        function getPollSuccessCallback(pollData) {
-            $scope.options = pollData.Options;
-
-            $scope.optionAddingAllowed = pollData.OptionAdding;
+            $scope.optionAddingAllowed = $scope.poll.OptionAdding;
 
             TokenService.getToken(pollId, getTokenSuccessCallback);
         }
@@ -65,7 +63,8 @@
                     return {
                         OptionId: option.Id,
                         VoteValue: option.voteValue,
-                        VoterName: IdentityService.identity.name
+                        VoterName: IdentityService.identity && $scope.poll && $scope.poll.NamedVoting ?
+                                   IdentityService.identity.name : null
                     };
                 });
         }

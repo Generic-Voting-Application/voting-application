@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -26,6 +27,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 Poll poll = context
                     .Polls
+                    .Include(p => p.Options)
                     .SingleOrDefault(p => p.UUID == pollId);
 
                 if (poll == null)
