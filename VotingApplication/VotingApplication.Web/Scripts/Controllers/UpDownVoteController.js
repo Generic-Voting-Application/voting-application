@@ -22,10 +22,6 @@
         activate();
 
         function activate() {
-            PollService.getPoll(pollId, getPollSuccessCallback);
-        }
-
-        function getPollSuccessCallback(pollData) {
             $scope.$watch('poll', function () {
                 $scope.options = $scope.poll ? $scope.poll.Options : [];
             });
