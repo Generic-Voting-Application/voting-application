@@ -16,8 +16,8 @@
                 <span>
                     <span ng-if="!account"><span class="clickable" ng-click="openLoginDialog()">Sign In</span> | <span class="clickable" ng-click="openRegisterDialog()">Register</span></span>
                     <span ng-if="account">{{account.email}}</span>
-                    <i class="glyphicon glyphicon-user"></i>
-                    <i ng-show="account" class="glyphicon glyphicon-chevron-down" ng-click="toggleAccountControls=!toggleAccountControls"></i>
+                    <i class="fa fa-user"></i>
+                    <i ng-show="account" class="fa fa-chevron-down" ng-click="toggleAccountControls=!toggleAccountControls"></i>
                 </span>
                 <div class="pull-right account-control-box" ng-show="toggleAccountControls && account">
                     <div><a href="/">My Account</a></div>
