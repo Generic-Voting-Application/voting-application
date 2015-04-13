@@ -6,9 +6,9 @@
         .factory('VoteService', VoteService);
 
 
-    VoteService.$inject = ['$location', '$http'];
+    VoteService.$inject = ['$location', '$http', '$q'];
 
-    function VoteService($location, $http) {
+    function VoteService($location, $http, $q) {
 
         var lastCheckedTimestamps = {};
 
