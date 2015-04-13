@@ -9,12 +9,16 @@
         .module('GVA.Voting')
         .controller('MultiVoteController', MultiVoteController);
 
-    MultiVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService'];
+    MultiVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService', 'ngDialog'];
 
-    function MultiVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService) {
+    function MultiVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService, ngDialog) {
 
         var pollId = $routeParams.pollId;
         var token = null;
+
+        $scope.optionAddingAllowed = false;
+
+        $scope.addOption = addOption;
 
         // Register our getVotes strategy with the parent controller
         $scope.setVoteCallback(getVotes);
@@ -25,6 +29,8 @@
             $scope.$watch('poll', function () {
                 $scope.options = $scope.poll ? $scope.poll.Options : [];
             });
+
+            $scope.optionAddingAllowed = $scope.poll.OptionAdding;
 
             TokenService.getToken(pollId, getTokenSuccessCallback);
         }
@@ -60,6 +66,15 @@
                                    IdentityService.identity.name : null
                     };
                 });
+        }
+
+        function addOption() {
+            ngDialog.open({
+                template: '/Routes/AddOptionDialog',
+                controller: 'AddVoterOptionDialogController',
+                scope: $scope,
+                data: { pollId: pollId }
+            });
         }
     }
 })();

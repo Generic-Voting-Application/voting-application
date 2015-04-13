@@ -13,6 +13,12 @@
             </div>
             <hr />
         </div>
+
+        <div ng-show="optionAddingAllowed">
+            <p>
+                <a class="icon-padded-left clickable" ng-click="addOption()">+ Add another Option</a>
+            </p>
+        </div>
     </div>
     <div class="flexbox">
         <button class="active-btn btn-medium centered" ng-click="submitVote(options)">Vote</button>

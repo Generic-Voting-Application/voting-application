@@ -9,9 +9,9 @@
         .module('GVA.Voting')
         .controller('PointsVoteController', PointsVoteController);
 
-    PointsVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService'];
+    PointsVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService', 'ngDialog'];
 
-    function PointsVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService) {
+    function PointsVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService, ngDialog) {
 
         var pollId = $routeParams.pollId;
         var token = null;
@@ -19,7 +19,9 @@
         $scope.options = [];
         $scope.totalPointsAvailable = 0;
         $scope.maxPointsPerOption = 0;
+        $scope.optionAddingAllowed = false;
 
+        $scope.addOption = addOption;
         $scope.unallocatedPoints = calculateUnallocatedPoints;
         $scope.disabledAddPoints = shouldAddPointsBeDisabled;
 
@@ -42,6 +44,8 @@
             });
 
 
+
+            $scope.optionAddingAllowed = $scope.poll.OptionAdding;
 
             TokenService.getToken(pollId, getTokenSuccessCallback);
         }
@@ -77,6 +81,15 @@
                                    IdentityService.identity.name : null
                     };
                 });
+        }
+
+        function addOption() {
+            ngDialog.open({
+                template: '/Routes/AddOptionDialog',
+                controller: 'AddVoterOptionDialogController',
+                scope: $scope,
+                data: { pollId: pollId }
+            });
         }
 
         function calculateUnallocatedPoints() {

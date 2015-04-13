@@ -9,9 +9,9 @@
         .module('GVA.Voting')
         .controller('BasicVoteController', BasicVoteController);
 
-    BasicVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService'];
+    BasicVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService', 'ngDialog'];
 
-    function BasicVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService) {
+    function BasicVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService, ngDialog) {
 
         var pollId = $routeParams.pollId;
         var token = null;
@@ -19,6 +19,8 @@
 
         $scope.options = {};
         $scope.optionAddingAllowed = false;
+
+        $scope.addOption = addOption;
 
         // Register our getVotes strategy with the parent controller
         $scope.setVoteCallback(getVotes);
@@ -54,6 +56,15 @@
                 if (option.Id === vote.OptionId) {
                     option.selected = true;
                 }
+            });
+        }
+
+        function addOption() {
+            ngDialog.open({
+                template: '/Routes/AddOptionDialog',
+                controller: 'AddVoterOptionDialogController',
+                scope: $scope,
+                data: { pollId: pollId }
             });
         }
 

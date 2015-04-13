@@ -6,9 +6,9 @@
         .factory('VoteService', VoteService);
 
 
-    VoteService.$inject = ['$location', '$http'];
+    VoteService.$inject = ['$location', '$http', '$q'];
 
-    function VoteService($location, $http) {
+    function VoteService($location, $http, $q) {
 
         var lastCheckedTimestamps = {};
 
@@ -16,7 +16,8 @@
             submitVote: submitVote,
             getResults: getResults,
             getTokenVotes: getTokenVotes,
-            refreshLastChecked: refreshLastChecked
+            refreshLastChecked: refreshLastChecked,
+            addVoterOption: addVoterOption
         };
 
         return service;
@@ -99,6 +100,19 @@
 
         function refreshLastChecked(pollId) {
             lastCheckedTimestamps[pollId] = 0;
+        }
+
+        function addVoterOption(pollId, newOption) {
+            var deferred = $q.defer();
+
+            $http
+                .post(
+                    '/api/poll/' + pollId + '/option',
+                    newOption
+                )
+                .success(function (data) { deferred.resolve(data); });
+
+            return deferred.promise;
         }
     }
 })();
