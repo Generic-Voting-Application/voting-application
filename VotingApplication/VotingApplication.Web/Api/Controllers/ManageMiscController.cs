@@ -19,7 +19,9 @@ namespace VotingApplication.Web.Api.Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = context.Polls.Where(p => p.ManageId == manageId).SingleOrDefault();
+                Poll poll = context
+                    .Polls
+                    .SingleOrDefault(p => p.ManageId == manageId);
 
                 if (poll == null)
                 {
@@ -33,6 +35,7 @@ namespace VotingApplication.Web.Api.Controllers
 
                 poll.InviteOnly = updateRequest.InviteOnly;
                 poll.NamedVoting = updateRequest.NamedVoting;
+                poll.OptionAdding = updateRequest.OptionAdding;
 
                 poll.LastUpdated = DateTime.Now;
 

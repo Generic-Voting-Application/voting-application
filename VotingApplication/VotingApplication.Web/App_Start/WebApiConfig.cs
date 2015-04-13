@@ -27,21 +27,21 @@ namespace VotingApplication.Web
             );
 
             config.Routes.MapHttpRoute(
-                name: "TokenPollVoteApiRoute",
-                routeTemplate: "api/token/{tokenGuid}/poll/{pollId}/vote/{voteId}",
-                defaults: new { controller = "TokenPollVote", voteId = RouteParameter.Optional }
+                name: "PollVoteApiRoute",
+                routeTemplate: "api/poll/{pollId}/token/{tokenGuid}/vote",
+                defaults: new { controller = "PollVote" }
             );
 
             config.Routes.MapHttpRoute(
-                name: "PollVoteApiRoute",
-                routeTemplate: "api/poll/{pollId}/vote/{voteId}",
-                defaults: new { controller = "PollVote", voteId = RouteParameter.Optional }
+                name: "PollResultsApiRoute",
+                routeTemplate: "api/poll/{pollId}/results",
+                defaults: new { controller = "PollResults" }
             );
 
             config.Routes.MapHttpRoute(
                 name: "PollOptionApiRoute",
-                routeTemplate: "api/poll/{pollId}/option/{optionId}",
-                defaults: new { controller = "PollOption", optionId = RouteParameter.Optional }
+                routeTemplate: "api/poll/{pollId}/option",
+                defaults: new { controller = "PollOption" }
             );
 
             config.Routes.MapHttpRoute(

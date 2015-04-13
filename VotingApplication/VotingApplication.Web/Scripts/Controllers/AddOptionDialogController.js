@@ -9,8 +9,10 @@
 
     function AddOptionDialogController($scope) {
 
+        $scope.multipleAddingAllowed = true;
+
         $scope.addOption = addOption;
-        $scope.dismiss = dismiss;
+        $scope.addOptionAndClose = addOptionAndClose;
 
         function addOption(form) {
             if (form.name === null) {
@@ -27,6 +29,12 @@
             form.description = null;
 
             $scope.options.push(newOption);
+        }
+
+        function addOptionAndClose(form) {
+            addOption(form);
+
+            dismiss();
         }
 
         function dismiss() {
