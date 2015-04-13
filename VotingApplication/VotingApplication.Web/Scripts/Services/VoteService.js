@@ -29,7 +29,7 @@
 
             $http({
                 method: 'PUT',
-                url: '/api/token/' + token + '/poll/' + pollId + '/vote',
+                url: '/api/poll/' + pollId + '/token/' + token + '/vote',
                 data: votes
             })
             .success(function (data) {
@@ -83,7 +83,7 @@
 
             $http({
                 method: 'GET',
-                url: '/api/token/' + token + '/poll/' + pollId + '/vote'
+                url: '/api/poll/' + pollId + '/token/' + token + '/vote'
             })
             .success(function (data) {
                 if (callback) {

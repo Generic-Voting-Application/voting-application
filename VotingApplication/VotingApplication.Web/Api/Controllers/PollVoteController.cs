@@ -11,20 +11,20 @@ using VotingApplication.Web.Api.Validators;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
-    public class TokenPollVoteController : WebApiController
+    public class PollVoteController : WebApiController
     {
         private readonly IVoteValidatorFactory _voteValidatorFactory;
 
-        public TokenPollVoteController() : base() { }
+        public PollVoteController() : base() { }
 
-        public TokenPollVoteController(IContextFactory contextFactory, IVoteValidatorFactory voteValidatorFactory)
+        public PollVoteController(IContextFactory contextFactory, IVoteValidatorFactory voteValidatorFactory)
             : base(contextFactory)
         {
             _voteValidatorFactory = voteValidatorFactory;
         }
 
         [HttpGet]
-        public List<VoteRequestResponseModel> Get(Guid tokenGuid, Guid pollId)
+        public List<VoteRequestResponseModel> Get(Guid pollId, Guid tokenGuid)
         {
             using (IVotingContext context = _contextFactory.CreateContext())
             {
@@ -67,7 +67,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         }
 
         [HttpPut]
-        public void Put(Guid tokenGuid, Guid pollId, List<VoteRequestModel> voteRequests)
+        public void Put(Guid pollId, Guid tokenGuid, List<VoteRequestModel> voteRequests)
         {
             using (IVotingContext context = _contextFactory.CreateContext())
             {
