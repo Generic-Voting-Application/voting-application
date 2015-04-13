@@ -10,8 +10,8 @@
         </h2>
         <div class="manage-section">
             <div>
-                <span class="glyphicon glyphicon-question-sign pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Question:</h4>
+                <span class="fa fa-question-circle pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Question</h4>
             </div>
             <div>
                 <form ng-submit="toggleNameEdit=false;updateQuestion()">
@@ -22,8 +22,8 @@
                         </span>
                         <span ng-if="toggleNameEdit">
                             <input class="wide-input" ng-model="$parent.Question" required />
-                            <span class="glyphicon glyphicon-remove pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.discardNameChanges()"></span>
-                            <span class="glyphicon glyphicon-ok pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.updateQuestion()"></span>
+                            <span class="fa fa-remove pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.discardNameChanges()"></span>
+                            <span class="fa fa-ok pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.updateQuestion()"></span>
                         </span>
                     </span>
                 </form>
@@ -31,18 +31,18 @@
         </div>
         <div class="manage-section">
             <div>
-                <span class="glyphicon glyphicon-th-list pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Options:</h4>
+                <span class="fa fa-list pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Options</h4>
             </div>
             <div>
-                <span class="icon-padded-left">{{poll.Options.length}} Options</span>
+                <span class="icon-padded-left">{{poll.Options.length}} Option(s)</span>
                 <span class="pull-right"><a href="{{manageSubPageUrl('Options')}}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section">
             <div>
-                <span class="glyphicon glyphicon-check pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Poll Style:</h4>
+                <span class="fa fa-check-square-o pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Poll Style</h4>
             </div>
             <div>
                 <span class="icon-padded-left">{{poll.VotingStrategy}}</span>
@@ -51,7 +51,7 @@
         </div>
         <div class="manage-section">
             <div>
-                <span class="glyphicon glyphicon-envelope pull-left" aria-hidden="true"></span>
+                <span class="fa fa-cog pull-left" aria-hidden="true"></span>
                 <h4 class="icon-padded-left">Miscellaneous Settings</h4>
             </div>
             <div class ="icon-padded-left">
@@ -65,8 +65,8 @@
         </div>
         <div class="manage-section">
             <div>
-                <span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Expires:</h4>
+                <span class="fa fa-clock-o pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Expires</h4>
             </div>
             <div>
                 <span>
@@ -77,28 +77,28 @@
         </div>
         <div class="manage-section">
             <div>
-                <span class="glyphicon glyphicon-user pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Invitees:</h4>
+                <span class="fa fa-users pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Invitations</h4>
             </div>
             <div>
-                <span class="icon-padded-left">{{poll.InviteeCount}} Invitees</span>
+                <span class="icon-padded-left">{{poll.InviteeCount}} Invitation(s)</span>
                 <span class="pull-right"><a href="{{manageSubPageUrl('Invitees')}}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section">
             <div>
-                <span class="glyphicon glyphicon-tasks pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Voters:</h4>
+                <span class="fa fa-bar-chart pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Ballots</h4>
             </div>
             <div>
-                <span class="icon-padded-left">{{ poll.VotersCount }} Voters</span>
+                <span class="icon-padded-left">{{ poll.VotersCount }} Ballot(s)</span>
                 <span class="pull-right"><a href="{{ manageSubPageUrl('Voters') }}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section" ng-show="!poll.InviteOnly">
             <div>
-                <span class="glyphicon glyphicon-link pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Share:</h4>
+                <span class="fa fa-share-alt pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Share</h4>
             </div>
             <div>
                 <div class="icon-padded-left">
