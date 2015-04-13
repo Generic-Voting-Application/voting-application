@@ -7,14 +7,15 @@
         .controller('VotingPageController', VotingPageController);
 
 
-    VotingPageController.$inject = ['$scope', '$routeParams', 'IdentityService', 'VoteService', 'TokenService', 'RoutingService'];
+    VotingPageController.$inject = ['$scope', '$routeParams', 'IdentityService', 'VoteService', 'TokenService', 'RoutingService', 'PollService'];
 
-    function VotingPageController($scope, $routeParams, IdentityService, VoteService, TokenService, RoutingService) {
+    function VotingPageController($scope, $routeParams, IdentityService, VoteService, TokenService, RoutingService, PollService) {
 
         // Turn "/#/voting/abc/123" into "/#/results/abc/123"
         var pollId = $routeParams['pollId'];
         var tokenId = $routeParams['tokenId'] || '';
 
+        $scope.poll = null;
         $scope.resultsLink = RoutingService.getResultsPageUrl(pollId, tokenId);
 
         $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
@@ -40,6 +41,10 @@
             TokenService.getToken(pollId, function (tokenData) {
                 tokenId = tokenData;
             });
+
+            PollService.getPoll(pollId, function (pollData) {
+                $scope.poll = pollData;
+            });
         }
 
         function submitVote(options) {
@@ -52,7 +57,7 @@
                 return;
             }
 
-            if (!IdentityService.identity) {
+            if (!IdentityService.identity && $scope.poll && $scope.poll.NamedVoting) {
                 return IdentityService.openLoginDialog($scope, function () {
                     submitVote(options);
                 });

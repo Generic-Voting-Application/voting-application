@@ -30,18 +30,18 @@
 
 
         function activate() {
-            PollService.getPoll(pollId, pollServiceSuccessCallback);
-        }
+            $scope.$watch('poll', function () {
+                $scope.options = $scope.poll ? $scope.poll.Options : [];
 
-        function pollServiceSuccessCallback(pollData) {
-            $scope.options = pollData.Options;
+                $scope.options.forEach(function (d) {
+                    d.voteValue = 0;
+                });
 
-            $scope.options.forEach(function (d) {
-                d.voteValue = 0;
+                $scope.totalPointsAvailable = $scope.poll ? $scope.poll.MaxPoints : 0;
+                $scope.maxPointsPerOption = $scope.poll ? $scope.poll.MaxPerVote : 0;
             });
 
-            $scope.totalPointsAvailable = pollData.MaxPoints;
-            $scope.maxPointsPerOption = pollData.MaxPerVote;
+
 
             TokenService.getToken(pollId, getTokenSuccessCallback);
         }
@@ -73,7 +73,8 @@
                     return {
                         OptionId: option.Id,
                         VoteValue: option.voteValue,
-                        VoterName: IdentityService.identity.name
+                        VoterName: IdentityService.identity && $scope.poll && $scope.poll.NamedVoting ?
+                                   IdentityService.identity.name : null
                     };
                 });
         }
