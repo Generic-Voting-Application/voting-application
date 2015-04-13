@@ -29,7 +29,15 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 model.OptionName = vote.Option.Name;
             }
 
-            model.VoterName = poll.NamedVoting ? vote.Ballot.VoterName : "Anonymous User";
+            if (!poll.NamedVoting || vote.Ballot.VoterName == null)
+            {
+                model.VoterName = "Anonymous User";
+            }
+            else
+            {
+                model.VoterName = vote.Ballot.VoterName;
+            }
+
             model.VoteValue = vote.VoteValue;
 
             return model;
