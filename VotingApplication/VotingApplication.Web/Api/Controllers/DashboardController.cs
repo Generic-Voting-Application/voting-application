@@ -61,12 +61,12 @@ namespace VotingApplication.Web.Api.Controllers
         {
             if (pollCopyRequest == null)
             {
-                this.ThrowError(HttpStatusCode.BadRequest);
+                ThrowError(HttpStatusCode.BadRequest);
             }
 
             if (!ModelState.IsValid)
             {
-                this.ThrowError(HttpStatusCode.BadRequest, ModelState);
+                ThrowError(HttpStatusCode.BadRequest, ModelState);
             }
 
             using (IVotingContext context = _contextFactory.CreateContext())
@@ -80,13 +80,13 @@ namespace VotingApplication.Web.Api.Controllers
 
                 if (pollToCopy == null)
                 {
-                    this.ThrowError(HttpStatusCode.BadRequest);
+                    ThrowError(HttpStatusCode.BadRequest);
                 }
 
 
                 if (pollToCopy.CreatorIdentity != userId)
                 {
-                    this.ThrowError(HttpStatusCode.Forbidden);
+                    ThrowError(HttpStatusCode.Forbidden);
                 }
 
                 Poll newPoll = CopyPoll(pollToCopy);

@@ -35,7 +35,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (poll == null)
                 {
-                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", id));
+                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", id));
                 }
 
                 return CreatePollResponseFromModel(poll);
@@ -68,12 +68,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             if (pollCreationRequest == null)
             {
-                this.ThrowError(HttpStatusCode.BadRequest);
+                ThrowError(HttpStatusCode.BadRequest);
             }
 
             if (!ModelState.IsValid)
             {
-                this.ThrowError(HttpStatusCode.BadRequest, ModelState);
+                ThrowError(HttpStatusCode.BadRequest, ModelState);
             }
 
             #endregion

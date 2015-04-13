@@ -44,7 +44,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (poll == null)
                 {
-                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
+                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
                 }
 
                 return poll.Options.Select(OptionToModel).ToList();
@@ -61,23 +61,23 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 if (optionCreationRequest == null)
                 {
-                    this.ThrowError(HttpStatusCode.BadRequest);
+                    ThrowError(HttpStatusCode.BadRequest);
                 }
 
                 Poll poll = context.Polls.Where(p => p.UUID == pollId).FirstOrDefault();
                 if (poll == null)
                 {
-                    this.ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", pollId));
+                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", pollId));
                 }
 
                 if (!poll.OptionAdding)
                 {
-                    this.ThrowError(HttpStatusCode.MethodNotAllowed, string.Format("Option adding not allowed for poll {0}", pollId));
+                    ThrowError(HttpStatusCode.MethodNotAllowed, string.Format("Option adding not allowed for poll {0}", pollId));
                 }
 
                 if (!ModelState.IsValid)
                 {
-                    this.ThrowError(HttpStatusCode.BadRequest, ModelState);
+                    ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
                 Option newOption = ModelToOption(optionCreationRequest);

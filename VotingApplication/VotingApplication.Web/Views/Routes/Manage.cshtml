@@ -14,16 +14,16 @@
                 <h4 class="icon-padded-left">Question:</h4>
             </div>
             <div>
-                <form ng-submit="toggleNameEdit=false;updatePoll()">
+                <form ng-submit="toggleNameEdit=false;updateQuestion()">
                     <span class="icon-padded-left">
                         <span ng-if="!toggleNameEdit">
-                            {{poll.Name}}
+                            {{Question}}
                             <span class="pull-right"><a class="clickable" ng-click="$parent.toggleNameEdit=true">Edit</a></span>
                         </span>
                         <span ng-if="toggleNameEdit">
-                            <input class="wide-input" ng-model="poll.Name" required />
+                            <input class="wide-input" ng-model="$parent.Question" required />
                             <span class="glyphicon glyphicon-remove pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.discardNameChanges()"></span>
-                            <span class="glyphicon glyphicon-ok pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.updatePoll()"></span>
+                            <span class="glyphicon glyphicon-ok pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.updateQuestion()"></span>
                         </span>
                     </span>
                 </form>

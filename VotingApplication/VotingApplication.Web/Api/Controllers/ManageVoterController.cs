@@ -36,7 +36,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 if (poll == null)
                 {
                     string errorMessage = String.Format("Poll {0} not found", manageId);
-                    this.ThrowError(HttpStatusCode.NotFound, errorMessage);
+                    ThrowError(HttpStatusCode.NotFound, errorMessage);
                 }
 
                 if (poll.Ballots.Any())
@@ -82,17 +82,17 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             if (request == null)
             {
-                this.ThrowError(HttpStatusCode.BadRequest);
+                ThrowError(HttpStatusCode.BadRequest);
             }
 
             if (!request.BallotDeleteRequests.Any())
             {
-                this.ThrowError(HttpStatusCode.BadRequest);
+                ThrowError(HttpStatusCode.BadRequest);
             }
 
             if (request.BallotDeleteRequests.Any(b => !b.VoteDeleteRequests.Any()))
             {
-                this.ThrowError(HttpStatusCode.BadRequest);
+                ThrowError(HttpStatusCode.BadRequest);
             }
 
             using (IVotingContext context = _contextFactory.CreateContext())
@@ -106,7 +106,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (poll == null)
                 {
-                    this.ThrowError(HttpStatusCode.NotFound, String.Format("Poll {0} not found", manageId));
+                    ThrowError(HttpStatusCode.NotFound, String.Format("Poll {0} not found", manageId));
                 }
 
                 List<Guid> requestBallotGuids = request
@@ -121,7 +121,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 if (requestBallotGuids.Except(pollBallotGuids).Any())
                 {
-                    this.ThrowError(HttpStatusCode.NotFound, String.Format("Ballots requested for delete do not all belong to poll {0}", manageId));
+                    ThrowError(HttpStatusCode.NotFound, String.Format("Ballots requested for delete do not all belong to poll {0}", manageId));
                 }
 
                 List<Ballot> ballots = poll.Ballots.ToList();
@@ -136,7 +136,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                         if (vote == null)
                         {
-                            this.ThrowError(HttpStatusCode.NotFound, String.Format("Ballot {0} does not contain an option {1}", ballotRequest.BallotManageGuid, voteRequest.OptionNumber));
+                            ThrowError(HttpStatusCode.NotFound, String.Format("Ballot {0} does not contain an option {1}", ballotRequest.BallotManageGuid, voteRequest.OptionNumber));
                         }
 
                         ballot.Votes.Remove(vote);
