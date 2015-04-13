@@ -56,7 +56,8 @@
                     return {
                         OptionId: option.Id,
                         VoteValue: option.voteValue,
-                        VoterName: IdentityService.identity ? IdentityService.identity.name : null
+                        VoterName: IdentityService.identity && $scope.poll && $scope.poll.NamedVoting ?
+                                   IdentityService.identity.name : null
                     };
                 });
         }
