@@ -36,7 +36,6 @@ namespace VotingApplication.Web.Api.Controllers
                 poll.InviteOnly = updateRequest.InviteOnly;
                 poll.NamedVoting = updateRequest.NamedVoting;
                 poll.OptionAdding = updateRequest.OptionAdding;
-                poll.OptionAdding = updateRequest.OptionAdding;
 
                 poll.LastUpdated = DateTime.Now;
 
