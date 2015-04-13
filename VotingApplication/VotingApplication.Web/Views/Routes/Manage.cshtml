@@ -52,11 +52,12 @@
         <div class="manage-section">
             <div>
                 <span class="glyphicon glyphicon-envelope pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Invitation style:</h4>
+                <h4 class="icon-padded-left">Miscellaneous Settings</h4>
             </div>
-            <div>
-                <span class="icon-padded-left" ng-if="poll.InviteOnly">Invite Only, </span>
-                <span class="icon-padded-left" ng-if="!poll.InviteOnly">Open Voting, </span>
+            <div class ="icon-padded-left">
+                <span ng-if="poll.InviteOnly">Invite Only</span>
+                <span ng-if="!poll.InviteOnly">Open Voting</span>
+                <br />
                 <span ng-if="poll.NamedVoting">Named Voters</span>
                 <span ng-if="!poll.NamedVoting">Anonymous Voters</span>
                 <span class="pull-right"><a href="{{manageSubPageUrl('InvitationStyle')}}">Edit</a></span>
