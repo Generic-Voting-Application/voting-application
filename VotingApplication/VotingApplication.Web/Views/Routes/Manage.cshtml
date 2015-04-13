@@ -98,16 +98,15 @@
         <div class="manage-section" ng-show="!poll.InviteOnly">
             <div>
                 <span class="fa fa-share-alt pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Share</h4>
-            </div>
-            <div>
-                <div class="icon-padded-left">
+                <div class="pull-right">
                     <a href="mailto:&amp;body={{fullPollUrl()}}"><i class="fa fa-envelope-square fa-2x"></i></a>
                     <i class="fa fa-facebook-square fa-2x"></i>
                     <i class="fa fa-google-plus-square fa-2x"></i>
                 </div>
+                <h4 class="icon-padded-left">Share</h4>
             </div>
         </div>
+        <div class="clear"></div>
         <div class="manage-section flexbox">
             <div class="centered">
                 <a href="{{pollUrl()}}">
