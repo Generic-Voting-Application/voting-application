@@ -58,7 +58,7 @@
 
             $http({
                 method: 'GET',
-                url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastCheckedTimestamps[pollId]
+                url: '/api/poll/' + pollId + '/results?lastRefreshed=' + lastCheckedTimestamps[pollId]
             })
             .success(function (data, status) {
                 if (callback) {

@@ -17,7 +17,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
     [TestClass]
     public class PollVoteControllerTests
     {
-        private PollVoteController _controller;
+        private PollResultsController _controller;
         private Vote _bobVote;
         private Vote _joeVote;
         private Vote _otherVote;
@@ -73,7 +73,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Options).Returns(dummyOptions);
             mockContext.Setup(a => a.Polls).Returns(dummyPolls);
 
-            _controller = new PollVoteController(mockContextFactory.Object);
+            _controller = new PollResultsController(mockContextFactory.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -136,7 +136,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             Uri requestURI;
-            Uri.TryCreate("http://localhost/?lastPoll=0", UriKind.Absolute, out requestURI);
+            Uri.TryCreate("http://localhost/?lastRefreshed=0", UriKind.Absolute, out requestURI);
             _controller.Request.RequestUri = requestURI;
             var response = _controller.Get(_mainUUID);
 
@@ -152,7 +152,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             Uri requestURI;
-            Uri.TryCreate("http://localhost/?lastPoll=2145916800000", UriKind.Absolute, out requestURI);
+            Uri.TryCreate("http://localhost/?lastRefreshed=2145916800000", UriKind.Absolute, out requestURI);
             _controller.Request.RequestUri = requestURI;
             var response = _controller.Get(_mainUUID);
 

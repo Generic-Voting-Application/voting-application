@@ -14,11 +14,11 @@ using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
-    public class PollVoteController : WebApiController
+    public class PollResultsController : WebApiController
     {
-        public PollVoteController() : base() { }
+        public PollResultsController() : base() { }
 
-        public PollVoteController(IContextFactory contextFactory) : base(contextFactory) { }
+        public PollResultsController(IContextFactory contextFactory) : base(contextFactory) { }
 
         [HttpGet]
         [ResponseType(typeof(IEnumerable<VoteRequestResponseModel>))]
@@ -38,13 +38,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 if (Request.RequestUri != null)
                 {
                     NameValueCollection queryMap = HttpUtility.ParseQueryString(Request.RequestUri.Query);
-                    string lastPolledDate = queryMap["lastPoll"];
+                    string lastRefreshedDate = queryMap["lastRefreshed"];
 
                     var clientLastUpdated = DateTime.MinValue;
 
-                    if (lastPolledDate != null)
+                    if (lastRefreshedDate != null)
                     {
-                        clientLastUpdated = UnixTimeToDateTime(long.Parse(lastPolledDate));
+                        clientLastUpdated = UnixTimeToDateTime(long.Parse(lastRefreshedDate));
                     }
 
                     if (poll.LastUpdated < clientLastUpdated)
@@ -76,7 +76,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             return dateTime;
         }
 
-        private static VoteRequestResponseModel VoteToModel(Vote vote, Poll poll)
+        private VoteRequestResponseModel VoteToModel(Vote vote, Poll poll)
         {
             var model = new VoteRequestResponseModel();
 
