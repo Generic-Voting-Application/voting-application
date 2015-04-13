@@ -22,11 +22,9 @@
         activate();
 
         function activate() {
-            PollService.getPoll(pollId, getPollDataSuccessCallback);
-        }
-
-        function getPollDataSuccessCallback(pollData) {
-            $scope.options = pollData.Options;
+            $scope.$watch('poll', function () {
+                $scope.options = $scope.poll ? $scope.poll.Options : [];
+            });
 
             TokenService.getToken(pollId, getTokenSuccessCallback);
         }
@@ -58,7 +56,8 @@
                     return {
                         OptionId: option.Id,
                         VoteValue: option.voteValue,
-                        VoterName: IdentityService.identity.name
+                        VoterName: IdentityService.identity && $scope.poll && $scope.poll.NamedVoting ?
+                                   IdentityService.identity.name : null
                     };
                 });
         }

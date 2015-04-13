@@ -45,12 +45,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     .Include(v => v.Ballot);
 
                 return votes
-                    .Select(VoteToModel)
+                    .Select(v => VoteToModel(v, poll))
                     .ToList();
             }
         }
 
-        private static VoteRequestResponseModel VoteToModel(Vote vote)
+        private static VoteRequestResponseModel VoteToModel(Vote vote, Poll poll)
         {
             var model = new VoteRequestResponseModel();
 
@@ -58,6 +58,15 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 model.OptionId = vote.Option.Id;
                 model.OptionName = vote.Option.Name;
+                model.VoterName = vote.Ballot.VoterName;
+            }
+
+            if (!poll.NamedVoting || vote.Ballot.VoterName == null)
+            {
+                model.VoterName = "Anonymous User";
+            }
+            else
+            {
                 model.VoterName = vote.Ballot.VoterName;
             }
 
