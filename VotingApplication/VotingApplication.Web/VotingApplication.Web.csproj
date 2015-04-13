@@ -248,8 +248,8 @@
     <Compile Include="Api\Controllers\PollController.cs" />
     <Compile Include="Api\Controllers\PollOptionController.cs" />
     <Compile Include="Api\Controllers\PollTokenController.cs" />
+    <Compile Include="Api\Controllers\PollResultsController.cs" />
     <Compile Include="Api\Controllers\PollVoteController.cs" />
-    <Compile Include="Api\Controllers\TokenPollVoteController.cs" />
     <Compile Include="Api\Controllers\WebApiController.cs" />
     <Compile Include="Api\Filters\BasicAuthenticator.cs" />
     <Compile Include="Api\Filters\LoggingExceptionFilterAttribute.cs" />

@@ -16,6 +16,10 @@
         var pollId = $routeParams.pollId;
         var token = null;
 
+
+        $scope.options = {};
+        $scope.optionAddingAllowed = false;
+
         // Register our getVotes strategy with the parent controller
         $scope.setVoteCallback(getVotes);
 
@@ -26,8 +30,11 @@
                 $scope.options = $scope.poll ? $scope.poll.Options : [];
             });
 
+            $scope.optionAddingAllowed = $scope.poll.optionAddingAllowed;
+
             TokenService.getToken(pollId, getTokenSuccessCallback);
         }
+
 
         function getTokenSuccessCallback(tokenData) {
             token = tokenData;

@@ -21,7 +21,7 @@
         return service;
 
 
-        function getPoll(pollId, callback, failureCallback) {
+        function getPoll(pollId, callback) {
 
             if (!pollId) {
                 return null;
@@ -34,11 +34,6 @@
             .success(function (data) {
                 if (callback) {
                     callback(data);
-                }
-            })
-            .error(function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
                 }
             });
 

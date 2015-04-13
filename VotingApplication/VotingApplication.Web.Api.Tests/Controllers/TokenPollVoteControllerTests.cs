@@ -19,7 +19,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
     [TestClass]
     public class TokenPollVoteControllerTests
     {
-        private TokenPollVoteController _controller;
+        private PollVoteController _controller;
         private Vote _bobVote;
         private Vote _joeVote;
         private InMemoryDbSet<Vote> _dummyVotes;
@@ -99,7 +99,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _mockValidatorFactory = new Mock<IVoteValidatorFactory>();
             _mockValidatorFactory.Setup(a => a.CreateValidator(PollType.Basic)).Returns(mockValidator.Object);
 
-            _controller = new TokenPollVoteController(mockContextFactory.Object, _mockValidatorFactory.Object);
+            _controller = new PollVoteController(mockContextFactory.Object, _mockValidatorFactory.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -118,14 +118,14 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetIsAllowed()
         {
             // Act
-            _controller.Get(_bobBallot.TokenGuid, _mainUUID);
+            _controller.Get(_mainUUID, _bobBallot.TokenGuid);
         }
 
         [TestMethod]
         public void GetReturnsListOfVotesForUserAndPoll()
         {
             // Act
-            var response = _controller.Get(_bobBallot.TokenGuid, _mainUUID);
+            var response = _controller.Get(_mainUUID, _bobBallot.TokenGuid);
 
             // Assert
             Assert.AreEqual(1, response.Count);
@@ -138,7 +138,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            _controller.Get(_bobBallot.TokenGuid, newGuid);
+            _controller.Get(newGuid, _bobBallot.TokenGuid);
 
         }
 
@@ -146,7 +146,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void GetForValidUserAndPollWithNoVotesIsEmpty()
         {
             // Act
-            var response = _controller.Get(_bobBallot.TokenGuid, _otherUUID);
+            var response = _controller.Get(_otherUUID, _bobBallot.TokenGuid);
 
             // Assert
             Assert.AreEqual(0, response.Count);
@@ -164,7 +164,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.ModelState.AddModelError("OptionId", "");
 
             // Act
-            _controller.Put(_bobBallot.TokenGuid, _mainUUID, new List<VoteRequestModel>());
+            _controller.Put(_mainUUID, _bobBallot.TokenGuid, new List<VoteRequestModel>());
         }
 
         [TestMethod]
@@ -172,7 +172,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutNonexistentOptionIsNotAllowed()
         {
             // Act
-            _controller.Put(_bobBallot.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 99 } });
+            _controller.Put(_mainUUID, _bobBallot.TokenGuid, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 99 } });
         }
 
         [TestMethod]
@@ -180,14 +180,14 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutNonexistentPollIsNotAllowed()
         {
             // Act
-            _controller.Put(_bobBallot.TokenGuid, Guid.NewGuid(), new List<VoteRequestModel>() { });
+            _controller.Put(Guid.NewGuid(), _bobBallot.TokenGuid, new List<VoteRequestModel>() { });
         }
 
         [TestMethod]
         public void PutWithNewVoteIsAllowed()
         {
             // Act
-            _controller.Put(_otherBallot.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1, VoteValue = 0 } });
+            _controller.Put(_mainUUID, _otherBallot.TokenGuid, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1, VoteValue = 0 } });
 
             // Assert
             Assert.AreEqual(3, _dummyVotes.Local.Count);
@@ -197,7 +197,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutReplacesCurrentVote()
         {
             // Act
-            _controller.Put(_bobBallot.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1, VoteValue = 0 } });
+            _controller.Put(_mainUUID, _bobBallot.TokenGuid, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1, VoteValue = 0 } });
 
             // Assert
             Assert.AreEqual(2, _dummyVotes.Local.Count);
@@ -207,7 +207,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutWithNewVoteSetsVoteValueCorrectly()
         {
             // Act
-            _controller.Put(_bobBallot.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1, VoteValue = 0 } });
+            _controller.Put(_mainUUID, _bobBallot.TokenGuid, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1, VoteValue = 0 } });
 
             // Assert
             Assert.AreEqual(0, _dummyVotes.Local.Single(v => v.Ballot.TokenGuid == _bobBallot.TokenGuid && v.Poll.UUID == _mainUUID).VoteValue);
@@ -218,7 +218,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutInvalidOptionIsNotAllowed()
         {
             // Act
-            _controller.Put(_bobBallot.TokenGuid, _mainUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 3 } });
+            _controller.Put(_mainUUID, _bobBallot.TokenGuid, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 3 } });
         }
 
         [TestMethod]
@@ -229,7 +229,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var newVote = new Vote() { Option = new Option() { Id = 1 }, Poll = new Poll() { UUID = _timedUUID } };
 
             // Act
-            _controller.Put(_bobBallot.TokenGuid, _timedUUID, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } });
+            _controller.Put(_timedUUID, _bobBallot.TokenGuid, new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } });
         }
 
         [TestMethod]
@@ -240,7 +240,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _mockValidatorFactory.Setup(a => a.CreateValidator(PollType.Points)).Returns(pointsValidator.Object);
 
             // Act
-            _controller.Put(_otherBallot.TokenGuid, _pointsUUID, new List<VoteRequestModel> { new VoteRequestModel { OptionId = 1, VoteValue = 2 } });
+            _controller.Put(_pointsUUID, _otherBallot.TokenGuid, new List<VoteRequestModel> { new VoteRequestModel { OptionId = 1, VoteValue = 2 } });
 
             // Assert
             pointsValidator.Verify(a => a.Validate(It.IsAny<List<VoteRequestModel>>(), It.IsAny<Poll>(), It.IsAny<ModelStateDictionary>()));
@@ -255,7 +255,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var voteRequests = new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } };
 
             // Act
-            _controller.Put(Guid.NewGuid(), _tokenUUID, voteRequests);
+            _controller.Put(_tokenUUID, Guid.NewGuid(), voteRequests);
         }
 
         [TestMethod]
@@ -266,7 +266,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var voteRequests = new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } };
 
             // Act
-            _controller.Put(Guid.NewGuid(), _mainUUID, voteRequests);
+            _controller.Put(_mainUUID, Guid.NewGuid(), voteRequests);
         }
 
         #endregion
