@@ -21,6 +21,16 @@
                 </form>
             </div>
         </div>
+        <div class="manage-section">
+            <div>
+                <form class="form-section-block">
+                    <label for="OptionAdding">Voters can add their own options</label>
+                    <toggle-switch id="OptionAdding" ng-model="poll.OptionAdding" on-label="Yes" off-label="No"></toggle-switch>
+                    <small ng-if="poll.OptionAdding">Voters can add their own options to the poll</small>
+                    <small ng-if="!poll.OptionAdding">Voters cannot add their own options to the poll</small>
+                </form>
+            </div>
+        </div>
 
         <div class="manage-section">
             <button class="manage-btn" ng-click="return()">Cancel</button>
