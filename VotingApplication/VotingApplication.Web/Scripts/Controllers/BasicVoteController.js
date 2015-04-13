@@ -22,42 +22,39 @@
         activate();
 
         function activate() {
-            PollService.getPoll(pollId, getPollSuccessCallback);
+            $scope.$watch('poll', function () {
+                $scope.options = $scope.poll ? $scope.poll.Options : [];
+            });
 
-            function getPollSuccessCallback(pollData) {
-                $scope.options = pollData.Options;
+            TokenService.getToken(pollId, getTokenSuccessCallback);
+        }
 
-                TokenService.getToken(pollId, getTokenSuccessCallback);
+        function getTokenSuccessCallback(tokenData) {
+            token = tokenData;
+
+            VoteService.getTokenVotes(pollId, token, getTokenVotesSuccessCallback);
+        }
+
+        function getTokenVotesSuccessCallback(voteData) {
+
+            if (!voteData || voteData.length === 0) {
+                return;
             }
 
-            function getTokenSuccessCallback(tokenData) {
-                token = tokenData;
+            var vote = voteData[0];
 
-                VoteService.getTokenVotes(pollId, token, getTokenVotesSuccessCallback);
-            }
-
-            function getTokenVotesSuccessCallback(voteData) {
-
-                if (!voteData || voteData.length === 0) {
-                    return;
+            angular.forEach($scope.options, function (option) {
+                if (option.Id === vote.OptionId) {
+                    option.selected = true;
                 }
-
-                var vote = voteData[0];
-
-                angular.forEach($scope.options, function (option) {
-                    if (option.Id === vote.OptionId) {
-                        option.selected = true;
-                    }
-                });
-            }
-
+            });
         }
 
         function getVotes(option) {
             return [{
                 OptionId: option.Id,
                 VoteValue: 1,
-                VoterName: IdentityService.identity.name
+                VoterName: IdentityService.identity ? IdentityService.identity.name : null
             }];
         }
     }
