@@ -8,8 +8,8 @@
             <label for="description">Description</label>
             <input class="form-input" id="description" ng-model="addOptionForm.description">
         </div>
-        <button class="active-btn" ng-disabled="!addOptionForm.name || addOptionForm.name.length === 0" ng-click="addOption(addOptionForm)" type="submit">Add Another</button>
-        <button class="active-btn" ng-click="addOption(addOptionForm); dismiss()">Done</button>
+        <button class="active-btn" ng-show="multipleAddingAllowed" ng-disabled="!addOptionForm.name || addOptionForm.name.length === 0" ng-click="addOption(addOptionForm)" type="submit">Add Another</button>
+        <button class="active-btn" ng-click="addOptionAndClose(addOptionForm)">Done</button>
     </form>
 </div>
 <span class="dialog-error-bar-bottom" ng-show="displayError">{{displayError}}</span>
