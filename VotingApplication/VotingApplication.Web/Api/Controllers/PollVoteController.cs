@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web;
+using System.Web.Http;
 using System.Web.Http.Description;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
@@ -16,11 +17,68 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     public class PollVoteController : WebApiController
     {
         public PollVoteController() : base() { }
+
         public PollVoteController(IContextFactory contextFactory) : base(contextFactory) { }
 
-        private VoteRequestResponseModel VoteToModel(Vote vote, Poll poll)
+        [HttpGet]
+        [ResponseType(typeof(IEnumerable<VoteRequestResponseModel>))]
+        public HttpResponseMessage Get(Guid pollId)
         {
-            VoteRequestResponseModel model = new VoteRequestResponseModel();
+            using (IVotingContext context = _contextFactory.CreateContext())
+            {
+                Poll poll = context
+                    .Polls
+                    .FirstOrDefault(s => s.UUID == pollId);
+
+                if (poll == null)
+                {
+                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
+                }
+
+                if (Request.RequestUri != null)
+                {
+                    NameValueCollection queryMap = HttpUtility.ParseQueryString(Request.RequestUri.Query);
+                    string lastPolledDate = queryMap["lastPoll"];
+
+                    var clientLastUpdated = DateTime.MinValue;
+
+                    if (lastPolledDate != null)
+                    {
+                        clientLastUpdated = UnixTimeToDateTime(long.Parse(lastPolledDate));
+                    }
+
+                    if (poll.LastUpdated < clientLastUpdated)
+                    {
+                        return new HttpResponseMessage(HttpStatusCode.NotModified);
+                    }
+                }
+
+                List<Vote> votes = context
+                    .Votes
+                    .Include(v => v.Poll)
+                    .Where(v => v.Poll.UUID == pollId)
+                    .Include(v => v.Option)
+                    .Include(v => v.Ballot)
+                    .ToList();
+
+                List<VoteRequestResponseModel> result = votes
+                    .Select(v => VoteToModel(v, poll))
+                    .ToList();
+
+                return Request.CreateResponse(HttpStatusCode.OK, result);
+            }
+        }
+
+        private static DateTime UnixTimeToDateTime(double unixTimestamp)
+        {
+            var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            dateTime = dateTime.AddMilliseconds(unixTimestamp);
+            return dateTime;
+        }
+
+        private static VoteRequestResponseModel VoteToModel(Vote vote, Poll poll)
+        {
+            var model = new VoteRequestResponseModel();
 
             if (vote.Option != null)
             {
@@ -34,60 +92,5 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             return model;
         }
-
-        #region GET
-
-        [ResponseType(typeof(IEnumerable<VoteRequestResponseModel>))]
-        public HttpResponseMessage Get(Guid pollId)
-        {
-            using (var context = _contextFactory.CreateContext())
-            {
-                Poll poll = context
-                    .Polls
-                    .FirstOrDefault(s => s.UUID == pollId);
-
-                List<Vote> votes = context
-                    .Votes
-                    .Include(v => v.Poll)
-                    .Where(v => v.Poll.UUID == pollId)
-                    .Include(v => v.Option)
-                    .Include(v => v.Ballot)
-                    .ToList();
-
-                if (poll == null)
-                {
-                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
-                }
-
-                DateTime clientLastUpdated = DateTime.MinValue;
-                if (Request.RequestUri != null && Request.RequestUri.Query != null)
-                {
-                    NameValueCollection queryMap = HttpUtility.ParseQueryString(this.Request.RequestUri.Query);
-                    string lastPolledDate = queryMap["lastPoll"];
-
-                    if (lastPolledDate != null)
-                    {
-                        clientLastUpdated = UnixTimeToDateTime(long.Parse(lastPolledDate));
-                    }
-
-                    if (poll.LastUpdated.CompareTo(clientLastUpdated) < 0)
-                    {
-                        return new HttpResponseMessage(HttpStatusCode.NotModified);
-                    }
-                }
-
-                var result = votes.Select(v => VoteToModel(v, poll)).ToList();
-                return Request.CreateResponse(HttpStatusCode.OK, result);
-            }
-        }
-
-        private static DateTime UnixTimeToDateTime(double unixTimestamp)
-        {
-            DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            dateTime = dateTime.AddMilliseconds(unixTimestamp);
-            return dateTime;
-        }
-
-        #endregion
     }
 }

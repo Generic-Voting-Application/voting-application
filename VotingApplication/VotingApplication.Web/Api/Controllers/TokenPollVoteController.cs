@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
@@ -12,30 +13,46 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
     public class TokenPollVoteController : WebApiController
     {
-        private IVoteValidatorFactory _voteValidatorFactory;
+        private readonly IVoteValidatorFactory _voteValidatorFactory;
 
         public TokenPollVoteController() : base() { }
+
         public TokenPollVoteController(IContextFactory contextFactory, IVoteValidatorFactory voteValidatorFactory)
             : base(contextFactory)
         {
             _voteValidatorFactory = voteValidatorFactory;
         }
 
-        private Vote ModelToVote(VoteRequestModel voteRequest, Ballot ballot, Option option, Poll poll)
+        [HttpGet]
+        public List<VoteRequestResponseModel> Get(Guid tokenGuid, Guid pollId)
         {
-            return new Vote
+            using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Option = option,
-                Poll = poll,
-                Ballot = ballot,
-                VoteValue = voteRequest.VoteValue
-            };
+                Poll poll = context
+                    .Polls
+                    .SingleOrDefault(s => s.UUID == pollId);
 
+                if (poll == null)
+                {
+                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
+                }
+
+                IQueryable<Vote> votes = context
+                    .Votes
+                    .Include(v => v.Poll)
+                    .Where(v => v.Ballot.TokenGuid == tokenGuid && v.Poll.UUID == pollId)
+                    .Include(v => v.Option)
+                    .Include(v => v.Ballot);
+
+                return votes
+                    .Select(VoteToModel)
+                    .ToList();
+            }
         }
 
-        private VoteRequestResponseModel VoteToModel(Vote vote, Poll poll)
+        private static VoteRequestResponseModel VoteToModel(Vote vote)
         {
-            VoteRequestResponseModel model = new VoteRequestResponseModel();
+            var model = new VoteRequestResponseModel();
 
             if (vote.Option != null)
             {
@@ -49,40 +66,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             return model;
         }
 
-
-        #region GET
-
-        public List<VoteRequestResponseModel> Get(Guid tokenGuid, Guid pollId)
-        {
-
-            using (var context = _contextFactory.CreateContext())
-            {
-                Poll poll = context.Polls.Where(s => s.UUID == pollId).FirstOrDefault();
-                if (poll == null)
-                {
-                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
-                }
-
-                List<Vote> votes = context
-                    .Votes
-                    .Include(v => v.Poll)
-                    .Where(v => v.Ballot.TokenGuid == tokenGuid && v.Poll.UUID == pollId)
-                    .Include(v => v.Option)
-                    .Include(v => v.Ballot)
-                    .ToList();
-
-                return votes.Select(v => VoteToModel(v, poll)).ToList();
-            }
-
-        }
-
-        #endregion
-
-        #region PUT
-
+        [HttpPut]
         public void Put(Guid tokenGuid, Guid pollId, List<VoteRequestModel> voteRequests)
         {
-            using (var context = _contextFactory.CreateContext())
+            using (IVotingContext context = _contextFactory.CreateContext())
             {
                 if (voteRequests == null)
                 {
@@ -94,7 +81,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
-                Poll poll = context.Polls.Where(p => p.UUID == pollId).Include(p => p.Ballots).Include(p => p.Options).SingleOrDefault();
+                Poll poll = context
+                    .Polls
+                    .Where(p => p.UUID == pollId)
+                    .Include(p => p.Ballots)
+                    .Include(p => p.Options)
+                    .SingleOrDefault();
+
                 if (poll == null)
                 {
                     ThrowError(HttpStatusCode.NotFound, String.Format("Poll {0} not found", pollId));
@@ -105,24 +98,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     ThrowError(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", pollId));
                 }
 
-                Ballot ballot = poll.Ballots.SingleOrDefault(t => t.TokenGuid == tokenGuid);
-
-                if (ballot == null)
-                {
-                    if (poll.InviteOnly)
-                    {
-                        ThrowError(HttpStatusCode.Forbidden, String.Format("Token {0} not valid for this poll", tokenGuid));
-                    }
-                    else
-                    {
-                        ballot = new Ballot() { TokenGuid = tokenGuid };
-                        poll.Ballots.Add(ballot);
-                    }
-                }
 
                 foreach (VoteRequestModel voteRequest in voteRequests)
                 {
-                    if (!poll.Options.Any(o => o.Id == voteRequest.OptionId))
+                    if (poll.Options.All(o => o.Id != voteRequest.OptionId))
                     {
                         ModelState.AddModelError("OptionId", "Option choice not valid for this poll");
                     }
@@ -135,6 +114,24 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 if (!ModelState.IsValid)
                 {
                     ThrowError(HttpStatusCode.BadRequest, ModelState);
+                }
+
+
+                Ballot ballot = poll
+                    .Ballots
+                    .SingleOrDefault(t => t.TokenGuid == tokenGuid);
+
+                if (ballot == null)
+                {
+                    if (poll.InviteOnly)
+                    {
+                        ThrowError(HttpStatusCode.Forbidden, String.Format("Token {0} not valid for this poll", tokenGuid));
+                    }
+                    else
+                    {
+                        ballot = new Ballot() { TokenGuid = tokenGuid };
+                        poll.Ballots.Add(ballot);
+                    }
                 }
 
                 List<Vote> existingVotes = context
@@ -151,10 +148,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 // For some reason, we don't have an addrange function on Entity Framework
                 foreach (VoteRequestModel voteRequest in voteRequests)
                 {
-                    context.Votes.Add(ModelToVote(voteRequest,
-                                                  ballot,
-                                                  context.Options.Single(o => o.Id == voteRequest.OptionId),
-                                                  context.Polls.Single(p => p.UUID == pollId)));
+                    Option option = context
+                        .Options
+                        .Single(o => o.Id == voteRequest.OptionId);
+
+                    Vote modelToVote = ModelToVote(voteRequest, ballot, option, poll);
+                    context.Votes.Add(modelToVote);
 
                     // TODO: refactor the voteRequest model to be a ballotRequest instead. => only one voterName.
                     ballot.VoterName = voteRequest.VoterName;
@@ -164,10 +163,18 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 context.SaveChanges();
             }
-
-            return;
         }
 
-        #endregion
+        private static Vote ModelToVote(VoteRequestModel voteRequest, Ballot ballot, Option option, Poll poll)
+        {
+            return new Vote
+            {
+                Option = option,
+                Poll = poll,
+                Ballot = ballot,
+                VoteValue = voteRequest.VoteValue
+            };
+
+        }
     }
 }
