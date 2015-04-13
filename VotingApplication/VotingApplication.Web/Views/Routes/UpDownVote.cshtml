@@ -20,7 +20,13 @@
                     <span truncated-text ng-model="option.Description" max-chars="60" class="option-description"></span>
                 </div>
             </div>
-            <hr />
+            <hr/>
+        </div>
+
+        <div ng-show="optionAddingAllowed">
+            <p>
+                <a class="icon-padded-left clickable" ng-click="addOption()">+ Add another Option</a>
+            </p>
         </div>
     </div>
     <div class="flexbox">
