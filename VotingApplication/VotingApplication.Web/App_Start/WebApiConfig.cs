@@ -40,8 +40,8 @@ namespace VotingApplication.Web
 
             config.Routes.MapHttpRoute(
                 name: "PollOptionApiRoute",
-                routeTemplate: "api/poll/{pollId}/option/{optionId}",
-                defaults: new { controller = "PollOption", optionId = RouteParameter.Optional }
+                routeTemplate: "api/poll/{pollId}/option",
+                defaults: new { controller = "PollOption" }
             );
 
             config.Routes.MapHttpRoute(
