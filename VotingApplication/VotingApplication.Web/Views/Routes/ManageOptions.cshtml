@@ -6,8 +6,8 @@
         <p ng-if="options.length === 0">No options have been added.</p>
 
         <div class="manage-section" ng-repeat="option in options">
-            <span class="glyphicon glyphicon-trash pull-right clickable form-aligned-top" ng-click="removeOption(option)"></span>
-            <span class="glyphicon glyphicon-pencil pull-right clickable form-aligned-top" ng-click="editOption(option)"></span>
+            <span class="fa fa-trash-o pull-right clickable form-aligned-top" ng-click="removeOption(option)"></span>
+            <span class="fa fa-pencil pull-right clickable form-aligned-top" ng-click="editOption(option)"></span>
             <div ng-if="!option.editOptionToggle" aria-hidden="true">
                 <h4>{{option.Name}}</h4>
                 <div>{{option.Description}}</div>
