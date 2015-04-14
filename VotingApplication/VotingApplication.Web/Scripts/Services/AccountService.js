@@ -25,27 +25,74 @@
             observerCallbacks.push(callback);
         };
 
-        self.setAccount = setAccount;
-
         self.clearAccount = function () {
             self.account = null;
             delete $localStorage.account;
             notifyObservers();
         };
 
-        self.getAccessToken = getAccessToken;
+        self.login = login;
 
-        self.registerAccountAndLogin = function (email, password) {
+        self.registerAccountAndLogin = registerAccountAndLogin;
+
+        self.forgotPassword = function (email) {
+            return $http({
+                method: 'POST',
+                url: '/api/Account/ForgotPassword',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({
+                    Email: email
+                })
+            });
+        };
+
+        self.resetPassword = function (email, code, password, confirmPassword) {
+            return $http({
+                method: 'POST',
+                url: '/api/Account/ResetPassword',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({
+                    Email: email,
+                    Code: code,
+                    Password: password,
+                    ConfirmPassword: confirmPassword
+                })
+            });
+        };
+
+        self.openLoginDialog = function (scope) {
+            ngDialog.open({
+                template: '../Routes/AccountLogin',
+                controller: 'AccountLoginController',
+                'scope': scope
+            });
+        };
+
+        self.openRegisterDialog = function (scope) {
+            ngDialog.open({
+                template: '../Routes/AccountRegister',
+                controller: 'AccountRegisterController',
+                'scope': scope
+            });
+        };
+
+        return self;
+
+        function login(email, password) {
             var deferred = $q.defer();
 
-            register(email, password)
-                .then(function () { return getAccessToken(email, password); })
+            getAccessToken(email, password)
                 .then(function (response) { setAccount(response.data.access_token, email); })
                 .then(function () { deferred.resolve(); })
                 .catch(function () { deferred.reject(); });
 
             return deferred.promise;
-        };
+        }
+
+        function registerAccountAndLogin(email, password) {
+            return register(email, password)
+                .then(function () { return login(email, password); });
+        }
 
         function register(email, password) {
             return $http({
@@ -88,49 +135,5 @@
 
             notifyObservers();
         }
-
-        self.forgotPassword = function (email) {
-            return $http({
-                method: 'POST',
-                url: '/api/Account/ForgotPassword',
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify({
-                    Email: email
-                })
-            });
-        };
-
-        self.resetPassword = function (email, code, password, confirmPassword) {
-            return $http({
-                method: 'POST',
-                url: '/api/Account/ResetPassword',
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify({
-                    Email: email,
-                    Code: code,
-                    Password: password,
-                    ConfirmPassword: confirmPassword
-                })
-            });
-        };
-
-        self.openLoginDialog = function (scope, callback) {
-            ngDialog.open({
-                template: '../Routes/AccountLogin',
-                controller: 'AccountLoginController',
-                'scope': scope,
-                data: { 'callback': callback }
-            });
-        };
-
-        self.openRegisterDialog = function (scope) {
-            ngDialog.open({
-                template: '../Routes/AccountRegister',
-                controller: 'AccountRegisterController',
-                'scope': scope
-            });
-        };
-
-        return self;
     }
 })();
