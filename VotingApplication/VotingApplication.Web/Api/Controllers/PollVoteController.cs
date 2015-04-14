@@ -59,12 +59,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 model.OptionId = vote.Option.Id;
                 model.OptionName = vote.Option.Name;
-                model.VoterName = vote.Ballot.VoterName;
             }
 
             if (poll.NamedVoting && vote.Ballot.VoterName != null)
             {
-                model.VoterName = "Anonymous User";
+                model.VoterName = vote.Ballot.VoterName;
             }
 
             model.VoteValue = vote.VoteValue;
