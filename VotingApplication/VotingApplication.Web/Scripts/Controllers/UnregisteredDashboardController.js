@@ -1,4 +1,5 @@
 ﻿/// <reference path="../Services/AccountService.js" />
+/// <reference path="../Services/RoutingService.js" />
 /// <reference path="../Services/PollService.js" />
 (function () {
     'use strict';
@@ -30,7 +31,7 @@
 
         function createPollSuccessCallback(data) {
             TokenService.setToken(data.UUID, data.CreatorBallot.TokenGuid);
-            RoutingService.navigateToManagePage(data.manageId);
+            RoutingService.navigateToManagePage(data.ManageId);
             
         }
     }

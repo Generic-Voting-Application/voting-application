@@ -6,7 +6,7 @@
         <div class="manage-section">
             <div class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.VotingStrategy=='Basic'}" ng-click="updateStrategy('Basic')">
                 <span class="pull-left">
-                    <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                    <span class="fa fa-check" aria-hidden="true"></span>
                     <span class="poll-type-text">Single Vote</span>
                 </span>
             </div>
@@ -15,7 +15,7 @@
         <div class="manage-section">
             <div class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.VotingStrategy=='Multi'}" ng-click="updateStrategy('Multi')">
                 <span class="pull-left">
-                    <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+                    <span class="fa fa-check-square-o" aria-hidden="true"></span>
                     <span class="poll-type-text">Multi Vote</span>
                 </span>
             </div>
@@ -24,7 +24,7 @@
         <div class="manage-section">
             <div class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.VotingStrategy=='UpDown'}" ng-click="updateStrategy('UpDown')">
                 <span class="pull-left">
-                    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                    <span class="fa fa-thumbs-o-up" aria-hidden="true"></span>
                     <span class="poll-type-text">Up/Down Vote</span>
                 </span>
             </div>
@@ -34,7 +34,7 @@
             <div class="poll-type-btn-extended" ng-class="{'selected':poll.VotingStrategy=='Points'}">
                 <div class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.VotingStrategy=='Points'}" ng-click="updateStrategy('Points')">
                     <span class="pull-left">
-                        <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>
+                        <span class="fa fa-tasks" aria-hidden="true"></span>
                         <span class="poll-type-text">Points vote</span>
                     </span>
                 </div>

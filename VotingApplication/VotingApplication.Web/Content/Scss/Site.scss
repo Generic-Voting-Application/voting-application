@@ -1,6 +1,5 @@
 ﻿@import url(https://fonts.googleapis.com/css?family=Roboto:700);
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
-@import url(../Lib/Css/bootstrap-glyphicons.css);
 @import url(../Lib/Css/font-awesome-min.css);
 
 $Grey400: #BDBDBD;
@@ -39,6 +38,13 @@ header {
     width: 50%;
 }
 
+*, *:before, *:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+
 header {
     height: 45px;
     padding: 5px 20px;
@@ -66,6 +72,11 @@ h4 {
 
 a {
     text-decoration: none;
+    color: #428bca;
+}
+
+button {
+    cursor: pointer;
 }
 
 .btn {
