@@ -19,6 +19,11 @@ namespace VotingApplication.Web.Api.Controllers
         {
             ValidateRequest(request);
 
+            if (!ModelState.IsValid)
+            {
+                ThrowError(HttpStatusCode.BadRequest, ModelState);
+            }
+
             using (var context = _contextFactory.CreateContext())
             {
                 Poll poll = GetPoll(context, manageId);

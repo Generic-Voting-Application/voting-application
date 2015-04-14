@@ -37,12 +37,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
                 }
 
-                IQueryable<Vote> votes = context
+                List<Vote> votes = context
                     .Votes
                     .Include(v => v.Poll)
                     .Where(v => v.Ballot.TokenGuid == tokenGuid && v.Poll.UUID == pollId)
                     .Include(v => v.Option)
-                    .Include(v => v.Ballot);
+                    .Include(v => v.Ballot)
+                    .ToList();
 
                 return votes
                     .Select(v => VoteToModel(v, poll))
