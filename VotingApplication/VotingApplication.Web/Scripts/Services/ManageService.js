@@ -125,7 +125,7 @@
 
         self.getVotes = function (pollId, callback, failureCallback) {
 
-            $http.get('/api/poll/' + pollId + '/vote')
+            $http.get('/api/poll/' + pollId + '/results')
                 .success(function (data) {
                     if (callback) {
                         callback(data);
