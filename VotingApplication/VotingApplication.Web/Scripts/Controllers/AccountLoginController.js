@@ -1,5 +1,4 @@
 ﻿/// <reference path="../Services/AccountService.js" />
-/// <reference path="../Services/ErrorService.js" />
 (function () {
     'use strict';
 
@@ -23,7 +22,7 @@
         }
 
         function displayErrorMessage() {
-            $scope.displayError = $rootScope.error.readableMessage;
+            displayError($rootScope.error.readableMessage);
             $rootScope.error = null;
         }
 
@@ -45,11 +44,11 @@
         }
 
         function clearError() {
-            $scope.errorMessage = '';
+            $scope.displayError = null;
         }
 
         function displayError(errorMessage) {
-            $scope.errorMessage = errorMessage;
+            $scope.displayError = errorMessage;
         }
 
 

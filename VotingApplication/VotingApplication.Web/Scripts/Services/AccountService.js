@@ -35,16 +35,7 @@
 
         self.registerAccountAndLogin = registerAccountAndLogin;
 
-        self.forgotPassword = function (email) {
-            return $http({
-                method: 'POST',
-                url: '/api/Account/ForgotPassword',
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify({
-                    Email: email
-                })
-            });
-        };
+        self.forgotPassword = forgotPassword;
 
         self.resetPassword = function (email, code, password, confirmPassword) {
             return $http({
@@ -60,23 +51,13 @@
             });
         };
 
-        self.openLoginDialog = function (scope) {
-            ngDialog.open({
-                template: '../Routes/AccountLogin',
-                controller: 'AccountLoginController',
-                'scope': scope
-            });
-        };
+        self.openLoginDialog = openLoginDialog;
 
-        self.openRegisterDialog = function (scope) {
-            ngDialog.open({
-                template: '../Routes/AccountRegister',
-                controller: 'AccountRegisterController',
-                'scope': scope
-            });
-        };
+        self.openRegisterDialog = openRegisterDialog;
 
         return self;
+
+
 
         function login(email, password) {
             var deferred = $q.defer();
@@ -87,6 +68,17 @@
                 .catch(function () { deferred.reject(); });
 
             return deferred.promise;
+        }
+
+        function forgotPassword(email) {
+            return $http({
+                method: 'POST',
+                url: '/api/Account/ForgotPassword',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({
+                    Email: email
+                })
+            });
         }
 
         function registerAccountAndLogin(email, password) {
@@ -134,6 +126,22 @@
             $localStorage.account = account;
 
             notifyObservers();
+        }
+
+        function openLoginDialog(scope) {
+            ngDialog.open({
+                template: '../Routes/AccountLogin',
+                controller: 'AccountLoginController',
+                'scope': scope
+            });
+        }
+
+        function openRegisterDialog(scope) {
+            ngDialog.open({
+                template: '../Routes/AccountRegister',
+                controller: 'AccountRegisterController',
+                'scope': scope
+            });
         }
     }
 })();
