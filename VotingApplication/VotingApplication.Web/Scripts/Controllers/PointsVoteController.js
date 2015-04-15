@@ -24,6 +24,7 @@
         $scope.addOption = addOption;
         $scope.unallocatedPoints = calculateUnallocatedPoints;
         $scope.disabledAddPoints = shouldAddPointsBeDisabled;
+        $scope.notifyOptionAdded = notifyOptionAdded;
 
         // Register our getVotes strategy with the parent controller
         $scope.setVoteCallback(getVotes);
@@ -90,6 +91,10 @@
                 scope: $scope,
                 data: { pollId: pollId }
             });
+        }
+
+        function notifyOptionAdded() {
+            $scope.$emit('voterOptionAddedEvent');
         }
 
         function calculateUnallocatedPoints() {
