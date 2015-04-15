@@ -40,8 +40,8 @@
                         d.voteValue = 0;
                     });
 
-                    $scope.totalPointsAvailable = $scope.poll ? $scope.poll.MaxPoints : 0;
-                    $scope.maxPointsPerOption = $scope.poll ? $scope.poll.MaxPerVote : 0;
+                    $scope.totalPointsAvailable = $scope.poll.MaxPoints;
+                    $scope.maxPointsPerOption =$scope.poll.MaxPerVote;
                     $scope.optionAddingAllowed = $scope.poll.OptionAdding;
                 }
             });
