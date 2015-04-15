@@ -30,7 +30,7 @@
         function activate() {
             $scope.$watch('poll', function () {
                 if ($scope.poll) {
-                    $scope.options = $scope.poll.Options
+                    $scope.options = $scope.poll.Options;
                     $scope.optionAddingAllowed = $scope.poll.OptionAddingAllowed;
                 }
             });
