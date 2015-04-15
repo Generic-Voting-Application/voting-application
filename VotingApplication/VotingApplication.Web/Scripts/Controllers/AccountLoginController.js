@@ -22,7 +22,7 @@
         }
 
         function displayErrorMessage() {
-            displayError($rootScope.error.readableMessage);
+            showError($rootScope.error.readableMessage);
             $rootScope.error = null;
         }
 
@@ -30,12 +30,12 @@
             clearError();
 
             if (form.email === undefined) {
-                displayError('Please supply email address.');
+                showError('Please supply email address.');
             }
             else {
                 AccountService.forgotPassword(form.email)
                     .then(closeDialog)
-                    .catch(function (data) { displayError(data.Message || data.error_description); });
+                    .catch(function (data) { showError(data.Message || data.error_description); });
             }
         }
 
@@ -47,7 +47,7 @@
             $scope.displayError = null;
         }
 
-        function displayError(errorMessage) {
+        function showError(errorMessage) {
             $scope.displayError = errorMessage;
         }
 
