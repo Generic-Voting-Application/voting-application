@@ -32,7 +32,7 @@
             $scope.$watch('poll', function () {
                 if ($scope.poll) {
                     $scope.options = $scope.poll.Options;
-                    $scope.optionAddingAllowed = $scope.poll.OptionAddingAllowed;
+                    $scope.optionAddingAllowed = $scope.poll.OptionAdding;
                 }
             });
 
