@@ -28,10 +28,11 @@
 
         function activate() {
             $scope.$watch('poll', function () {
-                $scope.options = $scope.poll ? $scope.poll.Options : [];
+                if ($scope.poll) {
+                    $scope.options = $scope.poll.Options;
+                    $scope.optionAddingAllowed = $scope.poll.OptionAdding;
+                }
             });
-
-            $scope.optionAddingAllowed = $scope.poll.OptionAdding;
 
             TokenService.getToken(pollId, getTokenSuccessCallback);
         }
