@@ -9,9 +9,9 @@
         .module('GVA.Voting')
         .controller('PointsVoteController', PointsVoteController);
 
-    PointsVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService'];
+    PointsVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService', 'ngDialog'];
 
-    function PointsVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService) {
+    function PointsVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService, ngDialog) {
 
         var pollId = $routeParams.pollId;
         var token = null;
@@ -19,9 +19,12 @@
         $scope.options = [];
         $scope.totalPointsAvailable = 0;
         $scope.maxPointsPerOption = 0;
+        $scope.optionAddingAllowed = false;
 
+        $scope.addOption = addOption;
         $scope.unallocatedPoints = calculateUnallocatedPoints;
         $scope.disabledAddPoints = shouldAddPointsBeDisabled;
+        $scope.notifyOptionAdded = notifyOptionAdded;
 
         // Register our getVotes strategy with the parent controller
         $scope.setVoteCallback(getVotes);
@@ -30,18 +33,19 @@
 
 
         function activate() {
-            PollService.getPoll(pollId, pollServiceSuccessCallback);
-        }
+            $scope.$watch('poll', function () {
+                if ($scope.poll) {
+                    $scope.options = $scope.poll.Options;
 
-        function pollServiceSuccessCallback(pollData) {
-            $scope.options = pollData.Options;
+                    $scope.options.forEach(function (d) {
+                        d.voteValue = 0;
+                    });
 
-            $scope.options.forEach(function (d) {
-                d.voteValue = 0;
+                    $scope.totalPointsAvailable = $scope.poll.MaxPoints;
+                    $scope.maxPointsPerOption =$scope.poll.MaxPerVote;
+                    $scope.optionAddingAllowed = $scope.poll.OptionAdding;
+                }
             });
-
-            $scope.totalPointsAvailable = pollData.MaxPoints;
-            $scope.maxPointsPerOption = pollData.MaxPerVote;
 
             TokenService.getToken(pollId, getTokenSuccessCallback);
         }
@@ -73,9 +77,23 @@
                     return {
                         OptionId: option.Id,
                         VoteValue: option.voteValue,
-                        VoterName: IdentityService.identity.name
+                        VoterName: IdentityService.identity && $scope.poll && $scope.poll.NamedVoting ?
+                                   IdentityService.identity.name : null
                     };
                 });
+        }
+
+        function addOption() {
+            ngDialog.open({
+                template: '/Routes/AddOptionDialog',
+                controller: 'AddVoterOptionDialogController',
+                scope: $scope,
+                data: { pollId: pollId }
+            });
+        }
+
+        function notifyOptionAdded() {
+            $scope.$emit('voterOptionAddedEvent');
         }
 
         function calculateUnallocatedPoints() {

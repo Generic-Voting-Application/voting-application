@@ -9,6 +9,10 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
         public string VoterName { get; set; }
         public List<VoteResponse> Votes { get; set; }
 
+        public ManageVoteResponseModel()
+        {
+            VoterName = "Anonymous User";
+        }
     }
 
     public class VoteResponse

@@ -236,13 +236,20 @@
     <Compile Include="Api\Controllers\AccountController.cs" />
     <Compile Include="Api\Controllers\DashboardController.cs" />
     <Compile Include="Api\Controllers\ManageController.cs" />
+    <Compile Include="Api\Controllers\ManageQuestionController.cs" />
+    <Compile Include="Api\Controllers\ManageMiscController.cs" />
+    <Compile Include="Api\Controllers\ManagePollTypeController.cs" />
+    <Compile Include="Api\Controllers\ManageExpiryController.cs" />
     <Compile Include="Api\Controllers\ManageInvitationController.cs" />
+    <Compile Include="Api\Controllers\ManageOptionController.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManageOptionResponseModel.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManageOptionUpdateRequest.cs" />
     <Compile Include="Api\Controllers\ManageVoterController.cs" />
     <Compile Include="Api\Controllers\PollController.cs" />
     <Compile Include="Api\Controllers\PollOptionController.cs" />
     <Compile Include="Api\Controllers\PollTokenController.cs" />
+    <Compile Include="Api\Controllers\PollResultsController.cs" />
     <Compile Include="Api\Controllers\PollVoteController.cs" />
-    <Compile Include="Api\Controllers\TokenPollVoteController.cs" />
     <Compile Include="Api\Controllers\WebApiController.cs" />
     <Compile Include="Api\Filters\BasicAuthenticator.cs" />
     <Compile Include="Api\Filters\LoggingExceptionFilterAttribute.cs" />
@@ -257,6 +264,11 @@
     <Compile Include="Api\Models\DBViewModels\CopyPollResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\DashboardPollResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\DeleteVotersRequestModel.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManagePollMiscRequest.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManageInvitationResponseModel.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManageQuestionRequest.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManagePollTypeRequest.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManagePollExpiryRequest.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollRequestResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollUpdateRequest.cs" />
     <Compile Include="Api\Models\DBViewModels\ManageVoteResponseModel.cs" />
@@ -265,7 +277,7 @@
     <Compile Include="Api\Models\DBViewModels\PollCreationRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\PollCreationResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\PollRequestResponseModel.cs" />
-    <Compile Include="Api\Models\DBViewModels\ManagePollBallotRequestModel.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManageInvitationRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\VoteRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\VoteRequestResponseModel.cs" />
     <Compile Include="Api\Models\IdentityModels.cs" />
@@ -324,7 +336,6 @@
     </None>
     <EmbeddedResource Include="Api\Resources\EmailTemplate.html" />
     <Content Include="Content\Lib\Css\angular-toggle-switch.css" />
-    <Content Include="Content\Lib\Css\bootstrap-glyphicons.css" />
     <Content Include="Content\Lib\Css\font-awesome-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-theme-default-min.css" />
@@ -333,9 +344,9 @@
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="Fonts\fontawesome-webfont.svg" />
-    <Content Include="Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\Logo.png" />
+    <Content Include="Scripts\Controllers\AddVoterOptionDialogController.js" />
     <Content Include="Scripts\Controllers\EditOptionDialogController.js" />
     <Content Include="Scripts\Controllers\AddOptionDialogController.js" />
     <Content Include="Scripts\Controllers\ManageVotersController.js" />
@@ -419,6 +430,7 @@
     <Content Include="Views\Routes\ErrorBar.cshtml" />
     <Content Include="Views\Routes\AddOptionDialog.cshtml" />
     <Content Include="Views\Routes\EditOptionDialog.cshtml" />
+    <Content Include="Fonts\fontawesome-webfont.woff2" />
     <None Include="Views\Routes\PollHeading.cshtml" />
     <Content Include="Views\Routes\PollTypeChange.cshtml" />
     <Content Include="Scripts\Directives\PollHeading.html" />
@@ -442,9 +454,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="Fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="Fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\Scss\Creation.scss" />
     <Content Include="Content\Scss\Voting.scss" />
     <None Include="Project_Readme.html" />

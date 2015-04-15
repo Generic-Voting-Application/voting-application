@@ -8,8 +8,11 @@
     AddOptionDialogController.$inject = ['$scope'];
 
     function AddOptionDialogController($scope) {
+
+        $scope.multipleAddingAllowed = true;
+
         $scope.addOption = addOption;
-        $scope.dismiss = dismiss;
+        $scope.addOptionAndClose = addOptionAndClose;
 
         function addOption(form) {
             if (form.name === null) {
@@ -18,13 +21,20 @@
 
             var newOption = {
                 Name: form.name,
-                Description: form.description
+                Description: form.description,
+                OptionNumber: null
             };
 
             form.name = null;
             form.description = null;
 
-            $scope.poll.Options.push(newOption);
+            $scope.options.push(newOption);
+        }
+
+        function addOptionAndClose(form) {
+            addOption(form);
+
+            dismiss();
         }
 
         function dismiss() {

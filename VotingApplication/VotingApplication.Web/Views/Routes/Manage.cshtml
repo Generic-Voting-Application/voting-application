@@ -10,20 +10,20 @@
         </h2>
         <div class="manage-section">
             <div>
-                <span class="glyphicon glyphicon-question-sign pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Question:</h4>
+                <span class="fa fa-question-circle pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Question</h4>
             </div>
             <div>
-                <form ng-submit="toggleNameEdit=false;updatePoll()">
+                <form ng-submit="toggleNameEdit=false;updateQuestion()">
                     <span class="icon-padded-left">
                         <span ng-if="!toggleNameEdit">
-                            {{poll.Name}}
+                            {{Question}}
                             <span class="pull-right"><a class="clickable" ng-click="$parent.toggleNameEdit=true">Edit</a></span>
                         </span>
                         <span ng-if="toggleNameEdit">
-                            <input class="wide-input" ng-model="poll.Name" required />
-                            <span class="glyphicon glyphicon-remove pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.discardNameChanges()"></span>
-                            <span class="glyphicon glyphicon-ok pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.updatePoll()"></span>
+                            <input class="wide-input" ng-model="$parent.Question" required />
+                            <span class="fa fa-remove pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.discardNameChanges()"></span>
+                            <span class="fa fa-ok pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.updateQuestion()"></span>
                         </span>
                     </span>
                 </form>
@@ -31,41 +31,18 @@
         </div>
         <div class="manage-section">
             <div>
-                <span class="glyphicon glyphicon-th-list pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Options:</h4>
+                <span class="fa fa-list pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Options</h4>
             </div>
             <div>
-                <span class="icon-padded-left">{{poll.Options.length}} Options</span>
+                <span class="icon-padded-left">{{poll.Options.length}} Option{{poll.Options.length !== 1 ? 's' : ''}}</span>
                 <span class="pull-right"><a href="{{manageSubPageUrl('Options')}}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section">
             <div>
-                <span class="glyphicon glyphicon-user pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Invitees:</h4>
-            </div>
-            <div>
-                <span class="icon-padded-left">{{invitees.length}} Invitees</span>
-                <span class="pull-right"><a href="{{manageSubPageUrl('Invitees')}}">Edit</a></span>
-            </div>
-        </div>
-        <div class="manage-section">
-            <div>
-                <span class="glyphicon glyphicon-envelope pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Invitation style:</h4>
-            </div>
-            <div>
-                <span class="icon-padded-left" ng-if="poll.InviteOnly">Invite Only, </span>
-                <span class="icon-padded-left" ng-if="!poll.InviteOnly">Open Voting, </span>
-                <span ng-if="poll.NamedVoting">Named Voters</span>
-                <span ng-if="!poll.NamedVoting">Anonymous Voters</span>
-                <span class="pull-right"><a href="{{manageSubPageUrl('InvitationStyle')}}">Edit</a></span>
-            </div>
-        </div>
-        <div class="manage-section">
-            <div>
-                <span class="glyphicon glyphicon-check pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Poll Style:</h4>
+                <span class="fa fa-check-square-o pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Poll Style</h4>
             </div>
             <div>
                 <span class="icon-padded-left">{{poll.VotingStrategy}}</span>
@@ -74,8 +51,24 @@
         </div>
         <div class="manage-section">
             <div>
-                <span class="glyphicon glyphicon-time pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Expires:</h4>
+                <span class="fa fa-cog pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Miscellaneous Settings</h4>
+            </div>
+            <div class ="icon-padded-left">
+                <span ng-if="poll.InviteOnly">Invite Only</span>
+                <span ng-if="!poll.InviteOnly">Open Voting</span>
+                <br />
+                <span ng-if="poll.NamedVoting">Named Voters</span>
+                <span ng-if="!poll.NamedVoting">Anonymous Voters</span>
+                <br />
+                <span>Voters {{poll.OptionAdding ? "can" : "can't"}} add options</span>
+                <span class="pull-right"><a href="{{manageSubPageUrl('InvitationStyle')}}">Edit</a></span>
+            </div>
+        </div>
+        <div class="manage-section">
+            <div>
+                <span class="fa fa-clock-o pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Expires</h4>
             </div>
             <div>
                 <span>
@@ -86,27 +79,36 @@
         </div>
         <div class="manage-section">
             <div>
-                <span class="glyphicon glyphicon-tasks pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Voters:</h4>
+                <span class="fa fa-users pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Invitations</h4>
             </div>
             <div>
-                <span class="icon-padded-left">{{ poll.Voters.length }} Voters</span>
+                <span class="icon-padded-left">{{poll.InviteeCount}} Invitation{{poll.InviteeCount !== 1 ? 's' : ''}}</span>
+                <span class="pull-right"><a href="{{manageSubPageUrl('Invitees')}}">Edit</a></span>
+            </div>
+        </div>
+        <div class="manage-section">
+            <div>
+                <span class="fa fa-bar-chart pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Ballots</h4>
+            </div>
+            <div>
+                <span class="icon-padded-left">{{ poll.VotersCount }} Ballot{{poll.VotersCount !== 1 ? 's' : ''}}</span>
                 <span class="pull-right"><a href="{{ manageSubPageUrl('Voters') }}">Edit</a></span>
             </div>
         </div>
         <div class="manage-section" ng-show="!poll.InviteOnly">
             <div>
-                <span class="glyphicon glyphicon-link pull-left" aria-hidden="true"></span>
-                <h4 class="icon-padded-left">Share:</h4>
-            </div>
-            <div>
-                <div class="icon-padded-left">
-                    <a href="mailto:&amp;body={{fullPollUrl()}}"><i class="fa fa-envelope-square fa-lg"></i></a>
-                    <i class="fa fa-facebook-square fa-lg"></i>
-                    <i class="fa fa-google-plus-square fa-lg"></i>
+                <span class="fa fa-share-alt pull-left" aria-hidden="true"></span>
+                <div class="pull-right">
+                    <a href="mailto:&amp;body={{fullPollUrl()}}"><i class="fa fa-envelope-square fa-2x"></i></a>
+                    <i class="fa fa-facebook-square fa-2x"></i>
+                    <i class="fa fa-google-plus-square fa-2x"></i>
                 </div>
+                <h4 class="icon-padded-left">Share</h4>
             </div>
         </div>
+        <div class="clear"></div>
         <div class="manage-section flexbox">
             <div class="centered">
                 <a href="{{pollUrl()}}">

@@ -2,7 +2,7 @@
     <div class="option-area">
         <h3>Options</h3>
         <div ng-repeat="option in options">
-            <div class="option-block" ng-class="{'selected-option': option.voteValue }" ng-click="option.voteValue=option.voteValue?0:1">
+            <div class="option-block clickable" ng-class="{'selected-option': option.voteValue }" ng-click="option.voteValue=option.voteValue?0:1">
                 <div class="option-block-row">
                     <input class="pull-left option-checkbox" type="checkbox" ng-model="option.voteValue" ng-true-value="1" ng-false-value="0" ng-click="$event.stopPropagation()" />
                     <strong>{{option.Name}}</strong>
@@ -12,6 +12,12 @@
                 </div>
             </div>
             <hr />
+        </div>
+
+        <div ng-show="optionAddingAllowed">
+            <p>
+                <a class="icon-padded-left clickable" ng-click="addOption()">+ Add another option</a>
+            </p>
         </div>
     </div>
     <div class="flexbox">

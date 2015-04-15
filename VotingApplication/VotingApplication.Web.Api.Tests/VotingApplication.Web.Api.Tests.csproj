@@ -100,7 +100,12 @@
     <Compile Include="Controllers\DashboardControllerTests.cs" />
     <Compile Include="Controllers\ExpectedHttpExceptionAttribute.cs" />
     <Compile Include="Controllers\ManageControllerTests.cs" />
+    <Compile Include="Controllers\ManageQuestionControllerTests.cs" />
+    <Compile Include="Controllers\ManagePollTypeControllerTests.cs" />
+    <Compile Include="Controllers\ManageExpiryControllerTests.cs" />
     <Compile Include="Controllers\ManageInvitationControllerTests.cs" />
+    <Compile Include="Controllers\ManageOptionControllerTests.cs" />
+    <Compile Include="Controllers\ManageMiscControllerTests.cs" />
     <Compile Include="Controllers\ManageVoterControllerTests.cs" />
     <Compile Include="Controllers\PollControllerTests.cs" />
     <Compile Include="Controllers\PollTokenControllerTests.cs" />
@@ -142,9 +147,13 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\AccountLoginControllerTests.js" />
+    <Content Include="Scripts\AccountRegisterControllerTests.js" />
+    <Content Include="Scripts\AccountServiceTests.js" />
     <Content Include="Scripts\HomepageControllerTests.js" />
     <Content Include="Scripts\Lib\angular-mocks.js" />
     <Content Include="Scripts\ManageServiceTests.js" />
+    <Content Include="Scripts\ManageOptionControllerTests.js" />
     <Content Include="Scripts\ManageVotersControllerTests.js" />
   </ItemGroup>
   <ItemGroup />

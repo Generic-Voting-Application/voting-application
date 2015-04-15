@@ -27,21 +27,21 @@ namespace VotingApplication.Web
             );
 
             config.Routes.MapHttpRoute(
-                name: "TokenPollVoteApiRoute",
-                routeTemplate: "api/token/{tokenGuid}/poll/{pollId}/vote/{voteId}",
-                defaults: new { controller = "TokenPollVote", voteId = RouteParameter.Optional }
+                name: "PollVoteApiRoute",
+                routeTemplate: "api/poll/{pollId}/token/{tokenGuid}/vote",
+                defaults: new { controller = "PollVote" }
             );
 
             config.Routes.MapHttpRoute(
-                name: "PollVoteApiRoute",
-                routeTemplate: "api/poll/{pollId}/vote/{voteId}",
-                defaults: new { controller = "PollVote", voteId = RouteParameter.Optional }
+                name: "PollResultsApiRoute",
+                routeTemplate: "api/poll/{pollId}/results",
+                defaults: new { controller = "PollResults" }
             );
 
             config.Routes.MapHttpRoute(
                 name: "PollOptionApiRoute",
-                routeTemplate: "api/poll/{pollId}/option/{optionId}",
-                defaults: new { controller = "PollOption", optionId = RouteParameter.Optional }
+                routeTemplate: "api/poll/{pollId}/option",
+                defaults: new { controller = "PollOption" }
             );
 
             config.Routes.MapHttpRoute(
@@ -52,14 +52,38 @@ namespace VotingApplication.Web
 
             config.Routes.MapHttpRoute(
                 name: "ManageOptionApiRoute",
-                routeTemplate: "api/manage/{manageId}/option/{optionId}",
-                defaults: new { controller = "ManageOption", optionId = RouteParameter.Optional }
+                routeTemplate: "api/manage/{manageId}/option",
+                defaults: new { controller = "ManageOption" }
             );
 
             config.Routes.MapHttpRoute(
                 name: "ManageInvitationApiRoute",
                 routeTemplate: "api/manage/{manageId}/invitation/",
                 defaults: new { controller = "ManageInvitation" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "ManageExpiryApiRoute",
+                routeTemplate: "api/manage/{manageId}/expiry/",
+                defaults: new { controller = "ManageExpiry" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "ManagePollTypeApiRoute",
+                routeTemplate: "api/manage/{manageId}/pollType/",
+                defaults: new { controller = "ManagePollType" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "ManageQuestionApiRoute",
+                routeTemplate: "api/manage/{manageId}/question/",
+                defaults: new { controller = "ManageQuestion" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "ManageMiscApiRoute",
+                routeTemplate: "api/manage/{manageId}/misc/",
+                defaults: new { controller = "ManageMisc" }
             );
 
             config.Routes.MapHttpRoute(

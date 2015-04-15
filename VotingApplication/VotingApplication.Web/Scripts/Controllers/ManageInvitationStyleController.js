@@ -19,7 +19,13 @@
         activate();
 
         function updatePoll() {
-            ManageService.updatePoll($routeParams.manageId, $scope.poll, navigateToManagePage);
+            var miscConfig = {
+                InviteOnly: $scope.poll.InviteOnly,
+                NamedVoting: $scope.poll.NamedVoting,
+                OptionAdding: $scope.poll.OptionAdding
+            };
+
+            ManageService.updatePollMisc($routeParams.manageId, miscConfig, navigateToManagePage);
         }
 
         function navigateToManagePage() {
@@ -27,7 +33,7 @@
         }
 
         function activate() {
-            ManageService.registerPollObserver(function() {
+            ManageService.registerPollObserver(function () {
                 $scope.poll = ManageService.poll;
             });
         }

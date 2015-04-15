@@ -1,5 +1,4 @@
 ﻿/// <reference path="../Services/AccountService.js" />
-/// <reference path="../Services/ErrorService.js" />
 (function () {
     'use strict';
 
@@ -13,60 +12,46 @@
 
         $scope.loginAccount = loginAccount;
         $scope.forgottenPassword = forgottenPassword;
-        
+
         function loginAccount(form) {
             clearError();
 
-            // Can this not be turned into a promise?
-            AccountService.getAccessToken(form.email, form.password).success(function (data) {
-                loginCallback(form.email, data);
-            })
-            .error(function (data, status) {
-                loginFailureCallback(form, data, status);
-            });
-        }
-        
-        function forgottenPassword(form) {
-            clearError();
-            
-            if (form.email === undefined) {
-                displayError('Please supply email address.');
-                return;
-            }
-
-            AccountService.forgotPassword(form.email).success(function () {
-                $scope.closeThisDialog();
-
-                if ($scope.ngDialogData.callback) {
-                    $scope.ngDialogData.callback();
-                }
-            })
-            .error(function (data) {
-                displayError(data.Message || data.error_description);
-            });
+            AccountService.login(form.email, form.password)
+                .then(closeDialog)
+                .catch(displayErrorMessage);
         }
 
-        function loginCallback(email, data) {
-            AccountService.setAccount(data.access_token, email);
-
-            $scope.closeThisDialog();
-            if ($scope.ngDialogData.callback) {
-                $scope.ngDialogData.callback();
-            }
-        }
-
-        function loginFailureCallback() {
-            $scope.displayError = $rootScope.error.readableMessage;
+        function displayErrorMessage() {
+            showError($rootScope.error.readableMessage);
             $rootScope.error = null;
         }
 
-        function displayError(errorMessage) {
-            $scope.errorMessage = errorMessage;
+        function forgottenPassword(form) {
+            clearError();
+
+            if (form.email === undefined) {
+                showError('Please supply email address.');
+            }
+            else {
+                AccountService.forgotPassword(form.email)
+                    .then(closeDialog)
+                    .catch(function (data) { showError(data.Message || data.error_description); });
+            }
+        }
+
+        function closeDialog() {
+            $scope.closeThisDialog();
         }
 
         function clearError() {
-            $scope.errorMessage = '';
+            $scope.displayError = null;
         }
+
+        function showError(errorMessage) {
+            $scope.displayError = errorMessage;
+        }
+
+
     }
 
 })();

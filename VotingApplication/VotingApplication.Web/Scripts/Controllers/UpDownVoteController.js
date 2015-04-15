@@ -9,24 +9,31 @@
         .module('GVA.Voting')
         .controller('UpDownVoteController', UpDownVoteController);
 
-    UpDownVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService'];
+    UpDownVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService', 'ngDialog'];
 
-    function UpDownVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService) {
+    function UpDownVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService, ngDialog) {
 
         var pollId = $routeParams.pollId;
         var token = null;
 
+        $scope.options = {};
+        $scope.optionAddingAllowed = false;
+
+        $scope.addOption = addOption;
+
         // Register our getVotes strategy with the parent controller
         $scope.setVoteCallback(getVotes);
+        $scope.notifyOptionAdded = notifyOptionAdded;
 
         activate();
 
         function activate() {
-            PollService.getPoll(pollId, getPollSuccessCallback);
-        }
-
-        function getPollSuccessCallback(pollData) {
-            $scope.options = pollData.Options;
+            $scope.$watch('poll', function () {
+                if ($scope.poll) {
+                    $scope.options = $scope.poll.Options;
+                    $scope.optionAddingAllowed = $scope.poll.OptionAdding;
+                }
+            });
 
             TokenService.getToken(pollId, getTokenSuccessCallback);
         }
@@ -58,9 +65,23 @@
                     return {
                         OptionId: option.Id,
                         VoteValue: option.voteValue,
-                        VoterName: IdentityService.identity.name
+                        VoterName: IdentityService.identity && $scope.poll && $scope.poll.NamedVoting ?
+                                   IdentityService.identity.name : null
                     };
                 });
+        }
+
+        function addOption() {
+            ngDialog.open({
+                template: '/Routes/AddOptionDialog',
+                controller: 'AddVoterOptionDialogController',
+                scope: $scope,
+                data: { pollId: pollId }
+            });
+        }
+
+        function notifyOptionAdded() {
+            $scope.$emit('voterOptionAddedEvent');
         }
     }
 

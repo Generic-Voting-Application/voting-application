@@ -6,9 +6,9 @@
         .factory('VoteService', VoteService);
 
 
-    VoteService.$inject = ['$location', '$http'];
+    VoteService.$inject = ['$location', '$http', '$q'];
 
-    function VoteService($location, $http) {
+    function VoteService($location, $http, $q) {
 
         var lastCheckedTimestamps = {};
 
@@ -16,7 +16,8 @@
             submitVote: submitVote,
             getResults: getResults,
             getTokenVotes: getTokenVotes,
-            refreshLastChecked: refreshLastChecked
+            refreshLastChecked: refreshLastChecked,
+            addVoterOption: addVoterOption
         };
 
         return service;
@@ -29,7 +30,7 @@
 
             $http({
                 method: 'PUT',
-                url: '/api/token/' + token + '/poll/' + pollId + '/vote',
+                url: '/api/poll/' + pollId + '/token/' + token + '/vote',
                 data: votes
             })
             .success(function (data) {
@@ -58,7 +59,7 @@
 
             $http({
                 method: 'GET',
-                url: '/api/poll/' + pollId + '/vote?lastPoll=' + lastCheckedTimestamps[pollId]
+                url: '/api/poll/' + pollId + '/results?lastRefreshed=' + lastCheckedTimestamps[pollId]
             })
             .success(function (data, status) {
                 if (callback) {
@@ -83,7 +84,7 @@
 
             $http({
                 method: 'GET',
-                url: '/api/token/' + token + '/poll/' + pollId + '/vote'
+                url: '/api/poll/' + pollId + '/token/' + token + '/vote'
             })
             .success(function (data) {
                 if (callback) {
@@ -99,6 +100,19 @@
 
         function refreshLastChecked(pollId) {
             lastCheckedTimestamps[pollId] = 0;
+        }
+
+        function addVoterOption(pollId, newOption) {
+            var deferred = $q.defer();
+
+            $http
+                .post(
+                    '/api/poll/' + pollId + '/option',
+                    newOption
+                )
+                .success(function (data) { deferred.resolve(data); });
+
+            return deferred.promise;
         }
     }
 })();
