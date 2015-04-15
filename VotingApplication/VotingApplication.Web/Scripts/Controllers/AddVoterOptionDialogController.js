@@ -33,7 +33,7 @@
             $scope.options.push(newVoterOption);
 
             VoteService.addVoterOption($scope.ngDialogData.pollId, newVoterOption)
-                .then($scope.notifyOptionAdded());
+                .then($scope.notifyOptionAdded);
         }
 
         function addOptionAndClose(form) {
