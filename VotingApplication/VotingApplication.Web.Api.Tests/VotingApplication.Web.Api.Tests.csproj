@@ -147,6 +147,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\AccountLoginControllerTests.js" />
+    <Content Include="Scripts\AccountRegisterControllerTests.js" />
+    <Content Include="Scripts\AccountServiceTests.js" />
     <Content Include="Scripts\HomepageControllerTests.js" />
     <Content Include="Scripts\Lib\angular-mocks.js" />
     <Content Include="Scripts\ManageServiceTests.js" />

@@ -11,24 +11,22 @@
 
     function AccountRegisterController($scope, $rootScope, AccountService) {
 
-        $scope.registerAccount = function (form) {
-            AccountService.register(form.email, form.password).success(function () {
-                return AccountService.getAccessToken(form.email, form.password);
-            }).success(function (data) {
-                AccountService.setAccount(data.access_token, form.email);
+        $scope.registerAccountAndLogin = registerAccount;
 
+        function registerAccount(form) {
+
+            AccountService.registerAccountAndLogin(form.email, form.password)
+                .then(closeDialog)
+                .catch(displayErrorMessage);
+
+            function closeDialog() {
                 $scope.closeThisDialog();
-                if ($scope.ngDialogData.callback) {
-                    $scope.ngDialogData.callback();
-                }
-            }).error(loginFailureCallback);
+            }
 
-            function loginFailureCallback() {
+            function displayErrorMessage() {
                 $scope.displayError = $rootScope.error.readableMessage;
                 $rootScope.error = null;
             }
-        };
-
+        }
     }
-
 })();
