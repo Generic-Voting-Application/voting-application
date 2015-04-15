@@ -23,6 +23,7 @@
 
         // Register our getVotes strategy with the parent controller
         $scope.setVoteCallback(getVotes);
+        $scope.notifyOptionAdded = notifyOptionAdded;
 
         activate();
 
@@ -77,6 +78,10 @@
                 scope: $scope,
                 data: { pollId: pollId }
             });
+        }
+
+        function notifyOptionAdded() {
+            $scope.$emit('voterOptionAddedEvent');
         }
     }
 

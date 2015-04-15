@@ -21,6 +21,7 @@
         $scope.optionAddingAllowed = false;
 
         $scope.addOption = addOption;
+        $scope.notifyOptionAdded = notifyOptionAdded;
 
         // Register our getVotes strategy with the parent controller
         $scope.setVoteCallback(getVotes);
@@ -67,6 +68,10 @@
                 scope: $scope,
                 data: { pollId: pollId }
             });
+        }
+
+        function notifyOptionAdded() {
+            $scope.$emit('voterOptionAddedEvent');
         }
 
         function getVotes(option) {

@@ -26,6 +26,12 @@
         var getVotes = function () { return []; };
         $scope.setVoteCallback = function (votesFunc) { getVotes = votesFunc; };
 
+        $scope.$on('voterOptionAddedEvent', function () {
+            PollService.getPoll(pollId, function (pollData) {
+                $scope.poll = pollData;
+            });
+        });
+
         activate();
 
         function redirectIfExpired() {
@@ -64,7 +70,7 @@
             }
 
             var votes = getVotes(options);
-            
+
             VoteService.submitVote(pollId, votes, tokenId, function () {
                 window.location = $scope.resultsLink;
             });
