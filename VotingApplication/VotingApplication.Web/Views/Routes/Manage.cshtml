@@ -60,6 +60,8 @@
                 <br />
                 <span ng-if="poll.NamedVoting">Named Voters</span>
                 <span ng-if="!poll.NamedVoting">Anonymous Voters</span>
+                <br />
+                <span><span ng-if="!poll.OptionAdding">No </span>Voter Option Adding</span>
                 <span class="pull-right"><a href="{{manageSubPageUrl('InvitationStyle')}}">Edit</a></span>
             </div>
         </div>
