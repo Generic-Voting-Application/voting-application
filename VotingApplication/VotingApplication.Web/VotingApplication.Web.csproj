@@ -340,6 +340,7 @@
     <Content Include="Content\Lib\Css\ngDialog-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-theme-default-min.css" />
     <Content Include="Content\Scss\ErrorBar.scss" />
+    <None Include="Content\Scss\PollInfoBox.scss" />
     <Content Include="Content\Scss\Site.scss" />
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
@@ -371,6 +372,7 @@
     <Content Include="Scripts\Controllers\UnregisteredDashboardController.js" />
     <Content Include="Scripts\Controllers\UpDownVoteController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
+    <Content Include="Scripts\Directives\PollInfoBox.js" />
     <Content Include="Scripts\Directives\ErrorBar.js" />
     <Content Include="Scripts\Directives\ResultsChart.html" />
     <Content Include="Scripts\Directives\ResultsChart.js" />
@@ -448,6 +450,7 @@
     <Content Include="Views\Routes\UpDownVote.cshtml" />
     <Content Include="Views\Poll\Index.cshtml" />
     <Content Include="Views\Routes\ManageInvitationStyle.cshtml" />
+    <Content Include="Views\Routes\PollInfoBox.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

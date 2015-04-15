@@ -62,6 +62,13 @@ namespace VotingApplication.Web
             errorBarStyle.Orderer = nullOrderer;
             bundles.Add(errorBarStyle);
 
+            StyleBundle pollInfoBoxStyle = new StyleBundle("~/Bundles/PollInfoBox");
+            pollInfoBoxStyle.Include("~/Content/Scss/PollInfoBox.scss");
+            pollInfoBoxStyle.Builder = nullBuilder;
+            pollInfoBoxStyle.Transforms.Add(styleTransformer);
+            pollInfoBoxStyle.Orderer = nullOrderer;
+            bundles.Add(pollInfoBoxStyle);
+
             ScriptBundle scriptLibBundle = new ScriptBundle("~/Bundles/ScriptLib");
             scriptLibBundle.IncludeDirectory("~/Scripts/Lib", "*.js");
             scriptLibBundle.IncludeDirectory("~/Scripts/Lib", "*.js.map");

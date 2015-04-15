@@ -59,9 +59,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             var model = new ManageVoteResponseModel
             {
                 BallotManageGuid = ballot.ManageGuid,
-                VoterName = ballot.VoterName,
                 Votes = new List<VoteResponse>()
             };
+
+            if (ballot.VoterName != null)
+            {
+                model.VoterName = ballot.VoterName;
+            }
 
             foreach (Vote vote in ballot.Votes)
             {

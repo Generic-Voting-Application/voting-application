@@ -1,0 +1,28 @@
+﻿$Green50: #E8F5E9;
+
+.pib-poll-info-box {
+    background-color: $Green50;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+}
+
+.pib-poll-info-content {
+    > ul {
+        margin: 0px;
+        font-size: small;
+    }
+
+    > .more-help {
+        padding-left: 20px;
+    }
+}
+
+.pib-pull-right {
+    float: right;
+    margin-right: 5px;
+}
+
+.pib-clickable {
+    cursor: pointer;
+}

@@ -1,0 +1,22 @@
+﻿@Styles.Render("~/Bundles/PollInfoBox")
+<div class="pib-poll-info-box pib-clickable" ng-click="displayInfo=!displayInfo">
+    <span class="pib-pull-right">
+        <i class="fa fa-chevron-up" ng-show="displayInfo"></i>
+        <i class="fa fa-chevron-down" ng-show="!displayInfo"></i>
+    </span>
+    <div class="pib-poll-info-content" ng-show="displayInfo">
+        <ul>
+            <li ng-if="poll.VotingStrategy=='Basic'">A single option may be voted for</li>
+            <li ng-if="poll.VotingStrategy=='Points'">You may allocate <strong>{{poll.MaxPoints}}</strong> points between all of the options</li>
+            <li ng-if="poll.VotingStrategy=='Points'">Each option may receive a maximum of <strong>{{poll.MaxPerVote}}</strong> points</li>
+            <li ng-if="poll.VotingStrategy=='UpDown'">Each option may be voted for/against or ignored</li>
+            <li ng-if="poll.VotingStrategy=='Multi'">Any number of options may be selected and voted for</li>
+            <li>You may change your vote at any time <span ng-if="poll.ExpiryDate">before the poll expires</span></li>
+            <li ng-if="poll.NamedVoting">You are required to give a name when voting</li>
+            <li ng-if="!poll.NamedVoting">Voting is anonymous</li>
+            <li ng-if="poll.OptionAdding">You may add your own options for others to vote on</li>
+        </ul>
+        <a class="more-help" href="/Help" target="_blank">Still stuck?</a>
+    </div>
+    <span ng-show="!displayInfo">Poll Advice</span>
+</div>

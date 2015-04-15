@@ -51,25 +51,6 @@
                 });
         };
 
-        self.updatePoll = function (manageId, poll, callback, failureCallback) {
-
-            $http({
-                method: 'PUT',
-                url: '/api/manage/' + manageId,
-                data: poll
-            })
-            .success(function (data) {
-                if (callback) {
-                    callback(data);
-                }
-            })
-            .error(function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
-            });
-        };
-
         self.updatePollExpiry = function (manageId, expiryDate, callback, failureCallback) {
             $http({
                 method: 'PUT',
@@ -144,7 +125,7 @@
 
         self.getVotes = function (pollId, callback, failureCallback) {
 
-            $http.get('/api/poll/' + pollId + '/vote')
+            $http.get('/api/poll/' + pollId + '/results')
                 .success(function (data) {
                     if (callback) {
                         callback(data);
