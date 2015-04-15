@@ -33,19 +33,18 @@
 
         function activate() {
             $scope.$watch('poll', function () {
-                $scope.options = $scope.poll ? $scope.poll.Options : [];
+                if ($scope.poll) {
+                    $scope.options = $scope.poll.Options;
 
-                $scope.options.forEach(function (d) {
-                    d.voteValue = 0;
-                });
+                    $scope.options.forEach(function (d) {
+                        d.voteValue = 0;
+                    });
 
-                $scope.totalPointsAvailable = $scope.poll ? $scope.poll.MaxPoints : 0;
-                $scope.maxPointsPerOption = $scope.poll ? $scope.poll.MaxPerVote : 0;
+                    $scope.totalPointsAvailable = $scope.poll ? $scope.poll.MaxPoints : 0;
+                    $scope.maxPointsPerOption = $scope.poll ? $scope.poll.MaxPerVote : 0;
+                    $scope.optionAddingAllowed = $scope.poll.OptionAdding;
+                }
             });
-
-
-
-            $scope.optionAddingAllowed = $scope.poll.OptionAdding;
 
             TokenService.getToken(pollId, getTokenSuccessCallback);
         }
