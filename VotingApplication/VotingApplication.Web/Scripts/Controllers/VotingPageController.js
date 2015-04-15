@@ -1,4 +1,8 @@
 ﻿/// <reference path="../Services/IdentityService.js" />
+/// <reference path="../Services/VoteService.js" />
+/// <reference path="../Services/TokenService.js" />
+/// <reference path="../Services/RoutingService.js" />
+/// <reference path="../Services/PollService.js" />
 (function () {
     'use strict';
 
@@ -26,17 +30,9 @@
         var getVotes = function () { return []; };
         $scope.setVoteCallback = function (votesFunc) { getVotes = votesFunc; };
 
-        $scope.$on('voterOptionAddedEvent', function () {
-            PollService.getPoll(pollId, function (pollData) {
-                $scope.poll = pollData;
-            });
-        });
+        $scope.$on('voterOptionAddedEvent', function () { getPollData(); });
 
         activate();
-
-        function redirectIfExpired() {
-            window.location.replace($scope.resultsLink);
-        }
 
         function activate() {
             // Angular won't auto update this so we need to use the observer pattern
@@ -48,6 +44,10 @@
                 tokenId = tokenData;
             });
 
+            getPollData();
+        }
+
+        function getPollData() {
             PollService.getPoll(pollId, function (pollData) {
                 $scope.poll = pollData;
             });
@@ -72,8 +72,12 @@
             var votes = getVotes(options);
 
             VoteService.submitVote(pollId, votes, tokenId, function () {
-                window.location = $scope.resultsLink;
+                RoutingService.navigateToResultsPage(pollId);
             });
+        }
+
+        function redirectIfExpired() {
+            window.location.replace($scope.resultsLink);
         }
     }
 })();
