@@ -30,8 +30,6 @@
                 Description: form.description
             };
 
-            $scope.options.push(newVoterOption);
-
             VoteService.addVoterOption($scope.ngDialogData.pollId, newVoterOption)
                 .then($scope.notifyOptionAdded);
         }
