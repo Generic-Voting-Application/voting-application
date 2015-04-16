@@ -1,7 +1,9 @@
 ﻿<div ng-controller="UpDownVoteController" ng-app="GVA.Voting" class="voting-area">
     <div class="option-area">
+
         <h3>Options</h3>
-        <div ng-repeat="option in options">
+
+        <div ng-repeat="option in poll.Options">
             <div class="option-block">
                 <div class="option-block-row">
                     <div class="option-buttons">
@@ -20,16 +22,16 @@
                     <span truncated-text ng-model="option.Description" max-chars="60" class="option-description"></span>
                 </div>
             </div>
-            <hr/>
+            <hr />
         </div>
 
-        <div ng-show="optionAddingAllowed">
+        <div ng-show="poll.OptionAdding">
             <p>
                 <a class="icon-padded-left clickable" ng-click="addOption()">+ Add another option</a>
             </p>
         </div>
     </div>
     <div class="flexbox">
-        <button class="active-btn btn-medium centered" ng-click="submitVote(options)">Vote</button>
+        <button class="active-btn btn-medium centered" ng-click="submitVote(poll.Options)">Vote</button>
     </div>
 </div>
