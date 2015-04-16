@@ -15,12 +15,11 @@
 
     function VotingPageController($scope, $routeParams, IdentityService, VoteService, TokenService, RoutingService, PollService) {
 
-        // Turn "/#/voting/abc/123" into "/#/results/abc/123"
-        var pollId = $routeParams['pollId'];
+        $scope.pollId = $routeParams['pollId'];
         $scope.token = $routeParams['tokenId'] || '';
 
         $scope.poll = {};
-        $scope.resultsLink = RoutingService.getResultsPageUrl(pollId, $scope.token);
+        $scope.resultsLink = RoutingService.getResultsPageUrl($scope.pollId, $scope.token);
 
         $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
         $scope.logoutIdentity = IdentityService.clearIdentityName;
@@ -30,25 +29,30 @@
         var getVotes = function () { return []; };
         $scope.setVoteCallback = function (votesFunc) { getVotes = votesFunc; };
 
-        $scope.$on('voterOptionAddedEvent', function () { getPollData(); });
-
         activate();
 
         function activate() {
+
+            $scope.$on('voterOptionAddedEvent', function () { getPollData(); });
+
             // Angular won't auto update this so we need to use the observer pattern
             IdentityService.registerIdentityObserver(function () {
                 $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
             });
 
-            TokenService.getToken(pollId, function (tokenData) {
-                $scope.token = tokenData;
-            });
+            getToken();
 
             getPollData();
         }
 
+        function getToken() {
+            TokenService.getToken($scope.pollId, function (tokenData) {
+                $scope.token = tokenData;
+            });
+        }
+
         function getPollData() {
-            PollService.getPoll(pollId, function (pollData) {
+            PollService.getPoll($scope.pollId, function (pollData) {
                 $scope.poll = pollData;
             });
         }
@@ -71,8 +75,8 @@
 
             var votes = getVotes(options);
 
-            VoteService.submitVote(pollId, votes, $scope.token, function () {
-                RoutingService.navigateToResultsPage(pollId);
+            VoteService.submitVote($scope.pollId, votes, $scope.token, function () {
+                RoutingService.navigateToResultsPage($scope.pollId);
             });
         }
 

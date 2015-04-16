@@ -11,8 +11,6 @@
 
     function BasicVoteController($scope, $routeParams, IdentityService, VoteService, ngDialog) {
 
-        var pollId = $routeParams.pollId;
-
         $scope.addOption = addOption;
         $scope.notifyOptionAdded = notifyOptionAdded;
 
@@ -22,10 +20,10 @@
             // Register our getVotes strategy with the parent controller
             $scope.setVoteCallback(getVotes);
 
-            VoteService.getTokenVotes(pollId, $scope.token, getTokenVotesSuccessCallback);
+            VoteService.getTokenVotes($scope.pollId, $scope.token, selectOption);
         }
 
-        function getTokenVotesSuccessCallback(voteData) {
+        function selectOption(voteData) {
 
             if (!voteData || voteData.length === 0) {
                 return;
@@ -45,7 +43,7 @@
                 template: '/Routes/AddOptionDialog',
                 controller: 'AddVoterOptionDialogController',
                 scope: $scope,
-                data: { pollId: pollId }
+                data: { pollId: $scope.pollId }
             });
         }
 
