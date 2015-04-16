@@ -17,10 +17,10 @@
 
         // Turn "/#/voting/abc/123" into "/#/results/abc/123"
         var pollId = $routeParams['pollId'];
-        var tokenId = $routeParams['tokenId'] || '';
+        $scope.token = $routeParams['tokenId'] || '';
 
-        $scope.poll = null;
-        $scope.resultsLink = RoutingService.getResultsPageUrl(pollId, tokenId);
+        $scope.poll = {};
+        $scope.resultsLink = RoutingService.getResultsPageUrl(pollId, $scope.token);
 
         $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
         $scope.logoutIdentity = IdentityService.clearIdentityName;
@@ -41,7 +41,7 @@
             });
 
             TokenService.getToken(pollId, function (tokenData) {
-                tokenId = tokenData;
+                $scope.token = tokenData;
             });
 
             getPollData();
@@ -58,7 +58,7 @@
                 return null;
             }
 
-            if (!tokenId || tokenId.length === 0) {
+            if (!$scope.token || $scope.token.length === 0) {
                 // TODO: Inform the user that they somehow don't have a token
                 return;
             }
@@ -71,7 +71,7 @@
 
             var votes = getVotes(options);
 
-            VoteService.submitVote(pollId, votes, tokenId, function () {
+            VoteService.submitVote(pollId, votes, $scope.token, function () {
                 RoutingService.navigateToResultsPage(pollId);
             });
         }
