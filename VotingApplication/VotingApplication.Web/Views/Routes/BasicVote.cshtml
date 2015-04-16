@@ -4,7 +4,7 @@
         <h3>Options</h3>
 
         <div ng-repeat="option in poll.Options">
-            <div class="option-block" ng-class="{'selected-option': option.selected }">
+            <div class="option-block" ng-class="{'selected-option': option.voteValue }">
                 <div class="option-block-row">
                     <div class="option-buttons">
                         <button class="active-btn btn-medium" ng-click="submitVote(option)">Vote</button>

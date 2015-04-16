@@ -54,6 +54,22 @@
         function getPollData() {
             PollService.getPoll($scope.pollId, function (pollData) {
                 $scope.poll = pollData;
+
+                setSelectedValues();
+            });
+        }
+
+        function setSelectedValues() {
+            VoteService.getTokenVotes($scope.pollId, $scope.token, function (voteData) {
+
+                voteData.forEach(function (vote) {
+                    $scope.poll.Options.forEach(function (option) {
+                        if (option.Id === vote.OptionId) {
+                            option.voteValue = vote.VoteValue;
+                        }
+                    });
+                });
+
             });
         }
 
