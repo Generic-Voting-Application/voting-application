@@ -82,6 +82,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             Assert.IsTrue(isGuid);
+            Assert.AreNotEqual(manageGuid, Guid.Empty);
         }
 
         [TestMethod]
