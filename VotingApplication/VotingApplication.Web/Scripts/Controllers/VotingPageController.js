@@ -18,7 +18,7 @@
         $scope.pollId = $routeParams['pollId'];
         $scope.token = $routeParams['tokenId'] || '';
 
-        $scope.poll = {};
+        $scope.poll = { Options: [] };
         $scope.resultsLink = RoutingService.getResultsPageUrl($scope.pollId, $scope.token);
 
         $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
@@ -61,6 +61,8 @@
 
         function setSelectedValues() {
             VoteService.getTokenVotes($scope.pollId, $scope.token, function (voteData) {
+
+                $scope.poll.Options.forEach(function (opt) { opt.voteValue = 0; });
 
                 voteData.forEach(function (vote) {
                     $scope.poll.Options.forEach(function (option) {
