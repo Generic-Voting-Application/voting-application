@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using FakeDbSet;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
-using FakeDbSet;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
-using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -73,6 +69,20 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             // Assert
             Assert.AreEqual(1, _mainPoll.Ballots.Count);
+        }
+
+        [TestMethod]
+        public void GetSavesNewManageToken()
+        {
+            // Act
+            _controller.Get(_mainUUID);
+
+            Guid manageGuid;
+            bool isGuid = Guid.TryParse(_mainPoll.Ballots.Last().ManageGuid.ToString(), out manageGuid);
+
+            // Assert
+            Assert.IsTrue(isGuid);
+            Assert.AreNotEqual(manageGuid, Guid.Empty);
         }
 
         [TestMethod]

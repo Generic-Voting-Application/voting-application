@@ -1,14 +1,10 @@
-﻿using System.Data.Entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Web;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
-using VotingApplication.Web.Api.Filters;
-using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
@@ -37,12 +33,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 Guid newTokenGuid = Guid.NewGuid();
 
-                if(poll.Ballots == null)
+                if (poll.Ballots == null)
                 {
                     poll.Ballots = new List<Ballot>();
                 }
 
-                poll.Ballots.Add(new Ballot { TokenGuid = newTokenGuid });
+                poll.Ballots.Add(new Ballot { TokenGuid = newTokenGuid, ManageGuid = Guid.NewGuid() });
 
                 context.SaveChanges();
 
