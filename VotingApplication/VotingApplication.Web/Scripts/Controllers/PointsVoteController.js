@@ -26,6 +26,10 @@
         $scope.disabledAddPoints = shouldAddPointsBeDisabled;
         $scope.notifyOptionAdded = notifyOptionAdded;
 
+        $scope.increaseVote = increaseVote;
+        $scope.decreaseVote = decreaseVote;
+        $scope.unallocatedPointsPercentage = unallocatedPointsPercentage;
+
         // Register our getVotes strategy with the parent controller
         $scope.setVoteCallback(getVotes);
 
@@ -42,7 +46,7 @@
                     });
 
                     $scope.totalPointsAvailable = $scope.poll.MaxPoints;
-                    $scope.maxPointsPerOption =$scope.poll.MaxPerVote;
+                    $scope.maxPointsPerOption = $scope.poll.MaxPerVote;
                     $scope.optionAddingAllowed = $scope.poll.OptionAdding;
                 }
             });
@@ -108,6 +112,25 @@
 
         function shouldAddPointsBeDisabled(pointValue) {
             return pointValue >= $scope.maxPointsPerOption || $scope.unallocatedPoints() === 0;
+        }
+
+        function increaseVote(option) {
+            if (option.voteValue < $scope.maxPointsPerOption) {
+                option.voteValue = option.voteValue + 1;
+            }
+        }
+
+        function decreaseVote(option) {
+            if (option.voteValue > 0) {
+                option.voteValue = option.voteValue - 1;
+            }
+        }
+
+        function unallocatedPointsPercentage() {
+            if ($scope.totalPointsAvailable === 0)
+                return 0;
+
+            return (calculateUnallocatedPoints() / $scope.totalPointsAvailable) * 100;
         }
     }
 })();

@@ -1,8 +1,10 @@
 ﻿<div ng-controller="PointsVoteController" ng-app="GVA.Voting" class="voting-area">
+
     Unallocated points: {{unallocatedPoints()}}/{{totalPointsAvailable}}
     <div class="progress" id="progress-bar">
-        <div style="width: {{unallocatedPoints()/totalPointsAvailable * 100}}%" class="progress-bar" role="progressbar"></div>
+        <div ng-style="{ 'width': unallocatedPointsPercentage() + '%' }" class="progress-bar" role="progressbar"></div>
     </div>
+
     <div class="option-area">
         <h3>Options</h3>
         <div ng-repeat="option in options">
@@ -10,9 +12,9 @@
                 <div class="option-block-row">
                     <div class="option-buttons">
                         <span class="btn-group-points">
-                            <button class="active-btn pull-left" ng-disabled="(option.voteValue <= 0)" ng-click="(option.voteValue = option.voteValue-1)">-</button>
+                            <button class="active-btn pull-left" ng-disabled="(option.voteValue <= 0)" ng-click="decreaseVote(option)">-</button>
                             <label class="points-label">{{option.voteValue}}/{{maxPointsPerOption}}</label>
-                            <button class="active-btn pull-right" ng-disabled="(disabledAddPoints(option.voteValue))" ng-click="(option.voteValue = option.voteValue+1)">+</button>
+                            <button class="active-btn pull-right" ng-disabled="(disabledAddPoints(option.voteValue))" ng-click="increaseVote(option)">+</button>
                         </span>
                     </div>
                     <strong>{{option.Name}}</strong>
@@ -21,7 +23,9 @@
                     <span truncated-text ng-model="option.Description" max-chars="60" class="option-description"></span>
                 </div>
             </div>
-            <hr/>
+
+            <hr />
+
         </div>
 
         <div ng-show="optionAddingAllowed">
