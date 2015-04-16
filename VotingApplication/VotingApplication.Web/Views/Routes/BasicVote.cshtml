@@ -1,8 +1,10 @@
 ﻿<div ng-controller="BasicVoteController" ng-app="GVA.Voting" class="voting-area">
     <div class="option-area">
+
         <h3>Options</h3>
-        <div ng-repeat="option in options">
-            <div class="option-block" ng-class="{'selected-option': option.selected }">
+
+        <div ng-repeat="option in poll.Options">
+            <div class="option-block" ng-class="{'selected-option': option.voteValue }">
                 <div class="option-block-row">
                     <div class="option-buttons">
                         <button class="active-btn btn-medium" ng-click="submitVote(option)">Vote</button>
@@ -13,10 +15,12 @@
                     <span truncated-text ng-model="option.Description" max-chars="60" class="option-description"></span>
                 </div>
             </div>
+
             <hr />
+
         </div>
 
-        <div ng-show="optionAddingAllowed">
+        <div ng-show="poll.OptionAdding">
             <p>
                 <a class="icon-padded-left clickable" ng-click="addOption()">+ Add another option</a>
             </p>
