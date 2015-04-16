@@ -33,7 +33,7 @@
 
         function activate() {
 
-            $scope.$on('voterOptionAddedEvent', function () { getPollData(); });
+            $scope.$on('voterOptionAddedEvent', optionAdded);
 
             // Angular won't auto update this so we need to use the observer pattern
             IdentityService.registerIdentityObserver(function () {
@@ -68,6 +68,31 @@
                     $scope.poll.Options.forEach(function (option) {
                         if (option.Id === vote.OptionId) {
                             option.voteValue = vote.VoteValue;
+                        }
+                    });
+                });
+
+            });
+        }
+
+        function optionAdded() {
+
+            var currentlySelectedOptions = $scope.poll.Options.filter(function (opt) {
+                return opt.voteValue !== 0;
+            });
+
+
+            // TODO: Replace this with a promise chain instead of duplicating.
+            PollService.getPoll($scope.pollId, function (pollData) {
+                $scope.poll = pollData;
+
+                $scope.poll.Options.forEach(function (opt) { opt.voteValue = 0; });
+
+                currentlySelectedOptions.forEach(function (selectedOption) {
+                    $scope.poll.Options.forEach(function (option) {
+                        // Note that this is subtly different from the initial load (as we have Id vs Id here, and Id vs OptionId above)
+                        if (option.Id === selectedOption.Id) {
+                            option.voteValue = selectedOption.voteValue;
                         }
                     });
                 });
