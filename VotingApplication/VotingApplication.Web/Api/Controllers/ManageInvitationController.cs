@@ -131,7 +131,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         private void DeleteBallot(IVotingContext context, Ballot ballot, Poll poll)
         {
-            List<Vote> redundantVotes = ballot.Votes;
+            List<Vote> redundantVotes = new List<Vote>(ballot.Votes);
 
             foreach (Vote redundantVote in redundantVotes)
             {
