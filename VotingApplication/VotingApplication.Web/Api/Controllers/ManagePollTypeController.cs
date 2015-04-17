@@ -40,8 +40,8 @@ namespace VotingApplication.Web.Api.Controllers
                 }
 
                 if (updateRequest.PollType.ToLower() != poll.PollType.ToString().ToLower() ||
-                    updateRequest.MaxPerVote != poll.MaxPerVote ||
-                    updateRequest.MaxPoints != poll.MaxPoints)
+                   (poll.PollType == PollType.Points && (updateRequest.MaxPerVote != poll.MaxPerVote ||
+                                                         updateRequest.MaxPoints != poll.MaxPoints)))
                 {
                     List<Vote> removedVotes = context.Votes.Include(v => v.Poll)
                                                             .Where(v => v.Poll.UUID == poll.UUID)
