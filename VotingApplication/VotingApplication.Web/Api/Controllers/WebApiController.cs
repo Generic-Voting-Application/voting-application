@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Data.Entity;
+using System.Linq;
 using System.Web.Http.ModelBinding;
 using VotingApplication.Data.Context;
+using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Logging;
+using VotingApplication.Web.Api.Metrics;
 
 namespace VotingApplication.Web.Api.Controllers
 {
@@ -38,6 +43,8 @@ namespace VotingApplication.Web.Api.Controllers
 
             logger.Log(message, exception);
 
+            MetricEventHandler.ErrorEvent(exception, CurrentPollId());
+
             throw exception;
         }
 
@@ -47,8 +54,38 @@ namespace VotingApplication.Web.Api.Controllers
 
             ILogger logger = LoggerFactory.GetLogger();
             logger.Log(exception);
+            MetricEventHandler.ErrorEvent(exception, CurrentPollId());
 
             throw exception;
+        }
+
+        private Guid CurrentPollId()
+        {
+            IDictionary<string, object> routeValues = RequestContext.RouteData.Values;
+
+            if (routeValues["pollId"] != null)
+            {
+                return Guid.Parse((string)routeValues["pollId"]);
+            }
+
+            if (routeValues["manageId"] == null)
+            {
+                return Guid.Empty;
+            }
+
+            // Find corresponding pollId for manageId
+            using (var context = _contextFactory.CreateContext())
+            {
+                Guid manageGuid = Guid.Parse((string)routeValues["manageId"]);
+                Poll matchingPoll = context.Polls.SingleOrDefault(p => p.ManageId == manageGuid);
+
+                if (matchingPoll == null)
+                {
+                    return Guid.Empty;
+                }
+
+                return matchingPoll.UUID;
+            }
         }
     }
 }
