@@ -147,14 +147,14 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\AccountLoginControllerTests.js" />
-    <Content Include="Scripts\AccountRegisterControllerTests.js" />
-    <Content Include="Scripts\AccountServiceTests.js" />
-    <Content Include="Scripts\HomepageControllerTests.js" />
+    <Content Include="Scripts\Controllers\AccountLoginControllerTests.js" />
+    <Content Include="Scripts\Controllers\AccountRegisterControllerTests.js" />
+    <Content Include="Scripts\Services\AccountServiceTests.js" />
+    <Content Include="Scripts\Controllers\HomepageControllerTests.js" />
     <Content Include="Scripts\Lib\angular-mocks.js" />
-    <Content Include="Scripts\ManageServiceTests.js" />
-    <Content Include="Scripts\ManageOptionControllerTests.js" />
-    <Content Include="Scripts\ManageVotersControllerTests.js" />
+    <Content Include="Scripts\Services\ManageServiceTests.js" />
+    <Content Include="Scripts\Controllers\ManageOptionControllerTests.js" />
+    <Content Include="Scripts\Controllers\ManageVotersControllerTests.js" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
