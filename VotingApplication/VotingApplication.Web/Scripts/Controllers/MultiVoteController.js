@@ -26,7 +26,7 @@
                 .map(function (option) {
                     return {
                         OptionId: option.Id,
-                        VoteValue: option.voteValue,
+                        VoteValue: 1,
                         VoterName: IdentityService.identity && $scope.poll && $scope.poll.NamedVoting ?
                                    IdentityService.identity.name : null
                     };
