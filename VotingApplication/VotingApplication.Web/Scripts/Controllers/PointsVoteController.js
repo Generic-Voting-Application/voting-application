@@ -12,7 +12,8 @@
 
         $scope.addOption = addOption;
         $scope.unallocatedPoints = calculateUnallocatedPoints;
-        $scope.disabledAddPoints = shouldAddPointsBeDisabled;
+        $scope.addPointsDisabled = shouldAddPointsBeDisabled;
+        $scope.subtractPointsDisabled = shouldSubtractPointsBeDisabled;
         $scope.notifyOptionAdded = notifyOptionAdded;
 
         $scope.increaseVote = increaseVote;
@@ -65,8 +66,12 @@
             return unallocatedPoints;
         }
 
-        function shouldAddPointsBeDisabled(pointValue) {
-            return pointValue >= $scope.poll.MaxPerVote || $scope.unallocatedPoints() === 0;
+        function shouldSubtractPointsBeDisabled(option) {
+            return option.voteValue <= 0;
+        }
+
+        function shouldAddPointsBeDisabled(option) {
+            return option.voteValue >= $scope.poll.MaxPerVote || $scope.unallocatedPoints() === 0;
         }
 
         function increaseVote(option) {

@@ -151,6 +151,7 @@
     <Content Include="Scripts\Controllers\AccountRegisterControllerTests.js" />
     <Content Include="Scripts\Controllers\BasicVoteControllerTests.js" />
     <Content Include="Scripts\Controllers\MultiVoteControllerTests.js" />
+    <Content Include="Scripts\Controllers\PointsVoteControllerTests.js" />
     <Content Include="Scripts\Controllers\UpDownVoteControllerTests.js" />
     <Content Include="Scripts\Services\AccountServiceTests.js" />
     <Content Include="Scripts\Controllers\HomepageControllerTests.js" />
