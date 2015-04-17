@@ -149,6 +149,7 @@
   <ItemGroup>
     <Content Include="Scripts\Controllers\AccountLoginControllerTests.js" />
     <Content Include="Scripts\Controllers\AccountRegisterControllerTests.js" />
+    <Content Include="Scripts\Controllers\BasicVoteControllerTests.js" />
     <Content Include="Scripts\Services\AccountServiceTests.js" />
     <Content Include="Scripts\Controllers\HomepageControllerTests.js" />
     <Content Include="Scripts\Lib\angular-mocks.js" />
