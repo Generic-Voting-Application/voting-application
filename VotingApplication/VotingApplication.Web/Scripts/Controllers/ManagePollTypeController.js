@@ -40,7 +40,7 @@
             ManageService.getVotes($scope.poll.UUID, function (votes) {
                 if (votes.length > 0 &&
                         ($scope.poll.VotingStrategy !== startingPollType ||
-                        ($scope.poll.PollType == 'Points' &&
+                        ($scope.poll.PollType === 'Points' &&
                             ($scope.poll.MaxPerVote !== startingMaxPerVote ||
                             $scope.poll.MaxPoints !== startingMaxPoints)))) {
                     openPollChangeDialog(updatePoll);

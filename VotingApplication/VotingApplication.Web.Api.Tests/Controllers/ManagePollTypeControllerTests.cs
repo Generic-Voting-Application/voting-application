@@ -181,6 +181,33 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             }
 
             [TestMethod]
+            public void ChangedPollMaxPerVoteOnNonPointsPoll_LeavesVotes()
+            {
+                IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                Poll existingPoll = CreatePoll();
+                existingPoll.PollType = PollType.Basic;
+                existingPoll.MaxPoints = 1;
+                existingPoll.MaxPerVote = 1;
+                existingPolls.Add(existingPoll);
+
+                Vote testVote = new Vote() { Poll = existingPoll };
+
+                IDbSet<Ballot> existingBallots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+
+                IDbSet<Vote> existingVotes = DbSetTestHelper.CreateMockDbSet<Vote>();
+                existingVotes.Add(testVote);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, existingBallots, existingVotes);
+                ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "Basic", MaxPerVote = 1, MaxPoints = 2 };
+
+                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory);
+
+                controller.Put(PollManageGuid, request);
+
+                Assert.AreEqual(1, existingVotes.Local.Count);
+            }
+
+            [TestMethod]
             public void UnChangedPollType_LeavesVotes()
             {
                 IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
