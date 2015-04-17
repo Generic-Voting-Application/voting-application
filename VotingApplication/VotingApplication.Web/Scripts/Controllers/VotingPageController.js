@@ -119,7 +119,7 @@
             var votes = getVotes(options);
 
             VoteService.submitVote($scope.pollId, votes, $scope.token, function () {
-                RoutingService.navigateToResultsPage($scope.pollId);
+                RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
             });
         }
 
