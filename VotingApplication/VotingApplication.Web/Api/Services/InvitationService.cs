@@ -36,7 +36,7 @@ namespace VotingApplication.Web.Api.Services
             }
 
             string hostUri = WebConfigurationManager.AppSettings["HostURI"];
-            if (hostUri == String.Empty)
+            if (string.IsNullOrWhiteSpace(hostUri))
             {
                 return;
             }

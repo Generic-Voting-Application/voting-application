@@ -74,7 +74,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 foreach (ManageInvitationRequestModel invitee in invitees)
                 {
-                    Ballot matchingBallot = matchingPoll.Ballots.SingleOrDefault(b => b.ManageGuid == invitee.ManageToken);
+                    Ballot matchingBallot = matchingPoll.Ballots.SingleOrDefault(b => b.ManageGuid != Guid.Empty && b.ManageGuid == invitee.ManageToken);
                     redundantBallots.RemoveAll(b => b == matchingBallot);
 
                     if (matchingBallot == null)
