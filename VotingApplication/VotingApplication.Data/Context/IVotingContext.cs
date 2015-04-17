@@ -10,6 +10,7 @@ namespace VotingApplication.Data.Context
         IDbSet<Vote> Votes { get; set; }
         IDbSet<Poll> Polls { get; set; }
         IDbSet<Ballot> Ballots { get; set; }
+        IDbSet<Event> Events { get; set; }
 
         int SaveChanges();
     }
