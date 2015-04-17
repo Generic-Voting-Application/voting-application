@@ -1,6 +1,6 @@
 ﻿'use strict';
 
-describe('BasicVoteController', function () {
+describe('MultiVoteController', function () {
 
     beforeEach(module('GVA.Voting'));
 
@@ -21,7 +21,7 @@ describe('BasicVoteController', function () {
         spyOn(scope, 'setVoteCallback').and.callThrough();
         spyOn(mockngDialog, 'open').and.callThrough();
 
-        $controller('BasicVoteController', { $scope: scope, ngDialog: mockngDialog });
+        $controller('MultiVoteController', { $scope: scope, ngDialog: mockngDialog });
     }));
 
 
@@ -74,23 +74,54 @@ describe('BasicVoteController', function () {
 
     describe('VoteCallback called', function () {
 
-        it('Returns single vote', function () {
-            var option = {
-                Id: 35,
-                voteValue: 1
-            };
+        it('Returns correct number of votes', function () {
+            var options = [
+                {
+                    Id: 35,
+                    voteValue: 1
+                },
+                {
+                    Id: 34,
+                    voteValue: 1
+                },
+                {
+                    Id: 23,
+                    voteValue: 1
+                }
+            ];
 
-            var votes = voteCallback(option);
+            var votes = voteCallback(options);
+
+            expect(votes.length).toBe(3);
+        });
+
+        it('Returns only votes voted for', function () {
+            var options = [
+                {
+                    Id: 35,
+                    voteValue: 0
+                },
+                {
+                    Id: 34,
+                    voteValue: 0
+                },
+                {
+                    Id: 23,
+                    voteValue: 1
+                }
+            ];
+
+            var votes = voteCallback(options);
 
             expect(votes.length).toBe(1);
-            expect(votes[0].OptionId).toBe(35);
+            expect(votes[0].OptionId).toBe(23);
         });
 
         it('VoteValue is always 1', function () {
-            var option = {
+            var option = [{
                 Id: 35,
                 voteValue: 56
-            };
+            }];
 
             var votes = voteCallback(option);
 
