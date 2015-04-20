@@ -576,7 +576,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         public static ManageVoterController CreateManageVoteController(IContextFactory contextFactory)
         {
-            return new ManageVoterController(contextFactory)
+            return new ManageVoterController(contextFactory, null)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()

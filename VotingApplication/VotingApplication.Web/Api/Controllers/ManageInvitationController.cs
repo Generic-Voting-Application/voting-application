@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Services;
 
@@ -19,8 +20,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             _invitationService = invitationService;
         }
-        public ManageInvitationController(IContextFactory contextFactory, IInvitationService invitationService)
-            : base(contextFactory)
+        public ManageInvitationController(IContextFactory contextFactory, IMetricEventHandler metricHandler, IInvitationService invitationService)
+            : base(contextFactory, metricHandler)
         {
             _invitationService = invitationService;
         }
@@ -41,15 +42,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls
-                                            .Where(p => p.ManageId == manageId)
-                                            .Include(p => p.Ballots)
-                                            .FirstOrDefault();
-
-                if (matchingPoll == null)
-                {
-                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
-                }
+                Poll matchingPoll = PollByManageId(manageId);
 
                 return matchingPoll.Ballots
                     .Where(b => !String.IsNullOrWhiteSpace(b.Email))

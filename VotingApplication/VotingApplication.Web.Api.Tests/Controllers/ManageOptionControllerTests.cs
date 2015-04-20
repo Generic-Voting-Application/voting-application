@@ -516,7 +516,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         public static ManageOptionController CreateManageOptionController(IContextFactory contextFactory)
         {
-            return new ManageOptionController(contextFactory)
+            return new ManageOptionController(contextFactory, null)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()

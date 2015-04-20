@@ -92,7 +92,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         public static ManageQuestionController CreateManageQuestionController(IContextFactory contextFactory)
         {
-            return new ManageQuestionController(contextFactory)
+            return new ManageQuestionController(contextFactory, null)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()

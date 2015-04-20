@@ -59,7 +59,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         public static ManageMiscController CreateManageExpiryController(IContextFactory contextFactory)
         {
-            return new ManageMiscController(contextFactory)
+            return new ManageMiscController(contextFactory, null)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()

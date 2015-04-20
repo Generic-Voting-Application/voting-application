@@ -128,7 +128,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             public static PollOptionController CreatePollOptionController(IContextFactory contextFactory)
             {
-                return new PollOptionController(contextFactory)
+                return new PollOptionController(contextFactory, null)
                 {
                     Request = new HttpRequestMessage(),
                     Configuration = new HttpConfiguration()

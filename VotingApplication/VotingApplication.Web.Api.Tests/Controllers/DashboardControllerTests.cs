@@ -348,7 +348,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         public DashboardController CreateDashboardController(IContextFactory contextFactory)
         {
-            return new DashboardController(contextFactory)
+            return new DashboardController(contextFactory, null)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()

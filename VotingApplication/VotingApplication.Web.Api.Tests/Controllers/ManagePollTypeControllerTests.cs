@@ -154,7 +154,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         public static ManagePollTypeController CreateManagePollTypeController(IContextFactory contextFactory)
         {
-            return new ManagePollTypeController(contextFactory)
+            return new ManagePollTypeController(contextFactory, null)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()

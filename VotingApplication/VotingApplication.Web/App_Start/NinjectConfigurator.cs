@@ -5,6 +5,7 @@ using System.Web.Configuration;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Web.Api.Logging;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Services;
 using VotingApplication.Web.Api.Validators;
 using VotingApplication.Web.Common;
@@ -54,6 +55,7 @@ namespace VotingApplication.Web.Api.App_Start
             container.Bind<IVoteValidatorFactory>().To<VoteValidatorFactory>();
             container.Bind<ILogger>().To<NLogger>();
             container.Bind<IInvitationService>().To<InvitationService>();
+            container.Bind<IMetricEventHandler>().To<MetricEventHandler>();
 
             ConfigureMailSender(container);
         }

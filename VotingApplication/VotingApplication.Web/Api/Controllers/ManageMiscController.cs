@@ -4,6 +4,7 @@ using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers
@@ -12,21 +13,14 @@ namespace VotingApplication.Web.Api.Controllers
     {
         public ManageMiscController() : base() { }
 
-        public ManageMiscController(IContextFactory contextFactory) : base(contextFactory) { }
+        public ManageMiscController(IContextFactory contextFactory, IMetricEventHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpPut]
         public void Put(Guid manageId, ManagePollMiscRequest updateRequest)
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = context
-                    .Polls
-                    .SingleOrDefault(p => p.ManageId == manageId);
-
-                if (poll == null)
-                {
-                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll for manage id {0} not found", manageId));
-                }
+                Poll poll = PollByManageId(manageId);
 
                 if (!ModelState.IsValid)
                 {

@@ -53,7 +53,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             _mockInvitationService = new Mock<IInvitationService>();
 
-            _controller = new ManageInvitationController(mockContextFactory.Object, _mockInvitationService.Object);
+            _controller = new ManageInvitationController(mockContextFactory.Object, null, _mockInvitationService.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }

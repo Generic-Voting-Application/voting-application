@@ -41,7 +41,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Polls).Returns(dummyPolls);
             mockContext.Setup(a => a.SaveChanges()).Returns(null);
 
-            _controller = new PollTokenController(mockContextFactory.Object);
+            _controller = new PollTokenController(mockContextFactory.Object, null);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }

@@ -99,7 +99,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _mockValidatorFactory = new Mock<IVoteValidatorFactory>();
             _mockValidatorFactory.Setup(a => a.CreateValidator(PollType.Basic)).Returns(mockValidator.Object);
 
-            _controller = new PollVoteController(mockContextFactory.Object, _mockValidatorFactory.Object);
+            _controller = new PollVoteController(mockContextFactory.Object, null, _mockValidatorFactory.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }

@@ -66,7 +66,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
             mockContext.Setup(a => a.Ballots).Returns(_dummyTokens);
 
-            _controller = new ManageController(mockContextFactory.Object);
+            _controller = new ManageController(mockContextFactory.Object, null);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -78,6 +78,29 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 _dummyOptions.Local[i].Id = (long)i + 1;
             }
         }
+
+        #region Poll Retrieval
+
+        [TestMethod]
+        public void CanRetrievePollByManageId()
+        {
+            // Act
+            Poll retrievedPoll = _controller.PollByManageId(_manageEmptyUUID);
+
+            // Assert
+            Poll expectedPoll = _dummyPolls.Local[1];
+            Assert.AreEqual(expectedPoll, retrievedPoll);
+        }
+
+        [TestMethod]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
+        public void RetrievalOfMissingPollByPollIdIsNotFoundException()
+        {
+            // Act
+            Poll retrievedPoll = _controller.PollByManageId(Guid.NewGuid());
+        }
+
+        #endregion
 
         #region GET
 
@@ -222,7 +245,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             public static ManageController CreateManageController(IContextFactory contextFactory)
             {
-                return new ManageController(contextFactory)
+                return new ManageController(contextFactory, null)
                 {
                     Request = new HttpRequestMessage(),
                     Configuration = new HttpConfiguration()

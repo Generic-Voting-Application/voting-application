@@ -10,21 +10,25 @@ using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Logging;
 using VotingApplication.Web.Api.Metrics;
+using System.Linq.Expressions;
 
 namespace VotingApplication.Web.Api.Controllers
 {
     public class WebApiController : ApiController
     {
         protected readonly IContextFactory _contextFactory;
+        private readonly IMetricEventHandler _metricHandler;
 
         public WebApiController()
         {
-            this._contextFactory = new ContextFactory();
+            _contextFactory = new ContextFactory();
+            _metricHandler = new MetricEventHandler(_contextFactory);
         }
 
-        public WebApiController(IContextFactory contextFactory)
+        public WebApiController(IContextFactory contextFactory, IMetricEventHandler metricHandler)
         {
-            this._contextFactory = contextFactory;
+            _contextFactory = contextFactory;
+            _metricHandler = metricHandler;
         }
 
         public void ThrowError(HttpStatusCode statusCode)
@@ -43,7 +47,10 @@ namespace VotingApplication.Web.Api.Controllers
 
             logger.Log(message, exception);
 
-            MetricEventHandler.ErrorEvent(exception, CurrentPollId());
+            if (_metricHandler != null)
+            {
+                _metricHandler.ErrorEvent(exception, CurrentPollId());
+            }
 
             throw exception;
         }
@@ -54,13 +61,53 @@ namespace VotingApplication.Web.Api.Controllers
 
             ILogger logger = LoggerFactory.GetLogger();
             logger.Log(exception);
-            MetricEventHandler.ErrorEvent(exception, CurrentPollId());
+
+            if (_metricHandler != null)
+            {
+                _metricHandler.ErrorEvent(exception, CurrentPollId());
+            }
 
             throw exception;
         }
 
+        public Poll PollByPollId(Guid pollId)
+        {
+            return PollByPredicate(p => p.UUID == pollId, string.Format("Poll {0} not found", pollId));
+        }
+
+        public Poll PollByManageId(Guid manageId)
+        {
+            return PollByPredicate(p => p.ManageId == manageId, string.Format("Poll for manage id {0} not found", manageId));
+        }
+
+        private Poll PollByPredicate(Expression<Func<Poll, bool>> predicate, string notFoundMessage)
+        {
+            using (var context = _contextFactory.CreateContext())
+            {
+                Poll poll = context.Polls
+                    .Where(predicate)
+                    .Include(p => p.Options)
+                    .Include(p => p.Ballots)
+                    .Include(p => p.Ballots.Select(b => b.Votes))
+                    .Include(p => p.Ballots.Select(b => b.Votes.Select(v => v.Option)))
+                    .FirstOrDefault();
+
+                if (poll == null)
+                {
+                    ThrowError(HttpStatusCode.NotFound, notFoundMessage);
+                }
+
+                return poll;
+            }
+        }
+
         private Guid CurrentPollId()
         {
+            if (RequestContext.RouteData == null)
+            {
+                return Guid.Empty;
+            }
+
             IDictionary<string, object> routeValues = RequestContext.RouteData.Values;
 
             if (routeValues["pollId"] != null)
@@ -76,14 +123,8 @@ namespace VotingApplication.Web.Api.Controllers
             // Find corresponding pollId for manageId
             using (var context = _contextFactory.CreateContext())
             {
-                Guid manageGuid = Guid.Parse((string)routeValues["manageId"]);
-                Poll matchingPoll = context.Polls.SingleOrDefault(p => p.ManageId == manageGuid);
-
-                if (matchingPoll == null)
-                {
-                    return Guid.Empty;
-                }
-
+                Guid manageId = Guid.Parse((string)routeValues["manageId"]);
+                Poll matchingPoll = PollByManageId(manageId);
                 return matchingPoll.UUID;
             }
         }

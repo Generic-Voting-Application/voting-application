@@ -6,6 +6,7 @@ using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Validators;
 
@@ -17,8 +18,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public PollVoteController() : base() { }
 
-        public PollVoteController(IContextFactory contextFactory, IVoteValidatorFactory voteValidatorFactory)
-            : base(contextFactory)
+        public PollVoteController(IContextFactory contextFactory, IMetricEventHandler metricHandler, IVoteValidatorFactory voteValidatorFactory)
+            : base(contextFactory, metricHandler)
         {
             _voteValidatorFactory = voteValidatorFactory;
         }
@@ -28,14 +29,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Poll poll = context
-                    .Polls
-                    .SingleOrDefault(s => s.UUID == pollId);
-
-                if (poll == null)
-                {
-                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
-                }
+                Poll poll = PollByPollId(pollId);
 
                 List<Vote> votes = context
                     .Votes

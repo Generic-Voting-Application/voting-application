@@ -10,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
@@ -18,7 +19,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     {
         public PollResultsController() : base() { }
 
-        public PollResultsController(IContextFactory contextFactory) : base(contextFactory) { }
+        public PollResultsController(IContextFactory contextFactory, IMetricEventHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpGet]
         [ResponseType(typeof(IEnumerable<VoteRequestResponseModel>))]
@@ -26,14 +27,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Poll poll = context
-                    .Polls
-                    .FirstOrDefault(s => s.UUID == pollId);
-
-                if (poll == null)
-                {
-                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
-                }
+                Poll poll = PollByPollId(pollId);
 
                 if (Request.RequestUri != null)
                 {

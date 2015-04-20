@@ -5,6 +5,7 @@ using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
@@ -13,7 +14,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     {
         public PollOptionController() : base() { }
 
-        public PollOptionController(IContextFactory contextFactory) : base(contextFactory) { }
+        public PollOptionController(IContextFactory contextFactory, IMetricEventHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpPost]
         public void Post(Guid pollId, OptionCreationRequestModel optionCreationRequest)

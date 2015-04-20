@@ -59,7 +59,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Polls).Returns(_dummyPolls);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
-            _controller = new PollController(mockContextFactory.Object)
+            _controller = new PollController(mockContextFactory.Object, null)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()
@@ -73,6 +73,28 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 _dummyPolls.Local[i].UUID = UUIDs[i];
             }
         }
+
+        #region Poll Retrieval
+
+        [TestMethod]
+        public void CanRetrievePollByPollId()
+        {
+            // Act
+            Poll retrievedPoll = _controller.PollByPollId(UUIDs[1]);
+
+            // Assert
+            Assert.AreEqual(_otherPoll, retrievedPoll);
+        }
+
+        [TestMethod]
+        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
+        public void RetrievalOfMissingPollByPollIdIsNull()
+        {
+            // Act
+            Poll retrievedPoll = _controller.PollByPollId(Guid.NewGuid());
+        }
+
+        #endregion
 
         #region GET
 

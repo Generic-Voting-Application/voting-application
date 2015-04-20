@@ -94,7 +94,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         public static ManageExpiryController CreateManageExpiryController(IContextFactory contextFactory)
         {
-            return new ManageExpiryController(contextFactory)
+            return new ManageExpiryController(contextFactory, null)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()

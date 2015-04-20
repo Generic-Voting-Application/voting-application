@@ -4,6 +4,7 @@ using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers
@@ -12,7 +13,7 @@ namespace VotingApplication.Web.Api.Controllers
     {
         public ManageQuestionController() : base() { }
 
-        public ManageQuestionController(IContextFactory contextFactory) : base(contextFactory) { }
+        public ManageQuestionController(IContextFactory contextFactory, IMetricEventHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpPut]
         public void Put(Guid manageId, ManageQuestionRequest request)
@@ -24,10 +25,10 @@ namespace VotingApplication.Web.Api.Controllers
                 ThrowError(HttpStatusCode.BadRequest, ModelState);
             }
 
+            Poll poll = PollByManageId(manageId);
+
             using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = GetPoll(context, manageId);
-
                 if (String.IsNullOrWhiteSpace(request.Question))
                 {
                     ThrowError(HttpStatusCode.BadRequest, "Question cannot be null or empty");
@@ -46,20 +47,6 @@ namespace VotingApplication.Web.Api.Controllers
             {
                 ThrowError(HttpStatusCode.BadRequest, "Question request cannot be null");
             }
-        }
-
-        private Poll GetPoll(IVotingContext context, Guid manageId)
-        {
-            Poll matchingPoll = context.Polls
-                                        .Where(p => p.ManageId == manageId)
-                                        .FirstOrDefault();
-
-            if (matchingPoll == null)
-            {
-                ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
-            }
-
-            return matchingPoll;
         }
     }
 }

@@ -6,13 +6,18 @@ using VotingApplication.Data.Model;
 
 namespace VotingApplication.Web.Api.Metrics
 {
-    public static class MetricEventHandler
+    public class MetricEventHandler : IMetricEventHandler
     {
-        private static IContextFactory _contextFactory = new ContextFactory();
+        private readonly IContextFactory _contextFactory;
+        
+        public MetricEventHandler (IContextFactory contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
 
         #region Error Events
 
-        public static Event ErrorEvent(HttpResponseException exception, Guid pollId)
+        public Event ErrorEvent(HttpResponseException exception, Guid pollId)
         {
             Event errorEvent = new Event("ERROR", pollId);
 
@@ -36,14 +41,14 @@ namespace VotingApplication.Web.Api.Metrics
             return errorEvent;
         }
 
-        private static string ErrorDetailFromRequestMessage(HttpResponseException exception)
+        private string ErrorDetailFromRequestMessage(HttpResponseException exception)
         {
             string apiRoute = exception.Response.RequestMessage.Method + " " + exception.Response.RequestMessage.RequestUri;
             string requestPayload = GetPayload(exception);
             return apiRoute + " " + requestPayload;
         }
 
-        private static string GetPayload(HttpResponseException exception)
+        private string GetPayload(HttpResponseException exception)
         {
             var requestContext = exception.Response.RequestMessage.Properties["MS_RequestContext"];
             HttpRequestWrapper webRequest = requestContext.GetType().GetProperty("WebRequest").GetValue(requestContext) as HttpRequestWrapper;
