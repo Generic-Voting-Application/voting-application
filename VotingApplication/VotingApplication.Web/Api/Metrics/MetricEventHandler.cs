@@ -53,13 +53,18 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(pageChangeEvent);
         }
 
-        private void StoreEvent(Event eventToStore)
+        public void LoginEvent()
         {
-            using (var context = _contextFactory.CreateContext())
-            {
-                context.Events.Add(eventToStore);
-                context.SaveChanges();
-            }
+            Event loginEvent = new Event("Login", Guid.Empty);
+            loginEvent.Value = HttpStatusCode.OK.ToString();
+            StoreEvent(loginEvent);
+        }
+
+        public void RegisterEvent()
+        {
+            Event registerEvent = new Event("Register", Guid.Empty);
+            registerEvent.Value = HttpStatusCode.OK.ToString();
+            StoreEvent(registerEvent);
         }
 
         #region Utilities
@@ -87,6 +92,15 @@ namespace VotingApplication.Web.Api.Metrics
             {
                 Poll matchingPoll = context.Polls.Where(p => p.UUID == guid || p.ManageId == guid).SingleOrDefault();
                 return (matchingPoll != null) ? matchingPoll.UUID : Guid.Empty;
+            }
+        }
+
+        private void StoreEvent(Event eventToStore)
+        {
+            using (var context = _contextFactory.CreateContext())
+            {
+                context.Events.Add(eventToStore);
+                context.SaveChanges();
             }
         }
 
