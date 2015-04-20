@@ -44,14 +44,14 @@
 
         function getResultsSuccessCallback(data) {
 
-            if (data) {
-                $scope.voteCount = data.length;
+            if (data && data.Votes) {
+                $scope.voteCount = data.Votes.length;
             }
 
             var groupedData = {};
 
             // Group together votes for the same options
-            data.forEach(function (d) {
+            data.Votes.forEach(function (d) {
                 if (!(d.OptionName in groupedData)) {
                     groupedData[d.OptionName] = { Value: 0, Voters: [] };
                 }
