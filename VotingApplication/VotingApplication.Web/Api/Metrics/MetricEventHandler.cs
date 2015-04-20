@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using VotingApplication.Data.Context;
@@ -21,7 +21,7 @@ namespace VotingApplication.Web.Api.Metrics
 
         public void ErrorEvent(HttpResponseException exception, Guid pollId)
         {
-            Event errorEvent = new Event("ERROR", pollId);
+            Event errorEvent = new Event("ERROR", GetExistingPollId(pollId));
 
             errorEvent.Value = exception.Response.StatusCode.ToString();
 
@@ -44,26 +44,11 @@ namespace VotingApplication.Web.Api.Metrics
             return apiRoute + " " + requestPayload;
         }
 
-        private string GetPayload(HttpResponseException exception)
-        {
-            var requestContext = exception.Response.RequestMessage.Properties["MS_RequestContext"];
-            HttpRequestWrapper webRequest = requestContext.GetType().GetProperty("WebRequest").GetValue(requestContext) as HttpRequestWrapper;
-            
-            if (webRequest == null)
-            {
-                return "";
-            }
-
-            byte[] buffer = new byte[webRequest.ContentLength];
-            webRequest.InputStream.Read(buffer, 0, webRequest.ContentLength);
-            return System.Text.Encoding.Default.GetString(buffer);
-        }
-
         #endregion
 
         public void PageChangeEvent(string route, int statusCode, Guid pollId)
         {
-            Event pageChangeEvent = new Event("GoTo" + route, pollId);
+            Event pageChangeEvent = new Event("GoTo" + route, GetExistingPollId(pollId));
             pageChangeEvent.Value = ((HttpStatusCode)statusCode).ToString();
             StoreEvent(pageChangeEvent);
         }
@@ -76,5 +61,35 @@ namespace VotingApplication.Web.Api.Metrics
                 context.SaveChanges();
             }
         }
+
+        #region Utilities
+
+        private string GetPayload(HttpResponseException exception)
+        {
+            var requestContext = exception.Response.RequestMessage.Properties["MS_RequestContext"];
+            HttpRequestWrapper webRequest = requestContext.GetType().GetProperty("WebRequest").GetValue(requestContext) as HttpRequestWrapper;
+
+            if (webRequest == null)
+            {
+                return "";
+            }
+
+            byte[] buffer = new byte[webRequest.ContentLength];
+            webRequest.InputStream.Read(buffer, 0, webRequest.ContentLength);
+            return System.Text.Encoding.Default.GetString(buffer);
+        }
+
+        // Make sure we are using the PollId, not the corresponding ManageId, if available
+        private Guid GetExistingPollId(Guid guid)
+        {
+            // Find corresponding pollId for manageId
+            using (var context = _contextFactory.CreateContext())
+            {
+                Poll matchingPoll = context.Polls.Where(p => p.UUID == guid || p.ManageId == guid).SingleOrDefault();
+                return (matchingPoll != null) ? matchingPoll.UUID : Guid.Empty;
+            }
+        }
+
+        #endregion
     }
 }

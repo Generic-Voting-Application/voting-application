@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Data.Entity;
-using System.Linq;
 using System.Web.Http.ModelBinding;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Logging;
 using VotingApplication.Web.Api.Metrics;
-using System.Linq.Expressions;
 
 namespace VotingApplication.Web.Api.Controllers
 {
@@ -115,20 +115,12 @@ namespace VotingApplication.Web.Api.Controllers
                 return Guid.Parse((string)routeValues["pollId"]);
             }
 
-            if (routeValues["manageId"] == null)
+            if (routeValues["manageId"] != null)
             {
-                return Guid.Empty;
+                return Guid.Parse((string)routeValues["manageId"]);
             }
 
-            // Find corresponding pollId for manageId
-            using (var context = _contextFactory.CreateContext())
-            {
-                Guid manageId = Guid.Parse((string)routeValues["manageId"]);
-                // Avoid using PollByManageId as this can infinitely recurse through
-                // CurrentPollId => PollByManageId => ThrowError => CurrentPollId => ...
-                Poll matchingPoll = context.Polls.Where(p => p.ManageId == manageId).SingleOrDefault();
-                return (matchingPoll != null) ? matchingPoll.UUID : Guid.Empty;
-            }
+            return Guid.Empty;
         }
     }
 }
