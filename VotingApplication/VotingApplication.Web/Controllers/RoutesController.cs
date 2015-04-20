@@ -1,16 +1,40 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
+using VotingApplication.Data.Context;
+using VotingApplication.Web.Api.Metrics;
 
 namespace VotingApplication.Web.Controllers
 {
     public class RoutesController : Controller
     {
+        private IMetricEventHandler _metricHandler;
+
+        public RoutesController()
+        {
+            var ContextFactory = new ContextFactory();
+            _metricHandler = new MetricEventHandler(ContextFactory);
+        }
+
+        public RoutesController(IMetricEventHandler metricHandler)
+        {
+            _metricHandler = metricHandler;
+        }
+
+        private void LogPageEvent(string route)
+        {
+            object pollId = RouteData.Values["id"] ?? Guid.Empty;
+            _metricHandler.PageChangeEvent(route, Response.StatusCode, Guid.Parse(pollId.ToString()));
+        }
+
         public ActionResult Vote()
         {
+            LogPageEvent("Vote");
             return View();
         }
 
         public ActionResult Results()
         {
+            LogPageEvent("Results");
             return View();
         }
 
@@ -44,23 +68,21 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
-        public ActionResult Create()
-        {
-            return View();
-        }
-
         public ActionResult UnregisteredDashboard()
         {
+            LogPageEvent("UnregisteredDashboard");
             return View();
         }
 
         public ActionResult AccountLogin()
         {
+            LogPageEvent("Login");
             return View();
         }
 
         public ActionResult AccountRegister()
         {
+            LogPageEvent("Register");
             return View();
         }
 
@@ -71,36 +93,43 @@ namespace VotingApplication.Web.Controllers
 
         public ActionResult Manage()
         {
+            LogPageEvent("Manage");
             return View();
         }
 
         public ActionResult ManageOptions()
         {
+            LogPageEvent("ManageOptions");
             return View();
         }
 
         public ActionResult ManageInvitees()
         {
+            LogPageEvent("ManageInvitees");
             return View();
         }
 
         public ActionResult ManageInvitationStyle()
         {
+            LogPageEvent("ManageInvitationStyle");
             return View();
         }
 
         public ActionResult ManagePollType()
         {
+            LogPageEvent("ManagePollType");
             return View();
         }
 
         public ActionResult ManageExpiry()
         {
+            LogPageEvent("ManageExpiry");
             return View();
         }
 
         public ActionResult ManageVoters()
         {
+            LogPageEvent("ManageVoters");
             return View();
         }
 
@@ -111,6 +140,7 @@ namespace VotingApplication.Web.Controllers
 
         public ActionResult RegisteredDashboard()
         {
+            LogPageEvent("RegisteredDashboard");
             return View();
         }
 

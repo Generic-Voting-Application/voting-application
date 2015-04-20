@@ -8,6 +8,7 @@ namespace VotingApplication.Web.Api.Metrics
 {
     public interface IMetricEventHandler
     {
-        Event ErrorEvent(HttpResponseException exception, Guid pollId);
+        void PageChangeEvent(string route, int statusCode, Guid pollId);
+        void ErrorEvent(HttpResponseException exception, Guid pollId);
     }
 }

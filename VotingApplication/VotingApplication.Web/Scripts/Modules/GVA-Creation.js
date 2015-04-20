@@ -6,32 +6,45 @@
         .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider
-                .when('/Manage/', {
-                    templateUrl: '../Routes/Manage'
-                })
                 .when('/Manage/:manageId', {
-                    templateUrl: '../Routes/Manage'
+                    templateUrl: function (params) {
+                        return '../Routes/Manage/' + params['manageId'];
+                    }
                 })
                 .when('/Manage/:manageId/Name', {
-                    templateUrl: '../Routes/ManageName'
+                    templateUrl: function (params) {
+                        return '../Routes/ManageName/' + params['manageId'];
+                    }
                 })
                 .when('/Manage/:manageId/Options', {
-                    templateUrl: '../Routes/ManageOptions'
+                    templateUrl: function (params) {
+                        return '../Routes/ManageOptions/' + params['manageId'];
+                    }
                 })
                 .when('/Manage/:manageId/Invitees', {
-                    templateUrl: '../Routes/ManageInvitees'
+                    templateUrl: function (params) {
+                        return '../Routes/ManageInvitees/' + params['manageId'];
+                    }
                 })
                 .when('/Manage/:manageId/InvitationStyle', {
-                    templateUrl: '../Routes/ManageInvitationStyle'
+                    templateUrl: function (params) {
+                        return '../Routes/ManageInvitationStyle/' + params['manageId'];
+                    }
                 })
                 .when('/Manage/:manageId/Voters', {
-                    templateUrl: '../Routes/ManageVoters'
+                    templateUrl: function (params) {
+                        return '../Routes/ManageVoters/' + params['manageId'];
+                    }
                 })
                 .when('/Manage/:manageId/PollType', {
-                    templateUrl: '../Routes/ManagePollType'
+                    templateUrl: function (params) {
+                        return '../Routes/ManagePollType/' + params['manageId'];
+                    }
                 })
                 .when('/Manage/:manageId/Expiry', {
-                    templateUrl: '../Routes/ManageExpiry'
+                    templateUrl: function (params) {
+                        return '../Routes/ManageExpiry/' + params['manageId'];
+                    }
                 })
                 .when('/Account/ResetPassword', {
                     templateUrl: '../Routes/AccountResetPassword'

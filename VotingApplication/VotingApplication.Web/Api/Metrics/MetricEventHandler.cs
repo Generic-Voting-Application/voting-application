@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using VotingApplication.Data.Context;
@@ -17,7 +19,7 @@ namespace VotingApplication.Web.Api.Metrics
 
         #region Error Events
 
-        public Event ErrorEvent(HttpResponseException exception, Guid pollId)
+        public void ErrorEvent(HttpResponseException exception, Guid pollId)
         {
             Event errorEvent = new Event("ERROR", pollId);
 
@@ -32,13 +34,7 @@ namespace VotingApplication.Web.Api.Metrics
                 errorEvent.Detail = exception.Response.ReasonPhrase;
             }
 
-            using (var context = _contextFactory.CreateContext())
-            {
-                context.Events.Add(errorEvent);
-                context.SaveChanges();
-            }
-
-            return errorEvent;
+            StoreEvent(errorEvent);
         }
 
         private string ErrorDetailFromRequestMessage(HttpResponseException exception)
@@ -64,5 +60,21 @@ namespace VotingApplication.Web.Api.Metrics
         }
 
         #endregion
+
+        public void PageChangeEvent(string route, int statusCode, Guid pollId)
+        {
+            Event pageChangeEvent = new Event("GoTo" + route, pollId);
+            pageChangeEvent.Value = ((HttpStatusCode)statusCode).ToString();
+            StoreEvent(pageChangeEvent);
+        }
+
+        private void StoreEvent(Event eventToStore)
+        {
+            using (var context = _contextFactory.CreateContext())
+            {
+                context.Events.Add(eventToStore);
+                context.SaveChanges();
+            }
+        }
     }
 }
