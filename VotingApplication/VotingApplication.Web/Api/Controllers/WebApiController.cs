@@ -90,7 +90,7 @@ namespace VotingApplication.Web.Api.Controllers
                     .Include(p => p.Ballots)
                     .Include(p => p.Ballots.Select(b => b.Votes))
                     .Include(p => p.Ballots.Select(b => b.Votes.Select(v => v.Option)))
-                    .FirstOrDefault();
+                    .SingleOrDefault();
 
                 if (poll == null)
                 {
@@ -124,8 +124,10 @@ namespace VotingApplication.Web.Api.Controllers
             using (var context = _contextFactory.CreateContext())
             {
                 Guid manageId = Guid.Parse((string)routeValues["manageId"]);
-                Poll matchingPoll = PollByManageId(manageId);
-                return matchingPoll.UUID;
+                // Avoid using PollByManageId as this can infinitely recurse through
+                // CurrentPollId => PollByManageId => ThrowError => CurrentPollId => ...
+                Poll matchingPoll = context.Polls.Where(p => p.ManageId == manageId).SingleOrDefault();
+                return (matchingPoll != null) ? matchingPoll.UUID : Guid.Empty;
             }
         }
     }

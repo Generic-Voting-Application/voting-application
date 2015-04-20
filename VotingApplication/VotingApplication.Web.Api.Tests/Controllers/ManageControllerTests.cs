@@ -79,29 +79,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             }
         }
 
-        #region Poll Retrieval
-
-        [TestMethod]
-        public void CanRetrievePollByManageId()
-        {
-            // Act
-            Poll retrievedPoll = _controller.PollByManageId(_manageEmptyUUID);
-
-            // Assert
-            Poll expectedPoll = _dummyPolls.Local[1];
-            Assert.AreEqual(expectedPoll, retrievedPoll);
-        }
-
-        [TestMethod]
-        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
-        public void RetrievalOfMissingPollByPollIdIsNotFoundException()
-        {
-            // Act
-            Poll retrievedPoll = _controller.PollByManageId(Guid.NewGuid());
-        }
-
-        #endregion
-
         #region GET
 
         [TestMethod]
