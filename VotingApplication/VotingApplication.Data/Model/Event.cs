@@ -22,5 +22,8 @@ namespace VotingApplication.Data.Model
 
         [Required]
         public Guid PollId { get; set; }
+
+        public string Value { get; set; }
+        public string Detail { get; set; }
     }
 }
