@@ -82,19 +82,19 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                           {
                               Option = optionGroupOption,
                               Sum = optionGroupVotes.Sum(v => v.VoteValue),
-                              Voters = optionGroupVotes.Select(v => v.Ballot.VoterName)
+                              Voters = optionGroupVotes.Select(v => (new ResultVoteModel { Name = v.Ballot.VoterName, Value = v.VoteValue }))
                           };
 
             int resultsMax = results.Max(r => r.Sum);
 
             summary.Winners = results.
-                                Where(r => r.Sum == resultsMax).
-                                Select(r => r.Option).
-                                ToList();
+                              Where(r => r.Sum == resultsMax).
+                              Select(r => r.Option).
+                              ToList();
 
             summary.Results = results.
-                                Select(r => ResultToModel(r.Option, r.Sum, r.Voters.ToList())).
-                                ToList();
+                              Select(r => ResultToModel(r.Option, r.Sum, r.Voters.ToList<ResultVoteModel>())).
+                              ToList();
             return summary;
         }
 
@@ -105,7 +105,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             return dateTime;
         }
 
-        private ResultModel ResultToModel(Option option, int sum, List<String> voters)
+        private ResultModel ResultToModel(Option option, int sum, List<ResultVoteModel> voters)
         {
             return new ResultModel
             {
