@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Web;
 using System.Web.Http;
 using VotingApplication.Data.Context;
@@ -10,6 +11,8 @@ namespace VotingApplication.Web.Api.Metrics
     {
         void PageChangeEvent(string route, int statusCode, Guid pollId);
         void ErrorEvent(HttpResponseException exception, Guid pollId);
+
+        void UpdateResults(HttpStatusCode status, Guid pollId);
 
         void LoginEvent();
         void RegisterEvent();

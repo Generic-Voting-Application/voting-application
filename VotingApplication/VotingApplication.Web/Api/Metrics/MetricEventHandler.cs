@@ -53,6 +53,13 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(pageChangeEvent);
         }
 
+        public void UpdateResults(HttpStatusCode status, Guid pollId)
+        {
+            Event updateResultsEvent = new Event("UpdateResults", GetExistingPollId(pollId));
+            updateResultsEvent.Value = status.ToString();
+            StoreEvent(updateResultsEvent);
+        }
+
         public void LoginEvent()
         {
             Event loginEvent = new Event("Login", Guid.Empty);
