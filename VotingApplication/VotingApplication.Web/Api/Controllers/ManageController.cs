@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -18,6 +19,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         public ManageController(IContextFactory contextFactory) : base(contextFactory) { }
 
         [HttpGet]
+        [Authorize]
+        [AllowAnonymous]
         public ManagePollRequestResponseModel Get(Guid manageId)
         {
             using (IVotingContext context = _contextFactory.CreateContext())
@@ -32,6 +35,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 if (poll == null)
                 {
                     ThrowError(HttpStatusCode.NotFound, string.Format("Poll for manage id {0} not found", manageId));
+                }
+
+                if (String.IsNullOrEmpty(poll.CreatorIdentity) && !String.IsNullOrEmpty(User.Identity.GetUserId()))
+                {
+                    poll.CreatorIdentity = User.Identity.GetUserId();
+                    poll.Creator = User.Identity.GetUserName();
+                    context.SaveChanges();
                 }
 
                 return CreateResponseModelFromPoll(poll);
