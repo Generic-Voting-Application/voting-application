@@ -60,6 +60,14 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(updateResultsEvent);
         }
 
+        public void SetExpiry(DateTimeOffset? expiry, Guid pollId)
+        {
+            Event setExpiryEvent = new Event("SetExpiry", GetExistingPollId(pollId));
+            setExpiryEvent.Value = HttpStatusCode.OK.ToString();
+            setExpiryEvent.Detail = (expiry != null) ? expiry.ToString() : "Never";
+            StoreEvent(setExpiryEvent);
+        }
+
         public void LoginEvent()
         {
             Event loginEvent = new Event("Login", Guid.Empty);
