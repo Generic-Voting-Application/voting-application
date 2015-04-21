@@ -16,13 +16,14 @@ using VotingApplication.Web.Api.Models.DBViewModels;
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
     [TestClass]
-    public class PollVoteControllerTests
+    public class PollResultControllerTests
     {
         private PollResultsController _controller;
         private Vote _bobVote;
         private Vote _joeVote;
         private Vote _otherVote;
         private Vote _anonymousVote;
+        private Option _burgerOption;
         private Guid _mainUUID;
         private Guid _otherUUID;
         private Guid _emptyUUID;
@@ -48,10 +49,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             anonymousPoll.NamedVoting = false;
 
-            Option burgerOption = new Option { Id = 1, Name = "Burger King" };
+            _burgerOption = new Option { Id = 1, Name = "Burger King" };
 
-            _bobVote = new Vote() { Id = 1, Poll = mainPoll, Option = burgerOption, Ballot = new Ballot() };
-            _joeVote = new Vote() { Id = 2, Poll = mainPoll, Option = burgerOption, Ballot = new Ballot() };
+            _bobVote = new Vote() { Id = 1, Poll = mainPoll, Option = _burgerOption, Ballot = new Ballot(), VoteValue = 1 };
+            _joeVote = new Vote() { Id = 2, Poll = mainPoll, Option = _burgerOption, Ballot = new Ballot(), VoteValue = 1 };
             _otherVote = new Vote() { Id = 3, Poll = new Poll() { UUID = _otherUUID }, Option = new Option() { Id = 1 }, Ballot = new Ballot() };
             _anonymousVote = new Vote() { Id = 4, Poll = new Poll() { UUID = _anonymousUUID }, Option = new Option() { Id = 1 }, Ballot = new Ballot() };
 
@@ -60,7 +61,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _dummyVotes.Add(_otherVote);
             _dummyVotes.Add(_anonymousVote);
 
-            dummyOptions.Add(burgerOption);
+            dummyOptions.Add(_burgerOption);
 
             dummyPolls.Add(mainPoll);
             dummyPolls.Add(otherPoll);
@@ -106,7 +107,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_mainUUID);
 
             // Assert
-            var responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            var responseVotes = response.Votes;
             Assert.AreEqual(2, responseVotes.Count);
             CollectionAssert.AreEqual(new long[] { 1, 1 }, responseVotes.Select(r => r.OptionId).ToArray());
         }
@@ -118,7 +119,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_emptyUUID);
 
             // Assert
-            var responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            var responseVotes = response.Votes;
             Assert.AreEqual(0, responseVotes.Count);
         }
 
@@ -129,7 +130,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_anonymousUUID);
 
             // Assert
-            var responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            var responseVotes = response.Votes;
             Assert.AreEqual(1, responseVotes.Count);
             Assert.AreEqual("Anonymous User", responseVotes[0].VoterName);
         }
@@ -144,13 +145,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Get(_mainUUID);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
-            var responseVotes = ((ObjectContent)response.Content).Value as List<VoteRequestResponseModel>;
+            var responseVotes = response.Votes;
             Assert.AreEqual(2, responseVotes.Count);
         }
 
         [TestMethod]
+        [ExpectedHttpResponseException(HttpStatusCode.NotModified)]
         public void GetWithHighTimestampReturnsNotModified()
         {
             // Act
@@ -158,9 +158,36 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Uri.TryCreate("http://localhost/?lastRefreshed=2145916800000", UriKind.Absolute, out requestURI);
             _controller.Request.RequestUri = requestURI;
             var response = _controller.Get(_mainUUID);
+        }
+
+        [TestMethod]
+        public void GetReturnsWinnerForThatPoll()
+        {
+            // Act
+            var response = _controller.Get(_mainUUID);
 
             // Assert
-            Assert.AreEqual(HttpStatusCode.NotModified, response.StatusCode);
+            List<Option> responseWinners = response.Winners;
+            List<Option> expectedWinners = new List<Option>() { _burgerOption };
+
+            Assert.AreEqual(1, responseWinners.Count);
+
+            CollectionAssert.AreEquivalent(expectedWinners, responseWinners);
+        }
+
+        [TestMethod]
+        public void GetReturnsSummaryForThatPoll()
+        {
+            // Act
+            var response = _controller.Get(_mainUUID);
+
+            // Assert
+            List<ResultModel> responseResults = response.Results;
+
+            Assert.AreEqual(1, responseResults.Count);
+            Assert.AreEqual(2, responseResults[0].Voters.Count);
+            Assert.AreEqual(_burgerOption, responseResults[0].Option);
+            Assert.AreEqual(2, responseResults[0].Sum);
         }
 
         #endregion

@@ -35,24 +35,20 @@ namespace VotingApplication.Web.Api.Controllers
                     ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
-                if (pollType != poll.PollType)
-                {
-                    List<Vote> removedVotes = context.Votes.Include(v => v.Poll)
-                                                            .Where(v => v.Poll.UUID == poll.UUID)
-                                                            .ToList();
-                    foreach (Vote oldVote in removedVotes)
-                    {
-                        context.Votes.Remove(oldVote);
-                    }
-
-                }
-
                 if (poll.PollType == pollType)
                 {
                     if (pollType != PollType.Points || (poll.MaxPoints == updateRequest.MaxPoints && poll.MaxPerVote == updateRequest.MaxPerVote))
                     {
                         return;
                     }
+                }
+
+                List<Vote> removedVotes = context.Votes.Include(v => v.Poll)
+                                                        .Where(v => v.Poll.UUID == poll.UUID)
+                                                        .ToList();
+                foreach (Vote oldVote in removedVotes)
+                {
+                    context.Votes.Remove(oldVote);
                 }
 
                 _metricHandler.PollTypeChangedEvent(pollType, updateRequest.MaxPerVote, updateRequest.MaxPoints, poll.UUID);

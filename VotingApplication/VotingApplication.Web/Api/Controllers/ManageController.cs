@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
@@ -19,6 +17,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         public ManageController(IContextFactory contextFactory, IMetricEventHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpGet]
+        [Authorize]
+        [AllowAnonymous]
         public ManagePollRequestResponseModel Get(Guid manageId)
         {
             using (var context = _contextFactory.CreateContext())

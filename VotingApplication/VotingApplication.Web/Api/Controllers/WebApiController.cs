@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -77,7 +78,16 @@ namespace VotingApplication.Web.Api.Controllers
 
         public Poll PollByManageId(Guid manageId, IVotingContext context)
         {
-            return PollByPredicate(p => p.ManageId == manageId, string.Format("Poll for manage id {0} not found", manageId), context);
+            Poll poll = PollByPredicate(p => p.ManageId == manageId, string.Format("Poll for manage id {0} not found", manageId), context);
+
+            if (String.IsNullOrEmpty(poll.CreatorIdentity) && !String.IsNullOrEmpty(User.Identity.GetUserId()))
+            {
+                poll.CreatorIdentity = User.Identity.GetUserId();
+                poll.Creator = User.Identity.GetUserName();
+                context.SaveChanges();
+            }
+
+            return poll;
         }
 
         private Poll PollByPredicate(Expression<Func<Poll, bool>> predicate, string notFoundMessage, IVotingContext context)

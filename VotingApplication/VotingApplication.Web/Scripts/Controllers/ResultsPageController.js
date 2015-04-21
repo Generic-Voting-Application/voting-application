@@ -32,7 +32,7 @@
             $scope.hasExpired = true;
         }
 
-        function reloadData (){
+        function reloadData() {
             VoteService.getResults(pollId, getResultsSuccessCallback, getResultsFailureCallback);
         }
 
@@ -44,47 +44,30 @@
 
         function getResultsSuccessCallback(data) {
 
-            if (data) {
-                $scope.voteCount = data.length;
+            if (!data) {
+                return;
             }
 
-            var groupedData = {};
-
-            // Group together votes for the same options
-            data.forEach(function (d) {
-                if (!(d.OptionName in groupedData)) {
-                    groupedData[d.OptionName] = { Value: 0, Voters: [] };
-                }
-
-                groupedData[d.OptionName].Value += d.VoteValue;
-                var optionVote = { Name: d.VoterName, Value: d.VoteValue };
-                groupedData[d.OptionName].Voters.push(optionVote);
-
-            });
-
-            var winningScore = 0;
-
-            var datapoints = [];
-
-            // Separate into datapoints
-            for (var key in groupedData) {
-                if (groupedData.hasOwnProperty(key)) {
-                    datapoints.push({ Name: key, Sum: groupedData[key].Value, Voters: groupedData[key].Voters });
-                    winningScore = Math.max(winningScore, groupedData[key].Value);
-                }
+            if (data.Votes) {
+                $scope.voteCount = data.Votes.length;
+            }
+            
+            if (data.Winners) {
+                $scope.winner = data.Winners.map(function (d) {
+                    return d.Name;
+                }).join(', ');
+                $scope.plural = (data.Winners.length > 1) ? 's (Draw)' : '';
             }
 
-            var winners = datapoints.filter(function (d) {
-                return d.Sum === winningScore;
-            });
+            if (data.Results) {
+                var dataPoints = [];
+                data.Results.forEach(function (result) {
+                    dataPoints.push({ Name: result.Option.Name, Sum: result.Sum, Voters: result.Voters });
+                });
 
-            $scope.winner = winners.map(function (d) {
-                return d.Name;
-            }).join(', ');
+                $scope.chartData = dataPoints;
+            }
 
-            $scope.plural = (winners.length > 1) ? 's (Draw)' : '';
-
-            $scope.chartData = datapoints;
         }
 
 

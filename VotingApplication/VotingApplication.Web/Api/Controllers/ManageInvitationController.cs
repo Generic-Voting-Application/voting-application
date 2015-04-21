@@ -67,7 +67,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 foreach (ManageInvitationRequestModel invitee in invitees)
                 {
-                    Ballot matchingBallot = matchingPoll.Ballots.SingleOrDefault(b => b.ManageGuid == invitee.ManageToken);
+                    Ballot matchingBallot = matchingPoll.Ballots.SingleOrDefault(b => b.ManageGuid != Guid.Empty && b.ManageGuid == invitee.ManageToken);
                     redundantBallots.RemoveAll(b => b == matchingBallot);
 
                     if (matchingBallot == null)
@@ -124,7 +124,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         private void DeleteBallot(IVotingContext context, Ballot ballot, Poll poll)
         {
-            List<Vote> redundantVotes = ballot.Votes;
+            List<Vote> redundantVotes = ballot.Votes.ToList();
 
             foreach (Vote redundantVote in redundantVotes)
             {
