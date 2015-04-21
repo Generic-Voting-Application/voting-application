@@ -4,10 +4,8 @@ using System.Collections.Specialized;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.Description;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
@@ -21,8 +19,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         public PollResultsController(IContextFactory contextFactory) : base(contextFactory) { }
 
         [HttpGet]
-        [ResponseType(typeof(IEnumerable<VoteRequestResponseModel>))]
-        public HttpResponseMessage Get(Guid pollId)
+        public ResultsRequestResponseModel Get(Guid pollId)
         {
             using (IVotingContext context = _contextFactory.CreateContext())
             {
@@ -49,7 +46,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                     if (poll.LastUpdated < clientLastUpdated)
                     {
-                        return new HttpResponseMessage(HttpStatusCode.NotModified);
+                        ThrowError(HttpStatusCode.NotModified);
                     }
                 }
 
@@ -61,12 +58,49 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     .Include(v => v.Ballot)
                     .ToList();
 
-                List<VoteRequestResponseModel> result = votes
+                List<VoteRequestResponseModel> responseVotes = votes
                     .Select(v => VoteToModel(v, poll))
                     .ToList();
 
-                return Request.CreateResponse(HttpStatusCode.OK, result);
+                ResultsRequestResponseModel results = SummariseVotes(votes);
+                results.Votes = responseVotes;
+
+                return results;
             }
+        }
+
+        private ResultsRequestResponseModel SummariseVotes(List<Vote> votes)
+        {
+            ResultsRequestResponseModel summary = new ResultsRequestResponseModel();
+
+            var results = from vote in votes
+                          group vote by vote.Option.PollOptionNumber into result
+                          let optionGroupVotes = result.ToList()
+                          let optionGroupOption = optionGroupVotes[0].Option
+                          orderby optionGroupOption.PollOptionNumber ascending
+                          select new
+                          {
+                              Option = optionGroupOption,
+                              Sum = optionGroupVotes.Sum(v => v.VoteValue),
+                              Voters = optionGroupVotes.Select(v => (new ResultVoteModel { Name = v.Ballot.VoterName, Value = v.VoteValue }))
+                          };
+
+            if (results.Count() == 0)
+            {
+                return summary;
+            }
+
+            int resultsMax = results.Max(r => r.Sum);
+
+            summary.Winners = results.
+                              Where(r => r.Sum == resultsMax).
+                              Select(r => r.Option).
+                              ToList();
+
+            summary.Results = results.
+                              Select(r => ResultToModel(r.Option, r.Sum, r.Voters.ToList<ResultVoteModel>())).
+                              ToList();
+            return summary;
         }
 
         private static DateTime UnixTimeToDateTime(double unixTimestamp)
@@ -74,6 +108,16 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             var dateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             dateTime = dateTime.AddMilliseconds(unixTimestamp);
             return dateTime;
+        }
+
+        private ResultModel ResultToModel(Option option, int sum, List<ResultVoteModel> voters)
+        {
+            return new ResultModel
+            {
+                Option = option,
+                Sum = sum,
+                Voters = voters
+            };
         }
 
         private VoteRequestResponseModel VoteToModel(Vote vote, Poll poll)
