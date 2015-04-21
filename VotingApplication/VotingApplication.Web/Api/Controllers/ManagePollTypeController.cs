@@ -22,7 +22,7 @@ namespace VotingApplication.Web.Api.Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = PollByManageId(manageId);
+                Poll poll = PollByManageId(manageId, context);
 
                 PollType pollType;
                 if (!Enum.TryParse<PollType>(updateRequest.PollType, true, out pollType))

@@ -24,6 +24,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
     {
         private WebApiController _controller;
         private InMemoryDbSet<Poll> _dummyPolls;
+        private IVotingContext _mockContext;
 
         [TestInitialize]
         public void Setup()
@@ -32,7 +33,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
-            mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
+            _mockContext = mockContext.Object;
+            mockContextFactory.Setup(a => a.CreateContext()).Returns(_mockContext);
             mockContext.Setup(a => a.Polls).Returns(_dummyPolls);
 
             var mockMetricHandler = new Mock<IMetricEventHandler>();
@@ -53,7 +55,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _dummyPolls.Add(createdPoll);
 
             // Act
-            Poll retrievedPoll = _controller.PollByPollId(pollId);
+            Poll retrievedPoll = _controller.PollByPollId(pollId, _mockContext);
 
             // Assert
             Assert.AreEqual(createdPoll, retrievedPoll);
@@ -64,7 +66,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void RetrievalOfMissingPollByPollIdIsNotFoundException()
         {
             // Act
-            _controller.PollByPollId(Guid.NewGuid());
+            _controller.PollByPollId(Guid.NewGuid(), _mockContext);
         }
 
         [TestMethod]
@@ -76,7 +78,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _dummyPolls.Add(createdPoll);
 
             // Act
-            Poll retrievedPoll = _controller.PollByManageId(manageId);
+            Poll retrievedPoll = _controller.PollByManageId(manageId, _mockContext);
 
             // Assert
             Assert.AreEqual(createdPoll, retrievedPoll);
@@ -87,7 +89,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void RetrievalOfMissingPollByManageIdIsNotFoundException()
         {
             // Act
-            _controller.PollByManageId(Guid.NewGuid());
+            _controller.PollByManageId(Guid.NewGuid(), _mockContext);
         }
 
         [TestMethod]
@@ -102,13 +104,13 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             routeData.Values.Add("manageId", Guid.NewGuid().ToString());
             routeData.Values.Add("pollId", null);
 
-            var mockContext = new Mock<HttpRequestContext>();
-            mockContext.Setup(a => a.RouteData).Returns(routeData);
+            var mockRequestContext = new Mock<HttpRequestContext>();
+            mockRequestContext.Setup(a => a.RouteData).Returns(routeData);
 
-            _controller.RequestContext = mockContext.Object;
+            _controller.RequestContext = mockRequestContext.Object;
 
             // Act
-            _controller.PollByManageId(Guid.NewGuid());
+            _controller.PollByManageId(Guid.NewGuid(), _mockContext);
         }
 
         #endregion

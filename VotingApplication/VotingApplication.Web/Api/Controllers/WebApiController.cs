@@ -70,35 +70,32 @@ namespace VotingApplication.Web.Api.Controllers
             throw exception;
         }
 
-        public Poll PollByPollId(Guid pollId)
+        public Poll PollByPollId(Guid pollId, IVotingContext context)
         {
-            return PollByPredicate(p => p.UUID == pollId, string.Format("Poll {0} not found", pollId));
+            return PollByPredicate(p => p.UUID == pollId, string.Format("Poll {0} not found", pollId), context);
         }
 
-        public Poll PollByManageId(Guid manageId)
+        public Poll PollByManageId(Guid manageId, IVotingContext context)
         {
-            return PollByPredicate(p => p.ManageId == manageId, string.Format("Poll for manage id {0} not found", manageId));
+            return PollByPredicate(p => p.ManageId == manageId, string.Format("Poll for manage id {0} not found", manageId), context);
         }
 
-        private Poll PollByPredicate(Expression<Func<Poll, bool>> predicate, string notFoundMessage)
+        private Poll PollByPredicate(Expression<Func<Poll, bool>> predicate, string notFoundMessage, IVotingContext context)
         {
-            using (var context = _contextFactory.CreateContext())
+            Poll poll = context.Polls
+                .Where(predicate)
+                .Include(p => p.Options)
+                .Include(p => p.Ballots)
+                .Include(p => p.Ballots.Select(b => b.Votes))
+                .Include(p => p.Ballots.Select(b => b.Votes.Select(v => v.Option)))
+                .SingleOrDefault();
+
+            if (poll == null)
             {
-                Poll poll = context.Polls
-                    .Where(predicate)
-                    .Include(p => p.Options)
-                    .Include(p => p.Ballots)
-                    .Include(p => p.Ballots.Select(b => b.Votes))
-                    .Include(p => p.Ballots.Select(b => b.Votes.Select(v => v.Option)))
-                    .SingleOrDefault();
-
-                if (poll == null)
-                {
-                    ThrowError(HttpStatusCode.NotFound, notFoundMessage);
-                }
-
-                return poll;
+                ThrowError(HttpStatusCode.NotFound, notFoundMessage);
             }
+
+            return poll;
         }
 
         private Guid CurrentPollId()

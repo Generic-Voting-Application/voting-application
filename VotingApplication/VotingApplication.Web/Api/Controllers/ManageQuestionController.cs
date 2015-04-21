@@ -25,10 +25,10 @@ namespace VotingApplication.Web.Api.Controllers
                 ThrowError(HttpStatusCode.BadRequest, ModelState);
             }
 
-            Poll poll = PollByManageId(manageId);
-
             using (var context = _contextFactory.CreateContext())
             {
+                Poll poll = PollByManageId(manageId, context);
+
                 if (String.IsNullOrWhiteSpace(request.Question))
                 {
                     ThrowError(HttpStatusCode.BadRequest, "Question cannot be null or empty");

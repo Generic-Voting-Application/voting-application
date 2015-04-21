@@ -42,7 +42,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = PollByManageId(manageId);
+                Poll matchingPoll = PollByManageId(manageId, context);
 
                 return matchingPoll.Ballots
                     .Where(b => !String.IsNullOrWhiteSpace(b.Email))

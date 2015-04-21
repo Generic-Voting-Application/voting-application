@@ -24,7 +24,7 @@ namespace VotingApplication.Web.Api.Controllers
         {
             using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Poll poll = PollByManageId(manageId);
+                Poll poll = PollByManageId(manageId, context);
 
                 return poll
                     .Options

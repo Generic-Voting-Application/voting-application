@@ -27,7 +27,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Poll poll = PollByPollId(pollId);
+                Poll poll = PollByPollId(pollId, context);
 
                 if (Request.RequestUri != null)
                 {

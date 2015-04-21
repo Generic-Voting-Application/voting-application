@@ -20,7 +20,7 @@ namespace VotingApplication.Web.Api.Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = PollByManageId(manageId);
+                Poll poll = PollByManageId(manageId, context);
 
                 if (updateRequest.ExpiryDate.HasValue && updateRequest.ExpiryDate < DateTime.Now)
                 {

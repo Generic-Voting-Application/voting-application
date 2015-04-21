@@ -21,8 +21,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         [HttpGet]
         public PollRequestResponseModel Get(Guid id)
         {
-            Poll poll = PollByPollId(id);
-            return CreatePollResponseFromModel(poll);
+            using (var context = _contextFactory.CreateContext())
+            {
+                Poll poll = PollByPollId(id, context);
+                return CreatePollResponseFromModel(poll);
+            }
         }
 
         private PollRequestResponseModel CreatePollResponseFromModel(Poll poll)

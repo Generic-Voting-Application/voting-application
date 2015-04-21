@@ -22,7 +22,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = PollByManageId(manageId);
+                Poll poll = PollByManageId(manageId, context);
 
                 if (poll.Ballots.Any())
                 {
@@ -86,7 +86,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Poll poll = PollByManageId(manageId);
+                Poll poll = PollByManageId(manageId, context);
 
                 List<Guid> requestBallotGuids = request
                     .BallotDeleteRequests

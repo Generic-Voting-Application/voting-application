@@ -20,7 +20,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = PollByPollId(pollId);
+                Poll poll = PollByPollId(pollId, context);
 
                 if (poll.InviteOnly)
                 {
