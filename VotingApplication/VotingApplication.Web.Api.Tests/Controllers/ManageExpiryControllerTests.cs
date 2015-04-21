@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Data.Entity;
 using System.Net;
@@ -7,6 +8,7 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Tests.TestHelpers;
 
@@ -94,7 +96,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         public static ManageExpiryController CreateManageExpiryController(IContextFactory contextFactory)
         {
-            return new ManageExpiryController(contextFactory, null)
+            var mockMetricHandler = new Mock<MetricEventHandler>(contextFactory);
+            return new ManageExpiryController(contextFactory, mockMetricHandler.Object)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()
