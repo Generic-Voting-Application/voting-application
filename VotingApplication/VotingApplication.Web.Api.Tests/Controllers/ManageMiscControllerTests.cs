@@ -80,9 +80,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Put(PollManageGuid, request);
 
                 // Assert
-                metricHandler.Verify(m => m.SetMiscInviteOnly(true, existingPoll.UUID), Times.Once());
-                metricHandler.Verify(m => m.SetMiscNamedVoting(true, existingPoll.UUID), Times.Once());
-                metricHandler.Verify(m => m.SetMiscOptionAdding(true, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.InviteOnlyChangedEvent(true, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.NamedVotingChangedEvent(true, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.OptionAddingChangedEvent(true, existingPoll.UUID), Times.Once());
             }
 
             [TestMethod]
@@ -107,9 +107,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Put(PollManageGuid, request);
 
                 // Assert
-                metricHandler.Verify(m => m.SetMiscInviteOnly(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
-                metricHandler.Verify(m => m.SetMiscNamedVoting(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
-                metricHandler.Verify(m => m.SetMiscOptionAdding(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.InviteOnlyChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.NamedVotingChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.OptionAddingChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
             }
         }
 

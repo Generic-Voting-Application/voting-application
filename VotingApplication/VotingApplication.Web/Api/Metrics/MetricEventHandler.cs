@@ -53,7 +53,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(pageChangeEvent);
         }
 
-        public void UpdateResults(HttpStatusCode status, Guid pollId)
+        public void ResultsUpdateEvent(HttpStatusCode status, Guid pollId)
         {
             Event updateResultsEvent = new Event("UpdateResults", pollId);
             updateResultsEvent.Value = status.ToString();
@@ -62,7 +62,7 @@ namespace VotingApplication.Web.Api.Metrics
 
         #region Poll Configuration
 
-        public void SetExpiry(DateTimeOffset? expiry, Guid pollId)
+        public void ExpiryChangedEvent(DateTimeOffset? expiry, Guid pollId)
         {
             Event setExpiryEvent = new Event("SetExpiry", pollId);
             setExpiryEvent.Value = HttpStatusCode.OK.ToString();
@@ -70,7 +70,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setExpiryEvent);
         }
 
-        public void SetPollType(PollType pollType, int maxPerVote, int maxPerPoll, Guid pollId)
+        public void PollTypeChangedEvent(PollType pollType, int maxPerVote, int maxPerPoll, Guid pollId)
         {
             Event setPollType = new Event("SetPollType", pollId);
             setPollType.Value = HttpStatusCode.OK.ToString();
@@ -84,7 +84,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setPollType);
         }
 
-        public void SetMiscInviteOnly(bool inviteOnly, Guid pollId)
+        public void InviteOnlyChangedEvent(bool inviteOnly, Guid pollId)
         {
             Event setInviteOnly = new Event("SetInviteOnly", pollId);
             setInviteOnly.Value = HttpStatusCode.OK.ToString();
@@ -92,7 +92,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setInviteOnly);
         }
 
-        public void SetMiscNamedVoting(bool namedVoting, Guid pollId)
+        public void NamedVotingChangedEvent(bool namedVoting, Guid pollId)
         {
             Event setNamedVoting = new Event("SetNamedVoting", pollId);
             setNamedVoting.Value = HttpStatusCode.OK.ToString();
@@ -100,7 +100,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setNamedVoting);
         }
 
-        public void SetMiscOptionAdding(bool optionAdding, Guid pollId)
+        public void OptionAddingChangedEvent(bool optionAdding, Guid pollId)
         {
             Event setAllowOptionAdding = new Event("SetInviteOnly", pollId);
             setAllowOptionAdding.Value = HttpStatusCode.OK.ToString();

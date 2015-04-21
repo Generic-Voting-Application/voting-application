@@ -30,20 +30,20 @@ namespace VotingApplication.Web.Api.Controllers
                 if (poll.InviteOnly != updateRequest.InviteOnly)
                 {
                     poll.InviteOnly = updateRequest.InviteOnly;
-                    _metricHandler.SetMiscInviteOnly(poll.InviteOnly, poll.UUID);
+                    _metricHandler.InviteOnlyChangedEvent(poll.InviteOnly, poll.UUID);
                 }
 
                 if (poll.NamedVoting != updateRequest.NamedVoting)
                 {
                     poll.NamedVoting = updateRequest.NamedVoting;
-                    _metricHandler.SetMiscNamedVoting(poll.NamedVoting, poll.UUID);
+                    _metricHandler.NamedVotingChangedEvent(poll.NamedVoting, poll.UUID);
                 }
 
 
                 if (poll.OptionAdding != updateRequest.OptionAdding)
                 {
                     poll.OptionAdding = updateRequest.OptionAdding;
-                    _metricHandler.SetMiscOptionAdding(poll.OptionAdding, poll.UUID);
+                    _metricHandler.OptionAddingChangedEvent(poll.OptionAdding, poll.UUID);
                 }
 
                 poll.LastUpdated = DateTime.Now;

@@ -113,7 +113,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Put(PollManageGuid, request);
 
                 // Assert
-                metricHandler.Verify(m => m.SetExpiry(future, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.ExpiryChangedEvent(future, existingPoll.UUID), Times.Once());
             }
 
             [TestMethod]
@@ -137,7 +137,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Put(PollManageGuid, request);
 
                 // Assert
-                metricHandler.Verify(m => m.SetExpiry(It.IsAny<DateTimeOffset?>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.ExpiryChangedEvent(It.IsAny<DateTimeOffset?>(), It.IsAny<Guid>()), Times.Never());
             }
         }
 

@@ -12,12 +12,12 @@ namespace VotingApplication.Web.Api.Metrics
         void PageChangeEvent(string route, int statusCode, Guid pollId);
         void ErrorEvent(HttpResponseException exception, Guid pollId);
 
-        void UpdateResults(HttpStatusCode status, Guid pollId);
-        void SetExpiry(DateTimeOffset? expiry, Guid pollId);
-        void SetPollType(PollType pollType, int maxPerVote, int maxPerPoll, Guid pollId);
-        void SetMiscInviteOnly(bool inviteOnly, Guid pollId);
-        void SetMiscNamedVoting(bool namedVoting, Guid pollId);
-        void SetMiscOptionAdding(bool optionAdding, Guid pollId);
+        void ResultsUpdateEvent(HttpStatusCode status, Guid pollId);
+        void ExpiryChangedEvent(DateTimeOffset? expiry, Guid pollId);
+        void PollTypeChangedEvent(PollType pollType, int maxPerVote, int maxPerPoll, Guid pollId);
+        void InviteOnlyChangedEvent(bool inviteOnly, Guid pollId);
+        void NamedVotingChangedEvent(bool namedVoting, Guid pollId);
+        void OptionAddingChangedEvent(bool optionAdding, Guid pollId);
 
         void LoginEvent();
         void RegisterEvent();

@@ -55,7 +55,7 @@ namespace VotingApplication.Web.Api.Controllers
                     }
                 }
 
-                _metricHandler.SetPollType(pollType, updateRequest.MaxPerVote, updateRequest.MaxPoints, poll.UUID);
+                _metricHandler.PollTypeChangedEvent(pollType, updateRequest.MaxPerVote, updateRequest.MaxPoints, poll.UUID);
 
                 poll.PollType = pollType;
                 poll.MaxPerVote = updateRequest.MaxPerVote;
