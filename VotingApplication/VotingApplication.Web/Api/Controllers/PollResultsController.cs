@@ -85,6 +85,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                               Voters = optionGroupVotes.Select(v => (new ResultVoteModel { Name = v.Ballot.VoterName, Value = v.VoteValue }))
                           };
 
+            if (results.Count() == 0)
+            {
+                return summary;
+            }
+
             int resultsMax = results.Max(r => r.Sum);
 
             summary.Winners = results.

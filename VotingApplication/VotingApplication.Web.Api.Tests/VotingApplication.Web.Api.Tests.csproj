@@ -110,7 +110,7 @@
     <Compile Include="Controllers\PollControllerTests.cs" />
     <Compile Include="Controllers\PollTokenControllerTests.cs" />
     <Compile Include="Controllers\PollOptionControllerTests.cs" />
-    <Compile Include="Controllers\PollVoteControllerTests.cs" />
+    <Compile Include="Controllers\PollResultControllerTests.cs" />
     <Compile Include="Controllers\TokenPollVoteControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers\ContextFactoryTestHelper.cs" />
