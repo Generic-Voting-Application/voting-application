@@ -46,6 +46,8 @@ namespace VotingApplication.Web.Api.Metrics
 
         #endregion
 
+        #region Page Loads
+
         public void PageChangeEvent(string route, int statusCode, Guid pollId)
         {
             Event pageChangeEvent = new Event("GoTo" + route, GetExistingPollId(pollId));
@@ -59,6 +61,8 @@ namespace VotingApplication.Web.Api.Metrics
             updateResultsEvent.Value = status.ToString();
             StoreEvent(updateResultsEvent);
         }
+
+        #endregion
 
         #region Poll Configuration
 
@@ -108,7 +112,37 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setAllowOptionAdding);
         }
 
+        #region Options
+
+        public void OptionAddedEvent(Option option, Guid pollId)
+        {
+            Event optionAddedEvent = new Event("AddOption", pollId);
+            optionAddedEvent.Value = HttpStatusCode.OK.ToString();
+            optionAddedEvent.Detail = string.Format("#%d %s: %s", option.PollOptionNumber, option.Name, option.Description);
+            StoreEvent(optionAddedEvent);
+        }
+
+        public void OptionUpdatedEvent(Option option, Guid pollId)
+        {
+            Event optionUpdatedEvent = new Event("UpdateOption", pollId);
+            optionUpdatedEvent.Value = HttpStatusCode.OK.ToString();
+            optionUpdatedEvent.Detail = string.Format("#%d %s: %s", option.PollOptionNumber, option.Name, option.Description);
+            StoreEvent(optionUpdatedEvent);
+        }
+
+        public void OptionDeletedEvent(Option option, Guid pollId)
+        {
+            Event optionAddedEvent = new Event("DeleteOption", pollId);
+            optionAddedEvent.Value = HttpStatusCode.OK.ToString();
+            optionAddedEvent.Detail = string.Format("#%d %s: %s", option.PollOptionNumber, option.Name, option.Description);
+            StoreEvent(optionAddedEvent);
+        }
+
         #endregion
+
+        #endregion
+
+        #region Accounts
 
         public void LoginEvent()
         {
@@ -123,6 +157,8 @@ namespace VotingApplication.Web.Api.Metrics
             registerEvent.Value = HttpStatusCode.OK.ToString();
             StoreEvent(registerEvent);
         }
+
+        #endregion
 
         #region Utilities
 

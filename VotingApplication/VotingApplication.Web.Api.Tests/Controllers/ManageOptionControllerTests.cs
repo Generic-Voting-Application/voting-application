@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -9,6 +10,7 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Tests.TestHelpers;
 
@@ -512,11 +514,92 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 Assert.AreEqual(updatedDescription, options.Last().Description);
                 Assert.AreEqual(optionUpdateNumber, options.Last().PollOptionNumber);
             }
+
+            [TestMethod]
+            public void AddingAnOptionGeneratesAnAddOptionMetric()
+            {
+                // Arrange
+                var metricHandler = new Mock<IMetricEventHandler>();
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
+                ManageOptionController controller = CreateManageOptionController(contextFactory, metricHandler.Object);
+
+                Poll existingPoll = new Poll() { Options = new List<Option>(), UUID = Guid.NewGuid(), ManageId = Guid.NewGuid() };
+                polls.Add(existingPoll);
+
+                OptionUpdate optionUpdate = new OptionUpdate() { Name = "New Option" };
+                ManageOptionUpdateRequest request = new ManageOptionUpdateRequest() { Options = new List<OptionUpdate>() { optionUpdate }};
+
+                // Act
+                controller.Put(existingPoll.ManageId, request);
+
+                // Assert
+                metricHandler.Verify(m => m.OptionAddedEvent(It.Is<Option>(o => o.Name == "New Option"), existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.OptionDeletedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.OptionUpdatedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
+            }
+
+            [TestMethod]
+            public void UpdatingAnOptionGeneratesAnUpdateOptionMetric()
+            {
+                // Arrange
+                var metricHandler = new Mock<IMetricEventHandler>();
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
+                ManageOptionController controller = CreateManageOptionController(contextFactory, metricHandler.Object);
+
+                Poll existingPoll = new Poll() { Options = new List<Option>(), UUID = Guid.NewGuid(), ManageId = Guid.NewGuid() };
+                polls.Add(existingPoll);
+
+                Option existingOption = new Option() { Name = "New Option", PollOptionNumber = 1 };
+                existingPoll.Options.Add(existingOption);
+                OptionUpdate optionUpdate = new OptionUpdate() { Name = "New Option", OptionNumber = 1 };
+                ManageOptionUpdateRequest request = new ManageOptionUpdateRequest() { Options = new List<OptionUpdate>() { optionUpdate } };
+
+                // Act
+                controller.Put(existingPoll.ManageId, request);
+
+                // Assert
+                metricHandler.Verify(m => m.OptionUpdatedEvent(existingOption, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.OptionAddedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.OptionDeletedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
+            }
+
+            [TestMethod]
+            public void DeletingAnOptionGeneratesADeleteOptionMetric()
+            {
+                // Arrange
+                var metricHandler = new Mock<IMetricEventHandler>();
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
+                ManageOptionController controller = CreateManageOptionController(contextFactory, metricHandler.Object);
+
+                Poll existingPoll = new Poll() { Options = new List<Option>(), UUID = Guid.NewGuid(), ManageId = Guid.NewGuid() };
+                polls.Add(existingPoll);
+
+                Option existingOption = new Option() { Name = "New Option", PollOptionNumber = 1 };
+                existingPoll.Options.Add(existingOption);
+                ManageOptionUpdateRequest request = new ManageOptionUpdateRequest() { Options = new List<OptionUpdate>() };
+
+                // Act
+                controller.Put(existingPoll.ManageId, request);
+
+                // Assert
+                metricHandler.Verify(m => m.OptionDeletedEvent(existingOption, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.OptionAddedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.OptionUpdatedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
+            }
         }
 
         public static ManageOptionController CreateManageOptionController(IContextFactory contextFactory)
         {
-            return new ManageOptionController(contextFactory, null)
+            var metricHandler = new Mock<IMetricEventHandler>();
+            return CreateManageOptionController(contextFactory, metricHandler.Object);
+        }
+
+        public static ManageOptionController CreateManageOptionController(IContextFactory contextFactory, IMetricEventHandler metricHandler)
+        {
+            return new ManageOptionController(contextFactory, metricHandler)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()

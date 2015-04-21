@@ -134,7 +134,7 @@ namespace VotingApplication.Web.Api.Controllers
             return requestPollOptionNumbers;
         }
 
-        private static void RemoveOptions(IVotingContext context, Poll poll, IEnumerable<int> optionsToRemove)
+        private void RemoveOptions(IVotingContext context, Poll poll, IEnumerable<int> optionsToRemove)
         {
             foreach (int pollOptionNumber in optionsToRemove)
             {
@@ -142,6 +142,7 @@ namespace VotingApplication.Web.Api.Controllers
                     .Options
                     .Single(o => o.PollOptionNumber == pollOptionNumber);
 
+                _metricHandler.OptionDeletedEvent(option, poll.UUID);
                 poll.Options.Remove(option);
                 context.Options.Remove(option);
 
@@ -164,7 +165,7 @@ namespace VotingApplication.Web.Api.Controllers
             }
         }
 
-        private static void UpdateOptions(ManageOptionUpdateRequest request, Poll poll, IEnumerable<int> optionsToUpdate)
+        private void UpdateOptions(ManageOptionUpdateRequest request, Poll poll, IEnumerable<int> optionsToUpdate)
         {
             foreach (int pollOptionNumber in optionsToUpdate)
             {
@@ -178,10 +179,12 @@ namespace VotingApplication.Web.Api.Controllers
 
                 option.Name = update.Name;
                 option.Description = update.Description;
+
+                _metricHandler.OptionUpdatedEvent(option, poll.UUID);
             }
         }
 
-        private static void AddNewOptions(IVotingContext context, Poll poll, IEnumerable<OptionUpdate> optionUpdatesToAdd)
+        private void AddNewOptions(IVotingContext context, Poll poll, IEnumerable<OptionUpdate> optionUpdatesToAdd)
         {
             foreach (OptionUpdate optionRequest in optionUpdatesToAdd)
             {
@@ -190,6 +193,8 @@ namespace VotingApplication.Web.Api.Controllers
                     Name = optionRequest.Name,
                     Description = optionRequest.Description
                 };
+
+                _metricHandler.OptionAddedEvent(option, poll.UUID);
 
                 poll.Options.Add(option);
                 context.Options.Add(option);

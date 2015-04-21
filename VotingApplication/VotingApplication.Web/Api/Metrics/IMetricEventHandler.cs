@@ -19,6 +19,10 @@ namespace VotingApplication.Web.Api.Metrics
         void NamedVotingChangedEvent(bool namedVoting, Guid pollId);
         void OptionAddingChangedEvent(bool optionAdding, Guid pollId);
 
+        void OptionAddedEvent(Option option, Guid pollId);
+        void OptionUpdatedEvent(Option option, Guid pollId);
+        void OptionDeletedEvent(Option option, Guid pollId);
+
         void LoginEvent();
         void RegisterEvent();
     }
