@@ -32,6 +32,11 @@ namespace VotingApplication.Web.Api.Controllers
                     ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
+                if (poll.ExpiryDate == updateRequest.ExpiryDate)
+                {
+                    return;
+                }
+
                 poll.ExpiryDate = updateRequest.ExpiryDate;
                 poll.LastUpdated = DateTime.Now;
                 _metricHandler.SetExpiry(poll.ExpiryDate, poll.UUID);

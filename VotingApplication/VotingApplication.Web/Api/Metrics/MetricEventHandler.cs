@@ -55,14 +55,14 @@ namespace VotingApplication.Web.Api.Metrics
 
         public void UpdateResults(HttpStatusCode status, Guid pollId)
         {
-            Event updateResultsEvent = new Event("UpdateResults", GetExistingPollId(pollId));
+            Event updateResultsEvent = new Event("UpdateResults", pollId);
             updateResultsEvent.Value = status.ToString();
             StoreEvent(updateResultsEvent);
         }
 
         public void SetExpiry(DateTimeOffset? expiry, Guid pollId)
         {
-            Event setExpiryEvent = new Event("SetExpiry", GetExistingPollId(pollId));
+            Event setExpiryEvent = new Event("SetExpiry", pollId);
             setExpiryEvent.Value = HttpStatusCode.OK.ToString();
             setExpiryEvent.Detail = (expiry != null) ? expiry.ToString() : "Never";
             StoreEvent(setExpiryEvent);
@@ -70,7 +70,7 @@ namespace VotingApplication.Web.Api.Metrics
 
         public void SetPollType(PollType pollType, int maxPerVote, int maxPerPoll, Guid pollId)
         {
-            Event setPollType = new Event("SetPollType", GetExistingPollId(pollId));
+            Event setPollType = new Event("SetPollType", pollId);
             setPollType.Value = HttpStatusCode.OK.ToString();
             setPollType.Detail = pollType.ToString();
 

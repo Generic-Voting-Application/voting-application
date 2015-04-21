@@ -35,7 +35,7 @@ namespace VotingApplication.Web.Api.Controllers
                     ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
-                if (updateRequest.PollType.ToLower() != poll.PollType.ToString().ToLower())
+                if (pollType != poll.PollType)
                 {
                     List<Vote> removedVotes = context.Votes.Include(v => v.Poll)
                                                             .Where(v => v.Poll.UUID == poll.UUID)
@@ -47,14 +47,22 @@ namespace VotingApplication.Web.Api.Controllers
 
                 }
 
+                if (poll.PollType == pollType)
+                {
+                    if (pollType != PollType.Points || (poll.MaxPoints == updateRequest.MaxPoints && poll.MaxPerVote == updateRequest.MaxPerVote))
+                    {
+                        return;
+                    }
+                }
+
+                _metricHandler.SetPollType(pollType, updateRequest.MaxPerVote, updateRequest.MaxPoints, poll.UUID);
+
                 poll.PollType = pollType;
                 poll.MaxPerVote = updateRequest.MaxPerVote;
 
                 poll.MaxPoints = updateRequest.MaxPoints;
 
                 poll.LastUpdated = DateTime.Now;
-
-                _metricHandler.SetPollType(pollType, updateRequest.MaxPerVote, updateRequest.MaxPoints, poll.UUID);
 
                 context.SaveChanges();
             }

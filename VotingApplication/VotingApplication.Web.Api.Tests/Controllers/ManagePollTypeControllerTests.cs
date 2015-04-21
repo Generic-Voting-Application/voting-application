@@ -30,7 +30,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollTypeRequest request = new ManagePollTypeRequest { };
 
-                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory);
+                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory, new Mock<IMetricEventHandler>().Object);
 
                 controller.Put(Guid.NewGuid(), request);
             }
@@ -48,7 +48,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, existingBallots, existingVotes);
                 ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "UpDown", MaxPerVote = 1, MaxPoints = 1 };
 
-                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory);
+                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory, new Mock<IMetricEventHandler>().Object);
 
                 controller.Put(PollManageGuid, request);
 
@@ -71,7 +71,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, existingBallots, existingVotes);
                 ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "UpDown", MaxPerVote = maxPerVote, MaxPoints = maxPoints };
 
-                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory);
+                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory, new Mock<IMetricEventHandler>().Object);
 
                 controller.Put(PollManageGuid, request);
 
@@ -97,7 +97,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, existingBallots, existingVotes);
                 ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "NotAnOption", MaxPerVote = 1, MaxPoints = 1 };
 
-                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory);
+                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory, new Mock<IMetricEventHandler>().Object);
 
                 controller.Put(PollManageGuid, request);
 
@@ -121,7 +121,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, existingBallots, existingVotes);
                 ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "UpDown", MaxPerVote = 1, MaxPoints = 1 };
 
-                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory);
+                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory, new Mock<IMetricEventHandler>().Object);
 
                 controller.Put(PollManageGuid, request);
 
@@ -146,18 +146,144 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, existingBallots, existingVotes);
                 ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "Basic", MaxPerVote = 1, MaxPoints = 1 };
 
-                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory);
+                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory, new Mock<IMetricEventHandler>().Object);
 
                 controller.Put(PollManageGuid, request);
 
                 Assert.AreEqual(1, existingVotes.Local.Count);
             }
+
+            [TestMethod]
+            public void ChangesPollTypeGeneratesMetric()
+            {
+                // Arrange
+                IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                Poll existingPoll = CreatePoll();
+                existingPolls.Add(existingPoll);
+
+                IDbSet<Ballot> existingBallots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, existingBallots);
+                ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "UpDown", MaxPerVote = 1, MaxPoints = 1 };
+
+                Mock<IMetricEventHandler> mockMetricHandler = new Mock<IMetricEventHandler>();
+                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory, mockMetricHandler.Object);
+
+                // Act
+                controller.Put(PollManageGuid, request);
+
+                // Assert
+                mockMetricHandler.Verify(m => m.SetPollType(PollType.UpDown, 1, 1, existingPoll.UUID), Times.Once());
+            }
+
+            [TestMethod]
+            public void ChangesPollPointValuesInPointsPollGeneratesMetric()
+            {
+                // Arrange
+                IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                Poll existingPoll = CreatePoll();
+                existingPoll.PollType = PollType.Points;
+                existingPoll.MaxPerVote = 3;
+                existingPoll.MaxPoints = 7;
+                existingPolls.Add(existingPoll);
+
+                IDbSet<Ballot> existingBallots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, existingBallots);
+                ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "Points", MaxPerVote = 5, MaxPoints = 8 };
+
+                Mock<IMetricEventHandler> mockMetricHandler = new Mock<IMetricEventHandler>();
+                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory, mockMetricHandler.Object);
+
+                // Act
+                controller.Put(PollManageGuid, request);
+
+                // Assert
+                mockMetricHandler.Verify(m => m.SetPollType(PollType.Points, 5, 8, existingPoll.UUID), Times.Once());
+            }
+
+            [TestMethod]
+            public void ChangesPollPointValuesInNonPointsPollDoesNotGenerateMetric()
+            {
+                // Arrange
+                IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                Poll existingPoll = CreatePoll();
+                existingPoll.PollType = PollType.Basic;
+                existingPoll.MaxPerVote = 3;
+                existingPoll.MaxPoints = 7;
+                existingPolls.Add(existingPoll);
+
+                IDbSet<Ballot> existingBallots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, existingBallots);
+                ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "Basic", MaxPerVote = 5, MaxPoints = 8 };
+
+                Mock<IMetricEventHandler> mockMetricHandler = new Mock<IMetricEventHandler>();
+                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory, mockMetricHandler.Object);
+
+                // Act
+                controller.Put(PollManageGuid, request);
+
+                // Assert
+                mockMetricHandler.Verify(m => m.SetPollType(It.IsAny<PollType>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Guid>()), Times.Never());
+            }
+
+            [TestMethod]
+            public void IdenticalPollTypeDoesNotGenerateMetric()
+            {
+                // Arrange
+                IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                Poll existingPoll = CreatePoll();
+                existingPoll.PollType = PollType.Points;
+                existingPoll.MaxPerVote = 3;
+                existingPoll.MaxPoints = 7;
+                existingPolls.Add(existingPoll);
+
+                IDbSet<Ballot> existingBallots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, existingBallots);
+                ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "Points", MaxPerVote = 3, MaxPoints = 7 };
+
+                Mock<IMetricEventHandler> mockMetricHandler = new Mock<IMetricEventHandler>();
+                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory, mockMetricHandler.Object);
+
+                // Act
+                controller.Put(PollManageGuid, request);
+
+                // Assert
+                mockMetricHandler.Verify(m => m.SetPollType(It.IsAny<PollType>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Guid>()), Times.Never());
+            }
+
+            [TestMethod]
+            public void ChangingToPointsPollWithoutChangingPointsValuesGeneratesMetric()
+            {
+                // Arrange
+                IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                Poll existingPoll = CreatePoll();
+                existingPoll.PollType = PollType.Basic;
+                existingPoll.MaxPerVote = 3;
+                existingPoll.MaxPoints = 7;
+                existingPolls.Add(existingPoll);
+
+                IDbSet<Ballot> existingBallots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, existingBallots);
+                ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "Points", MaxPerVote = 3, MaxPoints = 7 };
+
+                Mock<IMetricEventHandler> mockMetricHandler = new Mock<IMetricEventHandler>();
+                ManagePollTypeController controller = CreateManagePollTypeController(contextFactory, mockMetricHandler.Object);
+
+                // Act
+                controller.Put(PollManageGuid, request);
+
+                // Assert
+                mockMetricHandler.Verify(m => m.SetPollType(PollType.Points, 3, 7, existingPoll.UUID), Times.Once());
+            }
         }
 
-        public static ManagePollTypeController CreateManagePollTypeController(IContextFactory contextFactory)
+        public static ManagePollTypeController CreateManagePollTypeController(IContextFactory contextFactory, IMetricEventHandler metricHandler)
         {
-            var mockMetricHandler = new Mock<MetricEventHandler>(contextFactory);
-            return new ManagePollTypeController(contextFactory, mockMetricHandler.Object)
+            return new ManagePollTypeController(contextFactory, metricHandler)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()
