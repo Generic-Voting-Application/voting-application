@@ -6,6 +6,9 @@
     </div>
     <div voting-strategy></div>
     <div class="flexbox">
-        <a class="btn inactive-btn centered" ng-href="{{resultsLink}}">Go to results</a>
+        <div class="centered">
+            <a class="btn inactive-btn" ng-href="{{resultsLink}}">Go to results</a>
+            <a class="btn error-btn clickable" ng-click="clearVote()">Clear vote</a>
+        </div>
     </div>
 </div>
