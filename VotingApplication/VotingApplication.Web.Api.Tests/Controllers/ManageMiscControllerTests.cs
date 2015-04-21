@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Data.Entity;
 using System.Net;
@@ -7,6 +8,7 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Tests.TestHelpers;
 
@@ -28,7 +30,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollMiscRequest request = new ManagePollMiscRequest { };
 
-                ManageMiscController controller = CreateManageExpiryController(contextFactory);
+                ManageMiscController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricEventHandler>().Object);
 
                 controller.Put(Guid.NewGuid(), request);
             }
@@ -47,7 +49,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = true, NamedVoting = true, OptionAdding = true };
 
-                ManageMiscController controller = CreateManageExpiryController(contextFactory);
+                ManageMiscController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricEventHandler>().Object);
 
                 controller.Put(PollManageGuid, request);
 
@@ -55,11 +57,65 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 Assert.IsTrue(existingPoll.NamedVoting);
                 Assert.IsTrue(existingPoll.OptionAdding);
             }
+
+            [TestMethod]
+            public void AlteringMiscConfigGeneratesMetrics()
+            {
+                // Arrange
+                IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                Poll existingPoll = CreatePoll();
+                existingPolls.Add(existingPoll);
+
+                existingPoll.NamedVoting = false;
+                existingPoll.InviteOnly = false;
+                existingPoll.OptionAdding = false;
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
+                ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = true, NamedVoting = true, OptionAdding = true };
+
+                Mock<IMetricEventHandler> metricHandler = new Mock<IMetricEventHandler>();
+                ManageMiscController controller = CreateManageExpiryController(contextFactory, metricHandler.Object);
+
+                // Act
+                controller.Put(PollManageGuid, request);
+
+                // Assert
+                metricHandler.Verify(m => m.SetMiscInviteOnly(true, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.SetMiscNamedVoting(true, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.SetMiscOptionAdding(true, existingPoll.UUID), Times.Once());
+            }
+
+            [TestMethod]
+            public void SettingExistingMiscSettingsDoesNotGenerateMetrics()
+            {
+                // Arrange
+                IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                Poll existingPoll = CreatePoll();
+                existingPolls.Add(existingPoll);
+
+                existingPoll.NamedVoting = false;
+                existingPoll.InviteOnly = false;
+                existingPoll.OptionAdding = false;
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
+                ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = false, NamedVoting = false, OptionAdding = false };
+
+                Mock<IMetricEventHandler> metricHandler = new Mock<IMetricEventHandler>();
+                ManageMiscController controller = CreateManageExpiryController(contextFactory, metricHandler.Object);
+
+                // Act
+                controller.Put(PollManageGuid, request);
+
+                // Assert
+                metricHandler.Verify(m => m.SetMiscInviteOnly(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.SetMiscNamedVoting(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.SetMiscOptionAdding(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
+            }
         }
 
-        public static ManageMiscController CreateManageExpiryController(IContextFactory contextFactory)
+        public static ManageMiscController CreateManageExpiryController(IContextFactory contextFactory, IMetricEventHandler metricHandler)
         {
-            return new ManageMiscController(contextFactory, null)
+            return new ManageMiscController(contextFactory, metricHandler)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()

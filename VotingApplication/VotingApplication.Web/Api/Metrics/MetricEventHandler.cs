@@ -60,6 +60,8 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(updateResultsEvent);
         }
 
+        #region Poll Configuration
+
         public void SetExpiry(DateTimeOffset? expiry, Guid pollId)
         {
             Event setExpiryEvent = new Event("SetExpiry", pollId);
@@ -81,6 +83,32 @@ namespace VotingApplication.Web.Api.Metrics
 
             StoreEvent(setPollType);
         }
+
+        public void SetMiscInviteOnly(bool inviteOnly, Guid pollId)
+        {
+            Event setInviteOnly = new Event("SetInviteOnly", pollId);
+            setInviteOnly.Value = HttpStatusCode.OK.ToString();
+            setInviteOnly.Detail = (inviteOnly) ? "Invite-Only" : "Open Poll";
+            StoreEvent(setInviteOnly);
+        }
+
+        public void SetMiscNamedVoting(bool namedVoting, Guid pollId)
+        {
+            Event setNamedVoting = new Event("SetNamedVoting", pollId);
+            setNamedVoting.Value = HttpStatusCode.OK.ToString();
+            setNamedVoting.Detail = (namedVoting) ? "Named Voters" : "Anonymous Voters";
+            StoreEvent(setNamedVoting);
+        }
+
+        public void SetMiscOptionAdding(bool optionAdding, Guid pollId)
+        {
+            Event setAllowOptionAdding = new Event("SetInviteOnly", pollId);
+            setAllowOptionAdding.Value = HttpStatusCode.OK.ToString();
+            setAllowOptionAdding.Detail = (optionAdding) ? "Voter Option Adding" : "No Voter Option Adding";
+            StoreEvent(setAllowOptionAdding);
+        }
+
+        #endregion
 
         public void LoginEvent()
         {
