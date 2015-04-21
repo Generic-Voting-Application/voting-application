@@ -1,0 +1,14 @@
+﻿@import '~/Content/Scss/Site.scss';
+
+$Orange200: #FFCC80;
+$Orange300: #FFB74D;
+$Grey400: #BDBDBD;
+$Grey600: #757575;
+$Black: #000000;
+$White: #FFFFFF;
+
+// Voting page specific
+
+body {
+    background-color: $Orange200;
+}

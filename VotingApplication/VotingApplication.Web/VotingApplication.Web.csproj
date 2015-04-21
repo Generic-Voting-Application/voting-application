@@ -310,6 +310,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
+    <Compile Include="Controllers\HelpController.cs" />
     <Compile Include="Controllers\RoutesController.cs" />
     <Compile Include="Controllers\PollController.cs" />
     <Compile Include="Global.asax.cs">
@@ -335,17 +336,25 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <EmbeddedResource Include="Api\Resources\EmailTemplate.html" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Lib\Css\angular-toggle-switch.css" />
     <Content Include="Content\Lib\Css\font-awesome-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-theme-default-min.css" />
     <Content Include="Content\Scss\ErrorBar.scss" />
+    <None Include="Content\Scss\PollInfoBox.scss" />
     <Content Include="Content\Scss\Site.scss" />
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="Fonts\fontawesome-webfont.svg" />
+    <Content Include="Fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\Logo.png" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\Controllers\AddVoterOptionDialogController.js" />
     <Content Include="Scripts\Controllers\EditOptionDialogController.js" />
     <Content Include="Scripts\Controllers\AddOptionDialogController.js" />
@@ -371,6 +380,7 @@
     <Content Include="Scripts\Controllers\UnregisteredDashboardController.js" />
     <Content Include="Scripts\Controllers\UpDownVoteController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
+    <Content Include="Scripts\Directives\PollInfoBox.js" />
     <Content Include="Scripts\Directives\ErrorBar.js" />
     <Content Include="Scripts\Directives\ResultsChart.html" />
     <Content Include="Scripts\Directives\ResultsChart.js" />
@@ -380,9 +390,14 @@
     <Content Include="Scripts\Directives\TruncatedText.js" />
     <Content Include="Scripts\Filters\dateFilters.js" />
     <Content Include="Scripts\Interceptors\ErrorInterceptor.js" />
+    <Content Include="Content\Scss\Help.scss" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\Lib\d3-tip-min.js" />
     <Content Include="Scripts\Lib\moment-min.js" />
     <Content Include="Scripts\Modules\GVA-Common.js" />
+    <Content Include="Scripts\Modules\GVA-Help.js" />
     <Content Include="Scripts\Modules\GVA-Creation.js" />
     <Content Include="Scripts\Modules\GVA-Poll.js" />
     <Content Include="Scripts\Lib\angular-min.js" />
@@ -431,6 +446,15 @@
     <Content Include="Views\Routes\AddOptionDialog.cshtml" />
     <Content Include="Views\Routes\EditOptionDialog.cshtml" />
     <Content Include="Fonts\fontawesome-webfont.woff2" />
+    <Content Include="Fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Help\Index.cshtml" />
+    <Content Include="Views\Help\Voting\VotingBasic.cshtml" />
+    <Content Include="Views\Help\Voting\VotingPoints.cshtml" />
+    <Content Include="Views\Help\Voting\VotingMulti.cshtml" />
+    <Content Include="Views\Help\Voting\VotingUpDown.cshtml" />
     <None Include="Views\Routes\PollHeading.cshtml" />
     <Content Include="Views\Routes\PollTypeChange.cshtml" />
     <Content Include="Scripts\Directives\PollHeading.html" />
@@ -448,6 +472,7 @@
     <Content Include="Views\Routes\UpDownVote.cshtml" />
     <Content Include="Views\Poll\Index.cshtml" />
     <Content Include="Views\Routes\ManageInvitationStyle.cshtml" />
+    <Content Include="Views\Routes\PollInfoBox.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

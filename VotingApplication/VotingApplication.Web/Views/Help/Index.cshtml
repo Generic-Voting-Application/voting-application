@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html ng-app="GVA.Help">
+<head>
+    <title>Vote On</title>
+    @Styles.Render("~/Bundles/StyleLib")
+    @Styles.Render("~/Bundles/HelpStyle")
+    <meta name="viewport" content="initial-scale=1">
+</head>
+<body>
+    <div class="center-panel">
+        <header>
+            <div class="pull-left" id="logo">
+                <a href="/"><img src="/Images/Logo.png" /></a>
+            </div>
+        </header>
+        <div class="body-content">
+            <h1>
+                Help
+            </h1>
+            Polls go in, Results come out and you <em>can't</em> explain that.
+            <div ng-view></div>
+        </div>
+        <footer><a href="mailto:generic.voting@gmail.com">Email Us</a> | © 2015 – Scott Logic Ltd</footer>
+    </div>
+    @Scripts.Render("~/Bundles/ScriptLib")
+    @Scripts.Render("~/Bundles/Script")
+</body>
+</html>

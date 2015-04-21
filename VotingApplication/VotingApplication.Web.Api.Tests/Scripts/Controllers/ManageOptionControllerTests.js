@@ -1,8 +1,8 @@
 ﻿'use strict';
 
-describe("ManageOptionController", function () {
+describe('ManageOptionController', function () {
 
-    beforeEach(module("GVA.Creation"));
+    beforeEach(module('GVA.Creation'));
 
     var scope;
     var manageServiceMock;
@@ -26,26 +26,26 @@ describe("ManageOptionController", function () {
         };
         getOptionsPromise = $q.defer();
         updateOptionsPromise = $q.defer();
-        spyOn(manageServiceMock, "getOptions").and.callFake(function () { return getOptionsPromise.promise; });
-        spyOn(manageServiceMock, "updateOptions").and.callFake(function () { return updateOptionsPromise.promise; });
+        spyOn(manageServiceMock, 'getOptions').and.callFake(function () { return getOptionsPromise.promise; });
+        spyOn(manageServiceMock, 'updateOptions').and.callFake(function () { return updateOptionsPromise.promise; });
 
         routingServiceMock = { navigateToManagePage: function () { } };
-        spyOn(routingServiceMock, "navigateToManagePage");
+        spyOn(routingServiceMock, 'navigateToManagePage');
 
 
-        $controller("ManageOptionController", { $scope: scope, ManageService: manageServiceMock, RoutingService: routingServiceMock });
+        $controller('ManageOptionController', { $scope: scope, ManageService: manageServiceMock, RoutingService: routingServiceMock });
     }));
 
-    it("Loads Options from service", function () {
+    it('Loads Options from service', function () {
         var getOptionsResponse = [{
             OptionNumber: 1,
-            Name: "First Option",
+            Name: 'First Option',
             Description: null
         },
         {
             OptionNumber: 2,
-            Name: "Second Option",
-            Description: "This is the second option"
+            Name: 'Second Option',
+            Description: 'This is the second option'
         }];
 
         getOptionsPromise.resolve(getOptionsResponse);
@@ -54,20 +54,20 @@ describe("ManageOptionController", function () {
         expect(scope.options).toBe(getOptionsResponse);
     });
 
-    describe("Remove Option", function () {
+    describe('Remove Option', function () {
 
-        it("Removes the option", function () {
+        it('Removes the option', function () {
 
             var option1 = {
                 OptionNumber: 1,
-                Name: "First Option",
+                Name: 'First Option',
                 Description: null
             };
 
             var option2 = {
                 OptionNumber: 2,
-                Name: "Second Option",
-                Description: "This is the second option"
+                Name: 'Second Option',
+                Description: 'This is the second option'
             };
 
             scope.options = [option1, option2];
@@ -81,30 +81,30 @@ describe("ManageOptionController", function () {
 
     });
 
-    describe("Return Without Save", function () {
+    describe('Return Without Save', function () {
 
-        it("Does not make service call to delete voters", function () {
+        it('Does not make service call to delete voters', function () {
             scope.returnWithoutSave();
 
             expect(manageServiceMock.updateOptions.calls.any()).toEqual(false);
         });
 
-        it("Makes service call to navigateToManagePage", function () {
+        it('Makes service call to navigateToManagePage', function () {
             scope.returnWithoutSave();
 
             expect(routingServiceMock.navigateToManagePage.calls.any()).toEqual(true);
         });
     });
 
-    describe("Save Options And Return", function () {
+    describe('Save Options And Return', function () {
 
-        it("Makes service call to delete voters", function () {
+        it('Makes service call to delete voters', function () {
             scope.saveOptionsAndReturn();
 
             expect(manageServiceMock.updateOptions.calls.any()).toEqual(true);
         });
 
-        it("Makes service call to Navigate To Manage Page when delete service call succeeds", function () {
+        it('Makes service call to Navigate To Manage Page when delete service call succeeds', function () {
             updateOptionsPromise.resolve();
 
 
@@ -115,7 +115,7 @@ describe("ManageOptionController", function () {
             expect(routingServiceMock.navigateToManagePage.calls.any()).toEqual(true);
         });
 
-        it("Does not make service call to Navigate To Manage Page if delete service call fails", function () {
+        it('Does not make service call to Navigate To Manage Page if delete service call fails', function () {
             updateOptionsPromise.reject();
 
 

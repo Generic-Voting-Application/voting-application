@@ -36,6 +36,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             [TestMethod]
             public void NullExpiry_SetsExpiryToNull()
             {
+                // Arrange
                 IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 Poll existingPoll = CreatePoll();
                 existingPolls.Add(existingPoll);
@@ -44,9 +45,12 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 ManagePollExpiryRequest request = new ManagePollExpiryRequest { };
 
                 ManageExpiryController controller = CreateManageExpiryController(contextFactory);
+                controller.Validate(request);
 
+                // Act
                 controller.Put(PollManageGuid, request);
 
+                // Assert
                 Assert.IsNull(existingPoll.ExpiryDate);
             }
 

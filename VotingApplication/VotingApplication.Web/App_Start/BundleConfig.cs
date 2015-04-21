@@ -41,6 +41,13 @@ namespace VotingApplication.Web
             createStyle.Orderer = nullOrderer;
             bundles.Add(createStyle);
 
+            StyleBundle helpStyle = new StyleBundle("~/Bundles/HelpStyle");
+            helpStyle.Include("~/Content/Scss/Help.scss");
+            helpStyle.Builder = nullBuilder;
+            helpStyle.Transforms.Add(styleTransformer);
+            helpStyle.Orderer = nullOrderer;
+            bundles.Add(helpStyle);
+
             StyleBundle dateTimePickerStyle = new StyleBundle("~/Bundles/DateTimePickerStyle");
             dateTimePickerStyle.Include("~/Content/Scss/DateTimePicker.scss");
             dateTimePickerStyle.Builder = nullBuilder;
@@ -61,6 +68,13 @@ namespace VotingApplication.Web
             errorBarStyle.Transforms.Add(styleTransformer);
             errorBarStyle.Orderer = nullOrderer;
             bundles.Add(errorBarStyle);
+
+            StyleBundle pollInfoBoxStyle = new StyleBundle("~/Bundles/PollInfoBox");
+            pollInfoBoxStyle.Include("~/Content/Scss/PollInfoBox.scss");
+            pollInfoBoxStyle.Builder = nullBuilder;
+            pollInfoBoxStyle.Transforms.Add(styleTransformer);
+            pollInfoBoxStyle.Orderer = nullOrderer;
+            bundles.Add(pollInfoBoxStyle);
 
             ScriptBundle scriptLibBundle = new ScriptBundle("~/Bundles/ScriptLib");
             scriptLibBundle.IncludeDirectory("~/Scripts/Lib", "*.js");

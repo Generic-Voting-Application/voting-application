@@ -6,9 +6,9 @@
         .factory('ManageService', ManageService);
 
 
-    ManageService.$inject = ['$location', '$http', '$routeParams', '$localStorage', '$q'];
+    ManageService.$inject = ['$location', '$http', '$routeParams', '$localStorage', '$q', 'AccountService'];
 
-    function ManageService($location, $http, $routeParams, $localStorage, $q) {
+    function ManageService($location, $http, $routeParams, $localStorage, $q, AccountService) {
         var self = this;
 
         var observerCallbacks = [];
@@ -36,29 +36,14 @@
                 return null;
             }
 
-            $http.get('/api/manage/' + manageId)
-                .success(function (data) {
-                    self.poll = data;
-                    notifyObservers();
-                    if (callback) {
-                        callback(data);
-                    }
-                })
-                .error(function (data, status) {
-                    if (failureCallback) {
-                        failureCallback(data, status);
-                    }
-                });
-        };
-
-        self.updatePoll = function (manageId, poll, callback, failureCallback) {
-
             $http({
-                method: 'PUT',
+                method: 'GET',
                 url: '/api/manage/' + manageId,
-                data: poll
+                headers: { 'Authorization': 'Bearer ' + (AccountService.account ? AccountService.account.token : '') }
             })
             .success(function (data) {
+                self.poll = data;
+                notifyObservers();
                 if (callback) {
                     callback(data);
                 }
@@ -123,7 +108,7 @@
                 }
             });
         };
-        
+
         self.updatePollMisc = function (manageId, miscConfig, callback, failureCallback) {
             $http({
                 method: 'PUT',
@@ -144,7 +129,7 @@
 
         self.getVotes = function (pollId, callback, failureCallback) {
 
-            $http.get('/api/poll/' + pollId + '/vote')
+            $http.get('/api/poll/' + pollId + '/results')
                 .success(function (data) {
                     if (callback) {
                         callback(data);
@@ -219,7 +204,8 @@
                 .success(function (data) {
                     if (callback) {
                         callback(data);
-                    }})
+                    }
+                })
                 .error(function (data) {
                     if (failureCallback) {
                         failureCallback(data);

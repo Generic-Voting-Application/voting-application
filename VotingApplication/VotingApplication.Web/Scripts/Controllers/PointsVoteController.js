@@ -1,7 +1,4 @@
 ﻿/// <reference path="../Services/IdentityService.js" />
-/// <reference path="../Services/PollService.js" />
-/// <reference path="../Services/TokenService.js" />
-/// <reference path="../Services/VoteService.js" />
 (function () {
     'use strict';
 
@@ -9,65 +6,28 @@
         .module('GVA.Voting')
         .controller('PointsVoteController', PointsVoteController);
 
-    PointsVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'PollService', 'TokenService', 'VoteService', 'ngDialog'];
+    PointsVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'ngDialog'];
 
-    function PointsVoteController($scope, $routeParams, IdentityService, PollService, TokenService, VoteService, ngDialog) {
-
-        var pollId = $routeParams.pollId;
-        var token = null;
-
-        $scope.options = [];
-        $scope.totalPointsAvailable = 0;
-        $scope.maxPointsPerOption = 0;
-        $scope.optionAddingAllowed = false;
+    function PointsVoteController($scope, $routeParams, IdentityService, ngDialog) {
 
         $scope.addOption = addOption;
         $scope.unallocatedPoints = calculateUnallocatedPoints;
-        $scope.disabledAddPoints = shouldAddPointsBeDisabled;
+        $scope.addPointsDisabled = shouldAddPointsBeDisabled;
+        $scope.subtractPointsDisabled = shouldSubtractPointsBeDisabled;
+        $scope.notifyOptionAdded = notifyOptionAdded;
 
-        // Register our getVotes strategy with the parent controller
-        $scope.setVoteCallback(getVotes);
+        $scope.increaseVote = increaseVote;
+        $scope.decreaseVote = decreaseVote;
+        $scope.unallocatedPointsPercentage = unallocatedPointsPercentage;
+
 
         activate();
 
 
         function activate() {
-            $scope.$watch('poll', function () {
-                $scope.options = $scope.poll ? $scope.poll.Options : [];
 
-                $scope.options.forEach(function (d) {
-                    d.voteValue = 0;
-                });
-
-                $scope.totalPointsAvailable = $scope.poll ? $scope.poll.MaxPoints : 0;
-                $scope.maxPointsPerOption = $scope.poll ? $scope.poll.MaxPerVote : 0;
-            });
-
-
-
-            $scope.optionAddingAllowed = $scope.poll.OptionAdding;
-
-            TokenService.getToken(pollId, getTokenSuccessCallback);
-        }
-
-        function getTokenSuccessCallback(tokenData) {
-            token = tokenData;
-
-
-            VoteService.getTokenVotes(pollId, token, function (voteData) {
-
-                voteData.forEach(function (dataItem) {
-
-                    for (var i = 0; i < $scope.options.length; i++) {
-                        var option = $scope.options[i];
-
-                        if (option.Id === dataItem.OptionId) {
-                            option.voteValue = dataItem.VoteValue;
-                            break;
-                        }
-                    }
-                });
-            });
+            // Register our getVotes strategy with the parent controller
+            $scope.setVoteCallback(getVotes);
         }
 
         function getVotes(options) {
@@ -88,22 +48,48 @@
                 template: '/Routes/AddOptionDialog',
                 controller: 'AddVoterOptionDialogController',
                 scope: $scope,
-                data: { pollId: pollId }
+                data: { pollId: $scope.pollId }
             });
         }
 
-        function calculateUnallocatedPoints() {
-            var unallocatedPoints = $scope.totalPointsAvailable;
+        function notifyOptionAdded() {
+            $scope.$emit('voterOptionAddedEvent');
+        }
 
-            for (var i = 0; i < $scope.options.length; i++) {
-                unallocatedPoints -= $scope.options[i].voteValue || 0;
+        function calculateUnallocatedPoints() {
+            var unallocatedPoints = $scope.poll.MaxPoints;
+
+            for (var i = 0; i < $scope.poll.Options.length; i++) {
+                unallocatedPoints -= $scope.poll.Options[i].voteValue || 0;
             }
 
             return unallocatedPoints;
         }
 
-        function shouldAddPointsBeDisabled(pointValue) {
-            return pointValue >= $scope.maxPointsPerOption || $scope.unallocatedPoints() === 0;
+        function shouldSubtractPointsBeDisabled(option) {
+            return option.voteValue <= 0;
+        }
+
+        function shouldAddPointsBeDisabled(option) {
+            return option.voteValue >= $scope.poll.MaxPerVote || $scope.unallocatedPoints() === 0;
+        }
+
+        function increaseVote(option) {
+            if (option.voteValue < $scope.poll.MaxPerVote) {
+                option.voteValue = option.voteValue + 1;
+            }
+        }
+
+        function decreaseVote(option) {
+            if (option.voteValue > 0) {
+                option.voteValue = option.voteValue - 1;
+            }
+        }
+
+        function unallocatedPointsPercentage() {
+
+
+            return (calculateUnallocatedPoints() / $scope.poll.MaxPoints) * 100;
         }
     }
 })();

@@ -7,5 +7,10 @@
         public long OptionId { get; set; }
         public string OptionName { get; set; }
         public int VoteValue { get; set; }
+
+        public VoteRequestResponseModel()
+        {
+            VoterName = "Anonymous User";
+        }
     }
 }

@@ -21,12 +21,12 @@
 
         return service;
 
-        function navigateToVotePage(pollId) {
-            $window.location.href = getVotePageUrl(pollId);
+        function navigateToVotePage(pollId, token) {
+            $window.location.href = getVotePageUrl(pollId, token);
         }
 
-        function navigateToResultsPage(pollId) {
-            $window.location.href = getResultsPageUrl(pollId);
+        function navigateToResultsPage(pollId, token) {
+            $window.location.href = getResultsPageUrl(pollId, token);
         }
 
         function navigateToManagePage(manageId, subPage) {
