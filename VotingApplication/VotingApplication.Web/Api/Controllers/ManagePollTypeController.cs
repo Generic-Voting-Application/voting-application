@@ -54,6 +54,8 @@ namespace VotingApplication.Web.Api.Controllers
 
                 poll.LastUpdated = DateTime.Now;
 
+                _metricHandler.SetPollType(pollType, updateRequest.MaxPerVote, updateRequest.MaxPoints, poll.UUID);
+
                 context.SaveChanges();
             }
         }

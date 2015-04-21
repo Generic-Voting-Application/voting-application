@@ -68,6 +68,20 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setExpiryEvent);
         }
 
+        public void SetPollType(PollType pollType, int maxPerVote, int maxPerPoll, Guid pollId)
+        {
+            Event setPollType = new Event("SetPollType", GetExistingPollId(pollId));
+            setPollType.Value = HttpStatusCode.OK.ToString();
+            setPollType.Detail = pollType.ToString();
+
+            if (pollType == PollType.Points)
+            {
+                setPollType.Detail += " (" + maxPerPoll + "/" + maxPerVote + ")";
+            }
+
+            StoreEvent(setPollType);
+        }
+
         public void LoginEvent()
         {
             Event loginEvent = new Event("Login", Guid.Empty);
