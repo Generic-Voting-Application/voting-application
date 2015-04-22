@@ -88,6 +88,8 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setPollType);
         }
 
+        #region Misc Configuration
+
         public void InviteOnlyChangedEvent(bool inviteOnly, Guid pollId)
         {
             Event setInviteOnly = new Event("SetInviteOnly", pollId);
@@ -112,13 +114,15 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setAllowOptionAdding);
         }
 
+        #endregion
+
         #region Options
 
         public void OptionAddedEvent(Option option, Guid pollId)
         {
             Event optionAddedEvent = new Event("AddOption", pollId);
             optionAddedEvent.Value = HttpStatusCode.OK.ToString();
-            optionAddedEvent.Detail = string.Format("#%d %s: %s", option.PollOptionNumber, option.Name, option.Description);
+            optionAddedEvent.Detail = string.Format("#{0} '{1}': '{2}'", option.PollOptionNumber, option.Name, option.Description);
             StoreEvent(optionAddedEvent);
         }
 
@@ -126,7 +130,7 @@ namespace VotingApplication.Web.Api.Metrics
         {
             Event optionUpdatedEvent = new Event("UpdateOption", pollId);
             optionUpdatedEvent.Value = HttpStatusCode.OK.ToString();
-            optionUpdatedEvent.Detail = string.Format("#%d %s: %s", option.PollOptionNumber, option.Name, option.Description);
+            optionUpdatedEvent.Detail = string.Format("#{0} '{1}': '{2}'", option.PollOptionNumber, option.Name, option.Description);
             StoreEvent(optionUpdatedEvent);
         }
 
@@ -134,7 +138,7 @@ namespace VotingApplication.Web.Api.Metrics
         {
             Event optionAddedEvent = new Event("DeleteOption", pollId);
             optionAddedEvent.Value = HttpStatusCode.OK.ToString();
-            optionAddedEvent.Detail = string.Format("#%d %s: %s", option.PollOptionNumber, option.Name, option.Description);
+            optionAddedEvent.Detail = string.Format("#{0} '{1}': '{2}'", option.PollOptionNumber, option.Name, option.Description);
             StoreEvent(optionAddedEvent);
         }
 
