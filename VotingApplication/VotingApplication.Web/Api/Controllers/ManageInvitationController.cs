@@ -133,6 +133,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 context.Votes.Remove(redundantVote);
             }
 
+            if (ballot.TokenGuid != Guid.Empty)
+            {
+                _metricHandler.BallotDeletedEvent(ballot, poll.UUID);
+            }
+
             poll.Ballots.Remove(ballot);
             context.Ballots.Remove(ballot);
 
