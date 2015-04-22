@@ -69,7 +69,6 @@ namespace VotingApplication.Web.Api.Metrics
         public void ExpiryChangedEvent(DateTimeOffset? expiry, Guid pollId)
         {
             Event setExpiryEvent = new Event("SetExpiry", pollId);
-            setExpiryEvent.Value = HttpStatusCode.OK.ToString();
             setExpiryEvent.Detail = (expiry != null) ? expiry.ToString() : "Never";
             StoreEvent(setExpiryEvent);
         }
@@ -77,7 +76,6 @@ namespace VotingApplication.Web.Api.Metrics
         public void PollTypeChangedEvent(PollType pollType, int maxPerVote, int maxPerPoll, Guid pollId)
         {
             Event setPollType = new Event("SetPollType", pollId);
-            setPollType.Value = HttpStatusCode.OK.ToString();
             setPollType.Detail = pollType.ToString();
 
             if (pollType == PollType.Points)
@@ -93,7 +91,6 @@ namespace VotingApplication.Web.Api.Metrics
         public void InviteOnlyChangedEvent(bool inviteOnly, Guid pollId)
         {
             Event setInviteOnly = new Event("SetInviteOnly", pollId);
-            setInviteOnly.Value = HttpStatusCode.OK.ToString();
             setInviteOnly.Detail = (inviteOnly) ? "Invite-Only" : "Open Poll";
             StoreEvent(setInviteOnly);
         }
@@ -101,7 +98,6 @@ namespace VotingApplication.Web.Api.Metrics
         public void NamedVotingChangedEvent(bool namedVoting, Guid pollId)
         {
             Event setNamedVoting = new Event("SetNamedVoting", pollId);
-            setNamedVoting.Value = HttpStatusCode.OK.ToString();
             setNamedVoting.Detail = (namedVoting) ? "Named Voters" : "Anonymous Voters";
             StoreEvent(setNamedVoting);
         }
@@ -109,7 +105,6 @@ namespace VotingApplication.Web.Api.Metrics
         public void OptionAddingChangedEvent(bool optionAdding, Guid pollId)
         {
             Event setAllowOptionAdding = new Event("SetInviteOnly", pollId);
-            setAllowOptionAdding.Value = HttpStatusCode.OK.ToString();
             setAllowOptionAdding.Detail = (optionAdding) ? "Voter Option Adding" : "No Voter Option Adding";
             StoreEvent(setAllowOptionAdding);
         }
@@ -121,7 +116,6 @@ namespace VotingApplication.Web.Api.Metrics
         public void OptionAddedEvent(Option option, Guid pollId)
         {
             Event optionAddedEvent = new Event("AddOption", pollId);
-            optionAddedEvent.Value = HttpStatusCode.OK.ToString();
             optionAddedEvent.Detail = string.Format("#{0} '{1}': '{2}'", option.PollOptionNumber, option.Name, option.Description);
             StoreEvent(optionAddedEvent);
         }
@@ -129,7 +123,6 @@ namespace VotingApplication.Web.Api.Metrics
         public void OptionUpdatedEvent(Option option, Guid pollId)
         {
             Event optionUpdatedEvent = new Event("UpdateOption", pollId);
-            optionUpdatedEvent.Value = HttpStatusCode.OK.ToString();
             optionUpdatedEvent.Detail = string.Format("#{0} '{1}': '{2}'", option.PollOptionNumber, option.Name, option.Description);
             StoreEvent(optionUpdatedEvent);
         }
@@ -137,7 +130,6 @@ namespace VotingApplication.Web.Api.Metrics
         public void OptionDeletedEvent(Option option, Guid pollId)
         {
             Event optionAddedEvent = new Event("DeleteOption", pollId);
-            optionAddedEvent.Value = HttpStatusCode.OK.ToString();
             optionAddedEvent.Detail = string.Format("#{0} '{1}': '{2}'", option.PollOptionNumber, option.Name, option.Description);
             StoreEvent(optionAddedEvent);
         }
@@ -148,12 +140,18 @@ namespace VotingApplication.Web.Api.Metrics
 
         public void VoteAddedEvent(Vote vote, Guid pollId)
         {
-            // TODO
+            Event voteAddedEvent = new Event("AddVote", pollId);
+            voteAddedEvent.Value = vote.Option.PollOptionNumber.ToString();
+            voteAddedEvent.Detail = vote.Option.Name + " (" + vote.VoteValue + ")";
+            StoreEvent(voteAddedEvent);
         }
 
         public void VoteDeletedEvent(Vote vote, Guid pollId)
         {
-            // TODO
+            Event voteAddedEvent = new Event("DeleteVote", pollId);
+            voteAddedEvent.Value = vote.Option.PollOptionNumber.ToString();
+            voteAddedEvent.Detail = vote.Option.Name + " (" + vote.VoteValue + ")";
+            StoreEvent(voteAddedEvent);
         }
 
         #endregion
