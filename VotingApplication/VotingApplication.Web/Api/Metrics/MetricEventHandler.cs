@@ -160,12 +160,18 @@ namespace VotingApplication.Web.Api.Metrics
 
         public void BallotAddedEvent(Ballot ballot, Guid pollId)
         {
-            // TODO
+            Event ballotAddedEvent = new Event("AddBallot", pollId);
+            ballotAddedEvent.Value = ballot.TokenGuid.ToString();
+            ballotAddedEvent.Detail = ballot.Email;
+            StoreEvent(ballotAddedEvent);
         }
 
         public void BallotDeletedEvent(Ballot ballot, Guid pollId)
         {
-            // TODO
+            Event ballotDeletedEvent = new Event("DeleteBallot", pollId);
+            ballotDeletedEvent.Value = ballot.TokenGuid.ToString();
+            ballotDeletedEvent.Detail = ballot.Email;
+            StoreEvent(ballotDeletedEvent);
         }
 
         #endregion
