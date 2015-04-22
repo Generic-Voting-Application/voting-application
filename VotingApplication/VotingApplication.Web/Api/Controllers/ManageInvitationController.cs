@@ -117,6 +117,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             if (ballot.TokenGuid == Guid.Empty)
             {
                 ballot.TokenGuid = Guid.NewGuid();
+                _metricHandler.BallotAddedEvent(ballot, poll.UUID);
             }
 
             _invitationService.SendInvitation(poll.UUID, ballot, poll.Name);

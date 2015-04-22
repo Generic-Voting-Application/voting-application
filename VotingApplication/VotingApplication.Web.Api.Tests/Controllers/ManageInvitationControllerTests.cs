@@ -432,6 +432,48 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _mockMetricHandler.Verify(m => m.VoteDeletedEvent(voteToRemove, _mainPoll.UUID), Times.Once());
         }
 
+        [TestMethod]
+        public void AddingANewInvitationGeneratesAnAddBallotMetric()
+        {
+            // Arrange
+            var request = new ManageInvitationRequestModel { Email = "a@b.c", SendInvitation = true };
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
+
+            // Assert
+            _mockMetricHandler.Verify(m => m.BallotAddedEvent(It.Is<Ballot>(b => b.Email == "a@b.c"), _mainPoll.UUID), Times.Once());
+        }
+
+        [TestMethod]
+        public void SavingAnEmailWithoutSendingInvitationDoesNotGenerateANewBallotMetric()
+        {
+            // Arrange
+            var request = new ManageInvitationRequestModel { Email = "a@b.c", SendInvitation = false };
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
+
+            // Assert
+            _mockMetricHandler.Verify(m => m.BallotAddedEvent(It.IsAny<Ballot>(), It.IsAny<Guid>()), Times.Never());
+        }
+
+        [TestMethod]
+        public void ResendingEmailToAnExistingBallotDoesNotGenerateNewBallotMetric()
+        {
+            // Arrange
+            Ballot existingBallot = new Ballot { Email = "a@b.c", TokenGuid = Guid.NewGuid(), ManageGuid = Guid.NewGuid() };
+            _mainPoll.Ballots.Add(existingBallot);
+            _dummyBallots.Add(existingBallot);
+            var request = new ManageInvitationRequestModel { Email = "a@b.c", SendInvitation = true, ManageToken = existingBallot.ManageGuid  };
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
+
+            // Assert
+            _mockMetricHandler.Verify(m => m.BallotAddedEvent(It.IsAny<Ballot>(), It.IsAny<Guid>()), Times.Never());
+        }
+
         #endregion
     }
 }
