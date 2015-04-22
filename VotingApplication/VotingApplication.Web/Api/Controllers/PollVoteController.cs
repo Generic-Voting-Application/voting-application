@@ -162,9 +162,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     context.Votes.Add(modelToVote);
 
                     // TODO: refactor the voteRequest model to be a ballotRequest instead. => only one voterName.
-                    String voterNameInput = voteRequest.VoterName;
-                    ballot.VoterName = Regex.Replace(voterNameInput, @"[^\w\.@ -]", "",
-                                       RegexOptions.None);
+                    if (!String.IsNullOrEmpty(voteRequest.VoterName))
+                    {
+                        ballot.VoterName = Regex.Replace(voteRequest.VoterName, @"[^\w\.@ -]", "",
+                                                               RegexOptions.None);
+                    }
+
                 }
 
                 poll.LastUpdated = DateTime.Now;
