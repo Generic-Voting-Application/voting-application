@@ -65,6 +65,13 @@ namespace VotingApplication.Web.Api.Metrics
 
         #endregion
 
+        public void PollCreatedEvent(Poll poll)
+        {
+            Event pollCreatedEvent = new Event(EventType.CreatePoll, poll.UUID);
+            pollCreatedEvent.Detail = poll.Name;
+            StoreEvent(pollCreatedEvent);
+        }
+
         #region Poll Configuration
 
         public void ExpiryChangedEvent(DateTimeOffset? expiry, Guid pollId)

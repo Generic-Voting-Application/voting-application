@@ -7,6 +7,7 @@ namespace VotingApplication.Data.Model
     {
         Error,
         GoToPage,
+        CreatePoll,
         UpdateResults,
         SetExpiry,
         SetPollType,

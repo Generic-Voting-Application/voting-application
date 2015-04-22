@@ -73,6 +73,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             using (var context = _contextFactory.CreateContext())
             {
+                _metricHandler.PollCreatedEvent(newPoll);
+
                 context.Polls.Add(newPoll);
                 newPoll.Ballots.Add(creatorBallot);
 

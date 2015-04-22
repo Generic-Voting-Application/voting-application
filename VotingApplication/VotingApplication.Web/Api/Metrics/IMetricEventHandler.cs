@@ -12,7 +12,9 @@ namespace VotingApplication.Web.Api.Metrics
         void PageChangeEvent(string route, int statusCode, Guid pollId);
         void ErrorEvent(HttpResponseException exception, Guid pollId);
 
+        void PollCreatedEvent(Poll poll);
         void ResultsUpdateEvent(HttpStatusCode status, Guid pollId);
+
         void ExpiryChangedEvent(DateTimeOffset? expiry, Guid pollId);
         void PollTypeChangedEvent(PollType pollType, int maxPerVote, int maxPerPoll, Guid pollId);
         void InviteOnlyChangedEvent(bool inviteOnly, Guid pollId);
