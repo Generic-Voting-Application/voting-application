@@ -1,4 +1,4 @@
-﻿<div ng-app="GVA.Creation" ng-controller="ManageInvitationStyleController">
+﻿<div ng-app="GVA.Creation" ng-controller="ManageMiscController">
     <div class="manage-area centered">
         <h2>Poll Invitation Style</h2>
         <div class="manage-section">
@@ -28,6 +28,16 @@
                     <toggle-switch id="OptionAdding" ng-model="poll.OptionAdding" on-label="Yes" off-label="No"></toggle-switch>
                     <small ng-if="poll.OptionAdding">Voters can add their own options to the poll</small>
                     <small ng-if="!poll.OptionAdding">Voters cannot add their own options to the poll</small>
+                </form>
+            </div>
+        </div>
+        <div class="manage-section">
+            <div>
+                <form class="form-section-block">
+                    <label for="HiddenResults">Results are hidden until a voter has voted</label>
+                    <toggle-switch id="HiddenResults" ng-model="poll.HiddenResults" on-label="Yes" off-label="No"></toggle-switch>
+                    <small ng-if="poll.HiddenResults">Voters can not see the results until they have cast a vote</small>
+                    <small ng-if="!poll.HiddenResults">Voters can see results at any time</small>
                 </form>
             </div>
         </div>
