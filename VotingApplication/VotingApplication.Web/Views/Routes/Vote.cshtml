@@ -9,6 +9,8 @@
         <div class="btn error-btn clickable centered" ng-click="clearVote()">Clear vote</div>
     </div>
     <div class="flexbox">
-        <div class="btn inactive-btn clickable centered" ng-click="navigateToResultsPage()">Go to results</div>
+        <a class="centered" href="{{resultsLink}}">
+            <div class="btn inactive-btn clickable">Go to results</div>
+        </a>
     </div>
 </div>
