@@ -5,10 +5,10 @@
         <button id="not-user-btn" class="btn inactive-btn" ng-click="logoutIdentity()">Not {{identityName}}?</button>
     </div>
     <div voting-strategy></div>
+    <div class="flexbox spaced-bottom">
+        <div class="btn error-btn clickable centered" ng-click="clearVote()">Clear vote</div>
+    </div>
     <div class="flexbox">
-        <div class="centered">
-            <a class="btn inactive-btn" ng-href="{{resultsLink}}">Go to results</a>
-            <a class="btn error-btn clickable" ng-click="clearVote()">Clear vote</a>
-        </div>
+        <div class="btn inactive-btn clickable centered" ng-click="navigateToResultsPage()">Go to results</div>
     </div>
 </div>

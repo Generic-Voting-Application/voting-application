@@ -19,7 +19,7 @@
         $scope.token = $routeParams['tokenId'] || '';
 
         $scope.poll = { Options: [] };
-        $scope.resultsLink = RoutingService.getResultsPageUrl($scope.pollId, $scope.token);
+        $scope.navigateToResultsPage = navigateToResultsPage;
 
         $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
         $scope.logoutIdentity = IdentityService.clearIdentityName;
@@ -110,6 +110,10 @@
             VoteService.submitVote($scope.pollId, [], $scope.token, function () {
                 RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
             });
+        }
+
+        function navigateToResultsPage() {
+            RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
         }
 
         function submitVote(options) {
