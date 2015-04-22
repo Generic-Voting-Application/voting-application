@@ -108,6 +108,19 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             }
 
             [TestMethod]
+            public void UnchangedQuestionDoesNotGenerateMetric()
+            {
+                // Arrange
+                ManageQuestionRequest request = new ManageQuestionRequest { Question = "ABC" };
+
+                // Act
+                _controller.Put(PollManageGuid, request);
+
+                // Assert
+                _metricHandler.Verify(m => m.QuestionChangedEvent(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never());
+            }
+
+            [TestMethod]
             [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
             public void InvalidQuestionDoesNotGenerateMetric()
             {

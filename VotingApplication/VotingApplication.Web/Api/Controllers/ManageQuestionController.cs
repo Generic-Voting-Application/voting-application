@@ -34,6 +34,11 @@ namespace VotingApplication.Web.Api.Controllers
                     ThrowError(HttpStatusCode.BadRequest, "Question cannot be null or empty");
                 }
 
+                if (poll.Name == request.Question)
+                {
+                    return;
+                }
+
                 _metricHandler.QuestionChangedEvent(request.Question, poll.UUID);
 
                 poll.Name = request.Question;
