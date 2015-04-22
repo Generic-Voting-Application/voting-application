@@ -3,12 +3,34 @@ using System.ComponentModel.DataAnnotations;
 
 namespace VotingApplication.Data.Model
 {
+    public enum EventType
+    {
+        Error,
+        GoToPage,
+        UpdateResults,
+        SetExpiry,
+        SetPollType,
+        SetInviteOnly,
+        SetNamedVoting,
+        SetOptionAdding,
+        AddOption,
+        UpdateOption,
+        DeleteOption,
+        AddVote,
+        DeleteVote,
+        AddBallot,
+        DeleteBallot,
+        Login,
+        Logout,
+        Register
+    }
+
     public class Event
     {
-        public Event(string eventType, Guid pollId)
+        public Event(EventType eventType, Guid pollId)
         {
             Timestamp = DateTime.Now;
-            EventType = eventType;
+            EventType = eventType.ToString();
             PollId = pollId;
         }
 
