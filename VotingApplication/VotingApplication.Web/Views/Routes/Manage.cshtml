@@ -23,7 +23,7 @@
                         <span ng-if="toggleNameEdit">
                             <input class="wide-input" ng-model="$parent.Question" required />
                             <span class="fa fa-remove pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.discardNameChanges()"></span>
-                            <span class="fa fa-ok pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.updateQuestion()"></span>
+                            <span class="fa fa-check pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.updateQuestion()"></span>
                         </span>
                     </span>
                 </form>
