@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -71,12 +72,12 @@ namespace VotingApplication.Web.Api.Controllers
             throw exception;
         }
 
-        public Poll PollByPollId(Guid pollId, IVotingContext context)
+        protected internal Poll PollByPollId(Guid pollId, IVotingContext context)
         {
             return PollByPredicate(p => p.UUID == pollId, string.Format("Poll {0} not found", pollId), context);
         }
 
-        public Poll PollByManageId(Guid manageId, IVotingContext context)
+        protected internal Poll PollByManageId(Guid manageId, IVotingContext context)
         {
             Poll poll = PollByPredicate(p => p.ManageId == manageId, string.Format("Poll for manage id {0} not found", manageId), context);
 

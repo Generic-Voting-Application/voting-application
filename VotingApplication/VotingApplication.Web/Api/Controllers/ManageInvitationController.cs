@@ -61,7 +61,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             using (var context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = GetPoll(context, manageId);
+                Poll matchingPoll = PollByManageId(manageId, context);
 
                 List<Ballot> redundantBallots = matchingPoll.Ballots.ToList<Ballot>();
 
@@ -95,21 +95,6 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             {
                 ThrowError(HttpStatusCode.BadRequest, "List of invitees cannot be null");
             }
-        }
-
-        private Poll GetPoll(IVotingContext context, Guid manageId)
-        {
-            Poll matchingPoll = context.Polls
-                                        .Where(p => p.ManageId == manageId)
-                                        .Include(p => p.Ballots.Select(b => b.Votes))
-                                        .FirstOrDefault();
-
-            if (matchingPoll == null)
-            {
-                ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", manageId));
-            }
-
-            return matchingPoll;
         }
 
         private void SendInvitation(Ballot ballot, Poll poll)
