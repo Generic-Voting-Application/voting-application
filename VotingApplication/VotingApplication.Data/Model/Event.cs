@@ -10,6 +10,7 @@ namespace VotingApplication.Data.Model
         UpdateResults,
         SetExpiry,
         SetPollType,
+        SetQuestion,
         SetInviteOnly,
         SetNamedVoting,
         SetOptionAdding,

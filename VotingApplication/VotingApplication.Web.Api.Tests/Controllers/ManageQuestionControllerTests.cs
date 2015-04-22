@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Data.Entity;
 using System.Net;
@@ -7,6 +8,7 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Tests.TestHelpers;
 
@@ -21,6 +23,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public class PutTests : ManageQuestionControllerTests
         {
             private ManageQuestionController _controller;
+            private Mock<IMetricEventHandler> _metricHandler;
             private Poll _existingPoll;
 
             [TestInitialize]
@@ -31,8 +34,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 existingPolls.Add(_existingPoll);
 
+                _metricHandler = new Mock<IMetricEventHandler>();
+
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
-                _controller = CreateManageQuestionController(contextFactory);
+                _controller = CreateManageQuestionController(contextFactory, _metricHandler.Object);
             }
 
             [TestMethod]
@@ -88,11 +93,38 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 // Assert
                 Assert.AreEqual(_existingPoll.Name, "DEF");
             }
+
+            [TestMethod]
+            public void ValidQuestionGeneratesMetric()
+            {
+                // Arrange
+                ManageQuestionRequest request = new ManageQuestionRequest { Question = "JKL" };
+
+                // Act
+                _controller.Put(PollManageGuid, request);
+
+                // Assert
+                _metricHandler.Verify(m => m.QuestionChangedEvent("JKL", _existingPoll.UUID), Times.Once());
+            }
+
+            [TestMethod]
+            [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
+            public void InvalidQuestionDoesNotGenerateMetric()
+            {
+                // Arrange
+                ManageQuestionRequest request = new ManageQuestionRequest { Question = "" };
+
+                // Act
+                _controller.Put(PollManageGuid, request);
+
+                // Assert
+                _metricHandler.Verify(m => m.QuestionChangedEvent(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never());
+            }
         }
 
-        public static ManageQuestionController CreateManageQuestionController(IContextFactory contextFactory)
+        public static ManageQuestionController CreateManageQuestionController(IContextFactory contextFactory, IMetricEventHandler metricHandler)
         {
-            return new ManageQuestionController(contextFactory, null)
+            return new ManageQuestionController(contextFactory, metricHandler)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()

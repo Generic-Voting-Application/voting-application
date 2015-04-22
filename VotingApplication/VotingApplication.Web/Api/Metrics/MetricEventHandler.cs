@@ -87,6 +87,13 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setPollType);
         }
 
+        public void QuestionChangedEvent(string question, Guid pollId)
+        {
+            Event setQuestion = new Event(EventType.SetQuestion, pollId);
+            setQuestion.Detail = question;
+            StoreEvent(setQuestion);
+        }
+
         #region Misc Configuration
 
         public void InviteOnlyChangedEvent(bool inviteOnly, Guid pollId)
