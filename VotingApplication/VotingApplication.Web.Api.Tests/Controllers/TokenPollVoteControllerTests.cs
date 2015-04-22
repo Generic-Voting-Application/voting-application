@@ -11,6 +11,7 @@ using System.Web.Http.ModelBinding;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Validators;
 
@@ -35,6 +36,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Ballot _otherBallot;
 
         private Mock<IVoteValidatorFactory> _mockValidatorFactory;
+        private Mock<IMetricEventHandler> _mockMetricHandler;
 
         [TestInitialize]
         public void setup()
@@ -99,7 +101,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _mockValidatorFactory = new Mock<IVoteValidatorFactory>();
             _mockValidatorFactory.Setup(a => a.CreateValidator(PollType.Basic)).Returns(mockValidator.Object);
 
-            _controller = new PollVoteController(mockContextFactory.Object, null, _mockValidatorFactory.Object);
+            _mockMetricHandler = new Mock<IMetricEventHandler>();
+
+            _controller = new PollVoteController(mockContextFactory.Object, _mockMetricHandler.Object, _mockValidatorFactory.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -251,7 +255,6 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutOnInviteOnlyPollWithUnrecognisedTokenIsForbidden()
         {
             // Arrange
-            var newVote = new Vote() { Option = new Option() { Id = 1 }, Poll = new Poll() { UUID = _tokenUUID } };
             var voteRequests = new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } };
 
             // Act
@@ -262,11 +265,39 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public void PutOnOpenPollWithUnrecognisedTokenIsAllowed()
         {
             // Arrange
-            var newVote = new Vote() { Option = new Option() { Id = 1 }, Poll = new Poll() { UUID = _mainUUID } };
             var voteRequests = new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } };
 
             // Act
             _controller.Put(_mainUUID, Guid.NewGuid(), voteRequests);
+        }
+
+        [TestMethod]
+        public void PutNewVoteGeneratesAddVoteMetric()
+        {
+            // Arrange
+            var voteRequests = new List<VoteRequestModel>() { new VoteRequestModel() { OptionId = 1 } };
+
+            // Act
+            _controller.Put(_mainUUID, Guid.NewGuid(), voteRequests);
+
+            // Assert
+            _mockMetricHandler.Verify(m => m.VoteAddedEvent(It.Is<Vote>(v => v.Option.Id == 1), _mainUUID), Times.Once());
+        }
+
+        [TestMethod]
+        public void ClearingVoteGeneratesRemoveVoteMetric()
+        {
+            // Arrange
+            Guid tokenGuid = Guid.NewGuid();
+            var existingVote = new Vote() { Option = new Option() { Id = 1 }, Poll = new Poll() { UUID = _mainUUID }, Ballot = new Ballot() { TokenGuid = tokenGuid } };
+            _dummyVotes.Add(existingVote);
+            var voteRequests = new List<VoteRequestModel>();
+
+            // Act
+            _controller.Put(_mainUUID, tokenGuid, voteRequests);
+
+            // Assert
+            _mockMetricHandler.Verify(m => m.VoteDeletedEvent(existingVote, _mainUUID), Times.Once());
         }
 
         #endregion

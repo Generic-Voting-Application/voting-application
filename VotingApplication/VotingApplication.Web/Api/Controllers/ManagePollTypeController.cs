@@ -48,6 +48,7 @@ namespace VotingApplication.Web.Api.Controllers
                                                         .ToList();
                 foreach (Vote oldVote in removedVotes)
                 {
+                    _metricHandler.VoteDeletedEvent(oldVote, poll.UUID);
                     context.Votes.Remove(oldVote);
                 }
 

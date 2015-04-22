@@ -144,6 +144,20 @@ namespace VotingApplication.Web.Api.Metrics
 
         #endregion
 
+        #region Votes
+
+        public void VoteAddedEvent(Vote vote, Guid pollId)
+        {
+            // TODO
+        }
+
+        public void VoteDeletedEvent(Vote vote, Guid pollId)
+        {
+            // TODO
+        }
+
+        #endregion
+
         #endregion
 
         #region Accounts

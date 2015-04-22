@@ -128,6 +128,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             foreach (Vote redundantVote in redundantVotes)
             {
+                _metricHandler.VoteDeletedEvent(redundantVote, poll.UUID);
                 context.Votes.Remove(redundantVote);
             }
 

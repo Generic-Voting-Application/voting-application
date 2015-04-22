@@ -10,6 +10,7 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Services;
 
@@ -25,6 +26,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Guid _inviteOnlyPollID;
         private Poll _inviteOnlyPoll;
         private Mock<IInvitationService> _mockInvitationService;
+        private Mock<IMetricEventHandler> _mockMetricHandler;
         private InMemoryDbSet<Vote> _dummyVotes;
         private InMemoryDbSet<Ballot> _dummyBallots;
 
@@ -52,8 +54,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Ballots).Returns(_dummyBallots);
 
             _mockInvitationService = new Mock<IInvitationService>();
+            _mockMetricHandler = new Mock<IMetricEventHandler>();
 
-            _controller = new ManageInvitationController(mockContextFactory.Object, null, _mockInvitationService.Object);
+            _controller = new ManageInvitationController(mockContextFactory.Object, _mockMetricHandler.Object, _mockInvitationService.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -412,6 +415,23 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             CollectionAssert.AreEquivalent(new List<Vote>(), _dummyVotes.Local);
         }
         
+        [TestMethod]
+        public void DeletingTheVotesOfABallotGeneratesAVoteDeletionMetric()
+        {
+            // Arrange
+            Vote voteToRemove = new Vote();
+            Ballot existingBallot = new Ballot() { Votes = new List<Vote> { voteToRemove } };
+            _dummyBallots.Add(existingBallot);
+            _mainPoll.Ballots.Add(existingBallot);
+            _dummyVotes.Add(voteToRemove);
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel>());
+
+            // Assert
+            _mockMetricHandler.Verify(m => m.VoteDeletedEvent(voteToRemove, _mainPoll.UUID), Times.Once());
+        }
+
         #endregion
     }
 }

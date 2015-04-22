@@ -118,6 +118,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                             ThrowError(HttpStatusCode.NotFound, String.Format("Ballot {0} does not contain an option {1}", ballotRequest.BallotManageGuid, voteRequest.OptionNumber));
                         }
 
+                        _metricHandler.VoteDeletedEvent(vote, poll.UUID);
                         ballot.Votes.Remove(vote);
                         context.Votes.Remove(vote);
                     }

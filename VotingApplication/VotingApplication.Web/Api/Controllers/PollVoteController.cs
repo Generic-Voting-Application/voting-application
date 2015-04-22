@@ -141,6 +141,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 foreach (Vote contextVote in existingVotes)
                 {
+                    _metricHandler.VoteDeletedEvent(contextVote, pollId);
                     context.Votes.Remove(contextVote);
                 }
 
@@ -153,6 +154,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                     Vote modelToVote = ModelToVote(voteRequest, ballot, option, poll);
                     context.Votes.Add(modelToVote);
+
+                    _metricHandler.VoteAddedEvent(modelToVote, pollId);
 
                     // TODO: refactor the voteRequest model to be a ballotRequest instead. => only one voterName.
                     ballot.VoterName = voteRequest.VoterName;

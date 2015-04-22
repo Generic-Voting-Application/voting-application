@@ -159,6 +159,7 @@ namespace VotingApplication.Web.Api.Controllers
                         .Include(b => b.Votes)
                         .Single(b => b.Votes.Any(v => v.Id == vote.Id));
 
+                    _metricHandler.VoteDeletedEvent(vote, poll.UUID);
                     ballot.Votes.Remove(vote);
                     context.Votes.Remove(vote);
                 }

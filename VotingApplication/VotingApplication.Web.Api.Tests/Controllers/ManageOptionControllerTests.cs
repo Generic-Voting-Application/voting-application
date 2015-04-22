@@ -589,6 +589,37 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 metricHandler.Verify(m => m.OptionAddedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
                 metricHandler.Verify(m => m.OptionUpdatedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
             }
+
+            [TestMethod]
+            public void DeletingAnOptionWithVotesGeneratesADeleteVoteMetric()
+            {
+                // Arrange
+                var metricHandler = new Mock<IMetricEventHandler>();
+                var polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var votes = DbSetTestHelper.CreateMockDbSet<Vote>();
+                var ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                var contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes);
+                ManageOptionController controller = CreateManageOptionController(contextFactory, metricHandler.Object);
+
+                Poll existingPoll = new Poll { Options = new List<Option>(), UUID = Guid.NewGuid(), ManageId = Guid.NewGuid() };
+                polls.Add(existingPoll);
+
+                Option existingOption = new Option { PollOptionNumber = 1 };
+                existingPoll.Options.Add(existingOption);
+
+                Vote existingVote = new Vote() { Poll = existingPoll, Option = existingOption, VoteValue = 1 };
+                votes.Add(existingVote);
+
+                Ballot existingBallot = new Ballot() { Votes = new List<Vote>() { existingVote } };
+                ballots.Add(existingBallot);
+
+                // Act
+                ManageOptionUpdateRequest request = new ManageOptionUpdateRequest() { Options = new List<OptionUpdate>() };
+                controller.Put(existingPoll.ManageId, request);
+
+                // Assert
+                metricHandler.Verify(m => m.VoteDeletedEvent(existingVote, existingPoll.UUID), Times.Once());
+            }
         }
 
         public static ManageOptionController CreateManageOptionController(IContextFactory contextFactory)
