@@ -9,6 +9,7 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Metrics;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -16,6 +17,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
     public class PollTokenControllerTests
     {
         private PollTokenController _controller;
+        private Mock<IMetricEventHandler> _metricHandler;
         private Guid _mainUUID;
         private Guid _inviteUUID;
         private Poll _mainPoll;
@@ -41,7 +43,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Polls).Returns(dummyPolls);
             mockContext.Setup(a => a.SaveChanges()).Returns(null);
 
-            _controller = new PollTokenController(mockContextFactory.Object, null);
+            _metricHandler = new Mock<IMetricEventHandler>();
+
+            _controller = new PollTokenController(mockContextFactory.Object, _metricHandler.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -100,6 +104,27 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             // Act
             _controller.Get(_inviteUUID);
 
+        }
+
+        [TestMethod]
+        public void GetOnOpenPollGeneratesAddBallotMetric()
+        {
+            // Act
+            Guid newToken = _controller.Get(_mainUUID);
+
+            // Assert
+            _metricHandler.Verify(m => m.BallotAddedEvent(It.Is<Ballot>(b => b.TokenGuid == newToken), _mainUUID), Times.Once());
+        }
+
+        [TestMethod]
+        [ExpectedHttpResponseException(HttpStatusCode.Forbidden)]
+        public void GetOnInvitationOnlyPollDoesNotGenerateAddBallotMetric()
+        {
+            // Act
+            _controller.Get(_inviteUUID);
+
+            // Assert
+            _metricHandler.Verify(m => m.BallotAddedEvent(It.IsAny<Ballot>(), It.IsAny<Guid>()), Times.Never());
         }
 
         #endregion

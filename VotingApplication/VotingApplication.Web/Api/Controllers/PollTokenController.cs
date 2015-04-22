@@ -34,7 +34,10 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     poll.Ballots = new List<Ballot>();
                 }
 
-                poll.Ballots.Add(new Ballot { TokenGuid = newTokenGuid, ManageGuid = Guid.NewGuid() });
+                Ballot newBallot = new Ballot { TokenGuid = newTokenGuid, ManageGuid = Guid.NewGuid() };
+                poll.Ballots.Add(newBallot);
+
+                _metricHandler.BallotAddedEvent(newBallot, pollId);
 
                 context.SaveChanges();
 

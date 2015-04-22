@@ -26,6 +26,9 @@ namespace VotingApplication.Web.Api.Metrics
         void VoteAddedEvent(Vote vote, Guid pollId);
         void VoteDeletedEvent(Vote vote, Guid pollId);
 
+        void BallotAddedEvent(Ballot ballot, Guid pollId);
+        void BallotDeletedEvent(Ballot ballot, Guid pollId);
+
         void LoginEvent();
         void RegisterEvent();
     }
