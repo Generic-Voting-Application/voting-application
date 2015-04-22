@@ -60,18 +60,8 @@
                 <span class="fa fa-cog pull-left" aria-hidden="true"></span>
                 <h4 class="icon-padded-left">
                     Miscellaneous Settings
-                    <span class="pull-right"><a href="{{manageSubPageUrl('InvitationStyle')}}">Edit</a></span>
+                    <span class="pull-right"><a href="{{manageSubPageUrl('Misc')}}">Edit</a></span>
                 </h4>
-            </div>
-            <div class="icon-padded-left">
-                <span ng-if="poll.InviteOnly">Invite Only</span>
-                <span ng-if="!poll.InviteOnly">Open Voting</span>
-                <br />
-                <span ng-if="poll.NamedVoting">Named Voters</span>
-                <span ng-if="!poll.NamedVoting">Anonymous Voters</span>
-                <br />
-                <span>Voters {{poll.OptionAdding ? "can" : "can't"}} add options</span>
-
             </div>
         </div>
         <div class="manage-section">
