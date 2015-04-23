@@ -84,7 +84,7 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
-        public ActionResult ManageInvitationStyle()
+        public ActionResult ManageMisc()
         {
             return View();
         }

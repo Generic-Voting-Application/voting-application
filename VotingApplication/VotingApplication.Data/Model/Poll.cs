@@ -36,6 +36,7 @@ namespace VotingApplication.Data.Model
         public DateTimeOffset? ExpiryDate { get; set; }
 
         public bool OptionAdding { get; set; }
+        public bool HiddenResults { get; set; }
 
         public DateTime LastUpdated { get; set; }
         public DateTime CreatedDate { get; set; }

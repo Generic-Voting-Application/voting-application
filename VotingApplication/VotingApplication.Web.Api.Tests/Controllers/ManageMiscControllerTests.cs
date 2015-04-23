@@ -43,9 +43,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 existingPoll.NamedVoting = false;
                 existingPoll.InviteOnly = false;
                 existingPoll.OptionAdding = false;
+                existingPoll.HiddenResults = false;
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
-                ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = true, NamedVoting = true, OptionAdding = true };
+                ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = true, NamedVoting = true, OptionAdding = true, HiddenResults = true };
 
                 ManageMiscController controller = CreateManageExpiryController(contextFactory);
 
@@ -54,6 +55,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 Assert.IsTrue(existingPoll.InviteOnly);
                 Assert.IsTrue(existingPoll.NamedVoting);
                 Assert.IsTrue(existingPoll.OptionAdding);
+                Assert.IsTrue(existingPoll.HiddenResults);
             }
         }
 
