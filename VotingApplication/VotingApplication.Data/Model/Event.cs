@@ -9,6 +9,7 @@ namespace VotingApplication.Data.Model
         {
             Timestamp = DateTime.Now;
             EventType = eventType.ToString();
+            StatusCode = 200;
             PollId = pollId;
         }
 
@@ -22,6 +23,8 @@ namespace VotingApplication.Data.Model
 
         [Required]
         public Guid PollId { get; set; }
+
+        public int StatusCode { get; set; }
 
         public string Value { get; set; }
         public string Detail { get; set; }

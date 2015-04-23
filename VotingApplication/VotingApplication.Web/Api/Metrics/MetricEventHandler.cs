@@ -23,7 +23,7 @@ namespace VotingApplication.Web.Api.Metrics
         {
             Event errorEvent = new Event(EventType.Error, GetExistingPollId(pollId));
 
-            errorEvent.Value = exception.Response.StatusCode.ToString();
+            errorEvent.StatusCode = (int)exception.Response.StatusCode;
 
             if (exception.Response.RequestMessage != null)
             {
@@ -51,7 +51,7 @@ namespace VotingApplication.Web.Api.Metrics
         public void PageChangeEvent(string route, int statusCode, Guid pollId)
         {
             Event pageChangeEvent = new Event(EventType.GoToPage, GetExistingPollId(pollId));
-            pageChangeEvent.Value = ((HttpStatusCode)statusCode).ToString();
+            pageChangeEvent.StatusCode = statusCode;
             pageChangeEvent.Detail = route;
             StoreEvent(pageChangeEvent);
         }
@@ -59,7 +59,7 @@ namespace VotingApplication.Web.Api.Metrics
         public void ResultsUpdateEvent(HttpStatusCode status, Guid pollId)
         {
             Event updateResultsEvent = new Event(EventType.UpdateResults, pollId);
-            updateResultsEvent.Value = status.ToString();
+            updateResultsEvent.StatusCode = (int)status;
             StoreEvent(updateResultsEvent);
         }
 
@@ -205,14 +205,12 @@ namespace VotingApplication.Web.Api.Metrics
         public void LoginEvent()
         {
             Event loginEvent = new Event(EventType.Login, Guid.Empty);
-            loginEvent.Value = HttpStatusCode.OK.ToString();
             StoreEvent(loginEvent);
         }
 
         public void RegisterEvent()
         {
             Event registerEvent = new Event(EventType.Register, Guid.Empty);
-            registerEvent.Value = HttpStatusCode.OK.ToString();
             StoreEvent(registerEvent);
         }
 
