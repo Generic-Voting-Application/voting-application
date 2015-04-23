@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
@@ -158,7 +159,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     _metricHandler.VoteAddedEvent(modelToVote, pollId);
 
                     // TODO: refactor the voteRequest model to be a ballotRequest instead. => only one voterName.
-                    ballot.VoterName = voteRequest.VoterName;
+                    if (!String.IsNullOrEmpty(voteRequest.VoterName))
+                    {
+                        ballot.VoterName = Regex.Replace(voteRequest.VoterName, @"[^\w\.@ -]", "",
+                                                               RegexOptions.None);
+                    }
+
                 }
 
                 poll.LastUpdated = DateTime.Now;

@@ -45,9 +45,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 existingPoll.NamedVoting = false;
                 existingPoll.InviteOnly = false;
                 existingPoll.OptionAdding = false;
+                existingPoll.HiddenResults = false;
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
-                ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = true, NamedVoting = true, OptionAdding = true };
+                ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = true, NamedVoting = true, OptionAdding = true, HiddenResults = true };
 
                 ManageMiscController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricEventHandler>().Object);
 
@@ -56,6 +57,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 Assert.IsTrue(existingPoll.InviteOnly);
                 Assert.IsTrue(existingPoll.NamedVoting);
                 Assert.IsTrue(existingPoll.OptionAdding);
+                Assert.IsTrue(existingPoll.HiddenResults);
             }
 
             [TestMethod]
@@ -69,9 +71,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 existingPoll.NamedVoting = false;
                 existingPoll.InviteOnly = false;
                 existingPoll.OptionAdding = false;
+                existingPoll.HiddenResults = false;
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
-                ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = true, NamedVoting = true, OptionAdding = true };
+                ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = true, NamedVoting = true, OptionAdding = true, HiddenResults = true };
 
                 Mock<IMetricEventHandler> metricHandler = new Mock<IMetricEventHandler>();
                 ManageMiscController controller = CreateManageExpiryController(contextFactory, metricHandler.Object);
@@ -83,6 +86,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 metricHandler.Verify(m => m.InviteOnlyChangedEvent(true, existingPoll.UUID), Times.Once());
                 metricHandler.Verify(m => m.NamedVotingChangedEvent(true, existingPoll.UUID), Times.Once());
                 metricHandler.Verify(m => m.OptionAddingChangedEvent(true, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.HiddenResultsChangedEvent(true, existingPoll.UUID), Times.Once());
             }
 
             [TestMethod]
@@ -96,9 +100,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 existingPoll.NamedVoting = false;
                 existingPoll.InviteOnly = false;
                 existingPoll.OptionAdding = false;
+                existingPoll.HiddenResults = false;
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
-                ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = false, NamedVoting = false, OptionAdding = false };
+                ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = false, NamedVoting = false, OptionAdding = false, HiddenResults = false };
 
                 Mock<IMetricEventHandler> metricHandler = new Mock<IMetricEventHandler>();
                 ManageMiscController controller = CreateManageExpiryController(contextFactory, metricHandler.Object);
@@ -110,6 +115,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 metricHandler.Verify(m => m.InviteOnlyChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
                 metricHandler.Verify(m => m.NamedVotingChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
                 metricHandler.Verify(m => m.OptionAddingChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.HiddenResultsChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
             }
         }
 

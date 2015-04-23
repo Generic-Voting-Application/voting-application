@@ -15,6 +15,7 @@ namespace VotingApplication.Data.Model
         SetInviteOnly,
         SetNamedVoting,
         SetOptionAdding,
+        SetHiddenResults,
         AddOption,
         UpdateOption,
         DeleteOption,

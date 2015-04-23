@@ -3,12 +3,12 @@
 
     angular
         .module('GVA.Creation')
-        .controller('ManageInvitationStyleController', ManageInvitationStyleController);
+        .controller('ManageMiscController', ManageMiscController);
 
-    ManageInvitationStyleController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];
+    ManageMiscController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];
 
 
-    function ManageInvitationStyleController($scope, $routeParams, $location, ManageService, RoutingService) {
+    function ManageMiscController($scope, $routeParams, $location, ManageService, RoutingService) {
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
@@ -22,7 +22,8 @@
             var miscConfig = {
                 InviteOnly: $scope.poll.InviteOnly,
                 NamedVoting: $scope.poll.NamedVoting,
-                OptionAdding: $scope.poll.OptionAdding
+                OptionAdding: $scope.poll.OptionAdding,
+                HiddenResults: $scope.poll.HiddenResults
             };
 
             ManageService.updatePollMisc($routeParams.manageId, miscConfig, navigateToManagePage);

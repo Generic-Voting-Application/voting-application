@@ -26,9 +26,9 @@
                         return '../Routes/ManageInvitees/' + params['manageId'];
                     }
                 })
-                .when('/Manage/:manageId/InvitationStyle', {
+                .when('/Manage/:manageId/Misc', {
                     templateUrl: function (params) {
-                        return '../Routes/ManageInvitationStyle/' + params['manageId'];
+                        return '../Routes/ManageMisc/' + params['manageId'];
                     }
                 })
                 .when('/Manage/:manageId/Voters', {

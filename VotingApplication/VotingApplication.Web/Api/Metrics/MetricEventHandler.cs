@@ -124,6 +124,13 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setAllowOptionAdding);
         }
 
+        public void HiddenResultsChangedEvent(bool hiddenResults, Guid pollId)
+        {
+            Event setHiddenResults = new Event(EventType.SetHiddenResults, pollId);
+            setHiddenResults.Detail = (hiddenResults) ? "Results hidden before voting" : "Results visible before voting";
+            StoreEvent(setHiddenResults);
+        }
+
         #endregion
 
         #region Options

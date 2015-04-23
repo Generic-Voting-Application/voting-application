@@ -10,5 +10,7 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
         public bool NamedVoting { get; set; }
         [Required]
         public bool OptionAdding { get; set; }
+        [Required]
+        public bool HiddenResults { get; set; }
     }
 }

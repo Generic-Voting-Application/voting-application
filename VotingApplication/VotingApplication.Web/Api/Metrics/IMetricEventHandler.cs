@@ -20,6 +20,7 @@ namespace VotingApplication.Web.Api.Metrics
         void InviteOnlyChangedEvent(bool inviteOnly, Guid pollId);
         void NamedVotingChangedEvent(bool namedVoting, Guid pollId);
         void OptionAddingChangedEvent(bool optionAdding, Guid pollId);
+        void HiddenResultsChangedEvent(bool hiddenResults, Guid pollId);
         void QuestionChangedEvent(string question, Guid pollId);
 
         void OptionAddedEvent(Option option, Guid pollId);
