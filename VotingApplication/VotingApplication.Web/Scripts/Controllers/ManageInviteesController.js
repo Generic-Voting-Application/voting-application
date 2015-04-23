@@ -98,9 +98,13 @@
         }
 
         function sendInvitations() {
-            $scope.sendingInvitations = true;
+            if ($scope.sendingInvitations) {
+                return;
+            }
 
-            var existingInvitations = $scope.Invitations.map(function (d) {
+            $scope.sendingInvitations = true;
+            
+            var existingInvitations = $scope.invitedUsers.map(function (d) {
                 d.SendInvitation = false;
                 return d;
             });
@@ -113,11 +117,11 @@
             var invitations = existingInvitations.concat(newInvitations);
 
             ManageService.sendInvitations($scope.manageId, invitations, function () {
-                $scope.sendingInvitations = false;
-
                 // We don't just do ManageService.getPoll, because we want to maintain any deleted "Invited" voters which have not yet been saved
                 $scope.invitedUsers = $scope.invitedUsers.concat($scope.pendingUsers);
                 $scope.pendingUsers = [];
+
+                $scope.sendingInvitations = false;
             }, function () {
                 $scope.sendingInvitations = false;
             });
@@ -126,12 +130,8 @@
         function updatePoll() {
             // Apply pending change
             addInvitee($scope.inviteString);
-
-            var invitations = $scope.invitedUsers.concat($scope.pendingUsers);
-
-            ManageService.sendInvitations($scope.manageId, invitations, function () {
-                returnToManage();
-            });
+            sendInvitations();
+            returnToManage();
         }
 
         function filterUsersByPending() {
