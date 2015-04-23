@@ -11,6 +11,7 @@ namespace VotingApplication.Data.Model
         Error,
         GoToPage,
         CreatePoll,
+        ClonePoll,
         UpdateResults,
         SetExpiry,
         SetPollType,

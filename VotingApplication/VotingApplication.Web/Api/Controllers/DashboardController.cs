@@ -87,6 +87,8 @@ namespace VotingApplication.Web.Api.Controllers
 
                 Poll newPoll = CopyPoll(pollToCopy);
 
+                _metricHandler.PollClonedEvent(newPoll);
+
                 context.Polls.Add(newPoll);
                 context.SaveChanges();
 

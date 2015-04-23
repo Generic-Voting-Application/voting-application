@@ -74,6 +74,14 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(pollCreatedEvent);
         }
 
+        public void PollClonedEvent(Poll poll)
+        {
+            Event pollClonedEvent = new Event(EventType.ClonePoll, poll.UUID);
+            pollClonedEvent.Value = poll.Name;
+            pollClonedEvent.Detail = new JavaScriptSerializer().Serialize(poll);
+            StoreEvent(pollClonedEvent);
+        }
+
         #region Poll Configuration
 
         public void ExpiryChangedEvent(DateTimeOffset? expiry, Guid pollId)

@@ -13,7 +13,9 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
+using VotingApplication.Web.Api.Tests.TestHelpers;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
 {
@@ -330,6 +332,26 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 Assert.AreEqual(copiedPoll.UUID, response.newPollId);
                 Assert.AreEqual(copiedPoll.ManageId, response.newManageId);
             }
+
+            [TestMethod]
+            public void CopyPollGeneratesAMetric()
+            {
+                // Arrange
+                Poll existingPoll = new Poll() { CreatorIdentity = UserId1, UUID = Guid.NewGuid(), Name = "Existing Poll" };
+                var polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                polls.Add(existingPoll);
+
+                IContextFactory contextFactory = CreateContextFactory(polls);
+                var metricHandler = new Mock<IMetricEventHandler>();
+                DashboardController controller = CreateDashboardController(contextFactory, metricHandler.Object);
+                controller.User = CreateAuthenticatedUser(UserId1);
+
+                // Act
+                controller.Copy(new CopyPollRequestModel() { UUIDToCopy = existingPoll.UUID });
+
+                // Assert
+                metricHandler.Verify(m => m.PollClonedEvent(It.Is<Poll>(p => p.Name == "Copy of Existing Poll" && p.UUID != Guid.Empty)), Times.Once());
+            }
         }
 
         private static IContextFactory CreateContextFactory(IDbSet<Poll> polls)
@@ -348,7 +370,13 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         public DashboardController CreateDashboardController(IContextFactory contextFactory)
         {
-            return new DashboardController(contextFactory, null)
+            var metricHandler = new Mock<IMetricEventHandler>();
+            return CreateDashboardController(contextFactory, metricHandler.Object);
+        }
+
+        public DashboardController CreateDashboardController(IContextFactory contextFactory, IMetricEventHandler metricHandler)
+        {
+            return new DashboardController(contextFactory, metricHandler)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()

@@ -13,6 +13,7 @@ namespace VotingApplication.Web.Api.Metrics
         void ErrorEvent(HttpResponseException exception, Guid pollId);
 
         void PollCreatedEvent(Poll poll);
+        void PollClonedEvent(Poll poll);
         void ResultsUpdateEvent(HttpStatusCode status, Guid pollId);
 
         void ExpiryChangedEvent(DateTimeOffset? expiry, Guid pollId);
