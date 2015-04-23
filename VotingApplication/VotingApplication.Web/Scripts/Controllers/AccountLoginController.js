@@ -17,7 +17,10 @@
             clearError();
 
             AccountService.login(form.email, form.password)
-                .then(closeDialog)
+                .then(function () {
+                    closeDialog();
+                    window.location.reload();
+                })
                 .catch(displayErrorMessage);
         }
 

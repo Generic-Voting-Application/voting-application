@@ -25,6 +25,7 @@
         $scope.logoutIdentity = IdentityService.clearIdentityName;
         $scope.gvaExpiredCallback = redirectIfExpired;
         $scope.submitVote = submitVote;
+        $scope.clearVote = clearVote;
 
         var getVotes = function () { return []; };
         $scope.setVoteCallback = function (votesFunc) { getVotes = votesFunc; };
@@ -100,6 +101,17 @@
             });
         }
 
+        function clearVote() {
+            if (!$scope.token || $scope.token.length === 0) {
+                // TODO: Inform the user that they somehow don't have a token
+                return;
+            }
+
+            VoteService.submitVote($scope.pollId, [], $scope.token, function () {
+                RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
+            });
+        }
+
         function submitVote(options) {
             if (!options) {
                 return null;
@@ -119,7 +131,7 @@
             var votes = getVotes(options);
 
             VoteService.submitVote($scope.pollId, votes, $scope.token, function () {
-                RoutingService.navigateToResultsPage($scope.pollId);
+                RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
             });
         }
 

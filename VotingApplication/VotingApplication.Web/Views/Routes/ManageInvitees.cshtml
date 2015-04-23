@@ -1,5 +1,5 @@
 ﻿<div ng-app="GVA.Creation" ng-controller="ManageInviteesController">
-    <div class="centered">
+    <div class="manage-area centered">
         <h2>Poll Invitees</h2>
 
         <h4>Invited</h4>
@@ -10,10 +10,12 @@
                 <span class="fa fa-times invitee-pill-delete" ng-click="deleteInvitedVoter(invitee)" aria-hidden="true"></span>
             </div>
         </div>
-                
+
         <h4>Pending</h4>
-        <input id="new-invitee" name="new-invitee" ng-model="inviteString" ng-change="emailUpdated()" ng-trim="false" />
-        <span class="fa fa-plus clickable" ng-click="addInvitee(inviteString);"></span>
+        <form ng-submit="inviteString = inviteString + '\n'; emailUpdated()">
+            <input id="new-invitee" name="new-invitee" ng-model="inviteString" ng-change="emailUpdated()" ng-trim="false" />
+            <span class="fa fa-plus clickable" ng-click="addInvitee(inviteString);"></span>
+        </form>
         <p ng-if="pendingUsers.length === 0">No pending invitations</p>
         <div class="pill-box">
             <div class="invitee-pill" ng-repeat="pending in pendingUsers">
