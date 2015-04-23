@@ -52,8 +52,6 @@
                 for (var i = 0; i < newEmails.length; i++) {
                     addInvitee(newEmails[i]);
                 }
-
-                $scope.$apply();
             }
         }
 
@@ -130,8 +128,14 @@
         function updatePoll() {
             // Apply pending change
             addInvitee($scope.inviteString);
-            sendInvitations();
-            returnToManage();
+
+            var invitations = $scope.invitedUsers.concat($scope.pendingUsers);
+
+            invitations.map(function (d) {
+                d.SendInvitation = false;
+            });
+
+            ManageService.sendInvitations($scope.manageId, invitations, $scope.discardChanges);
         }
 
         function filterUsersByPending() {
@@ -169,16 +173,6 @@
             });
 
             filterUsersByPending();
-
-            var inputField = document.getElementById('new-invitee');
-            if (inputField) {
-                inputField.addEventListener('keydown', function (e) {
-                    if (e.keyCode === 13) { // User pressed "return key"
-                        $scope.inviteString += '\n';
-                        emailUpdated();
-                    }
-                });
-            }
         }
     }
 })();
