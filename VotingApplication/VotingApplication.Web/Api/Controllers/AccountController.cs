@@ -425,7 +425,7 @@ namespace VotingApplication.Web.Controllers
                 return createResult;
             }
 
-            _metricHandler.RegisterEvent();
+            _metricHandler.RegisterEvent(user.UserName);
 
             return Ok();
         }

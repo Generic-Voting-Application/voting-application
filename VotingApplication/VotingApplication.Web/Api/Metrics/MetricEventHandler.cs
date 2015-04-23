@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Http;
+using System.Web.Script.Serialization;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 
@@ -68,7 +69,8 @@ namespace VotingApplication.Web.Api.Metrics
         public void PollCreatedEvent(Poll poll)
         {
             Event pollCreatedEvent = new Event(EventType.CreatePoll, poll.UUID);
-            pollCreatedEvent.Detail = poll.Name;
+            pollCreatedEvent.Value = poll.Name;
+            pollCreatedEvent.Detail = new JavaScriptSerializer().Serialize(poll);
             StoreEvent(pollCreatedEvent);
         }
 
@@ -77,18 +79,18 @@ namespace VotingApplication.Web.Api.Metrics
         public void ExpiryChangedEvent(DateTimeOffset? expiry, Guid pollId)
         {
             Event setExpiryEvent = new Event(EventType.SetExpiry, pollId);
-            setExpiryEvent.Detail = (expiry != null) ? expiry.ToString() : "Never";
+            setExpiryEvent.Value = (expiry != null) ? expiry.ToString() : "Never";
             StoreEvent(setExpiryEvent);
         }
 
         public void PollTypeChangedEvent(PollType pollType, int maxPerVote, int maxPerPoll, Guid pollId)
         {
             Event setPollType = new Event(EventType.SetPollType, pollId);
-            setPollType.Detail = pollType.ToString();
+            setPollType.Value = pollType.ToString();
 
             if (pollType == PollType.Points)
             {
-                setPollType.Detail += " (" + maxPerPoll + "/" + maxPerVote + ")";
+                setPollType.Detail = "{ MaxPerPoll: " + maxPerPoll + ", MaxPerVote: " + maxPerVote + " }";
             }
 
             StoreEvent(setPollType);
@@ -97,7 +99,7 @@ namespace VotingApplication.Web.Api.Metrics
         public void QuestionChangedEvent(string question, Guid pollId)
         {
             Event setQuestion = new Event(EventType.SetQuestion, pollId);
-            setQuestion.Detail = question;
+            setQuestion.Value = question;
             StoreEvent(setQuestion);
         }
 
@@ -106,6 +108,7 @@ namespace VotingApplication.Web.Api.Metrics
         public void InviteOnlyChangedEvent(bool inviteOnly, Guid pollId)
         {
             Event setInviteOnly = new Event(EventType.SetInviteOnly, pollId);
+            setInviteOnly.Value = (inviteOnly) ? "True" : "False";
             setInviteOnly.Detail = (inviteOnly) ? "Invite-Only" : "Open Poll";
             StoreEvent(setInviteOnly);
         }
@@ -113,6 +116,7 @@ namespace VotingApplication.Web.Api.Metrics
         public void NamedVotingChangedEvent(bool namedVoting, Guid pollId)
         {
             Event setNamedVoting = new Event(EventType.SetNamedVoting, pollId);
+            setNamedVoting.Value = (namedVoting) ? "True" : "False";
             setNamedVoting.Detail = (namedVoting) ? "Named Voters" : "Anonymous Voters";
             StoreEvent(setNamedVoting);
         }
@@ -120,6 +124,7 @@ namespace VotingApplication.Web.Api.Metrics
         public void OptionAddingChangedEvent(bool optionAdding, Guid pollId)
         {
             Event setAllowOptionAdding = new Event(EventType.SetOptionAdding, pollId);
+            setAllowOptionAdding.Value = (optionAdding) ? "True" : "False";
             setAllowOptionAdding.Detail = (optionAdding) ? "Voter Option Adding" : "No Voter Option Adding";
             StoreEvent(setAllowOptionAdding);
         }
@@ -127,6 +132,7 @@ namespace VotingApplication.Web.Api.Metrics
         public void HiddenResultsChangedEvent(bool hiddenResults, Guid pollId)
         {
             Event setHiddenResults = new Event(EventType.SetHiddenResults, pollId);
+            setHiddenResults.Value = (hiddenResults) ? "True" : "False";
             setHiddenResults.Detail = (hiddenResults) ? "Results hidden before voting" : "Results visible before voting";
             StoreEvent(setHiddenResults);
         }
@@ -138,22 +144,25 @@ namespace VotingApplication.Web.Api.Metrics
         public void OptionAddedEvent(Option option, Guid pollId)
         {
             Event optionAddedEvent = new Event(EventType.AddOption, pollId);
-            optionAddedEvent.Detail = string.Format("#{0} '{1}': '{2}'", option.PollOptionNumber, option.Name, option.Description);
+            optionAddedEvent.Value = option.Name;
+            optionAddedEvent.Detail = string.Format("#{0} '{1}'", option.PollOptionNumber, option.Description);
             StoreEvent(optionAddedEvent);
         }
 
         public void OptionUpdatedEvent(Option option, Guid pollId)
         {
             Event optionUpdatedEvent = new Event(EventType.UpdateOption, pollId);
-            optionUpdatedEvent.Detail = string.Format("#{0} '{1}': '{2}'", option.PollOptionNumber, option.Name, option.Description);
+            optionUpdatedEvent.Value = option.Name;
+            optionUpdatedEvent.Detail = string.Format("#{0} '{1}'", option.PollOptionNumber, option.Description);
             StoreEvent(optionUpdatedEvent);
         }
 
         public void OptionDeletedEvent(Option option, Guid pollId)
         {
-            Event optionAddedEvent = new Event(EventType.DeleteOption, pollId);
-            optionAddedEvent.Detail = string.Format("#{0} '{1}': '{2}'", option.PollOptionNumber, option.Name, option.Description);
-            StoreEvent(optionAddedEvent);
+            Event optionDeletedEvent = new Event(EventType.DeleteOption, pollId);
+            optionDeletedEvent.Value = option.Name;
+            optionDeletedEvent.Detail = string.Format("#{0} '{1}'", option.PollOptionNumber, option.Description);
+            StoreEvent(optionDeletedEvent);
         }
 
         #endregion
@@ -202,15 +211,17 @@ namespace VotingApplication.Web.Api.Metrics
 
         #region Accounts
 
-        public void LoginEvent()
+        public void LoginEvent(string username)
         {
             Event loginEvent = new Event(EventType.Login, Guid.Empty);
+            loginEvent.Value = username;
             StoreEvent(loginEvent);
         }
 
-        public void RegisterEvent()
+        public void RegisterEvent(string username)
         {
             Event registerEvent = new Event(EventType.Register, Guid.Empty);
+            registerEvent.Value = username;
             StoreEvent(registerEvent);
         }
 

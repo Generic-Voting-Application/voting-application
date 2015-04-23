@@ -33,7 +33,7 @@ namespace VotingApplication.Web.Api.Metrics
         void BallotAddedEvent(Ballot ballot, Guid pollId);
         void BallotDeletedEvent(Ballot ballot, Guid pollId);
 
-        void LoginEvent();
-        void RegisterEvent();
+        void LoginEvent(string username);
+        void RegisterEvent(string username);
     }
 }
