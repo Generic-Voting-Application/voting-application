@@ -74,7 +74,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Name = poll.Name,
                 NamedVoting = poll.NamedVoting,
                 ExpiryDate = poll.ExpiryDate,
-                OptionAdding = poll.OptionAdding
+                OptionAdding = poll.OptionAdding,
+                HiddenResults = poll.HiddenResults
             };
         }
 
