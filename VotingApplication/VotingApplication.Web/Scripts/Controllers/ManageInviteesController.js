@@ -5,10 +5,10 @@
         .module('GVA.Creation')
         .controller('ManageInviteesController', ManageInviteesController);
 
-    ManageInviteesController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];
+    ManageInviteesController.$inject = ['$scope', '$routeParams', 'ManageService', 'RoutingService'];
 
 
-    function ManageInviteesController($scope, $routeParams, $location, ManageService, RoutingService) {
+    function ManageInviteesController($scope, $routeParams, ManageService, RoutingService) {
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
@@ -171,12 +171,14 @@
             filterUsersByPending();
 
             var inputField = document.getElementById('new-invitee');
-            inputField.addEventListener('keydown', function (e) {
-                if (e.keyCode === 13) { // User pressed "return key"
-                    $scope.inviteString += '\n';
-                    emailUpdated();
-                }
-            });
+            if (inputField) {
+                inputField.addEventListener('keydown', function (e) {
+                    if (e.keyCode === 13) { // User pressed "return key"
+                        $scope.inviteString += '\n';
+                        emailUpdated();
+                    }
+                });
+            }
         }
     }
 })();
