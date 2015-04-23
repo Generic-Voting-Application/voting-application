@@ -5,10 +5,10 @@
         .module('GVA.Creation')
         .controller('ManageInviteesController', ManageInviteesController);
 
-    ManageInviteesController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];
+    ManageInviteesController.$inject = ['$scope', '$routeParams', 'ManageService', 'RoutingService'];
 
 
-    function ManageInviteesController($scope, $routeParams, $location, ManageService, RoutingService) {
+    function ManageInviteesController($scope, $routeParams, ManageService, RoutingService) {
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
@@ -52,8 +52,6 @@
                 for (var i = 0; i < newEmails.length; i++) {
                     addInvitee(newEmails[i]);
                 }
-
-                $scope.$apply();
             }
         }
 
@@ -98,9 +96,13 @@
         }
 
         function sendInvitations() {
-            $scope.sendingInvitations = true;
+            if ($scope.sendingInvitations) {
+                return;
+            }
 
-            var existingInvitations = $scope.Invitations.map(function (d) {
+            $scope.sendingInvitations = true;
+            
+            var existingInvitations = $scope.invitedUsers.map(function (d) {
                 d.SendInvitation = false;
                 return d;
             });
@@ -113,11 +115,11 @@
             var invitations = existingInvitations.concat(newInvitations);
 
             ManageService.sendInvitations($scope.manageId, invitations, function () {
-                $scope.sendingInvitations = false;
-
                 // We don't just do ManageService.getPoll, because we want to maintain any deleted "Invited" voters which have not yet been saved
                 $scope.invitedUsers = $scope.invitedUsers.concat($scope.pendingUsers);
                 $scope.pendingUsers = [];
+
+                $scope.sendingInvitations = false;
             }, function () {
                 $scope.sendingInvitations = false;
             });
@@ -129,9 +131,11 @@
 
             var invitations = $scope.invitedUsers.concat($scope.pendingUsers);
 
-            ManageService.sendInvitations($scope.manageId, invitations, function () {
-                returnToManage();
+            invitations.map(function (d) {
+                d.SendInvitation = false;
             });
+
+            ManageService.sendInvitations($scope.manageId, invitations, $scope.discardChanges);
         }
 
         function filterUsersByPending() {
@@ -169,14 +173,6 @@
             });
 
             filterUsersByPending();
-
-            var inputField = document.getElementById('new-invitee');
-            inputField.addEventListener('keydown', function (e) {
-                if (e.keyCode === 13) { // User pressed "return key"
-                    $scope.inviteString += '\n';
-                    emailUpdated();
-                }
-            });
         }
     }
 })();
