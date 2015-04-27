@@ -34,7 +34,7 @@ namespace VotingApplication.Web
                 TokenEndpointPath = new PathString("/Token"),
                 Provider = new ApplicationOAuthProvider(PublicClientId),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromSeconds(60),//TimeSpan.FromDays(14),
+                AccessTokenExpireTimeSpan = TimeSpan.FromDays(14),
                 AllowInsecureHttp = true
             };
 
