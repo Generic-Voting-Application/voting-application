@@ -92,13 +92,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             int resultsMax = results.Max(r => r.Sum);
 
-            summary.Winners = results.
-                              Where(r => r.Sum == resultsMax)
+            summary.Winners = results
+                              .Where(r => r.Sum == resultsMax)
                               .Select(r => r.Option)
                               .ToList();
 
-            summary.Results = results.
-                              Select(r => ResultToModel(r.Option, r.Sum, r.Voters.ToList<ResultVoteModel>()))
+            summary.Results = results
+                              .Select(r => ResultToModel(r.Option, r.Sum, r.Voters.ToList<ResultVoteModel>()))
                               .ToList();
             return summary;
         }
