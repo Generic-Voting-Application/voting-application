@@ -30,7 +30,7 @@ namespace VotingApplication.Web.Api.Controllers
         public WebApiController(IContextFactory contextFactory, IMetricHandler metricHandler)
         {
             _contextFactory = contextFactory;
-            _metricHandler = metricHandler;
+            _metricHandler = metricHandler ?? new EmptyMetricHandler();
         }
 
         public void ThrowError(HttpStatusCode statusCode)
@@ -64,10 +64,7 @@ namespace VotingApplication.Web.Api.Controllers
             ILogger logger = LoggerFactory.GetLogger();
             logger.Log(exception);
 
-            if (_metricHandler != null)
-            {
-                _metricHandler.ErrorEvent(exception, CurrentPollId());
-            }
+            _metricHandler.ErrorEvent(exception, CurrentPollId());
 
             throw exception;
         }
