@@ -40,7 +40,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(errorEvent);
         }
 
-        private string ErrorDetailFromRequestMessage(HttpRequestMessage request)
+        private static string ErrorDetailFromRequestMessage(HttpRequestMessage request)
         {
             string apiRoute = request.Method + " " + request.RequestUri;
             string requestPayload = GetPayload(request);
@@ -89,7 +89,14 @@ namespace VotingApplication.Web.Api.Metrics
         public void HandleExpiryChangedEvent(DateTimeOffset? expiry, Guid pollId)
         {
             Metric setExpiryEvent = new Metric(MetricType.SetExpiry, pollId);
-            setExpiryEvent.Value = (expiry != null) ? expiry.ToString() : "Never";
+            if (expiry == null)
+            {
+                setExpiryEvent.Value = "Never";
+            }
+            else
+            {
+                setExpiryEvent.Value = string.Format("{0:dd/MM/yyyy HH:mm:ss zzz}", expiry);
+            }
             StoreEvent(setExpiryEvent);
         }
 
@@ -239,7 +246,7 @@ namespace VotingApplication.Web.Api.Metrics
 
         #region Utilities
 
-        private string GetPayload(HttpRequestMessage request)
+        private static string GetPayload(HttpRequestMessage request)
         {
             var requestContext = request.Properties["MS_RequestContext"];
             HttpRequestWrapper webRequest = requestContext.GetType().GetProperty("WebRequest").GetValue(requestContext) as HttpRequestWrapper;
@@ -260,8 +267,14 @@ namespace VotingApplication.Web.Api.Metrics
             // Find corresponding pollId for manageId
             using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Poll matchingPoll = context.Polls.Where(p => p.UUID == guid || p.ManageId == guid).SingleOrDefault();
-                return (matchingPoll != null) ? matchingPoll.UUID : Guid.Empty;
+                Poll matchingPoll = context.Polls.SingleOrDefault(p => p.UUID == guid || p.ManageId == guid);
+
+                if (matchingPoll == null)
+                {
+                    return Guid.Empty;
+                }
+
+                return matchingPoll.UUID;
             }
         }
 

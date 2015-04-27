@@ -17,7 +17,7 @@ namespace VotingApplication.Web.Controllers
 
         public RoutesController(IMetricHandler metricHandler)
         {
-            _metricHandler = metricHandler;
+            _metricHandler = metricHandler ?? new EmptyMetricHandler();
         }
 
         private void LogPageEvent(string route)
