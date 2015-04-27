@@ -23,7 +23,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         public class PutTests : ManageQuestionControllerTests
         {
             private ManageQuestionController _controller;
-            private Mock<IMetricEventHandler> _metricHandler;
+            private Mock<IMetricHandler> _metricHandler;
             private Poll _existingPoll;
 
             [TestInitialize]
@@ -34,7 +34,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 existingPolls.Add(_existingPoll);
 
-                _metricHandler = new Mock<IMetricEventHandler>();
+                _metricHandler = new Mock<IMetricHandler>();
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 _controller = CreateManageQuestionController(contextFactory, _metricHandler.Object);
@@ -135,7 +135,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             }
         }
 
-        public static ManageQuestionController CreateManageQuestionController(IContextFactory contextFactory, IMetricEventHandler metricHandler)
+        public static ManageQuestionController CreateManageQuestionController(IContextFactory contextFactory, IMetricHandler metricHandler)
         {
             return new ManageQuestionController(contextFactory, metricHandler)
             {

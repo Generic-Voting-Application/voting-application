@@ -17,7 +17,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
     public class PollTokenControllerTests
     {
         private PollTokenController _controller;
-        private Mock<IMetricEventHandler> _metricHandler;
+        private Mock<IMetricHandler> _metricHandler;
         private Guid _mainUUID;
         private Guid _inviteUUID;
         private Poll _mainPoll;
@@ -43,7 +43,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Polls).Returns(dummyPolls);
             mockContext.Setup(a => a.SaveChanges()).Returns(null);
 
-            _metricHandler = new Mock<IMetricEventHandler>();
+            _metricHandler = new Mock<IMetricHandler>();
 
             _controller = new PollTokenController(mockContextFactory.Object, _metricHandler.Object);
             _controller.Request = new HttpRequestMessage();

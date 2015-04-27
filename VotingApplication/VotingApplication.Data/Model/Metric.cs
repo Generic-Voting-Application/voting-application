@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace VotingApplication.Data.Model
 {
-    public class Event
+    public class Metric
     {
-        public Event(EventType eventType, Guid pollId)
+        public Metric(MetricType metricType, Guid pollId)
         {
             Timestamp = DateTime.Now;
-            EventType = eventType.ToString();
+            MetricType = metricType.ToString();
             StatusCode = 200;
             PollId = pollId;
         }
@@ -19,7 +19,7 @@ namespace VotingApplication.Data.Model
         public DateTime Timestamp { get; set; }
 
         [Required]
-        public string EventType { get; set; }
+        public string MetricType { get; set; }
 
         [Required]
         public Guid PollId { get; set; }

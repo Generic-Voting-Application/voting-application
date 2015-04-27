@@ -135,7 +135,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 // Arrange
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
-                var metricHandler = new Mock<IMetricEventHandler>();
+                var metricHandler = new Mock<IMetricHandler>();
                 PollOptionController controller = CreatePollOptionController(contextFactory, metricHandler.Object);
 
                 Poll existingPoll = new Poll() { Options = new List<Option>(), UUID = Guid.NewGuid(), OptionAdding = true };
@@ -152,11 +152,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             public static PollOptionController CreatePollOptionController(IContextFactory contextFactory)
             {
-                var metricHandler = new Mock<IMetricEventHandler>();
+                var metricHandler = new Mock<IMetricHandler>();
                 return CreatePollOptionController(contextFactory, metricHandler.Object);
             }
 
-            public static PollOptionController CreatePollOptionController(IContextFactory contextFactory, IMetricEventHandler metricHandler)
+            public static PollOptionController CreatePollOptionController(IContextFactory contextFactory, IMetricHandler metricHandler)
             {
                 return new PollOptionController(contextFactory, metricHandler)
                 {

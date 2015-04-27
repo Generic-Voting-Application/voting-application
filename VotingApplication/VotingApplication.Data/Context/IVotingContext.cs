@@ -10,7 +10,7 @@ namespace VotingApplication.Data.Context
         IDbSet<Vote> Votes { get; set; }
         IDbSet<Poll> Polls { get; set; }
         IDbSet<Ballot> Ballots { get; set; }
-        IDbSet<Event> Events { get; set; }
+        IDbSet<Metric> Metrics { get; set; }
 
         int SaveChanges();
     }

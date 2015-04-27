@@ -429,7 +429,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 ballots.Add(ballot);
                 votes.Add(voteToClear);
 
-                var metricHandler = new Mock<IMetricEventHandler>();
+                var metricHandler = new Mock<IMetricHandler>();
                 var contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes, options);
                 ManageVoterController controller = CreateManageVoteController(contextFactory, metricHandler.Object);
 
@@ -615,11 +615,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         public static ManageVoterController CreateManageVoteController(IContextFactory contextFactory)
         {
-            var metricHandler = new Mock<IMetricEventHandler>();
+            var metricHandler = new Mock<IMetricHandler>();
             return CreateManageVoteController(contextFactory, metricHandler.Object);
         }
 
-        public static ManageVoterController CreateManageVoteController(IContextFactory contextFactory, IMetricEventHandler metricHandler)
+        public static ManageVoterController CreateManageVoteController(IContextFactory contextFactory, IMetricHandler metricHandler)
         {
             return new ManageVoterController(contextFactory, metricHandler)
             {

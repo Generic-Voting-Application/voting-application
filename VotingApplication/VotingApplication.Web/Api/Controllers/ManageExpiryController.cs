@@ -13,7 +13,7 @@ namespace VotingApplication.Web.Api.Controllers
     {
         public ManageExpiryController() : base() { }
 
-        public ManageExpiryController(IContextFactory contextFactory, IMetricEventHandler metricHandler) : base(contextFactory, metricHandler) { }
+        public ManageExpiryController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpPut]
         public void Put(Guid manageId, ManagePollExpiryRequest updateRequest)

@@ -242,8 +242,8 @@
     <Compile Include="Api\Controllers\ManageExpiryController.cs" />
     <Compile Include="Api\Controllers\ManageInvitationController.cs" />
     <Compile Include="Api\Controllers\ManageOptionController.cs" />
-    <Compile Include="Api\Metrics\IMetricEventHandler.cs" />
-    <Compile Include="Api\Metrics\MetricEventHandler.cs" />
+    <Compile Include="Api\Metrics\IMetricHandler.cs" />
+    <Compile Include="Api\Metrics\MetricHandler.cs" />
     <Compile Include="Api\Models\DBViewModels\ManageOptionResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManageOptionUpdateRequest.cs" />
     <Compile Include="Api\Controllers\ManageVoterController.cs" />

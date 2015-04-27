@@ -75,7 +75,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Options).Returns(dummyOptions);
             mockContext.Setup(a => a.Polls).Returns(dummyPolls);
 
-            var mockMetricHandler = new Mock<IMetricEventHandler>();
+            var mockMetricHandler = new Mock<IMetricHandler>();
 
             _controller = new PollResultsController(mockContextFactory.Object, mockMetricHandler.Object);
             _controller.Request = new HttpRequestMessage();

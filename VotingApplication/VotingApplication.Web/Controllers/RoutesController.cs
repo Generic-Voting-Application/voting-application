@@ -7,15 +7,15 @@ namespace VotingApplication.Web.Controllers
 {
     public class RoutesController : Controller
     {
-        private IMetricEventHandler _metricHandler;
+        private IMetricHandler _metricHandler;
 
         public RoutesController()
         {
             var ContextFactory = new ContextFactory();
-            _metricHandler = new MetricEventHandler(ContextFactory);
+            _metricHandler = new MetricHandler(ContextFactory);
         }
 
-        public RoutesController(IMetricEventHandler metricHandler)
+        public RoutesController(IMetricHandler metricHandler)
         {
             _metricHandler = metricHandler;
         }

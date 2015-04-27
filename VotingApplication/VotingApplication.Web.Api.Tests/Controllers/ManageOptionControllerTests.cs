@@ -519,7 +519,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             public void AddingAnOptionGeneratesAnAddOptionMetric()
             {
                 // Arrange
-                var metricHandler = new Mock<IMetricEventHandler>();
+                var metricHandler = new Mock<IMetricHandler>();
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
                 ManageOptionController controller = CreateManageOptionController(contextFactory, metricHandler.Object);
@@ -543,7 +543,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             public void UpdatingAnOptionGeneratesAnUpdateOptionMetric()
             {
                 // Arrange
-                var metricHandler = new Mock<IMetricEventHandler>();
+                var metricHandler = new Mock<IMetricHandler>();
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
                 ManageOptionController controller = CreateManageOptionController(contextFactory, metricHandler.Object);
@@ -569,7 +569,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             public void DeletingAnOptionGeneratesADeleteOptionMetric()
             {
                 // Arrange
-                var metricHandler = new Mock<IMetricEventHandler>();
+                var metricHandler = new Mock<IMetricHandler>();
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
                 ManageOptionController controller = CreateManageOptionController(contextFactory, metricHandler.Object);
@@ -594,7 +594,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             public void DeletingAnOptionWithVotesGeneratesADeleteVoteMetric()
             {
                 // Arrange
-                var metricHandler = new Mock<IMetricEventHandler>();
+                var metricHandler = new Mock<IMetricHandler>();
                 var polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var votes = DbSetTestHelper.CreateMockDbSet<Vote>();
                 var ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
@@ -624,11 +624,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         public static ManageOptionController CreateManageOptionController(IContextFactory contextFactory)
         {
-            var metricHandler = new Mock<IMetricEventHandler>();
+            var metricHandler = new Mock<IMetricHandler>();
             return CreateManageOptionController(contextFactory, metricHandler.Object);
         }
 
-        public static ManageOptionController CreateManageOptionController(IContextFactory contextFactory, IMetricEventHandler metricHandler)
+        public static ManageOptionController CreateManageOptionController(IContextFactory contextFactory, IMetricHandler metricHandler)
         {
             return new ManageOptionController(contextFactory, metricHandler)
             {

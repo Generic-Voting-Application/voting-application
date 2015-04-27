@@ -13,7 +13,7 @@ namespace VotingApplication.Web.Api.Controllers
     {
         public ManageMiscController() : base() { }
 
-        public ManageMiscController(IContextFactory contextFactory, IMetricEventHandler metricHandler) : base(contextFactory, metricHandler) { }
+        public ManageMiscController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpPut]
         public void Put(Guid manageId, ManagePollMiscRequest updateRequest)

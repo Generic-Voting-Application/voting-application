@@ -19,7 +19,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public PollVoteController() : base() { }
 
-        public PollVoteController(IContextFactory contextFactory, IMetricEventHandler metricHandler, IVoteValidatorFactory voteValidatorFactory)
+        public PollVoteController(IContextFactory contextFactory, IMetricHandler metricHandler, IVoteValidatorFactory voteValidatorFactory)
             : base(contextFactory, metricHandler)
         {
             _voteValidatorFactory = voteValidatorFactory;

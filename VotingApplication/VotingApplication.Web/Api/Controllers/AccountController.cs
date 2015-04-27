@@ -27,7 +27,7 @@ namespace VotingApplication.Web.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
-        private IMetricEventHandler _metricHandler = new MetricEventHandler(new ContextFactory());
+        private IMetricHandler _metricHandler = new MetricHandler(new ContextFactory());
 
         public AccountController()
         {

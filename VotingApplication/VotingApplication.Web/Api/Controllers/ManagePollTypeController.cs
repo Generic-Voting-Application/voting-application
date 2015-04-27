@@ -15,7 +15,7 @@ namespace VotingApplication.Web.Api.Controllers
     {
         public ManagePollTypeController() : base() { }
 
-        public ManagePollTypeController(IContextFactory contextFactory, IMetricEventHandler metricHandler) : base(contextFactory, metricHandler) { }
+        public ManagePollTypeController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpPut]
         public void Put(Guid manageId, ManagePollTypeRequest updateRequest)

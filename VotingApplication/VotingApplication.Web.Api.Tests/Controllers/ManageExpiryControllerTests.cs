@@ -30,7 +30,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollExpiryRequest request = new ManagePollExpiryRequest { };
 
-                ManageExpiryController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricEventHandler>().Object);
+                ManageExpiryController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricHandler>().Object);
 
                 controller.Put(Guid.NewGuid(), request);
             }
@@ -46,7 +46,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollExpiryRequest request = new ManagePollExpiryRequest { };
 
-                ManageExpiryController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricEventHandler>().Object);
+                ManageExpiryController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricHandler>().Object);
                 controller.Validate(request);
 
                 // Act
@@ -68,7 +68,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollExpiryRequest request = new ManagePollExpiryRequest { ExpiryDate = expiry };
 
-                ManageExpiryController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricEventHandler>().Object);
+                ManageExpiryController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricHandler>().Object);
 
                 controller.Put(PollManageGuid, request);
 
@@ -88,7 +88,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollExpiryRequest request = new ManagePollExpiryRequest { ExpiryDate = past };
 
-                ManageExpiryController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricEventHandler>().Object);
+                ManageExpiryController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricHandler>().Object);
 
                 controller.Put(PollManageGuid, request);
             }
@@ -106,7 +106,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollExpiryRequest request = new ManagePollExpiryRequest { ExpiryDate = future };
 
-                Mock<IMetricEventHandler> metricHandler = new Mock<IMetricEventHandler>();
+                Mock<IMetricHandler> metricHandler = new Mock<IMetricHandler>();
                 ManageExpiryController controller = CreateManageExpiryController(contextFactory, metricHandler.Object);
 
                 // Act
@@ -130,7 +130,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollExpiryRequest request = new ManagePollExpiryRequest { ExpiryDate = currentExpiry };
 
-                Mock<IMetricEventHandler> metricHandler = new Mock<IMetricEventHandler>();
+                Mock<IMetricHandler> metricHandler = new Mock<IMetricHandler>();
                 ManageExpiryController controller = CreateManageExpiryController(contextFactory, metricHandler.Object);
 
                 // Act
@@ -142,7 +142,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
 
-        public static ManageExpiryController CreateManageExpiryController(IContextFactory contextFactory, IMetricEventHandler metricHandler)
+        public static ManageExpiryController CreateManageExpiryController(IContextFactory contextFactory, IMetricHandler metricHandler)
         {
             return new ManageExpiryController(contextFactory, metricHandler)
             {

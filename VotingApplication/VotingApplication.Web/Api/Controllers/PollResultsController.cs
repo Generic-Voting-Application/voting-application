@@ -17,7 +17,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     {
         public PollResultsController() : base() { }
 
-        public PollResultsController(IContextFactory contextFactory, IMetricEventHandler metricHandler) : base(contextFactory, metricHandler) { }
+        public PollResultsController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpGet]
         public ResultsRequestResponseModel Get(Guid pollId)

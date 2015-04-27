@@ -12,7 +12,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     public class PollTokenController : WebApiController
     {
         public PollTokenController() : base() { }
-        public PollTokenController(IContextFactory contextFactory, IMetricEventHandler metricHandler) : base(contextFactory, metricHandler) { }
+        public PollTokenController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         #region GET
 

@@ -18,7 +18,7 @@ namespace VotingApplication.Web.Api.Providers
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {
         private readonly string _publicClientId;
-        private IMetricEventHandler _metricHandler = new MetricEventHandler(new ContextFactory());
+        private IMetricHandler _metricHandler = new MetricHandler(new ContextFactory());
 
         public ApplicationOAuthProvider(string publicClientId)
         {

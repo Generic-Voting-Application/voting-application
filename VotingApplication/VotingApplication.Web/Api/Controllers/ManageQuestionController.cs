@@ -13,7 +13,7 @@ namespace VotingApplication.Web.Api.Controllers
     {
         public ManageQuestionController() : base() { }
 
-        public ManageQuestionController(IContextFactory contextFactory, IMetricEventHandler metricHandler) : base(contextFactory, metricHandler) { }
+        public ManageQuestionController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpPut]
         public void Put(Guid manageId, ManageQuestionRequest request)

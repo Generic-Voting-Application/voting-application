@@ -30,7 +30,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollMiscRequest request = new ManagePollMiscRequest { };
 
-                ManageMiscController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricEventHandler>().Object);
+                ManageMiscController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricHandler>().Object);
 
                 controller.Put(Guid.NewGuid(), request);
             }
@@ -50,7 +50,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = true, NamedVoting = true, OptionAdding = true, HiddenResults = true };
 
-                ManageMiscController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricEventHandler>().Object);
+                ManageMiscController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricHandler>().Object);
 
                 controller.Put(PollManageGuid, request);
 
@@ -76,7 +76,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = true, NamedVoting = true, OptionAdding = true, HiddenResults = true };
 
-                Mock<IMetricEventHandler> metricHandler = new Mock<IMetricEventHandler>();
+                Mock<IMetricHandler> metricHandler = new Mock<IMetricHandler>();
                 ManageMiscController controller = CreateManageExpiryController(contextFactory, metricHandler.Object);
 
                 // Act
@@ -105,7 +105,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = false, NamedVoting = false, OptionAdding = false, HiddenResults = false };
 
-                Mock<IMetricEventHandler> metricHandler = new Mock<IMetricEventHandler>();
+                Mock<IMetricHandler> metricHandler = new Mock<IMetricHandler>();
                 ManageMiscController controller = CreateManageExpiryController(contextFactory, metricHandler.Object);
 
                 // Act
@@ -119,7 +119,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             }
         }
 
-        public static ManageMiscController CreateManageExpiryController(IContextFactory contextFactory, IMetricEventHandler metricHandler)
+        public static ManageMiscController CreateManageExpiryController(IContextFactory contextFactory, IMetricHandler metricHandler)
         {
             return new ManageMiscController(contextFactory, metricHandler)
             {

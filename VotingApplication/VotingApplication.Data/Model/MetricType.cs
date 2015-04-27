@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VotingApplication.Data.Model
 {
-    public enum EventType
+    public enum MetricType
     {
         Error,
         GoToPage,

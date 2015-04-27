@@ -19,15 +19,15 @@ namespace VotingApplication.Web.Api.Controllers
     public class WebApiController : ApiController
     {
         protected readonly IContextFactory _contextFactory;
-        protected readonly IMetricEventHandler _metricHandler;
+        protected readonly IMetricHandler _metricHandler;
 
         public WebApiController()
         {
             _contextFactory = new ContextFactory();
-            _metricHandler = new MetricEventHandler(_contextFactory);
+            _metricHandler = new MetricHandler(_contextFactory);
         }
 
-        public WebApiController(IContextFactory contextFactory, IMetricEventHandler metricHandler)
+        public WebApiController(IContextFactory contextFactory, IMetricHandler metricHandler)
         {
             _contextFactory = contextFactory;
             _metricHandler = metricHandler;

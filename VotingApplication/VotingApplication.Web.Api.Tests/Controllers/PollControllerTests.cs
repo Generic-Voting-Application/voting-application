@@ -23,7 +23,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         const string UserId = "4AEAE121-D540-48BF-907A-AA454248C0C0";
 
         private PollController _controller;
-        private Mock<IMetricEventHandler> _metricHandler;
+        private Mock<IMetricHandler> _metricHandler;
         private Poll _mainPoll;
         private Poll _otherPoll;
         private Poll _templatePoll;
@@ -61,7 +61,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Polls).Returns(_dummyPolls);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
-            _metricHandler = new Mock<IMetricEventHandler>();
+            _metricHandler = new Mock<IMetricHandler>();
 
             _controller = new PollController(mockContextFactory.Object, _metricHandler.Object)
             {

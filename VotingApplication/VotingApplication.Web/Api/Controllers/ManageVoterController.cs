@@ -15,7 +15,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     {
         public ManageVoterController() { }
 
-        public ManageVoterController(IContextFactory contextFactory, IMetricEventHandler metricHandler) : base(contextFactory, metricHandler) { }
+        public ManageVoterController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpGet]
         public List<ManageVoteResponseModel> Get(Guid manageId)

@@ -342,7 +342,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 polls.Add(existingPoll);
 
                 IContextFactory contextFactory = CreateContextFactory(polls);
-                var metricHandler = new Mock<IMetricEventHandler>();
+                var metricHandler = new Mock<IMetricHandler>();
                 DashboardController controller = CreateDashboardController(contextFactory, metricHandler.Object);
                 controller.User = CreateAuthenticatedUser(UserId1);
 
@@ -370,11 +370,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         public DashboardController CreateDashboardController(IContextFactory contextFactory)
         {
-            var metricHandler = new Mock<IMetricEventHandler>();
+            var metricHandler = new Mock<IMetricHandler>();
             return CreateDashboardController(contextFactory, metricHandler.Object);
         }
 
-        public DashboardController CreateDashboardController(IContextFactory contextFactory, IMetricEventHandler metricHandler)
+        public DashboardController CreateDashboardController(IContextFactory contextFactory, IMetricHandler metricHandler)
         {
             return new DashboardController(contextFactory, metricHandler)
             {

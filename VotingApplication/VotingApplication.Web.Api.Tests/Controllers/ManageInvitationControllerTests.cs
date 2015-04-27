@@ -26,7 +26,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Guid _inviteOnlyPollID;
         private Poll _inviteOnlyPoll;
         private Mock<IInvitationService> _mockInvitationService;
-        private Mock<IMetricEventHandler> _mockMetricHandler;
+        private Mock<IMetricHandler> _mockMetricHandler;
         private InMemoryDbSet<Vote> _dummyVotes;
         private InMemoryDbSet<Ballot> _dummyBallots;
 
@@ -54,7 +54,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Ballots).Returns(_dummyBallots);
 
             _mockInvitationService = new Mock<IInvitationService>();
-            _mockMetricHandler = new Mock<IMetricEventHandler>();
+            _mockMetricHandler = new Mock<IMetricHandler>();
 
             _controller = new ManageInvitationController(mockContextFactory.Object, _mockMetricHandler.Object, _mockInvitationService.Object);
             _controller.Request = new HttpRequestMessage();

@@ -36,7 +36,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         private Ballot _otherBallot;
 
         private Mock<IVoteValidatorFactory> _mockValidatorFactory;
-        private Mock<IMetricEventHandler> _mockMetricHandler;
+        private Mock<IMetricHandler> _mockMetricHandler;
 
         [TestInitialize]
         public void setup()
@@ -101,7 +101,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _mockValidatorFactory = new Mock<IVoteValidatorFactory>();
             _mockValidatorFactory.Setup(a => a.CreateValidator(PollType.Basic)).Returns(mockValidator.Object);
 
-            _mockMetricHandler = new Mock<IMetricEventHandler>();
+            _mockMetricHandler = new Mock<IMetricHandler>();
 
             _controller = new PollVoteController(mockContextFactory.Object, _mockMetricHandler.Object, _mockValidatorFactory.Object);
             _controller.Request = new HttpRequestMessage();

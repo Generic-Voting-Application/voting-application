@@ -14,7 +14,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public ManageController() : base() { }
 
-        public ManageController(IContextFactory contextFactory, IMetricEventHandler metricHandler) : base(contextFactory, metricHandler) { }
+        public ManageController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpGet]
         [Authorize]

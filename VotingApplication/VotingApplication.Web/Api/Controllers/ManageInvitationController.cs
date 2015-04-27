@@ -20,7 +20,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             _invitationService = invitationService;
         }
-        public ManageInvitationController(IContextFactory contextFactory, IMetricEventHandler metricHandler, IInvitationService invitationService)
+        public ManageInvitationController(IContextFactory contextFactory, IMetricHandler metricHandler, IInvitationService invitationService)
             : base(contextFactory, metricHandler)
         {
             _invitationService = invitationService;

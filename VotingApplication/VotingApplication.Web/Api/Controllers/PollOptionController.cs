@@ -14,7 +14,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     {
         public PollOptionController() : base() { }
 
-        public PollOptionController(IContextFactory contextFactory, IMetricEventHandler metricHandler) : base(contextFactory, metricHandler) { }
+        public PollOptionController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpPost]
         public void Post(Guid pollId, OptionCreationRequestModel optionCreationRequest)

@@ -251,7 +251,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, DbSetTestHelper.CreateMockDbSet<Ballot>(), votes);
                 ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "UpDown", MaxPerVote = 1, MaxPoints = 1 };
 
-                Mock<IMetricEventHandler> mockMetricHandler = new Mock<IMetricEventHandler>();
+                Mock<IMetricHandler> mockMetricHandler = new Mock<IMetricHandler>();
                 ManagePollTypeController controller = CreateManagePollTypeController(contextFactory, mockMetricHandler.Object);
 
                 // Act
@@ -280,7 +280,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, DbSetTestHelper.CreateMockDbSet<Ballot>(), votes); 
                 ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "Points", MaxPerVote = 5, MaxPoints = 8 };
 
-                Mock<IMetricEventHandler> mockMetricHandler = new Mock<IMetricEventHandler>();
+                Mock<IMetricHandler> mockMetricHandler = new Mock<IMetricHandler>();
                 ManagePollTypeController controller = CreateManagePollTypeController(contextFactory, mockMetricHandler.Object);
 
                 // Act
@@ -309,7 +309,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, DbSetTestHelper.CreateMockDbSet<Ballot>(), votes); 
                 ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "Basic", MaxPerVote = 5, MaxPoints = 8 };
 
-                Mock<IMetricEventHandler> mockMetricHandler = new Mock<IMetricEventHandler>();
+                Mock<IMetricHandler> mockMetricHandler = new Mock<IMetricHandler>();
                 ManagePollTypeController controller = CreateManagePollTypeController(contextFactory, mockMetricHandler.Object);
 
                 // Act
@@ -338,7 +338,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, DbSetTestHelper.CreateMockDbSet<Ballot>(), votes); 
                 ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "Points", MaxPerVote = 3, MaxPoints = 7 };
 
-                Mock<IMetricEventHandler> mockMetricHandler = new Mock<IMetricEventHandler>();
+                Mock<IMetricHandler> mockMetricHandler = new Mock<IMetricHandler>();
                 ManagePollTypeController controller = CreateManagePollTypeController(contextFactory, mockMetricHandler.Object);
 
                 // Act
@@ -367,7 +367,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, DbSetTestHelper.CreateMockDbSet<Ballot>(), votes); 
                 ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "Points", MaxPerVote = 3, MaxPoints = 7 };
 
-                Mock<IMetricEventHandler> mockMetricHandler = new Mock<IMetricEventHandler>();
+                Mock<IMetricHandler> mockMetricHandler = new Mock<IMetricHandler>();
                 ManagePollTypeController controller = CreateManagePollTypeController(contextFactory, mockMetricHandler.Object);
 
                 // Act
@@ -381,11 +381,11 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         public static ManagePollTypeController CreateManagePollTypeController(IContextFactory contextFactory)
         {
-            var metricHandler = new Mock<IMetricEventHandler>();
+            var metricHandler = new Mock<IMetricHandler>();
             return CreateManagePollTypeController(contextFactory, metricHandler.Object);
         }
 
-        public static ManagePollTypeController CreateManagePollTypeController(IContextFactory contextFactory, IMetricEventHandler metricHandler)
+        public static ManagePollTypeController CreateManagePollTypeController(IContextFactory contextFactory, IMetricHandler metricHandler)
         {
             return new ManagePollTypeController(contextFactory, metricHandler)
             {

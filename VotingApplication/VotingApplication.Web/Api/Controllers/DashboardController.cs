@@ -17,7 +17,7 @@ namespace VotingApplication.Web.Api.Controllers
     {
         public DashboardController() { }
 
-        public DashboardController(IContextFactory contextFactory, IMetricEventHandler metricHandler) : base(contextFactory, metricHandler) { }
+        public DashboardController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpGet]
         [Authorize]
