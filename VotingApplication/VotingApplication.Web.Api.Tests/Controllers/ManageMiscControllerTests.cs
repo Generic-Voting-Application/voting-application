@@ -83,10 +83,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Put(PollManageGuid, request);
 
                 // Assert
-                metricHandler.Verify(m => m.InviteOnlyChangedEvent(true, existingPoll.UUID), Times.Once());
-                metricHandler.Verify(m => m.NamedVotingChangedEvent(true, existingPoll.UUID), Times.Once());
-                metricHandler.Verify(m => m.OptionAddingChangedEvent(true, existingPoll.UUID), Times.Once());
-                metricHandler.Verify(m => m.HiddenResultsChangedEvent(true, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.HandleInviteOnlyChangedEvent(true, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.HandleNamedVotingChangedEvent(true, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.HandleOptionAddingChangedEvent(true, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.HandleHiddenResultsChangedEvent(true, existingPoll.UUID), Times.Once());
             }
 
             [TestMethod]
@@ -112,10 +112,10 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Put(PollManageGuid, request);
 
                 // Assert
-                metricHandler.Verify(m => m.InviteOnlyChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
-                metricHandler.Verify(m => m.NamedVotingChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
-                metricHandler.Verify(m => m.OptionAddingChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
-                metricHandler.Verify(m => m.HiddenResultsChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.HandleInviteOnlyChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.HandleNamedVotingChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.HandleOptionAddingChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.HandleHiddenResultsChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
             }
         }
 

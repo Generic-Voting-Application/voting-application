@@ -40,7 +40,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                     if (poll.LastUpdated < clientLastUpdated)
                     {
-                        _metricHandler.ResultsUpdateEvent(HttpStatusCode.NotModified, pollId);
+                        _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.NotModified, pollId);
                         throw new HttpResponseException(HttpStatusCode.NotModified);
                     }
                 }
@@ -57,7 +57,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     .Select(v => VoteToModel(v, poll))
                     .ToList();
 
-                _metricHandler.ResultsUpdateEvent(HttpStatusCode.OK, pollId);
+                _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.OK, pollId);
 
                 ResultsRequestResponseModel results = SummariseVotes(votes);
                 results.Votes = responseVotes;

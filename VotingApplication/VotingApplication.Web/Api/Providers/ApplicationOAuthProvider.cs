@@ -50,7 +50,7 @@ namespace VotingApplication.Web.Api.Providers
             AuthenticationProperties properties = CreateProperties(user.UserName);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
-            _metricHandler.LoginEvent(context.UserName);
+            _metricHandler.HandleLoginEvent(context.UserName);
             context.Request.Context.Authentication.SignIn(cookiesIdentity);
         }
 

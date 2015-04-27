@@ -429,7 +429,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Post(_mainManageID, new List<ManageInvitationRequestModel>());
 
             // Assert
-            _mockMetricHandler.Verify(m => m.VoteDeletedEvent(voteToRemove, _mainPoll.UUID), Times.Once());
+            _mockMetricHandler.Verify(m => m.HandleVoteDeletedEvent(voteToRemove, _mainPoll.UUID), Times.Once());
         }
 
         [TestMethod]
@@ -442,7 +442,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
 
             // Assert
-            _mockMetricHandler.Verify(m => m.BallotAddedEvent(It.Is<Ballot>(b => b.Email == "a@b.c"), _mainPoll.UUID), Times.Once());
+            _mockMetricHandler.Verify(m => m.HandleBallotAddedEvent(It.Is<Ballot>(b => b.Email == "a@b.c"), _mainPoll.UUID), Times.Once());
         }
 
         [TestMethod]
@@ -455,7 +455,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
 
             // Assert
-            _mockMetricHandler.Verify(m => m.BallotAddedEvent(It.IsAny<Ballot>(), It.IsAny<Guid>()), Times.Never());
+            _mockMetricHandler.Verify(m => m.HandleBallotAddedEvent(It.IsAny<Ballot>(), It.IsAny<Guid>()), Times.Never());
         }
 
         [TestMethod]
@@ -471,7 +471,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
 
             // Assert
-            _mockMetricHandler.Verify(m => m.BallotAddedEvent(It.IsAny<Ballot>(), It.IsAny<Guid>()), Times.Never());
+            _mockMetricHandler.Verify(m => m.HandleBallotAddedEvent(It.IsAny<Ballot>(), It.IsAny<Guid>()), Times.Never());
         }
 
         [TestMethod]
@@ -486,7 +486,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Post(_mainManageID, new List<ManageInvitationRequestModel>());
 
             // Assert
-            _mockMetricHandler.Verify(m => m.BallotDeletedEvent(It.IsAny<Ballot>(), It.IsAny<Guid>()), Times.Never());
+            _mockMetricHandler.Verify(m => m.HandleBallotDeletedEvent(It.IsAny<Ballot>(), It.IsAny<Guid>()), Times.Never());
         }
 
         [TestMethod]
@@ -502,7 +502,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Post(_mainManageID, new List<ManageInvitationRequestModel>());
 
             // Assert
-            _mockMetricHandler.Verify(m => m.BallotDeletedEvent(invitedBallot, _mainPoll.UUID), Times.Once());
+            _mockMetricHandler.Verify(m => m.HandleBallotDeletedEvent(invitedBallot, _mainPoll.UUID), Times.Once());
         }
 
         #endregion

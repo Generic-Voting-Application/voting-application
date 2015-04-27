@@ -21,7 +21,7 @@ namespace VotingApplication.Web.Api.Metrics
 
         #region Error Events
 
-        public void ErrorEvent(HttpResponseException exception, Guid pollId)
+        public void HandleErrorEvent(HttpResponseException exception, Guid pollId)
         {
             HttpResponseMessage response = exception.Response;
             Metric errorEvent = new Metric(MetricType.Error, GetExistingPollId(pollId));
@@ -51,7 +51,7 @@ namespace VotingApplication.Web.Api.Metrics
 
         #region Page Loads
 
-        public void PageChangeEvent(string route, int statusCode, Guid pollId)
+        public void HandlePageChangeEvent(string route, int statusCode, Guid pollId)
         {
             Metric pageChangeEvent = new Metric(MetricType.GoToPage, GetExistingPollId(pollId));
             pageChangeEvent.StatusCode = statusCode;
@@ -59,7 +59,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(pageChangeEvent);
         }
 
-        public void ResultsUpdateEvent(HttpStatusCode status, Guid pollId)
+        public void HandleResultsUpdateEvent(HttpStatusCode status, Guid pollId)
         {
             Metric updateResultsEvent = new Metric(MetricType.UpdateResults, pollId);
             updateResultsEvent.StatusCode = (int)status;
@@ -68,7 +68,7 @@ namespace VotingApplication.Web.Api.Metrics
 
         #endregion
 
-        public void PollCreatedEvent(Poll poll)
+        public void HandlePollCreatedEvent(Poll poll)
         {
             Metric pollCreatedEvent = new Metric(MetricType.CreatePoll, poll.UUID);
             pollCreatedEvent.Value = poll.Name;
@@ -76,7 +76,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(pollCreatedEvent);
         }
 
-        public void PollClonedEvent(Poll poll)
+        public void HandlePollClonedEvent(Poll poll)
         {
             Metric pollClonedEvent = new Metric(MetricType.ClonePoll, poll.UUID);
             pollClonedEvent.Value = poll.Name;
@@ -86,14 +86,14 @@ namespace VotingApplication.Web.Api.Metrics
 
         #region Poll Configuration
 
-        public void ExpiryChangedEvent(DateTimeOffset? expiry, Guid pollId)
+        public void HandleExpiryChangedEvent(DateTimeOffset? expiry, Guid pollId)
         {
             Metric setExpiryEvent = new Metric(MetricType.SetExpiry, pollId);
             setExpiryEvent.Value = (expiry != null) ? expiry.ToString() : "Never";
             StoreEvent(setExpiryEvent);
         }
 
-        public void PollTypeChangedEvent(PollType pollType, int maxPerVote, int maxPerPoll, Guid pollId)
+        public void HandlePollTypeChangedEvent(PollType pollType, int maxPerVote, int maxPerPoll, Guid pollId)
         {
             Metric setPollType = new Metric(MetricType.SetPollType, pollId);
             setPollType.Value = pollType.ToString();
@@ -106,7 +106,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setPollType);
         }
 
-        public void QuestionChangedEvent(string question, Guid pollId)
+        public void HandleQuestionChangedEvent(string question, Guid pollId)
         {
             Metric setQuestion = new Metric(MetricType.SetQuestion, pollId);
             setQuestion.Value = question;
@@ -115,7 +115,7 @@ namespace VotingApplication.Web.Api.Metrics
 
         #region Misc Configuration
 
-        public void InviteOnlyChangedEvent(bool inviteOnly, Guid pollId)
+        public void HandleInviteOnlyChangedEvent(bool inviteOnly, Guid pollId)
         {
             Metric setInviteOnly = new Metric(MetricType.SetInviteOnly, pollId);
             setInviteOnly.Value = (inviteOnly) ? "True" : "False";
@@ -123,7 +123,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setInviteOnly);
         }
 
-        public void NamedVotingChangedEvent(bool namedVoting, Guid pollId)
+        public void HandleNamedVotingChangedEvent(bool namedVoting, Guid pollId)
         {
             Metric setNamedVoting = new Metric(MetricType.SetNamedVoting, pollId);
             setNamedVoting.Value = (namedVoting) ? "True" : "False";
@@ -131,7 +131,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setNamedVoting);
         }
 
-        public void OptionAddingChangedEvent(bool optionAdding, Guid pollId)
+        public void HandleOptionAddingChangedEvent(bool optionAdding, Guid pollId)
         {
             Metric setAllowOptionAdding = new Metric(MetricType.SetOptionAdding, pollId);
             setAllowOptionAdding.Value = (optionAdding) ? "True" : "False";
@@ -139,7 +139,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setAllowOptionAdding);
         }
 
-        public void HiddenResultsChangedEvent(bool hiddenResults, Guid pollId)
+        public void HandleHiddenResultsChangedEvent(bool hiddenResults, Guid pollId)
         {
             Metric setHiddenResults = new Metric(MetricType.SetHiddenResults, pollId);
             setHiddenResults.Value = (hiddenResults) ? "True" : "False";
@@ -151,7 +151,7 @@ namespace VotingApplication.Web.Api.Metrics
 
         #region Options
 
-        public void OptionAddedEvent(Option option, Guid pollId)
+        public void HandleOptionAddedEvent(Option option, Guid pollId)
         {
             Metric optionAddedEvent = new Metric(MetricType.AddOption, pollId);
             optionAddedEvent.Value = option.Name;
@@ -159,7 +159,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(optionAddedEvent);
         }
 
-        public void OptionUpdatedEvent(Option option, Guid pollId)
+        public void HandleOptionUpdatedEvent(Option option, Guid pollId)
         {
             Metric optionUpdatedEvent = new Metric(MetricType.UpdateOption, pollId);
             optionUpdatedEvent.Value = option.Name;
@@ -167,7 +167,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(optionUpdatedEvent);
         }
 
-        public void OptionDeletedEvent(Option option, Guid pollId)
+        public void HandleOptionDeletedEvent(Option option, Guid pollId)
         {
             Metric optionDeletedEvent = new Metric(MetricType.DeleteOption, pollId);
             optionDeletedEvent.Value = option.Name;
@@ -179,7 +179,7 @@ namespace VotingApplication.Web.Api.Metrics
 
         #region Votes
 
-        public void VoteAddedEvent(Vote vote, Guid pollId)
+        public void HandleVoteAddedEvent(Vote vote, Guid pollId)
         {
             Metric voteAddedEvent = new Metric(MetricType.AddVote, pollId);
             voteAddedEvent.Value = vote.Option.PollOptionNumber.ToString();
@@ -187,7 +187,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(voteAddedEvent);
         }
 
-        public void VoteDeletedEvent(Vote vote, Guid pollId)
+        public void HandleVoteDeletedEvent(Vote vote, Guid pollId)
         {
             Metric voteAddedEvent = new Metric(MetricType.DeleteVote, pollId);
             voteAddedEvent.Value = vote.Option.PollOptionNumber.ToString();
@@ -199,7 +199,7 @@ namespace VotingApplication.Web.Api.Metrics
 
         #region Ballot
 
-        public void BallotAddedEvent(Ballot ballot, Guid pollId)
+        public void HandleBallotAddedEvent(Ballot ballot, Guid pollId)
         {
             Metric ballotAddedEvent = new Metric(MetricType.AddBallot, pollId);
             ballotAddedEvent.Value = ballot.TokenGuid.ToString();
@@ -207,7 +207,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(ballotAddedEvent);
         }
 
-        public void BallotDeletedEvent(Ballot ballot, Guid pollId)
+        public void HandleBallotDeletedEvent(Ballot ballot, Guid pollId)
         {
             Metric ballotDeletedEvent = new Metric(MetricType.DeleteBallot, pollId);
             ballotDeletedEvent.Value = ballot.TokenGuid.ToString();
@@ -221,14 +221,14 @@ namespace VotingApplication.Web.Api.Metrics
 
         #region Accounts
 
-        public void LoginEvent(string username)
+        public void HandleLoginEvent(string username)
         {
             Metric loginEvent = new Metric(MetricType.Login, Guid.Empty);
             loginEvent.Value = username;
             StoreEvent(loginEvent);
         }
 
-        public void RegisterEvent(string username)
+        public void HandleRegisterEvent(string username)
         {
             Metric registerEvent = new Metric(MetricType.Register, Guid.Empty);
             registerEvent.Value = username;

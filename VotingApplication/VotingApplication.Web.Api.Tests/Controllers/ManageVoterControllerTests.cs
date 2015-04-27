@@ -441,7 +441,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Delete(poll.ManageId, request);
 
                 // Assert
-                metricHandler.Verify(m => m.VoteDeletedEvent(voteToClear, poll.UUID), Times.Once());
+                metricHandler.Verify(m => m.HandleVoteDeletedEvent(voteToClear, poll.UUID), Times.Once());
             }
 
             [TestMethod]

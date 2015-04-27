@@ -51,7 +51,7 @@ namespace VotingApplication.Web.Api.Controllers
 
             if (_metricHandler != null)
             {
-                _metricHandler.ErrorEvent(exception, CurrentPollId());
+                _metricHandler.HandleErrorEvent(exception, CurrentPollId());
             }
 
             throw exception;
@@ -64,7 +64,7 @@ namespace VotingApplication.Web.Api.Controllers
             ILogger logger = LoggerFactory.GetLogger();
             logger.Log(exception);
 
-            _metricHandler.ErrorEvent(exception, CurrentPollId());
+            _metricHandler.HandleErrorEvent(exception, CurrentPollId());
 
             throw exception;
         }

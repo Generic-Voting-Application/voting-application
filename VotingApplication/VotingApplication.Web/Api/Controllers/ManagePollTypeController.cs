@@ -48,11 +48,11 @@ namespace VotingApplication.Web.Api.Controllers
                                                         .ToList();
                 foreach (Vote oldVote in removedVotes)
                 {
-                    _metricHandler.VoteDeletedEvent(oldVote, poll.UUID);
+                    _metricHandler.HandleVoteDeletedEvent(oldVote, poll.UUID);
                     context.Votes.Remove(oldVote);
                 }
 
-                _metricHandler.PollTypeChangedEvent(pollType, updateRequest.MaxPerVote, updateRequest.MaxPoints, poll.UUID);
+                _metricHandler.HandlePollTypeChangedEvent(pollType, updateRequest.MaxPerVote, updateRequest.MaxPoints, poll.UUID);
 
                 poll.PollType = pollType;
                 poll.MaxPerVote = updateRequest.MaxPerVote;

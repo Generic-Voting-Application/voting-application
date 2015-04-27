@@ -281,7 +281,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Put(_mainUUID, Guid.NewGuid(), voteRequests);
 
             // Assert
-            _mockMetricHandler.Verify(m => m.VoteAddedEvent(It.Is<Vote>(v => v.Option.Id == 1), _mainUUID), Times.Once());
+            _mockMetricHandler.Verify(m => m.HandleVoteAddedEvent(It.Is<Vote>(v => v.Option.Id == 1), _mainUUID), Times.Once());
         }
 
         [TestMethod]
@@ -297,7 +297,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Put(_mainUUID, tokenGuid, voteRequests);
 
             // Assert
-            _mockMetricHandler.Verify(m => m.VoteDeletedEvent(existingVote, _mainUUID), Times.Once());
+            _mockMetricHandler.Verify(m => m.HandleVoteDeletedEvent(existingVote, _mainUUID), Times.Once());
         }
 
         #endregion

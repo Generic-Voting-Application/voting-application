@@ -258,8 +258,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Put(PollManageGuid, request);
 
                 // Assert
-                mockMetricHandler.Verify(m => m.PollTypeChangedEvent(PollType.UpDown, 1, 1, existingPoll.UUID), Times.Once());
-                mockMetricHandler.Verify(m => m.VoteDeletedEvent(existingVote, existingPoll.UUID), Times.Once());
+                mockMetricHandler.Verify(m => m.HandlePollTypeChangedEvent(PollType.UpDown, 1, 1, existingPoll.UUID), Times.Once());
+                mockMetricHandler.Verify(m => m.HandleVoteDeletedEvent(existingVote, existingPoll.UUID), Times.Once());
             }
 
             [TestMethod]
@@ -287,8 +287,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Put(PollManageGuid, request);
 
                 // Assert
-                mockMetricHandler.Verify(m => m.PollTypeChangedEvent(PollType.Points, 5, 8, existingPoll.UUID), Times.Once());
-                mockMetricHandler.Verify(m => m.VoteDeletedEvent(existingVote, existingPoll.UUID), Times.Once());
+                mockMetricHandler.Verify(m => m.HandlePollTypeChangedEvent(PollType.Points, 5, 8, existingPoll.UUID), Times.Once());
+                mockMetricHandler.Verify(m => m.HandleVoteDeletedEvent(existingVote, existingPoll.UUID), Times.Once());
             }
 
             [TestMethod]
@@ -316,8 +316,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Put(PollManageGuid, request);
 
                 // Assert
-                mockMetricHandler.Verify(m => m.PollTypeChangedEvent(It.IsAny<PollType>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Guid>()), Times.Never());
-                mockMetricHandler.Verify(m => m.VoteDeletedEvent(It.IsAny<Vote>(), It.IsAny<Guid>()), Times.Never());
+                mockMetricHandler.Verify(m => m.HandlePollTypeChangedEvent(It.IsAny<PollType>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Guid>()), Times.Never());
+                mockMetricHandler.Verify(m => m.HandleVoteDeletedEvent(It.IsAny<Vote>(), It.IsAny<Guid>()), Times.Never());
             }
 
             [TestMethod]
@@ -345,8 +345,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Put(PollManageGuid, request);
 
                 // Assert
-                mockMetricHandler.Verify(m => m.PollTypeChangedEvent(It.IsAny<PollType>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Guid>()), Times.Never());
-                mockMetricHandler.Verify(m => m.VoteDeletedEvent(It.IsAny<Vote>(), It.IsAny<Guid>()), Times.Never());
+                mockMetricHandler.Verify(m => m.HandlePollTypeChangedEvent(It.IsAny<PollType>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Guid>()), Times.Never());
+                mockMetricHandler.Verify(m => m.HandleVoteDeletedEvent(It.IsAny<Vote>(), It.IsAny<Guid>()), Times.Never());
             }
 
             [TestMethod]
@@ -374,8 +374,8 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Put(PollManageGuid, request);
 
                 // Assert
-                mockMetricHandler.Verify(m => m.PollTypeChangedEvent(PollType.Points, 3, 7, existingPoll.UUID), Times.Once());
-                mockMetricHandler.Verify(m => m.VoteDeletedEvent(existingVote, existingPoll.UUID), Times.Once());
+                mockMetricHandler.Verify(m => m.HandlePollTypeChangedEvent(PollType.Points, 3, 7, existingPoll.UUID), Times.Once());
+                mockMetricHandler.Verify(m => m.HandleVoteDeletedEvent(existingVote, existingPoll.UUID), Times.Once());
             }
         }
 

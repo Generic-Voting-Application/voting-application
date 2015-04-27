@@ -23,7 +23,7 @@ namespace VotingApplication.Web.Controllers
         private void LogPageEvent(string route)
         {
             object pollId = RouteData.Values["id"] ?? Guid.Empty;
-            _metricHandler.PageChangeEvent(route, Response.StatusCode, Guid.Parse(pollId.ToString()));
+            _metricHandler.HandlePageChangeEvent(route, Response.StatusCode, Guid.Parse(pollId.ToString()));
         }
 
         public ActionResult Vote()

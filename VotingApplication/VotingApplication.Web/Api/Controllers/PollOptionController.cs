@@ -48,7 +48,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 Option newOption = CreateOptionFromRequest(optionCreationRequest);
 
-                _metricHandler.OptionAddedEvent(newOption, pollId);
+                _metricHandler.HandleOptionAddedEvent(newOption, pollId);
 
                 poll.Options.Add(newOption);
                 context.Options.Add(newOption);

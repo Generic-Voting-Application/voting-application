@@ -147,7 +147,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Post(existingPoll.UUID, request);
 
                 // Assert
-                metricHandler.Verify(m => m.OptionAddedEvent(It.Is<Option>(o => o.Name == "New Option"), existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.HandleOptionAddedEvent(It.Is<Option>(o => o.Name == "New Option"), existingPoll.UUID), Times.Once());
             }
 
             public static PollOptionController CreatePollOptionController(IContextFactory contextFactory)

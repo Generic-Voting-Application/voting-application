@@ -102,7 +102,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             if (ballot.TokenGuid == Guid.Empty)
             {
                 ballot.TokenGuid = Guid.NewGuid();
-                _metricHandler.BallotAddedEvent(ballot, poll.UUID);
+                _metricHandler.HandleBallotAddedEvent(ballot, poll.UUID);
             }
 
             _invitationService.SendInvitation(poll.UUID, ballot, poll.Name);
@@ -114,13 +114,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             foreach (Vote redundantVote in redundantVotes)
             {
-                _metricHandler.VoteDeletedEvent(redundantVote, poll.UUID);
+                _metricHandler.HandleVoteDeletedEvent(redundantVote, poll.UUID);
                 context.Votes.Remove(redundantVote);
             }
 
             if (ballot.TokenGuid != Guid.Empty)
             {
-                _metricHandler.BallotDeletedEvent(ballot, poll.UUID);
+                _metricHandler.HandleBallotDeletedEvent(ballot, poll.UUID);
             }
 
             poll.Ballots.Remove(ballot);

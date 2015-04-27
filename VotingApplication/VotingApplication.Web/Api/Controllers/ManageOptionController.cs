@@ -142,7 +142,7 @@ namespace VotingApplication.Web.Api.Controllers
                     .Options
                     .Single(o => o.PollOptionNumber == pollOptionNumber);
 
-                _metricHandler.OptionDeletedEvent(option, poll.UUID);
+                _metricHandler.HandleOptionDeletedEvent(option, poll.UUID);
                 poll.Options.Remove(option);
                 context.Options.Remove(option);
 
@@ -159,7 +159,7 @@ namespace VotingApplication.Web.Api.Controllers
                         .Include(b => b.Votes)
                         .Single(b => b.Votes.Any(v => v.Id == vote.Id));
 
-                    _metricHandler.VoteDeletedEvent(vote, poll.UUID);
+                    _metricHandler.HandleVoteDeletedEvent(vote, poll.UUID);
                     ballot.Votes.Remove(vote);
                     context.Votes.Remove(vote);
                 }
@@ -181,7 +181,7 @@ namespace VotingApplication.Web.Api.Controllers
                 option.Name = update.Name;
                 option.Description = update.Description;
 
-                _metricHandler.OptionUpdatedEvent(option, poll.UUID);
+                _metricHandler.HandleOptionUpdatedEvent(option, poll.UUID);
             }
         }
 
@@ -195,7 +195,7 @@ namespace VotingApplication.Web.Api.Controllers
                     Description = optionRequest.Description
                 };
 
-                _metricHandler.OptionAddedEvent(option, poll.UUID);
+                _metricHandler.HandleOptionAddedEvent(option, poll.UUID);
 
                 poll.Options.Add(option);
                 context.Options.Add(option);

@@ -113,7 +113,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             Guid newToken = _controller.Get(_mainUUID);
 
             // Assert
-            _metricHandler.Verify(m => m.BallotAddedEvent(It.Is<Ballot>(b => b.TokenGuid == newToken), _mainUUID), Times.Once());
+            _metricHandler.Verify(m => m.HandleBallotAddedEvent(It.Is<Ballot>(b => b.TokenGuid == newToken), _mainUUID), Times.Once());
         }
 
         [TestMethod]
@@ -124,7 +124,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             _controller.Get(_inviteUUID);
 
             // Assert
-            _metricHandler.Verify(m => m.BallotAddedEvent(It.IsAny<Ballot>(), It.IsAny<Guid>()), Times.Never());
+            _metricHandler.Verify(m => m.HandleBallotAddedEvent(It.IsAny<Ballot>(), It.IsAny<Guid>()), Times.Never());
         }
 
         #endregion

@@ -9,32 +9,32 @@ namespace VotingApplication.Web.Api.Metrics
 {
     public interface IMetricHandler
     {
-        void PageChangeEvent(string route, int statusCode, Guid pollId);
-        void ErrorEvent(HttpResponseException exception, Guid pollId);
+        void HandlePageChangeEvent(string route, int statusCode, Guid pollId);
+        void HandleErrorEvent(HttpResponseException exception, Guid pollId);
 
-        void PollCreatedEvent(Poll poll);
-        void PollClonedEvent(Poll poll);
-        void ResultsUpdateEvent(HttpStatusCode status, Guid pollId);
+        void HandlePollCreatedEvent(Poll poll);
+        void HandlePollClonedEvent(Poll poll);
+        void HandleResultsUpdateEvent(HttpStatusCode status, Guid pollId);
 
-        void ExpiryChangedEvent(DateTimeOffset? expiry, Guid pollId);
-        void PollTypeChangedEvent(PollType pollType, int maxPerVote, int maxPerPoll, Guid pollId);
-        void InviteOnlyChangedEvent(bool inviteOnly, Guid pollId);
-        void NamedVotingChangedEvent(bool namedVoting, Guid pollId);
-        void OptionAddingChangedEvent(bool optionAdding, Guid pollId);
-        void HiddenResultsChangedEvent(bool hiddenResults, Guid pollId);
-        void QuestionChangedEvent(string question, Guid pollId);
+        void HandleExpiryChangedEvent(DateTimeOffset? expiry, Guid pollId);
+        void HandlePollTypeChangedEvent(PollType pollType, int maxPerVote, int maxPerPoll, Guid pollId);
+        void HandleInviteOnlyChangedEvent(bool inviteOnly, Guid pollId);
+        void HandleNamedVotingChangedEvent(bool namedVoting, Guid pollId);
+        void HandleOptionAddingChangedEvent(bool optionAdding, Guid pollId);
+        void HandleHiddenResultsChangedEvent(bool hiddenResults, Guid pollId);
+        void HandleQuestionChangedEvent(string question, Guid pollId);
 
-        void OptionAddedEvent(Option option, Guid pollId);
-        void OptionUpdatedEvent(Option option, Guid pollId);
-        void OptionDeletedEvent(Option option, Guid pollId);
+        void HandleOptionAddedEvent(Option option, Guid pollId);
+        void HandleOptionUpdatedEvent(Option option, Guid pollId);
+        void HandleOptionDeletedEvent(Option option, Guid pollId);
 
-        void VoteAddedEvent(Vote vote, Guid pollId);
-        void VoteDeletedEvent(Vote vote, Guid pollId);
+        void HandleVoteAddedEvent(Vote vote, Guid pollId);
+        void HandleVoteDeletedEvent(Vote vote, Guid pollId);
 
-        void BallotAddedEvent(Ballot ballot, Guid pollId);
-        void BallotDeletedEvent(Ballot ballot, Guid pollId);
+        void HandleBallotAddedEvent(Ballot ballot, Guid pollId);
+        void HandleBallotDeletedEvent(Ballot ballot, Guid pollId);
 
-        void LoginEvent(string username);
-        void RegisterEvent(string username);
+        void HandleLoginEvent(string username);
+        void HandleRegisterEvent(string username);
     }
 }

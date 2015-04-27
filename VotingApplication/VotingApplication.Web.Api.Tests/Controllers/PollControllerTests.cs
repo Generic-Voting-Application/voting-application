@@ -219,7 +219,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Post(newPoll);
 
             // Assert
-            _metricHandler.Verify(m => m.PollCreatedEvent(It.Is<Poll>(p => p.Name == "New Poll" && p.UUID == response.UUID)), Times.Once());
+            _metricHandler.Verify(m => m.HandlePollCreatedEvent(It.Is<Poll>(p => p.Name == "New Poll" && p.UUID == response.UUID)), Times.Once());
         }
 
         [TestMethod]
@@ -230,7 +230,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             var response = _controller.Post(null);
 
             // Assert
-            _metricHandler.Verify(m => m.PollCreatedEvent(It.IsAny<Poll>()), Times.Never());
+            _metricHandler.Verify(m => m.HandlePollCreatedEvent(It.IsAny<Poll>()), Times.Never());
         }
 
         #endregion

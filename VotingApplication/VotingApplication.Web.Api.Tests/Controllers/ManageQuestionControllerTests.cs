@@ -104,7 +104,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 _controller.Put(PollManageGuid, request);
 
                 // Assert
-                _metricHandler.Verify(m => m.QuestionChangedEvent("JKL", _existingPoll.UUID), Times.Once());
+                _metricHandler.Verify(m => m.HandleQuestionChangedEvent("JKL", _existingPoll.UUID), Times.Once());
             }
 
             [TestMethod]
@@ -117,7 +117,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 _controller.Put(PollManageGuid, request);
 
                 // Assert
-                _metricHandler.Verify(m => m.QuestionChangedEvent(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never());
+                _metricHandler.Verify(m => m.HandleQuestionChangedEvent(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never());
             }
 
             [TestMethod]
@@ -131,7 +131,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 _controller.Put(PollManageGuid, request);
 
                 // Assert
-                _metricHandler.Verify(m => m.QuestionChangedEvent(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never());
+                _metricHandler.Verify(m => m.HandleQuestionChangedEvent(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never());
             }
         }
 

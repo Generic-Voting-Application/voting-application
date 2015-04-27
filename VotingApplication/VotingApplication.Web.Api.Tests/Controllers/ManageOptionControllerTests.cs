@@ -534,9 +534,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Put(existingPoll.ManageId, request);
 
                 // Assert
-                metricHandler.Verify(m => m.OptionAddedEvent(It.Is<Option>(o => o.Name == "New Option"), existingPoll.UUID), Times.Once());
-                metricHandler.Verify(m => m.OptionDeletedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
-                metricHandler.Verify(m => m.OptionUpdatedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.HandleOptionAddedEvent(It.Is<Option>(o => o.Name == "New Option"), existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.HandleOptionDeletedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.HandleOptionUpdatedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
             }
 
             [TestMethod]
@@ -560,9 +560,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Put(existingPoll.ManageId, request);
 
                 // Assert
-                metricHandler.Verify(m => m.OptionUpdatedEvent(existingOption, existingPoll.UUID), Times.Once());
-                metricHandler.Verify(m => m.OptionAddedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
-                metricHandler.Verify(m => m.OptionDeletedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.HandleOptionUpdatedEvent(existingOption, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.HandleOptionAddedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.HandleOptionDeletedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
             }
 
             [TestMethod]
@@ -585,9 +585,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Put(existingPoll.ManageId, request);
 
                 // Assert
-                metricHandler.Verify(m => m.OptionDeletedEvent(existingOption, existingPoll.UUID), Times.Once());
-                metricHandler.Verify(m => m.OptionAddedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
-                metricHandler.Verify(m => m.OptionUpdatedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.HandleOptionDeletedEvent(existingOption, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.HandleOptionAddedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.HandleOptionUpdatedEvent(It.IsAny<Option>(), It.IsAny<Guid>()), Times.Never());
             }
 
             [TestMethod]
@@ -618,7 +618,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Put(existingPoll.ManageId, request);
 
                 // Assert
-                metricHandler.Verify(m => m.VoteDeletedEvent(existingVote, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.HandleVoteDeletedEvent(existingVote, existingPoll.UUID), Times.Once());
             }
         }
 

@@ -350,7 +350,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 controller.Copy(new CopyPollRequestModel() { UUIDToCopy = existingPoll.UUID });
 
                 // Assert
-                metricHandler.Verify(m => m.PollClonedEvent(It.Is<Poll>(p => p.Name == "Copy of Existing Poll" && p.UUID != Guid.Empty)), Times.Once());
+                metricHandler.Verify(m => m.HandlePollClonedEvent(It.Is<Poll>(p => p.Name == "Copy of Existing Poll" && p.UUID != Guid.Empty)), Times.Once());
             }
         }
 

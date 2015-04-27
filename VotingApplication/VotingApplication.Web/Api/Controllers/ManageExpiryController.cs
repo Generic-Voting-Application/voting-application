@@ -39,7 +39,7 @@ namespace VotingApplication.Web.Api.Controllers
 
                 poll.ExpiryDate = updateRequest.ExpiryDate;
                 poll.LastUpdated = DateTime.Now;
-                _metricHandler.ExpiryChangedEvent(poll.ExpiryDate, poll.UUID);
+                _metricHandler.HandleExpiryChangedEvent(poll.ExpiryDate, poll.UUID);
 
                 context.SaveChanges();
             }
