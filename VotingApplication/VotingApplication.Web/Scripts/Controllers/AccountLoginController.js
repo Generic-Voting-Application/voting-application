@@ -6,9 +6,9 @@
         .module('GVA.Common')
         .controller('AccountLoginController', AccountLoginController);
 
-    AccountLoginController.$inject = ['$scope', '$rootScope', 'AccountService'];
+    AccountLoginController.$inject = ['$scope', '$rootScope', '$route', 'AccountService'];
 
-    function AccountLoginController($scope, $rootScope, AccountService) {
+    function AccountLoginController($scope, $rootScope, $route, AccountService) {
 
         $scope.loginAccount = loginAccount;
         $scope.forgottenPassword = forgottenPassword;
@@ -19,9 +19,7 @@
             AccountService.login(form.email, form.password)
                 .then(function () {
                     closeDialog();
-                    //setTimeout(function () {
-                    //    window.location.reload();
-                    //}, 300);
+                    $route.reload();
 
                 })
                 .catch(displayErrorMessage);
