@@ -63,21 +63,11 @@
             });
         };
 
-        self.updatePollType = function (manageId, pollTypeConfig, callback, failureCallback) {
-            $http({
+        self.updatePollType = function (manageId, pollTypeConfig) {
+            return $http({
                 method: 'PUT',
                 url: '/api/manage/' + manageId + '/pollType/',
                 data: pollTypeConfig
-            })
-            .success(function (data) {
-                if (callback) {
-                    callback(data);
-                }
-            })
-            .error(function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
             });
         };
 
