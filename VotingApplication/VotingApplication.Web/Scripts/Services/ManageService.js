@@ -55,21 +55,11 @@
             });
         };
 
-        self.updatePollExpiry = function (manageId, expiryDate, callback, failureCallback) {
-            $http({
+        self.updatePollExpiry = function (manageId, expiryDate) {
+            return $http({
                 method: 'PUT',
                 url: '/api/manage/' + manageId + '/expiry/',
                 data: { ExpiryDate: expiryDate }
-            })
-            .success(function (data) {
-                if (callback) {
-                    callback(data);
-                }
-            })
-            .error(function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
             });
         };
 

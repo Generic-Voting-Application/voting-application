@@ -23,7 +23,7 @@
         $scope.dateFilter = dateFilter;
 
         activate();
-        
+
         function activate() {
             ManageService.registerPollObserver(function () {
                 $scope.poll = ManageService.poll;
@@ -31,14 +31,15 @@
         }
 
         function formatExpiry() {
-            if ($scope.poll && $scope.poll.ExpiryDate){
+            if ($scope.poll && $scope.poll.ExpiryDate) {
                 return moment($scope.poll.ExpiryDate).format('dddd, MMMM Do YYYY, HH:mm');
             }
             return 'Never';
         }
 
         function updatePoll() {
-            ManageService.updatePollExpiry($routeParams.manageId, $scope.poll.ExpiryDate, navigateToManagePage);
+            ManageService.updatePollExpiry($routeParams.manageId, $scope.poll.ExpiryDate)
+            .then(navigateToManagePage);
         }
 
         function navigateToManagePage() {
@@ -62,7 +63,7 @@
         }
 
         function timeOffset() {
-            if ($scope.poll && $scope.poll.ExpiryDate){
+            if ($scope.poll && $scope.poll.ExpiryDate) {
                 var now = moment();
 
                 var hourAwayLower = moment(now).add(1, 'hour').subtract(2.5, 'minutes');
