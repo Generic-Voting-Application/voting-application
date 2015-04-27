@@ -23,6 +23,9 @@
 
         self.registerAccountObserver = function (callback) {
             observerCallbacks.push(callback);
+            if (self.account && new Date(self.account.expiry) < new Date()) {
+                self.clearAccount();
+            }
         };
 
         self.clearAccount = function () {
@@ -63,7 +66,11 @@
             var deferred = $q.defer();
 
             getAccessToken(email, password)
-                .then(function (response) { setAccount(response.data.access_token, email); })
+                .then(function (response) {
+                    setAccount(response.data.access_token,
+                               email,
+                               new Date(response.data['.expires']));
+                })
                 .then(function () { deferred.resolve(); })
                 .catch(function () { deferred.reject(); });
 
@@ -120,8 +127,8 @@
             });
         }
 
-        function setAccount(token, email) {
-            var account = { 'token': token, 'email': email };
+        function setAccount(token, email, expiry) {
+            var account = { 'token': token, 'email': email, 'expiry': expiry };
             self.account = account;
             $localStorage.account = account;
 

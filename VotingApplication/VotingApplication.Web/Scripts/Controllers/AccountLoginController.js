@@ -19,7 +19,10 @@
             AccountService.login(form.email, form.password)
                 .then(function () {
                     closeDialog();
-                    window.location.reload();
+                    //setTimeout(function () {
+                    //    window.location.reload();
+                    //}, 300);
+
                 })
                 .catch(displayErrorMessage);
         }
