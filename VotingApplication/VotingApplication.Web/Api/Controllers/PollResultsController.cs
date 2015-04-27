@@ -85,7 +85,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                               Voters = optionGroupVotes.Select(v => (new ResultVoteModel { Name = v.Ballot.VoterName, Value = v.VoteValue }))
                           };
 
-            if (results.Count() == 0)
+            if (results.Any())
             {
                 return summary;
             }
@@ -93,13 +93,13 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
             int resultsMax = results.Max(r => r.Sum);
 
             summary.Winners = results.
-                              Where(r => r.Sum == resultsMax).
-                              Select(r => r.Option).
-                              ToList();
+                              Where(r => r.Sum == resultsMax)
+                              .Select(r => r.Option)
+                              .ToList();
 
             summary.Results = results.
-                              Select(r => ResultToModel(r.Option, r.Sum, r.Voters.ToList<ResultVoteModel>())).
-                              ToList();
+                              Select(r => ResultToModel(r.Option, r.Sum, r.Voters.ToList<ResultVoteModel>()))
+                              .ToList();
             return summary;
         }
 
