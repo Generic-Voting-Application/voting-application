@@ -85,7 +85,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                               Voters = optionGroupVotes.Select(v => (new ResultVoteModel { Name = v.Ballot.VoterName, Value = v.VoteValue }))
                           };
 
-            if (results.Any())
+            if (!results.Any())
             {
                 return summary;
             }
