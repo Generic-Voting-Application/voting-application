@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using System.Web.Script.Serialization;
@@ -22,26 +23,27 @@ namespace VotingApplication.Web.Api.Metrics
 
         public void ErrorEvent(HttpResponseException exception, Guid pollId)
         {
+            HttpResponseMessage response = exception.Response;
             Metric errorEvent = new Metric(MetricType.Error, GetExistingPollId(pollId));
 
-            errorEvent.StatusCode = (int)exception.Response.StatusCode;
+            errorEvent.StatusCode = (int)response.StatusCode;
 
-            if (exception.Response.RequestMessage != null)
+            if (response.RequestMessage != null)
             {
-                errorEvent.Detail = ErrorDetailFromRequestMessage(exception);
+                errorEvent.Detail = ErrorDetailFromRequestMessage(response.RequestMessage);
             }
             else
             {
-                errorEvent.Detail = exception.Response.ReasonPhrase;
+                errorEvent.Detail = response.ReasonPhrase;
             }
 
             StoreEvent(errorEvent);
         }
 
-        private string ErrorDetailFromRequestMessage(HttpResponseException exception)
+        private string ErrorDetailFromRequestMessage(HttpRequestMessage request)
         {
-            string apiRoute = exception.Response.RequestMessage.Method + " " + exception.Response.RequestMessage.RequestUri;
-            string requestPayload = GetPayload(exception);
+            string apiRoute = request.Method + " " + request.RequestUri;
+            string requestPayload = GetPayload(request);
             return apiRoute + " " + requestPayload;
         }
 
@@ -237,14 +239,14 @@ namespace VotingApplication.Web.Api.Metrics
 
         #region Utilities
 
-        private string GetPayload(HttpResponseException exception)
+        private string GetPayload(HttpRequestMessage request)
         {
-            var requestContext = exception.Response.RequestMessage.Properties["MS_RequestContext"];
+            var requestContext = request.Properties["MS_RequestContext"];
             HttpRequestWrapper webRequest = requestContext.GetType().GetProperty("WebRequest").GetValue(requestContext) as HttpRequestWrapper;
 
             if (webRequest == null)
             {
-                return "";
+                return String.Empty;
             }
 
             byte[] buffer = new byte[webRequest.ContentLength];
@@ -256,7 +258,7 @@ namespace VotingApplication.Web.Api.Metrics
         private Guid GetExistingPollId(Guid guid)
         {
             // Find corresponding pollId for manageId
-            using (var context = _contextFactory.CreateContext())
+            using (IVotingContext context = _contextFactory.CreateContext())
             {
                 Poll matchingPoll = context.Polls.Where(p => p.UUID == guid || p.ManageId == guid).SingleOrDefault();
                 return (matchingPoll != null) ? matchingPoll.UUID : Guid.Empty;
@@ -265,7 +267,7 @@ namespace VotingApplication.Web.Api.Metrics
 
         private void StoreEvent(Metric eventToStore)
         {
-            using (var context = _contextFactory.CreateContext())
+            using (IVotingContext context = _contextFactory.CreateContext())
             {
                 context.Metrics.Add(eventToStore);
                 context.SaveChanges();

@@ -74,12 +74,18 @@ namespace VotingApplication.Web.Api.Controllers
 
         protected internal Poll PollByPollId(Guid pollId, IVotingContext context)
         {
-            return PollByPredicate(p => p.UUID == pollId, string.Format("Poll {0} not found", pollId), context);
+            Expression<Func<Poll, bool>> predicate = (p => p.UUID == pollId);
+            string errorMessage = string.Format("Poll {0} not found", pollId);
+
+            return PollByPredicate(predicate, errorMessage, context);
         }
 
         protected internal Poll PollByManageId(Guid manageId, IVotingContext context)
         {
-            Poll poll = PollByPredicate(p => p.ManageId == manageId, string.Format("Poll for manage id {0} not found", manageId), context);
+            Expression<Func<Poll, bool>> predicate = (p => p.ManageId == manageId);
+            string errorMessage = string.Format("Poll for manage id {0} not found", manageId);
+
+            Poll poll = PollByPredicate(predicate, errorMessage, context);
 
             if (String.IsNullOrEmpty(poll.CreatorIdentity) && !String.IsNullOrEmpty(User.Identity.GetUserId()))
             {
