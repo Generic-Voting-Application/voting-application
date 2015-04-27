@@ -48,7 +48,7 @@
                 // Trim long names
                 data.map(function (result) {
                     if (result.Name.length > 20) {
-                        result.Name = result.Name.substring(0, 20) + "..."
+                        result.Name = result.Name.substring(0, 20) + '...';
                     }
                     return result;
                 });
