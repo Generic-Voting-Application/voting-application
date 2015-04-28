@@ -45,6 +45,13 @@
                 chartElement.innerHTML = '';
 
                 var data = $scope.data.sort(function (a, b) { return b.Sum - a.Sum; });
+                // Trim long names
+                data.map(function (result) {
+                    if (result.Name.length > 20) {
+                        result.Name = result.Name.substring(0, 20) + '...';
+                    }
+                    return result;
+                });
 
                 var chartHeight = Math.min(data.length * 60 + 30, 600);
                 var chartWidth = chartElement.parentElement.parentElement.offsetWidth;
