@@ -118,6 +118,10 @@
     <Compile Include="Migrations\201504101434122_RemovePollOptionNumberCheckConstraint.Designer.cs">
       <DependentUpon>201504101434122_RemovePollOptionNumberCheckConstraint.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504280828581_AddHiddenResults.cs" />
+    <Compile Include="Migrations\201504280828581_AddHiddenResults.Designer.cs">
+      <DependentUpon>201504280828581_AddHiddenResults.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
     <Compile Include="Model\Option.cs" />
@@ -183,6 +187,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504101434122_RemovePollOptionNumberCheckConstraint.resx">
       <DependentUpon>201504101434122_RemovePollOptionNumberCheckConstraint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504280828581_AddHiddenResults.resx">
+      <DependentUpon>201504280828581_AddHiddenResults.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
