@@ -70,6 +70,7 @@
         "afterEach"  : false,
         "spyOn"      : false,
         "xit"        : false,
+        "fail"       : false,
         /* angular-mocks */
         "inject"     : false
     }
