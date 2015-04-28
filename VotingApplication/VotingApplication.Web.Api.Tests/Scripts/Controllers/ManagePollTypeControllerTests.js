@@ -13,7 +13,7 @@ describe('ManagePollTypeController', function () {
     var manageUpdatePollTypePromise;
     var manageGetVotesPromise;
 
-    var observerCallback = function () { };;
+    var observerCallback = function () { };
 
     var pollData = {};
     var votesData = {};
@@ -119,7 +119,7 @@ describe('ManagePollTypeController', function () {
             var poll = {
                 MaxPerVote: 3,
                 VotingStrategy: 'Points'
-            }
+            };
 
             var getVotesData = {
                 Votes: [
@@ -147,7 +147,7 @@ describe('ManagePollTypeController', function () {
             var poll = {
                 MaxPoints: 10,
                 VotingStrategy: 'Points'
-            }
+            };
 
             var getVotesData = {
                 Votes: [
@@ -175,7 +175,7 @@ describe('ManagePollTypeController', function () {
             var poll = {
                 MaxPerVote: 3,
                 VotingStrategy: 'Points'
-            }
+            };
 
             var getVotesData = {
                 Votes: [
@@ -203,7 +203,7 @@ describe('ManagePollTypeController', function () {
             var poll = {
                 MaxPoints: 10,
                 VotingStrategy: 'Points'
-            }
+            };
 
             var getVotesData = {
                 Votes: [
@@ -230,7 +230,7 @@ describe('ManagePollTypeController', function () {
         it('Asks for confirmation if there are votes for the poll, and the poll type has changed', function () {
             var poll = {
                 VotingStrategy: 'Points'
-            }
+            };
 
             var getVotesData = {
                 Votes: [
@@ -257,7 +257,7 @@ describe('ManagePollTypeController', function () {
         it('Does not ask for confirmation if there are votes for the poll, but the poll type has not changed', function () {
             var poll = {
                 VotingStrategy: 'Points'
-            }
+            };
 
             var getVotesData = {
                 Votes: [
