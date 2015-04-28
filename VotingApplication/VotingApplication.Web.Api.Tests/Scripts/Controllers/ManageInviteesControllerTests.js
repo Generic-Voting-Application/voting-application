@@ -34,7 +34,7 @@ describe('Manage Invitees Controller', function () {
         $controller('ManageInviteesController', { $scope: scope, ManageService: manageServiceMock, RoutingService: routingServiceMock });
     }));
 
-    it('Loads Invitations from service', function() {
+    it('Loads Invitations from service', function () {
 
         expect(manageServiceMock.getInvitations).toHaveBeenCalled();
     });
@@ -72,6 +72,34 @@ describe('Manage Invitees Controller', function () {
             // Assert
             expect(manageServiceMock.sendInvitations.calls.count()).toBe(1);
             expect(manageServiceMock.sendInvitations.calls.first().args[1]).toEqual([{ Email: 'test@test.com', EmailSent: false, SendInvitation: false }]);
+        });
+
+        it('Makes service call to send emails when saving', function () {
+
+            scope.saveChanges();
+
+
+            expect(manageServiceMock.sendInvitations).toHaveBeenCalled();
+        });
+
+        it('Makes service call to Navigate To Manage Page when send service call succeeds', function () {
+            manageSendInvitationsPromise.resolve();
+
+            scope.saveChanges();
+
+
+            scope.$apply();
+            expect(routingServiceMock.navigateToManagePage).toHaveBeenCalled();
+        });
+
+        it('Does not make service call to Navigate To Manage Page when send service call fails', function () {
+            manageSendInvitationsPromise.reject();
+
+            scope.saveChanges();
+
+
+            scope.$apply();
+            expect(routingServiceMock.navigateToManagePage).not.toHaveBeenCalled();
         });
     });
 

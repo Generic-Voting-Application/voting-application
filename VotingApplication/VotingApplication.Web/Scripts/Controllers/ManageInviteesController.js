@@ -168,7 +168,8 @@
                 d.SendInvitation = false;
             });
 
-            ManageService.sendInvitations($scope.manageId, invitations, $scope.discardChanges);
+            ManageService.sendInvitations($scope.manageId, invitations)
+            .then(returnToManage);
         }
 
         function returnToManage() {

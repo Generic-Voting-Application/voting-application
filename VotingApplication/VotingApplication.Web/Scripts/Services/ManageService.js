@@ -152,21 +152,12 @@
             return $http.get('/api/manage/' + manageId + '/invitation');
         };
 
-        self.sendInvitations = function (manageId, invitees, callback, failureCallback) {
-            $http({
+        self.sendInvitations = function (manageId, invitees) {
+            return $http({
                 method: 'POST',
                 url: '/api/manage/' + manageId + '/invitation',
                 data: invitees
-            }).success(function (data) {
-                if (callback) {
-                    callback(data);
-                }
-            })
-                .error(function (data, status) {
-                    if (failureCallback) {
-                        failureCallback(data, status);
-                    }
-                });
+            });
         };
 
         self.getOptions = function (manageId) {
