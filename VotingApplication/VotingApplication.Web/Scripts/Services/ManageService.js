@@ -30,28 +30,22 @@
             observerCallbacks.push(callback);
         };
 
-        self.getPoll = function (manageId, callback, failureCallback) {
+        self.getPoll = function (manageId) {
 
             if (!manageId) {
                 return null;
             }
 
-            $http({
+            return $http({
                 method: 'GET',
                 url: '/api/manage/' + manageId,
                 headers: { 'Authorization': 'Bearer ' + (AccountService.account ? AccountService.account.token : '') }
             })
-            .success(function (data) {
+            .then(function (data) {
                 self.poll = data;
                 notifyObservers();
-                if (callback) {
-                    callback(data);
-                }
-            })
-            .error(function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
+
+                return data;
             });
         };
 

@@ -35,10 +35,12 @@
         }
 
         function activate() {
-            ManageService.getPoll(manageId, function (data) {
+            ManageService.getPoll(manageId)
+            .then(function (data) {
                 $scope.poll = data;
                 $scope.Question = data.Name;
             });
+
             $scope.visited = ManageService.getVisited(manageId);
             if (!$scope.visited) {
                 ManageService.setVisited(manageId);
@@ -52,7 +54,8 @@
         }
 
         function discardNameChanges() {
-            ManageService.getPoll(manageId, function (data) {
+            ManageService.getPoll(manageId)
+            .then(function (data) {
                 $scope.poll = data;
             });
         }
