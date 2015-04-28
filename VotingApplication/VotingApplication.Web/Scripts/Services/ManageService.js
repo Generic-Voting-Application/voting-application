@@ -71,21 +71,11 @@
             });
         };
 
-        self.updateQuestion = function (manageId, question, callback, failureCallback) {
-            $http({
+        self.updateQuestion = function (manageId, question) {
+            return $http({
                 method: 'PUT',
                 url: '/api/manage/' + manageId + '/question/',
                 data: { Question: question }
-            })
-            .success(function (data) {
-                if (callback) {
-                    callback(data);
-                }
-            })
-            .error(function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
             });
         };
 

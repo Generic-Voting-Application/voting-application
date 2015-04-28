@@ -46,15 +46,9 @@
         }
 
         function updateQuestion() {
-            var successCallback = function () {
-                $scope.poll.Name = $scope.Question;
-            };
-
-            var failureCallback = function () {
-                $scope.Question = $scope.poll.Name;
-            };
-
-            ManageService.updateQuestion($routeParams.manageId, $scope.Question, successCallback, failureCallback);
+            ManageService.updateQuestion($routeParams.manageId, $scope.Question)
+            .then(function () { $scope.poll.Name = $scope.Question; })
+            .catch(function () { $scope.Question = $scope.poll.Name; });
         }
 
         function discardNameChanges() {
