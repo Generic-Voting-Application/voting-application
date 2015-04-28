@@ -161,7 +161,6 @@
     <Content Include="Scripts\Services\ManageServiceTests.js" />
     <Content Include="Scripts\Controllers\ManageOptionControllerTests.js" />
     <Content Include="Scripts\Controllers\ManageVotersControllerTests.js" />
-    <Content Include="Scripts\Services\TokenServiceTests.js" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -11,8 +11,6 @@ describe('VotingPageController', function () {
     var mockVoteService;
     var mockRoutingService;
 
-    var getTokenPromise;
-
     var mockTokenValue = '4A9AFE2C-240B-4BFF-A569-0FEF5A78FC10';
     var mockPollValue = {
         MaxPoints: 5,
@@ -22,20 +20,18 @@ describe('VotingPageController', function () {
     };
     var mockTokenVotes = [{ OptionId: 1, VoteValue: 1 }, { OptionId: 3, VoteValue: 1 }];
 
-    beforeEach(inject(function ($rootScope, $q, $controller) {
+    beforeEach(inject(function ($rootScope, $controller) {
 
         scope = $rootScope.$new();
 
         scope.poll = { Options: [] };
-
-        getTokenPromise = $q.defer();
 
         mockIdentityService = {
             identity: {},
             registerIdentityObserver: function () { },
             openLoginDialog: function () { }
         };
-        mockTokenService = { getToken: function () { return getTokenPromise.promise; } };
+        mockTokenService = { getToken: function (pollId, callback) { callback(mockTokenValue); } };
         mockPollService = { getPoll: function (pollId, callback) { callback(mockPollValue); } };
         mockVoteService = {
             getTokenVotes: function (pollId, token, callback) { callback(mockTokenVotes); },
@@ -64,10 +60,6 @@ describe('VotingPageController', function () {
         });
     }));
 
-    beforeEach(function () {
-        getTokenPromise.resolve(mockTokenValue);
-        scope.$apply();
-    });
 
     it('Registers callback with IdentityService', function () {
 

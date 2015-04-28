@@ -42,12 +42,14 @@
             });
 
             getToken();
+
+            getPollData();
         }
 
         function getToken() {
-            TokenService.getToken($scope.pollId)
-            .then(function (tokenData) { $scope.token = tokenData; })
-            .then(getPollData);
+            TokenService.getToken($scope.pollId, function (tokenData) {
+                $scope.token = tokenData;
+            });
         }
 
         function getPollData() {
