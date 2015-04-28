@@ -10,8 +10,10 @@ describe('VotingPageController', function () {
     var mockPollService;
     var mockVoteService;
     var mockRoutingService;
+    var mockRouteParams;
 
     var getTokenPromise;
+    var submitVotePromise;
 
     var mockTokenValue = '4A9AFE2C-240B-4BFF-A569-0FEF5A78FC10';
     var mockPollValue = {
@@ -30,6 +32,8 @@ describe('VotingPageController', function () {
 
         getTokenPromise = $q.defer();
 
+        mockRouteParams = { pollId: '5130518A-4DA5-4FAA-B8FC-0242C9CAA079' };
+
         mockIdentityService = {
             identity: {},
             registerIdentityObserver: function () { },
@@ -39,8 +43,11 @@ describe('VotingPageController', function () {
         mockPollService = { getPoll: function (pollId, callback) { callback(mockPollValue); } };
         mockVoteService = {
             getTokenVotes: function (pollId, token, callback) { callback(mockTokenVotes); },
-            submitVote: function (pollId, votes, token, callback) { callback(); }
+            submitVote: function () { }
         };
+        submitVotePromise = $q.defer();
+        spyOn(mockVoteService, 'submitVote').and.callFake(function () { return submitVotePromise.promise; });
+
         mockRoutingService = {
             getResultsPageUrl: function () { },
             navigateToResultsPage: function () { }
@@ -51,7 +58,6 @@ describe('VotingPageController', function () {
         spyOn(mockTokenService, 'getToken').and.callThrough();
         spyOn(mockPollService, 'getPoll').and.callThrough();
         spyOn(mockVoteService, 'getTokenVotes').and.callThrough();
-        spyOn(mockVoteService, 'submitVote').and.callThrough();
         spyOn(mockRoutingService, 'navigateToResultsPage').and.callThrough();
 
         $controller('VotingPageController', {
@@ -60,7 +66,8 @@ describe('VotingPageController', function () {
             TokenService: mockTokenService,
             PollService: mockPollService,
             VoteService: mockVoteService,
-            RoutingService: mockRoutingService
+            RoutingService: mockRoutingService,
+            $routeParams: mockRouteParams
         });
     }));
 
@@ -148,8 +155,12 @@ describe('VotingPageController', function () {
         });
 
         it('Calls Routing Service to navigate to the results page when the Vote Service submit is successful', function () {
+            submitVotePromise.resolve();
+
             scope.submitVote([]);
 
+
+            scope.$apply();
             expect(mockRoutingService.navigateToResultsPage).toHaveBeenCalled();
         });
 
@@ -212,6 +223,34 @@ describe('VotingPageController', function () {
 
 
             expect(scope.poll.Options).toEqual(expectedOptions);
+        });
+
+    });
+
+    describe('Clear Vote', function () {
+
+        it('Calls Vote Service to clear the vote', function () {
+
+            scope.clearVote();
+
+            expect(mockVoteService.submitVote).toHaveBeenCalled();
+        });
+
+        it('Calls Vote Service with no votes', function () {
+
+            scope.clearVote();
+
+            expect(mockVoteService.submitVote).toHaveBeenCalledWith(jasmine.any(String), [], jasmine.any(String));
+        });
+
+        it('Calls Routing Service to navigate to the results page when the Vote Service submit is successful', function () {
+            submitVotePromise.resolve();
+
+            scope.clearVote();
+
+
+            scope.$apply();
+            expect(mockRoutingService.navigateToResultsPage).toHaveBeenCalled();
         });
 
     });

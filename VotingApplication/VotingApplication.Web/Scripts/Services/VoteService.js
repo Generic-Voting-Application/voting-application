@@ -22,27 +22,16 @@
 
         return service;
 
-        function submitVote(pollId, votes, token, callback, failureCallback) {
+        function submitVote(pollId, votes, token) {
 
             if (!pollId || !votes || !token) {
                 return null;
             }
 
-            $http({
+            return $http({
                 method: 'PUT',
                 url: '/api/poll/' + pollId + '/token/' + token + '/vote',
                 data: votes
-            })
-            .success(function (data) {
-                if (callback) {
-                    callback(data);
-                }
-            })
-            .error(
-            function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
             });
 
         }
