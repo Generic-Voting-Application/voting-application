@@ -10,7 +10,7 @@ using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
 
-namespace VotingApplication.Web.Api.Tests.Controllers
+namespace VotingApplication.Web.Tests.Controllers
 {
     [TestClass]
     public class PollTokenControllerTests

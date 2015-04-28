@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4EF491BF-0EC2-4E96-ACBF-B21232BE3BC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Web.Api.Tests", "VotingApplication.Web.Api.Tests\VotingApplication.Web.Api.Tests.csproj", "{83728922-B15F-4BBC-86B7-5788D9E12A98}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Web.Tests", "VotingApplication.Web.Api.Tests\VotingApplication.Web.Tests.csproj", "{83728922-B15F-4BBC-86B7-5788D9E12A98}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Data", "VotingApplication.Data\VotingApplication.Data.csproj", "{942DCB1B-5882-4C01-95AE-3FE71E4103F2}"
 EndProject
@@ -63,7 +63,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{83728922-B15F-4BBC-86B7-5788D9E12A98} = {4EF491BF-0EC2-4E96-ACBF-B21232BE3BC9}
 		{A293CB92-9B81-41E9-A3BA-D8971E7C7F4B} = {D8BE54F9-AFD9-45B9-9B81-07211A2E4B28}
 	EndGlobalSection
 EndGlobal

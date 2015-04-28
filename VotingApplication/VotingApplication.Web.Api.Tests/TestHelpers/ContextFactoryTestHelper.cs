@@ -3,7 +3,7 @@ using System.Data.Entity;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 
-namespace VotingApplication.Web.Api.Tests.TestHelpers
+namespace VotingApplication.Web.Tests.TestHelpers
 {
     public static class ContextFactoryTestHelper
     {
