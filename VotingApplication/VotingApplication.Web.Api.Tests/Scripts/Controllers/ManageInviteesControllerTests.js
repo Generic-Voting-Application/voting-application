@@ -59,19 +59,22 @@ describe('Manage Invitees Controller', function () {
 
     describe('Save Changes', function () {
 
-        it('does not send emails when saving', function () {
-            // Arrange
-            scope.pendingUsers = [{ Email: 'test@test.com', EmailSent: false }];
+        it('Sets SendInvitation to false for all invites passed to service', function () {
+
+            scope.pendingUsers = [
+                {
+                    Email: 'test@test.com',
+                    EmailSent: false,
+                    SendInvitation: true
+                }];
             scope.invitedUsers = [];
             scope.manageId = 'abc';
-            scope.discard = function () { };
 
-            // Act
+
             scope.saveChanges();
 
-            // Assert
-            expect(manageServiceMock.sendInvitations.calls.count()).toBe(1);
-            expect(manageServiceMock.sendInvitations.calls.first().args[1]).toEqual([{ Email: 'test@test.com', EmailSent: false, SendInvitation: false }]);
+
+            expect(manageServiceMock.sendInvitations).toHaveBeenCalledWith('abc', [{ Email: 'test@test.com', EmailSent: false, SendInvitation: false }]);
         });
 
         it('Makes service call to send emails when saving', function () {
