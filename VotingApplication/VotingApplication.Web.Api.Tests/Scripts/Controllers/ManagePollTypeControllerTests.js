@@ -57,7 +57,7 @@ describe('ManagePollTypeController', function () {
 
             scope.$apply();
 
-            expect(manageServiceMock.updatePollType.calls.any()).toEqual(true);
+            expect(manageServiceMock.updatePollType).toHaveBeenCalled();
         });
 
         it('Makes service call to Navigate To Manage Page when update service call succeeds', function () {
@@ -69,7 +69,7 @@ describe('ManagePollTypeController', function () {
 
 
             scope.$apply();
-            expect(routingServiceMock.navigateToManagePage.calls.any()).toEqual(true);
+            expect(routingServiceMock.navigateToManagePage).toHaveBeenCalled();
         });
 
         it('Does not make service call to Navigate To Manage Page if delete service call fails', function () {
@@ -81,7 +81,7 @@ describe('ManagePollTypeController', function () {
 
 
             scope.$apply();
-            expect(routingServiceMock.navigateToManagePage.calls.any()).toEqual(false);
+            expect(routingServiceMock.navigateToManagePage).not.toHaveBeenCalled();
         });
 
         it('Makes service call to see if there are any votes on the poll', function () {
@@ -91,7 +91,7 @@ describe('ManagePollTypeController', function () {
             scope.updatePoll();
 
             scope.$apply();
-            expect(manageServiceMock.getVotes.calls.any()).toEqual(true);
+            expect(manageServiceMock.getVotes).toHaveBeenCalled();
         });
 
         it('Makes service call to Update Poll when getVotes service call succeeds', function () {
@@ -102,7 +102,7 @@ describe('ManagePollTypeController', function () {
 
 
             scope.$apply();
-            expect(manageServiceMock.updatePollType.calls.any()).toEqual(true);
+            expect(manageServiceMock.updatePollType).toHaveBeenCalled();
 
         });
     });
