@@ -26,7 +26,8 @@
                 HiddenResults: $scope.poll.HiddenResults
             };
 
-            ManageService.updatePollMisc($routeParams.manageId, miscConfig, navigateToManagePage);
+            ManageService.updatePollMisc($routeParams.manageId, miscConfig)
+            .then(navigateToManagePage);
         }
 
         function navigateToManagePage() {
