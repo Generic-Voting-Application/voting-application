@@ -11,6 +11,9 @@ describe('ManagePollTypeController', function () {
     var ngDialogMock;
 
     var manageUpdatePollTypePromise;
+    var manageGetVotesPromise;
+
+    var votesData = {};
 
     beforeEach(inject(function ($rootScope, $q, $controller) {
 
@@ -21,12 +24,14 @@ describe('ManagePollTypeController', function () {
 
             registerPollObserver: function () { },
             getPoll: function () { },
-            getVotes: function (pollId, callback) { callback({}); },
+            getVotes: function () { },
             updatePollType: function () { }
         };
 
         manageUpdatePollTypePromise = $q.defer();
+        manageGetVotesPromise = $q.defer();
         spyOn(manageServiceMock, 'updatePollType').and.callFake(function () { return manageUpdatePollTypePromise.promise; });
+        spyOn(manageServiceMock, 'getVotes').and.callFake(function () { return manageGetVotesPromise.promise; });
 
         routingServiceMock = { navigateToManagePage: function () { } };
         spyOn(routingServiceMock, 'navigateToManagePage');
@@ -46,13 +51,18 @@ describe('ManagePollTypeController', function () {
     describe('Update Poll', function () {
 
         it('Makes service call to update poll type', function () {
+            manageGetVotesPromise.resolve(votesData);
+
             scope.updatePoll();
+
+            scope.$apply();
 
             expect(manageServiceMock.updatePollType.calls.any()).toEqual(true);
         });
 
         it('Makes service call to Navigate To Manage Page when update service call succeeds', function () {
             manageUpdatePollTypePromise.resolve();
+            manageGetVotesPromise.resolve(votesData);
 
 
             scope.updatePoll();
@@ -64,6 +74,7 @@ describe('ManagePollTypeController', function () {
 
         it('Does not make service call to Navigate To Manage Page if delete service call fails', function () {
             manageUpdatePollTypePromise.reject();
+            manageGetVotesPromise.resolve(votesData);
 
 
             scope.updatePoll();
@@ -71,6 +82,28 @@ describe('ManagePollTypeController', function () {
 
             scope.$apply();
             expect(routingServiceMock.navigateToManagePage.calls.any()).toEqual(false);
+        });
+
+        it('Makes service call to see if there are any votes on the poll', function () {
+            manageGetVotesPromise.resolve(votesData);
+
+
+            scope.updatePoll();
+
+            scope.$apply();
+            expect(manageServiceMock.getVotes.calls.any()).toEqual(true);
+        });
+
+        it('Makes service call to Update Poll when getVotes service call succeeds', function () {
+            manageGetVotesPromise.resolve(votesData);
+
+
+            scope.updatePoll();
+
+
+            scope.$apply();
+            expect(manageServiceMock.updatePollType.calls.any()).toEqual(true);
+
         });
     });
 });

@@ -107,19 +107,8 @@
             });
         };
 
-        self.getVotes = function (pollId, callback, failureCallback) {
-
-            $http.get('/api/poll/' + pollId + '/results')
-                .success(function (data) {
-                    if (callback) {
-                        callback(data);
-                    }
-                })
-                .error(function (data, status) {
-                    if (failureCallback) {
-                        failureCallback(data, status);
-                    }
-                });
+        self.getVotes = function (pollId) {
+            return $http.get('/api/poll/' + pollId + '/results');
         };
 
         self.getVoters = function (manageId) {
