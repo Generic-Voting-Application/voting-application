@@ -41,11 +41,11 @@
                 url: '/api/manage/' + manageId,
                 headers: { 'Authorization': 'Bearer ' + (AccountService.account ? AccountService.account.token : '') }
             })
-            .then(function (data) {
-                self.poll = data;
+            .then(function (response) {
+                self.poll = response.data;
                 notifyObservers();
 
-                return data;
+                return response.data;
             });
         };
 
