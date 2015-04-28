@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace VotingApplication.Data.Context
 {
     public class ContextFactory : IContextFactory
@@ -11,6 +6,11 @@ namespace VotingApplication.Data.Context
         public IVotingContext CreateContext()
         {
             return new VotingContext();
+        }
+
+        public IVotingContext CreateTestContext()
+        {
+            return new TestVotingContext();
         }
     }
 }

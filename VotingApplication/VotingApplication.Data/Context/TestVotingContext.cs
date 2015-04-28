@@ -3,15 +3,17 @@ using VotingApplication.Data.Model;
 
 namespace VotingApplication.Data.Context
 {
-    public class VotingContext : DbContext, IVotingContext
+    public class TestVotingContext : DbContext, IVotingContext
     {
-        public VotingContext()
-            : base("VotingContext")
+        public TestVotingContext()
+            : base("TestVotingContext")
         {
             this.Configuration.LazyLoadingEnabled = false;
             this.Configuration.ProxyCreationEnabled = false;
             this.Configuration.ValidateOnSaveEnabled = false;
             this.Configuration.UseDatabaseNullSemantics = true;
+
+            Database.SetInitializer<TestVotingContext>(new CreateDatabaseIfNotExists<TestVotingContext>());
         }
 
         public IDbSet<Option> Options { get; set; }

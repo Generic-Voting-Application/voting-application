@@ -50,6 +50,7 @@
     <Compile Include="Context\ContextFactory.cs" />
     <Compile Include="Context\IContextFactory.cs" />
     <Compile Include="Context\IVotingContext.cs" />
+    <Compile Include="Context\TestVotingContext.cs" />
     <Compile Include="Migrations\201412101113388_Initial.cs" />
     <Compile Include="Migrations\201412101113388_Initial.Designer.cs">
       <DependentUpon>201412101113388_Initial.cs</DependentUpon>
