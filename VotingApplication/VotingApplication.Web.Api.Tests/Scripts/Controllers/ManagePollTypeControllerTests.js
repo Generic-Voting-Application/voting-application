@@ -13,6 +13,9 @@ describe('ManagePollTypeController', function () {
     var manageUpdatePollTypePromise;
     var manageGetVotesPromise;
 
+    var observerCallback = function () { };;
+
+    var pollData = {};
     var votesData = {};
 
     beforeEach(inject(function ($rootScope, $q, $controller) {
@@ -32,6 +35,11 @@ describe('ManagePollTypeController', function () {
         manageGetVotesPromise = $q.defer();
         spyOn(manageServiceMock, 'updatePollType').and.callFake(function () { return manageUpdatePollTypePromise.promise; });
         spyOn(manageServiceMock, 'getVotes').and.callFake(function () { return manageGetVotesPromise.promise; });
+        spyOn(manageServiceMock, 'registerPollObserver').and.callFake(function (callback) { observerCallback = callback; });
+        spyOn(manageServiceMock, 'getPoll').and.callFake(function () {
+            observerCallback();
+            return pollData;
+        });
 
         routingServiceMock = { navigateToManagePage: function () { } };
         spyOn(routingServiceMock, 'navigateToManagePage');
@@ -39,6 +47,7 @@ describe('ManagePollTypeController', function () {
         ngDialogMock = {
             open: function () { }
         };
+        spyOn(ngDialogMock, 'open');
 
         $controller('ManagePollTypeController', {
             $scope: scope,
@@ -104,6 +113,171 @@ describe('ManagePollTypeController', function () {
             scope.$apply();
             expect(manageServiceMock.updatePollType).toHaveBeenCalled();
 
+        });
+
+        it('Asks for confirmation if there are votes for the poll, the poll type is Points, and the max per vote has changed', function () {
+            var poll = {
+                MaxPerVote: 3,
+                VotingStrategy: 'Points'
+            }
+
+            var getVotesData = {
+                Votes: [
+                    {
+                        OptionId: 1,
+                        VoteValue: 1,
+                        VoterName: 'Bob'
+                    }
+                ]
+            };
+            manageGetVotesPromise.resolve(getVotesData);
+
+            manageServiceMock.poll = poll;
+            observerCallback();
+
+            scope.poll.MaxPerVote = 7;
+            scope.updatePoll();
+
+
+            scope.$apply();
+            expect(ngDialogMock.open).toHaveBeenCalled();
+        });
+
+        it('Asks for confirmation if there are votes for the poll, the poll type is Points, and the max point have changed', function () {
+            var poll = {
+                MaxPoints: 10,
+                VotingStrategy: 'Points'
+            }
+
+            var getVotesData = {
+                Votes: [
+                    {
+                        OptionId: 1,
+                        VoteValue: 1,
+                        VoterName: 'Bob'
+                    }
+                ]
+            };
+            manageGetVotesPromise.resolve(getVotesData);
+
+            manageServiceMock.poll = poll;
+            observerCallback();
+
+            scope.poll.MaxPoints = 8;
+            scope.updatePoll();
+
+
+            scope.$apply();
+            expect(ngDialogMock.open).toHaveBeenCalled();
+        });
+
+        it('Does not ask for confirmation if there are votes for the poll, the poll type is Points, but the max per vote has not changed', function () {
+            var poll = {
+                MaxPerVote: 3,
+                VotingStrategy: 'Points'
+            }
+
+            var getVotesData = {
+                Votes: [
+                    {
+                        OptionId: 1,
+                        VoteValue: 1,
+                        VoterName: 'Bob'
+                    }
+                ]
+            };
+            manageGetVotesPromise.resolve(getVotesData);
+
+            manageServiceMock.poll = poll;
+            observerCallback();
+
+
+            scope.updatePoll();
+
+
+            scope.$apply();
+            expect(ngDialogMock.open).not.toHaveBeenCalled();
+        });
+
+        it('Does not ask for confirmation if there are votes for the poll, the poll type is Points, but the max per vote has not changed', function () {
+            var poll = {
+                MaxPoints: 10,
+                VotingStrategy: 'Points'
+            }
+
+            var getVotesData = {
+                Votes: [
+                    {
+                        OptionId: 1,
+                        VoteValue: 1,
+                        VoterName: 'Bob'
+                    }
+                ]
+            };
+            manageGetVotesPromise.resolve(getVotesData);
+
+            manageServiceMock.poll = poll;
+            observerCallback();
+
+
+            scope.updatePoll();
+
+
+            scope.$apply();
+            expect(ngDialogMock.open).not.toHaveBeenCalled();
+        });
+
+        it('Asks for confirmation if there are votes for the poll, and the poll type has changed', function () {
+            var poll = {
+                VotingStrategy: 'Points'
+            }
+
+            var getVotesData = {
+                Votes: [
+                    {
+                        OptionId: 1,
+                        VoteValue: 1,
+                        VoterName: 'Bob'
+                    }
+                ]
+            };
+            manageGetVotesPromise.resolve(getVotesData);
+
+            manageServiceMock.poll = poll;
+            observerCallback();
+
+            scope.poll.VotingStrategy = 'Basic';
+            scope.updatePoll();
+
+
+            scope.$apply();
+            expect(ngDialogMock.open).toHaveBeenCalled();
+        });
+
+        it('Does not ask for confirmation if there are votes for the poll, but the poll type has not changed', function () {
+            var poll = {
+                VotingStrategy: 'Points'
+            }
+
+            var getVotesData = {
+                Votes: [
+                    {
+                        OptionId: 1,
+                        VoteValue: 1,
+                        VoterName: 'Bob'
+                    }
+                ]
+            };
+            manageGetVotesPromise.resolve(getVotesData);
+
+            manageServiceMock.poll = poll;
+            observerCallback();
+
+            scope.updatePoll();
+
+
+            scope.$apply();
+            expect(ngDialogMock.open).not.toHaveBeenCalled();
         });
     });
 });
