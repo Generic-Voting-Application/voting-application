@@ -148,18 +148,8 @@
             return $localStorage[manageId].visited;
         };
 
-        self.getInvitations = function (manageId, callback, failureCallback) {
-            $http.get('/api/manage/' + manageId + '/invitation')
-                .success(function (data) {
-                    if (callback) {
-                        callback(data);
-                    }
-                })
-                .error(function (data) {
-                    if (failureCallback) {
-                        failureCallback(data);
-                    }
-                });
+        self.getInvitations = function (manageId) {
+            return $http.get('/api/manage/' + manageId + '/invitation');
         };
 
         self.sendInvitations = function (manageId, invitees, callback, failureCallback) {

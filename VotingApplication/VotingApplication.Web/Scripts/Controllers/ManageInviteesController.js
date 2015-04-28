@@ -10,6 +10,9 @@
 
     function ManageInviteesController($scope, $routeParams, ManageService, RoutingService) {
 
+        var splitterTest = /[\n\s;>]+/;
+        var emailRegex = /[\w._%+-]+@\w+(\.\w+)+/;
+
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
 
@@ -18,20 +21,50 @@
         $scope.deletePendingVoter = deletePendingVoter;
         $scope.deleteInvitedVoter = deleteInvitedVoter;
         $scope.sendInvitations = sendInvitations;
-        $scope.inviteString = '';
 
         $scope.saveChanges = updatePoll;
         $scope.discardChanges = returnToManage;
 
         $scope.isSaving = false;
 
+        $scope.inviteString = '';
+
         $scope.pendingUsers = [];
         $scope.invitedUsers = [];
 
         activate();
 
-        var splitterTest = /[\n\s;>]+/;
-        var emailRegex = /[\w._%+-]+@\w+(\.\w+)+/;
+        function activate() {
+            ManageService.getInvitations($routeParams.manageId)
+            .then(function (data) {
+                $scope.Invitations = data;
+                filterUsersByPending();
+            });
+        }
+
+        function filterUsersByPending() {
+            $scope.pendingUsers = [];
+            $scope.invitedUsers = [];
+
+            if ($scope.Invitations === undefined) {
+                return;
+            }
+
+            for (var i = 0; i < $scope.Invitations.length; i++) {
+                var voter = $scope.Invitations[i];
+
+                if (voter.Email === null) {
+                    continue;
+                }
+
+                if (voter.EmailSent) {
+                    $scope.invitedUsers.push(voter);
+                }
+                else {
+                    $scope.pendingUsers.push(voter);
+                }
+            }
+        }
 
         function emailUpdated() {
             if (hasTerminatingCharacter($scope.inviteString)) {
@@ -101,7 +134,7 @@
             }
 
             $scope.sendingInvitations = true;
-            
+
             var existingInvitations = $scope.invitedUsers.map(function (d) {
                 d.SendInvitation = false;
                 return d;
@@ -138,41 +171,8 @@
             ManageService.sendInvitations($scope.manageId, invitations, $scope.discardChanges);
         }
 
-        function filterUsersByPending() {
-            $scope.pendingUsers = [];
-            $scope.invitedUsers = [];
-
-            if ($scope.Invitations === undefined) {
-                return;
-            }
-
-            for (var i = 0; i < $scope.Invitations.length; i++) {
-                var voter = $scope.Invitations[i];
-
-                if (voter.Email === null) {
-                    continue;
-                }
-                
-                if (voter.EmailSent) {
-                    $scope.invitedUsers.push(voter);
-                }
-                else {
-                    $scope.pendingUsers.push(voter);
-                }
-            }
-        }
-
         function returnToManage() {
             RoutingService.navigateToManagePage($scope.manageId);
-        }
-
-        function activate() {
-            ManageService.getInvitations($routeParams.manageId, function (data) {
-                $scope.Invitations = data;
-                filterUsersByPending();
-            });
-
-            filterUsersByPending();
         }
     }
 })();
