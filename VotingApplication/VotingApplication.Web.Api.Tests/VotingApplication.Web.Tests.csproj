@@ -124,6 +124,7 @@
     <Compile Include="E2E\Helpers\Clearers\PollClearer.cs" />
     <Compile Include="E2E\Helpers\Clearers\Clearer.cs" />
     <Compile Include="E2E\Helpers\Clearers\VoteClearer.cs" />
+    <Compile Include="E2E\Helpers\Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers\ContextFactoryTestHelper.cs" />
     <Compile Include="TestHelpers\DbSetTestHelper.cs" />

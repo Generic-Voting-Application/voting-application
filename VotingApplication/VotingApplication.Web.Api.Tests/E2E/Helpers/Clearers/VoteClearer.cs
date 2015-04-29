@@ -12,8 +12,12 @@ namespace VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers
 
         public void ClearLast()
         {
-            _context.Votes.Remove(_context.Votes.AsEnumerable().Last());
-            _context.SaveChanges();
+            Vote lastVote = _context.Votes.AsEnumerable().LastOrDefault();
+            if (lastVote != null)
+            {
+                _context.Votes.Remove(lastVote);
+                _context.SaveChanges();
+            }
         }
 
         public void ClearLast(int count)
