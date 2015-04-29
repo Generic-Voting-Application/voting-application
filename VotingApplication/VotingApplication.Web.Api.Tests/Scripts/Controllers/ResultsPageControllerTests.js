@@ -99,4 +99,68 @@ describe('Results Page Controller', function () {
 
         expect(scope.voteCount).toBe(3);
     });
+
+    it('Sets Winner to the single winning option', function () {
+        var resultData = {
+            Winners: [{ Name: 'Winning option' }]
+        };
+
+        var response = { data: resultData };
+
+        voteGetResultsPromise.resolve(response);
+
+        scope.$apply();
+        jasmine.clock().tick(3000);
+
+
+        expect(scope.winner).toBe('Winning option');
+    });
+
+    it('Sets Winner to the combined list of all winners', function () {
+        var resultData = {
+            Winners: [{ Name: 'Winning option' }, { Name: 'Another Winning option' }]
+        };
+
+        var response = { data: resultData };
+
+        voteGetResultsPromise.resolve(response);
+
+        scope.$apply();
+        jasmine.clock().tick(3000);
+
+
+        expect(scope.winner).toBe('Winning option, Another Winning option');
+    });
+
+    it('Sets plural to empty if there is a single winner', function() {
+        var resultData = {
+            Winners: [{ Name: 'Winning option' }]
+        };
+
+        var response = { data: resultData };
+
+        voteGetResultsPromise.resolve(response);
+
+        scope.$apply();
+        jasmine.clock().tick(3000);
+
+
+        expect(scope.plural).toBe('');
+    });
+
+    it('Sets plural if there is more than one winner', function() {
+        var resultData = {
+            Winners: [{ Name: 'Winning option' }, { Name: 'Another Winning option' }]
+        };
+
+        var response = { data: resultData };
+
+        voteGetResultsPromise.resolve(response);
+
+        scope.$apply();
+        jasmine.clock().tick(3000);
+
+
+        expect(scope.plural).toBe('s (Draw)');
+    });
 });

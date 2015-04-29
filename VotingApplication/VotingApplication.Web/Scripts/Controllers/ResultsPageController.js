@@ -34,11 +34,11 @@
 
         function reloadData() {
             VoteService.getResults(pollId)
-                .then(getResultsSuccessCallback)
+                .then(displayResults)
                 .catch(handleGetResultsError);
         }
 
-        function getResultsSuccessCallback(response) {
+        function displayResults(response) {
             var data = response.data;
 
             if (!data) {
@@ -53,6 +53,7 @@
                 $scope.winner = data.Winners.map(function (d) {
                     return d.Name;
                 }).join(', ');
+
                 $scope.plural = (data.Winners.length > 1) ? 's (Draw)' : '';
             }
 
