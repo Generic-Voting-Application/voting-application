@@ -124,6 +124,9 @@ namespace VotingApplication.Web.Tests.E2E
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultMultiPoll.UUID);
                 IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
+                IReadOnlyCollection<IWebElement> options = _driver.FindElements(NgBy.Repeater("option in poll.Options"));
+
+                options.First().Click();
                 buttons.First(b => b.Text == "Vote").Click();
 
                 VoteClearer voterClearer = new VoteClearer(_context);
@@ -140,6 +143,26 @@ namespace VotingApplication.Web.Tests.E2E
                 IWebElement resultsLink = anchors.FirstOrDefault(a => a.Text == "Go to results");
 
                 Assert.IsTrue(resultsLink.IsVisible());
+            }
+
+            [TestMethod]
+            public void MultiVote_AfterVoting_VoteIsRemembered()
+            {
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultMultiPoll.UUID);
+                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
+                IReadOnlyCollection<IWebElement> options = _driver.FindElements(NgBy.Repeater("option in poll.Options"));
+
+                options.First().Click();
+                buttons.First(b => b.Text == "Vote").Click();
+
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultMultiPoll.UUID);
+
+                VoteClearer voterClearer = new VoteClearer(_context);
+                voterClearer.ClearLast();
+
+                IWebElement selectedOption = _driver.FindElements(By.CssSelector(".selected-option")).Single();
+
+                Assert.IsTrue(selectedOption.IsVisible());
             }
         }
         #endregion
