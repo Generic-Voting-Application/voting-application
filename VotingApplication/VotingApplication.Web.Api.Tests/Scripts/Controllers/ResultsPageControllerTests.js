@@ -71,7 +71,7 @@ describe('Results Page Controller', function () {
 
     it('Does not remove the timer if the vote service returns a success from get results', function () {
 
-        voteGetResultsPromise.resolve();
+        voteGetResultsPromise.resolve({});
 
         scope.$apply();
         jasmine.clock().tick(3000);
@@ -89,7 +89,9 @@ describe('Results Page Controller', function () {
             Votes: [{}, {}, {}]
         };
 
-        voteGetResultsPromise.resolve(resultData);
+        var response = { data: resultData };
+
+        voteGetResultsPromise.resolve(response);
 
         scope.$apply();
         jasmine.clock().tick(3000);

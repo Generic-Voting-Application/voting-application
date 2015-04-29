@@ -24,16 +24,22 @@
 
         function submitVote(pollId, votes, token) {
 
+            var deferred = $q.defer();
+
             if (!pollId || !votes || !token) {
-                return null;
+                deferred.reject();
+                return deferred.promise;
             }
 
-            return $http({
+            $http({
                 method: 'PUT',
                 url: '/api/poll/' + pollId + '/token/' + token + '/vote',
                 data: votes
-            });
+            })
+            .success(function (data) { deferred.resolve(data); })
+            .error(function (data, status) { return deferred.reject(data, status); });
 
+            return deferred.promise;
         }
 
         function getResults(pollId) {
@@ -80,16 +86,12 @@
         }
 
         function addVoterOption(pollId, newOption) {
-            var deferred = $q.defer();
 
-            $http
+            return $http
                 .post(
                     '/api/poll/' + pollId + '/option',
                     newOption
-                )
-                .success(function (data) { deferred.resolve(data); });
-
-            return deferred.promise;
+                );
         }
     }
 })();
