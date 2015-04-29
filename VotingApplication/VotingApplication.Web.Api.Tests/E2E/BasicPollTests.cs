@@ -119,6 +119,16 @@ namespace VotingApplication.Web.Tests.E2E
 
                 Assert.IsTrue(_driver.Url.StartsWith(SiteBaseUri + "Poll/#/Results/" + _defaultBasicPoll.UUID));
             }
+
+            [TestMethod]
+            public void DefaultPoll_ShowsResultsButton()
+            {
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultBasicPoll.UUID);
+                IReadOnlyCollection<IWebElement> anchors = _driver.FindElements(By.TagName("a"));
+                IWebElement resultsLink = anchors.FirstOrDefault(a => a.Text == "Go to results");
+
+                Assert.IsTrue(resultsLink.IsVisible());
+            }
         }
 
         [TestClass]
@@ -269,9 +279,9 @@ namespace VotingApplication.Web.Tests.E2E
 
                 Assert.AreEqual(SiteBaseUri + "Poll/#/Vote/" + _namedBasicPoll.UUID, _driver.Url);
 
-                IWebElement form = _driver.FindElement(NgBy.Model("loginForm.name"));
-                Assert.IsTrue(form.IsVisible());
-                Assert.AreEqual(String.Empty, form.Text);
+                IWebElement formName = _driver.FindElement(NgBy.Model("loginForm.name"));
+                Assert.IsTrue(formName.IsVisible());
+                Assert.AreEqual(String.Empty, formName.Text);
             }
 
             [TestMethod]
@@ -283,13 +293,13 @@ namespace VotingApplication.Web.Tests.E2E
 
                 buttons = _driver.FindElements(By.TagName("Button"));
 
-                IWebElement form = _driver.FindElement(NgBy.Model("loginForm.name"));
+                IWebElement formName = _driver.FindElement(NgBy.Model("loginForm.name"));
                 IWebElement goButton = buttons.First(b => b.Text == "Go");
 
                 Assert.IsTrue(goButton.IsVisible());
                 Assert.IsFalse(goButton.Enabled);
 
-                form.SendKeys("User");
+                formName.SendKeys("User");
 
                 Assert.IsTrue(goButton.Enabled);
             }
@@ -303,15 +313,214 @@ namespace VotingApplication.Web.Tests.E2E
 
                 buttons = _driver.FindElements(By.TagName("Button"));
 
-                IWebElement form = _driver.FindElement(NgBy.Model("loginForm.name"));
+                IWebElement formName = _driver.FindElement(NgBy.Model("loginForm.name"));
                 IWebElement goButton = buttons.First(b => b.Text == "Go");
-                form.SendKeys("User");
+                formName.SendKeys("User");
+
+                IWebElement form = _driver.FindElement(By.Name("loginForm"));
                 form.Submit();
 
                 VoteClearer voterClearer = new VoteClearer(_context);
                 voterClearer.ClearLast();
 
                 Assert.IsTrue(_driver.Url.StartsWith(SiteBaseUri + "Poll/#/Results/" + _namedBasicPoll.UUID));
+            }
+        }
+
+        [TestClass]
+        public class OptionAddingPollConfiguration
+        {
+            private static IWebDriver _driver;
+            private static IVotingContext _context;
+
+            private static Poll _optionAddingBasicPoll;
+
+            [ClassInitialize]
+            public static void ClassInitialise(TestContext testContext)
+            {
+                _driver = new NgWebDriver(new ChromeDriver(ChromeDriverDir));
+                _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromSeconds(10));
+                _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
+
+                ContextFactory contextFactory = new ContextFactory();
+                _context = contextFactory.CreateTestContext();
+
+                List<Option> testPollOptions = new List<Option>() {
+                new Option(){ Name = "Test Option 1", Description = "Test Description 1" },
+                new Option(){ Name = "Test Option 2", Description = "Test Description 2" }};
+
+                // Open, Named voters, No Option Adding, Shown Results
+                _optionAddingBasicPoll = new Poll()
+                {
+                    UUID = Guid.NewGuid(),
+                    Name = "Test Poll",
+                    LastUpdated = DateTime.Now,
+                    CreatedDate = DateTime.Now,
+                    Options = testPollOptions,
+                    InviteOnly = false,
+                    NamedVoting = false,
+                    OptionAdding = true,
+                    HiddenResults = false
+                };
+
+                _context.Polls.Add(_optionAddingBasicPoll);
+                _context.SaveChanges();
+            }
+
+            [ClassCleanup]
+            public static void ClassCleanup()
+            {
+                PollClearer pollTearDown = new PollClearer(_context);
+                pollTearDown.ClearPoll(_optionAddingBasicPoll);
+
+                _driver.Dispose();
+                _context.Dispose();
+            }
+
+            [TestMethod]
+            public void OptionAddingPoll_ProvidesLinkForAddingOptions()
+            {
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingBasicPoll.UUID);
+                IReadOnlyCollection<IWebElement> anchors = _driver.FindElements(By.TagName("a"));
+                IWebElement addOptionLink = anchors.First(a => a.Text == "+ Add another option");
+
+                Assert.IsTrue(addOptionLink.IsVisible());
+            }
+
+            [TestMethod]
+            public void OptionAddingLink_PromptsForOptionDetails()
+            {
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingBasicPoll.UUID);
+                IReadOnlyCollection<IWebElement> anchors = _driver.FindElements(By.TagName("a"));
+                IWebElement addOptionLink = anchors.First(a => a.Text == "+ Add another option");
+                addOptionLink.Click();
+
+                Assert.AreEqual(SiteBaseUri + "Poll/#/Vote/" + _optionAddingBasicPoll.UUID, _driver.Url);
+
+                IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
+                Assert.IsTrue(formName.IsVisible());
+                Assert.AreEqual(String.Empty, formName.Text);
+
+                IWebElement formDescription = _driver.FindElement(NgBy.Model("addOptionForm.description"));
+                Assert.IsTrue(formDescription.IsVisible());
+                Assert.AreEqual(String.Empty, formDescription.Text);
+            }
+
+            [TestMethod]
+            public void OptionAddingPrompt_AcceptsValidName()
+            {
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingBasicPoll.UUID);
+                IReadOnlyCollection<IWebElement> anchors = _driver.FindElements(By.TagName("a"));
+                IWebElement addOptionLink = anchors.First(a => a.Text == "+ Add another option");
+                addOptionLink.Click();
+
+                IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
+
+                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
+                IWebElement doneButton = buttons.First(b => b.Text == "Done");
+
+                Assert.IsTrue(doneButton.IsVisible());
+                Assert.IsFalse(doneButton.Enabled);
+
+                formName.SendKeys("New Option");
+
+                Assert.IsTrue(doneButton.Enabled);
+            }
+
+            [TestMethod]
+            public void OptionAddingSubmission_AddsOption()
+            {
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingBasicPoll.UUID);
+                IReadOnlyCollection<IWebElement> anchors = _driver.FindElements(By.TagName("a"));
+                IWebElement addOptionLink = anchors.First(a => a.Text == "+ Add another option");
+                addOptionLink.Click();
+
+                IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
+
+                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
+                IWebElement doneButton = buttons.First(b => b.Text == "Done");
+
+                String newOptionName = "New Option";
+                formName.SendKeys(newOptionName);
+
+                IWebElement form = _driver.FindElement(By.Name("addOptionForm"));
+                form.Submit();
+
+                IReadOnlyCollection<IWebElement> optionNames = _driver.FindElements(NgBy.Binding("option.Name"));
+
+                Assert.AreEqual(_optionAddingBasicPoll.Options.Count + 1, optionNames.Count);
+                Assert.AreEqual(newOptionName, optionNames.Last().Text);
+
+                // Refresh to ensure they new option was stored in DB
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingBasicPoll.UUID);
+
+                optionNames = _driver.FindElements(NgBy.Binding("option.Name"));
+
+                Assert.AreEqual(_optionAddingBasicPoll.Options.Count + 1, optionNames.Count);
+                Assert.AreEqual(newOptionName, optionNames.Last().Text);
+            }
+        }
+
+        [TestClass]
+        public class HiddenResultsConfiguration
+        {
+            private static IWebDriver _driver;
+            private static IVotingContext _context;
+
+            private const int truncatedTextLimit = 60;
+            private static Poll _hiddenResultsBasicPoll;
+
+            [ClassInitialize]
+            public static void ClassInitialise(TestContext testContext)
+            {
+                _driver = new NgWebDriver(new ChromeDriver(ChromeDriverDir));
+                _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromSeconds(10));
+                _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
+
+                ContextFactory contextFactory = new ContextFactory();
+                _context = contextFactory.CreateTestContext();
+
+                List<Option> testPollOptions = new List<Option>() {
+                new Option(){ Name = "Test Option 1", Description = "Test Description 1" },
+                new Option(){ Name = "Test Option 2", 
+                              Description = "A very long test description 2 that should exceed the character limit for descriptions" }};
+
+                // Open, Anonymous, No Option Adding, Shown Results
+                _hiddenResultsBasicPoll = new Poll()
+                {
+                    UUID = Guid.NewGuid(),
+                    Name = "Test Poll",
+                    LastUpdated = DateTime.Now,
+                    CreatedDate = DateTime.Now,
+                    Options = testPollOptions,
+                    InviteOnly = false,
+                    NamedVoting = false,
+                    OptionAdding = false,
+                    HiddenResults = true
+                };
+
+                _context.Polls.Add(_hiddenResultsBasicPoll);
+                _context.SaveChanges();
+            }
+
+            [ClassCleanup]
+            public static void ClassCleanup()
+            {
+                PollClearer pollTearDown = new PollClearer(_context);
+                pollTearDown.ClearPoll(_hiddenResultsBasicPoll);
+
+                _driver.Dispose();
+                _context.Dispose();
+            }
+
+            [TestMethod]
+            public void HiddenResultsPoll_DoesNotShowResultsButton()
+            {
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _hiddenResultsBasicPoll.UUID);
+                IReadOnlyCollection<IWebElement> anchors = _driver.FindElements(By.TagName("a"));
+                IWebElement resultsLink = anchors.FirstOrDefault(a => a.Text == "Go to results");
+
+                Assert.IsNull(resultsLink);
             }
         }
     }
