@@ -36,33 +36,21 @@
 
         }
 
-        function getResults(pollId, callback, failureCallback) {
-
-            if (!pollId) {
-                return null;
-            }
+        function getResults(pollId) {
 
             if (!lastCheckedTimestamps[pollId]) {
                 lastCheckedTimestamps[pollId] = 0;
             }
 
-            $http({
+            return $http({
                 method: 'GET',
                 url: '/api/poll/' + pollId + '/results?lastRefreshed=' + lastCheckedTimestamps[pollId]
             })
             .success(function (data, status) {
-                if (callback) {
-                    callback(data, status);
-                }
-            })
-            .error(function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
+
+                lastCheckedTimestamps[pollId] = Date.now();
+                return data, status;
             });
-
-            lastCheckedTimestamps[pollId] = Date.now();
-
         }
 
         function getTokenVotes(pollId, token, callback, failureCallback) {
