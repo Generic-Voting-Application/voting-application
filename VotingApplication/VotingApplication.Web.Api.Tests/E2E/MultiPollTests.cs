@@ -17,22 +17,34 @@ namespace VotingApplication.Web.Tests.E2E
         private static readonly string ChromeDriverDir = @"..\..\";
         private static readonly string SiteBaseUri = @"http://localhost:64205/";
 
+        #region Default Config
         [TestClass]
         public class DefaultPollConfiguration
         {
-            private static IWebDriver _driver;
             private static IVotingContext _context;
 
             private const int truncatedTextLimit = 60;
             private static Poll _defaultMultiPoll;
 
-            [ClassInitialize]
-            public static void ClassInitialise(TestContext testContext)
+            private IWebDriver _driver;
+
+            [TestInitialize]
+            public virtual void TestInitialise()
             {
                 _driver = new NgWebDriver(new ChromeDriver(ChromeDriverDir));
                 _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromSeconds(10));
                 _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
+            }
 
+            [TestCleanup]
+            public void TestCleanUp()
+            {
+                _driver.Dispose();
+            }
+
+            [ClassInitialize]
+            public static void ClassInitialise(TestContext testContext)
+            {
                 ContextFactory contextFactory = new ContextFactory();
                 _context = contextFactory.CreateTestContext();
 
@@ -66,7 +78,6 @@ namespace VotingApplication.Web.Tests.E2E
                 PollClearer pollTearDown = new PollClearer(_context);
                 pollTearDown.ClearPoll(_defaultMultiPoll);
 
-                _driver.Dispose();
                 _context.Dispose();
             }
 
@@ -131,22 +142,35 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.IsTrue(resultsLink.IsVisible());
             }
         }
+        #endregion
 
+        #region Invite Only Config
         [TestClass]
         public class InviteOnlyPollConfiguration
         {
-            private static IWebDriver _driver;
             private static IVotingContext _context;
 
             private static Poll _inviteOnlyMultiPoll;
 
-            [ClassInitialize]
-            public static void ClassInitialise(TestContext testContext)
+            private IWebDriver _driver;
+
+            [TestInitialize]
+            public virtual void TestInitialise()
             {
                 _driver = new NgWebDriver(new ChromeDriver(ChromeDriverDir));
                 _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromSeconds(10));
                 _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
+            }
 
+            [TestCleanup]
+            public void TestCleanUp()
+            {
+                _driver.Dispose();
+            }
+
+            [ClassInitialize]
+            public static void ClassInitialise(TestContext testContext)
+            {
                 ContextFactory contextFactory = new ContextFactory();
                 _context = contextFactory.CreateTestContext();
 
@@ -183,7 +207,6 @@ namespace VotingApplication.Web.Tests.E2E
                 PollClearer pollTearDown = new PollClearer(_context);
                 pollTearDown.ClearPoll(_inviteOnlyMultiPoll);
 
-                _driver.Dispose();
                 _context.Dispose();
             }
 
@@ -221,22 +244,35 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.IsTrue(_driver.Url.StartsWith(SiteBaseUri + "Poll/#/Results/" + _inviteOnlyMultiPoll.UUID));
             }
         }
+        #endregion
 
+        #region Named Voters Config
         [TestClass]
         public class NamedVotersPollConfiguration
         {
-            private static IWebDriver _driver;
             private static IVotingContext _context;
 
             private static Poll _namedMultiPoll;
 
-            [ClassInitialize]
-            public static void ClassInitialise(TestContext testContext)
+            private IWebDriver _driver;
+
+            [TestInitialize]
+            public virtual void TestInitialise()
             {
                 _driver = new NgWebDriver(new ChromeDriver(ChromeDriverDir));
                 _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromSeconds(10));
                 _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
+            }
 
+            [TestCleanup]
+            public void TestCleanUp()
+            {
+                _driver.Dispose();
+            }
+
+            [ClassInitialize]
+            public static void ClassInitialise(TestContext testContext)
+            {
                 ContextFactory contextFactory = new ContextFactory();
                 _context = contextFactory.CreateTestContext();
 
@@ -269,7 +305,6 @@ namespace VotingApplication.Web.Tests.E2E
                 PollClearer pollTearDown = new PollClearer(_context);
                 pollTearDown.ClearPoll(_namedMultiPoll);
 
-                _driver.Dispose();
                 _context.Dispose();
             }
 
@@ -329,22 +364,35 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.IsTrue(_driver.Url.StartsWith(SiteBaseUri + "Poll/#/Results/" + _namedMultiPoll.UUID));
             }
         }
+        #endregion
 
+        #region Option Adding Config
         [TestClass]
         public class OptionAddingPollConfiguration
         {
-            private static IWebDriver _driver;
             private static IVotingContext _context;
 
             private static Poll _optionAddingMultiPoll;
 
-            [ClassInitialize]
-            public static void ClassInitialise(TestContext testContext)
+            private IWebDriver _driver;
+
+            [TestInitialize]
+            public virtual void TestInitialise()
             {
                 _driver = new NgWebDriver(new ChromeDriver(ChromeDriverDir));
                 _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromSeconds(10));
                 _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
+            }
 
+            [TestCleanup]
+            public void TestCleanUp()
+            {
+                _driver.Dispose();
+            }
+
+            [ClassInitialize]
+            public static void ClassInitialise(TestContext testContext)
+            {
                 ContextFactory contextFactory = new ContextFactory();
                 _context = contextFactory.CreateTestContext();
 
@@ -377,7 +425,6 @@ namespace VotingApplication.Web.Tests.E2E
                 PollClearer pollTearDown = new PollClearer(_context);
                 pollTearDown.ClearPoll(_optionAddingMultiPoll);
 
-                _driver.Dispose();
                 _context.Dispose();
             }
 
@@ -464,22 +511,35 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.AreEqual(newOptionName, optionNames.Last().Text);
             }
         }
+        #endregion
 
+        #region Hidden Results Config
         [TestClass]
         public class HiddenResultsConfiguration
         {
-            private static IWebDriver _driver;
             private static IVotingContext _context;
 
             private static Poll _hiddenResultsMultiPoll;
 
-            [ClassInitialize]
-            public static void ClassInitialise(TestContext testContext)
+            private IWebDriver _driver;
+
+            [TestInitialize]
+            public virtual void TestInitialise()
             {
                 _driver = new NgWebDriver(new ChromeDriver(ChromeDriverDir));
                 _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromSeconds(10));
                 _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
+            }
 
+            [TestCleanup]
+            public void TestCleanUp()
+            {
+                _driver.Dispose();
+            }
+
+            [ClassInitialize]
+            public static void ClassInitialise(TestContext testContext)
+            {
                 ContextFactory contextFactory = new ContextFactory();
                 _context = contextFactory.CreateTestContext();
 
@@ -513,7 +573,6 @@ namespace VotingApplication.Web.Tests.E2E
                 PollClearer pollTearDown = new PollClearer(_context);
                 pollTearDown.ClearPoll(_hiddenResultsMultiPoll);
 
-                _driver.Dispose();
                 _context.Dispose();
             }
 
@@ -527,5 +586,6 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.IsNull(resultsLink);
             }
         }
+        #endregion
     }
 }
