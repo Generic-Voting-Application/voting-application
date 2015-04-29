@@ -12,7 +12,7 @@ using VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers;
 
 namespace VotingApplication.Web.Tests.E2E
 {
-    public class BasicPollTests
+    public class MultiPollTests
     {
         private static readonly string ChromeDriverDir = @"..\..\";
         private static readonly string SiteBaseUri = @"http://localhost:64205/";
@@ -24,7 +24,7 @@ namespace VotingApplication.Web.Tests.E2E
             private static IVotingContext _context;
 
             private const int truncatedTextLimit = 60;
-            private static Poll _defaultBasicPoll;
+            private static Poll _defaultMultiPoll;
 
             [ClassInitialize]
             public static void ClassInitialise(TestContext testContext)
@@ -42,10 +42,10 @@ namespace VotingApplication.Web.Tests.E2E
                               Description = "A very long test description 2 that should exceed the character limit for descriptions" }};
 
                 // Open, Anonymous, No Option Adding, Shown Results
-                _defaultBasicPoll = new Poll()
+                _defaultMultiPoll = new Poll()
                 {
                     UUID = Guid.NewGuid(),
-                    PollType = PollType.Basic,
+                    PollType = PollType.Multi,
                     Name = "Test Poll",
                     LastUpdated = DateTime.Now,
                     CreatedDate = DateTime.Now,
@@ -56,7 +56,7 @@ namespace VotingApplication.Web.Tests.E2E
                     HiddenResults = false
                 };
 
-                _context.Polls.Add(_defaultBasicPoll);
+                _context.Polls.Add(_defaultMultiPoll);
                 _context.SaveChanges();
             }
 
@@ -64,33 +64,33 @@ namespace VotingApplication.Web.Tests.E2E
             public static void ClassCleanup()
             {
                 PollClearer pollTearDown = new PollClearer(_context);
-                pollTearDown.ClearPoll(_defaultBasicPoll);
+                pollTearDown.ClearPoll(_defaultMultiPoll);
 
                 _driver.Dispose();
                 _context.Dispose();
             }
 
             [TestMethod]
-            public void BasicVote_PopulatedOptions_DisplaysAllOptions()
+            public void MultiPoll_PopulatedOptions_DisplaysAllOptions()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultBasicPoll.UUID);
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultMultiPoll.UUID);
                 IReadOnlyCollection<IWebElement> optionNames = _driver.FindElements(NgBy.Binding("option.Name"));
 
-                Assert.AreEqual(_defaultBasicPoll.Options.Count, optionNames.Count);
-                CollectionAssert.AreEquivalent(_defaultBasicPoll.Options.Select(o => o.Name).ToList(),
+                Assert.AreEqual(_defaultMultiPoll.Options.Count, optionNames.Count);
+                CollectionAssert.AreEquivalent(_defaultMultiPoll.Options.Select(o => o.Name).ToList(),
                                                optionNames.Select(o => o.Text).ToList());
             }
 
             [TestMethod]
-            public void BasicVote_PopulatedOptions_DisplaysAllOptionDescriptions()
+            public void MultiPoll_PopulatedOptions_DisplaysAllOptionDescriptions()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultBasicPoll.UUID);
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultMultiPoll.UUID);
                 IReadOnlyCollection<IWebElement> optionDescriptions = _driver.FindElements(NgBy.Model("option.Description"));
 
-                Assert.AreEqual(_defaultBasicPoll.Options.Count, optionDescriptions.Count);
+                Assert.AreEqual(_defaultMultiPoll.Options.Count, optionDescriptions.Count);
                 List<String> expectedDescriptions = new List<string>();
 
-                foreach (Option option in _defaultBasicPoll.Options)
+                foreach (Option option in _defaultMultiPoll.Options)
                 {
                     string truncatedDescription = option.Description
                                                           .Split(' ')
@@ -109,22 +109,22 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod]
-            public void BasicVote_VotingOnOption_NavigatesToResultsPage()
+            public void MultiPoll_VotingOnOption_NavigatesToResultsPage()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultBasicPoll.UUID);
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultMultiPoll.UUID);
                 IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
                 buttons.First(b => b.Text == "Vote").Click();
 
                 VoteClearer voterClearer = new VoteClearer(_context);
                 voterClearer.ClearLast();
 
-                Assert.IsTrue(_driver.Url.StartsWith(SiteBaseUri + "Poll/#/Results/" + _defaultBasicPoll.UUID));
+                Assert.IsTrue(_driver.Url.StartsWith(SiteBaseUri + "Poll/#/Results/" + _defaultMultiPoll.UUID));
             }
 
             [TestMethod]
-            public void BasicVote_DefaultPoll_ShowsResultsButton()
+            public void MultiPoll_DefaultPoll_ShowsResultsButton()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultBasicPoll.UUID);
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultMultiPoll.UUID);
                 IReadOnlyCollection<IWebElement> anchors = _driver.FindElements(By.TagName("a"));
                 IWebElement resultsLink = anchors.FirstOrDefault(a => a.Text == "Go to results");
 
@@ -138,7 +138,7 @@ namespace VotingApplication.Web.Tests.E2E
             private static IWebDriver _driver;
             private static IVotingContext _context;
 
-            private static Poll _inviteOnlyBasicPoll;
+            private static Poll _inviteOnlyMultiPoll;
 
             [ClassInitialize]
             public static void ClassInitialise(TestContext testContext)
@@ -155,10 +155,10 @@ namespace VotingApplication.Web.Tests.E2E
                 new Option(){ Name = "Test Option 2", Description = "Test Description 2" }};
 
                 // Invite Only, Anonymous, No Option Adding, Shown Results
-                _inviteOnlyBasicPoll = new Poll()
+                _inviteOnlyMultiPoll = new Poll()
                 {
                     UUID = Guid.NewGuid(),
-                    PollType = PollType.Basic,
+                    PollType = PollType.Multi,
                     Name = "Test Poll",
                     LastUpdated = DateTime.Now,
                     CreatedDate = DateTime.Now,
@@ -173,7 +173,7 @@ namespace VotingApplication.Web.Tests.E2E
                     }
                 };
 
-                _context.Polls.Add(_inviteOnlyBasicPoll);
+                _context.Polls.Add(_inviteOnlyMultiPoll);
                 _context.SaveChanges();
             }
 
@@ -181,16 +181,16 @@ namespace VotingApplication.Web.Tests.E2E
             public static void ClassCleanup()
             {
                 PollClearer pollTearDown = new PollClearer(_context);
-                pollTearDown.ClearPoll(_inviteOnlyBasicPoll);
+                pollTearDown.ClearPoll(_inviteOnlyMultiPoll);
 
                 _driver.Dispose();
                 _context.Dispose();
             }
 
             [TestMethod]
-            public void BasicVote_AccessWithNoToken_DisplaysError()
+            public void MultiPoll_AccessWithNoToken_DisplaysError()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _inviteOnlyBasicPoll.UUID);
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _inviteOnlyMultiPoll.UUID);
                 IWebElement error = _driver.FindElement(NgBy.Binding("$root.error.readableMessage"));
 
                 Assert.IsTrue(error.IsVisible());
@@ -198,27 +198,27 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod]
-            public void BasicVote_AccessWithToken_DisplaysAllOptions()
+            public void MultiPoll_AccessWithToken_DisplaysAllOptions()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _inviteOnlyBasicPoll.UUID + "/" + _inviteOnlyBasicPoll.Ballots[0].TokenGuid);
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _inviteOnlyMultiPoll.UUID + "/" + _inviteOnlyMultiPoll.Ballots[0].TokenGuid);
                 IReadOnlyCollection<IWebElement> optionNames = _driver.FindElements(NgBy.Binding("option.Name"));
 
-                Assert.AreEqual(_inviteOnlyBasicPoll.Options.Count, optionNames.Count);
-                CollectionAssert.AreEquivalent(_inviteOnlyBasicPoll.Options.Select(o => o.Name).ToList(),
+                Assert.AreEqual(_inviteOnlyMultiPoll.Options.Count, optionNames.Count);
+                CollectionAssert.AreEquivalent(_inviteOnlyMultiPoll.Options.Select(o => o.Name).ToList(),
                                                optionNames.Select(o => o.Text).ToList());
             }
 
             [TestMethod]
-            public void BasicVote_VoteWithToken_NavigatesToResultsPage()
+            public void MultiPoll_VoteWithToken_NavigatesToResultsPage()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _inviteOnlyBasicPoll.UUID + "/" + _inviteOnlyBasicPoll.Ballots[0].TokenGuid);
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _inviteOnlyMultiPoll.UUID + "/" + _inviteOnlyMultiPoll.Ballots[0].TokenGuid);
                 IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
                 buttons.First(b => b.Text == "Vote").Click();
 
                 VoteClearer voterClearer = new VoteClearer(_context);
                 voterClearer.ClearLast();
 
-                Assert.IsTrue(_driver.Url.StartsWith(SiteBaseUri + "Poll/#/Results/" + _inviteOnlyBasicPoll.UUID));
+                Assert.IsTrue(_driver.Url.StartsWith(SiteBaseUri + "Poll/#/Results/" + _inviteOnlyMultiPoll.UUID));
             }
         }
 
@@ -228,7 +228,7 @@ namespace VotingApplication.Web.Tests.E2E
             private static IWebDriver _driver;
             private static IVotingContext _context;
 
-            private static Poll _namedBasicPoll;
+            private static Poll _namedMultiPoll;
 
             [ClassInitialize]
             public static void ClassInitialise(TestContext testContext)
@@ -245,10 +245,10 @@ namespace VotingApplication.Web.Tests.E2E
                 new Option(){ Name = "Test Option 2", Description = "Test Description 2" }};
 
                 // Open, Named voters, No Option Adding, Shown Results
-                _namedBasicPoll = new Poll()
+                _namedMultiPoll = new Poll()
                 {
                     UUID = Guid.NewGuid(),
-                    PollType = PollType.Basic,
+                    PollType = PollType.Multi,
                     Name = "Test Poll",
                     LastUpdated = DateTime.Now,
                     CreatedDate = DateTime.Now,
@@ -259,7 +259,7 @@ namespace VotingApplication.Web.Tests.E2E
                     HiddenResults = false
                 };
 
-                _context.Polls.Add(_namedBasicPoll);
+                _context.Polls.Add(_namedMultiPoll);
                 _context.SaveChanges();
             }
 
@@ -267,20 +267,20 @@ namespace VotingApplication.Web.Tests.E2E
             public static void ClassCleanup()
             {
                 PollClearer pollTearDown = new PollClearer(_context);
-                pollTearDown.ClearPoll(_namedBasicPoll);
+                pollTearDown.ClearPoll(_namedMultiPoll);
 
                 _driver.Dispose();
                 _context.Dispose();
             }
 
             [TestMethod]
-            public void BasicVote_VoteWithNoName_PromptsForName()
+            public void MultiPoll_VoteWithNoName_PromptsForName()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedBasicPoll.UUID);
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedMultiPoll.UUID);
                 IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
                 buttons.First(b => b.Text == "Vote").Click();
 
-                Assert.AreEqual(SiteBaseUri + "Poll/#/Vote/" + _namedBasicPoll.UUID, _driver.Url);
+                Assert.AreEqual(SiteBaseUri + "Poll/#/Vote/" + _namedMultiPoll.UUID, _driver.Url);
 
                 IWebElement formName = _driver.FindElement(NgBy.Model("loginForm.name"));
                 Assert.IsTrue(formName.IsVisible());
@@ -288,9 +288,9 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod]
-            public void BasicVote_NameInput_AcceptsValidName()
+            public void MultiPoll_NameInput_AcceptsValidName()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedBasicPoll.UUID);
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedMultiPoll.UUID);
                 IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
                 buttons.First(b => b.Text == "Vote").Click();
 
@@ -308,9 +308,9 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod]
-            public void BasicVote_NameInput_VotesUponSubmission()
+            public void MultiPoll_NameInput_VotesUponSubmission()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedBasicPoll.UUID);
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedMultiPoll.UUID);
                 IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
                 buttons.First(b => b.Text == "Vote").Click();
 
@@ -326,7 +326,7 @@ namespace VotingApplication.Web.Tests.E2E
                 VoteClearer voterClearer = new VoteClearer(_context);
                 voterClearer.ClearLast();
 
-                Assert.IsTrue(_driver.Url.StartsWith(SiteBaseUri + "Poll/#/Results/" + _namedBasicPoll.UUID));
+                Assert.IsTrue(_driver.Url.StartsWith(SiteBaseUri + "Poll/#/Results/" + _namedMultiPoll.UUID));
             }
         }
 
@@ -336,7 +336,7 @@ namespace VotingApplication.Web.Tests.E2E
             private static IWebDriver _driver;
             private static IVotingContext _context;
 
-            private static Poll _optionAddingBasicPoll;
+            private static Poll _optionAddingMultiPoll;
 
             [ClassInitialize]
             public static void ClassInitialise(TestContext testContext)
@@ -353,10 +353,10 @@ namespace VotingApplication.Web.Tests.E2E
                 new Option(){ Name = "Test Option 2", Description = "Test Description 2" }};
 
                 // Open, Named voters, No Option Adding, Shown Results
-                _optionAddingBasicPoll = new Poll()
+                _optionAddingMultiPoll = new Poll()
                 {
                     UUID = Guid.NewGuid(),
-                    PollType = PollType.Basic,
+                    PollType = PollType.Multi,
                     Name = "Test Poll",
                     LastUpdated = DateTime.Now,
                     CreatedDate = DateTime.Now,
@@ -367,7 +367,7 @@ namespace VotingApplication.Web.Tests.E2E
                     HiddenResults = false
                 };
 
-                _context.Polls.Add(_optionAddingBasicPoll);
+                _context.Polls.Add(_optionAddingMultiPoll);
                 _context.SaveChanges();
             }
 
@@ -375,16 +375,16 @@ namespace VotingApplication.Web.Tests.E2E
             public static void ClassCleanup()
             {
                 PollClearer pollTearDown = new PollClearer(_context);
-                pollTearDown.ClearPoll(_optionAddingBasicPoll);
+                pollTearDown.ClearPoll(_optionAddingMultiPoll);
 
                 _driver.Dispose();
                 _context.Dispose();
             }
 
             [TestMethod]
-            public void BasicVote_OptionAddingPoll_ProvidesLinkForAddingOptions()
+            public void MultiPoll_OptionAddingPoll_ProvidesLinkForAddingOptions()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingBasicPoll.UUID);
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingMultiPoll.UUID);
                 IReadOnlyCollection<IWebElement> anchors = _driver.FindElements(By.TagName("a"));
                 IWebElement addOptionLink = anchors.First(a => a.Text == "+ Add another option");
 
@@ -392,14 +392,14 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod]
-            public void BasicVote_OptionAddingLink_PromptsForOptionDetails()
+            public void MultiPoll_OptionAddingLink_PromptsForOptionDetails()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingBasicPoll.UUID);
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingMultiPoll.UUID);
                 IReadOnlyCollection<IWebElement> anchors = _driver.FindElements(By.TagName("a"));
                 IWebElement addOptionLink = anchors.First(a => a.Text == "+ Add another option");
                 addOptionLink.Click();
 
-                Assert.AreEqual(SiteBaseUri + "Poll/#/Vote/" + _optionAddingBasicPoll.UUID, _driver.Url);
+                Assert.AreEqual(SiteBaseUri + "Poll/#/Vote/" + _optionAddingMultiPoll.UUID, _driver.Url);
 
                 IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
                 Assert.IsTrue(formName.IsVisible());
@@ -411,9 +411,9 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod]
-            public void BasicVote_OptionAddingPrompt_AcceptsValidName()
+            public void MultiPoll_OptionAddingPrompt_AcceptsValidName()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingBasicPoll.UUID);
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingMultiPoll.UUID);
                 IReadOnlyCollection<IWebElement> anchors = _driver.FindElements(By.TagName("a"));
                 IWebElement addOptionLink = anchors.First(a => a.Text == "+ Add another option");
                 addOptionLink.Click();
@@ -432,9 +432,9 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod]
-            public void BasicVote_OptionAddingSubmission_AddsOption()
+            public void MultiPoll_OptionAddingSubmission_AddsOption()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingBasicPoll.UUID);
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingMultiPoll.UUID);
                 IReadOnlyCollection<IWebElement> anchors = _driver.FindElements(By.TagName("a"));
                 IWebElement addOptionLink = anchors.First(a => a.Text == "+ Add another option");
                 addOptionLink.Click();
@@ -452,15 +452,15 @@ namespace VotingApplication.Web.Tests.E2E
 
                 IReadOnlyCollection<IWebElement> optionNames = _driver.FindElements(NgBy.Binding("option.Name"));
 
-                Assert.AreEqual(_optionAddingBasicPoll.Options.Count + 1, optionNames.Count);
+                Assert.AreEqual(_optionAddingMultiPoll.Options.Count + 1, optionNames.Count);
                 Assert.AreEqual(newOptionName, optionNames.Last().Text);
 
                 // Refresh to ensure they new option was stored in DB
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingBasicPoll.UUID);
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingMultiPoll.UUID);
 
                 optionNames = _driver.FindElements(NgBy.Binding("option.Name"));
 
-                Assert.AreEqual(_optionAddingBasicPoll.Options.Count + 1, optionNames.Count);
+                Assert.AreEqual(_optionAddingMultiPoll.Options.Count + 1, optionNames.Count);
                 Assert.AreEqual(newOptionName, optionNames.Last().Text);
             }
         }
@@ -471,7 +471,7 @@ namespace VotingApplication.Web.Tests.E2E
             private static IWebDriver _driver;
             private static IVotingContext _context;
 
-            private static Poll _hiddenResultsBasicPoll;
+            private static Poll _hiddenResultsMultiPoll;
 
             [ClassInitialize]
             public static void ClassInitialise(TestContext testContext)
@@ -489,10 +489,10 @@ namespace VotingApplication.Web.Tests.E2E
                               Description = "A very long test description 2 that should exceed the character limit for descriptions" }};
 
                 // Open, Anonymous, No Option Adding, Shown Results
-                _hiddenResultsBasicPoll = new Poll()
+                _hiddenResultsMultiPoll = new Poll()
                 {
                     UUID = Guid.NewGuid(),
-                    PollType = PollType.Basic,
+                    PollType = PollType.Multi,
                     Name = "Test Poll",
                     LastUpdated = DateTime.Now,
                     CreatedDate = DateTime.Now,
@@ -503,7 +503,7 @@ namespace VotingApplication.Web.Tests.E2E
                     HiddenResults = true
                 };
 
-                _context.Polls.Add(_hiddenResultsBasicPoll);
+                _context.Polls.Add(_hiddenResultsMultiPoll);
                 _context.SaveChanges();
             }
 
@@ -511,16 +511,16 @@ namespace VotingApplication.Web.Tests.E2E
             public static void ClassCleanup()
             {
                 PollClearer pollTearDown = new PollClearer(_context);
-                pollTearDown.ClearPoll(_hiddenResultsBasicPoll);
+                pollTearDown.ClearPoll(_hiddenResultsMultiPoll);
 
                 _driver.Dispose();
                 _context.Dispose();
             }
 
             [TestMethod]
-            public void BasicVote_HiddenResultsPoll_DoesNotShowResultsButton()
+            public void MultiPoll_HiddenResultsPoll_DoesNotShowResultsButton()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _hiddenResultsBasicPoll.UUID);
+                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _hiddenResultsMultiPoll.UUID);
                 IReadOnlyCollection<IWebElement> anchors = _driver.FindElements(By.TagName("a"));
                 IWebElement resultsLink = anchors.FirstOrDefault(a => a.Text == "Go to results");
 
