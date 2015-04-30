@@ -179,4 +179,53 @@ describe('Vote Service', function () {
         });
 
     });
+
+    describe('Get Token Votes', function () {
+
+        it('Returns a failure for a null pollId', function () {
+
+            var pollId = null;
+
+
+            var promise = voteService.getTokenVotes(pollId);
+
+            promise
+                .then(function () {
+                    fail('Expected the promise to be rejected, not resolved.');
+                });
+
+            rootScope.$apply();
+        });
+
+        it('Returns a failure for a null tokenId', function () {
+
+            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
+            var token = null;
+
+            var promise = voteService.getTokenVotes(pollId, token);
+
+            promise
+                .then(function () {
+                    fail('Expected the promise to be rejected, not resolved.');
+                });
+
+            rootScope.$apply();
+        });
+
+        it('Makes http call to get votes for a token', function () {
+            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
+            var token = '64C66CBC-5A5F-481E-9546-26DCE015CD40';
+
+            var expectedUrl = '/api/poll/' + pollId + '/token/' + token + '/vote';
+
+            httpBackend.expect(
+                'GET',
+                expectedUrl
+            ).respond(200, '');
+
+            voteService.getTokenVotes(pollId, token);
+
+            httpBackend.flush();
+        });
+    });
 });

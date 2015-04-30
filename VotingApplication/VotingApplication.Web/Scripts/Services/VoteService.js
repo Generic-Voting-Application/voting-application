@@ -23,23 +23,17 @@
         return service;
 
         function submitVote(pollId, votes, token) {
-
-            var deferred = $q.defer();
-
             if (!pollId || !votes || !token) {
+                var deferred = $q.defer();
                 deferred.reject();
                 return deferred.promise;
             }
 
-            $http({
+            return $http({
                 method: 'PUT',
                 url: '/api/poll/' + pollId + '/token/' + token + '/vote',
                 data: votes
-            })
-            .success(function (data) { deferred.resolve(data); })
-            .error(function (data, status) { return deferred.reject(data, status); });
-
-            return deferred.promise;
+            });
         }
 
         function getResults(pollId) {
@@ -59,25 +53,16 @@
             });
         }
 
-        function getTokenVotes(pollId, token, callback, failureCallback) {
-
+        function getTokenVotes(pollId, token) {
             if (!pollId || !token) {
-                return null;
+                var deferred = $q.defer();
+                deferred.reject();
+                return deferred.promise;
             }
 
-            $http({
+            return $http({
                 method: 'GET',
                 url: '/api/poll/' + pollId + '/token/' + token + '/vote'
-            })
-            .success(function (data) {
-                if (callback) {
-                    callback(data);
-                }
-            })
-            .error(function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
             });
         }
 

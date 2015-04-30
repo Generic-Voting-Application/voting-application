@@ -14,6 +14,7 @@ describe('VotingPageController', function () {
 
     var getTokenPromise;
     var submitVotePromise;
+    var getTokenVotesPromise;
 
     var mockTokenValue = '4A9AFE2C-240B-4BFF-A569-0FEF5A78FC10';
     var mockPollValue = {
@@ -22,7 +23,6 @@ describe('VotingPageController', function () {
         Options: [{ Id: 1 }, { Id: 2 }, { Id: 3 }, { Id: 4 }],
         NamedVoting: false
     };
-    var mockTokenVotes = [{ OptionId: 1, VoteValue: 1 }, { OptionId: 3, VoteValue: 1 }];
 
     beforeEach(inject(function ($rootScope, $q, $controller) {
 
@@ -42,11 +42,13 @@ describe('VotingPageController', function () {
         mockTokenService = { getToken: function () { return getTokenPromise.promise; } };
         mockPollService = { getPoll: function (pollId, callback) { callback(mockPollValue); } };
         mockVoteService = {
-            getTokenVotes: function (pollId, token, callback) { callback(mockTokenVotes); },
+            getTokenVotes: function () { },
             submitVote: function () { }
         };
         submitVotePromise = $q.defer();
+        getTokenVotesPromise = $q.defer();
         spyOn(mockVoteService, 'submitVote').and.callFake(function () { return submitVotePromise.promise; });
+        spyOn(mockVoteService, 'getTokenVotes').and.callFake(function () { return getTokenVotesPromise.promise; });
 
         mockRoutingService = {
             getResultsPageUrl: function () { },
@@ -57,7 +59,6 @@ describe('VotingPageController', function () {
         spyOn(mockIdentityService, 'openLoginDialog').and.callThrough();
         spyOn(mockTokenService, 'getToken').and.callThrough();
         spyOn(mockPollService, 'getPoll').and.callThrough();
-        spyOn(mockVoteService, 'getTokenVotes').and.callThrough();
         spyOn(mockRoutingService, 'navigateToResultsPage').and.callThrough();
 
         $controller('VotingPageController', {
@@ -100,6 +101,12 @@ describe('VotingPageController', function () {
     });
 
     it('Sets the value for the vote into the options', function () {
+        var tokenVotes = [
+            { OptionId: 1, VoteValue: 1 },
+            { OptionId: 3, VoteValue: 1 }
+        ];
+
+        getTokenVotesPromise.resolve(tokenVotes);
 
         var expectedVoteUpdatedOptions = [
             { Id: 1, voteValue: 1 },
@@ -108,8 +115,8 @@ describe('VotingPageController', function () {
             { Id: 4, voteValue: 0 }
         ];
 
+        scope.$apply();
         expect(scope.poll.Options).toEqual(expectedVoteUpdatedOptions);
-
     });
 
     describe('Submit Vote', function () {

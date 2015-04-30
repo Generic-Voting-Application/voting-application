@@ -59,7 +59,8 @@
         }
 
         function setSelectedValues() {
-            VoteService.getTokenVotes($scope.pollId, $scope.token, function (voteData) {
+            VoteService.getTokenVotes($scope.pollId, $scope.token)
+            .then(function (voteData) {
 
                 $scope.poll.Options.forEach(function (opt) { opt.voteValue = 0; });
 
