@@ -33,8 +33,11 @@
 
         function createPollSuccessCallback(response) {
             var data = response.data;
-            TokenService.setToken(data.UUID, data.CreatorBallot.TokenGuid);
-            RoutingService.navigateToManagePage(data.ManageId);
+
+            TokenService.setToken(data.UUID, data.CreatorBallot.TokenGuid)
+                .then(function () {
+                    RoutingService.navigateToManagePage(data.ManageId);
+                });
         }
     }
 

@@ -12,6 +12,7 @@ describe('Unregistered Dashboard Controller', function () {
     var mockTokenService;
 
     var createPollPromise;
+    var setTokenPromise;
 
     var newPollUUID = '9C884B24-9B76-4FF8-A074-36AEB1EC3920';
     var newTokenGuid = 'B14A90C0-078A-4996-B0FA-EA09A0EB6FFE';
@@ -34,7 +35,8 @@ describe('Unregistered Dashboard Controller', function () {
         mockTokenService = {
             setToken: function () { }
         };
-        spyOn(mockTokenService, 'setToken').and.callThrough();
+        setTokenPromise = $q.defer();
+        spyOn(mockTokenService, 'setToken').and.callFake(function () { return setTokenPromise.promise; });
 
 
         $controller('UnregisteredDashboardController', {
@@ -67,6 +69,7 @@ describe('Unregistered Dashboard Controller', function () {
             };
             var response = { data: data };
             createPollPromise.resolve(response);
+            setTokenPromise.resolve();
 
             scope.createPoll(question);
 
@@ -88,6 +91,7 @@ describe('Unregistered Dashboard Controller', function () {
             };
             var response = { data: data };
             createPollPromise.resolve(response);
+            setTokenPromise.resolve();
 
             scope.createPoll(question);
 
@@ -130,6 +134,30 @@ describe('Unregistered Dashboard Controller', function () {
 
             scope.$apply();
             expect(mockTokenService.setToken).toHaveBeenCalledWith(newPollUUID, newTokenGuid);
+        });
+
+        it('Given a successful creation of a poll, calls routing service only once token service has finished', function () {
+            var question = 'Where shall we go?';
+
+            var data = {
+                UUID: newPollUUID,
+                CreatorBallot: {
+                    TokenGuid: newTokenGuid
+                }
+            };
+            var response = { data: data };
+            createPollPromise.resolve(response);
+
+            scope.createPoll(question);
+
+
+            // Should not be called until the promise is resolved.
+            scope.$apply();
+            expect(mockRoutingService.navigateToManagePage).not.toHaveBeenCalled();
+
+            setTokenPromise.resolve();
+            scope.$apply();
+            expect(mockRoutingService.navigateToManagePage).toHaveBeenCalled();
         });
     });
 
