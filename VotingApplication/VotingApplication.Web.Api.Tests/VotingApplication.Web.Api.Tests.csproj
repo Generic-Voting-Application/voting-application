@@ -158,6 +158,7 @@
     <Content Include="Scripts\Controllers\ManagePollTypeControllerTests.js" />
     <Content Include="Scripts\Controllers\MultiVoteControllerTests.js" />
     <Content Include="Scripts\Controllers\PointsVoteControllerTests.js" />
+    <Content Include="Scripts\Controllers\RegisteredDashboardControllerTests.js" />
     <Content Include="Scripts\Controllers\UnregisteredDashboardControllerTests.js" />
     <Content Include="Scripts\Controllers\UpDownVoteControllerTests.js" />
     <Content Include="Scripts\Controllers\VotingPageControllerTests.js" />
