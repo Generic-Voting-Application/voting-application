@@ -106,7 +106,9 @@ describe('VotingPageController', function () {
             { OptionId: 3, VoteValue: 1 }
         ];
 
-        getTokenVotesPromise.resolve(tokenVotes);
+        var response = { data: tokenVotes };
+
+        getTokenVotesPromise.resolve(response);
 
         var expectedVoteUpdatedOptions = [
             { Id: 1, voteValue: 1 },
