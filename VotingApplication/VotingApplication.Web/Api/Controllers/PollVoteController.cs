@@ -15,6 +15,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     public class PollVoteController : WebApiController
     {
         private readonly IVoteValidatorFactory _voteValidatorFactory;
+        private const string ValidVoterNameRegex = @"[^\w\.@ -]";
 
         public PollVoteController() : base() { }
 
@@ -164,8 +165,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     // TODO: refactor the voteRequest model to be a ballotRequest instead. => only one voterName.
                     if (!String.IsNullOrEmpty(voteRequest.VoterName))
                     {
-                        ballot.VoterName = Regex.Replace(voteRequest.VoterName, @"[^\w\.@ -]", "",
-                                                               RegexOptions.None);
+                        ballot.VoterName = Regex.Replace(voteRequest.VoterName, ValidVoterNameRegex, "");
                     }
 
                 }
