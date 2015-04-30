@@ -81,7 +81,7 @@ namespace VotingApplication.Web.Tests.E2E
                 _context.Dispose();
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void UpDownPoll_PopulatedOptions_DisplaysAllOptions()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultUpDownPoll.UUID);
@@ -92,7 +92,7 @@ namespace VotingApplication.Web.Tests.E2E
                                                optionNames.Select(o => o.Text).ToList());
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void UpDownPoll_PopulatedOptions_DisplaysAllOptionDescriptions()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultUpDownPoll.UUID);
@@ -119,7 +119,7 @@ namespace VotingApplication.Web.Tests.E2E
                                                optionDescriptions.Select(o => o.Text).ToList());
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void UpDownPoll_VotingOnOption_NavigatesToResultsPage()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultUpDownPoll.UUID);
@@ -136,7 +136,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.IsTrue(_driver.Url.StartsWith(SiteBaseUri + "Poll/#/Results/" + _defaultUpDownPoll.UUID));
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void UpDownPoll_DefaultPoll_ShowsResultsButton()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultUpDownPoll.UUID);
@@ -146,7 +146,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.IsTrue(resultsLink.IsVisible());
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void UpDownVote_AfterVoting_VoteIsRemembered()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultUpDownPoll.UUID);
@@ -157,14 +157,13 @@ namespace VotingApplication.Web.Tests.E2E
                 firstOptionButtons.First().Click();
                 buttons.First(b => b.Text == "Vote").Click();
 
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultUpDownPoll.UUID);
+                _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
+
+                options = _driver.FindElements(NgBy.Repeater("option in poll.Options"));
+                IWebElement selectedOptionButton = options.First().FindElements(By.CssSelector(".active-btn")).Single();
 
                 VoteClearer voterClearer = new VoteClearer(_context);
                 voterClearer.ClearLast();
-
-                // Refresh
-                options = _driver.FindElements(NgBy.Repeater("option in poll.Options"));
-                IWebElement selectedOptionButton = options.First().FindElements(By.CssSelector(".active-btn")).Single();
 
                 Assert.IsTrue(selectedOptionButton.IsVisible());
             }
@@ -237,7 +236,7 @@ namespace VotingApplication.Web.Tests.E2E
                 _context.Dispose();
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void UpDownPoll_AccessWithNoToken_DisplaysError()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _inviteOnlyUpDownPoll.UUID);
@@ -247,7 +246,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.AreEqual("This poll is invite only", error.Text);
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void UpDownPoll_AccessWithToken_DisplaysAllOptions()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _inviteOnlyUpDownPoll.UUID + "/" + _inviteOnlyUpDownPoll.Ballots[0].TokenGuid);
@@ -258,7 +257,7 @@ namespace VotingApplication.Web.Tests.E2E
                                                optionNames.Select(o => o.Text).ToList());
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void UpDownPoll_VoteWithToken_NavigatesToResultsPage()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _inviteOnlyUpDownPoll.UUID + "/" + _inviteOnlyUpDownPoll.Ballots[0].TokenGuid);
@@ -335,7 +334,7 @@ namespace VotingApplication.Web.Tests.E2E
                 _context.Dispose();
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void UpDownPoll_VoteWithNoName_PromptsForName()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedUpDownPoll.UUID);
@@ -349,7 +348,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.AreEqual(String.Empty, formName.Text);
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void UpDownPoll_NameInput_AcceptsValidName()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedUpDownPoll.UUID);
@@ -369,7 +368,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.IsTrue(goButton.Enabled);
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void UpDownPoll_NameInput_VotesUponSubmission()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedUpDownPoll.UUID);
@@ -455,7 +454,7 @@ namespace VotingApplication.Web.Tests.E2E
                 _context.Dispose();
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void UpDownPoll_OptionAddingPoll_ProvidesLinkForAddingOptions()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingUpDownPoll.UUID);
@@ -465,7 +464,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.IsTrue(addOptionLink.IsVisible());
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void UpDownPoll_OptionAddingLink_PromptsForOptionDetails()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingUpDownPoll.UUID);
@@ -484,7 +483,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.AreEqual(String.Empty, formDescription.Text);
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void UpDownPoll_OptionAddingPrompt_AcceptsValidName()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingUpDownPoll.UUID);
@@ -505,7 +504,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.IsTrue(doneButton.Enabled);
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void UpDownPoll_OptionAddingSubmission_AddsOption()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingUpDownPoll.UUID);
@@ -603,7 +602,7 @@ namespace VotingApplication.Web.Tests.E2E
                 _context.Dispose();
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void UpDownPoll_HiddenResultsPoll_DoesNotShowResultsButton()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _hiddenResultsUpDownPoll.UUID);

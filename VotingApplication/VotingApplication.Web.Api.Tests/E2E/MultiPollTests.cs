@@ -81,7 +81,7 @@ namespace VotingApplication.Web.Tests.E2E
                 _context.Dispose();
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void MultiPoll_PopulatedOptions_DisplaysAllOptions()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultMultiPoll.UUID);
@@ -92,7 +92,7 @@ namespace VotingApplication.Web.Tests.E2E
                                                optionNames.Select(o => o.Text).ToList());
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void MultiPoll_PopulatedOptions_DisplaysAllOptionDescriptions()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultMultiPoll.UUID);
@@ -119,7 +119,7 @@ namespace VotingApplication.Web.Tests.E2E
                                                optionDescriptions.Select(o => o.Text).ToList());
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void MultiPoll_VotingOnOption_NavigatesToResultsPage()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultMultiPoll.UUID);
@@ -135,7 +135,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.IsTrue(_driver.Url.StartsWith(SiteBaseUri + "Poll/#/Results/" + _defaultMultiPoll.UUID));
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void MultiPoll_DefaultPoll_ShowsResultsButton()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultMultiPoll.UUID);
@@ -145,7 +145,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.IsTrue(resultsLink.IsVisible());
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void MultiVote_AfterVoting_VoteIsRemembered()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultMultiPoll.UUID);
@@ -155,12 +155,12 @@ namespace VotingApplication.Web.Tests.E2E
                 options.First().Click();
                 buttons.First(b => b.Text == "Vote").Click();
 
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultMultiPoll.UUID);
+                _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
+
+                IWebElement selectedOption = _driver.FindElements(By.CssSelector(".selected-option")).Single();
 
                 VoteClearer voterClearer = new VoteClearer(_context);
                 voterClearer.ClearLast();
-
-                IWebElement selectedOption = _driver.FindElements(By.CssSelector(".selected-option")).Single();
 
                 Assert.IsTrue(selectedOption.IsVisible());
             }
@@ -233,7 +233,7 @@ namespace VotingApplication.Web.Tests.E2E
                 _context.Dispose();
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void MultiPoll_AccessWithNoToken_DisplaysError()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _inviteOnlyMultiPoll.UUID);
@@ -243,7 +243,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.AreEqual("This poll is invite only", error.Text);
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void MultiPoll_AccessWithToken_DisplaysAllOptions()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _inviteOnlyMultiPoll.UUID + "/" + _inviteOnlyMultiPoll.Ballots[0].TokenGuid);
@@ -254,7 +254,7 @@ namespace VotingApplication.Web.Tests.E2E
                                                optionNames.Select(o => o.Text).ToList());
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void MultiPoll_VoteWithToken_NavigatesToResultsPage()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _inviteOnlyMultiPoll.UUID + "/" + _inviteOnlyMultiPoll.Ballots[0].TokenGuid);
@@ -331,7 +331,7 @@ namespace VotingApplication.Web.Tests.E2E
                 _context.Dispose();
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void MultiPoll_VoteWithNoName_PromptsForName()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedMultiPoll.UUID);
@@ -345,7 +345,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.AreEqual(String.Empty, formName.Text);
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void MultiPoll_NameInput_AcceptsValidName()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedMultiPoll.UUID);
@@ -365,7 +365,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.IsTrue(goButton.Enabled);
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void MultiPoll_NameInput_VotesUponSubmission()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedMultiPoll.UUID);
@@ -451,7 +451,7 @@ namespace VotingApplication.Web.Tests.E2E
                 _context.Dispose();
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void MultiPoll_OptionAddingPoll_ProvidesLinkForAddingOptions()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingMultiPoll.UUID);
@@ -461,7 +461,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.IsTrue(addOptionLink.IsVisible());
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void MultiPoll_OptionAddingLink_PromptsForOptionDetails()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingMultiPoll.UUID);
@@ -480,7 +480,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.AreEqual(String.Empty, formDescription.Text);
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void MultiPoll_OptionAddingPrompt_AcceptsValidName()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingMultiPoll.UUID);
@@ -501,7 +501,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.IsTrue(doneButton.Enabled);
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void MultiPoll_OptionAddingSubmission_AddsOption()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _optionAddingMultiPoll.UUID);
@@ -599,7 +599,7 @@ namespace VotingApplication.Web.Tests.E2E
                 _context.Dispose();
             }
 
-            [TestMethod]
+            [TestMethod, TestCategory("E2E")]
             public void MultiPoll_HiddenResultsPoll_DoesNotShowResultsButton()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _hiddenResultsMultiPoll.UUID);

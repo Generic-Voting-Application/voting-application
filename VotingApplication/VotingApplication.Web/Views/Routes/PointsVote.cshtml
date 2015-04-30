@@ -1,7 +1,6 @@
 ﻿<div ng-controller="PointsVoteController" ng-app="GVA.Voting" class="voting-area">
 
-
-    Unallocated points: {{unallocatedPoints()}}/{{poll.MaxPoints}}
+    <span>Unallocated points: {{unallocatedPoints()}}/{{poll.MaxPoints}}</span>
     <div class="progress" id="progress-bar">
         <div ng-style="{ 'width': unallocatedPointsPercentage() + '%' }" class="progress-bar" role="progressbar"></div>
 
