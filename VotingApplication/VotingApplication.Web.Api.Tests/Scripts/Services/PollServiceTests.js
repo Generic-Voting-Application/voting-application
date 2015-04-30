@@ -56,6 +56,8 @@ describe('Poll Service', function () {
 
             var expectedData = '{"UUIDToCopy":"' + pollId + '"}';
 
+            accountService.account = { token: null };
+
             httpBackend.expect(
                    'POST',
                    expectedUrl,
@@ -63,6 +65,33 @@ describe('Poll Service', function () {
                ).respond(200);
 
             pollService.copyPoll(pollId);
+
+            httpBackend.flush();
+        });
+    });
+
+    describe('Get User Polls', function () {
+
+        it('Adds account token to Authorization header', function () {
+
+            var tokenValue = 'Some long token value...';
+
+            accountService.account = { token: tokenValue };
+
+            var expectedUrl = '/api/dashboard/polls';
+            var expectedAuthorizationHeader = 'Bearer ' + tokenValue;
+            var expectedData = null;
+
+            httpBackend.expect(
+                   'GET',
+                   expectedUrl,
+                   expectedData,
+                   function (headers) {
+                       return headers['Authorization'] === expectedAuthorizationHeader;
+                   }
+               ).respond(200);
+
+            pollService.getUserPolls();
 
             httpBackend.flush();
         });

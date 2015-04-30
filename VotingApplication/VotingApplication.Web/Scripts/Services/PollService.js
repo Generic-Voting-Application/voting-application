@@ -41,14 +41,11 @@
 
         function getUserPolls() {
 
-            var promise = $http({
+            return $http({
                 method: 'GET',
                 url: '/api/dashboard/polls',
                 headers: { 'Authorization': 'Bearer ' + AccountService.account.token }
             });
-
-            return promise;
-
         }
 
         function createPoll(question, successCallback) {

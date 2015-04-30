@@ -42,7 +42,7 @@
 
         function getUserPolls() {
             PollService.getUserPolls()
-                .success(function (data) {
+                .then(function (data) {
                     $scope.userPolls = data;
                 });
         }
@@ -57,7 +57,7 @@
 
         function copyPoll(pollId) {
             PollService.copyPoll(pollId)
-                .success(function (data) {
+                .then(function (data) {
                     navigateToManagePage(data.newManageId);
                 });
         }
