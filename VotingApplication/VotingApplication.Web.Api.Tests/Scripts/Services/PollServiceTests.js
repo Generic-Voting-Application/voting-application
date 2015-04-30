@@ -1,0 +1,71 @@
+﻿'use strict';
+
+describe('Poll Service', function () {
+
+    beforeEach(module('GVA.Poll'));
+
+    var pollService;
+
+    var accountService;
+    var httpBackend;
+
+    beforeEach(inject(function (PollService, AccountService, $httpBackend) {
+        pollService = PollService;
+        accountService = AccountService;
+        httpBackend = $httpBackend;
+    }));
+
+    afterEach(function () {
+        httpBackend.verifyNoOutstandingExpectation();
+        httpBackend.verifyNoOutstandingRequest();
+
+        // http://stackoverflow.com/questions/27016235/angular-js-unit-testing-httpbackend-spec-has-no-expectations
+        expect('Suppress SPEC HAS NO EXPECTATIONS').toBeDefined();
+    });
+
+    describe('Copy Poll', function () {
+
+        it('Adds account token to Authorization header', function () {
+
+            var pollId = null;
+            var tokenValue = 'Some long token value...';
+
+            accountService.account = { token: tokenValue };
+
+            var expectedUrl = '/api/dashboard/copy';
+            var expectedAuthorizationHeader = 'Bearer ' + tokenValue;
+            var expectedData = '{"UUIDToCopy":null}';
+
+            httpBackend.expect(
+                   'POST',
+                   expectedUrl,
+                   expectedData,
+                   function (headers) {
+                       return headers['Authorization'] === expectedAuthorizationHeader;
+                   }
+               ).respond(200);
+
+            pollService.copyPoll(pollId);
+
+            httpBackend.flush();
+        });
+
+        it('Adds the pollId to the request', function () {
+            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
+            var expectedUrl = '/api/dashboard/copy';
+
+            var expectedData = '{"UUIDToCopy":"' + pollId + '"}';
+
+            httpBackend.expect(
+                   'POST',
+                   expectedUrl,
+                   expectedData
+               ).respond(200);
+
+            pollService.copyPoll(pollId);
+
+            httpBackend.flush();
+        });
+    });
+
+});

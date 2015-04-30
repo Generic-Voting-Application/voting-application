@@ -166,6 +166,7 @@
     <Content Include="Scripts\Services\ManageServiceTests.js" />
     <Content Include="Scripts\Controllers\ManageOptionControllerTests.js" />
     <Content Include="Scripts\Controllers\ManageVotersControllerTests.js" />
+    <Content Include="Scripts\Services\PollServiceTests.js" />
     <Content Include="Scripts\Services\TokenServiceTests.js" />
     <Content Include="Scripts\Services\VoteServiceTests.js" />
   </ItemGroup>

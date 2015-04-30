@@ -76,7 +76,7 @@
         }
 
         function copyPoll(pollId) {
-            var promise = $http({
+            return $http({
                 method: 'POST',
                 url: '/api/dashboard/copy',
                 headers: {
@@ -85,8 +85,6 @@
                 },
                 data: JSON.stringify({ UUIDToCopy: pollId })
             });
-
-            return promise;
         }
     }
 })();
