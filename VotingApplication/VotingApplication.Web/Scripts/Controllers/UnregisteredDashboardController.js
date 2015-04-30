@@ -1,6 +1,7 @@
 ﻿/// <reference path="../Services/AccountService.js" />
 /// <reference path="../Services/RoutingService.js" />
 /// <reference path="../Services/PollService.js" />
+/// <reference path="../Services/TokenService.js" />
 (function () {
     'use strict';
 
@@ -26,13 +27,14 @@
         }
 
         function createNewPoll(question) {
-            PollService.createPoll(question, createPollSuccessCallback);
+            PollService.createPoll(question)
+            .then(createPollSuccessCallback);
         }
 
-        function createPollSuccessCallback(data) {
+        function createPollSuccessCallback(response) {
+            var data = response.data;
             TokenService.setToken(data.UUID, data.CreatorBallot.TokenGuid);
             RoutingService.navigateToManagePage(data.ManageId);
-            
         }
     }
 

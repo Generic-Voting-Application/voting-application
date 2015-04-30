@@ -97,4 +97,81 @@ describe('Poll Service', function () {
         });
     });
 
+    describe('Create Poll', function () {
+
+        it('Given an account token, it adds it to the Authorization header', function () {
+
+            var newQuestion = null;
+            var tokenValue = 'Some long token value...';
+
+            accountService.account = { token: tokenValue };
+
+            var expectedUrl = 'api/poll';
+            var expectedAuthorizationHeader = 'Bearer ' + tokenValue;
+            var expectedData = '{"PollName":null}';
+
+            httpBackend.expect(
+                   'POST',
+                   expectedUrl,
+                   expectedData,
+                   function (headers) {
+                       return headers['Authorization'] === expectedAuthorizationHeader;
+                   }
+               ).respond(200);
+
+            pollService.createPoll(newQuestion);
+
+            httpBackend.flush();
+        });
+
+        it('Given an empty account, it adds null to the Authorization header', function () {
+
+            var newQuestion = null;
+            accountService.account = null;
+
+            var expectedUrl = 'api/poll';
+            var expectedAuthorizationHeader = 'Bearer ' + null;
+            var expectedData = '{"PollName":null}';
+
+            httpBackend.expect(
+                   'POST',
+                   expectedUrl,
+                   expectedData,
+                   function (headers) {
+                       return headers['Authorization'] === expectedAuthorizationHeader;
+                   }
+               ).respond(200);
+
+            pollService.createPoll(newQuestion);
+
+            httpBackend.flush();
+        });
+
+        it('Adds the new question to the request', function () {
+
+            var newQuestion = 'Aren\'t you a little short for a StormTrooper?';
+            var tokenValue = 'Some long token value...';
+
+            accountService.account = { token: tokenValue };
+
+            var expectedUrl = 'api/poll';
+            var expectedAuthorizationHeader = 'Bearer ' + tokenValue;
+            var expectedData = '{"PollName":"' + newQuestion + '"}';
+
+            httpBackend.expect(
+                   'POST',
+                   expectedUrl,
+                   expectedData,
+                   function (headers) {
+                       return headers['Authorization'] === expectedAuthorizationHeader;
+                   }
+               ).respond(200);
+
+            pollService.createPoll(newQuestion);
+
+            httpBackend.flush();
+        });
+
+    });
+
 });

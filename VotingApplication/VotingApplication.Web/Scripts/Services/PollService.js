@@ -48,7 +48,7 @@
             });
         }
 
-        function createPoll(question, successCallback) {
+        function createPoll(question) {
             var token;
             if (AccountService.account) {
                 token = AccountService.account.token;
@@ -57,7 +57,7 @@
                 token = null;
             }
 
-            var request = {
+            return $http({
                 method: 'POST',
                 url: 'api/poll',
                 headers: {
@@ -65,10 +65,7 @@
                     'Authorization': 'Bearer ' + token
                 },
                 data: JSON.stringify({ PollName: question })
-            };
-
-            $http(request)
-                .success(successCallback);
+            });
 
         }
 
