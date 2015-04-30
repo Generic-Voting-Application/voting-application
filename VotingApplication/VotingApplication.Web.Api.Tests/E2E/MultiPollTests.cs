@@ -45,8 +45,7 @@ namespace VotingApplication.Web.Tests.E2E
             [ClassInitialize]
             public static void ClassInitialise(TestContext testContext)
             {
-                ContextFactory contextFactory = new ContextFactory();
-                _context = contextFactory.CreateTestContext();
+                _context = new TestVotingContext();
 
                 List<Option> testPollOptions = new List<Option>() {
                 new Option(){ Name = "Test Option 1", Description = "Test Description 1" },
@@ -194,8 +193,7 @@ namespace VotingApplication.Web.Tests.E2E
             [ClassInitialize]
             public static void ClassInitialise(TestContext testContext)
             {
-                ContextFactory contextFactory = new ContextFactory();
-                _context = contextFactory.CreateTestContext();
+                _context = new TestVotingContext();
 
                 List<Option> testPollOptions = new List<Option>() {
                 new Option(){ Name = "Test Option 1", Description = "Test Description 1" },
@@ -296,8 +294,7 @@ namespace VotingApplication.Web.Tests.E2E
             [ClassInitialize]
             public static void ClassInitialise(TestContext testContext)
             {
-                ContextFactory contextFactory = new ContextFactory();
-                _context = contextFactory.CreateTestContext();
+                _context = new TestVotingContext();
 
                 List<Option> testPollOptions = new List<Option>() {
                 new Option(){ Name = "Test Option 1", Description = "Test Description 1" },
@@ -416,8 +413,7 @@ namespace VotingApplication.Web.Tests.E2E
             [ClassInitialize]
             public static void ClassInitialise(TestContext testContext)
             {
-                ContextFactory contextFactory = new ContextFactory();
-                _context = contextFactory.CreateTestContext();
+                _context = new TestVotingContext();
 
                 List<Option> testPollOptions = new List<Option>() {
                 new Option(){ Name = "Test Option 1", Description = "Test Description 1" },
@@ -563,8 +559,7 @@ namespace VotingApplication.Web.Tests.E2E
             [ClassInitialize]
             public static void ClassInitialise(TestContext testContext)
             {
-                ContextFactory contextFactory = new ContextFactory();
-                _context = contextFactory.CreateTestContext();
+                _context = new TestVotingContext();
 
                 List<Option> testPollOptions = new List<Option>() {
                 new Option(){ Name = "Test Option 1", Description = "Test Description 1" },

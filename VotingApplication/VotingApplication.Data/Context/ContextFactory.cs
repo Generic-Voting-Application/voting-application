@@ -7,10 +7,5 @@ namespace VotingApplication.Data.Context
         {
             return new VotingContext();
         }
-
-        public IVotingContext CreateTestContext()
-        {
-            return new TestVotingContext();
-        }
     }
 }
