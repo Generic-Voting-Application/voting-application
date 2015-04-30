@@ -51,11 +51,13 @@
         }
 
         function getPollData() {
-            PollService.getPoll($scope.pollId, function (pollData) {
-                $scope.poll = pollData;
+            PollService.getPoll($scope.pollId)
+                .then(function (response) {
 
-                setSelectedValues();
-            });
+                    $scope.poll = response.data;
+
+                    setSelectedValues();
+                });
         }
 
         function setSelectedValues() {
@@ -83,23 +85,22 @@
                 return opt.voteValue !== 0;
             });
 
+            PollService.getPoll($scope.pollId)
+                .then(function (pollData) {
+                    $scope.poll = pollData;
 
-            // TODO: Replace this with a promise chain instead of duplicating.
-            PollService.getPoll($scope.pollId, function (pollData) {
-                $scope.poll = pollData;
+                    $scope.poll.Options.forEach(function (opt) { opt.voteValue = 0; });
 
-                $scope.poll.Options.forEach(function (opt) { opt.voteValue = 0; });
-
-                currentlySelectedOptions.forEach(function (selectedOption) {
-                    $scope.poll.Options.forEach(function (option) {
-                        // Note that this is subtly different from the initial load (as we have Id vs Id here, and Id vs OptionId above)
-                        if (option.Id === selectedOption.Id) {
-                            option.voteValue = selectedOption.voteValue;
-                        }
+                    currentlySelectedOptions.forEach(function (selectedOption) {
+                        $scope.poll.Options.forEach(function (option) {
+                            // Note that this is subtly different from the initial load (as we have Id vs Id here, and Id vs OptionId above)
+                            if (option.Id === selectedOption.Id) {
+                                option.voteValue = selectedOption.voteValue;
+                            }
+                        });
                     });
-                });
 
-            });
+                });
         }
 
         function clearVote() {

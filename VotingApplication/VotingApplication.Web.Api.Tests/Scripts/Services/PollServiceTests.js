@@ -8,11 +8,13 @@ describe('Poll Service', function () {
 
     var accountService;
     var httpBackend;
+    var rootScope;
 
-    beforeEach(inject(function (PollService, AccountService, $httpBackend) {
+    beforeEach(inject(function (PollService, AccountService, $httpBackend, $rootScope) {
         pollService = PollService;
         accountService = AccountService;
         httpBackend = $httpBackend;
+        rootScope = $rootScope;
     }));
 
     afterEach(function () {
@@ -170,6 +172,23 @@ describe('Poll Service', function () {
             pollService.createPoll(newQuestion);
 
             httpBackend.flush();
+        });
+
+    });
+
+    describe('Get Poll', function () {
+
+        it('Returns a failure for a null pollId', function () {
+            var pollId = null;
+
+            var promise = pollService.getPoll(pollId);
+
+            promise
+                .then(function () {
+                    fail('Expected the promise to be rejected, not resolved.');
+                });
+
+            rootScope.$apply();
         });
 
     });

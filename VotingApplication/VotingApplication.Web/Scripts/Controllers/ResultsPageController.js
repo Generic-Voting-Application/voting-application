@@ -1,6 +1,7 @@
 ﻿/// <reference path="../Services/IdentityService.js" />
 /// <reference path="../Services/PollService.js" />
 /// <reference path="../Services/VoteService.js" />
+/// <reference path="../Services/RoutingService.js" />
 (function () {
     'use strict';
 
@@ -81,7 +82,8 @@
 
         function activate() {
 
-            PollService.getPoll(pollId, getPollSuccessCallback);
+            PollService.getPoll(pollId)
+                .then(getPollSuccessCallback);
 
             VoteService.refreshLastChecked(pollId);
             reloadData();
