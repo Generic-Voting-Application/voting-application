@@ -13,8 +13,8 @@ namespace VotingApplication.Web.Api.Metrics
     public class MetricHandler : IMetricHandler
     {
         private readonly IContextFactory _contextFactory;
-        
-        public MetricHandler (IContextFactory contextFactory)
+
+        public MetricHandler(IContextFactory contextFactory)
         {
             _contextFactory = contextFactory;
         }
