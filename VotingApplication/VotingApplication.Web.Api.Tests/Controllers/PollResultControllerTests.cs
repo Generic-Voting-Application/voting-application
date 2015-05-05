@@ -10,6 +10,7 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Tests.Controllers
@@ -74,7 +75,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Options).Returns(dummyOptions);
             mockContext.Setup(a => a.Polls).Returns(dummyPolls);
 
-            _controller = new PollResultsController(mockContextFactory.Object);
+            var mockMetricHandler = new Mock<IMetricHandler>();
+
+            _controller = new PollResultsController(mockContextFactory.Object, mockMetricHandler.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
