@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -9,6 +10,7 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Tests.TestHelpers;
 
@@ -406,6 +408,43 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             }
 
             [TestMethod]
+            public void ClearedVotesGenerateVoteDeletionMetric()
+            {
+                // Arrange
+                Option option = new Option() { PollOptionNumber = 1, Id = 1, Name = "Option" };
+                Poll poll = new Poll() { UUID = Guid.NewGuid(), ManageId = Guid.NewGuid(), Options = new List<Option>() { option } };
+                Ballot ballot = new Ballot() { TokenGuid = Guid.NewGuid(), Votes = new List<Vote>(), ManageGuid = Guid.NewGuid() };
+                Vote voteToClear = new Vote() { Ballot = ballot, Poll = poll, VoteValue = 1, Option = option };
+                
+                ballot.Votes.Add(voteToClear);
+                poll.Ballots.Add(ballot);
+
+                var options = DbSetTestHelper.CreateMockDbSet<Option>();
+                var polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                var votes = DbSetTestHelper.CreateMockDbSet<Vote>();
+
+                options.Add(option);
+                polls.Add(poll);
+                ballots.Add(ballot);
+                votes.Add(voteToClear);
+
+                var metricHandler = new Mock<IMetricHandler>();
+                var contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes, options);
+                ManageVoterController controller = CreateManageVoteController(contextFactory, metricHandler.Object);
+
+                // Act
+                DeleteVoteRequestModel voteDelete = new DeleteVoteRequestModel() { OptionNumber = 1 };
+                DeleteBallotRequestModel deletion = new DeleteBallotRequestModel() { BallotManageGuid = ballot.ManageGuid, VoteDeleteRequests = new List<DeleteVoteRequestModel>() { voteDelete } };
+                List<DeleteBallotRequestModel> ballotDeletions = new List<DeleteBallotRequestModel>() { deletion };
+                DeleteVotersRequestModel request = new DeleteVotersRequestModel() { BallotDeleteRequests = ballotDeletions };
+                controller.Delete(poll.ManageId, request);
+
+                // Assert
+                metricHandler.Verify(m => m.HandleVoteDeletedEvent(voteToClear, poll.UUID), Times.Once());
+            }
+
+            [TestMethod]
             public void AllVotesRequestedRemovalForBallot_RemovesBallot()
             {
                 const int pollOptionNumber = 1;
@@ -576,7 +615,13 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
         public static ManageVoterController CreateManageVoteController(IContextFactory contextFactory)
         {
-            return new ManageVoterController(contextFactory)
+            var metricHandler = new Mock<IMetricHandler>();
+            return CreateManageVoteController(contextFactory, metricHandler.Object);
+        }
+
+        public static ManageVoterController CreateManageVoteController(IContextFactory contextFactory, IMetricHandler metricHandler)
+        {
+            return new ManageVoterController(contextFactory, metricHandler)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()

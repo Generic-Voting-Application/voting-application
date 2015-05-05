@@ -124,6 +124,8 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
+    <Compile Include="Model\Metric.cs" />
+    <Compile Include="Model\MetricType.cs" />
     <Compile Include="Model\Option.cs" />
     <Compile Include="Model\Poll.cs" />
     <Compile Include="Model\Ballot.cs" />

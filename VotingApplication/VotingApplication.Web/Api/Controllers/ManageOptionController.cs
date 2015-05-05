@@ -6,6 +6,7 @@ using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers
@@ -16,23 +17,14 @@ namespace VotingApplication.Web.Api.Controllers
         {
         }
 
-        public ManageOptionController(IContextFactory contextFactory) : base(contextFactory) { }
+        public ManageOptionController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpGet]
         public List<ManageOptionResponseModel> Get(Guid manageId)
         {
             using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Poll poll = context
-                    .Polls
-                    .Where(p => p.ManageId == manageId)
-                    .Include(p => p.Options)
-                    .SingleOrDefault();
-
-                if (poll == null)
-                {
-                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll for manage id {0} not found", manageId));
-                }
+                Poll poll = PollByManageId(manageId, context);
 
                 return poll
                     .Options
@@ -142,7 +134,7 @@ namespace VotingApplication.Web.Api.Controllers
             return requestPollOptionNumbers;
         }
 
-        private static void RemoveOptions(IVotingContext context, Poll poll, IEnumerable<int> optionsToRemove)
+        private void RemoveOptions(IVotingContext context, Poll poll, IEnumerable<int> optionsToRemove)
         {
             foreach (int pollOptionNumber in optionsToRemove)
             {
@@ -150,6 +142,7 @@ namespace VotingApplication.Web.Api.Controllers
                     .Options
                     .Single(o => o.PollOptionNumber == pollOptionNumber);
 
+                _metricHandler.HandleOptionDeletedEvent(option, poll.UUID);
                 poll.Options.Remove(option);
                 context.Options.Remove(option);
 
@@ -166,13 +159,14 @@ namespace VotingApplication.Web.Api.Controllers
                         .Include(b => b.Votes)
                         .Single(b => b.Votes.Any(v => v.Id == vote.Id));
 
+                    _metricHandler.HandleVoteDeletedEvent(vote, poll.UUID);
                     ballot.Votes.Remove(vote);
                     context.Votes.Remove(vote);
                 }
             }
         }
 
-        private static void UpdateOptions(ManageOptionUpdateRequest request, Poll poll, IEnumerable<int> optionsToUpdate)
+        private void UpdateOptions(ManageOptionUpdateRequest request, Poll poll, IEnumerable<int> optionsToUpdate)
         {
             foreach (int pollOptionNumber in optionsToUpdate)
             {
@@ -186,10 +180,12 @@ namespace VotingApplication.Web.Api.Controllers
 
                 option.Name = update.Name;
                 option.Description = update.Description;
+
+                _metricHandler.HandleOptionUpdatedEvent(option, poll.UUID);
             }
         }
 
-        private static void AddNewOptions(IVotingContext context, Poll poll, IEnumerable<OptionUpdate> optionUpdatesToAdd)
+        private void AddNewOptions(IVotingContext context, Poll poll, IEnumerable<OptionUpdate> optionUpdatesToAdd)
         {
             foreach (OptionUpdate optionRequest in optionUpdatesToAdd)
             {
@@ -198,6 +194,8 @@ namespace VotingApplication.Web.Api.Controllers
                     Name = optionRequest.Name,
                     Description = optionRequest.Description
                 };
+
+                _metricHandler.HandleOptionAddedEvent(option, poll.UUID);
 
                 poll.Options.Add(option);
                 context.Options.Add(option);
