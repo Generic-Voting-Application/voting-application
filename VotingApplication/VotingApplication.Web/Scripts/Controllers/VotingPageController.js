@@ -59,7 +59,8 @@
         }
 
         function setSelectedValues() {
-            VoteService.getTokenVotes($scope.pollId, $scope.token, function (voteData) {
+            VoteService.getTokenVotes($scope.pollId, $scope.token)
+            .then(function (voteData) {
 
                 $scope.poll.Options.forEach(function (opt) { opt.voteValue = 0; });
 
@@ -105,9 +106,10 @@
                 return;
             }
 
-            VoteService.submitVote($scope.pollId, [], $scope.token, function () {
-                RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
-            });
+            VoteService.submitVote($scope.pollId, [], $scope.token)
+                .then(function () {
+                    RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
+                });
         }
 
         function submitVote(options) {
@@ -128,9 +130,10 @@
 
             var votes = getVotes(options);
 
-            VoteService.submitVote($scope.pollId, votes, $scope.token, function () {
-                RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
-            });
+            VoteService.submitVote($scope.pollId, votes, $scope.token)
+                .then(function () {
+                    RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
+                });
         }
 
         function redirectIfExpired() {

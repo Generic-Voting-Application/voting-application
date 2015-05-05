@@ -33,16 +33,13 @@
         }
 
         function reloadData() {
-            VoteService.getResults(pollId, getResultsSuccessCallback, getResultsFailureCallback);
+            VoteService.getResults(pollId)
+                .then(displayResults)
+                .catch(handleGetResultsError);
         }
 
-        function getResultsFailureCallback(data, status) {
-            if (status >= 400 && reloadInterval) {
-                clearInterval(reloadInterval);
-            }
-        }
-
-        function getResultsSuccessCallback(data) {
+        function displayResults(response) {
+            var data = response.data;
 
             if (!data) {
                 return;
@@ -51,11 +48,12 @@
             if (data.Votes) {
                 $scope.voteCount = data.Votes.length;
             }
-            
+
             if (data.Winners) {
                 $scope.winner = data.Winners.map(function (d) {
                     return d.Name;
                 }).join(', ');
+
                 $scope.plural = (data.Winners.length > 1) ? 's (Draw)' : '';
             }
 
@@ -67,9 +65,13 @@
 
                 $scope.chartData = dataPoints;
             }
-
         }
 
+        function handleGetResultsError(response) {
+            if (response.status >= 400 && reloadInterval) {
+                clearInterval(reloadInterval);
+            }
+        }
 
         function getPollSuccessCallback(pollData) {
             if (pollData.ExpiryDate) {
