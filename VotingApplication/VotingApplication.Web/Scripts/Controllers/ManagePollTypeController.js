@@ -48,7 +48,7 @@
             .then(function (pollSummary) {
                 if (pollSummary.data && pollSummary.data.Votes && pollSummary.data.Votes.length > 0 &&
                         ($scope.poll.VotingStrategy !== startingPollType ||
-                        ($scope.poll.PollType === 'Points' &&
+                        ($scope.poll.VotingStrategy === 'Points' &&
                             ($scope.poll.MaxPerVote !== startingMaxPerVote ||
                             $scope.poll.MaxPoints !== startingMaxPoints)))) {
                     openPollChangeDialog(updatePollType);
