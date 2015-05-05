@@ -18,5 +18,6 @@ namespace VotingApplication.Data.Context
         public IDbSet<Vote> Votes { get; set; }
         public IDbSet<Poll> Polls { get; set; }
         public IDbSet<Ballot> Ballots { get; set; }
+        public IDbSet<Metric> Metrics { get; set; }
     }
 }

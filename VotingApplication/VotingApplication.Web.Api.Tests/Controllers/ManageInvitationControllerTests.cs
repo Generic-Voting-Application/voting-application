@@ -10,6 +10,7 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Services;
 
@@ -25,6 +26,7 @@ namespace VotingApplication.Web.Tests.Controllers
         private Guid _inviteOnlyPollID;
         private Poll _inviteOnlyPoll;
         private Mock<IInvitationService> _mockInvitationService;
+        private Mock<IMetricHandler> _mockMetricHandler;
         private InMemoryDbSet<Vote> _dummyVotes;
         private InMemoryDbSet<Ballot> _dummyBallots;
 
@@ -52,8 +54,9 @@ namespace VotingApplication.Web.Tests.Controllers
             mockContext.Setup(a => a.Ballots).Returns(_dummyBallots);
 
             _mockInvitationService = new Mock<IInvitationService>();
+            _mockMetricHandler = new Mock<IMetricHandler>();
 
-            _controller = new ManageInvitationController(mockContextFactory.Object, _mockInvitationService.Object);
+            _controller = new ManageInvitationController(mockContextFactory.Object, _mockMetricHandler.Object, _mockInvitationService.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -412,6 +415,96 @@ namespace VotingApplication.Web.Tests.Controllers
             CollectionAssert.AreEquivalent(new List<Vote>(), _dummyVotes.Local);
         }
         
+        [TestMethod]
+        public void DeletingTheVotesOfABallotGeneratesAVoteDeletionMetric()
+        {
+            // Arrange
+            Vote voteToRemove = new Vote();
+            Ballot existingBallot = new Ballot() { Votes = new List<Vote> { voteToRemove } };
+            _dummyBallots.Add(existingBallot);
+            _mainPoll.Ballots.Add(existingBallot);
+            _dummyVotes.Add(voteToRemove);
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel>());
+
+            // Assert
+            _mockMetricHandler.Verify(m => m.HandleVoteDeletedEvent(voteToRemove, _mainPoll.UUID), Times.Once());
+        }
+
+        [TestMethod]
+        public void AddingANewInvitationGeneratesAnAddBallotMetric()
+        {
+            // Arrange
+            var request = new ManageInvitationRequestModel { Email = "a@b.c", SendInvitation = true };
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
+
+            // Assert
+            _mockMetricHandler.Verify(m => m.HandleBallotAddedEvent(It.Is<Ballot>(b => b.Email == "a@b.c"), _mainPoll.UUID), Times.Once());
+        }
+
+        [TestMethod]
+        public void SavingAnEmailWithoutSendingInvitationDoesNotGenerateANewBallotMetric()
+        {
+            // Arrange
+            var request = new ManageInvitationRequestModel { Email = "a@b.c", SendInvitation = false };
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
+
+            // Assert
+            _mockMetricHandler.Verify(m => m.HandleBallotAddedEvent(It.IsAny<Ballot>(), It.IsAny<Guid>()), Times.Never());
+        }
+
+        [TestMethod]
+        public void ResendingEmailToAnExistingBallotDoesNotGenerateNewBallotMetric()
+        {
+            // Arrange
+            Ballot existingBallot = new Ballot { Email = "a@b.c", TokenGuid = Guid.NewGuid(), ManageGuid = Guid.NewGuid() };
+            _mainPoll.Ballots.Add(existingBallot);
+            _dummyBallots.Add(existingBallot);
+            var request = new ManageInvitationRequestModel { Email = "a@b.c", SendInvitation = true, ManageToken = existingBallot.ManageGuid  };
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel> { request });
+
+            // Assert
+            _mockMetricHandler.Verify(m => m.HandleBallotAddedEvent(It.IsAny<Ballot>(), It.IsAny<Guid>()), Times.Never());
+        }
+
+        [TestMethod]
+        public void DeletingAPendingBallotDoesNotGenerateABallotDeletedMetric()
+        {
+            // Arrange
+            Ballot pendingBallot = new Ballot { Email = "a@b.c", ManageGuid = Guid.NewGuid() };
+            _mainPoll.Ballots.Add(pendingBallot);
+            _dummyBallots.Add(pendingBallot);
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel>());
+
+            // Assert
+            _mockMetricHandler.Verify(m => m.HandleBallotDeletedEvent(It.IsAny<Ballot>(), It.IsAny<Guid>()), Times.Never());
+        }
+
+        [TestMethod]
+        public void DeletingAnInvitedBallotGeneratesABallotDeletedMetric()
+        {
+
+            // Arrange
+            Ballot invitedBallot = new Ballot { Email = "a@b.c", ManageGuid = Guid.NewGuid(), TokenGuid = Guid.NewGuid() };
+            _mainPoll.Ballots.Add(invitedBallot);
+            _dummyBallots.Add(invitedBallot);
+
+            // Act
+            _controller.Post(_mainManageID, new List<ManageInvitationRequestModel>());
+
+            // Assert
+            _mockMetricHandler.Verify(m => m.HandleBallotDeletedEvent(invitedBallot, _mainPoll.UUID), Times.Once());
+        }
+
         #endregion
     }
 }

@@ -7,10 +7,14 @@
         function ($routeProvider) {
             $routeProvider.
                 when('/Vote/:pollId/:tokenId?', {
-                    templateUrl: '../Routes/Vote'
+                    templateUrl: function (params) {
+                        return '../Routes/Vote/' + params['pollId'];
+                    }
                 })
                 .when('/Results/:pollId/:tokenId?', {
-                    templateUrl: '../Routes/Results'
+                    templateUrl: function (params) {
+                        return '../Routes/Results/' + params['pollId'];
+                    }
                 });
         }]);
 })();

@@ -7,37 +7,23 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Data.Model.Creation;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
 {
     public class PollController : WebApiController
     {
-        public PollController()
-        {
-        }
+        public PollController() { }
 
-        public PollController(IContextFactory contextFactory)
-            : base(contextFactory)
-        {
-        }
+        public PollController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpGet]
         public PollRequestResponseModel Get(Guid id)
         {
-            using (IVotingContext context = _contextFactory.CreateContext())
+            using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = context
-                    .Polls
-                    .Where(s => s.UUID == id)
-                    .Include(s => s.Options)
-                    .FirstOrDefault();
-
-                if (poll == null)
-                {
-                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", id));
-                }
-
+                Poll poll = PollByPollId(id, context);
                 return CreatePollResponseFromModel(poll);
             }
         }
@@ -88,6 +74,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             using (var context = _contextFactory.CreateContext())
             {
+                _metricHandler.HandlePollCreatedEvent(newPoll);
+
                 context.Polls.Add(newPoll);
                 newPoll.Ballots.Add(creatorBallot);
 

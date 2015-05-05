@@ -4,6 +4,7 @@ using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers
@@ -12,19 +13,14 @@ namespace VotingApplication.Web.Api.Controllers
     {
         public ManageExpiryController() : base() { }
 
-        public ManageExpiryController(IContextFactory contextFactory) : base(contextFactory) { }
+        public ManageExpiryController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpPut]
         public void Put(Guid manageId, ManagePollExpiryRequest updateRequest)
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = context.Polls.Where(p => p.ManageId == manageId).SingleOrDefault();
-
-                if (poll == null)
-                {
-                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll for manage id {0} not found", manageId));
-                }
+                Poll poll = PollByManageId(manageId, context);
 
                 if (updateRequest.ExpiryDate.HasValue && updateRequest.ExpiryDate < DateTime.Now)
                 {
@@ -36,8 +32,14 @@ namespace VotingApplication.Web.Api.Controllers
                     ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
+                if (poll.ExpiryDate == updateRequest.ExpiryDate)
+                {
+                    return;
+                }
+
                 poll.ExpiryDate = updateRequest.ExpiryDate;
                 poll.LastUpdated = DateTime.Now;
+                _metricHandler.HandleExpiryChangedEvent(poll.ExpiryDate, poll.UUID);
 
                 context.SaveChanges();
             }

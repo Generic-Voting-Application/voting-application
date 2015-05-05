@@ -6,6 +6,7 @@ using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers
@@ -14,19 +15,14 @@ namespace VotingApplication.Web.Api.Controllers
     {
         public ManagePollTypeController() : base() { }
 
-        public ManagePollTypeController(IContextFactory contextFactory) : base(contextFactory) { }
+        public ManagePollTypeController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpPut]
         public void Put(Guid manageId, ManagePollTypeRequest updateRequest)
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = context.Polls.Where(p => p.ManageId == manageId).SingleOrDefault();
-
-                if (poll == null)
-                {
-                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll for manage id {0} not found", manageId));
-                }
+                Poll poll = PollByManageId(manageId, context);
 
                 PollType pollType;
                 if (!Enum.TryParse<PollType>(updateRequest.PollType, true, out pollType))
@@ -39,19 +35,24 @@ namespace VotingApplication.Web.Api.Controllers
                     ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
-                if (updateRequest.PollType.ToLower() != poll.PollType.ToString().ToLower() ||
-                   (poll.PollType == PollType.Points && (updateRequest.MaxPerVote != poll.MaxPerVote ||
-                                                         updateRequest.MaxPoints != poll.MaxPoints)))
+                if (poll.PollType == pollType)
                 {
-                    List<Vote> removedVotes = context.Votes.Include(v => v.Poll)
-                                                            .Where(v => v.Poll.UUID == poll.UUID)
-                                                            .ToList();
-                    foreach (Vote oldVote in removedVotes)
+                    if (pollType != PollType.Points || (poll.MaxPoints == updateRequest.MaxPoints && poll.MaxPerVote == updateRequest.MaxPerVote))
                     {
-                        context.Votes.Remove(oldVote);
+                        return;
                     }
-
                 }
+
+                List<Vote> removedVotes = context.Votes.Include(v => v.Poll)
+                                                        .Where(v => v.Poll.UUID == poll.UUID)
+                                                        .ToList();
+                foreach (Vote oldVote in removedVotes)
+                {
+                    _metricHandler.HandleVoteDeletedEvent(oldVote, poll.UUID);
+                    context.Votes.Remove(oldVote);
+                }
+
+                _metricHandler.HandlePollTypeChangedEvent(pollType, updateRequest.MaxPerVote, updateRequest.MaxPoints, poll.UUID);
 
                 poll.PollType = pollType;
                 poll.MaxPerVote = updateRequest.MaxPerVote;

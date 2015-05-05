@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Validators;
 
@@ -19,8 +20,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
         public PollVoteController() : base() { }
 
-        public PollVoteController(IContextFactory contextFactory, IVoteValidatorFactory voteValidatorFactory)
-            : base(contextFactory)
+        public PollVoteController(IContextFactory contextFactory, IMetricHandler metricHandler, IVoteValidatorFactory voteValidatorFactory)
+            : base(contextFactory, metricHandler)
         {
             _voteValidatorFactory = voteValidatorFactory;
         }
@@ -30,14 +31,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Poll poll = context
-                    .Polls
-                    .SingleOrDefault(s => s.UUID == pollId);
-
-                if (poll == null)
-                {
-                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
-                }
+                Poll poll = PollByPollId(pollId, context);
 
                 List<Vote> votes = context
                     .Votes
@@ -149,6 +143,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 foreach (Vote contextVote in existingVotes)
                 {
+                    _metricHandler.HandleVoteDeletedEvent(contextVote, pollId);
                     context.Votes.Remove(contextVote);
                 }
 
@@ -161,6 +156,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                     Vote modelToVote = ModelToVote(voteRequest, ballot, option, poll);
                     context.Votes.Add(modelToVote);
+
+                    _metricHandler.HandleVoteAddedEvent(modelToVote, pollId);
 
                     // TODO: refactor the voteRequest model to be a ballotRequest instead. => only one voterName.
                     if (!String.IsNullOrEmpty(voteRequest.VoterName))

@@ -66,7 +66,7 @@ namespace VotingApplication.Web.Tests.Controllers
             mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
             mockContext.Setup(a => a.Ballots).Returns(_dummyTokens);
 
-            _controller = new ManageController(mockContextFactory.Object);
+            _controller = new ManageController(mockContextFactory.Object, null);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -222,7 +222,7 @@ namespace VotingApplication.Web.Tests.Controllers
 
             public static ManageController CreateManageController(IContextFactory contextFactory)
             {
-                return new ManageController(contextFactory)
+                return new ManageController(contextFactory, null)
                 {
                     Request = new HttpRequestMessage(),
                     Configuration = new HttpConfiguration()

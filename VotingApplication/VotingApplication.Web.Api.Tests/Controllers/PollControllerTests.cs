@@ -12,6 +12,7 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Tests.Controllers
@@ -22,6 +23,7 @@ namespace VotingApplication.Web.Tests.Controllers
         const string UserId = "4AEAE121-D540-48BF-907A-AA454248C0C0";
 
         private PollController _controller;
+        private Mock<IMetricHandler> _metricHandler;
         private Poll _mainPoll;
         private Poll _otherPoll;
         private Poll _templatePoll;
@@ -59,7 +61,9 @@ namespace VotingApplication.Web.Tests.Controllers
             mockContext.Setup(a => a.Polls).Returns(_dummyPolls);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
 
-            _controller = new PollController(mockContextFactory.Object)
+            _metricHandler = new Mock<IMetricHandler>();
+
+            _controller = new PollController(mockContextFactory.Object, _metricHandler.Object)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()
@@ -206,6 +210,29 @@ namespace VotingApplication.Web.Tests.Controllers
             // Assert
             Assert.AreEqual(_dummyPolls.Count(), 4);
         }
+
+        [TestMethod]
+        public void SuccessfulPollCreationGeneratesMetric()
+        {
+            // Act
+            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
+            var response = _controller.Post(newPoll);
+
+            // Assert
+            _metricHandler.Verify(m => m.HandlePollCreatedEvent(It.Is<Poll>(p => p.Name == "New Poll" && p.UUID == response.UUID)), Times.Once());
+        }
+
+        [TestMethod]
+        [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
+        public void UnsuccessfulPollCreationDoesNotGenerateMetric()
+        {
+            // Act
+            var response = _controller.Post(null);
+
+            // Assert
+            _metricHandler.Verify(m => m.HandlePollCreatedEvent(It.IsAny<Poll>()), Times.Never());
+        }
+
         #endregion
 
     }
