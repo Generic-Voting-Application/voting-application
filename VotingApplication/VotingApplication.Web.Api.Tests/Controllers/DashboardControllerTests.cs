@@ -15,7 +15,7 @@ using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers;
 using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
-using VotingApplication.Web.Api.Tests.TestHelpers;
+using VotingApplication.Web.Tests.TestHelpers;
 
 namespace VotingApplication.Web.Tests.Controllers
 {
