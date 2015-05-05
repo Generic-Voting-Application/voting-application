@@ -64,14 +64,15 @@
 
                 $scope.poll.Options.forEach(function (opt) { opt.voteValue = 0; });
 
-                voteData.forEach(function (vote) {
-                    $scope.poll.Options.forEach(function (option) {
-                        if (option.Id === vote.OptionId) {
-                            option.voteValue = vote.VoteValue;
-                        }
+                if (voteData.data) {
+                    voteData.data.forEach(function (vote) {
+                        $scope.poll.Options.forEach(function (option) {
+                            if (option.Id === vote.OptionId) {
+                                option.voteValue = vote.VoteValue;
+                            }
+                        });
                     });
-                });
-
+                }
             });
         }
 
