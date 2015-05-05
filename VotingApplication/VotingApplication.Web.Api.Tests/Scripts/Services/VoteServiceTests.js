@@ -9,8 +9,6 @@ describe('Vote Service', function () {
     var httpBackend;
 
     beforeEach(inject(function (VoteService, $rootScope, $httpBackend) {
-        jasmine.clock().install();
-
         voteService = VoteService;
         rootScope = $rootScope;
         httpBackend = $httpBackend;
@@ -22,8 +20,6 @@ describe('Vote Service', function () {
 
         // http://stackoverflow.com/questions/27016235/angular-js-unit-testing-httpbackend-spec-has-no-expectations
         expect('Suppress SPEC HAS NO EXPECTATIONS').toBeDefined();
-
-        jasmine.clock().uninstall();
     });
 
     describe('Get Results', function () {
@@ -50,9 +46,6 @@ describe('Vote Service', function () {
 
         it('Makes http call to get results', function () {
 
-            var baseTime = new Date(2013, 9, 23);
-            jasmine.clock().mockDate(baseTime);
-
             var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
 
             var expectedUrl = '/api/poll/' + pollId + '/results?lastRefreshed=0';
@@ -70,8 +63,7 @@ describe('Vote Service', function () {
 
         it('Passes the last requested datetime on multiple calls', function () {
 
-            var baseTime = new Date(2013, 9, 23); // 1382482800000
-            jasmine.clock().mockDate(baseTime);
+            spyOn(Date, 'now').and.callFake(function () { return 1382482800000; });
 
             var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
             var initialExpectedUrl = '/api/poll/' + pollId + '/results?lastRefreshed=0';
