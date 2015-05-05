@@ -124,6 +124,10 @@
     <Compile Include="Migrations\201504280828581_AddHiddenResults.Designer.cs">
       <DependentUpon>201504280828581_AddHiddenResults.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505050927125_Metrics.cs" />
+    <Compile Include="Migrations\201505050927125_Metrics.Designer.cs">
+      <DependentUpon>201505050927125_Metrics.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
     <Compile Include="Model\Metric.cs" />
@@ -194,6 +198,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504280828581_AddHiddenResults.resx">
       <DependentUpon>201504280828581_AddHiddenResults.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505050927125_Metrics.resx">
+      <DependentUpon>201505050927125_Metrics.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
