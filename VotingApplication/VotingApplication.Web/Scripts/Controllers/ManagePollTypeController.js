@@ -28,6 +28,11 @@
 
         function updatePollType() {
 
+            if ($scope.poll.VotingStrategy !== 'Points'){
+                $scope.poll.MaxPerVote = startingMaxPerVote;
+                $scope.poll.MaxPoints = startingMaxPoints;
+            }
+
             var pollTypeConfig = {
                 PollType: $scope.poll.VotingStrategy,
                 MaxPerVote: $scope.poll.MaxPerVote,
