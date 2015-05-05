@@ -101,10 +101,12 @@ describe('VotingPageController', function () {
     });
 
     it('Sets the value for the vote into the options', function () {
-        var tokenVotes = [
-            { OptionId: 1, VoteValue: 1 },
-            { OptionId: 3, VoteValue: 1 }
-        ];
+        var tokenVotes = {
+            data: [
+                { OptionId: 1, VoteValue: 1 },
+                { OptionId: 3, VoteValue: 1 }
+            ]
+        };
 
         getTokenVotesPromise.resolve(tokenVotes);
 
