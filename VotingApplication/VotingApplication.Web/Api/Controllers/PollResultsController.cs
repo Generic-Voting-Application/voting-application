@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers.API_Controllers
@@ -16,21 +17,14 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
     {
         public PollResultsController() : base() { }
 
-        public PollResultsController(IContextFactory contextFactory) : base(contextFactory) { }
+        public PollResultsController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpGet]
         public ResultsRequestResponseModel Get(Guid pollId)
         {
             using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Poll poll = context
-                    .Polls
-                    .FirstOrDefault(s => s.UUID == pollId);
-
-                if (poll == null)
-                {
-                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
-                }
+                Poll poll = PollByPollId(pollId, context);
 
                 if (Request.RequestUri != null)
                 {
@@ -46,7 +40,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                     if (poll.LastUpdated < clientLastUpdated)
                     {
-                        ThrowError(HttpStatusCode.NotModified);
+                        _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.NotModified, pollId);
+                        throw new HttpResponseException(HttpStatusCode.NotModified);
                     }
                 }
 
@@ -61,6 +56,8 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 List<VoteRequestResponseModel> responseVotes = votes
                     .Select(v => VoteToModel(v, poll))
                     .ToList();
+
+                _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.OK, pollId);
 
                 ResultsRequestResponseModel results = SummariseVotes(votes);
                 results.Votes = responseVotes;

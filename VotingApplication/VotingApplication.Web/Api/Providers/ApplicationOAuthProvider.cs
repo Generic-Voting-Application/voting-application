@@ -10,12 +10,15 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using VotingApplication.Web.Api.Models;
+using VotingApplication.Web.Api.Metrics;
+using VotingApplication.Data.Context;
 
 namespace VotingApplication.Web.Api.Providers
 {
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {
         private readonly string _publicClientId;
+        private IMetricHandler _metricHandler = new MetricHandler(new ContextFactory());
 
         public ApplicationOAuthProvider(string publicClientId)
         {
@@ -47,6 +50,7 @@ namespace VotingApplication.Web.Api.Providers
             AuthenticationProperties properties = CreateProperties(user.UserName);
             AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
             context.Validated(ticket);
+            _metricHandler.HandleLoginEvent(context.UserName);
             context.Request.Context.Authentication.SignIn(cookiesIdentity);
         }
 
