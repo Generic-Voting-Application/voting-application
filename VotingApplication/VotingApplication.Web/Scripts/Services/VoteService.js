@@ -22,79 +22,47 @@
 
         return service;
 
-        function submitVote(pollId, votes, token, callback, failureCallback) {
-
+        function submitVote(pollId, votes, token) {
             if (!pollId || !votes || !token) {
-                return null;
+                var deferred = $q.defer();
+                deferred.reject();
+                return deferred.promise;
             }
 
-            $http({
+            return $http({
                 method: 'PUT',
                 url: '/api/poll/' + pollId + '/token/' + token + '/vote',
                 data: votes
-            })
-            .success(function (data) {
-                if (callback) {
-                    callback(data);
-                }
-            })
-            .error(
-            function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
             });
-
         }
 
-        function getResults(pollId, callback, failureCallback) {
-
-            if (!pollId) {
-                return null;
-            }
+        function getResults(pollId) {
 
             if (!lastCheckedTimestamps[pollId]) {
                 lastCheckedTimestamps[pollId] = 0;
             }
 
-            $http({
+            return $http({
                 method: 'GET',
                 url: '/api/poll/' + pollId + '/results?lastRefreshed=' + lastCheckedTimestamps[pollId]
             })
             .success(function (data, status) {
-                if (callback) {
-                    callback(data, status);
-                }
-            })
-            .error(function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
+
+                lastCheckedTimestamps[pollId] = Date.now();
+                return data, status;
             });
-
-            lastCheckedTimestamps[pollId] = Date.now();
-
         }
 
-        function getTokenVotes(pollId, token, callback, failureCallback) {
-
+        function getTokenVotes(pollId, token) {
             if (!pollId || !token) {
-                return null;
+                var deferred = $q.defer();
+                deferred.reject();
+                return deferred.promise;
             }
 
-            $http({
+            return $http({
                 method: 'GET',
                 url: '/api/poll/' + pollId + '/token/' + token + '/vote'
-            })
-            .success(function (data) {
-                if (callback) {
-                    callback(data);
-                }
-            })
-            .error(function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
             });
         }
 
@@ -103,16 +71,12 @@
         }
 
         function addVoterOption(pollId, newOption) {
-            var deferred = $q.defer();
 
-            $http
+            return $http
                 .post(
                     '/api/poll/' + pollId + '/option',
                     newOption
-                )
-                .success(function (data) { deferred.resolve(data); });
-
-            return deferred.promise;
+                );
         }
     }
 })();
