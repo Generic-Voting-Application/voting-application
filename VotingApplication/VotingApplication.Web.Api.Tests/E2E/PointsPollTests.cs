@@ -16,7 +16,6 @@ namespace VotingApplication.Web.Tests.E2E
     {
         private static readonly string ChromeDriverDir = @"..\..\";
         private static readonly string SiteBaseUri = @"http://localhost:64205/";
-        private static readonly int WaitTime = 500;
 
         #region Default Config
         [TestClass]

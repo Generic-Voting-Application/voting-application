@@ -3,7 +3,7 @@ using VotingApplication.Data.Model;
 
 namespace VotingApplication.Data.Context
 {
-    public class TestVotingContext : DbContext, IVotingContext
+    public class TestVotingContext : DbContext, ITestVotingContext
     {
         public TestVotingContext()
             : base("TestVotingContext")
@@ -20,5 +20,10 @@ namespace VotingApplication.Data.Context
         public IDbSet<Vote> Votes { get; set; }
         public IDbSet<Poll> Polls { get; set; }
         public IDbSet<Ballot> Ballots { get; set; }
+
+        public void ReloadEntity(object entity)
+        {
+            Entry(entity).Reload();
+        }
     }
 }

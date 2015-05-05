@@ -5,7 +5,6 @@ using Protractor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Tests.E2E.Helpers;
@@ -17,7 +16,6 @@ namespace VotingApplication.Web.Tests.E2E
     {
         private static readonly string ChromeDriverDir = @"..\..\";
         private static readonly string SiteBaseUri = @"http://localhost:64205/";
-        private static readonly int WaitTime = 500;
 
         #region Default Config
         [TestClass]
@@ -146,8 +144,6 @@ namespace VotingApplication.Web.Tests.E2E
             public void BasicVote_AfterVoting_VoteIsRemembered()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultBasicPoll.UUID);
-
-                Thread.Sleep(WaitTime);
 
                 IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
                 buttons.First(b => b.Text == "Vote").Click();

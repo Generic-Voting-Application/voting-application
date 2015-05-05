@@ -1,0 +1,227 @@
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using Protractor;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using VotingApplication.Data.Context;
+using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Tests.E2E.Helpers;
+using VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers;
+
+namespace VotingApplication.Web.Tests.E2E
+{
+    [TestClass]
+    public class ManagePollTypeTests
+    {
+        private static readonly string ChromeDriverDir = @"..\..\";
+        private static readonly string SiteBaseUri = @"http://localhost:64205/";
+        private static readonly int WaitTime = 500;
+
+        private ITestVotingContext _context;
+        private Poll _defaultPoll;
+        private IWebDriver _driver;
+
+        [TestInitialize]
+        public virtual void TestInitialise()
+        {
+            _context = new TestVotingContext();
+
+            // Open, Anonymous, No Option Adding, Shown Results
+            _defaultPoll = new Poll()
+            {
+                UUID = Guid.NewGuid(),
+                ManageId = Guid.NewGuid(),
+                PollType = PollType.Basic,
+                Name = "Test Poll",
+                LastUpdated = DateTime.Now,
+                CreatedDate = DateTime.Now,
+                Options = new List<Option>(),
+                InviteOnly = false,
+                NamedVoting = false,
+                OptionAdding = false,
+                HiddenResults = false,
+                MaxPerVote = 3,
+                MaxPoints = 4
+            };
+
+            _context.Polls.Add(_defaultPoll);
+            _context.SaveChanges();
+
+            _driver = new NgWebDriver(new ChromeDriver(ChromeDriverDir));
+            _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromSeconds(10));
+            _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
+        }
+
+        [TestCleanup]
+        public void TestCleanUp()
+        {
+            _driver.Dispose();
+
+            PollClearer pollTearDown = new PollClearer(_context);
+            pollTearDown.ClearPoll(_defaultPoll);
+            _context.Dispose();
+        }
+
+        [TestMethod, TestCategory("E2E")]
+        public void ManagePollType_CancelButton_NavigatesToManagement()
+        {
+            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/PollType");
+
+            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
+            IWebElement cancelButton = buttons.First(l => l.Text == "Cancel");
+
+            cancelButton.Click();
+
+            Assert.AreEqual(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId, _driver.Url);
+        }
+
+        [TestMethod, TestCategory("E2E")]
+        public void ManagePollType_CancelButton_DoesNotSaveChanges()
+        {
+            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/PollType");
+
+            IReadOnlyCollection<IWebElement> pollTypeOptions = _driver.FindElements(By.ClassName("poll-type-btn"));
+            pollTypeOptions.First(o => o.Text.Contains("Multi Vote")).Click();
+
+            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
+            IWebElement cancelButton = buttons.First(l => l.Text == "Cancel");
+
+            cancelButton.Click();
+
+            Poll dbPoll = _context.Polls.Where(p => p.UUID == _defaultPoll.UUID).Single();
+
+            Assert.AreEqual(PollType.Basic, dbPoll.PollType);
+        }
+
+        [TestMethod, TestCategory("E2E")]
+        public void ManagePollType_Save_SavesChanges()
+        {
+            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/PollType");
+
+            IReadOnlyCollection<IWebElement> pollTypeOptions = _driver.FindElements(By.ClassName("poll-type-btn"));
+            IWebElement multiVoteButton = pollTypeOptions.First(o => o.Text.Contains("Multi Vote"));
+
+            multiVoteButton.Click();
+
+            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
+            IWebElement saveButton = buttons.First(l => l.Text == "Save");
+
+            saveButton.Click();
+
+            Poll dbPoll = _context.Polls.Local.Where(p => p.ManageId == _defaultPoll.ManageId).Single();
+
+            Thread.Sleep(WaitTime);
+            _context.ReloadEntity(dbPoll);
+
+            Assert.AreEqual(PollType.Multi, dbPoll.PollType);
+        }
+
+        [TestMethod, TestCategory("E2E")]
+        public void ManagePollType_Save_SavesPollConfigChanges()
+        {
+            int initialMaxPoints = _defaultPoll.MaxPoints;
+            int initialMaxPerVote = _defaultPoll.MaxPerVote;
+
+            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/PollType");
+
+            IReadOnlyCollection<IWebElement> pollTypeOptions = _driver.FindElements(By.ClassName("poll-type-btn"));
+            IWebElement pointsVoteButton = pollTypeOptions.First(o => o.Text.Contains("Points Vote"));
+
+            IWebElement pointsPerPollControl = _driver.FindElement(By.Id("points-per-poll"));
+            IReadOnlyCollection<IWebElement> pointsPerPollControlButtons = pointsPerPollControl.FindElements(By.TagName("button"));
+
+            IWebElement pointsPerVoteControl = _driver.FindElement(By.Id("points-per-vote"));
+            IReadOnlyCollection<IWebElement> pointsPerVoteControlButtons = pointsPerVoteControl.FindElements(By.TagName("button"));
+
+            pointsVoteButton.Click();
+            pointsPerPollControlButtons.First(b => b.Text == "+").Click();
+            pointsPerVoteControlButtons.First(b => b.Text == "-").Click();
+
+            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
+            IWebElement saveButton = buttons.First(l => l.Text == "Save");
+
+            saveButton.Click();
+
+            Poll dbPoll = _context.Polls.Local.Where(p => p.ManageId == _defaultPoll.ManageId).Single();
+
+            Thread.Sleep(WaitTime);
+            _context.ReloadEntity(dbPoll);
+
+            Assert.AreEqual(initialMaxPoints + 1, dbPoll.MaxPoints);
+            Assert.AreEqual(initialMaxPerVote - 1, dbPoll.MaxPerVote);
+        }
+
+        [TestMethod, TestCategory("E2E")]
+        public void ManagePollType_SaveOfNonPointsTypeAfterConfigChanges_DoesNotSavePollConfigChanges()
+        {
+            int initialMaxPoints = _defaultPoll.MaxPoints;
+            int initialMaxPerVote = _defaultPoll.MaxPerVote;
+
+            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/PollType");
+
+            IReadOnlyCollection<IWebElement> pollTypeOptions = _driver.FindElements(By.ClassName("poll-type-btn"));
+            IWebElement pointsVoteButton = pollTypeOptions.First(o => o.Text.Contains("Points Vote"));
+            IWebElement multiVoteButton = pollTypeOptions.First(o => o.Text.Contains("Multi Vote"));
+
+            IWebElement pointsPerPollControl = _driver.FindElement(By.Id("points-per-poll"));
+            IReadOnlyCollection<IWebElement> pointsPerPollControlButtons = pointsPerPollControl.FindElements(By.TagName("button"));
+
+            IWebElement pointsPerVoteControl = _driver.FindElement(By.Id("points-per-vote"));
+            IReadOnlyCollection<IWebElement> pointsPerVoteControlButtons = pointsPerVoteControl.FindElements(By.TagName("button"));
+
+            pointsVoteButton.Click();
+            pointsPerPollControlButtons.First(b => b.Text == "+").Click();
+            pointsPerVoteControlButtons.First(b => b.Text == "-").Click();
+            multiVoteButton.Click();
+
+            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
+            IWebElement saveButton = buttons.First(l => l.Text == "Save");
+
+            saveButton.Click();
+
+            Poll dbPoll = _context.Polls.Local.Where(p => p.ManageId == _defaultPoll.ManageId).Single();
+
+            Thread.Sleep(WaitTime);
+            _context.ReloadEntity(dbPoll);
+
+            Assert.AreEqual(initialMaxPoints, dbPoll.MaxPoints);
+            Assert.AreEqual(initialMaxPerVote, dbPoll.MaxPerVote);
+            Assert.AreEqual(PollType.Multi, dbPoll.PollType);
+        }
+
+        [TestMethod, TestCategory("E2E")]
+        public void ManagePollType_Save_WarnsUser()
+        {
+            Option pollOption = new Option() { PollOptionNumber = 1, Name = "Option" };
+            _defaultPoll.Options.Add(pollOption);
+
+            Ballot pollBallot = new Ballot { ManageGuid = Guid.NewGuid(), TokenGuid = Guid.NewGuid(), Votes = new List<Vote>() };
+            Vote pollVote = new Vote() { Poll = _defaultPoll, Ballot = pollBallot, Option = pollOption };
+            pollBallot.Votes.Add(pollVote);
+
+            _defaultPoll.Ballots.Add(pollBallot);
+
+            _context.SaveChanges();
+
+            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/PollType");
+
+            IReadOnlyCollection<IWebElement> pollTypeOptions = _driver.FindElements(By.ClassName("poll-type-btn"));
+            IWebElement multiVoteButton = pollTypeOptions.First(o => o.Text.Contains("Multi Vote"));
+
+            multiVoteButton.Click();
+
+            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
+            IWebElement saveButton = buttons.First(l => l.Text == "Save");
+
+            saveButton.Click();
+
+            Assert.AreEqual(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/PollType", _driver.Url);
+
+            IWebElement dialogContent = _driver.FindElement(By.ClassName("dialog-content"));
+            Assert.IsTrue(dialogContent.IsVisible());
+        }
+    }
+}

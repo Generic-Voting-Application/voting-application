@@ -35,11 +35,11 @@
                 <div class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.VotingStrategy=='Points'}" ng-click="updateStrategy('Points')">
                     <span class="pull-left">
                         <span class="fa fa-tasks" aria-hidden="true"></span>
-                        <span class="poll-type-text">Points vote</span>
+                        <span class="poll-type-text">Points Vote</span>
                     </span>
                 </div>
                 <div class="content">
-                    <div class="pull-left text-centered">
+                    <div class="pull-left text-centered" id="points-per-poll">
                         <small>Points per poll</small><br />
                         <span class="btn-group-points" ng-class="{'selected':poll.VotingStrategy=='Points'}">
                             <button class=" active-btn pull-left" ng-disabled="!canDecrementMP()" ng-click="(poll.MaxPoints = poll.MaxPoints - 1)">
@@ -51,7 +51,7 @@
                             </button>
                         </span>
                     </div>
-                    <div class="pull-right text-centered">
+                    <div class="pull-right text-centered" id="points-per-vote">
                         <small>Points per vote</small><br />
                         <span class="btn-group-points" ng-class="{'selected':poll.VotingStrategy=='Points'}">
                             <button class=" active-btn pull-left" ng-disabled="!canDecrementMPV()" ng-click="(poll.MaxPerVote = poll.MaxPerVote - 1)">
