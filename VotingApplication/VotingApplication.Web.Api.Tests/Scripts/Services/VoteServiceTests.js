@@ -9,6 +9,8 @@ describe('Vote Service', function () {
     var httpBackend;
 
     beforeEach(inject(function (VoteService, $rootScope, $httpBackend) {
+        jasmine.clock().install();
+
         voteService = VoteService;
         rootScope = $rootScope;
         httpBackend = $httpBackend;
@@ -20,6 +22,8 @@ describe('Vote Service', function () {
 
         // http://stackoverflow.com/questions/27016235/angular-js-unit-testing-httpbackend-spec-has-no-expectations
         expect('Suppress SPEC HAS NO EXPECTATIONS').toBeDefined();
+
+        jasmine.clock().uninstall();
     });
 
     describe('Get Results', function () {
