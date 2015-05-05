@@ -264,6 +264,11 @@ namespace VotingApplication.Web.Api.Metrics
         // Make sure we are using the PollId, not the corresponding ManageId, if available
         private Guid GetExistingPollId(Guid guid)
         {
+            if(guid == Guid.Empty)
+            {
+                return Guid.Empty;
+            }
+
             // Find corresponding pollId for manageId
             using (IVotingContext context = _contextFactory.CreateContext())
             {
