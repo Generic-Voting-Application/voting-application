@@ -111,7 +111,8 @@ namespace VotingApplication.Web.Api.Controllers
 
             if (namedVoting)
             {
-                resultVoteModel.Name = vote.Ballot.VoterName;
+                resultVoteModel.Name = String.IsNullOrWhiteSpace(vote.Ballot.VoterName) ? "Anonymous Voter" : vote.Ballot.VoterName;
+
             }
 
             return resultVoteModel;
