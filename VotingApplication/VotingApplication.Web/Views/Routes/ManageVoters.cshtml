@@ -4,7 +4,7 @@
 
         <div class="manage-section">
             <div class="centered">
-                <div class="error-btn btn-large clickable" ng-click="removeAllVotes()">
+                <div id="clear-all-button" class="error-btn btn-large clickable" ng-click="removeAllVotes()">
                     Reset All Votes
                 </div>
             </div>
@@ -37,8 +37,8 @@
         </div>
 
         <div class="manage-section">
-            <button class="manage-btn" ng-click="returnWithoutDelete()">Cancel</button>
-            <button class="manage-btn" ng-click="confirmDeleteAndReturn()">Save</button>
+            <button class="manage-btn" id="cancel-button" ng-click="returnWithoutDelete()">Cancel</button>
+            <button class="manage-btn" id="save-button" ng-click="confirmDeleteAndReturn()">Save</button>
         </div>
     </div>
 </div>

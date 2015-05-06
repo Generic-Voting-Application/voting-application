@@ -120,6 +120,7 @@
     <Compile Include="Controllers\PollOptionControllerTests.cs" />
     <Compile Include="Controllers\PollResultControllerTests.cs" />
     <Compile Include="Controllers\TokenPollVoteControllerTests.cs" />
+    <Compile Include="E2E\ManageBallotsTests.cs" />
     <Compile Include="E2E\ManageOptionsTests.cs" />
     <Compile Include="E2E\ManageMiscTests.cs" />
     <Compile Include="E2E\ManagePollTypeTests.cs" />
