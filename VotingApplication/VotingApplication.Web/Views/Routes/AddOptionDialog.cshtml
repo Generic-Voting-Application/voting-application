@@ -10,6 +10,7 @@
         </div>
 
         <button class="active-btn"
+                id="add-another-button"
                 ng-show="multipleAddingAllowed"
                 ng-disabled="addOptionForm.$invalid"
                 ng-click="addOption(addOptionForm)"
@@ -17,7 +18,7 @@
                 onclick="addOptionForm.name.focus()">
             Add Another
         </button>
-        <button class="active-btn" ng-disabled="addOptionForm.$invalid" ng-click="addOptionAndClose(addOptionForm)">Done</button>
+        <button class="active-btn" id="done-button" ng-disabled="addOptionForm.$invalid" ng-click="addOptionAndClose(addOptionForm)">Done</button>
     </form>
 </div>
 <span class="dialog-error-bar-bottom" ng-show="displayError">{{displayError}}</span>
