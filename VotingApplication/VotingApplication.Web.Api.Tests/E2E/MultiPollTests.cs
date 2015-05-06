@@ -130,8 +130,8 @@ namespace VotingApplication.Web.Tests.E2E
             public void VotingOnOption_NavigatesToResultsPage()
             {
                 _driver.Navigate().GoToUrl(PollUrl);
-                IReadOnlyCollection<IWebElement> voteButtons = _driver.FindElements(By.Id("vote-button"));
-                voteButtons.First().Click();
+                IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
+                voteButton.Click();
 
                 VoteClearer voterClearer = new VoteClearer(_context);
                 voterClearer.ClearLast();
@@ -277,20 +277,6 @@ namespace VotingApplication.Web.Tests.E2E
             private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
             private IWebDriver _driver;
 
-            [TestInitialize]
-            public virtual void TestInitialise()
-            {
-                _driver = new NgWebDriver(new ChromeDriver(ChromeDriverDir));
-                _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromSeconds(10));
-                _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
-            }
-
-            [TestCleanup]
-            public void TestCleanUp()
-            {
-                _driver.Dispose();
-            }
-
             [ClassInitialize]
             public static void ClassInitialise(TestContext testContext)
             {
@@ -326,6 +312,20 @@ namespace VotingApplication.Web.Tests.E2E
                 pollTearDown.ClearPoll(_namedMultiPoll);
 
                 _context.Dispose();
+            }
+
+            [TestInitialize]
+            public virtual void TestInitialise()
+            {
+                _driver = new NgWebDriver(new ChromeDriver(ChromeDriverDir));
+                _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromSeconds(10));
+                _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
+            }
+
+            [TestCleanup]
+            public void TestCleanUp()
+            {
+                _driver.Dispose();
             }
 
             [TestMethod, TestCategory("E2E")]
