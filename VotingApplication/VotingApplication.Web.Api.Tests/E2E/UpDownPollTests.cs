@@ -5,6 +5,7 @@ using Protractor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Tests.E2E.Helpers;
@@ -91,30 +92,38 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod, TestCategory("E2E")]
-            public void PopulatedOptions_DisplaysAllOptionDescriptions()
+            public void PopulatedOptions_DisplaysOptionDescriptions()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultUpDownPoll.UUID);
+                _driver.Navigate().GoToUrl(PollUrl);
                 IReadOnlyCollection<IWebElement> optionDescriptions = _driver.FindElements(NgBy.Model("option.Description"));
 
                 Assert.AreEqual(_defaultUpDownPoll.Options.Count, optionDescriptions.Count);
-                List<String> expectedDescriptions = new List<string>();
 
-                foreach (Option option in _defaultUpDownPoll.Options)
-                {
-                    string truncatedDescription = option.Description
-                                                          .Split(' ')
-                                                          .Aggregate((prev, curr) => (curr.Length + prev.Length >= truncatedTextLimit) ?
-                                                                                     prev : prev + " " + curr);
-
-                    if (truncatedDescription != option.Description)
-                    {
-                        truncatedDescription += "... Show More";
-                    }
-                    expectedDescriptions.Add(truncatedDescription);
-                }
-
-                CollectionAssert.AreEquivalent(expectedDescriptions,
+                CollectionAssert.AreEquivalent(_defaultUpDownPoll.Options.Select(o => o.Description).ToList(),
                                                optionDescriptions.Select(o => o.Text).ToList());
+            }
+
+            [TestMethod, TestCategory("E2E")]
+            public async Task PopulatedOptions_TruncatesLongDescriptions()
+            {
+                string truncatedString = new String('a', truncatedTextLimit / 2);
+                _driver.Navigate().GoToUrl(PollUrl);
+
+                Poll poll = _context.Polls.Where(p => p.UUID == PollGuid).Single();
+                poll.Options.Add(new Option()
+                {
+                    Name = "Test Option 2",
+                    Description = truncatedString + " " + truncatedString
+                });
+
+                await _context.SaveChangesAsync();
+
+                IReadOnlyCollection<IWebElement> optionDescriptions = _driver.FindElements(NgBy.Model("option.Description"));
+
+                Assert.AreEqual(truncatedString + "... Show More", optionDescriptions.Select(o => o.Text).Last());
+
+                poll.Options.Remove(poll.Options.Last());
+                _context.SaveChanges();
             }
 
             [TestMethod, TestCategory("E2E")]

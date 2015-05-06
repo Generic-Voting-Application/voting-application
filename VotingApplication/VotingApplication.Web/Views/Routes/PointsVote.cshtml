@@ -15,9 +15,9 @@
                 <div class="option-block-row">
                     <div class="option-buttons">
                         <span class="btn-group-points">
-                            <button class="active-btn pull-left" ng-disabled="shouldSubtractPointsBeDisabled(option)" ng-click="decreaseVote(option)">-</button>
+                            <button id="decrease-button" class="active-btn pull-left" ng-disabled="shouldSubtractPointsBeDisabled(option)" ng-click="decreaseVote(option)">-</button>
                             <label class="points-label">{{option.voteValue}}/{{poll.MaxPerVote}}</label>
-                            <button class="active-btn pull-right" ng-disabled="addPointsDisabled(option)" ng-click="increaseVote(option)">+</button>
+                            <button id="increase-button" class="active-btn pull-right" ng-disabled="addPointsDisabled(option)" ng-click="increaseVote(option)">+</button>
                         </span>
                     </div>
                     <strong>{{option.Name}}</strong>
@@ -33,11 +33,11 @@
 
         <div ng-show="poll.OptionAdding">
             <p>
-                <a class="icon-padded-left clickable" ng-click="addOption()">+ Add another option</a>
+                <a id="add-option-link" class="icon-padded-left clickable" ng-click="addOption()">+ Add another option</a>
             </p>
         </div>
     </div>
     <div class="flexbox">
-        <button class="active-btn btn-medium centered" ng-click="submitVote(poll.Options)">Vote</button>
+        <button id="vote-button" class="active-btn btn-medium centered" ng-click="submitVote(poll.Options)">Vote</button>
     </div>
 </div>
