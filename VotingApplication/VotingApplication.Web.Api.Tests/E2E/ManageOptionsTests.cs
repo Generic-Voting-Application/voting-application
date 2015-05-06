@@ -52,6 +52,7 @@ namespace VotingApplication.Web.Tests.E2E
                 new Option()
                 {
                     Name = "Test Option 1",
+                    Description = "Test Description 1",
                     PollOptionNumber = 1,
                 }
             );
@@ -60,6 +61,7 @@ namespace VotingApplication.Web.Tests.E2E
                 new Option()
                 {
                     Name = "Test Option 2",
+                    Description = "Test Description 2",
                     PollOptionNumber = 2,
                 }
             );
@@ -83,6 +85,30 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
+        public void ManageOptions_DisplaysOptionNames()
+        {
+            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+
+            IReadOnlyCollection<IWebElement> optionNames = _driver.FindElements(NgBy.Binding("option.Name"));
+
+            Assert.AreEqual(_defaultPoll.Options.Count, optionNames.Count);
+            CollectionAssert.AreEquivalent(_defaultPoll.Options.Select(o => o.Name).ToList(),
+                                           optionNames.Select(o => o.Text).ToList());
+        }
+
+        [TestMethod, TestCategory("E2E")]
+        public void ManageOptions_DisplaysOptionDescriptions()
+        {
+            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+
+            IReadOnlyCollection<IWebElement> optionDescriptions = _driver.FindElements(NgBy.Binding("option.Description"));
+
+            Assert.AreEqual(_defaultPoll.Options.Count, optionDescriptions.Count);
+            CollectionAssert.AreEquivalent(_defaultPoll.Options.Select(o => o.Description).ToList(),
+                                           optionDescriptions.Select(o => o.Text).ToList());
+        }
+
+        [TestMethod, TestCategory("E2E")]
         public void ManageOptions_CancelButton_NavigatesToManagement()
         {
             _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
@@ -94,6 +120,7 @@ namespace VotingApplication.Web.Tests.E2E
 
             Assert.AreEqual(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId, _driver.Url);
         }
+
 
         [TestMethod, TestCategory("E2E")]
         public void ManageOptions_CancelButton_DoesNotSaveChanges()
@@ -262,5 +289,89 @@ namespace VotingApplication.Web.Tests.E2E
             Assert.IsFalse(doneButton.Enabled);
             Assert.IsFalse(addAnotherButton.Enabled);
         }
+
+        [TestMethod, TestCategory("E2E")]
+        public void ManageOptions_DeleteButton_RemovesOption()
+        {
+            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+
+            IReadOnlyCollection<IWebElement> deleteButtons = _driver.FindElements(By.ClassName("fa-trash-o"));
+            deleteButtons.First().Click();
+
+            IReadOnlyCollection<IWebElement> options = _driver.FindElements(NgBy.Repeater("option in options"));
+
+            Assert.AreEqual(_defaultPoll.Options.Count - 1, options.Count);
+        }
+
+        [TestMethod, TestCategory("E2E")]
+        public void ManageOptions_EditButton_AllowsRenaming()
+        {
+            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+
+            IReadOnlyCollection<IWebElement> editButtons = _driver.FindElements(By.ClassName("fa-pencil"));
+            editButtons.First().Click();
+
+            IWebElement formName = _driver.FindElement(NgBy.Model("editOptionFormName"));
+            IWebElement formDescription = _driver.FindElement(NgBy.Model("editOptionFormDescription"));
+
+            Assert.IsTrue(formName.IsVisible());
+            Assert.IsTrue(formDescription.IsVisible());
+        }
+
+        [TestMethod, TestCategory("E2E")]
+        public void ManageOptions_EditSubmit_ChangesOptionDetails()
+        {
+            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+
+            IReadOnlyCollection<IWebElement> editButtons = _driver.FindElements(By.ClassName("fa-pencil"));
+            editButtons.First().Click();
+
+            IWebElement form = _driver.FindElement(By.Name("editOptionForm"));
+
+            IWebElement formName = _driver.FindElement(NgBy.Model("editOptionFormName"));
+            IWebElement formDescription = _driver.FindElement(NgBy.Model("editOptionFormDescription"));
+
+            string newName = "Changed Name";
+            string newDescription = "Changed Description";
+
+            formName.Clear();
+            formDescription.Clear();
+
+            formName.SendKeys(newName);
+            formDescription.SendKeys(newDescription);
+
+            IReadOnlyCollection<IWebElement> buttons = form.FindElements(By.TagName("button"));
+            IWebElement saveButton = buttons.First(l => l.Text == "Save");
+
+            saveButton.Click();
+
+            Thread.Sleep(DialogClearWaitTime);
+
+            IReadOnlyCollection<IWebElement> optionNames = _driver.FindElements(NgBy.Binding("option.Name"));
+            IReadOnlyCollection<IWebElement> optionDescriptions = _driver.FindElements(NgBy.Binding("option.Description"));
+
+            Assert.AreEqual(newName, optionNames.First().Text);
+            Assert.AreEqual(newDescription, optionDescriptions.First().Text);
+        }
+
+        [TestMethod, TestCategory("E2E")]
+        public void ManageOptions_EditSubmit_DoesNotAllowBlankName()
+        {
+            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+
+            IReadOnlyCollection<IWebElement> editButtons = _driver.FindElements(By.ClassName("fa-pencil"));
+            editButtons.First().Click();
+
+            IWebElement form = _driver.FindElement(By.Name("editOptionForm"));
+
+            IWebElement formName = _driver.FindElement(NgBy.Model("editOptionFormName"));
+            formName.Clear();
+
+            IReadOnlyCollection<IWebElement> buttons = form.FindElements(By.TagName("button"));
+            IWebElement saveButton = buttons.First(l => l.Text == "Save");
+
+            Assert.IsFalse(saveButton.Enabled);
+        }
+
     }
 }
