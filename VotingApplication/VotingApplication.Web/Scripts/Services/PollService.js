@@ -7,9 +7,9 @@
         .factory('PollService', PollService);
 
 
-    PollService.$inject = ['$http', 'AccountService'];
+    PollService.$inject = ['$http', '$q', 'AccountService'];
 
-    function PollService($http, AccountService) {
+    function PollService($http, $q, AccountService) {
 
         var service = {
             getPoll: getPoll,
@@ -21,37 +21,30 @@
         return service;
 
 
-        function getPoll(pollId, callback) {
+        function getPoll(pollId) {
 
             if (!pollId) {
-                return null;
+                var deferred = $q.defer();
+                deferred.reject();
+                return deferred.promise;
             }
 
-            $http({
+            return $http({
                 method: 'GET',
                 url: '/api/poll/' + pollId
-            })
-            .success(function (data) {
-                if (callback) {
-                    callback(data);
-                }
             });
-
         }
 
         function getUserPolls() {
 
-            var promise = $http({
+            return $http({
                 method: 'GET',
                 url: '/api/dashboard/polls',
                 headers: { 'Authorization': 'Bearer ' + AccountService.account.token }
             });
-
-            return promise;
-
         }
 
-        function createPoll(question, successCallback) {
+        function createPoll(question) {
             var token;
             if (AccountService.account) {
                 token = AccountService.account.token;
@@ -60,7 +53,7 @@
                 token = null;
             }
 
-            var request = {
+            return $http({
                 method: 'POST',
                 url: 'api/poll',
                 headers: {
@@ -68,15 +61,12 @@
                     'Authorization': 'Bearer ' + token
                 },
                 data: JSON.stringify({ PollName: question })
-            };
-
-            $http(request)
-                .success(successCallback);
+            });
 
         }
 
         function copyPoll(pollId) {
-            var promise = $http({
+            return $http({
                 method: 'POST',
                 url: '/api/dashboard/copy',
                 headers: {
@@ -85,8 +75,6 @@
                 },
                 data: JSON.stringify({ UUIDToCopy: pollId })
             });
-
-            return promise;
         }
     }
 })();

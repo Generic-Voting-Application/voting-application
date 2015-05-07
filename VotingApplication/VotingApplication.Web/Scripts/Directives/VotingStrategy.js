@@ -13,9 +13,10 @@
         var pollStrategy = null;
         var pollId = $routeParams.pollId;
 
-        PollService.getPoll(pollId, function (data) {
-            pollStrategy = data.VotingStrategy;
-        });
+        PollService.getPoll(pollId)
+            .then(function (response) {
+                pollStrategy = response.data.VotingStrategy;
+            });
 
         var votingTemplate = function () {
             if (!pollStrategy) {

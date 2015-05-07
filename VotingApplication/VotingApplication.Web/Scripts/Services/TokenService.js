@@ -5,9 +5,9 @@
         .module('GVA.Common')
         .factory('TokenService', TokenService);
 
-    TokenService.$inject = ['$location', '$http', '$localStorage', '$routeParams', '$q'];
+    TokenService.$inject = ['$location', '$http', '$localStorage', '$routeParams', '$q', '$timeout'];
 
-    function TokenService($location, $http, $localStorage, $routeParams, $q) {
+    function TokenService($location, $http, $localStorage, $routeParams, $q, $timeout) {
 
         var service = {
             getToken: getTokenForPoll,
@@ -17,7 +17,13 @@
         return service;
 
         function setTokenForPoll(pollId, token) {
+            var deferred = $q.defer();
+
             $localStorage[pollId] = token;
+            // Ensure that we've actually saved the values before continuing. (see https://github.com/gsklee/ngStorage/issues/39)
+            $timeout(function () { deferred.resolve(); }, 110);
+
+            return deferred.promise;
         }
 
         function getTokenForPoll(pollId) {
