@@ -101,9 +101,6 @@
     <Reference Include="Ninject.Web.Common">
       <HintPath>..\packages\Ninject.Web.Common.3.2.3.0\lib\net45-full\Ninject.Web.Common.dll</HintPath>
     </Reference>
-    <Reference Include="NLog">
-      <HintPath>..\packages\NLog.3.2.0.0\lib\net45\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -246,12 +243,6 @@
     <Compile Include="Api\Controllers\PollVoteController.cs" />
     <Compile Include="Api\Controllers\WebApiController.cs" />
     <Compile Include="Api\Filters\BasicAuthenticator.cs" />
-    <Compile Include="Api\Filters\LoggingExceptionFilterAttribute.cs" />
-    <Compile Include="Api\Filters\LoggingHandleErrorAttribute.cs" />
-    <Compile Include="Api\Logging\ConsoleLogger.cs" />
-    <Compile Include="Api\Logging\ILogger.cs" />
-    <Compile Include="Api\Logging\LoggerFactory.cs" />
-    <Compile Include="Api\Logging\NLogger.cs" />
     <Compile Include="Api\Models\AccountBindingModels.cs" />
     <Compile Include="Api\Models\AccountViewModels.cs" />
     <Compile Include="Api\Models\DBViewModels\CopyPollRequestModel.cs" />

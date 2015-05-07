@@ -4,7 +4,6 @@ using System.Net;
 using System.Web.Configuration;
 using System.Web.Http;
 using VotingApplication.Data.Context;
-using VotingApplication.Web.Api.Logging;
 using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Services;
 using VotingApplication.Web.Api.Validators;
@@ -25,7 +24,7 @@ namespace VotingApplication.Web.Api.App_Start
             GlobalConfiguration.Configuration.DependencyResolver = resolver;
         }
 
-        private void ConfigureMailSender(IKernel container)
+        private static void ConfigureMailSender(IKernel container)
         {
             IMailSender mailSender;
 
@@ -47,13 +46,12 @@ namespace VotingApplication.Web.Api.App_Start
 
         }
 
-        private void AddBindings(IKernel container)
+        private static void AddBindings(IKernel container)
         {
             //Do Bindings here
             container.Bind<IContextFactory>().To<ContextFactory>();
             container.Bind<IVotingContext>().To<VotingContext>();
             container.Bind<IVoteValidatorFactory>().To<VoteValidatorFactory>();
-            container.Bind<ILogger>().To<NLogger>();
             container.Bind<IInvitationService>().To<InvitationService>();
             container.Bind<IMetricHandler>().To<MetricHandler>();
 
