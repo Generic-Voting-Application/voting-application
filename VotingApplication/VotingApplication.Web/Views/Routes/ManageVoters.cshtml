@@ -22,14 +22,14 @@
                             <span> {{ ballot.VoterName }} </span>
                         </td>
                         <td>
-                            <span class="clickable pull-right fa fa-times fa-2x" ng-click="removeBallot(ballot)"></span>
+                            <span id="remove-ballot-button" class="clickable pull-right fa fa-times fa-2x" ng-click="removeBallot(ballot)"></span>
                         </td>
                     </tr>
 
                     <tr ng-repeat="vote in ballot.Votes" ng-show="votesVisible">
                         <td class="manage-voters-vote"> {{ vote.OptionName }} </td>
                         <td>
-                            <span class="clickable pull-right fa fa-times" ng-click="removeVote(vote, ballot)"></span>
+                            <span id="remove-vote-button" class="clickable pull-right fa fa-times" ng-click="removeVote(vote, ballot)"></span>
                         </td>
                     </tr>
                 </tbody>

@@ -4,9 +4,9 @@ namespace VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers
 {
     public abstract class Clearer
     {
-        protected IVotingContext _context;
+        protected ITestVotingContext _context;
 
-        public Clearer(IVotingContext context)
+        public Clearer(ITestVotingContext context)
         {
             _context = context;
         }

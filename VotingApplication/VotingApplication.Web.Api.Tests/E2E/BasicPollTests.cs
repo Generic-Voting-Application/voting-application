@@ -22,7 +22,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestClass]
         public class DefaultPollConfiguration : BasicPollTests
         {
-            private static IVotingContext _context;
+            private static ITestVotingContext _context;
             private const int truncatedTextLimit = 60;
             private static Poll _defaultBasicPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
@@ -169,7 +169,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestClass]
         public class InviteOnlyPollConfiguration
         {
-            private static IVotingContext _context;
+            private static ITestVotingContext _context;
             private static Poll _inviteOnlyBasicPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
             private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
@@ -268,7 +268,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestClass]
         public class NamedVotersPollConfiguration
         {
-            private static IVotingContext _context;
+            private static ITestVotingContext _context;
             private static Poll _namedBasicPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
             private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
@@ -385,7 +385,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestClass]
         public class OptionAddingPollConfiguration
         {
-            private static IVotingContext _context;
+            private static ITestVotingContext _context;
             private static Poll _optionAddingBasicPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
             private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
@@ -524,7 +524,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestClass]
         public class HiddenResultsConfiguration
         {
-            private static IVotingContext _context;
+            private static ITestVotingContext _context;
             private static Poll _hiddenResultsBasicPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
             private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;

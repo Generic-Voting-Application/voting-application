@@ -8,7 +8,7 @@ namespace VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers
 {
     public class VoteClearer : Clearer
     {
-        public VoteClearer(IVotingContext context) : base(context) { }
+        public VoteClearer(ITestVotingContext context) : base(context) { }
 
         public void ClearLast()
         {

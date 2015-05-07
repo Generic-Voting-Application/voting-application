@@ -115,12 +115,10 @@ describe('VotingPageController', function () {
     });
 
     it('Sets the value for the vote into the options', function () {
-        var tokenVotes = {
-            data: [
-                { OptionId: 1, VoteValue: 1 },
-                { OptionId: 3, VoteValue: 1 }
-            ]
-        };
+        var tokenVotes = [
+            { OptionId: 1, VoteValue: 1 },
+            { OptionId: 3, VoteValue: 1 }
+        ];
 
 
         var tokenResponse = { data: tokenVotes };
@@ -130,16 +128,18 @@ describe('VotingPageController', function () {
         getPollPromise.resolve(pollResponse);
 
 
-        var expectedVoteUpdatedOptions = [
-            { Id: 1, voteValue: 1 },
-            { Id: 2, voteValue: 0 },
-            { Id: 3, voteValue: 1 },
-            { Id: 4, voteValue: 0 }
-        ];
+        var expectedVoteUpdatedOptions = {
+            data: [
+                { Id: 1, voteValue: 1 },
+                { Id: 2, voteValue: 0 },
+                { Id: 3, voteValue: 1 },
+                { Id: 4, voteValue: 0 }
+            ]
+        };
 
 
         scope.$apply();
-        expect(scope.poll.Options).toEqual(expectedVoteUpdatedOptions);
+        expect(scope.poll.Options).toEqual(expectedVoteUpdatedOptions.data);
     });
 
     describe('Submit Vote', function () {
@@ -225,13 +225,17 @@ describe('VotingPageController', function () {
 
         it('Maintains selected values after poll reload', function () {
             var poll = {
-                Options: [
-                    { Id: 1, voteValue: 1 },
-                    { Id: 2, voteValue: 2 },
-                    { Id: 3, voteValue: 0 },
-                    { Id: 4, voteValue: 0 },
-                    { Id: 5, voteValue: 3 }
-                ]
+                data:
+                    {
+                        Options: [
+                            { Id: 1, voteValue: 1 },
+                            { Id: 2, voteValue: 2 },
+                            { Id: 3, voteValue: 0 },
+                            { Id: 4, voteValue: 0 },
+                            { Id: 5, voteValue: 3 }
+                        ]
+                    }
+
             };
 
             var selectedOptions = [

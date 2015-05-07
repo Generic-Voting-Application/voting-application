@@ -110,7 +110,7 @@ namespace VotingApplication.Web.Tests.E2E
 
             saveButton.Click();
 
-            Poll dbPoll = _context.Polls.Local.Where(p => p.ManageId == _defaultPoll.ManageId).Single();
+            Poll dbPoll = _context.Polls.Where(p => p.ManageId == _defaultPoll.ManageId).Single();
 
             Thread.Sleep(WaitTime);
             _context.ReloadEntity(dbPoll);
@@ -142,7 +142,7 @@ namespace VotingApplication.Web.Tests.E2E
 
             saveButton.Click();
 
-            Poll dbPoll = _context.Polls.Local.Where(p => p.ManageId == _defaultPoll.ManageId).Single();
+            Poll dbPoll = _context.Polls.Where(p => p.ManageId == _defaultPoll.ManageId).Single();
 
             Thread.Sleep(WaitTime);
             _context.ReloadEntity(dbPoll);
@@ -177,7 +177,7 @@ namespace VotingApplication.Web.Tests.E2E
 
             saveButton.Click();
 
-            Poll dbPoll = _context.Polls.Local.Where(p => p.ManageId == _defaultPoll.ManageId).Single();
+            Poll dbPoll = _context.Polls.Where(p => p.ManageId == _defaultPoll.ManageId).Single();
 
             Thread.Sleep(WaitTime);
             _context.ReloadEntity(dbPoll);

@@ -7,7 +7,7 @@ namespace VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers
 {
     public class PollClearer : Clearer
     {
-        public PollClearer(IVotingContext context) : base(context) { }
+        public PollClearer(ITestVotingContext context) : base(context) { }
 
         public void ClearPoll(Poll poll)
         {
@@ -21,7 +21,7 @@ namespace VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers
             ((DbSet<Vote>)_context.Votes).RemoveRange(dbPoll.Ballots.SelectMany(b => b.Votes).ToList());
             ((DbSet<Option>)_context.Options).RemoveRange(dbPoll.Options);
             ((DbSet<Ballot>)_context.Ballots).RemoveRange(dbPoll.Ballots);
-            _context.Polls.Remove(poll);
+            _context.Polls.Remove(dbPoll);
 
             _context.SaveChanges();
         }

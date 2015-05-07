@@ -6,7 +6,7 @@ namespace VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers
 {
     public class DBClearer : Clearer
     {
-        public DBClearer(IVotingContext context) : base(context) { }
+        public DBClearer(ITestVotingContext context) : base(context) { }
 
         public void ClearAll()
         {

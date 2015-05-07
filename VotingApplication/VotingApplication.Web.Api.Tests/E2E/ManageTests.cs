@@ -21,7 +21,7 @@ namespace VotingApplication.Web.Tests.E2E
         private static readonly Guid PollManageGuid = Guid.NewGuid();
         private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid;
 
-        private IVotingContext _context;
+        private ITestVotingContext _context;
         private Poll _defaultPoll;
         private IWebDriver _driver;
 
