@@ -25,15 +25,17 @@
                 }
             }
 
-            PollService.getPoll(pollId, function (data) {
-                $scope.pollName = data.Name;
+            PollService.getPoll(pollId)
+                .then(function (response) {
+                    var data = response.data;
+                    $scope.pollName = data.Name;
 
-                if (data.ExpiryDate) {
-                    var expiryDate = new Date(data.ExpiryDate);
-                    $scope.pollExpiry = ExpiryStringService.timeStringForExpiry(expiryDate, calculateExpiry);
-                    resolveExpiryCallback(expiryDate);
-                }
-            });
+                    if (data.ExpiryDate) {
+                        var expiryDate = new Date(data.ExpiryDate);
+                        $scope.pollExpiry = ExpiryStringService.timeStringForExpiry(expiryDate, calculateExpiry);
+                        resolveExpiryCallback(expiryDate);
+                    }
+                });
         }
 
         return {

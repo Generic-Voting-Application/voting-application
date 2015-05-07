@@ -159,6 +159,8 @@
     <Content Include="Scripts\Controllers\ManagePollTypeControllerTests.js" />
     <Content Include="Scripts\Controllers\MultiVoteControllerTests.js" />
     <Content Include="Scripts\Controllers\PointsVoteControllerTests.js" />
+    <Content Include="Scripts\Controllers\RegisteredDashboardControllerTests.js" />
+    <Content Include="Scripts\Controllers\UnregisteredDashboardControllerTests.js" />
     <Content Include="Scripts\Controllers\UpDownVoteControllerTests.js" />
     <Content Include="Scripts\Controllers\VotingPageControllerTests.js" />
     <Content Include="Scripts\Services\AccountServiceTests.js" />
@@ -167,6 +169,7 @@
     <Content Include="Scripts\Services\ManageServiceTests.js" />
     <Content Include="Scripts\Controllers\ManageOptionControllerTests.js" />
     <Content Include="Scripts\Controllers\ManageVotersControllerTests.js" />
+    <Content Include="Scripts\Services\PollServiceTests.js" />
     <Content Include="Scripts\Services\TokenServiceTests.js" />
     <Content Include="Scripts\Services\VoteServiceTests.js" />
   </ItemGroup>

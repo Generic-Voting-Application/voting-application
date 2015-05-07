@@ -1,5 +1,7 @@
 ﻿/// <reference path="../Services/AccountService.js" />
 /// <reference path="../Services/PollService.js" />
+/// <reference path="../Services/RoutingService.js" />
+/// <reference path="../Services/TokenService.js" />
 (function () {
     'use strict';
 
@@ -32,22 +34,24 @@
 
 
         function createNewPoll(question) {
-            PollService.createPoll(question, createPollSuccessCallback);
+            PollService.createPoll(question)
+            .then(createPollSuccessCallback);
         }
 
-        function createPollSuccessCallback(data) {
-            TokenService.setToken(data.UUID, data.CreatorBallot.TokenGuid);
-            navigateToManagePage(data.ManageId);
+        function createPollSuccessCallback(response) {
+            var data = response.data;
+            TokenService.setToken(data.UUID, data.CreatorBallot.TokenGuid)
+                .then(function () { goToManagePage(data.ManageId); });
         }
 
         function getUserPolls() {
             PollService.getUserPolls()
-                .success(function (data) {
-                    $scope.userPolls = data;
+                .then(function (response) {
+                    $scope.userPolls = response.data;
                 });
         }
 
-        function navigateToManagePage(manageId) {
+        function goToManagePage(manageId) {
             return RoutingService.navigateToManagePage(manageId);
         }
 
@@ -57,8 +61,8 @@
 
         function copyPoll(pollId) {
             PollService.copyPoll(pollId)
-                .success(function (data) {
-                    navigateToManagePage(data.newManageId);
+                .then(function (data) {
+                    goToManagePage(data.newManageId);
                 });
         }
     }

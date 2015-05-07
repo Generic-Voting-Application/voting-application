@@ -15,6 +15,7 @@ describe('VotingPageController', function () {
     var getTokenPromise;
     var submitVotePromise;
     var getTokenVotesPromise;
+    var getPollPromise;
 
     var mockTokenValue = '4A9AFE2C-240B-4BFF-A569-0FEF5A78FC10';
     var mockPollValue = {
@@ -40,7 +41,13 @@ describe('VotingPageController', function () {
             openLoginDialog: function () { }
         };
         mockTokenService = { getToken: function () { return getTokenPromise.promise; } };
-        mockPollService = { getPoll: function (pollId, callback) { callback(mockPollValue); } };
+
+        mockPollService = {
+            getPoll: function () { }
+        };
+        getPollPromise = $q.defer();
+        spyOn(mockPollService, 'getPoll').and.callFake(function () { return getPollPromise.promise; });
+
         mockVoteService = {
             getTokenVotes: function () { },
             submitVote: function () { }
@@ -58,7 +65,6 @@ describe('VotingPageController', function () {
         spyOn(mockIdentityService, 'registerIdentityObserver').and.callThrough();
         spyOn(mockIdentityService, 'openLoginDialog').and.callThrough();
         spyOn(mockTokenService, 'getToken').and.callThrough();
-        spyOn(mockPollService, 'getPoll').and.callThrough();
         spyOn(mockRoutingService, 'navigateToResultsPage').and.callThrough();
 
         $controller('VotingPageController', {
@@ -90,12 +96,20 @@ describe('VotingPageController', function () {
 
     it('Gets poll from PollService and saves it into scope', function () {
 
+        var response = { data: mockPollValue };
+
+        getPollPromise.resolve(response);
+        scope.$apply();
+
         expect(mockPollService.getPoll).toHaveBeenCalled();
 
         expect(scope.poll).toBe(mockPollValue);
     });
 
     it('Gets votes for a given Token', function () {
+
+        getPollPromise.resolve(mockPollValue);
+        scope.$apply();
 
         expect(mockVoteService.getTokenVotes).toHaveBeenCalled();
     });
@@ -106,7 +120,13 @@ describe('VotingPageController', function () {
             { OptionId: 3, VoteValue: 1 }
         ];
 
-        getTokenVotesPromise.resolve(tokenVotes);
+
+        var tokenResponse = { data: tokenVotes };
+        getTokenVotesPromise.resolve(tokenResponse);
+
+        var pollResponse = { data: mockPollValue };
+        getPollPromise.resolve(pollResponse);
+
 
         var expectedVoteUpdatedOptions = [
             { Id: 1, voteValue: 1 },
@@ -114,6 +134,7 @@ describe('VotingPageController', function () {
             { Id: 3, voteValue: 1 },
             { Id: 4, voteValue: 0 }
         ];
+
 
         scope.$apply();
         expect(scope.poll.Options).toEqual(expectedVoteUpdatedOptions);
@@ -186,6 +207,10 @@ describe('VotingPageController', function () {
 
         it('Gets poll from PollService and saves it into scope', function () {
 
+            var pollResponse = { data: mockPollValue };
+            getPollPromise.resolve(pollResponse);
+            scope.$apply();
+
             // Clear the spied calls, as it gets called during construction.
             mockPollService.getPoll.calls.reset();
 
@@ -207,8 +232,6 @@ describe('VotingPageController', function () {
                 ]
             };
 
-            mockPollService.getPoll.and.callFake(function (pollId, callback) { callback(poll); });
-
             var selectedOptions = [
                 { Id: 1, voteValue: 1 },
                 { Id: 2, voteValue: 0 },
@@ -226,9 +249,10 @@ describe('VotingPageController', function () {
 
             scope.poll.Options = selectedOptions;
 
+            getPollPromise.resolve(poll);
             scope.$emit('voterOptionAddedEvent');
 
-
+            scope.$apply();
             expect(scope.poll.Options).toEqual(expectedOptions);
         });
 
