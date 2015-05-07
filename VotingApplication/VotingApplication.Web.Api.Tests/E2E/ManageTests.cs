@@ -17,6 +17,9 @@ namespace VotingApplication.Web.Tests.E2E
     {
         private static readonly string ChromeDriverDir = @"..\..\";
         private static readonly string SiteBaseUri = @"http://localhost:64205/";
+        private static readonly Guid PollGuid = Guid.NewGuid();
+        private static readonly Guid PollManageGuid = Guid.NewGuid();
+        private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid;
 
         private IVotingContext _context;
         private Poll _defaultPoll;
@@ -30,8 +33,8 @@ namespace VotingApplication.Web.Tests.E2E
             // Open, Anonymous, No Option Adding, Shown Results
             _defaultPoll = new Poll()
             {
-                UUID = Guid.NewGuid(),
-                ManageId = Guid.NewGuid(),
+                UUID = PollGuid,
+                ManageId = PollManageGuid,
                 PollType = PollType.Basic,
                 Name = "Test Poll",
                 LastUpdated = DateTime.Now,
@@ -62,9 +65,9 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageNameChange_NameSection_DisplaysCurrentName()
+        public void NameSection_DisplaysCurrentName()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId);
+            _driver.Navigate().GoToUrl(PollUrl);
             IWebElement manageNameSection = _driver.FindElement(By.Id("manage-name-section"));
 
             IWebElement pollName = manageNameSection.FindElement(NgBy.Binding("Question"));
@@ -74,17 +77,16 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageNameChange_NameUpdate_UpdatesName()
+        public void NameUpdate_UpdatesName()
         {
             String newPollName = "Poll Name Updated";
 
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId);
+            _driver.Navigate().GoToUrl(PollUrl);
             IWebElement manageNameSection = _driver.FindElement(By.Id("manage-name-section"));
 
-            IWebElement editButton = manageNameSection.FindElements(By.TagName("a")).Single();
+            IWebElement editLink = manageNameSection.FindElement(By.Id("edit-link"));
 
-
-            editButton.Click();
+            editLink.Click();
 
             IWebElement editInput = manageNameSection.FindElements(By.TagName("Input")).Single();
             editInput.Clear();
@@ -100,85 +102,79 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageNavigation_OptionSectionEditButton_NavigatesToOptionManagement()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId);
+            _driver.Navigate().GoToUrl(PollUrl);
             IWebElement manageSection = _driver.FindElement(By.Id("manage-options-section"));
 
-            IReadOnlyCollection<IWebElement> links = manageSection.FindElements(By.TagName("a"));
-            IWebElement editLink = links.First(l => l.Text == "Edit");
+            IWebElement editLink = manageSection.FindElement(By.Id("edit-link"));
 
             editLink.Click();
 
-            Assert.AreEqual(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options", _driver.Url);
+            Assert.AreEqual(PollUrl + "/Options", _driver.Url);
         }
 
         [TestMethod, TestCategory("E2E")]
         public void ManageNavigation_PollTypeSectionEditButton_NavigatesToPollTypeManagement()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId);
+            _driver.Navigate().GoToUrl(PollUrl);
             IWebElement manageSection = _driver.FindElement(By.Id("manage-poll-type-section"));
 
-            IReadOnlyCollection<IWebElement> links = manageSection.FindElements(By.TagName("a"));
-            IWebElement editLink = links.First(l => l.Text == "Edit");
+            IWebElement editLink = manageSection.FindElement(By.Id("edit-link"));
 
             editLink.Click();
 
-            Assert.AreEqual(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/PollType", _driver.Url);
+            Assert.AreEqual(PollUrl + "/PollType", _driver.Url);
         }
 
         [TestMethod, TestCategory("E2E")]
         public void ManageNavigation_MiscSectionEditButton_NavigatesToMiscManagement()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId);
+            _driver.Navigate().GoToUrl(PollUrl);
             IWebElement manageSection = _driver.FindElement(By.Id("manage-misc-section"));
 
-            IReadOnlyCollection<IWebElement> links = manageSection.FindElements(By.TagName("a"));
-            IWebElement editLink = links.First(l => l.Text == "Edit");
+            IWebElement editLink = manageSection.FindElement(By.Id("edit-link"));
 
             editLink.Click();
 
-            Assert.AreEqual(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Misc", _driver.Url);
+            Assert.AreEqual(PollUrl + "/Misc", _driver.Url);
         }
 
         [TestMethod, TestCategory("E2E")]
         public void ManageNavigation_ExpirySectionEditButton_NavigatesToExpiryManagement()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId);
+            _driver.Navigate().GoToUrl(PollUrl);
             IWebElement manageSection = _driver.FindElement(By.Id("manage-expiry-section"));
 
-            IReadOnlyCollection<IWebElement> links = manageSection.FindElements(By.TagName("a"));
-            IWebElement editLink = links.First(l => l.Text == "Edit");
+            IWebElement editLink = manageSection.FindElement(By.Id("edit-link"));
 
             editLink.Click();
 
-            Assert.AreEqual(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Expiry", _driver.Url);
+            Assert.AreEqual(PollUrl + "/Expiry", _driver.Url);
         }
 
         [TestMethod, TestCategory("E2E")]
         public void ManageNavigation_InviteesSectionEditButton_NavigatesToInviteesManagement()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId);
+            _driver.Navigate().GoToUrl(PollUrl);
             IWebElement manageSection = _driver.FindElement(By.Id("manage-invitees-section"));
 
-            IReadOnlyCollection<IWebElement> links = manageSection.FindElements(By.TagName("a"));
-            IWebElement editLink = links.First(l => l.Text == "Edit");
+            IWebElement editLink = manageSection.FindElement(By.Id("edit-link"));
 
             editLink.Click();
 
-            Assert.AreEqual(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Invitees", _driver.Url);
+            Assert.AreEqual(PollUrl + "/Invitees", _driver.Url);
         }
 
         [TestMethod, TestCategory("E2E")]
         public void ManageNavigation_VotersSectionEditButton_NavigatesToVotersManagement()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId);
+            _driver.Navigate().GoToUrl(PollUrl);
             IWebElement manageSection = _driver.FindElement(By.Id("manage-voters-section"));
 
-            IReadOnlyCollection<IWebElement> links = manageSection.FindElements(By.TagName("a"));
-            IWebElement editLink = links.First(l => l.Text == "Edit");
+            IWebElement editLink = manageSection.FindElement(By.Id("edit-link"));
 
             editLink.Click();
 
-            Assert.AreEqual(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Voters", _driver.Url);
+            Assert.AreEqual(PollUrl + "/Voters", _driver.Url);
         }
     }
 }

@@ -8,7 +8,7 @@
             <label for="description">Description</label>
             <input class="form-input" id="description" ng-model="editOptionFormDescription">
         </div>
-        <button class="active-btn" ng-disabled="editOptionForm.$invalid" ng-click="updateOption()" type="submit">Save</button>
+        <button id="dialog-save-button" class="active-btn" ng-disabled="editOptionForm.$invalid" ng-click="updateOption()" type="submit">Save</button>
     </form>
 </div>
 <span class="dialog-error-bar-bottom" ng-show="displayError">{{displayError}}</span>

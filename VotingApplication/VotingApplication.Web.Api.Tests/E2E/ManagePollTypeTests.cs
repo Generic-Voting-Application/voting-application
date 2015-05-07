@@ -19,6 +19,9 @@ namespace VotingApplication.Web.Tests.E2E
         private static readonly string ChromeDriverDir = @"..\..\";
         private static readonly string SiteBaseUri = @"http://localhost:64205/";
         private static readonly int WaitTime = 500;
+        private static readonly Guid PollGuid = Guid.NewGuid();
+        private static readonly Guid PollManageGuid = Guid.NewGuid();
+        private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid + "/PollType";
 
         private ITestVotingContext _context;
         private Poll _defaultPoll;
@@ -32,8 +35,8 @@ namespace VotingApplication.Web.Tests.E2E
             // Open, Anonymous, No Option Adding, Shown Results
             _defaultPoll = new Poll()
             {
-                UUID = Guid.NewGuid(),
-                ManageId = Guid.NewGuid(),
+                UUID = PollGuid,
+                ManageId = PollManageGuid,
                 PollType = PollType.Basic,
                 Name = "Test Poll",
                 LastUpdated = DateTime.Now,
@@ -68,10 +71,9 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManagePollType_CancelButton_NavigatesToManagement()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/PollType");
+            _driver.Navigate().GoToUrl(PollUrl);
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement cancelButton = buttons.First(l => l.Text == "Cancel");
+            IWebElement cancelButton = _driver.FindElement(By.Id("cancel-button"));
 
             cancelButton.Click();
 
@@ -81,13 +83,12 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManagePollType_CancelButton_DoesNotSaveChanges()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/PollType");
+            _driver.Navigate().GoToUrl(PollUrl);
 
-            IReadOnlyCollection<IWebElement> pollTypeOptions = _driver.FindElements(By.ClassName("poll-type-btn"));
-            pollTypeOptions.First(o => o.Text.Contains("Multi Vote")).Click();
+            IWebElement multiVoteButton = _driver.FindElement(By.Id("multi-vote-button"));
+            multiVoteButton.Click();
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement cancelButton = buttons.First(l => l.Text == "Cancel");
+            IWebElement cancelButton = _driver.FindElement(By.Id("cancel-button"));
 
             cancelButton.Click();
 
@@ -99,15 +100,13 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManagePollType_Save_SavesChanges()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/PollType");
+            _driver.Navigate().GoToUrl(PollUrl);
 
-            IReadOnlyCollection<IWebElement> pollTypeOptions = _driver.FindElements(By.ClassName("poll-type-btn"));
-            IWebElement multiVoteButton = pollTypeOptions.First(o => o.Text.Contains("Multi Vote"));
+            IWebElement multiVoteButton = _driver.FindElement(By.Id("multi-vote-button"));
 
             multiVoteButton.Click();
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement saveButton = buttons.First(l => l.Text == "Save");
+            IWebElement saveButton = _driver.FindElement(By.Id("save-button"));
 
             saveButton.Click();
 
@@ -125,23 +124,21 @@ namespace VotingApplication.Web.Tests.E2E
             int initialMaxPoints = _defaultPoll.MaxPoints;
             int initialMaxPerVote = _defaultPoll.MaxPerVote;
 
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/PollType");
+            _driver.Navigate().GoToUrl(PollUrl);
 
-            IReadOnlyCollection<IWebElement> pollTypeOptions = _driver.FindElements(By.ClassName("poll-type-btn"));
-            IWebElement pointsVoteButton = pollTypeOptions.First(o => o.Text.Contains("Points Vote"));
+            IWebElement pointsVoteButton = _driver.FindElement(By.Id("points-vote-button"));
 
             IWebElement pointsPerPollControl = _driver.FindElement(By.Id("points-per-poll"));
-            IReadOnlyCollection<IWebElement> pointsPerPollControlButtons = pointsPerPollControl.FindElements(By.TagName("button"));
+            IWebElement pointsPerPollIncreaseButton = pointsPerPollControl.FindElement(By.Id("increase-button"));
 
             IWebElement pointsPerVoteControl = _driver.FindElement(By.Id("points-per-vote"));
-            IReadOnlyCollection<IWebElement> pointsPerVoteControlButtons = pointsPerVoteControl.FindElements(By.TagName("button"));
+            IWebElement pointsPerVoteDecreaseButton = pointsPerVoteControl.FindElement(By.Id("decrease-button"));
 
             pointsVoteButton.Click();
-            pointsPerPollControlButtons.First(b => b.Text == "+").Click();
-            pointsPerVoteControlButtons.First(b => b.Text == "-").Click();
+            pointsPerPollIncreaseButton.Click();
+            pointsPerVoteDecreaseButton.Click();
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement saveButton = buttons.First(l => l.Text == "Save");
+            IWebElement saveButton = _driver.FindElement(By.Id("save-button"));
 
             saveButton.Click();
 
@@ -160,25 +157,23 @@ namespace VotingApplication.Web.Tests.E2E
             int initialMaxPoints = _defaultPoll.MaxPoints;
             int initialMaxPerVote = _defaultPoll.MaxPerVote;
 
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/PollType");
+            _driver.Navigate().GoToUrl(PollUrl);
 
-            IReadOnlyCollection<IWebElement> pollTypeOptions = _driver.FindElements(By.ClassName("poll-type-btn"));
-            IWebElement pointsVoteButton = pollTypeOptions.First(o => o.Text.Contains("Points Vote"));
-            IWebElement multiVoteButton = pollTypeOptions.First(o => o.Text.Contains("Multi Vote"));
+            IWebElement pointsVoteButton = _driver.FindElement(By.Id("points-vote-button"));
+            IWebElement multiVoteButton = _driver.FindElement(By.Id("multi-vote-button"));
 
             IWebElement pointsPerPollControl = _driver.FindElement(By.Id("points-per-poll"));
-            IReadOnlyCollection<IWebElement> pointsPerPollControlButtons = pointsPerPollControl.FindElements(By.TagName("button"));
+            IWebElement pointsPerPollIncreaseButton = pointsPerPollControl.FindElement(By.Id("increase-button"));
 
             IWebElement pointsPerVoteControl = _driver.FindElement(By.Id("points-per-vote"));
-            IReadOnlyCollection<IWebElement> pointsPerVoteControlButtons = pointsPerVoteControl.FindElements(By.TagName("button"));
+            IWebElement pointsPerVoteDecreaseButton = pointsPerVoteControl.FindElement(By.Id("decrease-button"));
 
             pointsVoteButton.Click();
-            pointsPerPollControlButtons.First(b => b.Text == "+").Click();
-            pointsPerVoteControlButtons.First(b => b.Text == "-").Click();
+            pointsPerPollIncreaseButton.Click();
+            pointsPerVoteDecreaseButton.Click();
             multiVoteButton.Click();
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement saveButton = buttons.First(l => l.Text == "Save");
+            IWebElement saveButton = _driver.FindElement(By.Id("save-button"));
 
             saveButton.Click();
 
@@ -206,19 +201,17 @@ namespace VotingApplication.Web.Tests.E2E
 
             _context.SaveChanges();
 
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/PollType");
+            _driver.Navigate().GoToUrl(PollUrl);
 
-            IReadOnlyCollection<IWebElement> pollTypeOptions = _driver.FindElements(By.ClassName("poll-type-btn"));
-            IWebElement multiVoteButton = pollTypeOptions.First(o => o.Text.Contains("Multi Vote"));
+            IWebElement multiVoteButton = _driver.FindElement(By.Id("multi-vote-button"));
 
             multiVoteButton.Click();
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement saveButton = buttons.First(l => l.Text == "Save");
+            IWebElement saveButton = _driver.FindElement(By.Id("save-button"));
 
             saveButton.Click();
 
-            Assert.AreEqual(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/PollType", _driver.Url);
+            Assert.AreEqual(PollUrl, _driver.Url);
 
             IWebElement dialogContent = _driver.FindElement(By.ClassName("dialog-content"));
             Assert.IsTrue(dialogContent.IsVisible());

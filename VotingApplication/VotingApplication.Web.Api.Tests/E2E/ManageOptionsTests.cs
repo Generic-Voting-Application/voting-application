@@ -20,6 +20,9 @@ namespace VotingApplication.Web.Tests.E2E
         private static readonly string SiteBaseUri = @"http://localhost:64205/";
         private static readonly int WaitTime = 500;
         private static readonly int DialogClearWaitTime = 1000;
+        private static readonly Guid PollGuid = Guid.NewGuid();
+        private static readonly Guid PollManageGuid = Guid.NewGuid();
+        private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid + "/Options";
 
         private ITestVotingContext _context;
         private Poll _defaultPoll;
@@ -33,8 +36,8 @@ namespace VotingApplication.Web.Tests.E2E
             // Open, Anonymous, No Option Adding, Shown Results
             _defaultPoll = new Poll()
             {
-                UUID = Guid.NewGuid(),
-                ManageId = Guid.NewGuid(),
+                UUID = PollGuid,
+                ManageId = PollManageGuid,
                 PollType = PollType.Basic,
                 Name = "Test Poll",
                 LastUpdated = DateTime.Now,
@@ -87,7 +90,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageOptions_DisplaysOptionNames()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+            _driver.Navigate().GoToUrl(PollUrl);
 
             IReadOnlyCollection<IWebElement> optionNames = _driver.FindElements(NgBy.Binding("option.Name"));
 
@@ -99,7 +102,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageOptions_DisplaysOptionDescriptions()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+            _driver.Navigate().GoToUrl(PollUrl);
 
             IReadOnlyCollection<IWebElement> optionDescriptions = _driver.FindElements(NgBy.Binding("option.Description"));
 
@@ -111,10 +114,9 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageOptions_CancelButton_NavigatesToManagement()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+            _driver.Navigate().GoToUrl(PollUrl);
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement cancelButton = buttons.First(l => l.Text == "Cancel");
+            IWebElement cancelButton = _driver.FindElement(By.Id("cancel-button"));
 
             cancelButton.Click();
 
@@ -125,7 +127,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageOptions_CancelButton_DoesNotSaveChanges()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+            _driver.Navigate().GoToUrl(PollUrl);
 
             IWebElement addOptionButton = _driver.FindElement(By.PartialLinkText("New Option"));
             addOptionButton.Click();
@@ -133,14 +135,13 @@ namespace VotingApplication.Web.Tests.E2E
             IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
             formName.SendKeys("Test");
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement doneButton = buttons.First(l => l.Text == "Done");
+            IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
 
             doneButton.Click();
 
             Thread.Sleep(DialogClearWaitTime);
 
-            IWebElement cancelButton = buttons.First(l => l.Text == "Cancel");
+            IWebElement cancelButton = _driver.FindElement(By.Id("cancel-button"));
 
             cancelButton.Click();
 
@@ -155,7 +156,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageOptions_Save_SavesChanges()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+            _driver.Navigate().GoToUrl(PollUrl);
 
             IWebElement addOptionButton = _driver.FindElement(By.PartialLinkText("New Option"));
             addOptionButton.Click();
@@ -169,8 +170,7 @@ namespace VotingApplication.Web.Tests.E2E
             IWebElement formDescription = _driver.FindElement(NgBy.Model("addOptionForm.description"));
             formDescription.SendKeys(newOptionDescription);
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement doneButton = buttons.First(l => l.Text == "Done");
+            IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
 
             doneButton.Click();
 
@@ -189,7 +189,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageOptions_AddAnotherButton_AddsOption()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+            _driver.Navigate().GoToUrl(PollUrl);
 
             IWebElement addOptionButton = _driver.FindElement(By.PartialLinkText("New Option"));
             addOptionButton.Click();
@@ -197,8 +197,7 @@ namespace VotingApplication.Web.Tests.E2E
             IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
             formName.SendKeys("Test");
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement addAnotherButton = buttons.First(l => l.Text == "Add Another");
+            IWebElement addAnotherButton = _driver.FindElement(By.Id("add-another-button"));
 
             addAnotherButton.Click();
 
@@ -210,7 +209,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageOptions_AddAnotherButton_DoesNotCloseForm()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+            _driver.Navigate().GoToUrl(PollUrl);
 
             IWebElement addOptionButton = _driver.FindElement(By.PartialLinkText("New Option"));
             addOptionButton.Click();
@@ -218,8 +217,7 @@ namespace VotingApplication.Web.Tests.E2E
             IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
             formName.SendKeys("Test");
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement addAnotherButton = buttons.First(l => l.Text == "Add Another");
+            IWebElement addAnotherButton = _driver.FindElement(By.Id("add-another-button"));
 
             addAnotherButton.Click();
 
@@ -231,7 +229,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageOptions_DoneButton_AddsOption()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+            _driver.Navigate().GoToUrl(PollUrl);
 
             IWebElement addOptionButton = _driver.FindElement(By.PartialLinkText("New Option"));
             addOptionButton.Click();
@@ -239,10 +237,9 @@ namespace VotingApplication.Web.Tests.E2E
             IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
             formName.SendKeys("Test");
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement addAnotherButton = buttons.First(l => l.Text == "Done");
+            IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
 
-            addAnotherButton.Click();
+            doneButton.Click();
 
             IReadOnlyCollection<IWebElement> options = _driver.FindElements(NgBy.Repeater("option in options"));
 
@@ -252,7 +249,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageOptions_DoneButton_ClosesForm()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+            _driver.Navigate().GoToUrl(PollUrl);
 
             IWebElement addOptionButton = _driver.FindElement(By.PartialLinkText("New Option"));
             addOptionButton.Click();
@@ -260,8 +257,7 @@ namespace VotingApplication.Web.Tests.E2E
             IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
             formName.SendKeys("Test");
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement doneButton = buttons.First(l => l.Text == "Done");
+            IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
 
             doneButton.Click();
 
@@ -275,16 +271,15 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageOptions_AddOptionForm_RequiresAName()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+            _driver.Navigate().GoToUrl(PollUrl);
 
             IWebElement addOptionButton = _driver.FindElement(By.PartialLinkText("New Option"));
             addOptionButton.Click();
 
             IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement doneButton = buttons.First(l => l.Text == "Done");
-            IWebElement addAnotherButton = buttons.First(l => l.Text == "Add Another");
+            IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
+            IWebElement addAnotherButton = _driver.FindElement(By.Id("add-another-button"));
 
             Assert.IsFalse(doneButton.Enabled);
             Assert.IsFalse(addAnotherButton.Enabled);
@@ -293,7 +288,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageOptions_DeleteButton_RemovesOption()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+            _driver.Navigate().GoToUrl(PollUrl);
 
             IReadOnlyCollection<IWebElement> deleteButtons = _driver.FindElements(By.ClassName("fa-trash-o"));
             deleteButtons.First().Click();
@@ -306,7 +301,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageOptions_EditButton_AllowsRenaming()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+            _driver.Navigate().GoToUrl(PollUrl);
 
             IReadOnlyCollection<IWebElement> editButtons = _driver.FindElements(By.ClassName("fa-pencil"));
             editButtons.First().Click();
@@ -321,7 +316,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageOptions_EditSubmit_ChangesOptionDetails()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+            _driver.Navigate().GoToUrl(PollUrl);
 
             IReadOnlyCollection<IWebElement> editButtons = _driver.FindElements(By.ClassName("fa-pencil"));
             editButtons.First().Click();
@@ -340,8 +335,7 @@ namespace VotingApplication.Web.Tests.E2E
             formName.SendKeys(newName);
             formDescription.SendKeys(newDescription);
 
-            IReadOnlyCollection<IWebElement> buttons = form.FindElements(By.TagName("button"));
-            IWebElement saveButton = buttons.First(l => l.Text == "Save");
+            IWebElement saveButton = _driver.FindElement(By.Id("dialog-save-button"));
 
             saveButton.Click();
 
@@ -357,7 +351,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageOptions_EditSubmit_DoesNotAllowBlankName()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Options");
+            _driver.Navigate().GoToUrl(PollUrl);
 
             IReadOnlyCollection<IWebElement> editButtons = _driver.FindElements(By.ClassName("fa-pencil"));
             editButtons.First().Click();
@@ -367,8 +361,7 @@ namespace VotingApplication.Web.Tests.E2E
             IWebElement formName = _driver.FindElement(NgBy.Model("editOptionFormName"));
             formName.Clear();
 
-            IReadOnlyCollection<IWebElement> buttons = form.FindElements(By.TagName("button"));
-            IWebElement saveButton = buttons.First(l => l.Text == "Save");
+            IWebElement saveButton = _driver.FindElement(By.Id("dialog-save-button"));
 
             Assert.IsFalse(saveButton.Enabled);
         }

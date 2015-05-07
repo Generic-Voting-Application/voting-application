@@ -18,6 +18,9 @@ namespace VotingApplication.Web.Tests.E2E
         private static readonly string ChromeDriverDir = @"..\..\";
         private static readonly string SiteBaseUri = @"http://localhost:64205/";
         private static readonly int WaitTime = 500;
+        private static readonly Guid PollGuid = Guid.NewGuid();
+        private static readonly Guid PollManageGuid = Guid.NewGuid();
+        private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid + "/Misc";
 
         private ITestVotingContext _context;
         private Poll _defaultPoll;
@@ -31,8 +34,8 @@ namespace VotingApplication.Web.Tests.E2E
             // Open, Anonymous, No Option Adding, Shown Results
             _defaultPoll = new Poll()
             {
-                UUID = Guid.NewGuid(),
-                ManageId = Guid.NewGuid(),
+                UUID = PollGuid,
+                ManageId = PollManageGuid,
                 PollType = PollType.Basic,
                 Name = "Test Poll",
                 LastUpdated = DateTime.Now,
@@ -67,10 +70,9 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageMisc_CancelButton_NavigatesToManagement()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Misc");
+            _driver.Navigate().GoToUrl(PollUrl);
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement cancelButton = buttons.First(l => l.Text == "Cancel");
+            IWebElement cancelButton = _driver.FindElement(By.Id("cancel-button"));
 
             cancelButton.Click();
 
@@ -80,13 +82,12 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageMisc_CancelButton_DoesNotSaveChanges()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Misc");
+            _driver.Navigate().GoToUrl(PollUrl);
 
             IWebElement inviteOnlySwitch = _driver.FindElement(By.Id("InviteOnly"));
             inviteOnlySwitch.Click();
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement cancelButton = buttons.First(l => l.Text == "Cancel");
+            IWebElement cancelButton = _driver.FindElement(By.Id("cancel-button"));
 
             cancelButton.Click();
 
@@ -101,7 +102,7 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManageMisc_Save_SavesChanges()
         {
-            _driver.Navigate().GoToUrl(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId + "/Misc");
+            _driver.Navigate().GoToUrl(PollUrl);
 
             IWebElement inviteOnlySwitch = _driver.FindElement(By.Id("InviteOnly"));
             IWebElement namedVotingSwitch = _driver.FindElement(By.Id("NamedVoting"));
@@ -113,8 +114,7 @@ namespace VotingApplication.Web.Tests.E2E
             optionAddingSwitch.Click();
             hiddenResultsSwitch.Click();
 
-            IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("button"));
-            IWebElement saveButton = buttons.First(l => l.Text == "Save");
+            IWebElement saveButton = _driver.FindElement(By.Id("save-button"));
 
             saveButton.Click();
 

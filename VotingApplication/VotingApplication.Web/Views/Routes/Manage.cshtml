@@ -13,7 +13,7 @@
                 <span class="fa fa-question-circle pull-left" aria-hidden="true"></span>
                 <h4 class="icon-padded-left">
                     Question
-                    <span class="pull-right"><a class="clickable" ng-click="toggleNameEdit=true" ng-hide="toggleNameEdit">Edit</a></span>
+                    <span id="edit-link" class="pull-right"><a class="clickable" ng-click="toggleNameEdit=true" ng-hide="toggleNameEdit">Edit</a></span>
                 </h4>
             </div>
             <div>
@@ -36,7 +36,7 @@
                 <span class="fa fa-list pull-left" aria-hidden="true"></span>
                 <h4 class="icon-padded-left">
                     Options
-                    <span class="pull-right"><a href="{{manageSubPageUrl('Options')}}">Edit</a></span>
+                    <span id="edit-link" class="pull-right"><a href="{{manageSubPageUrl('Options')}}">Edit</a></span>
                 </h4>
             </div>
             <div>
@@ -48,7 +48,7 @@
                 <span class="fa fa-check-square-o pull-left" aria-hidden="true"></span>
                 <h4 class="icon-padded-left">
                     Poll Style
-                    <span class="pull-right"><a href="{{manageSubPageUrl('PollType')}}">Edit</a></span>
+                    <span id="edit-link" class="pull-right"><a href="{{manageSubPageUrl('PollType')}}">Edit</a></span>
                 </h4>
             </div>
             <div>
@@ -60,7 +60,7 @@
                 <span class="fa fa-cog pull-left" aria-hidden="true"></span>
                 <h4 class="icon-padded-left">
                     Miscellaneous Settings
-                    <span class="pull-right"><a href="{{manageSubPageUrl('Misc')}}">Edit</a></span>
+                    <span id="edit-link" class="pull-right"><a href="{{manageSubPageUrl('Misc')}}">Edit</a></span>
                 </h4>
             </div>
         </div>
@@ -69,7 +69,7 @@
                 <span class="fa fa-clock-o pull-left" aria-hidden="true"></span>
                 <h4 class="icon-padded-left">
                     Expires
-                    <span class="pull-right"><a href="{{manageSubPageUrl('Expiry')}}">Edit</a></span>
+                    <span id="edit-link" class="pull-right"><a href="{{manageSubPageUrl('Expiry')}}">Edit</a></span>
                 </h4>
             </div>
             <div>
@@ -81,7 +81,7 @@
                 <span class="fa fa-users pull-left" aria-hidden="true"></span>
                 <h4 class="icon-padded-left">
                     Invitations
-                    <span class="pull-right"><a href="{{manageSubPageUrl('Invitees')}}">Edit</a></span>
+                    <span id="edit-link" class="pull-right"><a href="{{manageSubPageUrl('Invitees')}}">Edit</a></span>
                 </h4>
             </div>
             <div>
@@ -93,7 +93,7 @@
                 <span class="fa fa-bar-chart pull-left" aria-hidden="true"></span>
                 <h4 class="icon-padded-left">
                     Ballots
-                    <span class="pull-right"><a href="{{ manageSubPageUrl('Voters') }}">Edit</a></span>
+                    <span id="edit-link" class="pull-right"><a href="{{ manageSubPageUrl('Voters') }}">Edit</a></span>
                 </h4>
             </div>
             <div>

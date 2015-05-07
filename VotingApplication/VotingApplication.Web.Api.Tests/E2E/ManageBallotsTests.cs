@@ -18,6 +18,9 @@ namespace VotingApplication.Web.Tests.E2E
         private static readonly string ChromeDriverDir = @"..\..\";
         private static readonly string SiteBaseUri = @"http://localhost:64205/";
         private static readonly int WaitTime = 500;
+        private static readonly Guid PollGuid = Guid.NewGuid();
+        private static readonly Guid PollManageGuid = Guid.NewGuid();
+        private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid;
 
         private ITestVotingContext _context;
         private Poll _defaultPoll;
@@ -31,8 +34,8 @@ namespace VotingApplication.Web.Tests.E2E
             // Open, Anonymous, No Option Adding, Shown Results
             _defaultPoll = new Poll()
             {
-                UUID = Guid.NewGuid(),
-                ManageId = Guid.NewGuid(),
+                UUID = PollGuid,
+                ManageId = PollManageGuid,
                 PollType = PollType.Basic,
                 Name = "Test Poll",
                 LastUpdated = DateTime.Now,
