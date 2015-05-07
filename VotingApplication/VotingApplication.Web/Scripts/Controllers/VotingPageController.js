@@ -68,8 +68,8 @@
 
                 $scope.poll.Options.forEach(function (opt) { opt.voteValue = 0; });
 
-                if (voteData.data) {
-                    voteData.data.forEach(function (vote) {
+                if (voteData) {
+                    voteData.forEach(function (vote) {
                         $scope.poll.Options.forEach(function (option) {
                             if (option.Id === vote.OptionId) {
                                 option.voteValue = vote.VoteValue;
@@ -88,7 +88,7 @@
 
             PollService.getPoll($scope.pollId)
                 .then(function (pollData) {
-                    $scope.poll = pollData;
+                    $scope.poll = pollData.data;
 
                     $scope.poll.Options.forEach(function (opt) { opt.voteValue = 0; });
 
