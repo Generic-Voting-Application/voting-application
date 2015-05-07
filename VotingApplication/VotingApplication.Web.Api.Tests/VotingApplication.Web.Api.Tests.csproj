@@ -12,7 +12,6 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
     <JSLintSkip>\Scripts\Lib\angular-min.js|\Scripts\Lib\angular-mocks.js|\Scripts\Lib\</JSLintSkip>
     <NuGetPackageImportStamp>6010152b</NuGetPackageImportStamp>
   </PropertyGroup>
