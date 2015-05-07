@@ -307,9 +307,6 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="BundleTransformer.Configuration.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="ClearScript.V8\ClearScriptV8-32.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
