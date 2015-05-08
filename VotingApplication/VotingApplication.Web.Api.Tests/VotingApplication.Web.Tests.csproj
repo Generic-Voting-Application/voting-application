@@ -98,6 +98,7 @@
     <Compile Include="E2E\ManageBallotsTests.cs" />
     <Compile Include="E2E\ManageMiscTests.cs" />
     <Compile Include="E2E\ManageOptionsTests.cs" />
+    <Compile Include="E2E\ManageExpiryTests.cs" />
     <Compile Include="E2E\ManagePollTypeTests.cs" />
     <Compile Include="E2E\ManageTests.cs" />
     <Compile Include="E2E\MultiPollTests.cs" />
@@ -161,7 +162,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
