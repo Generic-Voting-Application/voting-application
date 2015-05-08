@@ -10,7 +10,6 @@ using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
-using VotingApplication.Web.Api.Logging;
 using VotingApplication.Web.Api.Metrics;
 
 namespace VotingApplication.Web.Api.Controllers
@@ -44,10 +43,6 @@ namespace VotingApplication.Web.Api.Controllers
                 ReasonPhrase = message
             });
 
-            ILogger logger = LoggerFactory.GetLogger();
-
-            logger.Log(message, exception);
-
             if (_metricHandler != null)
             {
                 _metricHandler.HandleErrorEvent(exception, CurrentPollId());
@@ -59,9 +54,6 @@ namespace VotingApplication.Web.Api.Controllers
         public void ThrowError(HttpStatusCode statusCode, ModelStateDictionary modelState)
         {
             HttpResponseException exception = new HttpResponseException(Request.CreateErrorResponse(statusCode, modelState));
-
-            ILogger logger = LoggerFactory.GetLogger();
-            logger.Log(exception);
 
             _metricHandler.HandleErrorEvent(exception, CurrentPollId());
 

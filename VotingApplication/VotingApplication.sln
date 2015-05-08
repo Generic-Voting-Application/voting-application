@@ -21,17 +21,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configura
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Web.Common", "VotingApplication.Web.Common\VotingApplication.Web.Common.csproj", "{969076F5-F2AD-4711-853B-BA1BD3439E13}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B4664874-E386-4AA5-B494-3124CA40DCDB}"
-	ProjectSection(SolutionItems) = preProject
-		VotingApplication.Web.Api\App_Start\NinjectWebCommon.cs = VotingApplication.Web.Api\App_Start\NinjectWebCommon.cs
-		VotingApplication.Data\Model\Poll.cs = VotingApplication.Data\Model\Poll.cs
-		VotingApplication.Web.Api.Tests\RunJavascriptTests.ps1 = VotingApplication.Web.Api.Tests\RunJavascriptTests.ps1
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Web", "VotingApplication.Web\VotingApplication.Web.csproj", "{08D315E9-B845-48E1-A2F0-486E7064C2C3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{942DCB1B-5882-4C01-95AE-3FE71E4103F2} = {942DCB1B-5882-4C01-95AE-3FE71E4103F2}
 		{969076F5-F2AD-4711-853B-BA1BD3439E13} = {969076F5-F2AD-4711-853B-BA1BD3439E13}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{43FEF99B-9969-4E04-900A-681A73B6E01A}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
 Global

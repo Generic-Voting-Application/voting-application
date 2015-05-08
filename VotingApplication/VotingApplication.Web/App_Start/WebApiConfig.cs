@@ -3,7 +3,6 @@ using System.Data.Entity.Migrations;
 using System.Net.Http.Headers;
 using System.Web.Http;
 using VotingApplication.Data.Migrations;
-using VotingApplication.Web.Api.Filters;
 
 namespace VotingApplication.Web
 {
@@ -15,7 +14,6 @@ namespace VotingApplication.Web
             // Configure Web API to use only bearer token authentication.
             config.SuppressDefaultHostAuthentication();
             config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
-            config.Filters.Add(new LoggingExceptionFilterAttribute());
 
             // Web API routes
             config.MapHttpAttributeRoutes();
