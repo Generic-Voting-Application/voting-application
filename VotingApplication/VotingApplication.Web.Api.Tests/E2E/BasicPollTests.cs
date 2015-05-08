@@ -5,6 +5,7 @@ using Protractor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
@@ -103,7 +104,7 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod, TestCategory("E2E")]
-            public async Task PopulatedOptions_TruncatesLongDescriptions()
+            public void PopulatedOptions_TruncatesLongDescriptions()
             {
                 string truncatedString = new String('a', truncatedTextLimit / 2);
                 _driver.Navigate().GoToUrl(PollUrl);
@@ -114,8 +115,10 @@ namespace VotingApplication.Web.Tests.E2E
                     Name = "Test Option 2",
                     Description = truncatedString + " " + truncatedString
                 });
+                
+                _context.SaveChanges();
 
-                await _context.SaveChangesAsync();
+                Thread.Sleep(WaitTime);
 
                 IReadOnlyCollection<IWebElement> optionDescriptions = _driver.FindElements(NgBy.Model("option.Description"));
 
