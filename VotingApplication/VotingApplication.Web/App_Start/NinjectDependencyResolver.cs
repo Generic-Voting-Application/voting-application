@@ -1,10 +1,9 @@
-﻿using Ninject;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Web;
 using System.Web.Http.Dependencies;
+using Ninject;
 
-namespace VotingApplication.Web.Common
+namespace VotingApplication.Web
 {
     public class NinjectDependencyResolver : IDependencyResolver
     {
