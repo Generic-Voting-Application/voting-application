@@ -15,7 +15,7 @@ using VotingApplication.Web.Api.Controllers.API_Controllers;
 using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
-namespace VotingApplication.Web.Api.Tests.Controllers
+namespace VotingApplication.Web.Tests.Controllers
 {
     [TestClass]
     public class PollControllerTests

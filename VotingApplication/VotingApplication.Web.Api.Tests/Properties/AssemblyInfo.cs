@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("VotingApplication.Web.Api.Tests")]
+[assembly: AssemblyTitle("VotingApplication.Web.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Scott Logic Ltd.")]
-[assembly: AssemblyProduct("VotingApplication.Web.Api.Tests")]
+[assembly: AssemblyProduct("VotingApplication.Web.Tests")]
 [assembly: AssemblyCopyright("Copyright © Scott Logic Ltd. 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

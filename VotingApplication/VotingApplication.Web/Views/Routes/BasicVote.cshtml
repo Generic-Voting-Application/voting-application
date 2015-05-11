@@ -7,7 +7,7 @@
             <div class="option-block" ng-class="{'selected-option': option.voteValue }">
                 <div class="option-block-row">
                     <div class="option-buttons">
-                        <button class="active-btn btn-medium" ng-click="submitVote(option)">Vote</button>
+                        <button id="vote-button" class="active-btn btn-medium" ng-click="submitVote(option)">Vote</button>
                     </div>
                     <strong>{{option.Name}}</strong>
                 </div>
@@ -22,7 +22,7 @@
 
         <div ng-show="poll.OptionAdding">
             <p>
-                <a class="icon-padded-left clickable" ng-click="addOption()">+ Add another option</a>
+                <a id="add-option-link" class="icon-padded-left clickable" ng-click="addOption()">+ Add another option</a>
             </p>
         </div>
     </div>

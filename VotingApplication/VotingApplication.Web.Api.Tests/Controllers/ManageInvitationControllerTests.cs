@@ -14,7 +14,7 @@ using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Services;
 
-namespace VotingApplication.Web.Api.Tests.Controllers
+namespace VotingApplication.Web.Tests.Controllers
 {
     [TestClass]
     public class ManageInvitationControllerTests
