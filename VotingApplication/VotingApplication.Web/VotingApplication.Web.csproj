@@ -425,14 +425,11 @@
     <Content Include="Views\Poll\Index.cshtml" />
     <Content Include="Views\Routes\ManageMisc.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="Content\Scss\Creation.scss" />
     <Content Include="Content\Scss\Voting.scss" />
-    <None Include="Project_Readme.html" />
     <Content Include="Views\Routes\Vote.cshtml" />
     <Content Include="Views\Routes\Results.cshtml" />
   </ItemGroup>
