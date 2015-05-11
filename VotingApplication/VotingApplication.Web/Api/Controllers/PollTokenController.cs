@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Net;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Metrics;
 
-namespace VotingApplication.Web.Api.Controllers.API_Controllers
+namespace VotingApplication.Web.Api.Controllers
 {
     public class PollTokenController : WebApiController
     {

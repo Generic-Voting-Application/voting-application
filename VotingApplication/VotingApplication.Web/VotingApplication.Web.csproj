@@ -296,6 +296,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\NinjectConfigurator.cs" />
+    <Compile Include="App_Start\NinjectDependencyResolver.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
@@ -437,10 +438,6 @@
     <ProjectReference Include="..\VotingApplication.Data\VotingApplication.Data.csproj">
       <Project>{942dcb1b-5882-4c01-95ae-3fe71e4103f2}</Project>
       <Name>VotingApplication.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VotingApplication.Web.Common\VotingApplication.Web.Common.csproj">
-      <Project>{969076f5-f2ad-4711-853b-ba1bd3439e13}</Project>
-      <Name>VotingApplication.Web.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

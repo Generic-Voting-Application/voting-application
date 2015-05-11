@@ -1,16 +1,14 @@
-﻿using Microsoft.AspNet.Identity;
-using System;
-using System.Data.Entity;
-using System.Linq;
+﻿using System;
 using System.Net;
 using System.Web.Http;
+using Microsoft.AspNet.Identity;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Data.Model.Creation;
 using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
-namespace VotingApplication.Web.Api.Controllers.API_Controllers
+namespace VotingApplication.Web.Api.Controllers
 {
     public class PollController : WebApiController
     {

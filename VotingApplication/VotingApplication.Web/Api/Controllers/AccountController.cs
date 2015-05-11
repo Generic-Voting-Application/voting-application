@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.OAuth;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Claims;
@@ -12,14 +6,19 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OAuth;
 using VotingApplication.Data.Context;
 using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models;
 using VotingApplication.Web.Api.Providers;
 using VotingApplication.Web.Api.Results;
 
-namespace VotingApplication.Web.Controllers
+namespace VotingApplication.Web.Api.Controllers
 {
     [Authorize]
     [RoutePrefix("api/Account")]
