@@ -8,7 +8,7 @@ using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
-namespace VotingApplication.Web.Api.Controllers.API_Controllers
+namespace VotingApplication.Web.Api.Controllers
 {
     public class PollOptionController : WebApiController
     {

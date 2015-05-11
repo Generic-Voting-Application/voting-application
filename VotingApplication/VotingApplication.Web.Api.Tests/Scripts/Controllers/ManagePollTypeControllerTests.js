@@ -122,14 +122,18 @@ describe('ManagePollTypeController', function () {
             };
 
             var getVotesData = {
-                Votes: [
-                    {
-                        OptionId: 1,
-                        VoteValue: 1,
-                        VoterName: 'Bob'
-                    }
-                ]
+
+                data: {
+                    Votes: [
+                        {
+                            OptionId: 1,
+                            VoteValue: 1,
+                            VoterName: 'Bob'
+                        }
+                    ]
+                }
             };
+
             manageGetVotesPromise.resolve(getVotesData);
 
             manageServiceMock.poll = poll;
@@ -150,14 +154,18 @@ describe('ManagePollTypeController', function () {
             };
 
             var getVotesData = {
-                Votes: [
-                    {
-                        OptionId: 1,
-                        VoteValue: 1,
-                        VoterName: 'Bob'
-                    }
-                ]
+
+                data: {
+                    Votes: [
+                        {
+                            OptionId: 1,
+                            VoteValue: 1,
+                            VoterName: 'Bob'
+                        }
+                    ]
+                }
             };
+
             manageGetVotesPromise.resolve(getVotesData);
 
             manageServiceMock.poll = poll;
@@ -178,13 +186,16 @@ describe('ManagePollTypeController', function () {
             };
 
             var getVotesData = {
-                Votes: [
-                    {
-                        OptionId: 1,
-                        VoteValue: 1,
-                        VoterName: 'Bob'
-                    }
-                ]
+
+                data: {
+                    Votes: [
+                        {
+                            OptionId: 1,
+                            VoteValue: 1,
+                            VoterName: 'Bob'
+                        }
+                    ]
+                }
             };
             manageGetVotesPromise.resolve(getVotesData);
 
@@ -206,14 +217,18 @@ describe('ManagePollTypeController', function () {
             };
 
             var getVotesData = {
-                Votes: [
-                    {
-                        OptionId: 1,
-                        VoteValue: 1,
-                        VoterName: 'Bob'
-                    }
-                ]
+
+                data: {
+                    Votes: [
+                        {
+                            OptionId: 1,
+                            VoteValue: 1,
+                            VoterName: 'Bob'
+                        }
+                    ]
+                }
             };
+
             manageGetVotesPromise.resolve(getVotesData);
 
             manageServiceMock.poll = poll;
@@ -233,13 +248,16 @@ describe('ManagePollTypeController', function () {
             };
 
             var getVotesData = {
-                Votes: [
-                    {
-                        OptionId: 1,
-                        VoteValue: 1,
-                        VoterName: 'Bob'
-                    }
-                ]
+
+                data: {
+                    Votes: [
+                        {
+                            OptionId: 1,
+                            VoteValue: 1,
+                            VoterName: 'Bob'
+                        }
+                    ]
+                }
             };
             manageGetVotesPromise.resolve(getVotesData);
 
@@ -260,14 +278,19 @@ describe('ManagePollTypeController', function () {
             };
 
             var getVotesData = {
-                Votes: [
-                    {
-                        OptionId: 1,
-                        VoteValue: 1,
-                        VoterName: 'Bob'
-                    }
-                ]
+
+                data: {
+                    Votes: [
+                        {
+                            OptionId: 1,
+                            VoteValue: 1,
+                            VoterName: 'Bob'
+                        }
+                    ]
+                }
+
             };
+
             manageGetVotesPromise.resolve(getVotesData);
 
             manageServiceMock.poll = poll;

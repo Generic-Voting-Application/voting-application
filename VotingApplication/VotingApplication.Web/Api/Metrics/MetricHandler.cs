@@ -13,8 +13,8 @@ namespace VotingApplication.Web.Api.Metrics
     public class MetricHandler : IMetricHandler
     {
         private readonly IContextFactory _contextFactory;
-        
-        public MetricHandler (IContextFactory contextFactory)
+
+        public MetricHandler(IContextFactory contextFactory)
         {
             _contextFactory = contextFactory;
         }
@@ -264,6 +264,11 @@ namespace VotingApplication.Web.Api.Metrics
         // Make sure we are using the PollId, not the corresponding ManageId, if available
         private Guid GetExistingPollId(Guid guid)
         {
+            if(guid == Guid.Empty)
+            {
+                return Guid.Empty;
+            }
+
             // Find corresponding pollId for manageId
             using (IVotingContext context = _contextFactory.CreateContext())
             {

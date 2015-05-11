@@ -28,6 +28,11 @@
 
         function updatePollType() {
 
+            if ($scope.poll.VotingStrategy !== 'Points'){
+                $scope.poll.MaxPerVote = startingMaxPerVote;
+                $scope.poll.MaxPoints = startingMaxPoints;
+            }
+
             var pollTypeConfig = {
                 PollType: $scope.poll.VotingStrategy,
                 MaxPerVote: $scope.poll.MaxPerVote,
@@ -41,7 +46,7 @@
         function tentativeUpdatePoll() {
             ManageService.getVotes($scope.poll.UUID)
             .then(function (pollSummary) {
-                if (pollSummary.Votes && pollSummary.Votes.length > 0 &&
+                if (pollSummary.data && pollSummary.data.Votes && pollSummary.data.Votes.length > 0 &&
                         ($scope.poll.VotingStrategy !== startingPollType ||
                         ($scope.poll.VotingStrategy === 'Points' &&
                             ($scope.poll.MaxPerVote !== startingMaxPerVote ||

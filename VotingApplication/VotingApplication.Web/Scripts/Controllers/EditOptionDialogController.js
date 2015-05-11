@@ -10,16 +10,16 @@
     function EditOptionDialogController($scope) {
         $scope.updateOption = updateOption;
 
-        $scope.name = $scope.ngDialogData.option.Name;
-        $scope.description = $scope.ngDialogData.option.Description;
+        $scope.editOptionFormName = $scope.ngDialogData.option.Name;
+        $scope.editOptionFormDescription = $scope.ngDialogData.option.Description;
 
         function updateOption() {
             if ($scope.name === null) {
                 return;
             }
 
-            $scope.ngDialogData.option.Name = $scope.name;
-            $scope.ngDialogData.option.Description = $scope.description;
+            $scope.ngDialogData.option.Name = $scope.editOptionFormName;
+            $scope.ngDialogData.option.Description = $scope.editOptionFormDescription;
 
             $scope.closeThisDialog();
         }

@@ -6,6 +6,7 @@ namespace VotingApplication.Data.Context
     public class VotingContext : DbContext, IVotingContext
     {
         public VotingContext()
+            : base("VotingContext")
         {
             this.Configuration.LazyLoadingEnabled = false;
             this.Configuration.ProxyCreationEnabled = false;

@@ -7,16 +7,19 @@
         .module('GVA.Common')
         .controller('AccountRegisterController', AccountRegisterController);
 
-    AccountRegisterController.$inject = ['$scope', '$rootScope', 'AccountService'];
+    AccountRegisterController.$inject = ['$scope', '$route', '$rootScope', 'AccountService'];
 
-    function AccountRegisterController($scope, $rootScope, AccountService) {
+    function AccountRegisterController($scope, $route, $rootScope, AccountService) {
 
         $scope.registerAccountAndLogin = registerAccount;
 
         function registerAccount(form) {
 
             AccountService.registerAccountAndLogin(form.email, form.password)
-                .then(closeDialog)
+                .then(function () {
+                    closeDialog();
+                    $route.reload();
+                })
                 .catch(displayErrorMessage);
 
             function closeDialog() {

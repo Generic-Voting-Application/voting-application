@@ -8,10 +8,10 @@ using System.Net.Http;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
-using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Controllers;
 using VotingApplication.Web.Api.Metrics;
 
-namespace VotingApplication.Web.Api.Tests.Controllers
+namespace VotingApplication.Web.Tests.Controllers
 {
     [TestClass]
     public class PollTokenControllerTests

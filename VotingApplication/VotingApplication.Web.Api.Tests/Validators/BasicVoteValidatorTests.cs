@@ -5,7 +5,7 @@ using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Validators;
 
-namespace VotingApplication.Web.Api.Tests.Validators
+namespace VotingApplication.Web.Tests.Validators
 {
     [TestClass]
     public class RankedVoteValidatorTests

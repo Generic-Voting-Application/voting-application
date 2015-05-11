@@ -1,7 +1,7 @@
 ﻿using FakeDbSet;
 using System.Data.Entity;
 
-namespace VotingApplication.Web.Api.Tests.TestHelpers
+namespace VotingApplication.Web.Tests.TestHelpers
 {
     public static class DbSetTestHelper
     {

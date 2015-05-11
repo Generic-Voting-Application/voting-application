@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Web;
-using System.Web.Http;
+using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Ninject;
 using Ninject.Web.Common;
-using Microsoft.Web.Infrastructure.DynamicModuleHelper;
+using VotingApplication.Web;
 
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(VotingApplication.Web.Api.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(VotingApplication.Web.Api.App_Start.NinjectWebCommon), "Stop")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(NinjectWebCommon), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(NinjectWebCommon), "Stop")]
 
-namespace VotingApplication.Web.Api.App_Start
+namespace VotingApplication.Web
 {
     public static class NinjectWebCommon
     {

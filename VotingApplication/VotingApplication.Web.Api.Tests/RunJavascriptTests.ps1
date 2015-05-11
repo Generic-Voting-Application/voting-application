@@ -4,7 +4,7 @@ $ChutzpahDir = get-childitem chutzpah.console.exe -recurse | select-object -firs
 
 # Run tests using Chutzpah and export recdsults as JUnit format to chutzpah-results.xml
 
-$ChutzpahCmd = "$($ChutzpahDir)\chutzpah.console.exe $($env:APPVEYOR_BUILD_FOLDER)\VotingApplication\VotingApplication.Web.Api.Tests /junit .\chutzpah-results.xml"
+$ChutzpahCmd = "$($ChutzpahDir)\chutzpah.console.exe $($env:APPVEYOR_BUILD_FOLDER)\VotingApplication\VotingApplication.Web.Tests /junit .\chutzpah-results.xml"
 Write-Host $ChutzpahCmd
 Invoke-Expression $ChutzpahCmd
 

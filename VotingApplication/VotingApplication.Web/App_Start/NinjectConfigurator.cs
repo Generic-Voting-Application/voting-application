@@ -1,15 +1,14 @@
-﻿using Ninject;
-using System;
+﻿using System;
 using System.Net;
 using System.Web.Configuration;
 using System.Web.Http;
+using Ninject;
 using VotingApplication.Data.Context;
 using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Services;
 using VotingApplication.Web.Api.Validators;
-using VotingApplication.Web.Common;
 
-namespace VotingApplication.Web.Api.App_Start
+namespace VotingApplication.Web
 {
     public class NinjectConfigurator
     {

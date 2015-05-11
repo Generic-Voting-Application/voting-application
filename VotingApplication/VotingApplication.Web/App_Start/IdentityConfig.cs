@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using System.Web.Http;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
-using System.Web;
-using System.Web.Http;
+using VotingApplication.Web.Api.Models;
 using VotingApplication.Web.Api.Services;
 
-namespace VotingApplication.Web.Api.Models
+namespace VotingApplication.Web
 {
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
 
