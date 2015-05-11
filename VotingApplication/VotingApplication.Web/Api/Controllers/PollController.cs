@@ -33,7 +33,7 @@ namespace VotingApplication.Web.Api.Controllers
                 UUID = poll.UUID,
                 Name = poll.Name,
                 Creator = poll.Creator,
-                VotingStrategy = poll.PollType.ToString(),
+                PollType = poll.PollType.ToString(),
                 CreatedDate = poll.CreatedDate,
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,

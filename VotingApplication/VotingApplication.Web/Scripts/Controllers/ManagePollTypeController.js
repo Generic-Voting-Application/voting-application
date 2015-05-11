@@ -28,13 +28,13 @@
 
         function updatePollType() {
 
-            if ($scope.poll.VotingStrategy !== 'Points'){
+            if ($scope.poll.PollType !== 'Points'){
                 $scope.poll.MaxPerVote = startingMaxPerVote;
                 $scope.poll.MaxPoints = startingMaxPoints;
             }
 
             var pollTypeConfig = {
-                PollType: $scope.poll.VotingStrategy,
+                PollType: $scope.poll.PollType,
                 MaxPerVote: $scope.poll.MaxPerVote,
                 MaxPoints: $scope.poll.MaxPoints
             };
@@ -47,8 +47,8 @@
             ManageService.getVotes($scope.poll.UUID)
             .then(function (pollSummary) {
                 if (pollSummary.data && pollSummary.data.Votes && pollSummary.data.Votes.length > 0 &&
-                        ($scope.poll.VotingStrategy !== startingPollType ||
-                        ($scope.poll.VotingStrategy === 'Points' &&
+                        ($scope.poll.PollType !== startingPollType ||
+                        ($scope.poll.PollType === 'Points' &&
                             ($scope.poll.MaxPerVote !== startingMaxPerVote ||
                             $scope.poll.MaxPoints !== startingMaxPoints)))) {
                     openPollChangeDialog(updatePollType);
@@ -63,7 +63,7 @@
         }
 
         function updateStrategy(strategy) {
-            $scope.poll.VotingStrategy = strategy;
+            $scope.poll.PollType = strategy;
         }
 
         // Points per vote
@@ -72,7 +72,7 @@
                 return false;
             }
 
-            return $scope.poll.VotingStrategy === 'Points' && $scope.poll.MaxPerVote < $scope.poll.MaxPoints;
+            return $scope.poll.PollType === 'Points' && $scope.poll.MaxPerVote < $scope.poll.MaxPoints;
         }
 
         function canDecrementMPV() {
@@ -80,7 +80,7 @@
                 return false;
             }
 
-            return $scope.poll.VotingStrategy === 'Points' && $scope.poll.MaxPerVote > 1;
+            return $scope.poll.PollType === 'Points' && $scope.poll.MaxPerVote > 1;
         }
 
         // Max points
@@ -89,7 +89,7 @@
                 return false;
             }
 
-            return $scope.poll.VotingStrategy === 'Points';
+            return $scope.poll.PollType === 'Points';
         }
 
         function canDecrementMP() {
@@ -97,7 +97,7 @@
                 return false;
             }
 
-            return $scope.poll.VotingStrategy === 'Points' && $scope.poll.MaxPoints > 1 && $scope.poll.MaxPoints > $scope.poll.MaxPerVote;
+            return $scope.poll.PollType === 'Points' && $scope.poll.MaxPoints > 1 && $scope.poll.MaxPoints > $scope.poll.MaxPerVote;
         }
 
         function openPollChangeDialog(callback) {
@@ -112,7 +112,7 @@
         function activate() {
             ManageService.registerPollObserver(function () {
                 $scope.poll = ManageService.poll;
-                startingPollType = $scope.poll.VotingStrategy;
+                startingPollType = $scope.poll.PollType;
                 startingMaxPerVote = $scope.poll.MaxPerVote;
                 startingMaxPoints = $scope.poll.MaxPoints;
             });

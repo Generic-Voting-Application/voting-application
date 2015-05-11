@@ -4,7 +4,7 @@
         <h3>How will the voters vote?</h3>
 
         <div class="manage-section">
-            <div id="basic-vote-button" class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.VotingStrategy=='Basic'}" ng-click="updateStrategy('Basic')">
+            <div id="basic-vote-button" class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.PollType=='Basic'}" ng-click="updateStrategy('Basic')">
                 <span class="pull-left">
                     <span class="fa fa-check" aria-hidden="true"></span>
                     <span class="poll-type-text">Single Vote</span>
@@ -13,7 +13,7 @@
         </div>
 
         <div class="manage-section">
-            <div id="multi-vote-button" class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.VotingStrategy=='Multi'}" ng-click="updateStrategy('Multi')">
+            <div id="multi-vote-button" class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.PollType=='Multi'}" ng-click="updateStrategy('Multi')">
                 <span class="pull-left">
                     <span class="fa fa-check-square-o" aria-hidden="true"></span>
                     <span class="poll-type-text">Multi Vote</span>
@@ -22,7 +22,7 @@
         </div>
 
         <div class="manage-section">
-            <div id="updown-vote-button" class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.VotingStrategy=='UpDown'}" ng-click="updateStrategy('UpDown')">
+            <div id="updown-vote-button" class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.PollType=='UpDown'}" ng-click="updateStrategy('UpDown')">
                 <span class="pull-left">
                     <span class="fa fa-thumbs-o-up" aria-hidden="true"></span>
                     <span class="poll-type-text">Up/Down Vote</span>
@@ -31,8 +31,8 @@
         </div>
 
         <div class="manage-section">
-            <div class="poll-type-btn-extended" ng-class="{'selected':poll.VotingStrategy=='Points'}">
-                <div id="points-vote-button" class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.VotingStrategy=='Points'}" ng-click="updateStrategy('Points')">
+            <div class="poll-type-btn-extended" ng-class="{'selected':poll.PollType=='Points'}">
+                <div id="points-vote-button" class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.PollType=='Points'}" ng-click="updateStrategy('Points')">
                     <span class="pull-left">
                         <span class="fa fa-tasks" aria-hidden="true"></span>
                         <span class="poll-type-text">Points Vote</span>
@@ -41,7 +41,7 @@
                 <div class="content">
                     <div class="pull-left text-centered" id="points-per-poll">
                         <small>Points per poll</small><br />
-                        <span class="btn-group-points" ng-class="{'selected':poll.VotingStrategy=='Points'}">
+                        <span class="btn-group-points" ng-class="{'selected':poll.PollType=='Points'}">
                             <button id="decrease-button" class=" active-btn pull-left" ng-disabled="!canDecrementMP()" ng-click="(poll.MaxPoints = poll.MaxPoints - 1)">
                                 -
                             </button>
@@ -53,7 +53,7 @@
                     </div>
                     <div class="pull-right text-centered" id="points-per-vote">
                         <small>Points per vote</small><br />
-                        <span class="btn-group-points" ng-class="{'selected':poll.VotingStrategy=='Points'}">
+                        <span class="btn-group-points" ng-class="{'selected':poll.PollType=='Points'}">
                             <button id="decrease-button" class=" active-btn pull-left" ng-disabled="!canDecrementMPV()" ng-click="(poll.MaxPerVote = poll.MaxPerVote - 1)">
                                 -
                             </button>

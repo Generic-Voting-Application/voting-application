@@ -118,7 +118,7 @@ describe('ManagePollTypeController', function () {
         it('Asks for confirmation if there are votes for the poll, the poll type is Points, and the max per vote has changed', function () {
             var poll = {
                 MaxPerVote: 3,
-                VotingStrategy: 'Points'
+                PollType: 'Points'
             };
 
             var getVotesData = {
@@ -150,7 +150,7 @@ describe('ManagePollTypeController', function () {
         it('Asks for confirmation if there are votes for the poll, the poll type is Points, and the max point have changed', function () {
             var poll = {
                 MaxPoints: 10,
-                VotingStrategy: 'Points'
+                PollType: 'Points'
             };
 
             var getVotesData = {
@@ -182,7 +182,7 @@ describe('ManagePollTypeController', function () {
         it('Does not ask for confirmation if there are votes for the poll, the poll type is Points, but the max per vote has not changed', function () {
             var poll = {
                 MaxPerVote: 3,
-                VotingStrategy: 'Points'
+                PollType: 'Points'
             };
 
             var getVotesData = {
@@ -213,7 +213,7 @@ describe('ManagePollTypeController', function () {
         it('Does not ask for confirmation if there are votes for the poll, the poll type is Points, but the max per vote has not changed', function () {
             var poll = {
                 MaxPoints: 10,
-                VotingStrategy: 'Points'
+                PollType: 'Points'
             };
 
             var getVotesData = {
@@ -244,7 +244,7 @@ describe('ManagePollTypeController', function () {
 
         it('Asks for confirmation if there are votes for the poll, and the poll type has changed', function () {
             var poll = {
-                VotingStrategy: 'Points'
+                PollType: 'Points'
             };
 
             var getVotesData = {
@@ -264,7 +264,7 @@ describe('ManagePollTypeController', function () {
             manageServiceMock.poll = poll;
             observerCallback();
 
-            scope.poll.VotingStrategy = 'Basic';
+            scope.poll.PollType = 'Basic';
             scope.updatePoll();
 
 
@@ -274,7 +274,7 @@ describe('ManagePollTypeController', function () {
 
         it('Does not ask for confirmation if there are votes for the poll, but the poll type has not changed', function () {
             var poll = {
-                VotingStrategy: 'Points'
+                PollType: 'Points'
             };
 
             var getVotesData = {
