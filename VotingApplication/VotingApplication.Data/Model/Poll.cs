@@ -25,8 +25,8 @@ namespace VotingApplication.Data.Model
 
         public List<Option> Options { get; set; }
 
-        public int MaxPoints { get; set; }
-        public int MaxPerVote { get; set; }
+        public int? MaxPoints { get; set; }
+        public int? MaxPerVote { get; set; }
 
         public bool InviteOnly { get; set; }
         public List<Ballot> Ballots { get; set; }

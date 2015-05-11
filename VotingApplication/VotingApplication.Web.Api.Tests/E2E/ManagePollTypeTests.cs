@@ -121,8 +121,8 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManagePollType_Save_SavesPollConfigChanges()
         {
-            int initialMaxPoints = _defaultPoll.MaxPoints;
-            int initialMaxPerVote = _defaultPoll.MaxPerVote;
+            int? initialMaxPoints = _defaultPoll.MaxPoints;
+            int? initialMaxPerVote = _defaultPoll.MaxPerVote;
 
             _driver.Navigate().GoToUrl(PollUrl);
 
@@ -154,8 +154,8 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManagePollType_SaveOfNonPointsTypeAfterConfigChanges_DoesNotSavePollConfigChanges()
         {
-            int initialMaxPoints = _defaultPoll.MaxPoints;
-            int initialMaxPerVote = _defaultPoll.MaxPerVote;
+            int? initialMaxPoints = _defaultPoll.MaxPoints;
+            int? initialMaxPerVote = _defaultPoll.MaxPerVote;
 
             _driver.Navigate().GoToUrl(PollUrl);
 

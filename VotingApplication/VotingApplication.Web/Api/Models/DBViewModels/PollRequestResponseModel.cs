@@ -11,8 +11,8 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
         public string Creator { get; set; }
         public DateTime CreatedDate { get; set; }
         public string VotingStrategy { get; set; }
-        public int MaxPoints { get; set; }
-        public int MaxPerVote { get; set; }
+        public int? MaxPoints { get; set; }
+        public int? MaxPerVote { get; set; }
         public bool InviteOnly { get; set; }
         public bool NamedVoting { get; set; }
         public DateTimeOffset? ExpiryDate { get; set; }
