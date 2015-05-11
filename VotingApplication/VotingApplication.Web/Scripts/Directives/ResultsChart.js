@@ -17,6 +17,8 @@
                 }
             });
 
+            window.addEventListener('resize', drawChart);
+
             function textWidth(text) {
                 var context = canvas.getContext('2d');
                 context.font = '16px Open Sans';
