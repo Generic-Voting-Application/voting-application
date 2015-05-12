@@ -10,20 +10,20 @@
 
     function votingStrategy($routeParams, PollService) {
 
-        var pollStrategy = null;
+        var pollType = null;
         var pollId = $routeParams.pollId;
 
         PollService.getPoll(pollId)
             .then(function (response) {
-                pollStrategy = response.data.VotingStrategy;
+                pollType = response.data.PollType;
             });
 
         var votingTemplate = function () {
-            if (!pollStrategy) {
+            if (!pollType) {
                 return '';
             }
 
-            return '../Routes/' + pollStrategy + 'Vote';
+            return '../Routes/' + pollType + 'Vote';
         };
 
         return {

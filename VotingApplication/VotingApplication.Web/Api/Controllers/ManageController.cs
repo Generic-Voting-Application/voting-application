@@ -47,7 +47,7 @@ namespace VotingApplication.Web.Api.Controllers
                 Options = poll.Options,
                 InviteeCount = Invitees.Count,
                 VotersCount = Voters.Count,
-                VotingStrategy = poll.PollType.ToString(),
+                PollType = poll.PollType.ToString(),
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,
                 InviteOnly = poll.InviteOnly,
