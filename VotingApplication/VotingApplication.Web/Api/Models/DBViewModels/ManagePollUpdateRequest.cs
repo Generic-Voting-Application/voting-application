@@ -10,7 +10,7 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
         [Required]
         public string Name { get; set; }
         [Required]
-        public string VotingStrategy { get; set; }
+        public string PollType { get; set; }
         [Range(1, int.MaxValue)]
         public int MaxPoints { get; set; }
         [Range(1, int.MaxValue)]
