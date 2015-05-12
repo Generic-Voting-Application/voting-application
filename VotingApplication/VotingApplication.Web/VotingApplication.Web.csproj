@@ -269,7 +269,7 @@
     <Compile Include="Api\Models\DBViewModels\ResultModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ResultsRequestResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ResultVoteModel.cs" />
-    <Compile Include="Api\Models\DBViewModels\VoteRequestModel.cs" />
+    <Compile Include="Api\Models\DBViewModels\BallotRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\VoteRequestResponseModel.cs" />
     <Compile Include="Api\Models\IdentityModels.cs" />
     <Compile Include="Api\Models\ManageModels.cs" />
@@ -475,4 +475,3 @@
   <Target Name="AfterBuild">
   </Target> -->
 </Project>
-

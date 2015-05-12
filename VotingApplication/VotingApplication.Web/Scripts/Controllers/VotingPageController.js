@@ -132,9 +132,15 @@
                 });
             }
 
+            var voterName = (IdentityService.identity && $scope.poll && $scope.poll.NamedVoting) ? IdentityService.identity.name : null;
             var votes = getVotes(options);
 
-            VoteService.submitVote($scope.pollId, votes, $scope.token)
+            var ballot = {
+                VoterName: voterName,
+                Votes: votes
+            };
+
+            VoteService.submitVote($scope.pollId, ballot, $scope.token)
                 .then(function () {
                     RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
                 });

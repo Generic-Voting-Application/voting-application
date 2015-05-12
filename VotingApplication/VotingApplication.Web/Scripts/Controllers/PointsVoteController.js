@@ -1,14 +1,13 @@
-﻿/// <reference path="../Services/IdentityService.js" />
-(function () {
+﻿(function () {
     'use strict';
 
     angular
         .module('GVA.Voting')
         .controller('PointsVoteController', PointsVoteController);
 
-    PointsVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'ngDialog'];
+    PointsVoteController.$inject = ['$scope', '$routeParams', 'ngDialog'];
 
-    function PointsVoteController($scope, $routeParams, IdentityService, ngDialog) {
+    function PointsVoteController($scope, $routeParams, ngDialog) {
 
         $scope.addOption = addOption;
         $scope.unallocatedPoints = calculateUnallocatedPoints;
@@ -36,9 +35,7 @@
                 .map(function (option) {
                     return {
                         OptionId: option.Id,
-                        VoteValue: option.voteValue,
-                        VoterName: IdentityService.identity && $scope.poll && $scope.poll.NamedVoting ?
-                                   IdentityService.identity.name : null
+                        VoteValue: option.voteValue
                     };
                 });
         }
