@@ -15,8 +15,8 @@ namespace VotingApplication.Data.Model.Creation
 
                 PollType = PollType.Basic,
                 Options = new List<Option>(),
-                MaxPoints = 7,
-                MaxPerVote = 3,
+                MaxPoints = null,
+                MaxPerVote = null,
                 InviteOnly = false,
                 NamedVoting = false,
                 ExpiryDate = null,

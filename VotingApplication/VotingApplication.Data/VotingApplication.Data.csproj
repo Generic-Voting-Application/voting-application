@@ -129,6 +129,10 @@
     <Compile Include="Migrations\201505050939302_AddMetricTable.Designer.cs">
       <DependentUpon>201505050939302_AddMetricTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505111336261_NullablePointsConfig.cs" />
+    <Compile Include="Migrations\201505111336261_NullablePointsConfig.Designer.cs">
+      <DependentUpon>201505111336261_NullablePointsConfig.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
     <Compile Include="Model\Metric.cs" />
@@ -203,6 +207,9 @@
     <EmbeddedResource Include="Migrations\201505050939302_AddMetricTable.resx">
       <DependentUpon>201505050939302_AddMetricTable.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505111336261_NullablePointsConfig.resx">
+      <DependentUpon>201505111336261_NullablePointsConfig.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -213,4 +220,3 @@
   </Target>
   -->
 </Project>
-

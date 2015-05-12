@@ -21,8 +21,8 @@
         $scope.canDecrementMP = canDecrementMP;
 
         var startingPollType = null;
-        var startingMaxPerVote = 0;
-        var startingMaxPoints = 0;
+        var startingMaxPerVote = null;
+        var startingMaxPoints = null;
 
         activate();
 
@@ -112,7 +112,10 @@
         function activate() {
             ManageService.registerPollObserver(function () {
                 $scope.poll = ManageService.poll;
+                $scope.poll.MaxPerVote = $scope.poll.MaxPerVote || 3;
+                $scope.poll.MaxPoints = $scope.poll.MaxPoints || 7;
                 startingPollType = $scope.poll.PollType;
+
                 startingMaxPerVote = $scope.poll.MaxPerVote;
                 startingMaxPoints = $scope.poll.MaxPoints;
             });
