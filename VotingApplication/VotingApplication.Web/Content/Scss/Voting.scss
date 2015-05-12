@@ -84,7 +84,7 @@ body {
 
 .option-buttons {
     float: right;
-    width: 100px;
+    /*width: 100px;*/
 }
 
 .option-buttons > * {
@@ -95,6 +95,19 @@ body {
 
 .btn-group-points {
     border-color: $Green500;
+    @extend .btn-group;
+    width: 130px;
+
+    > button {
+        width: 40px;
+    }
+
+    > .points-label {
+        float: left;
+        padding: 7px 0 0 0;
+        width: 48px;
+        text-align: center;
+    }
 }
 
 .progress {
