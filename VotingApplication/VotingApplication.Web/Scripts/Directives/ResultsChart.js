@@ -5,7 +5,9 @@
         .module('GVA.Voting')
         .directive('gvaResultsChart', resultsChart);
 
-    function resultsChart() {
+    resultsChart.$inject = ['$window'];
+
+    function resultsChart($window) {
 
         function link($scope) {
 
@@ -16,6 +18,8 @@
                     drawChart();
                 }
             });
+
+            $window.addEventListener('resize', drawChart);
 
             function textWidth(text) {
                 var context = canvas.getContext('2d');
