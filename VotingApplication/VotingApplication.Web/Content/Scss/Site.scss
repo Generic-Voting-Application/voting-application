@@ -30,6 +30,11 @@ header {
     box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.6);
     display: flex;
     flex-direction: column;
+    /* This isn't caught by auto prefix */
+    display: -webkit-flex;
+    -webkit-flex-direction: column;
+    /* Safari hack */
+    -webkit-box-orient: vertical;
     margin: 0 auto;
     min-height: 100vh;
     min-width: 320px;
@@ -58,6 +63,10 @@ footer {
 
 .body-content {
     flex: 1;
+    /* IE fix*/
+    flex-basis: auto;
+    /* This isn't caught by auto prefix */
+    -webkit-flex: 1;
     padding: 5px 20px;
 }
 
