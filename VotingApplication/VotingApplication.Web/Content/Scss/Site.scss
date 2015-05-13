@@ -86,6 +86,7 @@ button {
     border-style: solid;
     text-align: center;
     outline: none;
+    display: inline-block;
 }
 
 .inactive-btn {
@@ -170,6 +171,8 @@ button {
 .flexbox {
     width: 100%;
     display: flex;
+    /* This isn't caught by auto prefix */
+    display: -webkit-flex;
 }
 
 .centered {

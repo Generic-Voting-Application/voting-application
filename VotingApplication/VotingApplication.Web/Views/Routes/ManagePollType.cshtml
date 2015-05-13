@@ -3,7 +3,7 @@
         <h2>The Style</h2>
         <h3>How will the voters vote?</h3>
 
-        <div class="manage-section">
+        <div class="manage-section flexbox">
             <div id="basic-vote-button" class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.PollType=='Basic'}" ng-click="updateStrategy('Basic')">
                 <span class="pull-left">
                     <span class="fa fa-check" aria-hidden="true"></span>
@@ -12,7 +12,7 @@
             </div>
         </div>
 
-        <div class="manage-section">
+        <div class="manage-section flexbox">
             <div id="multi-vote-button" class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.PollType=='Multi'}" ng-click="updateStrategy('Multi')">
                 <span class="pull-left">
                     <span class="fa fa-check-square-o" aria-hidden="true"></span>
@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <div class="manage-section">
+        <div class="manage-section flexbox">
             <div id="updown-vote-button" class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.PollType=='UpDown'}" ng-click="updateStrategy('UpDown')">
                 <span class="pull-left">
                     <span class="fa fa-thumbs-o-up" aria-hidden="true"></span>
@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <div class="manage-section">
+        <div class="manage-section flexbox">
             <div class="poll-type-btn-extended" ng-class="{'selected':poll.PollType=='Points'}">
                 <div id="points-vote-button" class="inactive-btn btn-large clickable poll-type-btn" ng-class="{'active-btn' : poll.PollType=='Points'}" ng-click="updateStrategy('Points')">
                     <span class="pull-left">
