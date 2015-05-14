@@ -36,8 +36,8 @@
 
         function activate() {
             ManageService.getInvitations($routeParams.manageId)
-            .then(function (data) {
-                $scope.Invitations = data;
+            .then(function (response) {
+                $scope.Invitations = response.data;
                 filterUsersByPending();
             });
         }
