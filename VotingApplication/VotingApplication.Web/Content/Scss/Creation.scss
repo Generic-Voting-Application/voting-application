@@ -46,7 +46,7 @@ body {
 }
 
 #register-block {
-    width: 205px;
+    width: 215px;
     margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
@@ -104,8 +104,6 @@ body {
 
         &:first-of-type {
             border-top: none;
-
-
         }
     }
 }
@@ -228,6 +226,7 @@ body {
 
 .poll-type-btn {
     height: 48px;
+    width: 100%;
 
     .fa {
         margin-right: 10px;
@@ -235,10 +234,10 @@ body {
 }
 
 .poll-type-btn-extended {
-    @extend .manage-section;
     border: 1px solid;
     border-color: $Grey400;
     border-radius: 7px;
+    width: 100%;
 
     > .poll-type-btn {
         border-top: none;
