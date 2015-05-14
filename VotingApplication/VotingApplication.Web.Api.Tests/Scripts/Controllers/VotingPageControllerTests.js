@@ -277,7 +277,12 @@ describe('VotingPageController', function () {
 
             scope.clearVote();
 
-            expect(mockVoteService.submitVote).toHaveBeenCalledWith(jasmine.any(String), [], jasmine.any(String));
+            var expectedBallot = {
+                VoterName: null,
+                Votes: []
+            }
+
+            expect(mockVoteService.submitVote).toHaveBeenCalledWith(jasmine.any(String), expectedBallot, jasmine.any(String));
         });
 
         it('Calls Routing Service to navigate to the results page when the Vote Service submit is successful', function () {

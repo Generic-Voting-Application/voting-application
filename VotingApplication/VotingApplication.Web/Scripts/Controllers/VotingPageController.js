@@ -110,7 +110,14 @@
                 return;
             }
 
-            VoteService.submitVote($scope.pollId, [], $scope.token)
+            var voterName = (IdentityService.identity && $scope.poll && $scope.poll.NamedVoting) ? IdentityService.identity.name : null;
+
+            var emptyBallot = {
+                VoterName: voterName,
+                Votes: []
+            };
+
+            VoteService.submitVote($scope.pollId, emptyBallot, $scope.token)
                 .then(function () {
                     RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
                 });

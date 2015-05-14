@@ -158,9 +158,9 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod, TestCategory("E2E")]
-            public void UpDownVote_AfterVoting_VoteIsRemembered()
+            public void AfterVoting_VoteIsRemembered()
             {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultUpDownPoll.UUID);
+                _driver.Navigate().GoToUrl(PollUrl);
                 IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
                 IReadOnlyCollection<IWebElement> options = _driver.FindElements(NgBy.Repeater("option in poll.Options"));
 
@@ -179,6 +179,33 @@ namespace VotingApplication.Web.Tests.E2E
                 voterClearer.ClearLast();
 
                 Assert.IsTrue(selectedOptionButton.IsVisible());
+            }
+
+            [TestMethod, TestCategory("E2E")]
+            public void ClearVote_RemovesVote()
+            {
+                _driver.Navigate().GoToUrl(PollUrl);
+
+                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
+                IReadOnlyCollection<IWebElement> options = _driver.FindElements(NgBy.Repeater("option in poll.Options"));
+
+                IReadOnlyCollection<IWebElement> firstOptionButtons = options.First().FindElements(By.TagName("Button"));
+                firstOptionButtons.First().Click();
+
+                IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
+                voteButton.Click();
+
+                _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
+
+                IWebElement clearVoteOption = _driver.FindElements(By.Id("clear-vote-button")).Single();
+                clearVoteOption.Click();
+
+                _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
+
+                options = _driver.FindElements(NgBy.Repeater("option in poll.Options"));
+                IWebElement selectedOptionButton = options.First().FindElements(By.CssSelector(".active-btn")).FirstOrDefault();
+
+                Assert.IsFalse(selectedOptionButton.IsVisible());
             }
         }
 

@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Tests.E2E.Helpers;
@@ -115,7 +114,7 @@ namespace VotingApplication.Web.Tests.E2E
                     Name = "Test Option 2",
                     Description = truncatedString + " " + truncatedString
                 });
-                
+
                 _context.SaveChanges();
 
                 Thread.Sleep(WaitTime);
@@ -166,6 +165,26 @@ namespace VotingApplication.Web.Tests.E2E
                 voterClearer.ClearLast();
 
                 Assert.IsTrue(selectedOption.IsVisible());
+            }
+
+            [TestMethod, TestCategory("E2E")]
+            public void ClearVote_RemovesVote()
+            {
+                _driver.Navigate().GoToUrl(PollUrl);
+
+                IReadOnlyCollection<IWebElement> voteButtons = _driver.FindElements(By.Id("vote-button"));
+                voteButtons.First().Click();
+
+                _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
+
+                IWebElement clearVoteOption = _driver.FindElements(By.Id("clear-vote-button")).Single();
+                clearVoteOption.Click();
+
+                _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
+
+                IWebElement selectedOption = _driver.FindElements(By.CssSelector(".selected-option")).FirstOrDefault();
+
+                Assert.IsFalse(selectedOption.IsVisible());
             }
         }
 

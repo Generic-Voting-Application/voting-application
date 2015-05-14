@@ -167,6 +167,32 @@ namespace VotingApplication.Web.Tests.E2E
 
                 Assert.IsTrue(selectedOption.IsVisible());
             }
+
+            [TestMethod, TestCategory("E2E")]
+            public void ClearVote_RemovesVote()
+            {
+                _driver.Navigate().GoToUrl(PollUrl);
+                IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
+                IReadOnlyCollection<IWebElement> options = _driver.FindElements(NgBy.Repeater("option in poll.Options"));
+
+                options.First().Click();
+                voteButton.Click();
+
+                _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
+
+                IWebElement clearVoteOption = _driver.FindElements(By.Id("clear-vote-button")).Single();
+                clearVoteOption.Click();
+
+                _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
+
+                IWebElement selectedOption = _driver.FindElements(By.CssSelector(".selected-option")).FirstOrDefault();
+
+                VoteClearer voterClearer = new VoteClearer(_context);
+                voterClearer.ClearLast();
+
+                Assert.IsFalse(selectedOption.IsVisible());
+            }
+
         }
 
         [TestClass]

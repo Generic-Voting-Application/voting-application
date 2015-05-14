@@ -6,7 +6,7 @@
     </div>
     <div voting-strategy></div>
     <div class="flexbox spaced-bottom">
-        <div class="btn error-btn clickable centered" ng-click="clearVote()">Clear vote</div>
+        <div id="clear-vote-button" class="btn error-btn clickable centered" ng-click="clearVote()">Clear vote</div>
     </div>
     <div class="flexbox">
         <a class="centered" ng-hide="poll.HiddenResults" href="{{resultsLink}}">
