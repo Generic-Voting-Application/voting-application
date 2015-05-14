@@ -11,7 +11,7 @@ describe('AccountLoginController', function () {
     var loginPromise;
     var forgotPasswordPromise;
 
-    beforeEach(inject(function ($rootScope, $controller, $q) {
+    beforeEach(inject(function ($rootScope, $controller, $route, $q) {
 
         rootScope = $rootScope;
         rootScope.error = {};

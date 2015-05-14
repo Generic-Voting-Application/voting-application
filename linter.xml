@@ -714,6 +714,7 @@
 	  <string>afterEach</string>
 	  <string>spyOn</string>
 	  <string>xit</string>
+	  <string>fail</string>
 	  <!-- angular-mocks -->
 	  <string>inject</string>
     </PreDefined>

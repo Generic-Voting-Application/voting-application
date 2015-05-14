@@ -42,37 +42,41 @@
             });
 
             getToken();
-
-            getPollData();
         }
 
         function getToken() {
-            TokenService.getToken($scope.pollId, function (tokenData) {
-                $scope.token = tokenData;
-            });
+            TokenService.getToken($scope.pollId)
+            .then(function (tokenData) { $scope.token = tokenData; })
+            .then(getPollData);
         }
 
         function getPollData() {
-            PollService.getPoll($scope.pollId, function (pollData) {
-                $scope.poll = pollData;
+            PollService.getPoll($scope.pollId)
+                .then(function (response) {
 
-                setSelectedValues();
-            });
+                    $scope.poll = response.data;
+
+                    setSelectedValues();
+                });
         }
 
         function setSelectedValues() {
-            VoteService.getTokenVotes($scope.pollId, $scope.token, function (voteData) {
+            VoteService.getTokenVotes($scope.pollId, $scope.token)
+            .then(function (response) {
+
+                var voteData = response.data;
 
                 $scope.poll.Options.forEach(function (opt) { opt.voteValue = 0; });
 
-                voteData.forEach(function (vote) {
-                    $scope.poll.Options.forEach(function (option) {
-                        if (option.Id === vote.OptionId) {
-                            option.voteValue = vote.VoteValue;
-                        }
+                if (voteData) {
+                    voteData.forEach(function (vote) {
+                        $scope.poll.Options.forEach(function (option) {
+                            if (option.Id === vote.OptionId) {
+                                option.voteValue = vote.VoteValue;
+                            }
+                        });
                     });
-                });
-
+                }
             });
         }
 
@@ -82,23 +86,22 @@
                 return opt.voteValue !== 0;
             });
 
+            PollService.getPoll($scope.pollId)
+                .then(function (pollData) {
+                    $scope.poll = pollData.data;
 
-            // TODO: Replace this with a promise chain instead of duplicating.
-            PollService.getPoll($scope.pollId, function (pollData) {
-                $scope.poll = pollData;
+                    $scope.poll.Options.forEach(function (opt) { opt.voteValue = 0; });
 
-                $scope.poll.Options.forEach(function (opt) { opt.voteValue = 0; });
-
-                currentlySelectedOptions.forEach(function (selectedOption) {
-                    $scope.poll.Options.forEach(function (option) {
-                        // Note that this is subtly different from the initial load (as we have Id vs Id here, and Id vs OptionId above)
-                        if (option.Id === selectedOption.Id) {
-                            option.voteValue = selectedOption.voteValue;
-                        }
+                    currentlySelectedOptions.forEach(function (selectedOption) {
+                        $scope.poll.Options.forEach(function (option) {
+                            // Note that this is subtly different from the initial load (as we have Id vs Id here, and Id vs OptionId above)
+                            if (option.Id === selectedOption.Id) {
+                                option.voteValue = selectedOption.voteValue;
+                            }
+                        });
                     });
-                });
 
-            });
+                });
         }
 
         function clearVote() {
@@ -107,9 +110,10 @@
                 return;
             }
 
-            VoteService.submitVote($scope.pollId, [], $scope.token, function () {
-                RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
-            });
+            VoteService.submitVote($scope.pollId, [], $scope.token)
+                .then(function () {
+                    RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
+                });
         }
 
         function submitVote(options) {
@@ -128,11 +132,18 @@
                 });
             }
 
+            var voterName = (IdentityService.identity && $scope.poll && $scope.poll.NamedVoting) ? IdentityService.identity.name : null;
             var votes = getVotes(options);
 
-            VoteService.submitVote($scope.pollId, votes, $scope.token, function () {
-                RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
-            });
+            var ballot = {
+                VoterName: voterName,
+                Votes: votes
+            };
+
+            VoteService.submitVote($scope.pollId, ballot, $scope.token)
+                .then(function () {
+                    RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
+                });
         }
 
         function redirectIfExpired() {

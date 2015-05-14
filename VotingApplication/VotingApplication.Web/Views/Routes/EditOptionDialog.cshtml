@@ -3,12 +3,12 @@
         <h2>Edit Option</h2>
         <div class="form-section-block centered">
             <label for="name">Name</label>
-            <input autofocus class="form-input" id="name" ng-model="name">
+            <input autofocus class="form-input" id="name" ng-model="editOptionFormName" required>
 
             <label for="description">Description</label>
-            <input class="form-input" id="description" ng-model="description">
+            <input class="form-input" id="description" ng-model="editOptionFormDescription">
         </div>
-        <button class="active-btn" ng-disabled="!name || name.length === 0" ng-click="updateOption()" type="submit">Save</button>
+        <button id="dialog-save-button" class="active-btn" ng-disabled="editOptionForm.$invalid" ng-click="updateOption()" type="submit">Save</button>
     </form>
 </div>
 <span class="dialog-error-bar-bottom" ng-show="displayError">{{displayError}}</span>

@@ -1,43 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
-namespace VotingApplication.Web.Api.Controllers.API_Controllers
+namespace VotingApplication.Web.Api.Controllers
 {
     public class ManageVoterController : WebApiController
     {
-        public ManageVoterController()
-        {
-        }
+        public ManageVoterController() { }
 
-        public ManageVoterController(IContextFactory contextFactory)
-            : base(contextFactory)
-        {
-        }
+        public ManageVoterController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpGet]
         public List<ManageVoteResponseModel> Get(Guid manageId)
         {
             using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = context
-                    .Polls
-                    .Include(p => p.Ballots)
-                    .Include(p => p.Ballots.Select(b => b.Votes))
-                    .Include(p => p.Ballots.Select(b => b.Votes.Select(v => v.Option)))
-                    .SingleOrDefault(s => s.ManageId == manageId);
-
-                if (poll == null)
-                {
-                    string errorMessage = String.Format("Poll {0} not found", manageId);
-                    ThrowError(HttpStatusCode.NotFound, errorMessage);
-                }
+                Poll poll = PollByManageId(manageId, context);
 
                 if (poll.Ballots.Any())
                 {
@@ -101,17 +85,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
             using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Poll poll = context
-                    .Polls
-                    .Include(p => p.Ballots)
-                    .Include(p => p.Ballots.Select(b => b.Votes))
-                    .Include(p => p.Ballots.Select(b => b.Votes.Select(v => v.Option)))
-                    .SingleOrDefault(s => s.ManageId == manageId);
-
-                if (poll == null)
-                {
-                    ThrowError(HttpStatusCode.NotFound, String.Format("Poll {0} not found", manageId));
-                }
+                Poll poll = PollByManageId(manageId, context);
 
                 List<Guid> requestBallotGuids = request
                     .BallotDeleteRequests
@@ -143,6 +117,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                             ThrowError(HttpStatusCode.NotFound, String.Format("Ballot {0} does not contain an option {1}", ballotRequest.BallotManageGuid, voteRequest.OptionNumber));
                         }
 
+                        _metricHandler.HandleVoteDeletedEvent(vote, poll.UUID);
                         ballot.Votes.Remove(vote);
                         context.Votes.Remove(vote);
                     }

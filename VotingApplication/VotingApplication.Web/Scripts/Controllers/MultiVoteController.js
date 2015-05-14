@@ -1,14 +1,13 @@
-﻿/// <reference path="../Services/IdentityService.js" />
-(function () {
+﻿(function () {
     'use strict';
 
     angular
         .module('GVA.Voting')
         .controller('MultiVoteController', MultiVoteController);
 
-    MultiVoteController.$inject = ['$scope', '$routeParams', 'IdentityService', 'ngDialog'];
+    MultiVoteController.$inject = ['$scope', '$routeParams', 'ngDialog'];
 
-    function MultiVoteController($scope, $routeParams, IdentityService, ngDialog) {
+    function MultiVoteController($scope, $routeParams, ngDialog) {
 
         $scope.addOption = addOption;
         $scope.notifyOptionAdded = notifyOptionAdded;
@@ -26,9 +25,7 @@
                 .map(function (option) {
                     return {
                         OptionId: option.Id,
-                        VoteValue: 1,
-                        VoterName: IdentityService.identity && $scope.poll && $scope.poll.NamedVoting ?
-                                   IdentityService.identity.name : null
+                        VoteValue: 1
                     };
                 });
         }

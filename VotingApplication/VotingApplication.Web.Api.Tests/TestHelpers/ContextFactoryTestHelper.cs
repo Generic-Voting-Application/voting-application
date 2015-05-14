@@ -3,48 +3,28 @@ using System.Data.Entity;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 
-namespace VotingApplication.Web.Api.Tests.TestHelpers
+namespace VotingApplication.Web.Tests.TestHelpers
 {
     public static class ContextFactoryTestHelper
     {
         public static IContextFactory CreateContextFactory(IDbSet<Poll> polls)
         {
-            Mock<IVotingContext> mockContext = CreateMockContext();
-
-            MockOutPolls(mockContext, polls);
-
-            return CreateMockFactory(mockContext);
+            return CreateContextFactory(polls, DbSetTestHelper.CreateMockDbSet<Ballot>());
         }
 
         public static IContextFactory CreateContextFactory(IDbSet<Poll> polls, IDbSet<Option> options)
         {
-            Mock<IVotingContext> mockContext = CreateMockContext();
-
-            MockOutPolls(mockContext, polls);
-            MockOutOptions(mockContext, options);
-
-            return CreateMockFactory(mockContext);
+            return CreateContextFactory(polls, DbSetTestHelper.CreateMockDbSet<Ballot>(), DbSetTestHelper.CreateMockDbSet<Vote>(), options);
         }
 
         public static IContextFactory CreateContextFactory(IDbSet<Poll> polls, IDbSet<Ballot> ballots)
         {
-            Mock<IVotingContext> mockContext = CreateMockContext();
-
-            MockOutPolls(mockContext, polls);
-            MockOutBallots(mockContext, ballots);
-
-            return CreateMockFactory(mockContext);
+            return CreateContextFactory(polls, ballots, DbSetTestHelper.CreateMockDbSet<Vote>());
         }
 
         public static IContextFactory CreateContextFactory(IDbSet<Poll> polls, IDbSet<Ballot> ballots, IDbSet<Vote> votes)
         {
-            Mock<IVotingContext> mockContext = CreateMockContext();
-
-            MockOutPolls(mockContext, polls);
-            MockOutBallots(mockContext, ballots);
-            MockOutVotes(mockContext, votes);
-
-            return CreateMockFactory(mockContext);
+            return CreateContextFactory(polls, ballots, votes, DbSetTestHelper.CreateMockDbSet<Option>());
         }
 
         public static IContextFactory CreateContextFactory(IDbSet<Poll> polls, IDbSet<Ballot> ballots, IDbSet<Vote> votes, IDbSet<Option> options)

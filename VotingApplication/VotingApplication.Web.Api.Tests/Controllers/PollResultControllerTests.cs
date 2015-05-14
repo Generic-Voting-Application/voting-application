@@ -3,16 +3,19 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
-using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Controllers;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
+using VotingApplication.Web.Tests.TestHelpers;
 
-namespace VotingApplication.Web.Api.Tests.Controllers
+namespace VotingApplication.Web.Tests.Controllers
 {
     [TestClass]
     public class PollResultControllerTests
@@ -74,7 +77,9 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Options).Returns(dummyOptions);
             mockContext.Setup(a => a.Polls).Returns(dummyPolls);
 
-            _controller = new PollResultsController(mockContextFactory.Object);
+            var mockMetricHandler = new Mock<IMetricHandler>();
+
+            _controller = new PollResultsController(mockContextFactory.Object, mockMetricHandler.Object);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -188,5 +193,200 @@ namespace VotingApplication.Web.Api.Tests.Controllers
         }
 
         #endregion
+
+        [TestClass]
+        public class GetTests
+        {
+            private readonly Guid _pollManageGuid = new Guid("BD7F7BB2-0CDC-4CFC-93E9-1F34C519C544");
+
+            [TestMethod]
+            public void NamedVoting_False_ReturnsNullForVoterName()
+            {
+                /* poll
+                      ballot1
+                        vote1   (option 1)
+                        vote2   (option 2)
+                    ballot2
+                        vote3   (option 1)
+                 */
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var poll = new Poll()
+                {
+                    UUID = _pollManageGuid,
+                    NamedVoting = false
+                };
+                polls.Add(poll);
+
+                IDbSet<Option> options = DbSetTestHelper.CreateMockDbSet<Option>();
+                var option1 = new Option() { PollOptionNumber = 1 };
+                var option2 = new Option() { PollOptionNumber = 2 };
+                options.Add(option1);
+                options.Add(option2);
+
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                var ballot1 = new Ballot() { VoterName = "Barbara" };
+                var ballot2 = new Ballot() { VoterName = "Doris" };
+                ballots.Add(ballot1);
+                ballots.Add(ballot2);
+
+                IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
+                var vote1 = new Vote() { Option = option1, Poll = poll, Ballot = ballot1 };
+                var vote2 = new Vote() { Option = option2, Poll = poll, Ballot = ballot1 };
+                var vote3 = new Vote() { Option = option1, Poll = poll, Ballot = ballot2 };
+                votes.Add(vote1);
+                votes.Add(vote2);
+                votes.Add(vote3);
+
+                ballot1.Votes.Add(vote1);
+                ballot1.Votes.Add(vote2);
+                ballot2.Votes.Add(vote3);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes, options);
+
+                var controller = new PollResultsController(contextFactory, Mock.Of<IMetricHandler>())
+                {
+                    Request = new HttpRequestMessage()
+                };
+
+
+                ResultsRequestResponseModel response = controller.Get(_pollManageGuid);
+
+
+                List<ResultVoteModel> voters = response
+                    .Results
+                    .SelectMany(r => r.Voters)
+                    .ToList();
+
+                Assert.IsTrue(voters.All(v => v.Name == null));
+            }
+
+            [TestMethod]
+            public void NamedVoting_True_ReturnsNotNullForVoterName()
+            {
+                /* poll
+                      ballot1
+                        vote1   (option 1)
+                        vote2   (option 2)
+                    ballot2
+                        vote3   (option 1)
+                 */
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var poll = new Poll()
+                {
+                    UUID = _pollManageGuid,
+                    NamedVoting = true
+                };
+                polls.Add(poll);
+
+                IDbSet<Option> options = DbSetTestHelper.CreateMockDbSet<Option>();
+                var option1 = new Option() { PollOptionNumber = 1 };
+                var option2 = new Option() { PollOptionNumber = 2 };
+                options.Add(option1);
+                options.Add(option2);
+
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                var ballot1 = new Ballot() { VoterName = "Barbara" };
+                var ballot2 = new Ballot() { VoterName = "Doris" };
+                ballots.Add(ballot1);
+                ballots.Add(ballot2);
+
+                IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
+                var vote1 = new Vote() { Option = option1, Poll = poll, Ballot = ballot1 };
+                var vote2 = new Vote() { Option = option2, Poll = poll, Ballot = ballot1 };
+                var vote3 = new Vote() { Option = option1, Poll = poll, Ballot = ballot2 };
+                votes.Add(vote1);
+                votes.Add(vote2);
+                votes.Add(vote3);
+
+                ballot1.Votes.Add(vote1);
+                ballot1.Votes.Add(vote2);
+                ballot2.Votes.Add(vote3);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes, options);
+
+                var controller = new PollResultsController(contextFactory, Mock.Of<IMetricHandler>())
+                {
+                    Request = new HttpRequestMessage()
+                };
+
+
+                ResultsRequestResponseModel response = controller.Get(_pollManageGuid);
+
+
+                List<ResultVoteModel> voters = response
+                    .Results
+                    .SelectMany(r => r.Voters)
+                    .ToList();
+
+                Assert.IsTrue(voters.All(v => v.Name != null));
+            }
+
+            [TestMethod]
+            public void NamedVoting_True_WithPreviousAnonymousVotes_ReturnsAnonymousVoterForUnNamedVoters()
+            {
+                /*  poll
+                        ballot1 [VoterName: Bob]
+                            vote1   (option 1)
+                            vote2   (option 2)  
+                        ballot2 [VoterName: null]
+                            vote3   (option 1)
+                 */
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var poll = new Poll()
+                {
+                    UUID = _pollManageGuid,
+                    NamedVoting = true
+                };
+                polls.Add(poll);
+
+                IDbSet<Option> options = DbSetTestHelper.CreateMockDbSet<Option>();
+                var option1 = new Option() { PollOptionNumber = 1 };
+                var option2 = new Option() { PollOptionNumber = 2 };
+                options.Add(option1);
+                options.Add(option2);
+
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                var ballot1 = new Ballot() { VoterName = "Bob" };
+                var ballot2 = new Ballot() { VoterName = null };
+                ballots.Add(ballot1);
+                ballots.Add(ballot2);
+
+                IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
+                var vote1 = new Vote() { Option = option1, Poll = poll, Ballot = ballot1 };
+                var vote2 = new Vote() { Option = option2, Poll = poll, Ballot = ballot1 };
+                var vote3 = new Vote() { Option = option1, Poll = poll, Ballot = ballot2 };
+                votes.Add(vote1);
+                votes.Add(vote2);
+                votes.Add(vote3);
+
+                ballot1.Votes.Add(vote1);
+                ballot1.Votes.Add(vote2);
+                ballot2.Votes.Add(vote3);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes, options);
+
+                var controller = new PollResultsController(contextFactory, Mock.Of<IMetricHandler>())
+                {
+                    Request = new HttpRequestMessage()
+                };
+
+
+                ResultsRequestResponseModel response = controller.Get(_pollManageGuid);
+
+
+                var expectedVoterNames = new List<string>() { "Bob", "Bob", "Anonymous Voter" };
+
+                List<string> voterNames = response
+                    .Results
+                    .SelectMany(r => r.Voters)
+                    .Select(v => v.Name)
+                    .ToList();
+
+                CollectionAssert.AreEquivalent(expectedVoterNames, voterNames);
+            }
+        }
     }
 }

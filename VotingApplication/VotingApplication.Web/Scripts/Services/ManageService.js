@@ -30,116 +30,59 @@
             observerCallbacks.push(callback);
         };
 
-        self.getPoll = function (manageId, callback, failureCallback) {
+        self.getPoll = function (manageId) {
 
             if (!manageId) {
                 return null;
             }
 
-            $http({
+            return $http({
                 method: 'GET',
                 url: '/api/manage/' + manageId,
                 headers: { 'Authorization': 'Bearer ' + (AccountService.account ? AccountService.account.token : '') }
             })
-            .success(function (data) {
-                self.poll = data;
+            .then(function (response) {
+                self.poll = response.data;
                 notifyObservers();
-                if (callback) {
-                    callback(data);
-                }
-            })
-            .error(function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
+
+                return response.data;
             });
         };
 
-        self.updatePollExpiry = function (manageId, expiryDate, callback, failureCallback) {
-            $http({
+        self.updatePollExpiry = function (manageId, expiryDate) {
+            return $http({
                 method: 'PUT',
                 url: '/api/manage/' + manageId + '/expiry/',
                 data: { ExpiryDate: expiryDate }
-            })
-            .success(function (data) {
-                if (callback) {
-                    callback(data);
-                }
-            })
-            .error(function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
             });
         };
 
-        self.updatePollType = function (manageId, pollTypeConfig, callback, failureCallback) {
-            $http({
+        self.updatePollType = function (manageId, pollTypeConfig) {
+            return $http({
                 method: 'PUT',
                 url: '/api/manage/' + manageId + '/pollType/',
                 data: pollTypeConfig
-            })
-            .success(function (data) {
-                if (callback) {
-                    callback(data);
-                }
-            })
-            .error(function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
             });
         };
 
-        self.updateQuestion = function (manageId, question, callback, failureCallback) {
-            $http({
+        self.updateQuestion = function (manageId, question) {
+            return $http({
                 method: 'PUT',
                 url: '/api/manage/' + manageId + '/question/',
                 data: { Question: question }
-            })
-            .success(function (data) {
-                if (callback) {
-                    callback(data);
-                }
-            })
-            .error(function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
             });
         };
 
-        self.updatePollMisc = function (manageId, miscConfig, callback, failureCallback) {
-            $http({
+        self.updatePollMisc = function (manageId, miscConfig) {
+            return $http({
                 method: 'PUT',
                 url: '/api/manage/' + manageId + '/misc/',
                 data: miscConfig
-            })
-            .success(function (data) {
-                if (callback) {
-                    callback(data);
-                }
-            })
-            .error(function (data, status) {
-                if (failureCallback) {
-                    failureCallback(data, status);
-                }
             });
         };
 
-        self.getVotes = function (pollId, callback, failureCallback) {
-
-            $http.get('/api/poll/' + pollId + '/results')
-                .success(function (data) {
-                    if (callback) {
-                        callback(data);
-                    }
-                })
-                .error(function (data, status) {
-                    if (failureCallback) {
-                        failureCallback(data, status);
-                    }
-                });
+        self.getVotes = function (pollId) {
+            return $http.get('/api/poll/' + pollId + '/results');
         };
 
         self.getVoters = function (manageId) {
@@ -199,35 +142,16 @@
             return $localStorage[manageId].visited;
         };
 
-        self.getInvitations = function (manageId, callback, failureCallback) {
-            $http.get('/api/manage/' + manageId + '/invitation')
-                .success(function (data) {
-                    if (callback) {
-                        callback(data);
-                    }
-                })
-                .error(function (data) {
-                    if (failureCallback) {
-                        failureCallback(data);
-                    }
-                });
+        self.getInvitations = function (manageId) {
+            return $http.get('/api/manage/' + manageId + '/invitation');
         };
 
-        self.sendInvitations = function (manageId, invitees, callback, failureCallback) {
-            $http({
+        self.sendInvitations = function (manageId, invitees) {
+            return $http({
                 method: 'POST',
                 url: '/api/manage/' + manageId + '/invitation',
                 data: invitees
-            }).success(function (data) {
-                if (callback) {
-                    callback(data);
-                }
-            })
-                .error(function (data, status) {
-                    if (failureCallback) {
-                        failureCallback(data, status);
-                    }
-                });
+            });
         };
 
         self.getOptions = function (manageId) {

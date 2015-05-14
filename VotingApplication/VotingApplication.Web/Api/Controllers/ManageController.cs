@@ -1,49 +1,29 @@
-﻿using Microsoft.AspNet.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
-namespace VotingApplication.Web.Api.Controllers.API_Controllers
+namespace VotingApplication.Web.Api.Controllers
 {
     public class ManageController : WebApiController
     {
 
         public ManageController() : base() { }
 
-        public ManageController(IContextFactory contextFactory) : base(contextFactory) { }
+        public ManageController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpGet]
         [Authorize]
         [AllowAnonymous]
         public ManagePollRequestResponseModel Get(Guid manageId)
         {
-            using (IVotingContext context = _contextFactory.CreateContext())
+            using (var context = _contextFactory.CreateContext())
             {
-                Poll poll = context.Polls
-                    .Where(p => p.ManageId == manageId)
-                    .Include(p => p.Options)
-                    .Include(p => p.Ballots)
-                    .Include(p => p.Ballots.Select(b => b.Votes))
-                    .FirstOrDefault();
-
-                if (poll == null)
-                {
-                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll for manage id {0} not found", manageId));
-                }
-
-                if (String.IsNullOrEmpty(poll.CreatorIdentity) && !String.IsNullOrEmpty(User.Identity.GetUserId()))
-                {
-                    poll.CreatorIdentity = User.Identity.GetUserId();
-                    poll.Creator = User.Identity.GetUserName();
-                    context.SaveChanges();
-                }
-
+                Poll poll = PollByManageId(manageId, context);
                 return CreateResponseModelFromPoll(poll);
             }
         }
@@ -67,7 +47,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 Options = poll.Options,
                 InviteeCount = Invitees.Count,
                 VotersCount = Voters.Count,
-                VotingStrategy = poll.PollType.ToString(),
+                PollType = poll.PollType.ToString(),
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,
                 InviteOnly = poll.InviteOnly,

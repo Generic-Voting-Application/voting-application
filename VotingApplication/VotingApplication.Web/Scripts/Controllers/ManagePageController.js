@@ -35,10 +35,12 @@
         }
 
         function activate() {
-            ManageService.getPoll(manageId, function (data) {
+            ManageService.getPoll(manageId)
+            .then(function (data) {
                 $scope.poll = data;
                 $scope.Question = data.Name;
             });
+
             $scope.visited = ManageService.getVisited(manageId);
             if (!$scope.visited) {
                 ManageService.setVisited(manageId);
@@ -46,19 +48,14 @@
         }
 
         function updateQuestion() {
-            var successCallback = function () {
-                $scope.poll.Name = $scope.Question;
-            };
-
-            var failureCallback = function () {
-                $scope.Question = $scope.poll.Name;
-            };
-
-            ManageService.updateQuestion($routeParams.manageId, $scope.Question, successCallback, failureCallback);
+            ManageService.updateQuestion($routeParams.manageId, $scope.Question)
+            .then(function () { $scope.poll.Name = $scope.Question; })
+            .catch(function () { $scope.Question = $scope.poll.Name; });
         }
 
         function discardNameChanges() {
-            ManageService.getPoll(manageId, function (data) {
+            ManageService.getPoll(manageId)
+            .then(function (data) {
                 $scope.poll = data;
             });
         }

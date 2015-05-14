@@ -3,7 +3,7 @@ using System;
 using System.Net;
 using System.Web.Http;
 
-namespace VotingApplication.Web.Api.Tests.Controllers
+namespace VotingApplication.Web.Tests.Controllers
 {
     public class ExpectedHttpResponseExceptionAttribute : ExpectedExceptionBaseAttribute
     {

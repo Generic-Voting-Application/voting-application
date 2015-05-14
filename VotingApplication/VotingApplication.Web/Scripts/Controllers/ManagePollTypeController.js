@@ -21,31 +21,39 @@
         $scope.canDecrementMP = canDecrementMP;
 
         var startingPollType = null;
-        var startingMaxPerVote = 0;
-        var startingMaxPoints = 0;
+        var startingMaxPerVote = null;
+        var startingMaxPoints = null;
 
         activate();
 
-        function updatePoll() {
+        function updatePollType() {
+
+            if ($scope.poll.PollType !== 'Points'){
+                $scope.poll.MaxPerVote = startingMaxPerVote;
+                $scope.poll.MaxPoints = startingMaxPoints;
+            }
 
             var pollTypeConfig = {
-                PollType: $scope.poll.VotingStrategy,
+                PollType: $scope.poll.PollType,
                 MaxPerVote: $scope.poll.MaxPerVote,
                 MaxPoints: $scope.poll.MaxPoints
             };
-            ManageService.updatePollType($routeParams.manageId, pollTypeConfig, navigateToManagePage);
+
+            ManageService.updatePollType($routeParams.manageId, pollTypeConfig)
+            .then(navigateToManagePage);
         }
 
         function tentativeUpdatePoll() {
-            ManageService.getVotes($scope.poll.UUID, function (pollSummary) {
-                if (pollSummary.Votes && pollSummary.Votes.length > 0 &&
-                        ($scope.poll.VotingStrategy !== startingPollType ||
+            ManageService.getVotes($scope.poll.UUID)
+            .then(function (pollSummary) {
+                if (pollSummary.data && pollSummary.data.Votes && pollSummary.data.Votes.length > 0 &&
+                        ($scope.poll.PollType !== startingPollType ||
                         ($scope.poll.PollType === 'Points' &&
                             ($scope.poll.MaxPerVote !== startingMaxPerVote ||
                             $scope.poll.MaxPoints !== startingMaxPoints)))) {
-                    openPollChangeDialog(updatePoll);
+                    openPollChangeDialog(updatePollType);
                 } else {
-                    updatePoll();
+                    updatePollType();
                 }
             });
         }
@@ -55,7 +63,7 @@
         }
 
         function updateStrategy(strategy) {
-            $scope.poll.VotingStrategy = strategy;
+            $scope.poll.PollType = strategy;
         }
 
         // Points per vote
@@ -64,7 +72,7 @@
                 return false;
             }
 
-            return $scope.poll.VotingStrategy === 'Points' && $scope.poll.MaxPerVote < $scope.poll.MaxPoints;
+            return $scope.poll.PollType === 'Points' && $scope.poll.MaxPerVote < $scope.poll.MaxPoints;
         }
 
         function canDecrementMPV() {
@@ -72,7 +80,7 @@
                 return false;
             }
 
-            return $scope.poll.VotingStrategy === 'Points' && $scope.poll.MaxPerVote > 1;
+            return $scope.poll.PollType === 'Points' && $scope.poll.MaxPerVote > 1;
         }
 
         // Max points
@@ -81,7 +89,7 @@
                 return false;
             }
 
-            return $scope.poll.VotingStrategy === 'Points';
+            return $scope.poll.PollType === 'Points';
         }
 
         function canDecrementMP() {
@@ -89,7 +97,7 @@
                 return false;
             }
 
-            return $scope.poll.VotingStrategy === 'Points' && $scope.poll.MaxPoints > 1 && $scope.poll.MaxPoints > $scope.poll.MaxPerVote;
+            return $scope.poll.PollType === 'Points' && $scope.poll.MaxPoints > 1 && $scope.poll.MaxPoints > $scope.poll.MaxPerVote;
         }
 
         function openPollChangeDialog(callback) {
@@ -104,7 +112,10 @@
         function activate() {
             ManageService.registerPollObserver(function () {
                 $scope.poll = ManageService.poll;
-                startingPollType = $scope.poll.VotingStrategy;
+                $scope.poll.MaxPerVote = $scope.poll.MaxPerVote || 3;
+                $scope.poll.MaxPoints = $scope.poll.MaxPoints || 7;
+                startingPollType = $scope.poll.PollType;
+
                 startingMaxPerVote = $scope.poll.MaxPerVote;
                 startingMaxPoints = $scope.poll.MaxPoints;
             });

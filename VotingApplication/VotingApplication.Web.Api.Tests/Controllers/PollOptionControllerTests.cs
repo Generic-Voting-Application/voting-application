@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -7,11 +9,12 @@ using System.Net.Http;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
-using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Controllers;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
-using VotingApplication.Web.Api.Tests.TestHelpers;
+using VotingApplication.Web.Tests.TestHelpers;
 
-namespace VotingApplication.Web.Api.Tests.Controllers
+namespace VotingApplication.Web.Tests.Controllers
 {
     [TestClass]
     public class PollOptionControllerTests
@@ -126,9 +129,36 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 Assert.AreEqual(optionDescription, poll.Options.First().Description);
             }
 
+            [TestMethod]
+            public void AddingOptionGeneratesMetric()
+            {
+                // Arrange
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
+                var metricHandler = new Mock<IMetricHandler>();
+                PollOptionController controller = CreatePollOptionController(contextFactory, metricHandler.Object);
+
+                Poll existingPoll = new Poll() { Options = new List<Option>(), UUID = Guid.NewGuid(), OptionAdding = true };
+                polls.Add(existingPoll);
+
+                OptionCreationRequestModel request = new OptionCreationRequestModel() { Name = "New Option" };
+
+                // Act
+                controller.Post(existingPoll.UUID, request);
+
+                // Assert
+                metricHandler.Verify(m => m.HandleOptionAddedEvent(It.Is<Option>(o => o.Name == "New Option"), existingPoll.UUID), Times.Once());
+            }
+
             public static PollOptionController CreatePollOptionController(IContextFactory contextFactory)
             {
-                return new PollOptionController(contextFactory)
+                var metricHandler = new Mock<IMetricHandler>();
+                return CreatePollOptionController(contextFactory, metricHandler.Object);
+            }
+
+            public static PollOptionController CreatePollOptionController(IContextFactory contextFactory, IMetricHandler metricHandler)
+            {
+                return new PollOptionController(contextFactory, metricHandler)
                 {
                     Request = new HttpRequestMessage(),
                     Configuration = new HttpConfiguration()

@@ -163,23 +163,6 @@ button {
     }
 }
 
-.btn-group-points {
-    @extend .btn-group;
-    width: 100px;
-
-    > button {
-        width: 29px;
-    }
-
-    > .points-label {
-        float: left;
-        padding: 7px 0 0 0;
-        width: 40px;
-    }
-}
-
-
-
 :disabled {
     opacity: 0.5;
 }

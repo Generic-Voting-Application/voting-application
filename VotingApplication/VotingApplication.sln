@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4EF491BF-0EC2-4E96-ACBF-B21232BE3BC9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Web.Api.Tests", "VotingApplication.Web.Api.Tests\VotingApplication.Web.Api.Tests.csproj", "{83728922-B15F-4BBC-86B7-5788D9E12A98}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Web.Tests", "VotingApplication.Web.Api.Tests\VotingApplication.Web.Tests.csproj", "{83728922-B15F-4BBC-86B7-5788D9E12A98}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Data", "VotingApplication.Data\VotingApplication.Data.csproj", "{942DCB1B-5882-4C01-95AE-3FE71E4103F2}"
 EndProject
@@ -21,19 +19,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configura
 		PublishScripts\Configurations\WebApplication1-WAWS-dev.json = PublishScripts\Configurations\WebApplication1-WAWS-dev.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Web.Common", "VotingApplication.Web.Common\VotingApplication.Web.Common.csproj", "{969076F5-F2AD-4711-853B-BA1BD3439E13}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B4664874-E386-4AA5-B494-3124CA40DCDB}"
-	ProjectSection(SolutionItems) = preProject
-		VotingApplication.Web.Api\App_Start\NinjectWebCommon.cs = VotingApplication.Web.Api\App_Start\NinjectWebCommon.cs
-		VotingApplication.Data\Model\Poll.cs = VotingApplication.Data\Model\Poll.cs
-		VotingApplication.Web.Api.Tests\RunJavascriptTests.ps1 = VotingApplication.Web.Api.Tests\RunJavascriptTests.ps1
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingApplication.Web", "VotingApplication.Web\VotingApplication.Web.csproj", "{08D315E9-B845-48E1-A2F0-486E7064C2C3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{942DCB1B-5882-4C01-95AE-3FE71E4103F2} = {942DCB1B-5882-4C01-95AE-3FE71E4103F2}
-		{969076F5-F2AD-4711-853B-BA1BD3439E13} = {969076F5-F2AD-4711-853B-BA1BD3439E13}
 	EndProjectSection
 EndProject
 Global
@@ -50,10 +38,6 @@ Global
 		{942DCB1B-5882-4C01-95AE-3FE71E4103F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{942DCB1B-5882-4C01-95AE-3FE71E4103F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{942DCB1B-5882-4C01-95AE-3FE71E4103F2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{969076F5-F2AD-4711-853B-BA1BD3439E13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{969076F5-F2AD-4711-853B-BA1BD3439E13}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{969076F5-F2AD-4711-853B-BA1BD3439E13}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{969076F5-F2AD-4711-853B-BA1BD3439E13}.Release|Any CPU.Build.0 = Release|Any CPU
 		{08D315E9-B845-48E1-A2F0-486E7064C2C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{08D315E9-B845-48E1-A2F0-486E7064C2C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08D315E9-B845-48E1-A2F0-486E7064C2C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -63,7 +47,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{83728922-B15F-4BBC-86B7-5788D9E12A98} = {4EF491BF-0EC2-4E96-ACBF-B21232BE3BC9}
 		{A293CB92-9B81-41E9-A3BA-D8971E7C7F4B} = {D8BE54F9-AFD9-45B9-9B81-07211A2E4B28}
 	EndGlobalSection
 EndGlobal

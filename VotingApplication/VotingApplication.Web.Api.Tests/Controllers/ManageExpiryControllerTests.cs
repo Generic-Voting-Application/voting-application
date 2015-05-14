@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Data.Entity;
 using System.Net;
@@ -7,10 +8,11 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
-using VotingApplication.Web.Api.Tests.TestHelpers;
+using VotingApplication.Web.Tests.TestHelpers;
 
-namespace VotingApplication.Web.Api.Tests.Controllers
+namespace VotingApplication.Web.Tests.Controllers
 {
     [TestClass]
     public class ManageExpiryControllerTests
@@ -28,7 +30,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollExpiryRequest request = new ManagePollExpiryRequest { };
 
-                ManageExpiryController controller = CreateManageExpiryController(contextFactory);
+                ManageExpiryController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricHandler>().Object);
 
                 controller.Put(Guid.NewGuid(), request);
             }
@@ -44,7 +46,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollExpiryRequest request = new ManagePollExpiryRequest { };
 
-                ManageExpiryController controller = CreateManageExpiryController(contextFactory);
+                ManageExpiryController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricHandler>().Object);
                 controller.Validate(request);
 
                 // Act
@@ -66,7 +68,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollExpiryRequest request = new ManagePollExpiryRequest { ExpiryDate = expiry };
 
-                ManageExpiryController controller = CreateManageExpiryController(contextFactory);
+                ManageExpiryController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricHandler>().Object);
 
                 controller.Put(PollManageGuid, request);
 
@@ -75,7 +77,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             [TestMethod]
             [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
-            public void PostExpiry_IsRejected()
+            public void ExpiryInThePast_IsRejected()
             {
                 IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 Poll existingPoll = CreatePoll();
@@ -86,15 +88,63 @@ namespace VotingApplication.Web.Api.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
                 ManagePollExpiryRequest request = new ManagePollExpiryRequest { ExpiryDate = past };
 
-                ManageExpiryController controller = CreateManageExpiryController(contextFactory);
+                ManageExpiryController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricHandler>().Object);
 
                 controller.Put(PollManageGuid, request);
             }
+
+            [TestMethod]
+            public void ChangedExpiryDateGeneratesMetric()
+            {
+                // Arrange
+                IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                Poll existingPoll = CreatePoll();
+                existingPolls.Add(existingPoll);
+
+                DateTime future = DateTime.Now.AddHours(1);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
+                ManagePollExpiryRequest request = new ManagePollExpiryRequest { ExpiryDate = future };
+
+                Mock<IMetricHandler> metricHandler = new Mock<IMetricHandler>();
+                ManageExpiryController controller = CreateManageExpiryController(contextFactory, metricHandler.Object);
+
+                // Act
+                controller.Put(PollManageGuid, request);
+
+                // Assert
+                metricHandler.Verify(m => m.HandleExpiryChangedEvent(future, existingPoll.UUID), Times.Once());
+            }
+
+            [TestMethod]
+            public void UnchangedExpiryDateDoesNotGenerateMetric()
+            {
+                // Arrange
+                IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                Poll existingPoll = CreatePoll();
+                DateTime currentExpiry = DateTime.Now.AddHours(1);
+                existingPoll.ExpiryDate = currentExpiry;
+                existingPolls.Add(existingPoll);
+
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
+                ManagePollExpiryRequest request = new ManagePollExpiryRequest { ExpiryDate = currentExpiry };
+
+                Mock<IMetricHandler> metricHandler = new Mock<IMetricHandler>();
+                ManageExpiryController controller = CreateManageExpiryController(contextFactory, metricHandler.Object);
+
+                // Act
+                controller.Put(PollManageGuid, request);
+
+                // Assert
+                metricHandler.Verify(m => m.HandleExpiryChangedEvent(It.IsAny<DateTimeOffset?>(), It.IsAny<Guid>()), Times.Never());
+            }
         }
 
-        public static ManageExpiryController CreateManageExpiryController(IContextFactory contextFactory)
+
+        public static ManageExpiryController CreateManageExpiryController(IContextFactory contextFactory, IMetricHandler metricHandler)
         {
-            return new ManageExpiryController(contextFactory)
+            return new ManageExpiryController(contextFactory, metricHandler)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()

@@ -7,21 +7,16 @@ using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
-using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers
 {
     public class DashboardController : WebApiController
     {
-        public DashboardController()
-        {
-        }
+        public DashboardController() { }
 
-        public DashboardController(IContextFactory contextFactory)
-            : base(contextFactory)
-        {
-        }
+        public DashboardController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpGet]
         [Authorize]
@@ -90,6 +85,8 @@ namespace VotingApplication.Web.Api.Controllers
                 }
 
                 Poll newPoll = CopyPoll(pollToCopy);
+
+                _metricHandler.HandlePollClonedEvent(newPoll);
 
                 context.Polls.Add(newPoll);
                 context.SaveChanges();

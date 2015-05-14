@@ -7,19 +7,21 @@ using System.Text.RegularExpressions;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Validators;
 
-namespace VotingApplication.Web.Api.Controllers.API_Controllers
+namespace VotingApplication.Web.Api.Controllers
 {
     public class PollVoteController : WebApiController
     {
         private readonly IVoteValidatorFactory _voteValidatorFactory;
+        private const string ValidVoterNameRegex = @"[^\w\.@ -]";
 
-        public PollVoteController() : base() { }
+        public PollVoteController() { }
 
-        public PollVoteController(IContextFactory contextFactory, IVoteValidatorFactory voteValidatorFactory)
-            : base(contextFactory)
+        public PollVoteController(IContextFactory contextFactory, IMetricHandler metricHandler, IVoteValidatorFactory voteValidatorFactory)
+            : base(contextFactory, metricHandler)
         {
             _voteValidatorFactory = voteValidatorFactory;
         }
@@ -29,14 +31,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         {
             using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Poll poll = context
-                    .Polls
-                    .SingleOrDefault(s => s.UUID == pollId);
-
-                if (poll == null)
-                {
-                    ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} not found", pollId));
-                }
+                Poll poll = PollByPollId(pollId, context);
 
                 List<Vote> votes = context
                     .Votes
@@ -73,11 +68,11 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
         }
 
         [HttpPut]
-        public void Put(Guid pollId, Guid tokenGuid, List<VoteRequestModel> voteRequests)
+        public void Put(Guid pollId, Guid tokenGuid, BallotRequestModel ballotRequest)
         {
             using (IVotingContext context = _contextFactory.CreateContext())
             {
-                if (voteRequests == null)
+                if (ballotRequest == null)
                 {
                     ThrowError(HttpStatusCode.BadRequest);
                 }
@@ -105,7 +100,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                 }
 
 
-                foreach (VoteRequestModel voteRequest in voteRequests)
+                foreach (VoteRequestModel voteRequest in ballotRequest.Votes)
                 {
                     if (poll.Options.All(o => o.Id != voteRequest.OptionId))
                     {
@@ -115,7 +110,7 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 // Poll specific validation
                 IVoteValidator voteValidator = _voteValidatorFactory.CreateValidator(poll.PollType);
-                voteValidator.Validate(voteRequests, poll, ModelState);
+                voteValidator.Validate(ballotRequest.Votes, poll, ModelState);
 
                 if (!ModelState.IsValid)
                 {
@@ -148,11 +143,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
 
                 foreach (Vote contextVote in existingVotes)
                 {
+                    _metricHandler.HandleVoteDeletedEvent(contextVote, pollId);
                     context.Votes.Remove(contextVote);
                 }
 
                 // For some reason, we don't have an addrange function on Entity Framework
-                foreach (VoteRequestModel voteRequest in voteRequests)
+                foreach (VoteRequestModel voteRequest in ballotRequest.Votes)
                 {
                     Option option = context
                         .Options
@@ -161,13 +157,12 @@ namespace VotingApplication.Web.Api.Controllers.API_Controllers
                     Vote modelToVote = ModelToVote(voteRequest, ballot, option, poll);
                     context.Votes.Add(modelToVote);
 
-                    // TODO: refactor the voteRequest model to be a ballotRequest instead. => only one voterName.
-                    if (!String.IsNullOrEmpty(voteRequest.VoterName))
-                    {
-                        ballot.VoterName = Regex.Replace(voteRequest.VoterName, @"[^\w\.@ -]", "",
-                                                               RegexOptions.None);
-                    }
+                    _metricHandler.HandleVoteAddedEvent(modelToVote, pollId);
+                }
 
+                if (!String.IsNullOrEmpty(ballotRequest.VoterName))
+                {
+                    ballot.VoterName = Regex.Replace(ballotRequest.VoterName, ValidVoterNameRegex, "");
                 }
 
                 poll.LastUpdated = DateTime.Now;

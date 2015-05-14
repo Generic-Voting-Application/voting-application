@@ -10,11 +10,11 @@ using System.Net.Http;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
-using VotingApplication.Web.Api.Controllers.API_Controllers;
+using VotingApplication.Web.Api.Controllers;
 using VotingApplication.Web.Api.Models.DBViewModels;
-using VotingApplication.Web.Api.Tests.TestHelpers;
+using VotingApplication.Web.Tests.TestHelpers;
 
-namespace VotingApplication.Web.Api.Tests.Controllers
+namespace VotingApplication.Web.Tests.Controllers
 {
     [TestClass]
     public class ManageControllerTests
@@ -66,7 +66,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
             mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
             mockContext.Setup(a => a.Ballots).Returns(_dummyTokens);
 
-            _controller = new ManageController(mockContextFactory.Object);
+            _controller = new ManageController(mockContextFactory.Object, null);
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
         }
@@ -222,7 +222,7 @@ namespace VotingApplication.Web.Api.Tests.Controllers
 
             public static ManageController CreateManageController(IContextFactory contextFactory)
             {
-                return new ManageController(contextFactory)
+                return new ManageController(contextFactory, null)
                 {
                     Request = new HttpRequestMessage(),
                     Configuration = new HttpConfiguration()

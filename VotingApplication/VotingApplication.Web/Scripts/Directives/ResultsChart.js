@@ -5,7 +5,9 @@
         .module('GVA.Voting')
         .directive('gvaResultsChart', resultsChart);
 
-    function resultsChart() {
+    resultsChart.$inject = ['$window'];
+
+    function resultsChart($window) {
 
         function link($scope) {
 
@@ -17,7 +19,9 @@
                 }
             });
 
-            function textWidth (text) {
+            $window.addEventListener('resize', drawChart);
+
+            function textWidth(text) {
                 var context = canvas.getContext('2d');
                 context.font = '16px Open Sans';
                 var metrics = context.measureText(text);
@@ -45,6 +49,13 @@
                 chartElement.innerHTML = '';
 
                 var data = $scope.data.sort(function (a, b) { return b.Sum - a.Sum; });
+                // Trim long names
+                data.map(function (result) {
+                    if (result.Name.length > 20) {
+                        result.Name = result.Name.substring(0, 20) + '...';
+                    }
+                    return result;
+                });
 
                 var chartHeight = Math.min(data.length * 60 + 30, 600);
                 var chartWidth = chartElement.parentElement.parentElement.offsetWidth;
@@ -82,16 +93,7 @@
                 var tooltip = d3.tip()
                     .attr('class', 'd3-tip')
                     .offset([-10, 0])
-                    .html(function (d) {
-                        var voterNames = d.Voters.slice(0, 5).map(function (d) { return d.Name + ' (' + d.Value + ')'; });
-                        var tooltipText = '<b>' + d.Name + '</b>: ' + d.Sum + ' votes<br /><br />' + voterNames.join('<br />');
-                        // Clip for more than 5 voters
-                        if (d.Voters.length > 5) {
-                            tooltipText += '<br />+ ' + (d.Voters.length - 5) + ' others';
-                        }
-
-                        return tooltipText;
-                    });
+                    .html(createToolTipText);
 
                 var chart = d3.select(chartElement)
                     .append('svg')
@@ -131,6 +133,45 @@
                         .on('mouseout', tooltip.hide);
 
                 chart.call(tooltip);
+            }
+
+            function createToolTipText(result) {
+
+                var tooltipText;
+
+                if (result.Voters.every(function (item) { return item.Name === null; })) {
+                    tooltipText = createToolTipHeader(result);
+                }
+                else {
+                    var voterNames = result.Voters
+                        .slice(0, 5)
+                        .map(function (d) {
+                            return d.Name + ' (' + d.Value + ')';
+                        });
+
+
+                    tooltipText = createToolTipHeader(result) + '<br />' + voterNames.join('<br />');
+
+                    // Clip for more than 5 voters
+                    if (result.Voters.length > 5) {
+                        tooltipText += '<br />+ ' + (result.Voters.length - 5) + ' other';
+
+                        if ((result.Voters.length - 5) > 1) {
+                            tooltipText += 's';
+                        }
+                    }
+                }
+
+                return tooltipText;
+            }
+
+            function createToolTipHeader(result) {
+                var header = '<b>' + result.Name + '</b>: ' + result.Sum + ' vote';
+                if (result.Sum > 1) {
+                    header += 's';
+                }
+
+                return header;
             }
         }
 
