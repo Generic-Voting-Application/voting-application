@@ -1,0 +1,24 @@
+﻿<div class="account-login dialog-content centered">
+    <form name="addChoiceForm" ng-submit="addChoice(addChoiceForm)">
+        <h2>New Choice</h2>
+        <div class="form-section-block centered">
+            <label for="name">Name</label>
+            <input autofocus class="form-input" id="name" ng-model="addChoiceForm.name" focus required>
+
+            <label for="description">Description</label>
+            <input class="form-input" id="description" ng-model="addChoiceForm.description">
+        </div>
+
+        <button class="active-btn"
+                id="add-another-button"
+                ng-show="multipleAddingAllowed"
+                ng-disabled="addChoiceForm.$invalid"
+                ng-click="addChoice(addChoiceForm)"
+                type="submit"
+                onclick="addChoiceForm.name.focus()">
+            Add Another
+        </button>
+        <button class="active-btn" id="done-button" ng-disabled="addChoiceForm.$invalid" ng-click="addChoiceAndClose(addChoiceForm)">Done</button>
+    </form>
+</div>
+<span class="dialog-error-bar-bottom" ng-show="displayError">{{displayError}}</span>

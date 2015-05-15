@@ -26,6 +26,6 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
 
     public class DeleteVoteRequestModel
     {
-        public int OptionNumber { get; set; }
+        public int ChoiceNumber { get; set; }
     }
 }

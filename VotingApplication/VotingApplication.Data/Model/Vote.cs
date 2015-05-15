@@ -3,7 +3,7 @@
     public class Vote
     {
         public long Id { get; set; }
-        public Option Option { get; set; }
+        public Choice Choice { get; set; }
         public int VoteValue { get; set; }
         public Ballot Ballot { get; set; }
 

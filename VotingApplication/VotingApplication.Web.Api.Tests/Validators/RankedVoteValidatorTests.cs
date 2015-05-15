@@ -30,8 +30,8 @@ namespace VotingApplication.Web.Tests.Validators
         public void ValidateAcceptsOutOfOrderVotes()
         {
             // Arrange
-            List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 2, OptionId = 2 },
-                                                                        new VoteRequestModel { VoteValue = 1, OptionId = 1 } };
+            List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 2, ChoiceId = 2 },
+                                                                        new VoteRequestModel { VoteValue = 1, ChoiceId = 1 } };
             
             // Act
             _validator.Validate(votes, _poll, _modelState);
@@ -44,8 +44,8 @@ namespace VotingApplication.Web.Tests.Validators
         public void ValidateRejectsMultipleVotes()
         {
             // Arrange
-            List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 1, OptionId = 1 }, 
-                                                                        new VoteRequestModel { VoteValue = 1, OptionId = 1 } };
+            List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 1, ChoiceId = 1 }, 
+                                                                        new VoteRequestModel { VoteValue = 1, ChoiceId = 1 } };
 
             // Act
             _validator.Validate(votes, _poll, _modelState);
@@ -60,8 +60,8 @@ namespace VotingApplication.Web.Tests.Validators
         public void ValidateRejectsVotesOutOfSequence()
         {
             // Arrange
-            List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 1, OptionId = 1 }, 
-                                                                        new VoteRequestModel { VoteValue = 3, OptionId = 2 } };
+            List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 1, ChoiceId = 1 }, 
+                                                                        new VoteRequestModel { VoteValue = 3, ChoiceId = 2 } };
 
             // Act
             _validator.Validate(votes, _poll, _modelState);
@@ -76,7 +76,7 @@ namespace VotingApplication.Web.Tests.Validators
         public void ValidateRejectsVotesWithValueLessThanOrEqualToZero()
         {
             // Arrange
-            List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 0, OptionId = 1 } };
+            List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 0, ChoiceId = 1 } };
 
             // Act
             _validator.Validate(votes, _poll, _modelState);
@@ -91,8 +91,8 @@ namespace VotingApplication.Web.Tests.Validators
         public void ValidateAcceptsValidInput()
         {
             // Arrange
-            List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 1, OptionId = 1},
-                                                                        new VoteRequestModel { VoteValue = 2, OptionId = 2} };
+            List<VoteRequestModel> votes = new List<VoteRequestModel> { new VoteRequestModel { VoteValue = 1, ChoiceId = 1},
+                                                                        new VoteRequestModel { VoteValue = 2, ChoiceId = 2} };
 
             // Act
             _validator.Validate(votes, _poll, _modelState);

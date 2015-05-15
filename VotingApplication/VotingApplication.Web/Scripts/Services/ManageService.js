@@ -121,7 +121,7 @@
                 };
 
                 item.Votes.forEach(function (vote) {
-                    deleteBallotRequest.VoteDeleteRequests.push({ OptionNumber: vote.OptionNumber });
+                    deleteBallotRequest.VoteDeleteRequests.push({ ChoiceNumber: vote.ChoiceNumber });
 
                 });
 
@@ -154,22 +154,22 @@
             });
         };
 
-        self.getOptions = function (manageId) {
+        self.getChoices = function (manageId) {
             var deferred = $q.defer();
 
             $http
-                .get('/api/manage/' + manageId + '/option')
+                .get('/api/manage/' + manageId + '/choice')
                 .success(function (data) { deferred.resolve(data); });
 
             return deferred.promise;
         };
 
-        self.updateOptions = function (manageId, options) {
+        self.updateChoices = function (manageId, choices) {
             var deferred = $q.defer();
 
-            $http.put('/api/manage/' + manageId + '/option',
+            $http.put('/api/manage/' + manageId + '/choice',
                 {
-                    Options: options
+                    Choices: choices
                 })
             .success(function (data) { deferred.resolve(data); });
 

@@ -14,7 +14,7 @@ describe('PointsVoteController', function () {
         scope = $rootScope.$new();
         scope.setVoteCallback = function (callback) { voteCallback = callback; };
 
-        scope.poll = { Options: [] };
+        scope.poll = { Choices: [] };
 
         mockngDialog = {
             open: function () { }
@@ -32,31 +32,31 @@ describe('PointsVoteController', function () {
         expect(scope.setVoteCallback).toHaveBeenCalled();
     });
 
-    describe('Add Option', function () {
+    describe('Add Choice', function () {
 
         var expectedTemplate = jasmine.objectContaining({
-            template: '/Routes/AddOptionDialog'
+            template: '/Routes/AddChoiceDialog'
         });
 
         var expectedController = jasmine.objectContaining({
-            controller: 'AddVoterOptionDialogController'
+            controller: 'AddVoterChoiceDialogController'
         });
 
         it('Calls ngDialog to open the dialog', function () {
 
-            scope.addOption();
+            scope.addChoice();
 
             expect(mockngDialog.open).toHaveBeenCalled();
         });
 
         it('Calls ngDialog with the correct template', function () {
-            scope.addOption();
+            scope.addChoice();
 
             expect(mockngDialog.open).toHaveBeenCalledWith(expectedTemplate);
         });
 
         it('Calls ngDialog with the correct controller', function () {
-            scope.addOption();
+            scope.addChoice();
 
             expect(mockngDialog.open).toHaveBeenCalledWith(expectedController);
         });
@@ -68,7 +68,7 @@ describe('PointsVoteController', function () {
                 data: { pollId: 67 }
             });
 
-            scope.addOption();
+            scope.addChoice();
 
             expect(mockngDialog.open).toHaveBeenCalledWith(expectedData);
         });
@@ -116,7 +116,7 @@ describe('PointsVoteController', function () {
             var votes = voteCallback(options);
 
             expect(votes.length).toBe(1);
-            expect(votes[0].OptionId).toBe(23);
+            expect(votes[0].ChoiceId).toBe(23);
         });
 
         it('VoteValue is set correctly', function () {
@@ -240,7 +240,7 @@ describe('PointsVoteController', function () {
         it('Returns 0 when there are no points to allocate', function () {
 
             scope.poll.MaxPoints = 10;
-            scope.poll.Options = [{ voteValue: 10 }];
+            scope.poll.Choices = [{ voteValue: 10 }];
 
             var percentage = scope.unallocatedPointsPercentage();
 
@@ -251,7 +251,7 @@ describe('PointsVoteController', function () {
         it('Returns 100 when there are no points allocated', function () {
 
             scope.poll.MaxPoints = 10;
-            scope.poll.Options = [{ voteValue: 0 }];
+            scope.poll.Choices = [{ voteValue: 0 }];
 
             var percentage = scope.unallocatedPointsPercentage();
 
@@ -262,7 +262,7 @@ describe('PointsVoteController', function () {
         it('Returns correct value when points are partially allocated', function () {
 
             scope.poll.MaxPoints = 10;
-            scope.poll.Options = [{ voteValue: 3 }];
+            scope.poll.Choices = [{ voteValue: 3 }];
 
             var percentage = scope.unallocatedPointsPercentage();
 
@@ -285,7 +285,7 @@ describe('PointsVoteController', function () {
         it('Returns zero when all points allocated', function () {
 
             scope.poll.MaxPoints = 10;
-            scope.poll.Options = [{ voteValue: 10 }];
+            scope.poll.Choices = [{ voteValue: 10 }];
 
             var points = scope.unallocatedPoints();
 
@@ -295,7 +295,7 @@ describe('PointsVoteController', function () {
         it('Returns correct value when points are partially allocated', function () {
 
             scope.poll.MaxPoints = 10;
-            scope.poll.Options = [{ voteValue: 7 }];
+            scope.poll.Choices = [{ voteValue: 7 }];
 
             var points = scope.unallocatedPoints();
 

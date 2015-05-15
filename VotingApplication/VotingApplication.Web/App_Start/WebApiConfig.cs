@@ -37,9 +37,9 @@ namespace VotingApplication.Web
             );
 
             config.Routes.MapHttpRoute(
-                name: "PollOptionApiRoute",
-                routeTemplate: "api/poll/{pollId}/option",
-                defaults: new { controller = "PollOption" }
+                name: "PollChoiceApiRoute",
+                routeTemplate: "api/poll/{pollId}/choice",
+                defaults: new { controller = "PollChoice" }
             );
 
             config.Routes.MapHttpRoute(
@@ -49,9 +49,9 @@ namespace VotingApplication.Web
             );
 
             config.Routes.MapHttpRoute(
-                name: "ManageOptionApiRoute",
-                routeTemplate: "api/manage/{manageId}/option",
-                defaults: new { controller = "ManageOption" }
+                name: "ManageChoiceApiRoute",
+                routeTemplate: "api/manage/{manageId}/choice",
+                defaults: new { controller = "ManageChoice" }
             );
 
             config.Routes.MapHttpRoute(

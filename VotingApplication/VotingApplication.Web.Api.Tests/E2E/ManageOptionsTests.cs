@@ -14,7 +14,7 @@ using VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers;
 namespace VotingApplication.Web.Tests.E2E
 {
     [TestClass]
-    public class ManageOptionsTests
+    public class ManageChoicesTests
     {
         private static readonly string ChromeDriverDir = @"..\..\";
         private static readonly string SiteBaseUri = @"http://localhost:64205/";
@@ -22,7 +22,7 @@ namespace VotingApplication.Web.Tests.E2E
         private static readonly int DialogClearWaitTime = 1000;
         private static readonly Guid PollGuid = Guid.NewGuid();
         private static readonly Guid PollManageGuid = Guid.NewGuid();
-        private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid + "/Options";
+        private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid + "/Choices";
 
         private ITestVotingContext _context;
         private Poll _defaultPoll;
@@ -33,7 +33,7 @@ namespace VotingApplication.Web.Tests.E2E
         {
             _context = new TestVotingContext();
 
-            // Open, Anonymous, No Option Adding, Shown Results
+            // Open, Anonymous, No Choice Adding, Shown Results
             _defaultPoll = new Poll()
             {
                 UUID = PollGuid,
@@ -42,30 +42,30 @@ namespace VotingApplication.Web.Tests.E2E
                 Name = "Test Poll",
                 LastUpdated = DateTime.Now,
                 CreatedDate = DateTime.Now,
-                Options = new List<Option>(),
+                Choices = new List<Choice>(),
                 InviteOnly = false,
                 NamedVoting = false,
-                OptionAdding = false,
+                ChoiceAdding = false,
                 HiddenResults = false,
                 MaxPerVote = 3,
                 MaxPoints = 4
             };
 
-            _defaultPoll.Options.Add(
-                new Option()
+            _defaultPoll.Choices.Add(
+                new Choice()
                 {
-                    Name = "Test Option 1",
+                    Name = "Test Choice 1",
                     Description = "Test Description 1",
-                    PollOptionNumber = 1,
+                    PollChoiceNumber = 1,
                 }
             );
 
-            _defaultPoll.Options.Add(
-                new Option()
+            _defaultPoll.Choices.Add(
+                new Choice()
                 {
-                    Name = "Test Option 2",
+                    Name = "Test Choice 2",
                     Description = "Test Description 2",
-                    PollOptionNumber = 2,
+                    PollChoiceNumber = 2,
                 }
             );
 
@@ -88,31 +88,31 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageOptions_DisplaysOptionNames()
+        public void ManageChoices_DisplaysChoiceNames()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
-            IReadOnlyCollection<IWebElement> optionNames = _driver.FindElements(NgBy.Binding("option.Name"));
+            IReadOnlyCollection<IWebElement> choiceNames = _driver.FindElements(NgBy.Binding("choice.Name"));
 
-            Assert.AreEqual(_defaultPoll.Options.Count, optionNames.Count);
-            CollectionAssert.AreEquivalent(_defaultPoll.Options.Select(o => o.Name).ToList(),
-                                           optionNames.Select(o => o.Text).ToList());
+            Assert.AreEqual(_defaultPoll.Choices.Count, choiceNames.Count);
+            CollectionAssert.AreEquivalent(_defaultPoll.Choices.Select(o => o.Name).ToList(),
+                                           choiceNames.Select(o => o.Text).ToList());
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageOptions_DisplaysOptionDescriptions()
+        public void ManageChoices_DisplaysChoiceDescriptions()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
-            IReadOnlyCollection<IWebElement> optionDescriptions = _driver.FindElements(NgBy.Binding("option.Description"));
+            IReadOnlyCollection<IWebElement> choiceDescriptions = _driver.FindElements(NgBy.Binding("choice.Description"));
 
-            Assert.AreEqual(_defaultPoll.Options.Count, optionDescriptions.Count);
-            CollectionAssert.AreEquivalent(_defaultPoll.Options.Select(o => o.Description).ToList(),
-                                           optionDescriptions.Select(o => o.Text).ToList());
+            Assert.AreEqual(_defaultPoll.Choices.Count, choiceDescriptions.Count);
+            CollectionAssert.AreEquivalent(_defaultPoll.Choices.Select(o => o.Description).ToList(),
+                                           choiceDescriptions.Select(o => o.Text).ToList());
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageOptions_CancelButton_NavigatesToManagement()
+        public void ManageChoices_CancelButton_NavigatesToManagement()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
@@ -125,14 +125,14 @@ namespace VotingApplication.Web.Tests.E2E
 
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageOptions_CancelButton_DoesNotSaveChanges()
+        public void ManageChoices_CancelButton_DoesNotSaveChanges()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
-            IWebElement addOptionButton = _driver.FindElement(By.PartialLinkText("New Option"));
-            addOptionButton.Click();
+            IWebElement addChoiceButton = _driver.FindElement(By.PartialLinkText("New Choice"));
+            addChoiceButton.Click();
 
-            IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
+            IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
             formName.SendKeys("Test");
 
             IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
@@ -150,25 +150,25 @@ namespace VotingApplication.Web.Tests.E2E
             Thread.Sleep(WaitTime);
             _context.ReloadEntity(dbPoll);
 
-            Assert.AreEqual(_defaultPoll.Options.Count, dbPoll.Options.Count);
+            Assert.AreEqual(_defaultPoll.Choices.Count, dbPoll.Choices.Count);
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageOptions_Save_SavesChanges()
+        public void ManageChoices_Save_SavesChanges()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
-            IWebElement addOptionButton = _driver.FindElement(By.PartialLinkText("New Option"));
-            addOptionButton.Click();
+            IWebElement addChoiceButton = _driver.FindElement(By.PartialLinkText("New Choice"));
+            addChoiceButton.Click();
 
-            string newOptionName = "Test Name";
-            string newOptionDescription = "Test Description";
+            string newChoiceName = "Test Name";
+            string newChoiceDescription = "Test Description";
 
-            IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
-            formName.SendKeys(newOptionName);
+            IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
+            formName.SendKeys(newChoiceName);
 
-            IWebElement formDescription = _driver.FindElement(NgBy.Model("addOptionForm.description"));
-            formDescription.SendKeys(newOptionDescription);
+            IWebElement formDescription = _driver.FindElement(NgBy.Model("addChoiceForm.description"));
+            formDescription.SendKeys(newChoiceDescription);
 
             IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
 
@@ -176,85 +176,85 @@ namespace VotingApplication.Web.Tests.E2E
 
             Thread.Sleep(DialogClearWaitTime);
 
-            IReadOnlyCollection<IWebElement> options = _driver.FindElements(NgBy.Repeater("option in options"));
-            IWebElement lastOption = options.Last();
+            IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in choices"));
+            IWebElement lastChoice = choices.Last();
 
-            IWebElement lastOptionName = lastOption.FindElement(NgBy.Binding("option.Name"));
-            IWebElement lastOptionDescription = lastOption.FindElement(NgBy.Binding("option.Description"));
+            IWebElement lastChoiceName = lastChoice.FindElement(NgBy.Binding("choice.Name"));
+            IWebElement lastChoiceDescription = lastChoice.FindElement(NgBy.Binding("choice.Description"));
 
-            Assert.AreEqual(newOptionName, lastOptionName.Text);
-            Assert.AreEqual(newOptionDescription, lastOptionDescription.Text);
+            Assert.AreEqual(newChoiceName, lastChoiceName.Text);
+            Assert.AreEqual(newChoiceDescription, lastChoiceDescription.Text);
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageOptions_AddAnotherButton_AddsOption()
+        public void ManageChoices_AddAnotherButton_AddsChoice()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
-            IWebElement addOptionButton = _driver.FindElement(By.PartialLinkText("New Option"));
-            addOptionButton.Click();
+            IWebElement addChoiceButton = _driver.FindElement(By.PartialLinkText("New Choice"));
+            addChoiceButton.Click();
 
-            IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
+            IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
             formName.SendKeys("Test");
 
             IWebElement addAnotherButton = _driver.FindElement(By.Id("add-another-button"));
 
             addAnotherButton.Click();
 
-            IReadOnlyCollection<IWebElement> options = _driver.FindElements(NgBy.Repeater("option in options"));
+            IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in choices"));
 
-            Assert.AreEqual(_defaultPoll.Options.Count + 1, options.Count);
+            Assert.AreEqual(_defaultPoll.Choices.Count + 1, choices.Count);
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageOptions_AddAnotherButton_DoesNotCloseForm()
+        public void ManageChoices_AddAnotherButton_DoesNotCloseForm()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
-            IWebElement addOptionButton = _driver.FindElement(By.PartialLinkText("New Option"));
-            addOptionButton.Click();
+            IWebElement addChoiceButton = _driver.FindElement(By.PartialLinkText("New Choice"));
+            addChoiceButton.Click();
 
-            IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
+            IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
             formName.SendKeys("Test");
 
             IWebElement addAnotherButton = _driver.FindElement(By.Id("add-another-button"));
 
             addAnotherButton.Click();
 
-            formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
+            formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
 
             Assert.IsTrue(formName.IsVisible());
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageOptions_DoneButton_AddsOption()
+        public void ManageChoices_DoneButton_AddsChoice()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
-            IWebElement addOptionButton = _driver.FindElement(By.PartialLinkText("New Option"));
-            addOptionButton.Click();
+            IWebElement addChoiceButton = _driver.FindElement(By.PartialLinkText("New Choice"));
+            addChoiceButton.Click();
 
-            IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
+            IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
             formName.SendKeys("Test");
 
             IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
 
             doneButton.Click();
 
-            IReadOnlyCollection<IWebElement> options = _driver.FindElements(NgBy.Repeater("option in options"));
+            IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in choices"));
 
-            Assert.AreEqual(_defaultPoll.Options.Count + 1, options.Count);
+            Assert.AreEqual(_defaultPoll.Choices.Count + 1, choices.Count);
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageOptions_DoneButton_ClosesForm()
+        public void ManageChoices_DoneButton_ClosesForm()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
-            IWebElement addOptionButton = _driver.FindElement(By.PartialLinkText("New Option"));
-            addOptionButton.Click();
+            IWebElement addChoiceButton = _driver.FindElement(By.PartialLinkText("New Choice"));
+            addChoiceButton.Click();
 
-            IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
+            IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
             formName.SendKeys("Test");
 
             IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
@@ -263,20 +263,20 @@ namespace VotingApplication.Web.Tests.E2E
 
             Thread.Sleep(DialogClearWaitTime);
 
-            formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
+            formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
 
             Assert.IsFalse(formName.IsVisible());
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageOptions_AddOptionForm_RequiresAName()
+        public void ManageChoices_AddChoiceForm_RequiresAName()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
-            IWebElement addOptionButton = _driver.FindElement(By.PartialLinkText("New Option"));
-            addOptionButton.Click();
+            IWebElement addChoiceButton = _driver.FindElement(By.PartialLinkText("New Choice"));
+            addChoiceButton.Click();
 
-            IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
+            IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
 
             IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
             IWebElement addAnotherButton = _driver.FindElement(By.Id("add-another-button"));
@@ -286,45 +286,45 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageOptions_DeleteButton_RemovesOption()
+        public void ManageChoices_DeleteButton_RemovesChoice()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
             IReadOnlyCollection<IWebElement> deleteButtons = _driver.FindElements(By.ClassName("fa-trash-o"));
             deleteButtons.First().Click();
 
-            IReadOnlyCollection<IWebElement> options = _driver.FindElements(NgBy.Repeater("option in options"));
+            IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in choices"));
 
-            Assert.AreEqual(_defaultPoll.Options.Count - 1, options.Count);
+            Assert.AreEqual(_defaultPoll.Choices.Count - 1, choices.Count);
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageOptions_EditButton_AllowsRenaming()
+        public void ManageChoices_EditButton_AllowsRenaming()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
             IReadOnlyCollection<IWebElement> editButtons = _driver.FindElements(By.ClassName("fa-pencil"));
             editButtons.First().Click();
 
-            IWebElement formName = _driver.FindElement(NgBy.Model("editOptionFormName"));
-            IWebElement formDescription = _driver.FindElement(NgBy.Model("editOptionFormDescription"));
+            IWebElement formName = _driver.FindElement(NgBy.Model("editChoiceFormName"));
+            IWebElement formDescription = _driver.FindElement(NgBy.Model("editChoiceFormDescription"));
 
             Assert.IsTrue(formName.IsVisible());
             Assert.IsTrue(formDescription.IsVisible());
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageOptions_EditSubmit_ChangesOptionDetails()
+        public void ManageChoices_EditSubmit_ChangesChoiceDetails()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
             IReadOnlyCollection<IWebElement> editButtons = _driver.FindElements(By.ClassName("fa-pencil"));
             editButtons.First().Click();
 
-            IWebElement form = _driver.FindElement(By.Name("editOptionForm"));
+            IWebElement form = _driver.FindElement(By.Name("editChoiceForm"));
 
-            IWebElement formName = _driver.FindElement(NgBy.Model("editOptionFormName"));
-            IWebElement formDescription = _driver.FindElement(NgBy.Model("editOptionFormDescription"));
+            IWebElement formName = _driver.FindElement(NgBy.Model("editChoiceFormName"));
+            IWebElement formDescription = _driver.FindElement(NgBy.Model("editChoiceFormDescription"));
 
             string newName = "Changed Name";
             string newDescription = "Changed Description";
@@ -341,24 +341,24 @@ namespace VotingApplication.Web.Tests.E2E
 
             Thread.Sleep(DialogClearWaitTime);
 
-            IReadOnlyCollection<IWebElement> optionNames = _driver.FindElements(NgBy.Binding("option.Name"));
-            IReadOnlyCollection<IWebElement> optionDescriptions = _driver.FindElements(NgBy.Binding("option.Description"));
+            IReadOnlyCollection<IWebElement> choiceNames = _driver.FindElements(NgBy.Binding("choice.Name"));
+            IReadOnlyCollection<IWebElement> choiceDescriptions = _driver.FindElements(NgBy.Binding("choice.Description"));
 
-            Assert.AreEqual(newName, optionNames.First().Text);
-            Assert.AreEqual(newDescription, optionDescriptions.First().Text);
+            Assert.AreEqual(newName, choiceNames.First().Text);
+            Assert.AreEqual(newDescription, choiceDescriptions.First().Text);
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageOptions_EditSubmit_DoesNotAllowBlankName()
+        public void ManageChoices_EditSubmit_DoesNotAllowBlankName()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
             IReadOnlyCollection<IWebElement> editButtons = _driver.FindElements(By.ClassName("fa-pencil"));
             editButtons.First().Click();
 
-            IWebElement form = _driver.FindElement(By.Name("editOptionForm"));
+            IWebElement form = _driver.FindElement(By.Name("editChoiceForm"));
 
-            IWebElement formName = _driver.FindElement(NgBy.Model("editOptionFormName"));
+            IWebElement formName = _driver.FindElement(NgBy.Model("editChoiceFormName"));
             formName.Clear();
 
             IWebElement saveButton = _driver.FindElement(By.Id("dialog-save-button"));

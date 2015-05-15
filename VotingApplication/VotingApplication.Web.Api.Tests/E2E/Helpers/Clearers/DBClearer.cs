@@ -10,7 +10,7 @@ namespace VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers
 
         public void ClearAll()
         {
-            ((DbSet<Option>)_context.Options).RemoveRange(_context.Options);
+            ((DbSet<Choice>)_context.Choices).RemoveRange(_context.Choices);
             ((DbSet<Vote>)_context.Votes).RemoveRange(_context.Votes);
             ((DbSet<Poll>)_context.Polls).RemoveRange(_context.Polls);
             ((DbSet<Ballot>)_context.Ballots).RemoveRange(_context.Ballots);

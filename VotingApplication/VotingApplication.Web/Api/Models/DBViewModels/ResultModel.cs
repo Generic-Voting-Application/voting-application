@@ -5,7 +5,7 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
 {
     public class ResultModel
     {
-        public Option Option;
+        public Choice Choice;
         public int Sum;
         public List<ResultVoteModel> Voters;
     }
