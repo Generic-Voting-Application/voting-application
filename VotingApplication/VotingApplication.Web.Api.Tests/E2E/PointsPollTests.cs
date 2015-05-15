@@ -600,14 +600,14 @@ namespace VotingApplication.Web.Tests.E2E
                 IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
 
                 IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
-                IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
+                IWebElement addButton = _driver.FindElement(By.Id("add-button"));
 
-                Assert.IsTrue(doneButton.IsVisible());
-                Assert.IsFalse(doneButton.Enabled);
+                Assert.IsTrue(addButton.IsVisible());
+                Assert.IsFalse(addButton.Enabled);
 
                 formName.SendKeys("New Option");
 
-                Assert.IsTrue(doneButton.Enabled);
+                Assert.IsTrue(addButton.Enabled);
             }
 
             [TestMethod, TestCategory("E2E")]
@@ -620,7 +620,7 @@ namespace VotingApplication.Web.Tests.E2E
                 IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
 
                 IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
-                IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
+                IWebElement addButton = _driver.FindElement(By.Id("add-button"));
 
                 String newOptionName = "New Option";
                 formName.SendKeys(newOptionName);

@@ -80,14 +80,6 @@ body {
     box-shadow: 1px 1px 4px rgba(0,0,0,0.6);
 }
 
-.account-login {
-    max-width: 320px;
-}
-
-.account-register {
-    max-width: 320px;
-}
-
 .account-control-box {
     position: absolute;
     border-style: solid;
@@ -157,6 +149,10 @@ body {
 
 .icon-padded-left {
     padding-left: 20px;
+}
+
+.padded-top-small {
+    padding-top: 5px;
 }
 
 .form-aligned-top {

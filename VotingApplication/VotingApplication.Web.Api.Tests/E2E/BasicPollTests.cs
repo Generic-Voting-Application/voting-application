@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Tests.E2E.Helpers;
@@ -115,7 +114,7 @@ namespace VotingApplication.Web.Tests.E2E
                     Name = "Test Option 2",
                     Description = truncatedString + " " + truncatedString
                 });
-                
+
                 _context.SaveChanges();
 
                 Thread.Sleep(WaitTime);
@@ -480,14 +479,16 @@ namespace VotingApplication.Web.Tests.E2E
                 addOptionLink.Click();
 
                 IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
-                IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
+                IWebElement addButton = _driver.FindElement(By.Id("add-button"));
 
-                Assert.IsTrue(doneButton.IsVisible());
-                Assert.IsFalse(doneButton.Enabled);
+                IReadOnlyCollection<IWebElement> addButtons = _driver.FindElements(By.Id("add-button"));
+
+                Assert.IsTrue(addButton.IsVisible());
+                Assert.IsFalse(addButton.Enabled);
 
                 formName.SendKeys("New Option");
 
-                Assert.IsTrue(doneButton.Enabled);
+                Assert.IsTrue(addButton.Enabled);
             }
 
             [TestMethod, TestCategory("E2E")]
@@ -498,7 +499,7 @@ namespace VotingApplication.Web.Tests.E2E
                 addOptionLink.Click();
 
                 IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
-                IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
+                IWebElement addButton = _driver.FindElement(By.Id("add-button"));
 
                 String newOptionName = "New Option";
                 formName.SendKeys(newOptionName);
