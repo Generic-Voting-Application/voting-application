@@ -280,7 +280,7 @@ describe('VotingPageController', function () {
             var expectedBallot = {
                 VoterName: null,
                 Votes: []
-            }
+            };
 
             expect(mockVoteService.submitVote).toHaveBeenCalledWith(jasmine.any(String), expectedBallot, jasmine.any(String));
         });
