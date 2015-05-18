@@ -27,7 +27,7 @@
                 Add
             </button>
 
-            <div class="pull-right padded-top-small">
+            <div ng-show="multipleAddingAllowed" class="pull-right padded-top-small">
                 <label for="add-another-checkbox">Add Another</label>
                 <input type="checkbox" id="add-another-checkbox"
                        ng-model="addOptionForm.addAnotherToggle"
