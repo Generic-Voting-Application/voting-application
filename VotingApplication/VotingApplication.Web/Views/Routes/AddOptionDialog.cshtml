@@ -1,5 +1,5 @@
 ﻿<div class="dialog-box-small dialog-content centered">
-    <form name="addOptionForm" ng-submit="addOption(addOptionForm)">
+    <form name="addOptionForm">
         <h2>New Option</h2>
         <div class="form-section-block centered">
             <label for="name">Name</label>
@@ -14,7 +14,7 @@
                     id="add-button"
                     ng-disabled="addOptionForm.$invalid"
                     ng-click="addOption(addOptionForm)"
-                    ng-if="addOptionForm.addAnotherToggle"
+                    ng-if="addAnotherToggle"
                     type="submit"
                     onclick="addOptionForm.name.focus()">
                 Add
@@ -23,17 +23,17 @@
                     id="add-button"
                     ng-disabled="addOptionForm.$invalid"
                     ng-click="addOptionAndClose(addOptionForm)"
-                    ng-if="!addOptionForm.addAnotherToggle">
+                    ng-if="!addAnotherToggle"
+                    type="submit">
                 Add
             </button>
 
-            <div ng-show="multipleAddingAllowed" class="pull-right padded-top-small">
+            <div class="pull-right padded-top-small">
                 <label for="add-another-checkbox">Add Another</label>
                 <input type="checkbox" id="add-another-checkbox"
-                       ng-model="addOptionForm.addAnotherToggle"
+                       ng-model="addAnotherToggle"
                        ng-true-value="true"
-                       ng-false-value="false"
-                       ng-init="addOptionForm.addAnotherToggle=true" />
+                       ng-false-value="false" />
             </div>
         </div>
 

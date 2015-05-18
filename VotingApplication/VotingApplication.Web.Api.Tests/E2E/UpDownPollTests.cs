@@ -518,8 +518,8 @@ namespace VotingApplication.Web.Tests.E2E
                 String newOptionName = "New Option";
                 formName.SendKeys(newOptionName);
 
-                IWebElement form = _driver.FindElement(By.Name("addOptionForm"));
-                form.Submit();
+                IWebElement formButton = _driver.FindElement(By.Id("add-button"));
+                formButton.Click();
 
                 IReadOnlyCollection<IWebElement> optionNames = _driver.FindElements(NgBy.Binding("option.Name"));
 
