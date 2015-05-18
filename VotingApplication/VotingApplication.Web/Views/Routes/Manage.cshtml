@@ -23,7 +23,7 @@
                             {{Question}}
                         </span>
                         <span ng-if="toggleNameEdit">
-                            <input class="wide-input" ng-model="$parent.Question" required />
+                            <input class="wide-input manage-input" ng-model="$parent.Question" required />
                             <span class="fa fa-remove pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.discardNameChanges()"></span>
                             <span class="fa fa-check pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.updateQuestion()"></span>
                         </span>
@@ -101,12 +101,18 @@
             </div>
         </div>
         <div class="manage-section" ng-show="!poll.InviteOnly" id="manage-share-section">
-            <div>
+            <div class="icon-margin-bottom">
                 <span class="fa fa-share-alt pull-left" aria-hidden="true"></span>
                 <div class="pull-right">
                     <a href="mailto:&amp;body={{fullPollUrl()}}"><i class="fa fa-envelope-square fa-2x"></i></a>
                 </div>
                 <h4 class="icon-padded-left">Share</h4>
+            </div>
+            <div>
+                <div class="input-btn-group">
+                    <input class="manage-input icon-margin-left" contenteditable="false" ng-readonly="true" ng-value="fullPollUrl()" />
+                    <button class="active-btn"><i class="fa fa-clipboard"></i></button>
+                </div>
             </div>
         </div>
         <div class="clear"></div>
