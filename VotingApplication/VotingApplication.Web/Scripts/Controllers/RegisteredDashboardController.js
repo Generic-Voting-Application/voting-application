@@ -13,7 +13,8 @@
 
     function RegisteredDashboardController($scope, AccountService, PollService, RoutingService, TokenService) {
 
-        $scope.account = AccountService.account;
+        var UNAUTHORISED = 401;
+
         $scope.createPoll = createNewPoll;
         $scope.getUserPolls = getUserPolls;
         $scope.manageUrl = manageUrl;
@@ -25,10 +26,6 @@
 
 
         function activate() {
-            AccountService.registerAccountObserver(function () {
-                $scope.account = AccountService.account;
-            });
-
             getUserPolls();
         }
 
@@ -48,6 +45,11 @@
             PollService.getUserPolls()
                 .then(function (response) {
                     $scope.userPolls = response.data;
+                })
+                .catch(function (response) {
+                    if (response.status === UNAUTHORISED) {
+                        AccountService.clearAccount();
+                    }
                 });
         }
 
