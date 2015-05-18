@@ -111,7 +111,7 @@
             <div>
                 <div class="input-btn-group">
                     <input class="manage-input icon-margin-left" contenteditable="false" ng-readonly="true" ng-value="fullPollUrl()" />
-                    <button class="active-btn"><i class="fa fa-clipboard"></i></button>
+                    <button id="copy-button" class="active-btn" ui-zeroclip zeroclip-copied="copied=true" zeroclip-model="fullPollUrl()"><i class="fa fa-clipboard"></i></button>
                 </div>
             </div>
         </div>

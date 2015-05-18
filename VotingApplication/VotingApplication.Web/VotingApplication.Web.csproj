@@ -357,8 +357,10 @@
     <Content Include="Scripts\Directives\TruncatedText.js" />
     <Content Include="Scripts\Filters\dateFilters.js" />
     <Content Include="Scripts\Interceptors\ErrorInterceptor.js" />
+    <Content Include="Scripts\Lib\angular-zeroclipboard.js" />
     <Content Include="Scripts\Lib\d3-tip-min.js" />
     <Content Include="Scripts\Lib\moment-min.js" />
+    <Content Include="Scripts\Lib\ZeroClipboard-min.js" />
     <Content Include="Scripts\Modules\GVA-Common.js" />
     <Content Include="Scripts\Modules\GVA-Creation.js" />
     <Content Include="Scripts\Modules\GVA-Poll.js" />
@@ -380,6 +382,7 @@
     <Content Include="Scripts\Lib\d3-min.js" />
     <Content Include="Scripts\Modules\GVA-Voting.js" />
     <Content Include="Scripts\Services\VoteService.js" />
+    <Content Include="Static\Lib\ZeroClipboard.swf" />
     <Content Include="Views\Routes\AccountLogin.cshtml" />
     <Content Include="Views\Routes\AccountRegister.cshtml" />
     <Content Include="Views\Routes\AccountResetPassword.cshtml" />
@@ -408,6 +411,7 @@
     <Content Include="Views\Routes\AddOptionDialog.cshtml" />
     <Content Include="Views\Routes\EditOptionDialog.cshtml" />
     <Content Include="Fonts\fontawesome-webfont.woff2" />
+    <Content Include="Scripts\Lib\ZeroClipboard-min.map" />
     <None Include="Views\Routes\PollHeading.cshtml" />
     <Content Include="Views\Routes\PollTypeChange.cshtml" />
     <Content Include="Scripts\Directives\PollHeading.html" />
