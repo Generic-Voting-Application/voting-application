@@ -45,7 +45,7 @@ namespace VotingApplication.Web.Api.Controllers
                 Name = poll.Name,
                 Creator = poll.Creator,
                 CreatedDateUtc = poll.CreatedDateUtc,
-                ExpiryDate = poll.ExpiryDateUtc
+                ExpiryDateUtc = poll.ExpiryDateUtc
             };
         }
 

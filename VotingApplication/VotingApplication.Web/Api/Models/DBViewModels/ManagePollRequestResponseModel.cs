@@ -16,7 +16,7 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
         public string Name { get; set; }
         public bool InviteOnly { get; set; }
         public bool NamedVoting { get; set; }
-        public DateTimeOffset? ExpiryDate { get; set; }
+        public DateTime? ExpiryDateUtc { get; set; }
         public bool OptionAdding { get; set; }
         public bool HiddenResults { get; set; }
     }

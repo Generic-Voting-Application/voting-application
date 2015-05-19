@@ -20,7 +20,7 @@ namespace VotingApplication.Web.Tests.E2E
         private static readonly Guid PollGuid = Guid.NewGuid();
         private static readonly Guid PollManageGuid = Guid.NewGuid();
         private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid + "/Expiry";
-        private static readonly DateTime DefaultTime = DateTime.Now;
+        private static readonly DateTime DefaultTime = DateTime.UtcNow;
 
         private ITestVotingContext _context;
         private Poll _defaultPoll;

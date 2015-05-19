@@ -52,11 +52,11 @@ namespace VotingApplication.Web.Tests.Controllers
             _joeBallot = new Ballot { TokenGuid = Guid.NewGuid() };
             _otherBallot = new Ballot { TokenGuid = Guid.NewGuid() };
 
-            Poll mainPoll = new Poll() { UUID = _mainUUID, ExpiryDateUtc = DateTime.Now.AddMinutes(30), Ballots = new List<Ballot>() { _bobBallot, _joeBallot, _otherBallot } };
+            Poll mainPoll = new Poll() { UUID = _mainUUID, ExpiryDateUtc = DateTime.UtcNow.AddMinutes(30), Ballots = new List<Ballot>() { _bobBallot, _joeBallot, _otherBallot } };
             Poll otherPoll = new Poll() { UUID = _otherUUID, Ballots = new List<Ballot>() { _otherBallot } };
             Poll pointsPoll = new Poll() { UUID = _pointsUUID, PollType = PollType.Points, MaxPerVote = 5, MaxPoints = 3, Ballots = new List<Ballot>() { _otherBallot } };
             Poll tokenPoll = new Poll() { UUID = _tokenUUID, Ballots = new List<Ballot>() { _validBallot }, InviteOnly = true };
-            Poll timedPoll = new Poll() { UUID = _timedUUID, ExpiryDateUtc = DateTime.Now.AddMinutes(-30) };
+            Poll timedPoll = new Poll() { UUID = _timedUUID, ExpiryDateUtc = DateTime.UtcNow.AddMinutes(-30) };
 
             Option burgerOption = new Option { Id = 1, Name = "Burger King" };
             Option pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };

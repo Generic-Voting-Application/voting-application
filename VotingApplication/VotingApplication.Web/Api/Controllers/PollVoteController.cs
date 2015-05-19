@@ -94,7 +94,7 @@ namespace VotingApplication.Web.Api.Controllers
                     ThrowError(HttpStatusCode.NotFound, String.Format("Poll {0} not found", pollId));
                 }
 
-                if (poll.ExpiryDateUtc.HasValue && poll.ExpiryDateUtc < DateTime.Now)
+                if (poll.ExpiryDateUtc.HasValue && poll.ExpiryDateUtc < DateTime.UtcNow)
                 {
                     ThrowError(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", pollId));
                 }

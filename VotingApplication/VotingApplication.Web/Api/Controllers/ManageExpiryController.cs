@@ -21,9 +21,9 @@ namespace VotingApplication.Web.Api.Controllers
             {
                 Poll poll = PollByManageId(manageId, context);
 
-                if (updateRequest.ExpiryDate.HasValue && updateRequest.ExpiryDate < DateTime.Now)
+                if (updateRequest.ExpiryDateUtc.HasValue && updateRequest.ExpiryDateUtc < DateTime.UtcNow)
                 {
-                    ModelState.AddModelError("ExpiryDate", "Invalid ExpiryDate");
+                    ModelState.AddModelError("ExpiryDateUtc", "Invalid ExpiryDateUtc");
                 }
 
                 if (!ModelState.IsValid)
@@ -31,12 +31,12 @@ namespace VotingApplication.Web.Api.Controllers
                     ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
-                if (poll.ExpiryDateUtc == updateRequest.ExpiryDate)
+                if (poll.ExpiryDateUtc == updateRequest.ExpiryDateUtc)
                 {
                     return;
                 }
 
-                poll.ExpiryDateUtc = updateRequest.ExpiryDate;
+                poll.ExpiryDateUtc = updateRequest.ExpiryDateUtc;
                 poll.LastUpdatedUtc = DateTime.UtcNow;
                 _metricHandler.HandleExpiryChangedEvent(poll.ExpiryDateUtc, poll.UUID);
 

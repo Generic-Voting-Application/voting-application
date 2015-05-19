@@ -63,10 +63,10 @@ namespace VotingApplication.Web.Tests.Controllers
                 Poll existingPoll = CreatePoll();
                 existingPolls.Add(existingPoll);
 
-                DateTime expiry = DateTime.Now.AddHours(1);
+                DateTime expiry = DateTime.UtcNow.AddHours(1);
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
-                ManagePollExpiryRequest request = new ManagePollExpiryRequest { ExpiryDate = expiry };
+                ManagePollExpiryRequest request = new ManagePollExpiryRequest { ExpiryDateUtc = expiry };
 
                 ManageExpiryController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricHandler>().Object);
 
@@ -83,10 +83,10 @@ namespace VotingApplication.Web.Tests.Controllers
                 Poll existingPoll = CreatePoll();
                 existingPolls.Add(existingPoll);
 
-                DateTime past = DateTime.Now.AddHours(-1);
+                DateTime past = DateTime.UtcNow.AddHours(-1);
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
-                ManagePollExpiryRequest request = new ManagePollExpiryRequest { ExpiryDate = past };
+                ManagePollExpiryRequest request = new ManagePollExpiryRequest { ExpiryDateUtc = past };
 
                 ManageExpiryController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricHandler>().Object);
 
@@ -101,10 +101,10 @@ namespace VotingApplication.Web.Tests.Controllers
                 Poll existingPoll = CreatePoll();
                 existingPolls.Add(existingPoll);
 
-                DateTime future = DateTime.Now.AddHours(1);
+                DateTime future = DateTime.UtcNow.AddHours(1);
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
-                ManagePollExpiryRequest request = new ManagePollExpiryRequest { ExpiryDate = future };
+                ManagePollExpiryRequest request = new ManagePollExpiryRequest { ExpiryDateUtc = future };
 
                 Mock<IMetricHandler> metricHandler = new Mock<IMetricHandler>();
                 ManageExpiryController controller = CreateManageExpiryController(contextFactory, metricHandler.Object);
@@ -122,13 +122,13 @@ namespace VotingApplication.Web.Tests.Controllers
                 // Arrange
                 IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 Poll existingPoll = CreatePoll();
-                DateTime currentExpiry = DateTime.Now.AddHours(1);
+                DateTime currentExpiry = DateTime.UtcNow.AddHours(1);
                 existingPoll.ExpiryDateUtc = currentExpiry;
                 existingPolls.Add(existingPoll);
 
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
-                ManagePollExpiryRequest request = new ManagePollExpiryRequest { ExpiryDate = currentExpiry };
+                ManagePollExpiryRequest request = new ManagePollExpiryRequest { ExpiryDateUtc = currentExpiry };
 
                 Mock<IMetricHandler> metricHandler = new Mock<IMetricHandler>();
                 ManageExpiryController controller = CreateManageExpiryController(contextFactory, metricHandler.Object);

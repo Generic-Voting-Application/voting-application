@@ -9,6 +9,6 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
         public string Name { get; set; }
         public string Creator { get; set; }
         public DateTime CreatedDateUtc { get; set; }
-        public DateTimeOffset? ExpiryDate { get; set; }
+        public DateTime? ExpiryDateUtc { get; set; }
     }
 }
