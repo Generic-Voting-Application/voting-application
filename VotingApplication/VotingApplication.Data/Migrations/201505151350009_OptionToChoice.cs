@@ -33,6 +33,12 @@ namespace VotingApplication.Data.Migrations
                  SELECT Name, Description, PollOptionNumber, Poll_Id
                  FROM dbo.Options");
 
+            Sql(@"UPDATE dbo.Polls
+                  SET ChoiceAdding = OptionAdding");
+
+            Sql(@"UPDATE dbo.Votes
+                  SET Choice_Id = Option_Id");
+
             DropColumn("dbo.Votes", "Option_Id");
             DropColumn("dbo.Polls", "OptionAdding");
             DropTable("dbo.Options");
@@ -58,18 +64,24 @@ namespace VotingApplication.Data.Migrations
             DropForeignKey("dbo.Votes", "Choice_Id", "dbo.Choices");
             DropIndex("dbo.Choices", new[] { "Poll_Id" });
             DropIndex("dbo.Votes", new[] { "Choice_Id" });
-            DropColumn("dbo.Polls", "ChoiceAdding");
-            DropColumn("dbo.Votes", "Choice_Id");
 
             CreateIndex("dbo.Options", "Poll_Id");
             CreateIndex("dbo.Votes", "Option_Id");
             AddForeignKey("dbo.Options", "Poll_Id", "dbo.Polls", "Id");
             AddForeignKey("dbo.Votes", "Option_Id", "dbo.Options", "Id");
 
+            Sql(@"UPDATE dbo.Polls
+                  SET OptionAdding = ChoiceAdding");
+
+            Sql(@"UPDATE dbo.Votes
+                  SET Option_Id = Choice_Id");
+
             Sql(@"INSERT INTO dbo.Options (Name, Description, PollOptionNumber, Poll_Id)
                  SELECT Name, Description, PollChoiceNumber, Poll_Id
                  FROM dbo.Choices");
 
+            DropColumn("dbo.Polls", "ChoiceAdding");
+            DropColumn("dbo.Votes", "Choice_Id");
             DropTable("dbo.Choices");
         }
     }
