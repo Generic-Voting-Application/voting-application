@@ -232,7 +232,7 @@
     <Compile Include="Api\Controllers\ManagePollTypeController.cs" />
     <Compile Include="Api\Controllers\ManageExpiryController.cs" />
     <Compile Include="Api\Controllers\ManageInvitationController.cs" />
-    <Compile Include="Api\Controllers\ManageOptionController.cs" />
+    <Compile Include="Api\Controllers\ManageChoiceController.cs" />
     <Compile Include="Api\Metrics\IMetricHandler.cs" />
     <Compile Include="Api\Metrics\EmptyMetricHandler.cs" />
     <Compile Include="Api\Metrics\MetricHandler.cs" />
@@ -240,7 +240,7 @@
     <Compile Include="Api\Models\DBViewModels\ManageOptionUpdateRequest.cs" />
     <Compile Include="Api\Controllers\ManageVoterController.cs" />
     <Compile Include="Api\Controllers\PollController.cs" />
-    <Compile Include="Api\Controllers\PollOptionController.cs" />
+    <Compile Include="Api\Controllers\PollChoiceController.cs" />
     <Compile Include="Api\Controllers\PollTokenController.cs" />
     <Compile Include="Api\Controllers\PollResultsController.cs" />
     <Compile Include="Api\Controllers\PollVoteController.cs" />
@@ -389,7 +389,7 @@
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Routes\Manage.cshtml" />
     <Content Include="Views\Routes\MultiVote.cshtml" />
-    <Content Include="Views\Routes\ManageOptions.cshtml" />
+    <Content Include="Views\Routes\ManageChoices.cshtml" />
     <Content Include="Views\Routes\ManagePollType.cshtml" />
     <Content Include="Views\Routes\ManageInvitees.cshtml" />
     <Content Include="Views\Routes\ManageExpiry.cshtml" />
@@ -405,8 +405,8 @@
     <Content Include="Fonts\fontawesome-webfont.woff" />
     <Content Include="Fonts\FontAwesome.otf" />
     <Content Include="Views\Routes\ErrorBar.cshtml" />
-    <Content Include="Views\Routes\AddOptionDialog.cshtml" />
-    <Content Include="Views\Routes\EditOptionDialog.cshtml" />
+    <Content Include="Views\Routes\AddChoiceDialog.cshtml" />
+    <Content Include="Views\Routes\EditChoiceDialog.cshtml" />
     <Content Include="Fonts\fontawesome-webfont.woff2" />
     <None Include="Views\Routes\PollHeading.cshtml" />
     <Content Include="Views\Routes\PollTypeChange.cshtml" />

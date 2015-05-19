@@ -9,8 +9,8 @@
 
     function UpDownVoteController($scope, $routeParams, ngDialog) {
 
-        $scope.addOption = addOption;
-        $scope.notifyOptionAdded = notifyOptionAdded;
+        $scope.addChoice = addChoice;
+        $scope.notifyChoiceAdded = notifyChoiceAdded;
 
         activate();
 
@@ -20,28 +20,28 @@
 
         }
 
-        function getVotes(options) {
-            return options
-                .filter(function (option) { return option.voteValue; })
-                .map(function (option) {
+        function getVotes(choices) {
+            return choices
+                .filter(function (choice) { return choice.voteValue; })
+                .map(function (choice) {
                     return {
-                        OptionId: option.Id,
-                        VoteValue: option.voteValue
+                        ChoiceId: choice.Id,
+                        VoteValue: choice.voteValue
                     };
                 });
         }
 
-        function addOption() {
+        function addChoice() {
             ngDialog.open({
-                template: '/Routes/AddOptionDialog',
-                controller: 'AddVoterOptionDialogController',
+                template: '/Routes/AddChoiceDialog',
+                controller: 'AddVoterChoiceDialogController',
                 scope: $scope,
                 data: { pollId: $scope.pollId }
             });
         }
 
-        function notifyOptionAdded() {
-            $scope.$emit('voterOptionAddedEvent');
+        function notifyChoiceAdded() {
+            $scope.$emit('voterChoiceAddedEvent');
         }
     }
 

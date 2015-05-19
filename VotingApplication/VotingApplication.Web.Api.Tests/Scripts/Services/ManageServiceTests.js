@@ -53,13 +53,13 @@ describe('ManageService', function () {
                 VoterName: 'Derek',
                 Votes: [
                     {
-                        OptionNumber: 1,
-                        OptionName: 'One',
+                        ChoiceNumber: 1,
+                        ChoiceName: 'One',
                         Value: 5
                     },
                     {
-                        OptionNumber: 2,
-                        OptionName: 'Two',
+                        ChoiceNumber: 2,
+                        ChoiceName: 'Two',
                         Value: 1
                     }]
             },
@@ -68,13 +68,13 @@ describe('ManageService', function () {
                     VoterName: 'Betty',
                     Votes: [
                         {
-                            OptionNumber: 1,
-                            OptionName: 'One',
+                            ChoiceNumber: 1,
+                            ChoiceName: 'One',
                             Value: 1
                         },
                         {
-                            OptionNumber: 3,
-                            OptionName: 'Three',
+                            ChoiceNumber: 3,
+                            ChoiceName: 'Three',
                             Value: 1
                         }]
                 }];
@@ -83,11 +83,11 @@ describe('ManageService', function () {
                 BallotDeleteRequests: [
                     {
                         BallotManageGuid: '275B1FF3-F37A-41F9-B91E-983F6D11429A',
-                        VoteDeleteRequests: [{ OptionNumber: 1 }, { OptionNumber: 2 }]
+                        VoteDeleteRequests: [{ ChoiceNumber: 1 }, { ChoiceNumber: 2 }]
                     },
                     {
                         BallotManageGuid: '4F63A474-1136-4E8D-879C-881299A19207',
-                        VoteDeleteRequests: [{ OptionNumber: 1 }, { OptionNumber: 3 }]
+                        VoteDeleteRequests: [{ ChoiceNumber: 1 }, { ChoiceNumber: 3 }]
                     }
                 ]
             };

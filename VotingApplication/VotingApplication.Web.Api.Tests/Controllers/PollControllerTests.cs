@@ -30,13 +30,13 @@ namespace VotingApplication.Web.Tests.Controllers
         private Guid _templateUUID;
         private DateTime _templateCreatedDate;
         private Guid[] UUIDs;
-        private Option _redOption;
+        private Choice _redChoice;
         private InMemoryDbSet<Poll> _dummyPolls;
 
         [TestInitialize]
         public void setup()
         {
-            _redOption = new Option() { Name = "Red" };
+            _redChoice = new Choice() { Name = "Red" };
 
             UUIDs = new[] { Guid.NewGuid(), Guid.NewGuid(), _templateUUID, Guid.NewGuid() };
             _mainPoll = new Poll() { UUID = UUIDs[0], ManageId = Guid.NewGuid() };
@@ -49,7 +49,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 UUID = _templateUUID,
                 ManageId = Guid.NewGuid(),
                 CreatedDate = _templateCreatedDate,
-                Options = new List<Option>() { _redOption },
+                Choices = new List<Choice>() { _redChoice },
                 CreatorIdentity = UserId
             };
 

@@ -16,7 +16,7 @@ namespace VotingApplication.Data.Context
             Database.SetInitializer<TestVotingContext>(new CreateDatabaseIfNotExists<TestVotingContext>());
         }
 
-        public IDbSet<Option> Options { get; set; }
+        public IDbSet<Choice> Choices { get; set; }
         public IDbSet<Vote> Votes { get; set; }
         public IDbSet<Poll> Polls { get; set; }
         public IDbSet<Ballot> Ballots { get; set; }

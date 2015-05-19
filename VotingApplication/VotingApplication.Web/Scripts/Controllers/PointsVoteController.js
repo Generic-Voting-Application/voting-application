@@ -9,11 +9,11 @@
 
     function PointsVoteController($scope, $routeParams, ngDialog) {
 
-        $scope.addOption = addOption;
+        $scope.addChoice = addChoice;
         $scope.unallocatedPoints = calculateUnallocatedPoints;
         $scope.addPointsDisabled = shouldAddPointsBeDisabled;
         $scope.subtractPointsDisabled = shouldSubtractPointsBeDisabled;
-        $scope.notifyOptionAdded = notifyOptionAdded;
+        $scope.notifyChoiceAdded = notifyChoiceAdded;
 
         $scope.increaseVote = increaseVote;
         $scope.decreaseVote = decreaseVote;
@@ -29,57 +29,57 @@
             $scope.setVoteCallback(getVotes);
         }
 
-        function getVotes(options) {
-            return options
-                .filter(function (option) { return option.voteValue; })
-                .map(function (option) {
+        function getVotes(choices) {
+            return choices
+                .filter(function (choice) { return choice.voteValue; })
+                .map(function (choice) {
                     return {
-                        OptionId: option.Id,
-                        VoteValue: option.voteValue
+                        ChoiceId: choice.Id,
+                        VoteValue: choice.voteValue
                     };
                 });
         }
 
-        function addOption() {
+        function addChoice() {
             ngDialog.open({
-                template: '/Routes/AddOptionDialog',
-                controller: 'AddVoterOptionDialogController',
+                template: '/Routes/AddChoiceDialog',
+                controller: 'AddVoterChoiceDialogController',
                 scope: $scope,
                 data: { pollId: $scope.pollId }
             });
         }
 
-        function notifyOptionAdded() {
-            $scope.$emit('voterOptionAddedEvent');
+        function notifyChoiceAdded() {
+            $scope.$emit('voterChoiceAddedEvent');
         }
 
         function calculateUnallocatedPoints() {
             var unallocatedPoints = $scope.poll.MaxPoints;
 
-            for (var i = 0; i < $scope.poll.Options.length; i++) {
-                unallocatedPoints -= $scope.poll.Options[i].voteValue || 0;
+            for (var i = 0; i < $scope.poll.Choices.length; i++) {
+                unallocatedPoints -= $scope.poll.Choices[i].voteValue || 0;
             }
 
             return unallocatedPoints;
         }
 
-        function shouldSubtractPointsBeDisabled(option) {
-            return option.voteValue <= 0;
+        function shouldSubtractPointsBeDisabled(choice) {
+            return choice.voteValue <= 0;
         }
 
-        function shouldAddPointsBeDisabled(option) {
-            return option.voteValue >= $scope.poll.MaxPerVote || $scope.unallocatedPoints() === 0;
+        function shouldAddPointsBeDisabled(choice) {
+            return choice.voteValue >= $scope.poll.MaxPerVote || $scope.unallocatedPoints() === 0;
         }
 
-        function increaseVote(option) {
-            if (option.voteValue < $scope.poll.MaxPerVote) {
-                option.voteValue = option.voteValue + 1;
+        function increaseVote(choice) {
+            if (choice.voteValue < $scope.poll.MaxPerVote) {
+                choice.voteValue = choice.voteValue + 1;
             }
         }
 
-        function decreaseVote(option) {
-            if (option.voteValue > 0) {
-                option.voteValue = option.voteValue - 1;
+        function decreaseVote(choice) {
+            if (choice.voteValue > 0) {
+                choice.voteValue = choice.voteValue - 1;
             }
         }
 

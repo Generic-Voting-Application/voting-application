@@ -2,7 +2,7 @@
 
 namespace VotingApplication.Web.Api.Models.DBViewModels
 {
-    public class OptionCreationRequestModel
+    public class ChoiceCreationRequestModel
     {
         [Required]
         [MinLength(1)]

@@ -126,7 +126,7 @@ describe('ManagePollTypeController', function () {
                 data: {
                     Votes: [
                         {
-                            OptionId: 1,
+                            ChoiceId: 1,
                             VoteValue: 1,
                             VoterName: 'Bob'
                         }
@@ -158,7 +158,7 @@ describe('ManagePollTypeController', function () {
                 data: {
                     Votes: [
                         {
-                            OptionId: 1,
+                            ChoiceId: 1,
                             VoteValue: 1,
                             VoterName: 'Bob'
                         }
@@ -190,7 +190,7 @@ describe('ManagePollTypeController', function () {
                 data: {
                     Votes: [
                         {
-                            OptionId: 1,
+                            ChoiceId: 1,
                             VoteValue: 1,
                             VoterName: 'Bob'
                         }
@@ -221,7 +221,7 @@ describe('ManagePollTypeController', function () {
                 data: {
                     Votes: [
                         {
-                            OptionId: 1,
+                            ChoiceId: 1,
                             VoteValue: 1,
                             VoterName: 'Bob'
                         }
@@ -252,7 +252,7 @@ describe('ManagePollTypeController', function () {
                 data: {
                     Votes: [
                         {
-                            OptionId: 1,
+                            ChoiceId: 1,
                             VoteValue: 1,
                             VoterName: 'Bob'
                         }
@@ -282,7 +282,7 @@ describe('ManagePollTypeController', function () {
                 data: {
                     Votes: [
                         {
-                            OptionId: 1,
+                            ChoiceId: 1,
                             VoteValue: 1,
                             VoterName: 'Bob'
                         }

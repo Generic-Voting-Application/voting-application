@@ -133,11 +133,15 @@
     <Compile Include="Migrations\201505111336261_NullablePointsConfig.Designer.cs">
       <DependentUpon>201505111336261_NullablePointsConfig.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505151350009_OptionToChoice.cs" />
+    <Compile Include="Migrations\201505151350009_OptionToChoice.Designer.cs">
+      <DependentUpon>201505151350009_OptionToChoice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
     <Compile Include="Model\Metric.cs" />
     <Compile Include="Model\MetricType.cs" />
-    <Compile Include="Model\Option.cs" />
+    <Compile Include="Model\Choice.cs" />
     <Compile Include="Model\Poll.cs" />
     <Compile Include="Model\Ballot.cs" />
     <Compile Include="Model\Vote.cs" />
@@ -209,6 +213,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505111336261_NullablePointsConfig.resx">
       <DependentUpon>201505111336261_NullablePointsConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505151350009_OptionToChoice.resx">
+      <DependentUpon>201505151350009_OptionToChoice.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
