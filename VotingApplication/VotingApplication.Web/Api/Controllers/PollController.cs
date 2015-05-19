@@ -34,7 +34,7 @@ namespace VotingApplication.Web.Api.Controllers
                 Name = poll.Name,
                 Creator = poll.Creator,
                 PollType = poll.PollType.ToString(),
-                CreatedDate = poll.CreatedDate,
+                CreatedDate = poll.CreatedDateUtc,
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,
                 InviteOnly = poll.InviteOnly,

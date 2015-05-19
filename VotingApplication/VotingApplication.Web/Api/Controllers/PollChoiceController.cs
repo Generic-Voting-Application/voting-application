@@ -53,7 +53,7 @@ namespace VotingApplication.Web.Api.Controllers
                 poll.Choices.Add(newOption);
                 context.Choices.Add(newOption);
 
-                poll.LastUpdated = DateTime.Now;
+                poll.LastUpdatedUtc = DateTime.Now;
 
                 context.SaveChanges();
             }

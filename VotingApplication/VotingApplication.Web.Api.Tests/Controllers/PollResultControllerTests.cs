@@ -44,7 +44,7 @@ namespace VotingApplication.Web.Tests.Controllers
             _emptyUUID = Guid.NewGuid();
             _anonymousUUID = Guid.NewGuid();
 
-            Poll mainPoll = new Poll() { UUID = _mainUUID, LastUpdated = DateTime.Today };
+            Poll mainPoll = new Poll() { UUID = _mainUUID, LastUpdatedUtc = DateTime.Today };
             Poll otherPoll = new Poll() { UUID = _otherUUID };
             Poll emptyPoll = new Poll() { UUID = _emptyUUID };
             Poll anonymousPoll = new Poll() { UUID = _anonymousUUID };

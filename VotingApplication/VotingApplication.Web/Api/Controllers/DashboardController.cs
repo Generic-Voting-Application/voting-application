@@ -29,7 +29,7 @@ namespace VotingApplication.Web.Api.Controllers
                 IEnumerable<DashboardPollResponseModel> userPolls = context
                     .Polls
                     .Where(p => p.CreatorIdentity == userId)
-                    .OrderByDescending(p => p.CreatedDate)
+                    .OrderByDescending(p => p.CreatedDateUtc)
                     .Select(CreateDashboardResponseFromModel);
 
                 return userPolls.ToList();
@@ -44,7 +44,7 @@ namespace VotingApplication.Web.Api.Controllers
                 ManageId = poll.ManageId,
                 Name = poll.Name,
                 Creator = poll.Creator,
-                CreatedDate = poll.CreatedDate,
+                CreatedDate = poll.CreatedDateUtc,
                 ExpiryDate = poll.ExpiryDate
             };
         }
@@ -120,8 +120,8 @@ namespace VotingApplication.Web.Api.Controllers
                 ChoiceAdding = pollToCopy.ChoiceAdding,
 
                 ExpiryDate = pollToCopy.ExpiryDate,
-                LastUpdated = DateTime.Now,
-                CreatedDate = DateTime.Now,
+                LastUpdatedUtc = DateTime.Now,
+                CreatedDateUtc = DateTime.Now,
 
 
                 Choices = CopyOptions(pollToCopy.Choices)

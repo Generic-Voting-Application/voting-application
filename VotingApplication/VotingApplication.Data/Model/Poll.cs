@@ -38,7 +38,7 @@ namespace VotingApplication.Data.Model
         public bool ChoiceAdding { get; set; }
         public bool HiddenResults { get; set; }
 
-        public DateTime LastUpdated { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime LastUpdatedUtc { get; set; }
+        public DateTime CreatedDateUtc { get; set; }
     }
 }

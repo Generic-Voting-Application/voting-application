@@ -129,7 +129,7 @@ namespace VotingApplication.Web.Api.Controllers
                     }
                 }
 
-                poll.LastUpdated = DateTime.Now;
+                poll.LastUpdatedUtc = DateTime.Now;
 
                 context.SaveChanges();
             }
