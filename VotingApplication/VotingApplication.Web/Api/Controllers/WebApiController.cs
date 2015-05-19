@@ -88,10 +88,10 @@ namespace VotingApplication.Web.Api.Controllers
         private Poll PollByPredicate(Expression<Func<Poll, bool>> predicate, string notFoundMessage, IVotingContext context)
         {
             Poll poll = context.Polls
-                .Include(p => p.Options)
+                .Include(p => p.Choices)
                 .Include(p => p.Ballots)
                 .Include(p => p.Ballots.Select(b => b.Votes))
-                .Include(p => p.Ballots.Select(b => b.Votes.Select(v => v.Option)))
+                .Include(p => p.Ballots.Select(b => b.Votes.Select(v => v.Choice)))
                 .SingleOrDefault(predicate);
 
             if (poll == null)

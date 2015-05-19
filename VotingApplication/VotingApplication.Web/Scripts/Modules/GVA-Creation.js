@@ -16,9 +16,9 @@
                         return '../Routes/ManageName/' + params['manageId'];
                     }
                 })
-                .when('/Manage/:manageId/Options', {
+                .when('/Manage/:manageId/Choices', {
                     templateUrl: function (params) {
-                        return '../Routes/ManageOptions/' + params['manageId'];
+                        return '../Routes/ManageChoices/' + params['manageId'];
                     }
                 })
                 .when('/Manage/:manageId/Invitees', {

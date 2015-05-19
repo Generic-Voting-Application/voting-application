@@ -40,8 +40,8 @@ namespace VotingApplication.Web.Api.Controllers
                 InviteOnly = poll.InviteOnly,
                 NamedVoting = poll.NamedVoting,
                 ExpiryDate = poll.ExpiryDate,
-                OptionAdding = poll.OptionAdding,
-                Options = poll.Options,
+                ChoiceAdding = poll.ChoiceAdding,
+                Choices = poll.Choices,
                 HiddenResults = poll.HiddenResults
             };
         }

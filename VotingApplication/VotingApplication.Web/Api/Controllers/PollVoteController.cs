@@ -37,7 +37,7 @@ namespace VotingApplication.Web.Api.Controllers
                     .Votes
                     .Include(v => v.Poll)
                     .Where(v => v.Ballot.TokenGuid == tokenGuid && v.Poll.UUID == pollId)
-                    .Include(v => v.Option)
+                    .Include(v => v.Choice)
                     .Include(v => v.Ballot)
                     .ToList();
 
@@ -51,10 +51,10 @@ namespace VotingApplication.Web.Api.Controllers
         {
             var model = new VoteRequestResponseModel();
 
-            if (vote.Option != null)
+            if (vote.Choice != null)
             {
-                model.OptionId = vote.Option.Id;
-                model.OptionName = vote.Option.Name;
+                model.ChoiceId = vote.Choice.Id;
+                model.ChoiceName = vote.Choice.Name;
             }
 
             if (poll.NamedVoting && vote.Ballot.VoterName != null)
@@ -86,7 +86,7 @@ namespace VotingApplication.Web.Api.Controllers
                     .Polls
                     .Where(p => p.UUID == pollId)
                     .Include(p => p.Ballots)
-                    .Include(p => p.Options)
+                    .Include(p => p.Choices)
                     .SingleOrDefault();
 
                 if (poll == null)
@@ -102,7 +102,7 @@ namespace VotingApplication.Web.Api.Controllers
 
                 foreach (VoteRequestModel voteRequest in ballotRequest.Votes)
                 {
-                    if (poll.Options.All(o => o.Id != voteRequest.OptionId))
+                    if (poll.Choices.All(o => o.Id != voteRequest.ChoiceId))
                     {
                         ModelState.AddModelError("OptionId", "Option choice not valid for this poll");
                     }
@@ -150,9 +150,9 @@ namespace VotingApplication.Web.Api.Controllers
                 // For some reason, we don't have an addrange function on Entity Framework
                 foreach (VoteRequestModel voteRequest in ballotRequest.Votes)
                 {
-                    Option option = context
-                        .Options
-                        .Single(o => o.Id == voteRequest.OptionId);
+                    Choice option = context
+                        .Choices
+                        .Single(o => o.Id == voteRequest.ChoiceId);
 
                     Vote modelToVote = ModelToVote(voteRequest, ballot, option, poll);
                     context.Votes.Add(modelToVote);
@@ -171,11 +171,11 @@ namespace VotingApplication.Web.Api.Controllers
             }
         }
 
-        private static Vote ModelToVote(VoteRequestModel voteRequest, Ballot ballot, Option option, Poll poll)
+        private static Vote ModelToVote(VoteRequestModel voteRequest, Ballot ballot, Choice option, Poll poll)
         {
             return new Vote
             {
-                Option = option,
+                Choice = option,
                 Poll = poll,
                 Ballot = ballot,
                 VoteValue = voteRequest.VoteValue

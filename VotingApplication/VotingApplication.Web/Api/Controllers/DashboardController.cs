@@ -70,7 +70,7 @@ namespace VotingApplication.Web.Api.Controllers
 
                 Poll pollToCopy = context
                     .Polls
-                    .Include(p => p.Options)
+                    .Include(p => p.Choices)
                     .SingleOrDefault(p => p.UUID == pollCopyRequest.UUIDToCopy);
 
                 if (pollToCopy == null)
@@ -117,26 +117,26 @@ namespace VotingApplication.Web.Api.Controllers
 
                 InviteOnly = pollToCopy.InviteOnly,
                 NamedVoting = pollToCopy.NamedVoting,
-                OptionAdding = pollToCopy.OptionAdding,
+                ChoiceAdding = pollToCopy.ChoiceAdding,
 
                 ExpiryDate = pollToCopy.ExpiryDate,
                 LastUpdatedUtc = DateTime.Now,
                 CreatedDateUtc = DateTime.Now,
 
 
-                Options = CopyOptions(pollToCopy.Options)
+                Choices = CopyOptions(pollToCopy.Choices)
             };
         }
 
-        private static List<Option> CopyOptions(IEnumerable<Option> options)
+        private static List<Choice> CopyOptions(IEnumerable<Choice> options)
         {
             if (options == null)
             {
-                return new List<Option>(0);
+                return new List<Choice>(0);
             }
 
             return options
-                .Select(o => new Option()
+                .Select(o => new Choice()
                 {
                     Name = o.Name,
                     Description = o.Description

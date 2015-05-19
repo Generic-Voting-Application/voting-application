@@ -23,13 +23,13 @@ namespace VotingApplication.Web.Api.Metrics
         public void HandlePollTypeChangedEvent(PollType pollType, int maxPerVote, int maxPerPoll, Guid pollId) { }
         public void HandleInviteOnlyChangedEvent(bool inviteOnly, Guid pollId) { }
         public void HandleNamedVotingChangedEvent(bool namedVoting, Guid pollId) { }
-        public void HandleOptionAddingChangedEvent(bool optionAdding, Guid pollId) { }
+        public void HandleChoiceAddingChangedEvent(bool optionAdding, Guid pollId) { }
         public void HandleHiddenResultsChangedEvent(bool hiddenResults, Guid pollId) { }
         public void HandleQuestionChangedEvent(string question, Guid pollId) { }
 
-        public void HandleOptionAddedEvent(Option option, Guid pollId) { }
-        public void HandleOptionUpdatedEvent(Option option, Guid pollId) { }
-        public void HandleOptionDeletedEvent(Option option, Guid pollId) { }
+        public void HandleChoiceAddedEvent(Choice option, Guid pollId) { }
+        public void HandleChoiceUpdatedEvent(Choice option, Guid pollId) { }
+        public void HandleChoiceDeletedEvent(Choice option, Guid pollId) { }
 
         public void HandleVoteAddedEvent(Vote vote, Guid pollId) { }
         public void HandleVoteDeletedEvent(Vote vote, Guid pollId) { }

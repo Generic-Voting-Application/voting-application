@@ -11,40 +11,40 @@ using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers
 {
-    public class ManageOptionController : WebApiController
+    public class ManageChoiceController : WebApiController
     {
-        public ManageOptionController()
+        public ManageChoiceController()
         {
         }
 
-        public ManageOptionController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
+        public ManageChoiceController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpGet]
-        public List<ManageOptionResponseModel> Get(Guid manageId)
+        public List<ManageChoiceResponseModel> Get(Guid manageId)
         {
             using (IVotingContext context = _contextFactory.CreateContext())
             {
                 Poll poll = PollByManageId(manageId, context);
 
                 return poll
-                    .Options
+                    .Choices
                     .Select(CreateOptionResponseModel)
                     .ToList();
             }
         }
 
-        public ManageOptionResponseModel CreateOptionResponseModel(Option option)
+        public ManageChoiceResponseModel CreateOptionResponseModel(Choice option)
         {
-            return new ManageOptionResponseModel()
+            return new ManageChoiceResponseModel()
             {
-                OptionNumber = option.PollOptionNumber,
+                ChoiceNumber = option.PollChoiceNumber,
                 Name = option.Name,
                 Description = option.Description
             };
         }
 
         [HttpPut]
-        public void Put(Guid manageId, ManageOptionUpdateRequest request)
+        public void Put(Guid manageId, ManageChoiceUpdateRequest request)
         {
             ValidateRequest(request);
 
@@ -80,9 +80,9 @@ namespace VotingApplication.Web.Api.Controllers
                 UpdateOptions(request, poll, optionsToUpdate);
 
 
-                List<OptionUpdate> optionUpdatesToAdd = request
-                    .Options
-                    .Where(o => o.OptionNumber.HasValue == false)
+                List<ChoiceUpdate> optionUpdatesToAdd = request
+                    .Choices
+                    .Where(o => o.ChoiceNumber.HasValue == false)
                     .ToList();
 
                 AddNewOptions(context, poll, optionUpdatesToAdd);
@@ -97,7 +97,7 @@ namespace VotingApplication.Web.Api.Controllers
         {
             Poll poll = context
                 .Polls
-                .Include(p => p.Options)
+                .Include(p => p.Choices)
                 .SingleOrDefault(p => p.ManageId == manageId);
 
             if (poll == null)
@@ -107,7 +107,7 @@ namespace VotingApplication.Web.Api.Controllers
             return poll;
         }
 
-        private void ValidateRequest(ManageOptionUpdateRequest request)
+        private void ValidateRequest(ManageChoiceUpdateRequest request)
         {
             if (request == null)
             {
@@ -118,18 +118,18 @@ namespace VotingApplication.Web.Api.Controllers
         private static List<int> GetExistingPollOptionNumbers(Poll poll)
         {
             List<int> existingPollOptionNumbers = poll
-                .Options
-                .Select(o => o.PollOptionNumber)
+                .Choices
+                .Select(o => o.PollChoiceNumber)
                 .ToList();
             return existingPollOptionNumbers;
         }
 
-        private static List<int> GetRequestPollOptionNumbers(ManageOptionUpdateRequest request)
+        private static List<int> GetRequestPollOptionNumbers(ManageChoiceUpdateRequest request)
         {
             List<int> requestPollOptionNumbers = request
-                .Options
-                .Where(o => o.OptionNumber.HasValue)
-                .Select(o => o.OptionNumber.Value)
+                .Choices
+                .Where(o => o.ChoiceNumber.HasValue)
+                .Select(o => o.ChoiceNumber.Value)
                 .ToList();
             return requestPollOptionNumbers;
         }
@@ -138,18 +138,18 @@ namespace VotingApplication.Web.Api.Controllers
         {
             foreach (int pollOptionNumber in optionsToRemove)
             {
-                Option option = poll
-                    .Options
-                    .Single(o => o.PollOptionNumber == pollOptionNumber);
+                Choice option = poll
+                    .Choices
+                    .Single(o => o.PollChoiceNumber == pollOptionNumber);
 
-                _metricHandler.HandleOptionDeletedEvent(option, poll.UUID);
-                poll.Options.Remove(option);
-                context.Options.Remove(option);
+                _metricHandler.HandleChoiceDeletedEvent(option, poll.UUID);
+                poll.Choices.Remove(option);
+                context.Choices.Remove(option);
 
                 List<Vote> votes = context
                     .Votes
-                    .Include(v => v.Option)
-                    .Where(v => v.Option.PollOptionNumber == pollOptionNumber)
+                    .Include(v => v.Choice)
+                    .Where(v => v.Choice.PollChoiceNumber == pollOptionNumber)
                     .ToList();
 
                 foreach (Vote vote in votes)
@@ -166,39 +166,39 @@ namespace VotingApplication.Web.Api.Controllers
             }
         }
 
-        private void UpdateOptions(ManageOptionUpdateRequest request, Poll poll, IEnumerable<int> optionsToUpdate)
+        private void UpdateOptions(ManageChoiceUpdateRequest request, Poll poll, IEnumerable<int> optionsToUpdate)
         {
             foreach (int pollOptionNumber in optionsToUpdate)
             {
-                Option option = poll
-                    .Options
-                    .Single(o => o.PollOptionNumber == pollOptionNumber);
+                Choice option = poll
+                    .Choices
+                    .Single(o => o.PollChoiceNumber == pollOptionNumber);
 
-                OptionUpdate update = request
-                    .Options
-                    .Single(o => o.OptionNumber == pollOptionNumber);
+                ChoiceUpdate update = request
+                    .Choices
+                    .Single(o => o.ChoiceNumber == pollOptionNumber);
 
                 option.Name = update.Name;
                 option.Description = update.Description;
 
-                _metricHandler.HandleOptionUpdatedEvent(option, poll.UUID);
+                _metricHandler.HandleChoiceUpdatedEvent(option, poll.UUID);
             }
         }
 
-        private void AddNewOptions(IVotingContext context, Poll poll, IEnumerable<OptionUpdate> optionUpdatesToAdd)
+        private void AddNewOptions(IVotingContext context, Poll poll, IEnumerable<ChoiceUpdate> optionUpdatesToAdd)
         {
-            foreach (OptionUpdate optionRequest in optionUpdatesToAdd)
+            foreach (ChoiceUpdate optionRequest in optionUpdatesToAdd)
             {
-                var option = new Option
+                var option = new Choice
                 {
                     Name = optionRequest.Name,
                     Description = optionRequest.Description
                 };
 
-                _metricHandler.HandleOptionAddedEvent(option, poll.UUID);
+                _metricHandler.HandleChoiceAddedEvent(option, poll.UUID);
 
-                poll.Options.Add(option);
-                context.Options.Add(option);
+                poll.Choices.Add(option);
+                context.Choices.Add(option);
             }
         }
     }

@@ -61,10 +61,6 @@ describe('Registered Dashboard Controller', function () {
         });
     }));
 
-    it('Registers as an observer with the account service', function () {
-        expect(mockAccountService.registerAccountObserver).toHaveBeenCalled();
-    });
-
     it('Loads user polls', function () {
         var userPollData = [
             {

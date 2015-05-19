@@ -1,9 +1,9 @@
 ﻿
 namespace VotingApplication.Web.Api.Models.DBViewModels
 {
-    public class ManageOptionResponseModel
+    public class ManageChoiceResponseModel
     {
-        public int OptionNumber { get; set; }
+        public int ChoiceNumber { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
     }

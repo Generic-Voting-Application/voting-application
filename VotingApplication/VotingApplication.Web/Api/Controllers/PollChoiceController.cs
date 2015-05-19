@@ -10,14 +10,14 @@ using VotingApplication.Web.Api.Models.DBViewModels;
 
 namespace VotingApplication.Web.Api.Controllers
 {
-    public class PollOptionController : WebApiController
+    public class PollChoiceController : WebApiController
     {
-        public PollOptionController() : base() { }
+        public PollChoiceController() : base() { }
 
-        public PollOptionController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
+        public PollChoiceController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpPost]
-        public void Post(Guid pollId, OptionCreationRequestModel optionCreationRequest)
+        public void Post(Guid pollId, ChoiceCreationRequestModel optionCreationRequest)
         {
             using (IVotingContext context = _contextFactory.CreateContext())
             {
@@ -28,7 +28,7 @@ namespace VotingApplication.Web.Api.Controllers
 
                 Poll poll = context
                     .Polls
-                    .Include(p => p.Options)
+                    .Include(p => p.Choices)
                     .SingleOrDefault(p => p.UUID == pollId);
 
                 if (poll == null)
@@ -36,7 +36,7 @@ namespace VotingApplication.Web.Api.Controllers
                     ThrowError(HttpStatusCode.NotFound, string.Format("Poll {0} does not exist", pollId));
                 }
 
-                if (!poll.OptionAdding)
+                if (!poll.ChoiceAdding)
                 {
                     ThrowError(HttpStatusCode.MethodNotAllowed, string.Format("Option adding not allowed for poll {0}", pollId));
                 }
@@ -46,12 +46,12 @@ namespace VotingApplication.Web.Api.Controllers
                     ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
-                Option newOption = CreateOptionFromRequest(optionCreationRequest);
+                Choice newOption = CreateOptionFromRequest(optionCreationRequest);
 
-                _metricHandler.HandleOptionAddedEvent(newOption, pollId);
+                _metricHandler.HandleChoiceAddedEvent(newOption, pollId);
 
-                poll.Options.Add(newOption);
-                context.Options.Add(newOption);
+                poll.Choices.Add(newOption);
+                context.Choices.Add(newOption);
 
                 poll.LastUpdatedUtc = DateTime.Now;
 
@@ -59,9 +59,9 @@ namespace VotingApplication.Web.Api.Controllers
             }
         }
 
-        private static Option CreateOptionFromRequest(OptionCreationRequestModel requestModel)
+        private static Choice CreateOptionFromRequest(ChoiceCreationRequestModel requestModel)
         {
-            return new Option
+            return new Choice
             {
                 Name = requestModel.Name,
                 Description = requestModel.Description

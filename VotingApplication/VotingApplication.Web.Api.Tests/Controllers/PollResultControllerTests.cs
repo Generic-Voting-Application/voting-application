@@ -25,7 +25,7 @@ namespace VotingApplication.Web.Tests.Controllers
         private Vote _joeVote;
         private Vote _otherVote;
         private Vote _anonymousVote;
-        private Option _burgerOption;
+        private Choice _burgerChoice;
         private Guid _mainUUID;
         private Guid _otherUUID;
         private Guid _emptyUUID;
@@ -36,7 +36,7 @@ namespace VotingApplication.Web.Tests.Controllers
         public void setup()
         {
             _dummyVotes = new InMemoryDbSet<Vote>(true);
-            InMemoryDbSet<Option> dummyOptions = new InMemoryDbSet<Option>(true);
+            InMemoryDbSet<Choice> dummyChoices = new InMemoryDbSet<Choice>(true);
             InMemoryDbSet<Poll> dummyPolls = new InMemoryDbSet<Poll>(true);
 
             _mainUUID = Guid.NewGuid();
@@ -51,19 +51,19 @@ namespace VotingApplication.Web.Tests.Controllers
 
             anonymousPoll.NamedVoting = false;
 
-            _burgerOption = new Option { Id = 1, Name = "Burger King" };
+            _burgerChoice = new Choice { Id = 1, Name = "Burger King" };
 
-            _bobVote = new Vote() { Id = 1, Poll = mainPoll, Option = _burgerOption, Ballot = new Ballot(), VoteValue = 1 };
-            _joeVote = new Vote() { Id = 2, Poll = mainPoll, Option = _burgerOption, Ballot = new Ballot(), VoteValue = 1 };
-            _otherVote = new Vote() { Id = 3, Poll = new Poll() { UUID = _otherUUID }, Option = new Option() { Id = 1 }, Ballot = new Ballot() };
-            _anonymousVote = new Vote() { Id = 4, Poll = new Poll() { UUID = _anonymousUUID }, Option = new Option() { Id = 1 }, Ballot = new Ballot() };
+            _bobVote = new Vote() { Id = 1, Poll = mainPoll, Choice = _burgerChoice, Ballot = new Ballot(), VoteValue = 1 };
+            _joeVote = new Vote() { Id = 2, Poll = mainPoll, Choice = _burgerChoice, Ballot = new Ballot(), VoteValue = 1 };
+            _otherVote = new Vote() { Id = 3, Poll = new Poll() { UUID = _otherUUID }, Choice = new Choice() { Id = 1 }, Ballot = new Ballot() };
+            _anonymousVote = new Vote() { Id = 4, Poll = new Poll() { UUID = _anonymousUUID }, Choice = new Choice() { Id = 1 }, Ballot = new Ballot() };
 
             _dummyVotes.Add(_bobVote);
             _dummyVotes.Add(_joeVote);
             _dummyVotes.Add(_otherVote);
             _dummyVotes.Add(_anonymousVote);
 
-            dummyOptions.Add(_burgerOption);
+            dummyChoices.Add(_burgerChoice);
 
             dummyPolls.Add(mainPoll);
             dummyPolls.Add(otherPoll);
@@ -74,7 +74,7 @@ namespace VotingApplication.Web.Tests.Controllers
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
             mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
-            mockContext.Setup(a => a.Options).Returns(dummyOptions);
+            mockContext.Setup(a => a.Choices).Returns(dummyChoices);
             mockContext.Setup(a => a.Polls).Returns(dummyPolls);
 
             var mockMetricHandler = new Mock<IMetricHandler>();
@@ -111,7 +111,7 @@ namespace VotingApplication.Web.Tests.Controllers
             // Assert
             var responseVotes = response.Votes;
             Assert.AreEqual(2, responseVotes.Count);
-            CollectionAssert.AreEqual(new long[] { 1, 1 }, responseVotes.Select(r => r.OptionId).ToArray());
+            CollectionAssert.AreEqual(new long[] { 1, 1 }, responseVotes.Select(r => r.ChoiceId).ToArray());
         }
 
         [TestMethod]
@@ -169,8 +169,8 @@ namespace VotingApplication.Web.Tests.Controllers
             var response = _controller.Get(_mainUUID);
 
             // Assert
-            List<Option> responseWinners = response.Winners;
-            List<Option> expectedWinners = new List<Option>() { _burgerOption };
+            List<Choice> responseWinners = response.Winners;
+            List<Choice> expectedWinners = new List<Choice>() { _burgerChoice };
 
             Assert.AreEqual(1, responseWinners.Count);
 
@@ -188,7 +188,7 @@ namespace VotingApplication.Web.Tests.Controllers
 
             Assert.AreEqual(1, responseResults.Count);
             Assert.AreEqual(2, responseResults[0].Voters.Count);
-            Assert.AreEqual(_burgerOption, responseResults[0].Option);
+            Assert.AreEqual(_burgerChoice, responseResults[0].Choice);
             Assert.AreEqual(2, responseResults[0].Sum);
         }
 
@@ -218,9 +218,9 @@ namespace VotingApplication.Web.Tests.Controllers
                 };
                 polls.Add(poll);
 
-                IDbSet<Option> options = DbSetTestHelper.CreateMockDbSet<Option>();
-                var option1 = new Option() { PollOptionNumber = 1 };
-                var option2 = new Option() { PollOptionNumber = 2 };
+                IDbSet<Choice> options = DbSetTestHelper.CreateMockDbSet<Choice>();
+                var option1 = new Choice() { PollChoiceNumber = 1 };
+                var option2 = new Choice() { PollChoiceNumber = 2 };
                 options.Add(option1);
                 options.Add(option2);
 
@@ -231,9 +231,9 @@ namespace VotingApplication.Web.Tests.Controllers
                 ballots.Add(ballot2);
 
                 IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
-                var vote1 = new Vote() { Option = option1, Poll = poll, Ballot = ballot1 };
-                var vote2 = new Vote() { Option = option2, Poll = poll, Ballot = ballot1 };
-                var vote3 = new Vote() { Option = option1, Poll = poll, Ballot = ballot2 };
+                var vote1 = new Vote() { Choice = option1, Poll = poll, Ballot = ballot1 };
+                var vote2 = new Vote() { Choice = option2, Poll = poll, Ballot = ballot1 };
+                var vote3 = new Vote() { Choice = option1, Poll = poll, Ballot = ballot2 };
                 votes.Add(vote1);
                 votes.Add(vote2);
                 votes.Add(vote3);
@@ -280,9 +280,9 @@ namespace VotingApplication.Web.Tests.Controllers
                 };
                 polls.Add(poll);
 
-                IDbSet<Option> options = DbSetTestHelper.CreateMockDbSet<Option>();
-                var option1 = new Option() { PollOptionNumber = 1 };
-                var option2 = new Option() { PollOptionNumber = 2 };
+                IDbSet<Choice> options = DbSetTestHelper.CreateMockDbSet<Choice>();
+                var option1 = new Choice() { PollChoiceNumber = 1 };
+                var option2 = new Choice() { PollChoiceNumber = 2 };
                 options.Add(option1);
                 options.Add(option2);
 
@@ -293,9 +293,9 @@ namespace VotingApplication.Web.Tests.Controllers
                 ballots.Add(ballot2);
 
                 IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
-                var vote1 = new Vote() { Option = option1, Poll = poll, Ballot = ballot1 };
-                var vote2 = new Vote() { Option = option2, Poll = poll, Ballot = ballot1 };
-                var vote3 = new Vote() { Option = option1, Poll = poll, Ballot = ballot2 };
+                var vote1 = new Vote() { Choice = option1, Poll = poll, Ballot = ballot1 };
+                var vote2 = new Vote() { Choice = option2, Poll = poll, Ballot = ballot1 };
+                var vote3 = new Vote() { Choice = option1, Poll = poll, Ballot = ballot2 };
                 votes.Add(vote1);
                 votes.Add(vote2);
                 votes.Add(vote3);
@@ -342,9 +342,9 @@ namespace VotingApplication.Web.Tests.Controllers
                 };
                 polls.Add(poll);
 
-                IDbSet<Option> options = DbSetTestHelper.CreateMockDbSet<Option>();
-                var option1 = new Option() { PollOptionNumber = 1 };
-                var option2 = new Option() { PollOptionNumber = 2 };
+                IDbSet<Choice> options = DbSetTestHelper.CreateMockDbSet<Choice>();
+                var option1 = new Choice() { PollChoiceNumber = 1 };
+                var option2 = new Choice() { PollChoiceNumber = 2 };
                 options.Add(option1);
                 options.Add(option2);
 
@@ -355,9 +355,9 @@ namespace VotingApplication.Web.Tests.Controllers
                 ballots.Add(ballot2);
 
                 IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
-                var vote1 = new Vote() { Option = option1, Poll = poll, Ballot = ballot1 };
-                var vote2 = new Vote() { Option = option2, Poll = poll, Ballot = ballot1 };
-                var vote3 = new Vote() { Option = option1, Poll = poll, Ballot = ballot2 };
+                var vote1 = new Vote() { Choice = option1, Poll = poll, Ballot = ballot1 };
+                var vote2 = new Vote() { Choice = option2, Poll = poll, Ballot = ballot1 };
+                var vote3 = new Vote() { Choice = option1, Poll = poll, Ballot = ballot2 };
                 votes.Add(vote1);
                 votes.Add(vote2);
                 votes.Add(vote3);

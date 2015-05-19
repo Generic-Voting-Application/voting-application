@@ -138,7 +138,7 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setNamedVoting);
         }
 
-        public void HandleOptionAddingChangedEvent(bool optionAdding, Guid pollId)
+        public void HandleChoiceAddingChangedEvent(bool optionAdding, Guid pollId)
         {
             Metric setAllowOptionAdding = new Metric(MetricType.SetOptionAdding, pollId);
             setAllowOptionAdding.Value = (optionAdding) ? "True" : "False";
@@ -158,27 +158,27 @@ namespace VotingApplication.Web.Api.Metrics
 
         #region Options
 
-        public void HandleOptionAddedEvent(Option option, Guid pollId)
+        public void HandleChoiceAddedEvent(Choice option, Guid pollId)
         {
             Metric optionAddedEvent = new Metric(MetricType.AddOption, pollId);
             optionAddedEvent.Value = option.Name;
-            optionAddedEvent.Detail = string.Format("#{0} '{1}'", option.PollOptionNumber, option.Description);
+            optionAddedEvent.Detail = string.Format("#{0} '{1}'", option.PollChoiceNumber, option.Description);
             StoreEvent(optionAddedEvent);
         }
 
-        public void HandleOptionUpdatedEvent(Option option, Guid pollId)
+        public void HandleChoiceUpdatedEvent(Choice option, Guid pollId)
         {
             Metric optionUpdatedEvent = new Metric(MetricType.UpdateOption, pollId);
             optionUpdatedEvent.Value = option.Name;
-            optionUpdatedEvent.Detail = string.Format("#{0} '{1}'", option.PollOptionNumber, option.Description);
+            optionUpdatedEvent.Detail = string.Format("#{0} '{1}'", option.PollChoiceNumber, option.Description);
             StoreEvent(optionUpdatedEvent);
         }
 
-        public void HandleOptionDeletedEvent(Option option, Guid pollId)
+        public void HandleChoiceDeletedEvent(Choice option, Guid pollId)
         {
             Metric optionDeletedEvent = new Metric(MetricType.DeleteOption, pollId);
             optionDeletedEvent.Value = option.Name;
-            optionDeletedEvent.Detail = string.Format("#{0} '{1}'", option.PollOptionNumber, option.Description);
+            optionDeletedEvent.Detail = string.Format("#{0} '{1}'", option.PollChoiceNumber, option.Description);
             StoreEvent(optionDeletedEvent);
         }
 
@@ -189,16 +189,16 @@ namespace VotingApplication.Web.Api.Metrics
         public void HandleVoteAddedEvent(Vote vote, Guid pollId)
         {
             Metric voteAddedEvent = new Metric(MetricType.AddVote, pollId);
-            voteAddedEvent.Value = vote.Option.PollOptionNumber.ToString();
-            voteAddedEvent.Detail = vote.Option.Name + " (" + vote.VoteValue + ")";
+            voteAddedEvent.Value = vote.Choice.PollChoiceNumber.ToString();
+            voteAddedEvent.Detail = vote.Choice.Name + " (" + vote.VoteValue + ")";
             StoreEvent(voteAddedEvent);
         }
 
         public void HandleVoteDeletedEvent(Vote vote, Guid pollId)
         {
             Metric voteAddedEvent = new Metric(MetricType.DeleteVote, pollId);
-            voteAddedEvent.Value = vote.Option.PollOptionNumber.ToString();
-            voteAddedEvent.Detail = vote.Option.Name + " (" + vote.VoteValue + ")";
+            voteAddedEvent.Value = vote.Choice.PollChoiceNumber.ToString();
+            voteAddedEvent.Detail = vote.Choice.Name + " (" + vote.VoteValue + ")";
             StoreEvent(voteAddedEvent);
         }
 

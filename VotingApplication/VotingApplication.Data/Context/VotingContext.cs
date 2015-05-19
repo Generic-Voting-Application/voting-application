@@ -14,7 +14,7 @@ namespace VotingApplication.Data.Context
             this.Configuration.UseDatabaseNullSemantics = true;
         }
 
-        public IDbSet<Option> Options { get; set; }
+        public IDbSet<Choice> Choices { get; set; }
         public IDbSet<Vote> Votes { get; set; }
         public IDbSet<Poll> Polls { get; set; }
         public IDbSet<Ballot> Ballots { get; set; }

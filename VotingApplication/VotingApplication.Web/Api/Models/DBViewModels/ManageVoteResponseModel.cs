@@ -17,8 +17,8 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
 
     public class VoteResponse
     {
-        public int OptionNumber { get; set; }
-        public string OptionName { get; set; }
+        public int ChoiceNumber { get; set; }
+        public string ChoiceName { get; set; }
         public int Value { get; set; }
     }
 }

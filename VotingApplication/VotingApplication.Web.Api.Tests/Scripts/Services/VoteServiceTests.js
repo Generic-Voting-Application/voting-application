@@ -155,20 +155,20 @@ describe('Vote Service', function () {
 
     });
 
-    describe('Add Voter Option', function () {
+    describe('Add Voter Choice', function () {
 
-        it('Makes http call to add option', function () {
+        it('Makes http call to add choice', function () {
             var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
-            var newOption = {};
+            var newChoice = {};
 
-            var expectedUrl = '/api/poll/' + pollId + '/option';
+            var expectedUrl = '/api/poll/' + pollId + '/choice';
 
             httpBackend.expect(
                     'POST',
                     expectedUrl
                     ).respond(200, '');
 
-            voteService.addVoterOption(pollId, newOption);
+            voteService.addVoterChoice(pollId, newChoice);
 
             httpBackend.flush();
 

@@ -2,7 +2,7 @@
 
 namespace VotingApplication.Web.Api.Models.DBViewModels
 {
-    public class OptionRequestResponseModel
+    public class ChoiceRequestResponseModel
     {
         public long Id { get; set; }
         public string Name { get; set; }
