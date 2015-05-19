@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Net;
 using System.Web.Http;
-using Microsoft.AspNet.Identity;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Data.Model.Creation;
@@ -26,7 +26,7 @@ namespace VotingApplication.Web.Api.Controllers
             }
         }
 
-        private PollRequestResponseModel CreatePollResponseFromModel(Poll poll)
+        private static PollRequestResponseModel CreatePollResponseFromModel(Poll poll)
         {
             return new PollRequestResponseModel
             {
@@ -34,7 +34,6 @@ namespace VotingApplication.Web.Api.Controllers
                 Name = poll.Name,
                 Creator = poll.Creator,
                 PollType = poll.PollType.ToString(),
-                CreatedDate = poll.CreatedDateUtc,
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,
                 InviteOnly = poll.InviteOnly,
