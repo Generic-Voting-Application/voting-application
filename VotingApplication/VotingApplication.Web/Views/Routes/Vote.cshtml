@@ -5,9 +5,6 @@
         <button id="not-user-btn" class="btn inactive-btn" ng-click="logoutIdentity()">Not {{identityName}}?</button>
     </div>
     <div voting-strategy></div>
-    <div class="flexbox spaced-bottom">
-        <div id="clear-vote-button" class="btn error-btn clickable centered" ng-click="clearVote()">Clear vote</div>
-    </div>
     <div class="flexbox">
         <a class="centered" ng-hide="poll.HiddenResults" href="{{resultsLink}}">
             <div id="results-button" class="btn inactive-btn clickable">Go to results</div>
