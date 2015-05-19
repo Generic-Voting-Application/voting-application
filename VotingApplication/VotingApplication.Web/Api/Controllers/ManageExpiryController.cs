@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
@@ -38,7 +37,7 @@ namespace VotingApplication.Web.Api.Controllers
                 }
 
                 poll.ExpiryDate = updateRequest.ExpiryDate;
-                poll.LastUpdatedUtc = DateTime.Now;
+                poll.LastUpdatedUtc = DateTime.UtcNow;
                 _metricHandler.HandleExpiryChangedEvent(poll.ExpiryDate, poll.UUID);
 
                 context.SaveChanges();

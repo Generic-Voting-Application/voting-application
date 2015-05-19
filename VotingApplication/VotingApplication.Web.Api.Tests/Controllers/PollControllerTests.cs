@@ -43,7 +43,7 @@ namespace VotingApplication.Web.Tests.Controllers
             _otherPoll = new Poll() { UUID = UUIDs[1], ManageId = Guid.NewGuid() };
 
             _templateUUID = Guid.NewGuid();
-            _templateCreatedDate = DateTime.Now.AddDays(-5);
+            _templateCreatedDate = DateTime.UtcNow.AddDays(-5);
             _templatePoll = new Poll()
             {
                 UUID = _templateUUID,

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
@@ -51,7 +50,7 @@ namespace VotingApplication.Web.Api.Controllers
                     _metricHandler.HandleHiddenResultsChangedEvent(poll.HiddenResults, poll.UUID);
                 }
 
-                poll.LastUpdatedUtc = DateTime.Now;
+                poll.LastUpdatedUtc = DateTime.UtcNow;
 
                 context.SaveChanges();
             }

@@ -120,8 +120,8 @@ namespace VotingApplication.Web.Api.Controllers
                 OptionAdding = pollToCopy.OptionAdding,
 
                 ExpiryDate = pollToCopy.ExpiryDate,
-                LastUpdatedUtc = DateTime.Now,
-                CreatedDateUtc = DateTime.Now,
+                LastUpdatedUtc = DateTime.UtcNow,
+                CreatedDateUtc = DateTime.UtcNow,
 
 
                 Options = CopyOptions(pollToCopy.Options)

@@ -165,7 +165,7 @@ namespace VotingApplication.Web.Api.Controllers
                     ballot.VoterName = Regex.Replace(ballotRequest.VoterName, ValidVoterNameRegex, "");
                 }
 
-                poll.LastUpdatedUtc = DateTime.Now;
+                poll.LastUpdatedUtc = DateTime.UtcNow;
 
                 context.SaveChanges();
             }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
@@ -42,7 +41,7 @@ namespace VotingApplication.Web.Api.Controllers
                 _metricHandler.HandleQuestionChangedEvent(request.Question, poll.UUID);
 
                 poll.Name = request.Question;
-                poll.LastUpdatedUtc = DateTime.Now;
+                poll.LastUpdatedUtc = DateTime.UtcNow;
 
                 context.SaveChanges();
             }

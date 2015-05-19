@@ -59,7 +59,7 @@ namespace VotingApplication.Web.Api.Controllers
 
                 poll.MaxPoints = updateRequest.MaxPoints;
 
-                poll.LastUpdatedUtc = DateTime.Now;
+                poll.LastUpdatedUtc = DateTime.UtcNow;
 
                 context.SaveChanges();
             }
