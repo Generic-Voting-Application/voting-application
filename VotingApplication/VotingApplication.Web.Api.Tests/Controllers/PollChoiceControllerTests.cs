@@ -17,7 +17,7 @@ using VotingApplication.Web.Tests.TestHelpers;
 namespace VotingApplication.Web.Tests.Controllers
 {
     [TestClass]
-    public class PollOptionControllerTests
+    public class PollChoiceControllerTests
     {
         [TestClass]
         public class PostTests
@@ -31,7 +31,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
-                PollOptionController controller = CreatePollOptionController(contextFactory);
+                PollChoiceController controller = CreatePollChoiceController(contextFactory);
 
 
                 controller.Post(PollManageGuid, null);
@@ -44,45 +44,45 @@ namespace VotingApplication.Web.Tests.Controllers
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
-                PollOptionController controller = CreatePollOptionController(contextFactory);
+                PollChoiceController controller = CreatePollChoiceController(contextFactory);
 
-                OptionCreationRequestModel optionCreationRequestModel = new OptionCreationRequestModel();
+                ChoiceCreationRequestModel optionCreationRequestModel = new ChoiceCreationRequestModel();
 
                 controller.Post(PollManageGuid, optionCreationRequestModel);
             }
 
             [TestMethod]
             [ExpectedHttpResponseException(HttpStatusCode.MethodNotAllowed)]
-            public void OptionAddingNotAllowedForPoll_ThrowsMethodNotAllowed()
+            public void ChoiceAddingNotAllowedForPoll_ThrowsMethodNotAllowed()
             {
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
-                polls.Add(new Poll() { UUID = PollManageGuid, OptionAdding = false });
+                polls.Add(new Poll() { UUID = PollManageGuid, ChoiceAdding = false });
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
-                PollOptionController controller = CreatePollOptionController(contextFactory);
+                PollChoiceController controller = CreatePollChoiceController(contextFactory);
 
-                OptionCreationRequestModel optionCreationRequestModel = new OptionCreationRequestModel();
+                ChoiceCreationRequestModel optionCreationRequestModel = new ChoiceCreationRequestModel();
 
                 controller.Post(PollManageGuid, optionCreationRequestModel);
             }
 
             [TestMethod]
-            public void OptionAddingAllowedForPoll_AddsOption()
+            public void ChoiceAddingAllowedForPoll_AddsChoice()
             {
                 const string optionName = "new option";
                 const string optionDescription = "description";
 
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
-                IDbSet<Option> options = DbSetTestHelper.CreateMockDbSet<Option>();
+                IDbSet<Choice> options = DbSetTestHelper.CreateMockDbSet<Choice>();
 
-                polls.Add(new Poll() { UUID = PollManageGuid, OptionAdding = true });
+                polls.Add(new Poll() { UUID = PollManageGuid, ChoiceAdding = true });
 
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, options);
-                PollOptionController controller = CreatePollOptionController(contextFactory);
+                PollChoiceController controller = CreatePollChoiceController(contextFactory);
 
 
-                OptionCreationRequestModel optionCreationRequestModel = new OptionCreationRequestModel()
+                ChoiceCreationRequestModel optionCreationRequestModel = new ChoiceCreationRequestModel()
                 {
                     Name = optionName,
                     Description = optionDescription,
@@ -96,27 +96,27 @@ namespace VotingApplication.Web.Tests.Controllers
             }
 
             [TestMethod]
-            public void OptionAddingAllowedForPoll_AddsOptionToPoll()
+            public void ChoiceAddingAllowedForPoll_AddsChoiceToPoll()
             {
                 const string optionName = "new option";
                 const string optionDescription = "description";
 
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
-                IDbSet<Option> options = DbSetTestHelper.CreateMockDbSet<Option>();
+                IDbSet<Choice> options = DbSetTestHelper.CreateMockDbSet<Choice>();
 
                 Poll poll = new Poll()
                 {
                     UUID = PollManageGuid,
-                    OptionAdding = true
+                    ChoiceAdding = true
                 };
                 polls.Add(poll);
 
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, options);
-                PollOptionController controller = CreatePollOptionController(contextFactory);
+                PollChoiceController controller = CreatePollChoiceController(contextFactory);
 
 
-                OptionCreationRequestModel optionCreationRequestModel = new OptionCreationRequestModel()
+                ChoiceCreationRequestModel optionCreationRequestModel = new ChoiceCreationRequestModel()
                 {
                     Name = optionName,
                     Description = optionDescription,
@@ -124,41 +124,41 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 controller.Post(PollManageGuid, optionCreationRequestModel);
 
-                Assert.AreEqual(1, poll.Options.Count);
-                Assert.AreEqual(optionName, poll.Options.First().Name);
-                Assert.AreEqual(optionDescription, poll.Options.First().Description);
+                Assert.AreEqual(1, poll.Choices.Count);
+                Assert.AreEqual(optionName, poll.Choices.First().Name);
+                Assert.AreEqual(optionDescription, poll.Choices.First().Description);
             }
 
             [TestMethod]
-            public void AddingOptionGeneratesMetric()
+            public void AddingChoiceGeneratesMetric()
             {
                 // Arrange
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
                 var metricHandler = new Mock<IMetricHandler>();
-                PollOptionController controller = CreatePollOptionController(contextFactory, metricHandler.Object);
+                PollChoiceController controller = CreatePollChoiceController(contextFactory, metricHandler.Object);
 
-                Poll existingPoll = new Poll() { Options = new List<Option>(), UUID = Guid.NewGuid(), OptionAdding = true };
+                Poll existingPoll = new Poll() { Choices = new List<Choice>(), UUID = Guid.NewGuid(), ChoiceAdding = true };
                 polls.Add(existingPoll);
 
-                OptionCreationRequestModel request = new OptionCreationRequestModel() { Name = "New Option" };
+                ChoiceCreationRequestModel request = new ChoiceCreationRequestModel() { Name = "New Choice" };
 
                 // Act
                 controller.Post(existingPoll.UUID, request);
 
                 // Assert
-                metricHandler.Verify(m => m.HandleOptionAddedEvent(It.Is<Option>(o => o.Name == "New Option"), existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.HandleChoiceAddedEvent(It.Is<Choice>(o => o.Name == "New Choice"), existingPoll.UUID), Times.Once());
             }
 
-            public static PollOptionController CreatePollOptionController(IContextFactory contextFactory)
+            public static PollChoiceController CreatePollChoiceController(IContextFactory contextFactory)
             {
                 var metricHandler = new Mock<IMetricHandler>();
-                return CreatePollOptionController(contextFactory, metricHandler.Object);
+                return CreatePollChoiceController(contextFactory, metricHandler.Object);
             }
 
-            public static PollOptionController CreatePollOptionController(IContextFactory contextFactory, IMetricHandler metricHandler)
+            public static PollChoiceController CreatePollChoiceController(IContextFactory contextFactory, IMetricHandler metricHandler)
             {
-                return new PollOptionController(contextFactory, metricHandler)
+                return new PollChoiceController(contextFactory, metricHandler)
                 {
                     Request = new HttpRequestMessage(),
                     Configuration = new HttpConfiguration()

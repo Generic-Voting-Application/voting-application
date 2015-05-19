@@ -44,11 +44,11 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 existingPoll.NamedVoting = false;
                 existingPoll.InviteOnly = false;
-                existingPoll.OptionAdding = false;
+                existingPoll.ChoiceAdding = false;
                 existingPoll.HiddenResults = false;
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
-                ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = true, NamedVoting = true, OptionAdding = true, HiddenResults = true };
+                ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = true, NamedVoting = true, ChoiceAdding = true, HiddenResults = true };
 
                 ManageMiscController controller = CreateManageExpiryController(contextFactory, new Mock<IMetricHandler>().Object);
 
@@ -56,7 +56,7 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 Assert.IsTrue(existingPoll.InviteOnly);
                 Assert.IsTrue(existingPoll.NamedVoting);
-                Assert.IsTrue(existingPoll.OptionAdding);
+                Assert.IsTrue(existingPoll.ChoiceAdding);
                 Assert.IsTrue(existingPoll.HiddenResults);
             }
 
@@ -70,11 +70,11 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 existingPoll.NamedVoting = false;
                 existingPoll.InviteOnly = false;
-                existingPoll.OptionAdding = false;
+                existingPoll.ChoiceAdding = false;
                 existingPoll.HiddenResults = false;
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
-                ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = true, NamedVoting = true, OptionAdding = true, HiddenResults = true };
+                ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = true, NamedVoting = true, ChoiceAdding = true, HiddenResults = true };
 
                 Mock<IMetricHandler> metricHandler = new Mock<IMetricHandler>();
                 ManageMiscController controller = CreateManageExpiryController(contextFactory, metricHandler.Object);
@@ -85,7 +85,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 // Assert
                 metricHandler.Verify(m => m.HandleInviteOnlyChangedEvent(true, existingPoll.UUID), Times.Once());
                 metricHandler.Verify(m => m.HandleNamedVotingChangedEvent(true, existingPoll.UUID), Times.Once());
-                metricHandler.Verify(m => m.HandleOptionAddingChangedEvent(true, existingPoll.UUID), Times.Once());
+                metricHandler.Verify(m => m.HandleChoiceAddingChangedEvent(true, existingPoll.UUID), Times.Once());
                 metricHandler.Verify(m => m.HandleHiddenResultsChangedEvent(true, existingPoll.UUID), Times.Once());
             }
 
@@ -99,11 +99,11 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 existingPoll.NamedVoting = false;
                 existingPoll.InviteOnly = false;
-                existingPoll.OptionAdding = false;
+                existingPoll.ChoiceAdding = false;
                 existingPoll.HiddenResults = false;
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls);
-                ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = false, NamedVoting = false, OptionAdding = false, HiddenResults = false };
+                ManagePollMiscRequest request = new ManagePollMiscRequest { InviteOnly = false, NamedVoting = false, ChoiceAdding = false, HiddenResults = false };
 
                 Mock<IMetricHandler> metricHandler = new Mock<IMetricHandler>();
                 ManageMiscController controller = CreateManageExpiryController(contextFactory, metricHandler.Object);
@@ -114,7 +114,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 // Assert
                 metricHandler.Verify(m => m.HandleInviteOnlyChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
                 metricHandler.Verify(m => m.HandleNamedVotingChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
-                metricHandler.Verify(m => m.HandleOptionAddingChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
+                metricHandler.Verify(m => m.HandleChoiceAddingChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
                 metricHandler.Verify(m => m.HandleHiddenResultsChangedEvent(It.IsAny<bool>(), It.IsAny<Guid>()), Times.Never());
             }
         }

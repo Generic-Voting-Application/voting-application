@@ -34,11 +34,11 @@ namespace VotingApplication.Web.Tests.E2E
             {
                 _context = new TestVotingContext();
 
-                List<Option> testPollOptions = new List<Option>() {
-                    new Option(){ Name = "Test Option 1", Description = "Test Description 1" }
+                List<Choice> testPollChoices = new List<Choice>() {
+                    new Choice(){ Name = "Test Choice 1", Description = "Test Description 1" }
                 };
 
-                // Open, Anonymous, No Option Adding, Shown Results
+                // Open, Anonymous, No Choice Adding, Shown Results
                 _defaultMultiPoll = new Poll()
                 {
                     UUID = PollGuid,
@@ -46,10 +46,10 @@ namespace VotingApplication.Web.Tests.E2E
                     Name = "Test Poll",
                     LastUpdated = DateTime.Now,
                     CreatedDate = DateTime.Now,
-                    Options = testPollOptions,
+                    Choices = testPollChoices,
                     InviteOnly = false,
                     NamedVoting = false,
-                    OptionAdding = false,
+                    ChoiceAdding = false,
                     HiddenResults = false
                 };
 
@@ -81,53 +81,53 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod, TestCategory("E2E")]
-            public void PopulatedOptions_DisplaysAllOptions()
+            public void PopulatedChoices_DisplaysAllChoices()
             {
                 _driver.Navigate().GoToUrl(PollUrl);
-                IReadOnlyCollection<IWebElement> optionNames = _driver.FindElements(NgBy.Binding("option.Name"));
+                IReadOnlyCollection<IWebElement> choiceNames = _driver.FindElements(NgBy.Binding("choice.Name"));
 
-                Assert.AreEqual(_defaultMultiPoll.Options.Count, optionNames.Count);
-                CollectionAssert.AreEquivalent(_defaultMultiPoll.Options.Select(o => o.Name).ToList(),
-                                               optionNames.Select(o => o.Text).ToList());
+                Assert.AreEqual(_defaultMultiPoll.Choices.Count, choiceNames.Count);
+                CollectionAssert.AreEquivalent(_defaultMultiPoll.Choices.Select(o => o.Name).ToList(),
+                                               choiceNames.Select(o => o.Text).ToList());
             }
 
             [TestMethod, TestCategory("E2E")]
-            public void PopulatedOptions_DisplaysOptionDescriptions()
+            public void PopulatedChoices_DisplaysChoiceDescriptions()
             {
                 _driver.Navigate().GoToUrl(PollUrl);
-                IReadOnlyCollection<IWebElement> optionDescriptions = _driver.FindElements(NgBy.Model("option.Description"));
+                IReadOnlyCollection<IWebElement> choiceDescriptions = _driver.FindElements(NgBy.Model("choice.Description"));
 
-                Assert.AreEqual(_defaultMultiPoll.Options.Count, optionDescriptions.Count);
+                Assert.AreEqual(_defaultMultiPoll.Choices.Count, choiceDescriptions.Count);
 
-                CollectionAssert.AreEquivalent(_defaultMultiPoll.Options.Select(o => o.Description).ToList(),
-                                               optionDescriptions.Select(o => o.Text).ToList());
+                CollectionAssert.AreEquivalent(_defaultMultiPoll.Choices.Select(o => o.Description).ToList(),
+                                               choiceDescriptions.Select(o => o.Text).ToList());
             }
 
             [TestMethod, TestCategory("E2E")]
-            public async Task PopulatedOptions_TruncatesLongDescriptions()
+            public async Task PopulatedChoices_TruncatesLongDescriptions()
             {
                 string truncatedString = new String('a', truncatedTextLimit / 2);
                 _driver.Navigate().GoToUrl(PollUrl);
 
                 Poll poll = _context.Polls.Where(p => p.UUID == PollGuid).Single();
-                poll.Options.Add(new Option()
+                poll.Choices.Add(new Choice()
                 {
-                    Name = "Test Option 2",
+                    Name = "Test Choice 2",
                     Description = truncatedString + " " + truncatedString
                 });
 
                 await _context.SaveChangesAsync();
 
-                IReadOnlyCollection<IWebElement> optionDescriptions = _driver.FindElements(NgBy.Model("option.Description"));
+                IReadOnlyCollection<IWebElement> choiceDescriptions = _driver.FindElements(NgBy.Model("choice.Description"));
 
-                Assert.AreEqual(truncatedString + "... Show More", optionDescriptions.Select(o => o.Text).Last());
+                Assert.AreEqual(truncatedString + "... Show More", choiceDescriptions.Select(o => o.Text).Last());
 
-                poll.Options.Remove(poll.Options.Last());
+                poll.Choices.Remove(poll.Choices.Last());
                 _context.SaveChanges();
             }
 
             [TestMethod, TestCategory("E2E")]
-            public void VotingOnOption_NavigatesToResultsPage()
+            public void VotingOnChoice_NavigatesToResultsPage()
             {
                 _driver.Navigate().GoToUrl(PollUrl);
                 IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
@@ -153,19 +153,19 @@ namespace VotingApplication.Web.Tests.E2E
             {
                 _driver.Navigate().GoToUrl(PollUrl);
                 IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
-                IReadOnlyCollection<IWebElement> options = _driver.FindElements(NgBy.Repeater("option in poll.Options"));
+                IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
 
-                options.First().Click();
+                choices.First().Click();
                 voteButton.Click();
 
                 _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
 
-                IWebElement selectedOption = _driver.FindElements(By.CssSelector(".selected-option")).Single();
+                IWebElement selectedChoice = _driver.FindElements(By.CssSelector(".selected-choice")).Single();
 
                 VoteClearer voterClearer = new VoteClearer(_context);
                 voterClearer.ClearLast();
 
-                Assert.IsTrue(selectedOption.IsVisible());
+                Assert.IsTrue(selectedChoice.IsVisible());
             }
 
             [TestMethod, TestCategory("E2E")]
@@ -173,24 +173,24 @@ namespace VotingApplication.Web.Tests.E2E
             {
                 _driver.Navigate().GoToUrl(PollUrl);
                 IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
-                IReadOnlyCollection<IWebElement> options = _driver.FindElements(NgBy.Repeater("option in poll.Options"));
+                IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
 
-                options.First().Click();
+                choices.First().Click();
                 voteButton.Click();
 
                 _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
 
-                IWebElement clearVoteOption = _driver.FindElements(By.Id("clear-vote-button")).Single();
-                clearVoteOption.Click();
+                IWebElement clearVoteChoice = _driver.FindElements(By.Id("clear-vote-button")).Single();
+                clearVoteChoice.Click();
 
                 _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
 
-                IWebElement selectedOption = _driver.FindElements(By.CssSelector(".selected-option")).FirstOrDefault();
+                IWebElement selectedChoice = _driver.FindElements(By.CssSelector(".selected-choice")).FirstOrDefault();
 
                 VoteClearer voterClearer = new VoteClearer(_context);
                 voterClearer.ClearLast();
 
-                Assert.IsFalse(selectedOption.IsVisible());
+                Assert.IsFalse(selectedChoice.IsVisible());
             }
 
         }
@@ -209,11 +209,11 @@ namespace VotingApplication.Web.Tests.E2E
             {
                 _context = new TestVotingContext();
 
-                List<Option> testPollOptions = new List<Option>() {
-                new Option(){ Name = "Test Option 1", Description = "Test Description 1" },
-                new Option(){ Name = "Test Option 2", Description = "Test Description 2" }};
+                List<Choice> testPollChoices = new List<Choice>() {
+                new Choice(){ Name = "Test Choice 1", Description = "Test Description 1" },
+                new Choice(){ Name = "Test Choice 2", Description = "Test Description 2" }};
 
-                // Invite Only, Anonymous, No Option Adding, Shown Results
+                // Invite Only, Anonymous, No Choice Adding, Shown Results
                 _inviteOnlyMultiPoll = new Poll()
                 {
                     UUID = PollGuid,
@@ -221,10 +221,10 @@ namespace VotingApplication.Web.Tests.E2E
                     Name = "Test Poll",
                     LastUpdated = DateTime.Now,
                     CreatedDate = DateTime.Now,
-                    Options = testPollOptions,
+                    Choices = testPollChoices,
                     InviteOnly = true,
                     NamedVoting = false,
-                    OptionAdding = false,
+                    ChoiceAdding = false,
                     HiddenResults = false,
                     Ballots = new List<Ballot>()
                     {
@@ -270,14 +270,14 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod, TestCategory("E2E")]
-            public void AccessWithToken_DisplaysAllOptions()
+            public void AccessWithToken_DisplaysAllChoices()
             {
                 _driver.Navigate().GoToUrl(PollUrl + "/" + _inviteOnlyMultiPoll.Ballots[0].TokenGuid);
-                IReadOnlyCollection<IWebElement> optionNames = _driver.FindElements(NgBy.Binding("option.Name"));
+                IReadOnlyCollection<IWebElement> choiceNames = _driver.FindElements(NgBy.Binding("choice.Name"));
 
-                Assert.AreEqual(_inviteOnlyMultiPoll.Options.Count, optionNames.Count);
-                CollectionAssert.AreEquivalent(_inviteOnlyMultiPoll.Options.Select(o => o.Name).ToList(),
-                                               optionNames.Select(o => o.Text).ToList());
+                Assert.AreEqual(_inviteOnlyMultiPoll.Choices.Count, choiceNames.Count);
+                CollectionAssert.AreEquivalent(_inviteOnlyMultiPoll.Choices.Select(o => o.Name).ToList(),
+                                               choiceNames.Select(o => o.Text).ToList());
             }
 
             [TestMethod, TestCategory("E2E")]
@@ -308,11 +308,11 @@ namespace VotingApplication.Web.Tests.E2E
             {
                 _context = new TestVotingContext();
 
-                List<Option> testPollOptions = new List<Option>() {
-                new Option(){ Name = "Test Option 1", Description = "Test Description 1" },
-                new Option(){ Name = "Test Option 2", Description = "Test Description 2" }};
+                List<Choice> testPollChoices = new List<Choice>() {
+                new Choice(){ Name = "Test Choice 1", Description = "Test Description 1" },
+                new Choice(){ Name = "Test Choice 2", Description = "Test Description 2" }};
 
-                // Open, Named voters, No Option Adding, Shown Results
+                // Open, Named voters, No Choice Adding, Shown Results
                 _namedMultiPoll = new Poll()
                 {
                     UUID = PollGuid,
@@ -320,10 +320,10 @@ namespace VotingApplication.Web.Tests.E2E
                     Name = "Test Poll",
                     LastUpdated = DateTime.Now,
                     CreatedDate = DateTime.Now,
-                    Options = testPollOptions,
+                    Choices = testPollChoices,
                     InviteOnly = false,
                     NamedVoting = true,
-                    OptionAdding = false,
+                    ChoiceAdding = false,
                     HiddenResults = false
                 };
 
@@ -409,10 +409,10 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestClass]
-        public class OptionAddingPollConfiguration
+        public class ChoiceAddingPollConfiguration
         {
             private static ITestVotingContext _context;
-            private static Poll _optionAddingMultiPoll;
+            private static Poll _choiceAddingMultiPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
             private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
             private IWebDriver _driver;
@@ -422,26 +422,26 @@ namespace VotingApplication.Web.Tests.E2E
             {
                 _context = new TestVotingContext();
 
-                List<Option> testPollOptions = new List<Option>() {
-                new Option(){ Name = "Test Option 1", Description = "Test Description 1" },
-                new Option(){ Name = "Test Option 2", Description = "Test Description 2" }};
+                List<Choice> testPollChoices = new List<Choice>() {
+                new Choice(){ Name = "Test Choice 1", Description = "Test Description 1" },
+                new Choice(){ Name = "Test Choice 2", Description = "Test Description 2" }};
 
-                // Open, Named voters, No Option Adding, Shown Results
-                _optionAddingMultiPoll = new Poll()
+                // Open, Named voters, No Choice Adding, Shown Results
+                _choiceAddingMultiPoll = new Poll()
                 {
                     UUID = PollGuid,
                     PollType = PollType.Multi,
                     Name = "Test Poll",
                     LastUpdated = DateTime.Now,
                     CreatedDate = DateTime.Now,
-                    Options = testPollOptions,
+                    Choices = testPollChoices,
                     InviteOnly = false,
                     NamedVoting = false,
-                    OptionAdding = true,
+                    ChoiceAdding = true,
                     HiddenResults = false
                 };
 
-                _context.Polls.Add(_optionAddingMultiPoll);
+                _context.Polls.Add(_choiceAddingMultiPoll);
                 _context.SaveChanges();
             }
 
@@ -449,7 +449,7 @@ namespace VotingApplication.Web.Tests.E2E
             public static void ClassCleanup()
             {
                 PollClearer pollTearDown = new PollClearer(_context);
-                pollTearDown.ClearPoll(_optionAddingMultiPoll);
+                pollTearDown.ClearPoll(_choiceAddingMultiPoll);
 
                 _context.Dispose();
             }
@@ -469,80 +469,80 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod, TestCategory("E2E")]
-            public void OptionAddingPoll_ProvidesLinkForAddingOptions()
+            public void ChoiceAddingPoll_ProvidesLinkForAddingChoices()
             {
                 _driver.Navigate().GoToUrl(PollUrl);
-                IWebElement addOptionLink = _driver.FindElement(By.Id("add-option-link"));
+                IWebElement addChoiceLink = _driver.FindElement(By.Id("add-choice-link"));
 
-                Assert.IsTrue(addOptionLink.IsVisible());
+                Assert.IsTrue(addChoiceLink.IsVisible());
             }
 
             [TestMethod, TestCategory("E2E")]
-            public void OptionAddingLink_PromptsForOptionDetails()
+            public void ChoiceAddingLink_PromptsForChoiceDetails()
             {
                 _driver.Navigate().GoToUrl(PollUrl);
-                IWebElement addOptionLink = _driver.FindElement(By.Id("add-option-link"));
-                addOptionLink.Click();
+                IWebElement addChoiceLink = _driver.FindElement(By.Id("add-choice-link"));
+                addChoiceLink.Click();
 
                 Assert.AreEqual(PollUrl, _driver.Url);
 
-                IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
+                IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
                 Assert.IsTrue(formName.IsVisible());
                 Assert.AreEqual(String.Empty, formName.Text);
 
-                IWebElement formDescription = _driver.FindElement(NgBy.Model("addOptionForm.description"));
+                IWebElement formDescription = _driver.FindElement(NgBy.Model("addChoiceForm.description"));
                 Assert.IsTrue(formDescription.IsVisible());
                 Assert.AreEqual(String.Empty, formDescription.Text);
             }
 
             [TestMethod, TestCategory("E2E")]
-            public void OptionAddingPrompt_AcceptsValidName()
+            public void ChoiceAddingPrompt_AcceptsValidName()
             {
                 _driver.Navigate().GoToUrl(PollUrl);
-                IWebElement addOptionLink = _driver.FindElement(By.Id("add-option-link"));
-                addOptionLink.Click();
+                IWebElement addChoiceLink = _driver.FindElement(By.Id("add-choice-link"));
+                addChoiceLink.Click();
 
-                IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
+                IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
                 IWebElement addButton = _driver.FindElement(By.Id("add-button"));
 
                 Assert.IsTrue(addButton.IsVisible());
                 Assert.IsFalse(addButton.Enabled);
 
-                formName.SendKeys("New Option");
+                formName.SendKeys("New Choice");
 
                 Assert.IsTrue(addButton.Enabled);
             }
 
             [TestMethod, TestCategory("E2E")]
-            public void OptionAddingSubmission_AddsOption()
+            public void ChoiceAddingSubmission_AddsChoice()
             {
                 _driver.Navigate().GoToUrl(PollUrl);
-                IWebElement addOptionLink = _driver.FindElement(By.Id("add-option-link"));
-                addOptionLink.Click();
+                IWebElement addChoiceLink = _driver.FindElement(By.Id("add-choice-link"));
+                addChoiceLink.Click();
 
-                IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
+                IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
                 IWebElement addButton = _driver.FindElement(By.Id("add-button"));
 
-                String newOptionName = "New Option";
-                formName.SendKeys(newOptionName);
+                String newChoiceName = "New Choice";
+                formName.SendKeys(newChoiceName);
 
                 IWebElement formButton = _driver.FindElement(By.Id("add-button"));
                 formButton.Click();
 
-                IReadOnlyCollection<IWebElement> optionNames = _driver.FindElements(NgBy.Binding("option.Name"));
+                IReadOnlyCollection<IWebElement> choiceNames = _driver.FindElements(NgBy.Binding("choice.Name"));
 
-                Assert.AreEqual(_optionAddingMultiPoll.Options.Count + 1, optionNames.Count);
-                Assert.AreEqual(newOptionName, optionNames.Last().Text);
+                Assert.AreEqual(_choiceAddingMultiPoll.Choices.Count + 1, choiceNames.Count);
+                Assert.AreEqual(newChoiceName, choiceNames.Last().Text);
 
-                // Refresh to ensure the new option was stored in DB
+                // Refresh to ensure the new choice was stored in DB
                 _driver.Navigate().GoToUrl(PollUrl);
 
-                optionNames = _driver.FindElements(NgBy.Binding("option.Name"));
+                choiceNames = _driver.FindElements(NgBy.Binding("choice.Name"));
 
-                Assert.AreEqual(_optionAddingMultiPoll.Options.Count + 1, optionNames.Count);
-                Assert.AreEqual(newOptionName, optionNames.Last().Text);
+                Assert.AreEqual(_choiceAddingMultiPoll.Choices.Count + 1, choiceNames.Count);
+                Assert.AreEqual(newChoiceName, choiceNames.Last().Text);
 
-                _optionAddingMultiPoll.Options.Remove(_optionAddingMultiPoll.Options.Last());
+                _choiceAddingMultiPoll.Choices.Remove(_choiceAddingMultiPoll.Choices.Last());
                 _context.SaveChanges();
             }
         }
@@ -561,14 +561,14 @@ namespace VotingApplication.Web.Tests.E2E
             {
                 _context = new TestVotingContext();
 
-                List<Option> testPollOptions = new List<Option>() {
-                    new Option()
+                List<Choice> testPollChoices = new List<Choice>() {
+                    new Choice()
                     { 
-                        Name = "Test Option 1", Description = "Test Description 1" 
+                        Name = "Test Choice 1", Description = "Test Description 1" 
                     }
                 };
 
-                // Open, Anonymous, No Option Adding, Shown Results
+                // Open, Anonymous, No Choice Adding, Shown Results
                 _hiddenResultsMultiPoll = new Poll()
                 {
                     UUID = PollGuid,
@@ -576,10 +576,10 @@ namespace VotingApplication.Web.Tests.E2E
                     Name = "Test Poll",
                     LastUpdated = DateTime.Now,
                     CreatedDate = DateTime.Now,
-                    Options = testPollOptions,
+                    Choices = testPollChoices,
                     InviteOnly = false,
                     NamedVoting = false,
-                    OptionAdding = false,
+                    ChoiceAdding = false,
                     HiddenResults = true
                 };
 

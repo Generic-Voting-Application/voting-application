@@ -40,7 +40,7 @@ body {
     top: -20px;
 }
 
-.option-block {
+.choice-block {
     flex-direction: column;
     min-height: 50px;
     border-radius: 5px;
@@ -50,7 +50,7 @@ body {
         margin-bottom: 5px;
     }
 
-    .option-block .option-block-row {
+    .choice-block .choice-block-row {
         flex-direction: row;
         margin-bottom: 5px;
     }
@@ -60,11 +60,11 @@ body {
     margin-bottom: 15px;
 }
 
-.option-area {
+.choice-area {
     margin-bottom: 10px;
 }
 
-.selected-option {
+.selected-choice {
     background-color: $Green100;
 }
 
@@ -82,12 +82,12 @@ body {
 
 // Points-voting specific
 
-.option-buttons {
+.choice-buttons {
     float: right;
     /*width: 100px;*/
 }
 
-.option-buttons > * {
+.choice-buttons > * {
     display: block;
     text-align: center;
     margin-bottom: 5px;
@@ -124,7 +124,7 @@ body {
     height: 100%;
 }
 
-.option-description {
+.choice-description {
     min-height: 1em;
 }
 
@@ -154,11 +154,11 @@ body {
 
 // Multi vote specific
 
-.option-checkbox {
+.choice-checkbox {
     margin: 5px 10px 0px 10px;
 }
 
-.multivote-option-description {
-    @extend .option-description;
+.multivote-choice-description {
+    @extend .choice-description;
     padding-left: 34px;
 }

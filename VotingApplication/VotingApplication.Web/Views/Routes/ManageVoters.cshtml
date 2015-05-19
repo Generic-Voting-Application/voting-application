@@ -27,7 +27,7 @@
                     </tr>
 
                     <tr ng-repeat="vote in ballot.Votes" ng-show="votesVisible">
-                        <td class="manage-voters-vote"> {{ vote.OptionName }} </td>
+                        <td class="manage-voters-vote"> {{ vote.ChoiceName }} </td>
                         <td>
                             <span id="remove-vote-button" class="clickable pull-right fa fa-times" ng-click="removeVote(vote, ballot)"></span>
                         </td>

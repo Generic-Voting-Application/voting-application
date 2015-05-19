@@ -61,7 +61,7 @@
             if (data.Results) {
                 var dataPoints = [];
                 data.Results.forEach(function (result) {
-                    dataPoints.push({ Name: result.Option.Name, Sum: result.Sum, Voters: result.Voters });
+                    dataPoints.push({ Name: result.Choice.Name, Sum: result.Sum, Voters: result.Voters });
                 });
 
                 $scope.chartData = dataPoints;

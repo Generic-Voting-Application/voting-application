@@ -8,7 +8,7 @@ namespace VotingApplication.Data.Model
         public Poll()
         {
             Ballots = new List<Ballot>();
-            Options = new List<Option>();
+            Choices = new List<Choice>();
         }
 
         public long Id { get; set; }
@@ -23,7 +23,7 @@ namespace VotingApplication.Data.Model
 
         public string CreatorIdentity { get; set; }
 
-        public List<Option> Options { get; set; }
+        public List<Choice> Choices { get; set; }
 
         public int? MaxPoints { get; set; }
         public int? MaxPerVote { get; set; }
@@ -35,7 +35,7 @@ namespace VotingApplication.Data.Model
 
         public DateTimeOffset? ExpiryDate { get; set; }
 
-        public bool OptionAdding { get; set; }
+        public bool ChoiceAdding { get; set; }
         public bool HiddenResults { get; set; }
 
         public DateTime LastUpdated { get; set; }

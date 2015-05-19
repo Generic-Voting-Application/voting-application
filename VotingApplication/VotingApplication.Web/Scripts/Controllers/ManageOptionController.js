@@ -5,66 +5,66 @@
 
     angular
         .module('GVA.Creation')
-        .controller('ManageOptionController', ManageOptionController);
+        .controller('ManageChoiceController', ManageChoiceController);
 
-    ManageOptionController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService', 'ngDialog'];
+    ManageChoiceController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService', 'ngDialog'];
 
-    function ManageOptionController($scope, $routeParams, $location, ManageService, RoutingService, ngDialog) {
+    function ManageChoiceController($scope, $routeParams, $location, ManageService, RoutingService, ngDialog) {
 
         var manageId = $routeParams.manageId;
 
-        $scope.options = [];
+        $scope.choices = [];
 
-        $scope.addOption = addOption;
-        $scope.editOption = editOption;
-        $scope.removeOption = removeOption;
+        $scope.addChoice = addChoice;
+        $scope.editChoice = editChoice;
+        $scope.removeChoice = removeChoice;
 
-        $scope.saveOptionsAndReturn = saveOptionsAndReturn;
+        $scope.saveChoicesAndReturn = saveChoicesAndReturn;
         $scope.returnWithoutSave = returnWithoutSave;
 
 
         activate();
 
         function activate() {
-            //ManageService.registerPollObserver(loadOptions);
+            //ManageService.registerPollObserver(loadChoices);
 
-            loadOptions();
+            loadChoices();
         }
 
-        function loadOptions() {
-            ManageService.getOptions(manageId)
+        function loadChoices() {
+            ManageService.getChoices(manageId)
                 .then(function (data) {
-                    $scope.options = data;
+                    $scope.choices = data;
                 });
         }
 
-        function addOption() {
+        function addChoice() {
             ngDialog.open({
-                template: '/Routes/AddOptionDialog',
-                controller: 'AddOptionDialogController',
+                template: '/Routes/AddChoiceDialog',
+                controller: 'AddChoiceDialogController',
                 scope: $scope
             });
         }
 
-        function editOption(option) {
+        function editChoice(choice) {
             ngDialog.open({
-                template: '/Routes/EditOptionDialog',
-                controller: 'EditOptionDialogController',
+                template: '/Routes/EditChoiceDialog',
+                controller: 'EditChoiceDialogController',
                 scope: $scope,
-                data: { option: option }
+                data: { choice: choice }
             });
         }
 
-        function removeOption(option) {
-            $scope.options.splice($scope.options.indexOf(option), 1);
+        function removeChoice(choice) {
+            $scope.choices.splice($scope.choices.indexOf(choice), 1);
         }
 
         function returnWithoutSave() {
             RoutingService.navigateToManagePage(manageId);
         }
 
-        function saveOptionsAndReturn() {
-            ManageService.updateOptions(manageId, $scope.options)
+        function saveChoicesAndReturn() {
+            ManageService.updateChoices(manageId, $scope.choices)
                 .then(function () { RoutingService.navigateToManagePage(manageId); });
         }
     }

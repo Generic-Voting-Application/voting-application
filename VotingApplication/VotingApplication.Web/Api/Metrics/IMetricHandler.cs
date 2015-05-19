@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Net;
-using System.Web;
 using System.Web.Http;
-using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 
 namespace VotingApplication.Web.Api.Metrics
@@ -20,13 +18,13 @@ namespace VotingApplication.Web.Api.Metrics
         void HandlePollTypeChangedEvent(PollType pollType, int maxPerVote, int maxPerPoll, Guid pollId);
         void HandleInviteOnlyChangedEvent(bool inviteOnly, Guid pollId);
         void HandleNamedVotingChangedEvent(bool namedVoting, Guid pollId);
-        void HandleOptionAddingChangedEvent(bool optionAdding, Guid pollId);
+        void HandleChoiceAddingChangedEvent(bool choiceAdding, Guid pollId);
         void HandleHiddenResultsChangedEvent(bool hiddenResults, Guid pollId);
         void HandleQuestionChangedEvent(string question, Guid pollId);
 
-        void HandleOptionAddedEvent(Option option, Guid pollId);
-        void HandleOptionUpdatedEvent(Option option, Guid pollId);
-        void HandleOptionDeletedEvent(Option option, Guid pollId);
+        void HandleChoiceAddedEvent(Choice choice, Guid pollId);
+        void HandleChoiceUpdatedEvent(Choice choice, Guid pollId);
+        void HandleChoiceDeletedEvent(Choice choice, Guid pollId);
 
         void HandleVoteAddedEvent(Vote vote, Guid pollId);
         void HandleVoteDeletedEvent(Vote vote, Guid pollId);

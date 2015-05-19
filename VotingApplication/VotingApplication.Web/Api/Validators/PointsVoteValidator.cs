@@ -11,7 +11,7 @@ namespace VotingApplication.Web.Api.Validators
     {
         public void Validate(List<VoteRequestModel> voteRequests, Poll poll, ModelStateDictionary modelState)
         {
-            if (voteRequests.GroupBy(v => v.OptionId).Any(g => g.Count() > 1))
+            if (voteRequests.GroupBy(v => v.ChoiceId).Any(g => g.Count() > 1))
             {
                 modelState.AddModelError("Vote", "Invalid number of votes");
             }

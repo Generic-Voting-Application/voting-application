@@ -17,7 +17,7 @@
             getResults: getResults,
             getTokenVotes: getTokenVotes,
             refreshLastChecked: refreshLastChecked,
-            addVoterOption: addVoterOption
+            addVoterChoice: addVoterChoice
         };
 
         return service;
@@ -70,12 +70,12 @@
             lastCheckedTimestamps[pollId] = 0;
         }
 
-        function addVoterOption(pollId, newOption) {
+        function addVoterChoice(pollId, newChoice) {
 
             return $http
                 .post(
-                    '/api/poll/' + pollId + '/option',
-                    newOption
+                    '/api/poll/' + pollId + '/choice',
+                    newChoice
                 );
         }
     }
