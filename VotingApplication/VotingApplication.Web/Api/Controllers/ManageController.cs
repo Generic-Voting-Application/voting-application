@@ -53,7 +53,7 @@ namespace VotingApplication.Web.Api.Controllers
                 InviteOnly = poll.InviteOnly,
                 Name = poll.Name,
                 NamedVoting = poll.NamedVoting,
-                ExpiryDate = poll.ExpiryDate,
+                ExpiryDate = poll.ExpiryDateUtc,
                 OptionAdding = poll.OptionAdding,
                 HiddenResults = poll.HiddenResults
             };

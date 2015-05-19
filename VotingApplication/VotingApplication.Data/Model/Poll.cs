@@ -33,7 +33,7 @@ namespace VotingApplication.Data.Model
 
         public bool NamedVoting { get; set; }
 
-        public DateTimeOffset? ExpiryDate { get; set; }
+        public DateTime? ExpiryDateUtc { get; set; }
 
         public bool OptionAdding { get; set; }
         public bool HiddenResults { get; set; }

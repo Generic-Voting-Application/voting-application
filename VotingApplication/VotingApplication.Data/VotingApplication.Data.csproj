@@ -137,6 +137,10 @@
     <Compile Include="Migrations\201505190725448_LastUpdated_CreatedDate_Utc.Designer.cs">
       <DependentUpon>201505190725448_LastUpdated_CreatedDate_Utc.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505191339342_ExpiryDate_Utc.cs" />
+    <Compile Include="Migrations\201505191339342_ExpiryDate_Utc.Designer.cs">
+      <DependentUpon>201505191339342_ExpiryDate_Utc.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
     <Compile Include="Model\Metric.cs" />
@@ -216,6 +220,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505190725448_LastUpdated_CreatedDate_Utc.resx">
       <DependentUpon>201505190725448_LastUpdated_CreatedDate_Utc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505191339342_ExpiryDate_Utc.resx">
+      <DependentUpon>201505191339342_ExpiryDate_Utc.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

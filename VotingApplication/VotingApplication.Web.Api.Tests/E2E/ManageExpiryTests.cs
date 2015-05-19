@@ -20,7 +20,7 @@ namespace VotingApplication.Web.Tests.E2E
         private static readonly Guid PollGuid = Guid.NewGuid();
         private static readonly Guid PollManageGuid = Guid.NewGuid();
         private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid + "/Expiry";
-        private static readonly DateTimeOffset DefaultTime = DateTime.Now;
+        private static readonly DateTime DefaultTime = DateTime.Now;
 
         private ITestVotingContext _context;
         private Poll _defaultPoll;
@@ -46,7 +46,7 @@ namespace VotingApplication.Web.Tests.E2E
                 NamedVoting = false,
                 OptionAdding = false,
                 HiddenResults = false,
-                ExpiryDate = DefaultTime
+                ExpiryDateUtc = DefaultTime
             };
 
             _context.Polls.Add(_defaultPoll);
@@ -93,7 +93,7 @@ namespace VotingApplication.Web.Tests.E2E
 
             Poll dbPoll = _context.Polls.Where(p => p.UUID == _defaultPoll.UUID).Single();
 
-            Assert.AreEqual(DefaultTime, dbPoll.ExpiryDate);
+            Assert.AreEqual(DefaultTime, dbPoll.ExpiryDateUtc);
         }
     }
 }

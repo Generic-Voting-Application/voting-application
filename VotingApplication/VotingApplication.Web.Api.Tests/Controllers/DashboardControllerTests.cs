@@ -197,7 +197,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 const int maxPerVote = 2;
                 const bool inviteOnly = true;
                 const bool namedVoting = true;
-                DateTimeOffset? expiryDate = new DateTimeOffset(2015, 6, 2, 14, 2, 56, new TimeSpan());
+                DateTime? expiryDate = new DateTime(2015, 6, 2, 14, 2, 56);
                 const bool optionAdding = true;
 
                 var existingPoll = new Poll()
@@ -210,7 +210,7 @@ namespace VotingApplication.Web.Tests.Controllers
                     MaxPerVote = maxPerVote,
                     InviteOnly = inviteOnly,
                     NamedVoting = namedVoting,
-                    ExpiryDate = expiryDate,
+                    ExpiryDateUtc = expiryDate,
                     OptionAdding = optionAdding
                 };
 
@@ -240,7 +240,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 Assert.AreEqual(maxPerVote, copiedPoll.MaxPerVote);
                 Assert.AreEqual(inviteOnly, copiedPoll.InviteOnly);
                 Assert.AreEqual(namedVoting, copiedPoll.NamedVoting);
-                Assert.AreEqual(expiryDate, copiedPoll.ExpiryDate);
+                Assert.AreEqual(expiryDate, copiedPoll.ExpiryDateUtc);
                 Assert.AreEqual(optionAdding, copiedPoll.OptionAdding);
             }
 

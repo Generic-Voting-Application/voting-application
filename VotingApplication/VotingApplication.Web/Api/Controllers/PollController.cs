@@ -38,7 +38,7 @@ namespace VotingApplication.Web.Api.Controllers
                 MaxPerVote = poll.MaxPerVote,
                 InviteOnly = poll.InviteOnly,
                 NamedVoting = poll.NamedVoting,
-                ExpiryDate = poll.ExpiryDate,
+                ExpiryDate = poll.ExpiryDateUtc,
                 OptionAdding = poll.OptionAdding,
                 Options = poll.Options,
                 HiddenResults = poll.HiddenResults

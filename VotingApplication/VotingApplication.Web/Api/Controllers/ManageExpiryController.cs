@@ -31,14 +31,14 @@ namespace VotingApplication.Web.Api.Controllers
                     ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
-                if (poll.ExpiryDate == updateRequest.ExpiryDate)
+                if (poll.ExpiryDateUtc == updateRequest.ExpiryDate)
                 {
                     return;
                 }
 
-                poll.ExpiryDate = updateRequest.ExpiryDate;
+                poll.ExpiryDateUtc = updateRequest.ExpiryDate;
                 poll.LastUpdatedUtc = DateTime.UtcNow;
-                _metricHandler.HandleExpiryChangedEvent(poll.ExpiryDate, poll.UUID);
+                _metricHandler.HandleExpiryChangedEvent(poll.ExpiryDateUtc, poll.UUID);
 
                 context.SaveChanges();
             }

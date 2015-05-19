@@ -4,6 +4,6 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
 {
     public class ManagePollExpiryRequest
     {
-        public DateTimeOffset? ExpiryDate { get; set; }
+        public DateTime? ExpiryDate { get; set; }
     }
 }

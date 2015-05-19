@@ -53,7 +53,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 controller.Put(PollManageGuid, request);
 
                 // Assert
-                Assert.IsNull(existingPoll.ExpiryDate);
+                Assert.IsNull(existingPoll.ExpiryDateUtc);
             }
 
             [TestMethod]
@@ -72,7 +72,7 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 controller.Put(PollManageGuid, request);
 
-                Assert.AreEqual(expiry, existingPoll.ExpiryDate);
+                Assert.AreEqual(expiry, existingPoll.ExpiryDateUtc);
             }
 
             [TestMethod]
@@ -123,7 +123,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 IDbSet<Poll> existingPolls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 Poll existingPoll = CreatePoll();
                 DateTime currentExpiry = DateTime.Now.AddHours(1);
-                existingPoll.ExpiryDate = currentExpiry;
+                existingPoll.ExpiryDateUtc = currentExpiry;
                 existingPolls.Add(existingPoll);
 
 

@@ -19,7 +19,7 @@ namespace VotingApplication.Data.Model.Creation
                 MaxPerVote = null,
                 InviteOnly = false,
                 NamedVoting = false,
-                ExpiryDate = null,
+                ExpiryDateUtc = null,
                 OptionAdding = false,
 
                 CreatedDateUtc = DateTime.UtcNow,
