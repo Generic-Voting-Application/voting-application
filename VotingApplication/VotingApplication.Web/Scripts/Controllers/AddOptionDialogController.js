@@ -13,6 +13,7 @@
 
         $scope.addOption = addOption;
         $scope.addOptionAndClose = addOptionAndClose;
+        $scope.addAnotherToggle = true;
 
         function addOption(form) {
             if (form.name === null) {
