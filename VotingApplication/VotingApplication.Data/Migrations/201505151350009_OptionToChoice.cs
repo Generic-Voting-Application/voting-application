@@ -60,11 +60,17 @@ namespace VotingApplication.Data.Migrations
             DropIndex("dbo.Votes", new[] { "Choice_Id" });
             DropColumn("dbo.Polls", "ChoiceAdding");
             DropColumn("dbo.Votes", "Choice_Id");
-            DropTable("dbo.Choices");
+
             CreateIndex("dbo.Options", "Poll_Id");
             CreateIndex("dbo.Votes", "Option_Id");
             AddForeignKey("dbo.Options", "Poll_Id", "dbo.Polls", "Id");
             AddForeignKey("dbo.Votes", "Option_Id", "dbo.Options", "Id");
+
+            Sql(@"INSERT INTO dbo.Options (Name, Description, PollOptionNumber, Poll_Id)
+                 SELECT Name, Description, PollChoiceNumber, Poll_Id
+                 FROM dbo.Choices");
+
+            DropTable("dbo.Choices");
         }
     }
 }
