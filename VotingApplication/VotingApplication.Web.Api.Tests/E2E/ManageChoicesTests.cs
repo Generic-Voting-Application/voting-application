@@ -88,7 +88,7 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageChoices_DisplaysChoiceNames()
+        public void DisplaysChoiceNames()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
@@ -100,7 +100,7 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageChoices_DisplaysChoiceDescriptions()
+        public void DisplaysChoiceDescriptions()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
@@ -112,7 +112,7 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageChoices_CancelButton_NavigatesToManagement()
+        public void CancelButton_NavigatesToManagement()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
@@ -125,7 +125,7 @@ namespace VotingApplication.Web.Tests.E2E
 
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageChoices_CancelButton_DoesNotSaveChanges()
+        public void CancelButton_DoesNotSaveChanges()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
@@ -135,9 +135,11 @@ namespace VotingApplication.Web.Tests.E2E
             IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
             formName.SendKeys("Test");
 
-            IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
+            IWebElement addAnotherCheckbox = _driver.FindElement(By.Id("add-another-checkbox"));
+            addAnotherCheckbox.Click();
 
-            doneButton.Click();
+            IWebElement addButton = _driver.FindElement(By.Id("add-button"));
+            addButton.Click();
 
             Thread.Sleep(DialogClearWaitTime);
 
@@ -154,7 +156,7 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageChoices_Save_SavesChanges()
+        public void Save_SavesChanges()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
@@ -170,9 +172,11 @@ namespace VotingApplication.Web.Tests.E2E
             IWebElement formDescription = _driver.FindElement(NgBy.Model("addChoiceForm.description"));
             formDescription.SendKeys(newChoiceDescription);
 
-            IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
+            IWebElement addAnotherCheckbox = _driver.FindElement(By.Id("add-another-checkbox"));
+            addAnotherCheckbox.Click();
 
-            doneButton.Click();
+            IWebElement addButton = _driver.FindElement(By.Id("add-button"));
+            addButton.Click();
 
             Thread.Sleep(DialogClearWaitTime);
 
@@ -187,7 +191,7 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageChoices_AddAnotherButton_AddsChoice()
+        public void AddButton_AddsOption()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
@@ -197,9 +201,9 @@ namespace VotingApplication.Web.Tests.E2E
             IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
             formName.SendKeys("Test");
 
-            IWebElement addAnotherButton = _driver.FindElement(By.Id("add-another-button"));
+            IWebElement addButton = _driver.FindElement(By.Id("add-button"));
 
-            addAnotherButton.Click();
+            addButton.Click();
 
             IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in choices"));
 
@@ -207,7 +211,7 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageChoices_AddAnotherButton_DoesNotCloseForm()
+        public void AddButton_DoesNotCloseForm()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
@@ -217,9 +221,9 @@ namespace VotingApplication.Web.Tests.E2E
             IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
             formName.SendKeys("Test");
 
-            IWebElement addAnotherButton = _driver.FindElement(By.Id("add-another-button"));
+            IWebElement addButton = _driver.FindElement(By.Id("add-button"));
 
-            addAnotherButton.Click();
+            addButton.Click();
 
             formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
 
@@ -227,7 +231,7 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageChoices_DoneButton_AddsChoice()
+        public void AddButtonWithoutAddAnotherToggle_AddsOption()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
@@ -237,9 +241,11 @@ namespace VotingApplication.Web.Tests.E2E
             IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
             formName.SendKeys("Test");
 
-            IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
+            IWebElement addAnotherCheckbox = _driver.FindElement(By.Id("add-another-checkbox"));
+            addAnotherCheckbox.Click();
 
-            doneButton.Click();
+            IWebElement addButton = _driver.FindElement(By.Id("add-button"));
+            addButton.Click();
 
             IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in choices"));
 
@@ -247,7 +253,7 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageChoices_DoneButton_ClosesForm()
+        public void AddButtonWithoutAddAnotherToggle_ClosesForm()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
@@ -257,9 +263,12 @@ namespace VotingApplication.Web.Tests.E2E
             IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
             formName.SendKeys("Test");
 
-            IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
 
-            doneButton.Click();
+            IWebElement addAnotherCheckbox = _driver.FindElement(By.Id("add-another-checkbox"));
+            addAnotherCheckbox.Click();
+
+            IWebElement addButton = _driver.FindElement(By.Id("add-button"));
+            addButton.Click();
 
             Thread.Sleep(DialogClearWaitTime);
 
@@ -269,7 +278,7 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageChoices_AddChoiceForm_RequiresAName()
+        public void AddChoiceForm_RequiresAName()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
@@ -278,15 +287,13 @@ namespace VotingApplication.Web.Tests.E2E
 
             IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
 
-            IWebElement doneButton = _driver.FindElement(By.Id("done-button"));
-            IWebElement addAnotherButton = _driver.FindElement(By.Id("add-another-button"));
+            IWebElement addButton = _driver.FindElement(By.Id("add-button"));
 
-            Assert.IsFalse(doneButton.Enabled);
-            Assert.IsFalse(addAnotherButton.Enabled);
+            Assert.IsFalse(addButton.Enabled);
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageChoices_DeleteButton_RemovesChoice()
+        public void DeleteButton_RemovesChoice()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
@@ -299,7 +306,7 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageChoices_EditButton_AllowsRenaming()
+        public void EditButton_AllowsRenaming()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
@@ -314,7 +321,7 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageChoices_EditSubmit_ChangesChoiceDetails()
+        public void EditSubmit_ChangesChoiceDetails()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
@@ -349,7 +356,7 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageChoices_EditSubmit_DoesNotAllowBlankName()
+        public void EditSubmit_DoesNotAllowBlankName()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 

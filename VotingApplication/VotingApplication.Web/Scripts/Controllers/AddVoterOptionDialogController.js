@@ -14,10 +14,10 @@
 
         $scope.addChoice = addChoice;
         $scope.addChoiceAndClose = addChoiceAndClose;
+        $scope.addAnotherToggle = false;
 
         function addChoice(form) {
             add(form);
-            dismiss();
         }
 
         function add(form) {

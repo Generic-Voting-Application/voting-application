@@ -1,5 +1,6 @@
-﻿<div class="account-login dialog-content centered">
-    <form name="addChoiceForm" ng-submit="addChoice(addChoiceForm)">
+﻿
+﻿<div class="dialog-box-small dialog-content centered">
+    <form name="addChoiceForm">
         <h2>New Choice</h2>
         <div class="form-section-block centered">
             <label for="name">Name</label>
@@ -9,16 +10,33 @@
             <input class="form-input" id="description" ng-model="addChoiceForm.description">
         </div>
 
-        <button class="active-btn"
-                id="add-another-button"
-                ng-show="multipleAddingAllowed"
-                ng-disabled="addChoiceForm.$invalid"
-                ng-click="addChoice(addChoiceForm)"
-                type="submit"
-                onclick="addChoiceForm.name.focus()">
-            Add Another
-        </button>
-        <button class="active-btn" id="done-button" ng-disabled="addChoiceForm.$invalid" ng-click="addChoiceAndClose(addChoiceForm)">Done</button>
+        <div>
+            <button class="active-btn"
+                    id="add-button"
+                    ng-disabled="addChoiceForm.$invalid"
+                    ng-click="addChoice(addChoiceForm)"
+                    ng-if="addAnotherToggle"
+                    type="submit"
+                    onclick="addChoiceForm.name.focus()">
+                Add
+            </button>
+            <button class="active-btn"
+                    id="add-button"
+                    ng-disabled="addChoiceForm.$invalid"
+                    ng-click="addChoiceAndClose(addChoiceForm)"
+                    ng-if="!addAnotherToggle"
+                    type="submit">
+                Add
+            </button>
+
+            <div class="pull-right padded-top-small">
+                <label for="add-another-checkbox">Add Another</label>
+                <input type="checkbox" id="add-another-checkbox"
+                       ng-model="addAnotherToggle"
+                       ng-true-value="true"
+                       ng-false-value="false" />
+            </div>
+        </div>
     </form>
 </div>
 <span class="dialog-error-bar-bottom" ng-show="displayError">{{displayError}}</span>
