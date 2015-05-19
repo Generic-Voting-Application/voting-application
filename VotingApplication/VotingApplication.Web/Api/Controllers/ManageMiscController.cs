@@ -51,7 +51,7 @@ namespace VotingApplication.Web.Api.Controllers
                     _metricHandler.HandleHiddenResultsChangedEvent(poll.HiddenResults, poll.UUID);
                 }
 
-                poll.LastUpdated = DateTime.Now;
+                poll.LastUpdatedUtc = DateTime.Now;
 
                 context.SaveChanges();
             }

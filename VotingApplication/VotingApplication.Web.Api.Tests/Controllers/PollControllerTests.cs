@@ -48,7 +48,7 @@ namespace VotingApplication.Web.Tests.Controllers
             {
                 UUID = _templateUUID,
                 ManageId = Guid.NewGuid(),
-                CreatedDate = _templateCreatedDate,
+                CreatedDateUtc = _templateCreatedDate,
                 Options = new List<Option>() { _redOption },
                 CreatorIdentity = UserId
             };

@@ -39,7 +39,7 @@ namespace VotingApplication.Web.Api.Controllers
                         clientLastUpdated = UnixTimeToDateTime(long.Parse(lastRefreshedDate));
                     }
 
-                    if (poll.LastUpdated < clientLastUpdated)
+                    if (poll.LastUpdatedUtc < clientLastUpdated)
                     {
                         _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.NotModified, pollId);
                         throw new HttpResponseException(HttpStatusCode.NotModified);

@@ -22,8 +22,8 @@ namespace VotingApplication.Data.Model.Creation
                 ExpiryDate = null,
                 OptionAdding = false,
 
-                CreatedDate = DateTime.Now,
-                LastUpdated = DateTime.Now
+                CreatedDateUtc = DateTime.Now,
+                LastUpdatedUtc = DateTime.Now
             };
         }
 
