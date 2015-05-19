@@ -5,7 +5,7 @@ using Protractor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Tests.E2E.Helpers;
@@ -24,6 +24,7 @@ namespace VotingApplication.Web.Tests.E2E
             private static ITestVotingContext _context;
 
             private const int truncatedTextLimit = 60;
+            private static readonly int WaitTime = 500;
             private static Poll _defaultMultiPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
             private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
@@ -104,7 +105,7 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod, TestCategory("E2E")]
-            public async Task PopulatedChoices_TruncatesLongDescriptions()
+            public void PopulatedChoices_TruncatesLongDescriptions()
             {
                 string truncatedString = new String('a', truncatedTextLimit / 2);
                 _driver.Navigate().GoToUrl(PollUrl);
@@ -116,7 +117,9 @@ namespace VotingApplication.Web.Tests.E2E
                     Description = truncatedString + " " + truncatedString
                 });
 
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
+
+                Thread.Sleep(WaitTime);
 
                 IReadOnlyCollection<IWebElement> choiceDescriptions = _driver.FindElements(NgBy.Model("choice.Description"));
 
@@ -167,32 +170,6 @@ namespace VotingApplication.Web.Tests.E2E
 
                 Assert.IsTrue(selectedChoice.IsVisible());
             }
-
-            [TestMethod, TestCategory("E2E")]
-            public void ClearVote_RemovesVote()
-            {
-                _driver.Navigate().GoToUrl(PollUrl);
-                IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
-                IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
-
-                choices.First().Click();
-                voteButton.Click();
-
-                _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
-
-                IWebElement clearVoteChoice = _driver.FindElements(By.Id("clear-vote-button")).Single();
-                clearVoteChoice.Click();
-
-                _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
-
-                IWebElement selectedChoice = _driver.FindElements(By.CssSelector(".selected-choice")).FirstOrDefault();
-
-                VoteClearer voterClearer = new VoteClearer(_context);
-                voterClearer.ClearLast();
-
-                Assert.IsFalse(selectedChoice.IsVisible());
-            }
-
         }
 
         [TestClass]

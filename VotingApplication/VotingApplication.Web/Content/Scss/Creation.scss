@@ -151,6 +151,14 @@ body {
     padding-left: 20px;
 }
 
+.icon-margin-left {
+    margin-left: 20px;
+}
+
+.icon-margin-bottom {
+    margin-bottom: 15px;
+}
+
 .padded-top-small {
     padding-top: 5px;
 }
@@ -173,6 +181,11 @@ body {
         background-color: $Blue300;
         box-shadow: 0px 0px 4px 0px rgba($Black, 0.6);
     }
+}
+
+.manage-input {
+    @extend .input;
+    border-color: $Blue500;
 }
 
 .manage-area {

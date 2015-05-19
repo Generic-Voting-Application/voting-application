@@ -7,7 +7,8 @@
             <div class="choice-block" ng-class="{'selected-choice': choice.voteValue }">
                 <div class="choice-block-row">
                     <div class="choice-buttons">
-                        <button id="vote-button" class="active-btn btn-medium" ng-click="submitVote(choice)">Vote</button>
+                        <button ng-if="choice.voteValue" id="clear-vote-button" class="error-btn btn-medium" ng-click="clearVote()">Unvote</button>
+                        <button ng-if="!choice.voteValue" id="vote-button" class="active-btn btn-medium" ng-click="submitVote(choice)">Vote</button>
                     </div>
                     <strong>{{choice.Name}}</strong>
                 </div>

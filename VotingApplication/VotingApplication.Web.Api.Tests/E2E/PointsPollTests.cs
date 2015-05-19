@@ -275,35 +275,6 @@ namespace VotingApplication.Web.Tests.E2E
                 Assert.IsTrue(selectedChoicePoints.IsVisible());
                 Assert.AreEqual("1/" + _defaultPointsPoll.MaxPerVote, selectedChoicePoints.Text);
             }
-
-            [TestMethod, TestCategory("E2E")]
-            public void ClearVote_RemovesVote()
-            {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
-                IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
-
-                IReadOnlyCollection<IWebElement> increaseChoiceButtons = _driver.FindElements(By.Id("increase-button"));
-
-                IWebElement plusButton = increaseChoiceButtons.First();
-                IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
-
-                plusButton.Click();
-                voteButton.Click();
-
-                _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
-
-                IWebElement clearVoteChoice = _driver.FindElements(By.Id("clear-vote-button")).Single();
-                clearVoteChoice.Click();
-
-                _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
-
-                choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
-                IWebElement selectedChoicePoints = choices.First().FindElement(NgBy.Binding("poll.MaxPerVote"));
-
-                Assert.IsTrue(selectedChoicePoints.IsVisible());
-                Assert.AreEqual("0/" + _defaultPointsPoll.MaxPerVote, selectedChoicePoints.Text);
-            }
         }
 
         [TestClass]

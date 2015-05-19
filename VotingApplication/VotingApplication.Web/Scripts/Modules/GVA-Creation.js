@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('GVA.Creation', ['ngRoute', 'ngDialog', 'ngStorage', 'toggle-switch', 'GVA.Common', 'GVA.Poll'])
+        .module('GVA.Creation', ['ngRoute', 'ngDialog', 'ngStorage', 'zeroclipboard', 'toggle-switch', 'GVA.Common', 'GVA.Poll'])
         .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider
@@ -52,5 +52,10 @@
                 .otherwise({
                     templateUrl: '../Routes/HomePage'
                 });
+        }])
+        .config(['uiZeroclipConfigProvider', function (uiZeroclipConfigProvider) {
+            uiZeroclipConfigProvider.setZcConf({
+                swfPath: '/Static/Lib/ZeroClipboard.swf'
+            });
         }]);
 })();
