@@ -109,9 +109,19 @@
                 <h4 class="icon-padded-left">Share</h4>
             </div>
             <div>
-                <div class="input-btn-group">
+                <div class="input-btn-group" ng-if="!copyError">
                     <input class="manage-input icon-margin-left" contenteditable="false" ng-readonly="true" ng-value="fullPollUrl()" />
-                    <button id="copy-button" class="active-btn" ui-zeroclip zeroclip-copied="copied=true" zeroclip-model="fullPollUrl()"><i class="fa fa-clipboard"></i></button>
+                    <button id="copy-button"
+                            class="active-btn"
+                            ui-zeroclip
+                            zeroclip-copied="copied=true"
+                            zeroclip-model="fullPollUrl()"
+                            zeroclip-on-error="$parent.copyError=true">
+                        <i class="fa fa-clipboard"></i>
+                    </button>
+                </div>
+                <div ng-if="copyError">
+                    <input class="manage-input icon-margin-left" ng-value="fullPollUrl()" />
                 </div>
             </div>
         </div>
