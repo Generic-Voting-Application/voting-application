@@ -42,13 +42,13 @@ describe('ManageVotersController', function () {
                 VoterName: 'Derek',
                 Votes: [
                     {
-                        OptionNumber: 1,
-                        OptionName: 'One',
+                        ChoiceNumber: 1,
+                        ChoiceName: 'One',
                         Value: 5
                     },
                     {
-                        OptionNumber: 2,
-                        OptionName: 'Two',
+                        ChoiceNumber: 2,
+                        ChoiceName: 'Two',
                         Value: 1
                     }
                 ]
@@ -75,13 +75,13 @@ describe('ManageVotersController', function () {
                     VoterName: 'Derek',
                     Votes: [
                         {
-                            OptionNumber: 1,
-                            OptionName: 'One',
+                            ChoiceNumber: 1,
+                            ChoiceName: 'One',
                             Value: 5
                         },
                         {
-                            OptionNumber: 2,
-                            OptionName: 'Two',
+                            ChoiceNumber: 2,
+                            ChoiceName: 'Two',
                             Value: 1
                         }
                     ]
@@ -92,13 +92,13 @@ describe('ManageVotersController', function () {
                     VoterName: 'Barbara',
                     Votes: [
                         {
-                            OptionNumber: 3,
-                            OptionName: 'Three',
+                            ChoiceNumber: 3,
+                            ChoiceName: 'Three',
                             Value: 2
                         },
                         {
-                            OptionNumber: 7,
-                            OptionName: 'Seven',
+                            ChoiceNumber: 7,
+                            ChoiceName: 'Seven',
                             Value: 0
                         }
                     ]
@@ -122,13 +122,13 @@ describe('ManageVotersController', function () {
                     VoterName: 'Derek',
                     Votes: [
                         {
-                            OptionNumber: 1,
-                            OptionName: 'One',
+                            ChoiceNumber: 1,
+                            ChoiceName: 'One',
                             Value: 5
                         },
                         {
-                            OptionNumber: 2,
-                            OptionName: 'Two',
+                            ChoiceNumber: 2,
+                            ChoiceName: 'Two',
                             Value: 1
                         }
                     ]
@@ -139,13 +139,13 @@ describe('ManageVotersController', function () {
                     VoterName: 'Barbara',
                     Votes: [
                         {
-                            OptionNumber: 3,
-                            OptionName: 'Three',
+                            ChoiceNumber: 3,
+                            ChoiceName: 'Three',
                             Value: 2
                         },
                         {
-                            OptionNumber: 7,
-                            OptionName: 'Seven',
+                            ChoiceNumber: 7,
+                            ChoiceName: 'Seven',
                             Value: 0
                         }
                     ]
@@ -165,13 +165,13 @@ describe('ManageVotersController', function () {
                     VoterName: 'Derek',
                     Votes: [
                         {
-                            OptionNumber: 1,
-                            OptionName: 'One',
+                            ChoiceNumber: 1,
+                            ChoiceName: 'One',
                             Value: 5
                         },
                         {
-                            OptionNumber: 2,
-                            OptionName: 'Two',
+                            ChoiceNumber: 2,
+                            ChoiceName: 'Two',
                             Value: 1
                         }
                     ]
@@ -182,13 +182,13 @@ describe('ManageVotersController', function () {
                     VoterName: 'Barbara',
                     Votes: [
                         {
-                            OptionNumber: 3,
-                            OptionName: 'Three',
+                            ChoiceNumber: 3,
+                            ChoiceName: 'Three',
                             Value: 2
                         },
                         {
-                            OptionNumber: 7,
-                            OptionName: 'Seven',
+                            ChoiceNumber: 7,
+                            ChoiceName: 'Seven',
                             Value: 0
                         }
                     ]
@@ -202,8 +202,8 @@ describe('ManageVotersController', function () {
                     VoterName: 'Roger',
                     Votes: [
                         {
-                            OptionNumber: 3,
-                            OptionName: 'Three',
+                            ChoiceNumber: 3,
+                            ChoiceName: 'Three',
                             Value: 3
                         }
                     ]
@@ -226,13 +226,13 @@ describe('ManageVotersController', function () {
                 VoterName: 'Derek',
                 Votes: [
                     {
-                        OptionNumber: 1,
-                        OptionName: 'One',
+                        ChoiceNumber: 1,
+                        ChoiceName: 'One',
                         Value: 5
                     },
                     {
-                        OptionNumber: 2,
-                        OptionName: 'Two',
+                        ChoiceNumber: 2,
+                        ChoiceName: 'Two',
                         Value: 1
                     }
                 ]
@@ -243,13 +243,13 @@ describe('ManageVotersController', function () {
                 VoterName: 'Barbara',
                 Votes: [
                     {
-                        OptionNumber: 3,
-                        OptionName: 'Three',
+                        ChoiceNumber: 3,
+                        ChoiceName: 'Three',
                         Value: 2
                     },
                     {
-                        OptionNumber: 7,
-                        OptionName: 'Seven',
+                        ChoiceNumber: 7,
+                        ChoiceName: 'Seven',
                         Value: 0
                     }
                 ]
@@ -275,13 +275,13 @@ describe('ManageVotersController', function () {
             var voterManageGuid = 'D0F070A6-596A-4350-A3B3-ED542525D871';
             var voterName = 'Barbara';
             var voterVote1 = {
-                OptionNumber: 3,
-                OptionName: 'Three',
+                ChoiceNumber: 3,
+                ChoiceName: 'Three',
                 Value: 2
             };
             var voterVote2 = {
-                OptionNumber: 7,
-                OptionName: 'Seven',
+                ChoiceNumber: 7,
+                ChoiceName: 'Seven',
                 Value: 0
             };
 
@@ -329,13 +329,13 @@ describe('ManageVotersController', function () {
                 VoterName: 'Barbara',
                 Votes: [
                 {
-                    OptionNumber: 3,
-                    OptionName: 'Three',
+                    ChoiceNumber: 3,
+                    ChoiceName: 'Three',
                     Value: 2
                 },
                 {
-                    OptionNumber: 7,
-                    OptionName: 'Seven',
+                    ChoiceNumber: 7,
+                    ChoiceName: 'Seven',
                     Value: 0
                 }]
             };
@@ -357,13 +357,13 @@ describe('ManageVotersController', function () {
                 VoterName: 'Barbara',
                 Votes: [
                 {
-                    OptionNumber: 3,
-                    OptionName: 'Three',
+                    ChoiceNumber: 3,
+                    ChoiceName: 'Three',
                     Value: 2
                 },
                 {
-                    OptionNumber: 7,
-                    OptionName: 'Seven',
+                    ChoiceNumber: 7,
+                    ChoiceName: 'Seven',
                     Value: 0
                 }]
             };
@@ -385,13 +385,13 @@ describe('ManageVotersController', function () {
                 VoterName: 'Barbara',
                 Votes: [
                 {
-                    OptionNumber: 3,
-                    OptionName: 'Three',
+                    ChoiceNumber: 3,
+                    ChoiceName: 'Three',
                     Value: 2
                 },
                 {
-                    OptionNumber: 7,
-                    OptionName: 'Seven',
+                    ChoiceNumber: 7,
+                    ChoiceName: 'Seven',
                     Value: 0
                 }]
             };
@@ -400,13 +400,13 @@ describe('ManageVotersController', function () {
                 VoterName: 'Derek',
                 Votes: [
                 {
-                    OptionNumber: 1,
-                    OptionName: 'One',
+                    ChoiceNumber: 1,
+                    ChoiceName: 'One',
                     Value: 5
                 },
                 {
-                    OptionNumber: 2,
-                    OptionName: 'Two',
+                    ChoiceNumber: 2,
+                    ChoiceName: 'Two',
                     Value: 1
                 }]
             };
@@ -428,8 +428,8 @@ describe('ManageVotersController', function () {
                 VoterName: 'Derek',
                 Votes: [
                 {
-                    OptionNumber: 12,
-                    OptionName: 'Twelve',
+                    ChoiceNumber: 12,
+                    ChoiceName: 'Twelve',
                     Value: 12
                 }]
             };
@@ -438,13 +438,13 @@ describe('ManageVotersController', function () {
                 VoterName: 'Derek',
                 Votes: [
                 {
-                    OptionNumber: 1,
-                    OptionName: 'One',
+                    ChoiceNumber: 1,
+                    ChoiceName: 'One',
                     Value: 5
                 },
                 {
-                    OptionNumber: 2,
-                    OptionName: 'Two',
+                    ChoiceNumber: 2,
+                    ChoiceName: 'Two',
                     Value: 1
                 }]
             };
@@ -456,18 +456,18 @@ describe('ManageVotersController', function () {
                     VoterName: 'Derek',
                     Votes: [
                         {
-                            OptionNumber: 1,
-                            OptionName: 'One',
+                            ChoiceNumber: 1,
+                            ChoiceName: 'One',
                             Value: 5
                         },
                         {
-                            OptionNumber: 2,
-                            OptionName: 'Two',
+                            ChoiceNumber: 2,
+                            ChoiceName: 'Two',
                             Value: 1
                         },
                         {
-                            OptionNumber: 12,
-                            OptionName: 'Twelve',
+                            ChoiceNumber: 12,
+                            ChoiceName: 'Twelve',
                             Value: 12
                         }
                     ]
@@ -489,8 +489,8 @@ describe('ManageVotersController', function () {
 
         it('Given no votes to remove, adds ballot and vote to VotersToRemove', function () {
             var voteToRemove = {
-                OptionNumber: 3,
-                OptionName: 'Three',
+                ChoiceNumber: 3,
+                ChoiceName: 'Three',
                 Value: 2
             };
             var ballot = {
@@ -517,13 +517,13 @@ describe('ManageVotersController', function () {
 
         it('Removes vote from Voters', function () {
             var voteToRemove = {
-                OptionNumber: 3,
-                OptionName: 'Three',
+                ChoiceNumber: 3,
+                ChoiceName: 'Three',
                 Value: 2
             };
             var voteToRemain = {
-                OptionNumber: 2,
-                OptionName: 'Two',
+                ChoiceNumber: 2,
+                ChoiceName: 'Two',
                 Value: 1
             };
 
@@ -553,8 +553,8 @@ describe('ManageVotersController', function () {
 
         it('Removes ballot from Voters if it is the last vote in the ballot', function () {
             var vote = {
-                OptionNumber: 3,
-                OptionName: 'Three',
+                ChoiceNumber: 3,
+                ChoiceName: 'Three',
                 Value: 2
             };
 
@@ -576,8 +576,8 @@ describe('ManageVotersController', function () {
 
         it('Adds vote to ballot in VotersToRemove', function () {
             var voteToRemove = {
-                OptionNumber: 3,
-                OptionName: 'Three',
+                ChoiceNumber: 3,
+                ChoiceName: 'Three',
                 Value: 2
             };
             var ballot = {
@@ -586,8 +586,8 @@ describe('ManageVotersController', function () {
                 Votes: [
                     voteToRemove,
                     {
-                        OptionNumber: 56,
-                        OptionName: 'Fifty-six',
+                        ChoiceNumber: 56,
+                        ChoiceName: 'Fifty-six',
                         Value: 23
                     }]
             };
@@ -597,8 +597,8 @@ describe('ManageVotersController', function () {
                 VoterName: 'Barbara',
                 Votes: [
                 {
-                    OptionNumber: 1,
-                    OptionName: 'One',
+                    ChoiceNumber: 1,
+                    ChoiceName: 'One',
                     Value: 5
                 }]
             };
@@ -608,8 +608,8 @@ describe('ManageVotersController', function () {
                 VoterName: 'Barbara',
                 Votes: [
                     {
-                        OptionNumber: 1,
-                        OptionName: 'One',
+                        ChoiceNumber: 1,
+                        ChoiceName: 'One',
                         Value: 5
                     },
                 voteToRemove]

@@ -95,7 +95,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 existingVotes.Add(testVote);
 
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(existingPolls, existingBallots, existingVotes);
-                ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "NotAnOption", MaxPerVote = 1, MaxPoints = 1 };
+                ManagePollTypeRequest request = new ManagePollTypeRequest { PollType = "NotAnChoice", MaxPerVote = 1, MaxPoints = 1 };
 
                 ManagePollTypeController controller = CreateManagePollTypeController(contextFactory);
 

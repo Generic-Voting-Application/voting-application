@@ -79,7 +79,7 @@
             }
             else {
                 ballotToRemove.Votes.forEach(function (vote) {
-                    var votes = existingVoterToRemove[0].Votes.filter(filterVoteByOptionNumber(vote));
+                    var votes = existingVoterToRemove[0].Votes.filter(filterVoteByChoiceNumber(vote));
 
                     if (votes.length === 0) {
                         existingVoterToRemove[0].Votes.push(vote);
@@ -95,8 +95,8 @@
             return function (value) { return value.BallotManageGuid === item.BallotManageGuid; };
         }
 
-        function filterVoteByOptionNumber(item) {
-            return function (value) { return value.OptionNumber === item.OptionNumber; };
+        function filterVoteByChoiceNumber(item) {
+            return function (value) { return value.ChoiceNumber === item.ChoiceNumber; };
         }
 
         function loadVoters() {

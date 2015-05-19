@@ -1,16 +1,16 @@
 ﻿<div ng-controller="MultiVoteController" ng-app="GVA.Voting" class="voting-area">
-    <div class="option-area">
+    <div class="choice-area">
 
-        <h3>Options</h3>
+        <h3>Choices</h3>
 
-        <div ng-repeat="option in poll.Options">
-            <div class="option-block clickable" ng-class="{'selected-option': option.voteValue }" ng-click="option.voteValue = option.voteValue ? 0 : 1">
-                <div class="option-block-row">
-                    <input class="pull-right option-checkbox" type="checkbox" ng-model="option.voteValue" ng-true-value="1" ng-false-value="0" ng-click="$event.stopPropagation()" />
-                    <strong>{{option.Name}}</strong>
+        <div ng-repeat="choice in poll.Choices">
+            <div class="choice-block clickable" ng-class="{'selected-choice': choice.voteValue }" ng-click="choice.voteValue = choice.voteValue ? 0 : 1">
+                <div class="choice-block-row">
+                    <input class="pull-right choice-checkbox" type="checkbox" ng-model="choice.voteValue" ng-true-value="1" ng-false-value="0" ng-click="$event.stopPropagation()" />
+                    <strong>{{choice.Name}}</strong>
                 </div>
-                <div ng-if="option.Description" class="option-block-row">
-                    <span truncated-text ng-model="option.Description" max-chars="60" class="option-description"></span>
+                <div ng-if="choice.Description" class="choice-block-row">
+                    <span truncated-text ng-model="choice.Description" max-chars="60" class="choice-description"></span>
                 </div>
             </div>
 
@@ -18,13 +18,13 @@
 
         </div>
 
-        <div ng-show="poll.OptionAdding">
+        <div ng-show="poll.ChoiceAdding">
             <p>
-                <a id="add-option-link" class="icon-padded-left clickable" ng-click="addOption()">+ Add another option</a>
+                <a id="add-choice-link" class="icon-padded-left clickable" ng-click="addChoice()">+ Add another choice</a>
             </p>
         </div>
     </div>
     <div class="flexbox">
-        <button id="vote-button" class="active-btn btn-medium centered" ng-click="submitVote(poll.Options)">Vote</button>
+        <button id="vote-button" class="active-btn btn-medium centered" ng-click="submitVote(poll.Choices)">Vote</button>
     </div>
 </div>

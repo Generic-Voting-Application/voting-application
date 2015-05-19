@@ -18,7 +18,7 @@
         $scope.pollId = $routeParams['pollId'];
         $scope.token = $routeParams['tokenId'] || '';
 
-        $scope.poll = { Options: [] };
+        $scope.poll = { Choices: [] };
         $scope.resultsLink = RoutingService.getResultsPageUrl($scope.pollId, $scope.token);
 
         $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
@@ -34,7 +34,7 @@
 
         function activate() {
 
-            $scope.$on('voterOptionAddedEvent', optionAdded);
+            $scope.$on('voterChoiceAddedEvent', choiceAdded);
 
             // Angular won't auto update this so we need to use the observer pattern
             IdentityService.registerIdentityObserver(function () {
@@ -66,13 +66,13 @@
 
                 var voteData = response.data;
 
-                $scope.poll.Options.forEach(function (opt) { opt.voteValue = 0; });
+                $scope.poll.Choices.forEach(function (opt) { opt.voteValue = 0; });
 
                 if (voteData) {
                     voteData.forEach(function (vote) {
-                        $scope.poll.Options.forEach(function (option) {
-                            if (option.Id === vote.OptionId) {
-                                option.voteValue = vote.VoteValue;
+                        $scope.poll.Choices.forEach(function (choice) {
+                            if (choice.Id === vote.ChoiceId) {
+                                choice.voteValue = vote.VoteValue;
                             }
                         });
                     });
@@ -80,9 +80,9 @@
             });
         }
 
-        function optionAdded() {
+        function choiceAdded() {
 
-            var currentlySelectedOptions = $scope.poll.Options.filter(function (opt) {
+            var currentlySelectedChoices = $scope.poll.Choices.filter(function (opt) {
                 return opt.voteValue !== 0;
             });
 
@@ -90,13 +90,13 @@
                 .then(function (pollData) {
                     $scope.poll = pollData.data;
 
-                    $scope.poll.Options.forEach(function (opt) { opt.voteValue = 0; });
+                    $scope.poll.Choices.forEach(function (opt) { opt.voteValue = 0; });
 
-                    currentlySelectedOptions.forEach(function (selectedOption) {
-                        $scope.poll.Options.forEach(function (option) {
-                            // Note that this is subtly different from the initial load (as we have Id vs Id here, and Id vs OptionId above)
-                            if (option.Id === selectedOption.Id) {
-                                option.voteValue = selectedOption.voteValue;
+                    currentlySelectedChoices.forEach(function (selectedChoice) {
+                        $scope.poll.Choices.forEach(function (choice) {
+                            // Note that this is subtly different from the initial load (as we have Id vs Id here, and Id vs ChoiceId above)
+                            if (choice.Id === selectedChoice.Id) {
+                                choice.voteValue = selectedChoice.voteValue;
                             }
                         });
                     });
@@ -123,8 +123,8 @@
                 });
         }
 
-        function submitVote(options) {
-            if (!options) {
+        function submitVote(choices) {
+            if (!choices) {
                 return null;
             }
 
@@ -135,12 +135,12 @@
 
             if (!IdentityService.identity && $scope.poll && $scope.poll.NamedVoting) {
                 return IdentityService.openLoginDialog($scope, function () {
-                    submitVote(options);
+                    submitVote(choices);
                 });
             }
 
             var voterName = (IdentityService.identity && $scope.poll && $scope.poll.NamedVoting) ? IdentityService.identity.name : null;
-            var votes = getVotes(options);
+            var votes = getVotes(choices);
 
             var ballot = {
                 VoterName: voterName,

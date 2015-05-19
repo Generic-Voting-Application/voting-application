@@ -15,11 +15,11 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
         public int MaxPoints { get; set; }
         [Range(1, int.MaxValue)]
         public int MaxPerVote { get; set; }
-        public List<Option> Options { get; set; }
+        public List<Choice> Choices { get; set; }
         public List<ManageInvitationRequestModel> Voters { get; set; }
         public bool InviteOnly { get; set; }
         public bool NamedVoting { get; set; }
         public DateTimeOffset? ExpiryDate { get; set; }
-        public bool OptionAdding { get; set; }
+        public bool ChoiceAdding { get; set; }
     }
 }

@@ -1,28 +1,29 @@
+﻿
 ﻿<div class="dialog-box-small dialog-content centered">
-    <form name="addOptionForm">
-        <h2>New Option</h2>
+    <form name="addChoiceForm">
+        <h2>New Choice</h2>
         <div class="form-section-block centered">
             <label for="name">Name</label>
-            <input autofocus class="form-input" id="name" ng-model="addOptionForm.name" focus required>
+            <input autofocus class="form-input" id="name" ng-model="addChoiceForm.name" focus required>
 
             <label for="description">Description</label>
-            <input class="form-input" id="description" ng-model="addOptionForm.description">
+            <input class="form-input" id="description" ng-model="addChoiceForm.description">
         </div>
 
         <div>
             <button class="active-btn"
                     id="add-button"
-                    ng-disabled="addOptionForm.$invalid"
-                    ng-click="addOption(addOptionForm)"
+                    ng-disabled="addChoiceForm.$invalid"
+                    ng-click="addChoice(addChoiceForm)"
                     ng-if="addAnotherToggle"
                     type="submit"
-                    onclick="addOptionForm.name.focus()">
+                    onclick="addChoiceForm.name.focus()">
                 Add
             </button>
             <button class="active-btn"
                     id="add-button"
-                    ng-disabled="addOptionForm.$invalid"
-                    ng-click="addOptionAndClose(addOptionForm)"
+                    ng-disabled="addChoiceForm.$invalid"
+                    ng-click="addChoiceAndClose(addChoiceForm)"
                     ng-if="!addAnotherToggle"
                     type="submit">
                 Add
@@ -36,7 +37,6 @@
                        ng-false-value="false" />
             </div>
         </div>
-
     </form>
 </div>
 <span class="dialog-error-bar-bottom" ng-show="displayError">{{displayError}}</span>
