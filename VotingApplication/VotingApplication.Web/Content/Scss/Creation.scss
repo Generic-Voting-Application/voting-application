@@ -80,14 +80,6 @@ body {
     box-shadow: 1px 1px 4px rgba(0,0,0,0.6);
 }
 
-.account-login {
-    max-width: 320px;
-}
-
-.account-register {
-    max-width: 320px;
-}
-
 .account-control-box {
     position: absolute;
     border-style: solid;
@@ -167,6 +159,10 @@ body {
     margin-bottom: 15px;
 }
 
+.padded-top-small {
+    padding-top: 5px;
+}
+
 .form-aligned-top {
     margin-top: 4px;
     margin-left: 5px;
@@ -189,7 +185,6 @@ body {
 
 .manage-input {
     @extend .input;
-
     border-color: $Blue500;
 }
 
