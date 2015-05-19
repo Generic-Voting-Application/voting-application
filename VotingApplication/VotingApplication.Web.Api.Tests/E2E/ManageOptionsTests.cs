@@ -260,9 +260,10 @@ namespace VotingApplication.Web.Tests.E2E
             IWebElement addOptionButton = _driver.FindElement(By.PartialLinkText("New Option"));
             addOptionButton.Click();
 
+            Thread.Sleep(DialogClearWaitTime);
+
             IWebElement formName = _driver.FindElement(NgBy.Model("addOptionForm.name"));
             formName.SendKeys("Test");
-
 
             IWebElement addAnotherCheckbox = _driver.FindElement(By.Id("add-another-checkbox"));
             addAnotherCheckbox.Click();
