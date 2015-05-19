@@ -5,7 +5,7 @@ using Protractor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Tests.E2E.Helpers;
@@ -24,6 +24,7 @@ namespace VotingApplication.Web.Tests.E2E
             private static ITestVotingContext _context;
 
             private const int truncatedTextLimit = 60;
+            private static readonly int WaitTime = 500;
             private static Poll _defaultMultiPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
             private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
@@ -104,7 +105,7 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod, TestCategory("E2E")]
-            public async Task PopulatedOptions_TruncatesLongDescriptions()
+            public void PopulatedOptions_TruncatesLongDescriptions()
             {
                 string truncatedString = new String('a', truncatedTextLimit / 2);
                 _driver.Navigate().GoToUrl(PollUrl);
@@ -116,7 +117,9 @@ namespace VotingApplication.Web.Tests.E2E
                     Description = truncatedString + " " + truncatedString
                 });
 
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
+
+                Thread.Sleep(WaitTime);
 
                 IReadOnlyCollection<IWebElement> optionDescriptions = _driver.FindElements(NgBy.Model("option.Description"));
 
