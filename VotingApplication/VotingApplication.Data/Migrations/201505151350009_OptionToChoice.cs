@@ -13,13 +13,13 @@ namespace VotingApplication.Data.Migrations
             CreateTable(
                 "dbo.Choices",
                 c => new
-                    {
-                        Id = c.Long(nullable: false, identity: true),
-                        Name = c.String(),
-                        Description = c.String(),
-                        PollChoiceNumber = c.Int(nullable: false),
-                        Poll_Id = c.Long(),
-                    })
+                {
+                    Id = c.Long(nullable: false, identity: true),
+                    Name = c.String(),
+                    Description = c.String(),
+                    PollChoiceNumber = c.Int(nullable: false),
+                    Poll_Id = c.Long(),
+                })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Polls", t => t.Poll_Id)
                 .Index(t => t.Poll_Id);
@@ -29,15 +29,24 @@ namespace VotingApplication.Data.Migrations
             CreateIndex("dbo.Votes", "Choice_Id");
             AddForeignKey("dbo.Votes", "Choice_Id", "dbo.Choices", "Id");
 
-            Sql(@"INSERT INTO dbo.Choices (Name, Description, PollChoiceNumber, Poll_Id)
-                 SELECT Name, Description, PollOptionNumber, Poll_Id
-                 FROM dbo.Options");
+            Sql(@"
+                    ALTER TABLE dbo.Choices ADD OptionId BIGINT
+
+                    INSERT INTO dbo.Choices (Name, Description, PollChoiceNumber, Poll_Id, OptionId)
+                    SELECT Name, Description, PollOptionNumber, Poll_Id, Id
+                                 FROM dbo.Options
+             
+                    UPDATE v
+                    SET v.Choice_Id = c.Id
+                    FROM dbo.Votes v
+                    JOIN dbo.Choices c ON c.OptionId = v.Option_Id
+
+                    ALTER TABLE dbo.Choices DROP COLUMN OptionId
+                ");
 
             Sql(@"UPDATE dbo.Polls
                   SET ChoiceAdding = OptionAdding");
 
-            Sql(@"UPDATE dbo.Votes
-                  SET Choice_Id = Option_Id");
 
             DropColumn("dbo.Votes", "Option_Id");
             DropColumn("dbo.Polls", "OptionAdding");
@@ -49,13 +58,13 @@ namespace VotingApplication.Data.Migrations
             CreateTable(
                 "dbo.Options",
                 c => new
-                    {
-                        Id = c.Long(nullable: false, identity: true),
-                        Name = c.String(),
-                        Description = c.String(),
-                        PollOptionNumber = c.Int(nullable: false),
-                        Poll_Id = c.Long(),
-                    })
+                {
+                    Id = c.Long(nullable: false, identity: true),
+                    Name = c.String(),
+                    Description = c.String(),
+                    PollOptionNumber = c.Int(nullable: false),
+                    Poll_Id = c.Long(),
+                })
                 .PrimaryKey(t => t.Id);
 
             AddColumn("dbo.Polls", "OptionAdding", c => c.Boolean(nullable: false));
@@ -70,15 +79,23 @@ namespace VotingApplication.Data.Migrations
             AddForeignKey("dbo.Options", "Poll_Id", "dbo.Polls", "Id");
             AddForeignKey("dbo.Votes", "Option_Id", "dbo.Options", "Id");
 
+            Sql(@"
+                    ALTER TABLE dbo.Options ADD ChoiceId BIGINT
+
+                    INSERT INTO dbo.Options (Name, Description, PollOptionNumber, Poll_Id, ChoiceId)
+                    SELECT Name, Description, PollChoiceNumber, Poll_Id, Id
+                                 FROM dbo.Choices
+             
+                    UPDATE v
+                    SET v.Option_Id = o.Id
+                    FROM dbo.Votes v
+                    JOIN dbo.Options o ON c.ChoiceId = v.Choice_Id
+
+                    ALTER TABLE dbo.Options DROP COLUMN ChoiceId
+                ");
+
             Sql(@"UPDATE dbo.Polls
                   SET OptionAdding = ChoiceAdding");
-
-            Sql(@"UPDATE dbo.Votes
-                  SET Option_Id = Choice_Id");
-
-            Sql(@"INSERT INTO dbo.Options (Name, Description, PollOptionNumber, Poll_Id)
-                 SELECT Name, Description, PollChoiceNumber, Poll_Id
-                 FROM dbo.Choices");
 
             DropColumn("dbo.Polls", "ChoiceAdding");
             DropColumn("dbo.Votes", "Choice_Id");
