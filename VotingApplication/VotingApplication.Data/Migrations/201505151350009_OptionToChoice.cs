@@ -31,12 +31,14 @@ namespace VotingApplication.Data.Migrations
 
             Sql(@"
                     ALTER TABLE dbo.Choices ADD OptionId BIGINT
+                ");
 
-                    INSERT INTO dbo.Choices (Name, Description, PollChoiceNumber, Poll_Id, OptionId)
+            Sql(@"INSERT INTO dbo.Choices (Name, Description, PollChoiceNumber, Poll_Id, OptionId)
                     SELECT Name, Description, PollOptionNumber, Poll_Id, Id
                                  FROM dbo.Options
-             
-                    UPDATE v
+                ");
+
+            Sql(@"UPDATE v
                     SET v.Choice_Id = c.Id
                     FROM dbo.Votes v
                     JOIN dbo.Choices c ON c.OptionId = v.Option_Id
@@ -81,15 +83,17 @@ namespace VotingApplication.Data.Migrations
 
             Sql(@"
                     ALTER TABLE dbo.Options ADD ChoiceId BIGINT
+                ");
 
-                    INSERT INTO dbo.Options (Name, Description, PollOptionNumber, Poll_Id, ChoiceId)
+            Sql(@"INSERT INTO dbo.Options (Name, Description, PollOptionNumber, Poll_Id, ChoiceId)
                     SELECT Name, Description, PollChoiceNumber, Poll_Id, Id
                                  FROM dbo.Choices
-             
-                    UPDATE v
+                ");
+
+            Sql(@" UPDATE v
                     SET v.Option_Id = o.Id
                     FROM dbo.Votes v
-                    JOIN dbo.Options o ON c.ChoiceId = v.Choice_Id
+                    JOIN dbo.Options o ON o.ChoiceId = v.Choice_Id
 
                     ALTER TABLE dbo.Options DROP COLUMN ChoiceId
                 ");
