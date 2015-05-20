@@ -13,7 +13,7 @@ namespace VotingApplication.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201505190725448_LastUpdated_CreatedDate_Utc"; }
+            get { return "201505200917567_LastUpdated_CreatedDate_Utc"; }
         }
         
         string IMigrationMetadata.Source
