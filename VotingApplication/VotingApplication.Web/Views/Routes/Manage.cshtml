@@ -108,9 +108,16 @@
                 </div>
                 <h4 class="icon-padded-left">Share</h4>
             </div>
+        </div>
+
+        <div class="manage-section" ng-show="!poll.InviteOnly" id="manage-link-section">
             <div>
-                <div class="input-btn-group" ng-if="!copyError">
-                    <input class="manage-input icon-margin-left" contenteditable="false" ng-readonly="true" ng-value="fullPollUrl()" />
+                <span class="fa fa-link pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Link</h4>
+            </div>
+            <div>
+                <div class="icon-margin-left input-btn-group" ng-if="!copyError">
+                    <input class="manage-input" contenteditable="false" ng-readonly="true" ng-value="fullPollUrl()" />
                     <button id="copy-button"
                             class="active-btn"
                             ui-zeroclip

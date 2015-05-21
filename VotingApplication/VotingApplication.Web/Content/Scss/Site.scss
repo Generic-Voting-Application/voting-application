@@ -180,13 +180,16 @@ button {
 }
 
 .input-btn-group {
+    @extend .flexbox;
+
     > input {
         min-height: 35px;
         border-top-right-radius: 0px;
         border-bottom-right-radius: 0px;
         border-right: none;
         margin-right: 0px;
-        float:left;
+        float: left;
+        flex: 1;
     }
 
     > button {
