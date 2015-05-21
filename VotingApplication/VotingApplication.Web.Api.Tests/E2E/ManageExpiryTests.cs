@@ -16,7 +16,6 @@ namespace VotingApplication.Web.Tests.E2E
     {
         private static readonly string ChromeDriverDir = @"..\..\";
         private static readonly string SiteBaseUri = @"http://localhost:64205/";
-        private static readonly int WaitTime = 500;
         private static readonly Guid PollGuid = Guid.NewGuid();
         private static readonly Guid PollManageGuid = Guid.NewGuid();
         private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid + "/Expiry";
@@ -32,7 +31,7 @@ namespace VotingApplication.Web.Tests.E2E
         {
             _context = new TestVotingContext();
 
-            // Open, Anonymous, No Option Adding, Shown Results
+            // Open, Anonymous, No Choice Adding, Shown Results
             _defaultPoll = new Poll()
             {
                 UUID = PollGuid,
@@ -41,10 +40,10 @@ namespace VotingApplication.Web.Tests.E2E
                 Name = "Test Poll",
                 LastUpdatedUtc = DateTime.UtcNow,
                 CreatedDateUtc = DateTime.UtcNow,
-                Options = new List<Option>(),
+                Choices = new List<Choice>(),
                 InviteOnly = false,
                 NamedVoting = false,
-                OptionAdding = false,
+                ChoiceAdding = false,
                 HiddenResults = false,
                 ExpiryDateUtc = DefaultTime
             };

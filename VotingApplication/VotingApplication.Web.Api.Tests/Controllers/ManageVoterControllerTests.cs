@@ -112,9 +112,9 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 var vote = new Vote()
                 {
-                    Option = new Option()
+                    Choice = new Choice()
                     {
-                        PollOptionNumber = optionNumber,
+                        PollChoiceNumber = optionNumber,
                         Name = optionName
                     },
                     VoteValue = optionValue
@@ -142,9 +142,9 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 VoteResponse responseVote = responseBallot.Votes[0];
 
-                Assert.AreEqual(optionName, responseVote.OptionName);
+                Assert.AreEqual(optionName, responseVote.ChoiceName);
                 Assert.AreEqual(optionValue, responseVote.Value);
-                Assert.AreEqual(optionNumber, responseVote.OptionNumber);
+                Assert.AreEqual(optionNumber, responseVote.ChoiceNumber);
             }
 
             [TestMethod]
@@ -157,14 +157,14 @@ namespace VotingApplication.Web.Tests.Controllers
 
 
 
-                const string expectedOptionName = "SomeOption";
-                const int expectedOptionNumber = 3;
+                const string expectedChoiceName = "SomeChoice";
+                const int expectedChoiceNumber = 3;
 
-                var expectedOption = new Option() { PollOptionNumber = expectedOptionNumber, Name = expectedOptionName };
+                var expectedChoice = new Choice() { PollChoiceNumber = expectedChoiceNumber, Name = expectedChoiceName };
                 const int expectedVoteValue = 42;
 
-                const int otherOptionNumber = 1;
-                var otherOption = new Option() { PollOptionNumber = otherOptionNumber, Name = "Some Other Option" };
+                const int otherChoiceNumber = 1;
+                var otherChoice = new Choice() { PollChoiceNumber = otherChoiceNumber, Name = "Some Other Choice" };
                 const int otherVoteValue = 16;
 
 
@@ -175,7 +175,7 @@ namespace VotingApplication.Web.Tests.Controllers
                     ManageId = PollManageGuid,
                     Ballots = new List<Ballot>()
                     {
-                        CreateBallot(expectedVoterName, CreateVote(expectedOption, expectedVoteValue))
+                        CreateBallot(expectedVoterName, CreateVote(expectedChoice, expectedVoteValue))
                     }
                 };
                 var poll2 =
@@ -184,7 +184,7 @@ namespace VotingApplication.Web.Tests.Controllers
                         ManageId = otherManageGuid,
                         Ballots = new List<Ballot>()
                         {
-                            CreateBallot(otherVoterName, CreateVote(otherOption, otherVoteValue))
+                            CreateBallot(otherVoterName, CreateVote(otherChoice, otherVoteValue))
                         }
                     };
                 existingPolls.Add(poll1);
@@ -206,9 +206,9 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 VoteResponse responseVote = responseBallot.Votes[0];
 
-                Assert.AreEqual(expectedOptionName, responseVote.OptionName);
+                Assert.AreEqual(expectedChoiceName, responseVote.ChoiceName);
                 Assert.AreEqual(expectedVoteValue, responseVote.Value);
-                Assert.AreEqual(expectedOptionNumber, responseVote.OptionNumber);
+                Assert.AreEqual(expectedChoiceNumber, responseVote.ChoiceNumber);
             }
         }
 
@@ -314,8 +314,8 @@ namespace VotingApplication.Web.Tests.Controllers
             [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
             public void RequestedVotes_DoNotBelongToBallot()
             {
-                const int pollOptionNumber1 = 1;
-                const int pollOptionNumber2 = 2;
+                const int pollChoiceNumber1 = 1;
+                const int pollChoiceNumber2 = 2;
 
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var poll = CreatePoll();
@@ -329,9 +329,9 @@ namespace VotingApplication.Web.Tests.Controllers
                 IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
                 var vote = new Vote()
                 {
-                    Option = new Option()
+                    Choice = new Choice()
                     {
-                        PollOptionNumber = pollOptionNumber1
+                        PollChoiceNumber = pollChoiceNumber1
                     }
                 };
 
@@ -347,7 +347,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes);
                 ManageVoterController controller = CreateManageVoteController(contextFactory);
 
-                var voteRequest = new DeleteVoteRequestModel { OptionNumber = pollOptionNumber2 };
+                var voteRequest = new DeleteVoteRequestModel { ChoiceNumber = pollChoiceNumber2 };
                 var ballotRequest = new DeleteBallotRequestModel { BallotManageGuid = PollManageGuid };
                 ballotRequest.VoteDeleteRequests.Add(voteRequest);
 
@@ -361,7 +361,7 @@ namespace VotingApplication.Web.Tests.Controllers
             [TestMethod]
             public void RequestedVotesAreRemoved()
             {
-                const int pollOptionNumber = 1;
+                const int pollChoiceNumber = 1;
 
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var poll = CreatePoll();
@@ -375,9 +375,9 @@ namespace VotingApplication.Web.Tests.Controllers
                 IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
                 var vote = new Vote()
                 {
-                    Option = new Option()
+                    Choice = new Choice()
                     {
-                        PollOptionNumber = pollOptionNumber
+                        PollChoiceNumber = pollChoiceNumber
                     }
                 };
 
@@ -393,7 +393,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes);
                 ManageVoterController controller = CreateManageVoteController(contextFactory);
 
-                var voteRequest = new DeleteVoteRequestModel { OptionNumber = pollOptionNumber };
+                var voteRequest = new DeleteVoteRequestModel { ChoiceNumber = pollChoiceNumber };
                 var ballotRequest = new DeleteBallotRequestModel { BallotManageGuid = PollManageGuid };
                 ballotRequest.VoteDeleteRequests.Add(voteRequest);
 
@@ -411,15 +411,15 @@ namespace VotingApplication.Web.Tests.Controllers
             public void ClearedVotesGenerateVoteDeletionMetric()
             {
                 // Arrange
-                Option option = new Option() { PollOptionNumber = 1, Id = 1, Name = "Option" };
-                Poll poll = new Poll() { UUID = Guid.NewGuid(), ManageId = Guid.NewGuid(), Options = new List<Option>() { option } };
+                Choice option = new Choice() { PollChoiceNumber = 1, Id = 1, Name = "Choice" };
+                Poll poll = new Poll() { UUID = Guid.NewGuid(), ManageId = Guid.NewGuid(), Choices = new List<Choice>() { option } };
                 Ballot ballot = new Ballot() { TokenGuid = Guid.NewGuid(), Votes = new List<Vote>(), ManageGuid = Guid.NewGuid() };
-                Vote voteToClear = new Vote() { Ballot = ballot, Poll = poll, VoteValue = 1, Option = option };
+                Vote voteToClear = new Vote() { Ballot = ballot, Poll = poll, VoteValue = 1, Choice = option };
                 
                 ballot.Votes.Add(voteToClear);
                 poll.Ballots.Add(ballot);
 
-                var options = DbSetTestHelper.CreateMockDbSet<Option>();
+                var options = DbSetTestHelper.CreateMockDbSet<Choice>();
                 var polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
                 var votes = DbSetTestHelper.CreateMockDbSet<Vote>();
@@ -434,7 +434,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 ManageVoterController controller = CreateManageVoteController(contextFactory, metricHandler.Object);
 
                 // Act
-                DeleteVoteRequestModel voteDelete = new DeleteVoteRequestModel() { OptionNumber = 1 };
+                DeleteVoteRequestModel voteDelete = new DeleteVoteRequestModel() { ChoiceNumber = 1 };
                 DeleteBallotRequestModel deletion = new DeleteBallotRequestModel() { BallotManageGuid = ballot.ManageGuid, VoteDeleteRequests = new List<DeleteVoteRequestModel>() { voteDelete } };
                 List<DeleteBallotRequestModel> ballotDeletions = new List<DeleteBallotRequestModel>() { deletion };
                 DeleteVotersRequestModel request = new DeleteVotersRequestModel() { BallotDeleteRequests = ballotDeletions };
@@ -447,7 +447,7 @@ namespace VotingApplication.Web.Tests.Controllers
             [TestMethod]
             public void AllVotesRequestedRemovalForBallot_RemovesBallot()
             {
-                const int pollOptionNumber = 1;
+                const int pollChoiceNumber = 1;
 
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var poll = CreatePoll();
@@ -461,9 +461,9 @@ namespace VotingApplication.Web.Tests.Controllers
                 IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
                 var vote = new Vote()
                 {
-                    Option = new Option()
+                    Choice = new Choice()
                     {
-                        PollOptionNumber = pollOptionNumber
+                        PollChoiceNumber = pollChoiceNumber
                     }
                 };
 
@@ -479,7 +479,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes);
                 ManageVoterController controller = CreateManageVoteController(contextFactory);
 
-                var voteRequest = new DeleteVoteRequestModel { OptionNumber = pollOptionNumber };
+                var voteRequest = new DeleteVoteRequestModel { ChoiceNumber = pollChoiceNumber };
                 var ballotRequest = new DeleteBallotRequestModel { BallotManageGuid = PollManageGuid };
                 ballotRequest.VoteDeleteRequests.Add(voteRequest);
 
@@ -497,8 +497,8 @@ namespace VotingApplication.Web.Tests.Controllers
             [TestMethod]
             public void SomeVotesRequestedRemovalForBallot_DoesNotRemovesBallot()
             {
-                const int pollOptionNumber1 = 1;
-                const int pollOptionNumber2 = 5;
+                const int pollChoiceNumber1 = 1;
+                const int pollChoiceNumber2 = 5;
 
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var poll = CreatePoll();
@@ -512,16 +512,16 @@ namespace VotingApplication.Web.Tests.Controllers
                 IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
                 var vote1 = new Vote()
                 {
-                    Option = new Option()
+                    Choice = new Choice()
                     {
-                        PollOptionNumber = pollOptionNumber1
+                        PollChoiceNumber = pollChoiceNumber1
                     }
                 };
                 var vote2 = new Vote()
                 {
-                    Option = new Option()
+                    Choice = new Choice()
                     {
-                        PollOptionNumber = pollOptionNumber2
+                        PollChoiceNumber = pollChoiceNumber2
                     }
                 };
 
@@ -538,7 +538,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes);
                 ManageVoterController controller = CreateManageVoteController(contextFactory);
 
-                var voteRequest = new DeleteVoteRequestModel { OptionNumber = pollOptionNumber1 };
+                var voteRequest = new DeleteVoteRequestModel { ChoiceNumber = pollChoiceNumber1 };
                 var ballotRequest = new DeleteBallotRequestModel { BallotManageGuid = PollManageGuid };
                 ballotRequest.VoteDeleteRequests.Add(voteRequest);
 
@@ -556,8 +556,8 @@ namespace VotingApplication.Web.Tests.Controllers
             [TestMethod]
             public void OnlyRequestedVotesRemoved()
             {
-                const int pollOptionNumber1 = 1;
-                const int pollOptionNumber2 = 5;
+                const int pollChoiceNumber1 = 1;
+                const int pollChoiceNumber2 = 5;
 
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var poll = CreatePoll();
@@ -571,16 +571,16 @@ namespace VotingApplication.Web.Tests.Controllers
                 IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
                 var vote1 = new Vote()
                 {
-                    Option = new Option()
+                    Choice = new Choice()
                     {
-                        PollOptionNumber = pollOptionNumber1
+                        PollChoiceNumber = pollChoiceNumber1
                     }
                 };
                 var vote2 = new Vote()
                 {
-                    Option = new Option()
+                    Choice = new Choice()
                     {
-                        PollOptionNumber = pollOptionNumber2
+                        PollChoiceNumber = pollChoiceNumber2
                     }
                 };
 
@@ -597,7 +597,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes);
                 ManageVoterController controller = CreateManageVoteController(contextFactory);
 
-                var voteRequest = new DeleteVoteRequestModel { OptionNumber = pollOptionNumber1 };
+                var voteRequest = new DeleteVoteRequestModel { ChoiceNumber = pollChoiceNumber1 };
                 var ballotRequest = new DeleteBallotRequestModel { BallotManageGuid = PollManageGuid };
                 ballotRequest.VoteDeleteRequests.Add(voteRequest);
 
@@ -636,9 +636,9 @@ namespace VotingApplication.Web.Tests.Controllers
             };
         }
 
-        public Vote CreateVote(Option option, int value)
+        public Vote CreateVote(Choice option, int value)
         {
-            return new Vote() { Option = option, VoteValue = value };
+            return new Vote() { Choice = option, VoteValue = value };
         }
 
         public Ballot CreateBallot(string voterName, Vote vote)

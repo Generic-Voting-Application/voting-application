@@ -44,7 +44,7 @@ namespace VotingApplication.Web.Api.Controllers
             return new ManagePollRequestResponseModel
             {
                 UUID = poll.UUID,
-                Options = poll.Options,
+                Choices = poll.Choices,
                 InviteeCount = Invitees.Count,
                 VotersCount = Voters.Count,
                 PollType = poll.PollType.ToString(),
@@ -54,7 +54,7 @@ namespace VotingApplication.Web.Api.Controllers
                 Name = poll.Name,
                 NamedVoting = poll.NamedVoting,
                 ExpiryDateUtc = poll.ExpiryDateUtc,
-                OptionAdding = poll.OptionAdding,
+                ChoiceAdding = poll.ChoiceAdding,
                 HiddenResults = poll.HiddenResults
             };
         }

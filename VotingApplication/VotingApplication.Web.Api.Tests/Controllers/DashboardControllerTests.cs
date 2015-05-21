@@ -211,7 +211,7 @@ namespace VotingApplication.Web.Tests.Controllers
                     InviteOnly = inviteOnly,
                     NamedVoting = namedVoting,
                     ExpiryDateUtc = expiryDateUtc,
-                    OptionAdding = optionAdding
+                    ChoiceAdding = optionAdding
                 };
 
                 var dbPolls = new InMemoryDbSet<Poll>(clearDownExistingData: true)
@@ -241,30 +241,30 @@ namespace VotingApplication.Web.Tests.Controllers
                 Assert.AreEqual(inviteOnly, copiedPoll.InviteOnly);
                 Assert.AreEqual(namedVoting, copiedPoll.NamedVoting);
                 Assert.AreEqual(expiryDateUtc, copiedPoll.ExpiryDateUtc);
-                Assert.AreEqual(optionAdding, copiedPoll.OptionAdding);
+                Assert.AreEqual(optionAdding, copiedPoll.ChoiceAdding);
             }
 
             [TestMethod]
-            public void CopiedPollHasSameOptionsAsOriginal()
+            public void CopiedPollHasSameChoicesAsOriginal()
             {
                 Guid pollId = new Guid("00DB2F1B-C4F5-44D3-960C-386CEB9690C4");
 
-                var options = new List<Option>()
+                var options = new List<Choice>()
                 {
-                    new Option()
+                    new Choice()
                     {
                         Name = "One",
-                        Description = "Option 1"
+                        Description = "Choice 1"
                     },
-                    new Option()
+                    new Choice()
                     {
                         Name = "Two",
-                        Description = "Option 2"
+                        Description = "Choice 2"
                     },
-                    new Option()
+                    new Choice()
                     {
                         Name = "Three",
-                        Description = "Option 3"
+                        Description = "Choice 3"
                     }
                 };
 
@@ -272,7 +272,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 {
                     UUID = pollId,
                     CreatorIdentity = UserId1,
-                    Options = options
+                    Choices = options
                 };
 
                 var dbPolls = new InMemoryDbSet<Poll>(clearDownExistingData: true)
@@ -291,18 +291,18 @@ namespace VotingApplication.Web.Tests.Controllers
                 controller.Copy(request);
 
                 List<Poll> polls = dbPolls.ToList();
-                List<Option> originalPollOptions = polls[0].Options;
-                List<Option> copiedPollOptions = polls[1].Options;
+                List<Choice> originalPollChoices = polls[0].Choices;
+                List<Choice> copiedPollChoices = polls[1].Choices;
 
 
-                Assert.AreEqual(originalPollOptions[0].Name, copiedPollOptions[0].Name);
-                Assert.AreEqual(originalPollOptions[0].Description, copiedPollOptions[0].Description);
+                Assert.AreEqual(originalPollChoices[0].Name, copiedPollChoices[0].Name);
+                Assert.AreEqual(originalPollChoices[0].Description, copiedPollChoices[0].Description);
 
-                Assert.AreEqual(originalPollOptions[1].Name, copiedPollOptions[1].Name);
-                Assert.AreEqual(originalPollOptions[1].Description, copiedPollOptions[1].Description);
+                Assert.AreEqual(originalPollChoices[1].Name, copiedPollChoices[1].Name);
+                Assert.AreEqual(originalPollChoices[1].Description, copiedPollChoices[1].Description);
 
-                Assert.AreEqual(originalPollOptions[2].Name, copiedPollOptions[2].Name);
-                Assert.AreEqual(originalPollOptions[2].Description, copiedPollOptions[2].Description);
+                Assert.AreEqual(originalPollChoices[2].Name, copiedPollChoices[2].Name);
+                Assert.AreEqual(originalPollChoices[2].Description, copiedPollChoices[2].Description);
             }
 
             [TestMethod]

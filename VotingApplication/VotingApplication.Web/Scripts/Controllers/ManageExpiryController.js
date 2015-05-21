@@ -12,7 +12,7 @@
 
         $scope.poll = ManageService.poll;
         $scope.manageId = $routeParams.manageId;
-        $scope.timeOption = null;
+        $scope.timeChoice = null;
 
         $scope.updatePoll = updatePoll;
         $scope.return = navigateToManagePage;
@@ -46,16 +46,16 @@
             RoutingService.navigateToManagePage($scope.manageId);
         }
 
-        function setDate(option) {
-            var newDate = moment().add(1, option);
+        function setDate(choice) {
+            var newDate = moment().add(1, choice);
             newDate.minutes(Math.ceil(newDate.minutes() / 5) * 5);
             $scope.poll.ExpiryDate = newDate.toDate();
-            $scope.timeOption = option;
+            $scope.timeChoice = choice;
         }
 
         function removeExpiry() {
             $scope.poll.ExpiryDate = null;
-            $scope.timeOption = null;
+            $scope.timeChoice = null;
         }
 
         function dateFilter(date) {

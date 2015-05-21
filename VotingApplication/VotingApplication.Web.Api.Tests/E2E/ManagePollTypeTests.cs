@@ -32,7 +32,7 @@ namespace VotingApplication.Web.Tests.E2E
         {
             _context = new TestVotingContext();
 
-            // Open, Anonymous, No Option Adding, Shown Results
+            // Open, Anonymous, No Choice Adding, Shown Results
             _defaultPoll = new Poll()
             {
                 UUID = PollGuid,
@@ -41,10 +41,10 @@ namespace VotingApplication.Web.Tests.E2E
                 Name = "Test Poll",
                 LastUpdatedUtc = DateTime.UtcNow,
                 CreatedDateUtc = DateTime.UtcNow,
-                Options = new List<Option>(),
+                Choices = new List<Choice>(),
                 InviteOnly = false,
                 NamedVoting = false,
-                OptionAdding = false,
+                ChoiceAdding = false,
                 HiddenResults = false,
                 MaxPerVote = 3,
                 MaxPoints = 4
@@ -190,11 +190,11 @@ namespace VotingApplication.Web.Tests.E2E
         [TestMethod, TestCategory("E2E")]
         public void ManagePollType_Save_WarnsUser()
         {
-            Option pollOption = new Option() { PollOptionNumber = 1, Name = "Option" };
-            _defaultPoll.Options.Add(pollOption);
+            Choice pollChoice = new Choice() { PollChoiceNumber = 1, Name = "Choice" };
+            _defaultPoll.Choices.Add(pollChoice);
 
             Ballot pollBallot = new Ballot { ManageGuid = Guid.NewGuid(), TokenGuid = Guid.NewGuid(), Votes = new List<Vote>() };
-            Vote pollVote = new Vote() { Poll = _defaultPoll, Ballot = pollBallot, Option = pollOption };
+            Vote pollVote = new Vote() { Poll = _defaultPoll, Ballot = pollBallot, Choice = pollChoice };
             pollBallot.Votes.Add(pollVote);
 
             _defaultPoll.Ballots.Add(pollBallot);

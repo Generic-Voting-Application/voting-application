@@ -22,11 +22,11 @@ namespace VotingApplication.Web.Tests.Controllers
         private ManageController _controller;
         private Guid _manageMainUUID;
         private Guid _manageEmptyUUID;
-        private Option _burgerOption;
-        private Option _pizzaOption;
+        private Choice _burgerChoice;
+        private Choice _pizzaChoice;
         private Vote _burgerVote;
         private Poll _mainPoll;
-        private InMemoryDbSet<Option> _dummyOptions;
+        private InMemoryDbSet<Choice> _dummyChoices;
         private InMemoryDbSet<Vote> _dummyVotes;
         private InMemoryDbSet<Poll> _dummyPolls;
         private InMemoryDbSet<Ballot> _dummyTokens;
@@ -39,19 +39,19 @@ namespace VotingApplication.Web.Tests.Controllers
             _manageMainUUID = Guid.NewGuid();
             _manageEmptyUUID = Guid.NewGuid();
 
-            _burgerOption = new Option { Id = 1, Name = "Burger King" };
-            _pizzaOption = new Option { Id = 2, Name = "Pizza Hut" };
-            _dummyOptions = new InMemoryDbSet<Option>(true);
-            _dummyOptions.Add(_burgerOption);
-            _dummyOptions.Add(_pizzaOption);
+            _burgerChoice = new Choice { Id = 1, Name = "Burger King" };
+            _pizzaChoice = new Choice { Id = 2, Name = "Pizza Hut" };
+            _dummyChoices = new InMemoryDbSet<Choice>(true);
+            _dummyChoices.Add(_burgerChoice);
+            _dummyChoices.Add(_pizzaChoice);
 
-            _burgerVote = new Vote() { Id = 1, Poll = new Poll() { UUID = mainUUID }, Option = new Option() { Id = 1 } };
+            _burgerVote = new Vote() { Id = 1, Poll = new Poll() { UUID = mainUUID }, Choice = new Choice() { Id = 1 } };
             _dummyVotes = new InMemoryDbSet<Vote>(true);
             _dummyVotes.Add(_burgerVote);
 
             _dummyPolls = new InMemoryDbSet<Poll>(true);
-            _mainPoll = new Poll() { UUID = mainUUID, ManageId = _manageMainUUID, Options = new List<Option>() { _burgerOption, _pizzaOption }, Ballots = new List<Ballot>() };
-            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageId = _manageEmptyUUID, Options = new List<Option>(), Ballots = new List<Ballot>() };
+            _mainPoll = new Poll() { UUID = mainUUID, ManageId = _manageMainUUID, Choices = new List<Choice>() { _burgerChoice, _pizzaChoice }, Ballots = new List<Ballot>() };
+            Poll emptyPoll = new Poll() { UUID = emptyUUID, ManageId = _manageEmptyUUID, Choices = new List<Choice>(), Ballots = new List<Ballot>() };
             _dummyPolls.Add(_mainPoll);
             _dummyPolls.Add(emptyPoll);
 
@@ -60,7 +60,7 @@ namespace VotingApplication.Web.Tests.Controllers
             var mockContextFactory = new Mock<IContextFactory>();
             var mockContext = new Mock<IVotingContext>();
             mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
-            mockContext.Setup(a => a.Options).Returns(_dummyOptions);
+            mockContext.Setup(a => a.Choices).Returns(_dummyChoices);
             mockContext.Setup(a => a.Polls).Returns(_dummyPolls);
             mockContext.Setup(a => a.SaveChanges()).Callback(SaveChanges);
             mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
@@ -73,9 +73,9 @@ namespace VotingApplication.Web.Tests.Controllers
 
         private void SaveChanges()
         {
-            for (int i = 0; i < _dummyOptions.Count(); i++)
+            for (int i = 0; i < _dummyChoices.Count(); i++)
             {
-                _dummyOptions.Local[i].Id = (long)i + 1;
+                _dummyChoices.Local[i].Id = (long)i + 1;
             }
         }
 
@@ -99,24 +99,24 @@ namespace VotingApplication.Web.Tests.Controllers
         }
 
         [TestMethod]
-        public void GetWithEmptyPollReturnsEmptyOptionList()
+        public void GetWithEmptyPollReturnsEmptyChoiceList()
         {
             // Act
             var response = _controller.Get(_manageEmptyUUID);
 
             // Assert
-            Assert.AreEqual(0, response.Options.Count);
+            Assert.AreEqual(0, response.Choices.Count);
         }
 
         [TestMethod]
-        public void GetWithPopulatedPollReturnsOptionsForThatPoll()
+        public void GetWithPopulatedPollReturnsChoicesForThatPoll()
         {
             // Act
             var response = _controller.Get(_manageMainUUID);
 
             // Assert
-            Assert.AreEqual(2, response.Options.Count);
-            CollectionAssert.AreEqual(new string[] { "Burger King", "Pizza Hut" }, response.Options.Select(r => r.Name).ToArray());
+            Assert.AreEqual(2, response.Choices.Count);
+            CollectionAssert.AreEqual(new string[] { "Burger King", "Pizza Hut" }, response.Choices.Select(r => r.Name).ToArray());
         }
 
         [TestMethod]
@@ -161,9 +161,9 @@ namespace VotingApplication.Web.Tests.Controllers
                 IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
                 var vote = new Vote()
                 {
-                    Option = new Option()
+                    Choice = new Choice()
                     {
-                        PollOptionNumber = 1,
+                        PollChoiceNumber = 1,
 
                     },
                     VoteValue = 1

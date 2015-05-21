@@ -3,23 +3,23 @@
 
     angular
         .module('GVA.Common')
-        .controller('EditOptionDialogController', EditOptionDialogController);
+        .controller('EditChoiceDialogController', EditChoiceDialogController);
 
-    EditOptionDialogController.$inject = ['$scope'];
+    EditChoiceDialogController.$inject = ['$scope'];
 
-    function EditOptionDialogController($scope) {
-        $scope.updateOption = updateOption;
+    function EditChoiceDialogController($scope) {
+        $scope.updateChoice = updateChoice;
 
-        $scope.editOptionFormName = $scope.ngDialogData.option.Name;
-        $scope.editOptionFormDescription = $scope.ngDialogData.option.Description;
+        $scope.editChoiceFormName = $scope.ngDialogData.choice.Name;
+        $scope.editChoiceFormDescription = $scope.ngDialogData.choice.Description;
 
-        function updateOption() {
+        function updateChoice() {
             if ($scope.name === null) {
                 return;
             }
 
-            $scope.ngDialogData.option.Name = $scope.editOptionFormName;
-            $scope.ngDialogData.option.Description = $scope.editOptionFormDescription;
+            $scope.ngDialogData.choice.Name = $scope.editChoiceFormName;
+            $scope.ngDialogData.choice.Description = $scope.editChoiceFormDescription;
 
             $scope.closeThisDialog();
         }

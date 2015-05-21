@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('GVA.Creation', ['ngRoute', 'ngDialog', 'ngStorage', 'toggle-switch', 'GVA.Common', 'GVA.Poll'])
+        .module('GVA.Creation', ['ngRoute', 'ngDialog', 'ngStorage', 'zeroclipboard', 'toggle-switch', 'GVA.Common', 'GVA.Poll'])
         .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider
@@ -16,9 +16,9 @@
                         return '../Routes/ManageName/' + params['manageId'];
                     }
                 })
-                .when('/Manage/:manageId/Options', {
+                .when('/Manage/:manageId/Choices', {
                     templateUrl: function (params) {
-                        return '../Routes/ManageOptions/' + params['manageId'];
+                        return '../Routes/ManageChoices/' + params['manageId'];
                     }
                 })
                 .when('/Manage/:manageId/Invitees', {
@@ -52,5 +52,10 @@
                 .otherwise({
                     templateUrl: '../Routes/HomePage'
                 });
+        }])
+        .config(['uiZeroclipConfigProvider', function (uiZeroclipConfigProvider) {
+            uiZeroclipConfigProvider.setZcConf({
+                swfPath: '/Static/Lib/ZeroClipboard.swf'
+            });
         }]);
 })();

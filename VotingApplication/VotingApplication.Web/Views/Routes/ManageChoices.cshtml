@@ -1,0 +1,26 @@
+﻿<div ng-app="GVA.Creation" ng-controller="ManageChoiceController as vm">
+    <div class="manage-area centered">
+        <h2>
+            Poll Choices
+        </h2>
+        <p ng-if="choices.length === 0">No choices have been added.</p>
+
+        <div class="manage-section" ng-repeat="choice in choices">
+            <span class="fa fa-trash-o pull-right clickable form-aligned-top" ng-click="removeChoice(choice)"></span>
+            <span class="fa fa-pencil pull-right clickable form-aligned-top" ng-click="editChoice(choice)"></span>
+            <div ng-if="!choice.editChoiceToggle" aria-hidden="true">
+                <h4>{{choice.Name}}</h4>
+                <div>{{choice.Description}}</div>
+            </div>
+        </div>
+
+        <p>
+            <a class="icon-padded-left clickable" ng-click="addChoice()">+ New Choice</a>
+        </p>
+
+        <div class="manage-section">
+            <button id="cancel-button" class="manage-btn" ng-click="returnWithoutSave();">Cancel</button>
+            <button id="save-button" class="manage-btn" ng-click="saveChoicesAndReturn()">Save</button>
+        </div>
+    </div>
+</div>

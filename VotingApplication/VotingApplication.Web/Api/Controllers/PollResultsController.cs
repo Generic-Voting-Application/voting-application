@@ -50,7 +50,7 @@ namespace VotingApplication.Web.Api.Controllers
                     .Votes
                     .Include(v => v.Poll)
                     .Where(v => v.Poll.UUID == pollId)
-                    .Include(v => v.Option)
+                    .Include(v => v.Choice)
                     .Include(v => v.Ballot)
                     .ToList();
 
@@ -72,10 +72,10 @@ namespace VotingApplication.Web.Api.Controllers
             ResultsRequestResponseModel summary = new ResultsRequestResponseModel();
 
             var results = from vote in votes
-                          group vote by vote.Option.PollOptionNumber into result
+                          group vote by vote.Choice.PollChoiceNumber into result
                           let optionGroupVotes = result.ToList()
-                          let optionGroupOption = optionGroupVotes[0].Option
-                          orderby optionGroupOption.PollOptionNumber ascending
+                          let optionGroupOption = optionGroupVotes[0].Choice
+                          orderby optionGroupOption.PollChoiceNumber ascending
                           select new
                           {
                               Option = optionGroupOption,
@@ -125,11 +125,11 @@ namespace VotingApplication.Web.Api.Controllers
             return dateTime;
         }
 
-        private static ResultModel ResultToModel(Option option, int sum, List<ResultVoteModel> voters)
+        private static ResultModel ResultToModel(Choice choice, int sum, List<ResultVoteModel> voters)
         {
             return new ResultModel
             {
-                Option = option,
+                Choice = choice,
                 Sum = sum,
                 Voters = voters
             };
@@ -139,11 +139,11 @@ namespace VotingApplication.Web.Api.Controllers
         {
             var model = new VoteRequestResponseModel();
 
-            if (vote.Option != null)
+            if (vote.Choice != null)
             {
                 model.VoterId = vote.Ballot.Id;
-                model.OptionId = vote.Option.Id;
-                model.OptionName = vote.Option.Name;
+                model.ChoiceId = vote.Choice.Id;
+                model.ChoiceName = vote.Choice.Name;
             }
 
             if (vote.Ballot.VoterName != null)

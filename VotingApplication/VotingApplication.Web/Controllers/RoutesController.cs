@@ -97,7 +97,7 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
-        public ActionResult ManageOptions()
+        public ActionResult ManageChoices()
         {
             LogPageEvent("ManageOptions");
             return View();
@@ -164,12 +164,12 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
-        public ActionResult AddOptionDialog()
+        public ActionResult AddChoiceDialog()
         {
             return View();
         }
 
-        public ActionResult EditOptionDialog()
+        public ActionResult EditChoiceDialog()
         {
             return View();
         }

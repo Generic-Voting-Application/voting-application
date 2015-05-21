@@ -9,8 +9,8 @@
 
     function BasicVoteController($scope, $routeParams, ngDialog) {
 
-        $scope.addOption = addOption;
-        $scope.notifyOptionAdded = notifyOptionAdded;
+        $scope.addChoice = addChoice;
+        $scope.notifyChoiceAdded = notifyChoiceAdded;
 
         activate();
 
@@ -19,22 +19,22 @@
             $scope.setVoteCallback(getVotes);
         }
 
-        function addOption() {
+        function addChoice() {
             ngDialog.open({
-                template: '/Routes/AddOptionDialog',
-                controller: 'AddVoterOptionDialogController',
+                template: '/Routes/AddChoiceDialog',
+                controller: 'AddVoterChoiceDialogController',
                 scope: $scope,
                 data: { pollId: $scope.pollId }
             });
         }
 
-        function notifyOptionAdded() {
-            $scope.$emit('voterOptionAddedEvent');
+        function notifyChoiceAdded() {
+            $scope.$emit('voterChoiceAddedEvent');
         }
 
-        function getVotes(option) {
+        function getVotes(choice) {
             return [{
-                OptionId: option.Id,
+                ChoiceId: choice.Id,
                 VoteValue: 1
             }];
         }

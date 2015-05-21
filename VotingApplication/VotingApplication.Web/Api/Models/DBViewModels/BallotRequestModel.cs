@@ -17,7 +17,7 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
     public class VoteRequestModel
     {
         [Required]
-        public long OptionId { get; set; }
+        public long ChoiceId { get; set; }
         public int VoteValue { get; set; }
     }
 }
