@@ -141,13 +141,13 @@
     <Compile Include="Migrations\201505200917567_LastUpdated_CreatedDate_Utc.Designer.cs">
       <DependentUpon>201505200917567_LastUpdated_CreatedDate_Utc.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201505191339342_ExpiryDate_Utc.cs" />
-    <Compile Include="Migrations\201505191339342_ExpiryDate_Utc.Designer.cs">
-      <DependentUpon>201505191339342_ExpiryDate_Utc.cs</DependentUpon>
-	</Compile>
     <Compile Include="Migrations\201505210852163_PollChoiceNumberTrigger.cs" />
     <Compile Include="Migrations\201505210852163_PollChoiceNumberTrigger.Designer.cs">
       <DependentUpon>201505210852163_PollChoiceNumberTrigger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505211136481_ExpiryDate_Utc.cs" />
+    <Compile Include="Migrations\201505211136481_ExpiryDate_Utc.Designer.cs">
+      <DependentUpon>201505211136481_ExpiryDate_Utc.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
@@ -232,11 +232,11 @@
     <EmbeddedResource Include="Migrations\201505200917567_LastUpdated_CreatedDate_Utc.resx">
       <DependentUpon>201505200917567_LastUpdated_CreatedDate_Utc.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505191339342_ExpiryDate_Utc.resx">
-      <DependentUpon>201505191339342_ExpiryDate_Utc.cs</DependentUpon>
-	</EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505210852163_PollChoiceNumberTrigger.resx">
       <DependentUpon>201505210852163_PollChoiceNumberTrigger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505211136481_ExpiryDate_Utc.resx">
+      <DependentUpon>201505211136481_ExpiryDate_Utc.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
