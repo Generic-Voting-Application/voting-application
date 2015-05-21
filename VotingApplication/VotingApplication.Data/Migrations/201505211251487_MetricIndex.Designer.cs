@@ -13,7 +13,7 @@ namespace VotingApplication.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201505210757137_MetricIndex"; }
+            get { return "201505211251487_MetricIndex"; }
         }
         
         string IMigrationMetadata.Source

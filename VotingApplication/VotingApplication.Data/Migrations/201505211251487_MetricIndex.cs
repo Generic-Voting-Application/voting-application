@@ -1,8 +1,7 @@
 namespace VotingApplication.Data.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class MetricIndex : DbMigration
     {
         public override void Up()
@@ -10,7 +9,7 @@ namespace VotingApplication.Data.Migrations
             CreateIndex("dbo.Metrics", "Timestamp");
             CreateIndex("dbo.Metrics", "PollId");
         }
-        
+
         public override void Down()
         {
             DropIndex("dbo.Metrics", new[] { "PollId" });
