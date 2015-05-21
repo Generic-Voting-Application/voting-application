@@ -30,13 +30,10 @@ namespace VotingApplication.Web.Api.Controllers
         {
             return new PollRequestResponseModel
             {
-                UUID = poll.UUID,
                 Name = poll.Name,
-                Creator = poll.Creator,
                 PollType = poll.PollType.ToString(),
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,
-                InviteOnly = poll.InviteOnly,
                 NamedVoting = poll.NamedVoting,
                 ExpiryDateUtc = poll.ExpiryDateUtc,
                 ChoiceAdding = poll.ChoiceAdding,
