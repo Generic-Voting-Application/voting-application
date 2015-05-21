@@ -43,9 +43,7 @@ namespace VotingApplication.Web.Api.Controllers
                 UUID = poll.UUID,
                 ManageId = poll.ManageId,
                 Name = poll.Name,
-                Creator = poll.Creator,
-                CreatedDateUtc = poll.CreatedDateUtc,
-                ExpiryDateUtc = poll.ExpiryDateUtc
+                CreatedDateUtc = poll.CreatedDateUtc
             };
         }
 
