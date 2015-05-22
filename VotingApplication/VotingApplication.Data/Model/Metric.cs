@@ -8,7 +8,7 @@ namespace VotingApplication.Data.Model
     {
         public Metric(MetricType metricType, Guid pollId)
         {
-            Timestamp = DateTime.Now;
+            Timestamp = DateTime.UtcNow;
             MetricType = metricType;
             StatusCode = 200;
             PollId = pollId;
