@@ -31,14 +31,14 @@
         }
 
         function formatExpiry() {
-            if ($scope.poll && $scope.poll.ExpiryDate) {
-                return moment($scope.poll.ExpiryDate).format('dddd, MMMM Do YYYY, HH:mm');
+            if ($scope.poll && $scope.poll.ExpiryDateUtc) {
+                return moment($scope.poll.ExpiryDateUtc).format('dddd, MMMM Do YYYY, HH:mm');
             }
             return 'Never';
         }
 
         function updatePoll() {
-            ManageService.updatePollExpiry($routeParams.manageId, $scope.poll.ExpiryDate)
+            ManageService.updatePollExpiry($routeParams.manageId, $scope.poll.ExpiryDateUtc)
             .then(navigateToManagePage);
         }
 
@@ -49,12 +49,12 @@
         function setDate(choice) {
             var newDate = moment().add(1, choice);
             newDate.minutes(Math.ceil(newDate.minutes() / 5) * 5);
-            $scope.poll.ExpiryDate = newDate.toDate();
+            $scope.poll.ExpiryDateUtc = newDate.toDate();
             $scope.timeChoice = choice;
         }
 
         function removeExpiry() {
-            $scope.poll.ExpiryDate = null;
+            $scope.poll.ExpiryDateUtc = null;
             $scope.timeChoice = null;
         }
 
@@ -63,24 +63,24 @@
         }
 
         function timeOffset() {
-            if ($scope.poll && $scope.poll.ExpiryDate) {
+            if ($scope.poll && $scope.poll.ExpiryDateUtc) {
                 var now = moment();
 
                 var hourAwayLower = moment(now).add(1, 'hour').subtract(2.5, 'minutes');
                 var hourAwayUpper = moment(hourAwayLower).add(5, 'minutes');
-                if (moment($scope.poll.ExpiryDate).isBetween(hourAwayLower, hourAwayUpper)) {
+                if (moment($scope.poll.ExpiryDateUtc).isBetween(hourAwayLower, hourAwayUpper)) {
                     return 'hour';
                 }
 
                 var dayAwayLower = moment(now).add(1, 'day').subtract(2.5, 'minutes');
                 var dayAwayUpper = moment(dayAwayLower).add(5, 'minutes');
-                if (moment($scope.poll.ExpiryDate).isBetween(dayAwayLower, dayAwayUpper)) {
+                if (moment($scope.poll.ExpiryDateUtc).isBetween(dayAwayLower, dayAwayUpper)) {
                     return 'day';
                 }
 
                 var weekAwayLower = moment(now).add(1, 'week').subtract(2.5, 'minutes');
                 var weekAwayUpper = moment(weekAwayLower).add(5, 'minutes');
-                if (moment($scope.poll.ExpiryDate).isBetween(weekAwayLower, weekAwayUpper)) {
+                if (moment($scope.poll.ExpiryDateUtc).isBetween(weekAwayLower, weekAwayUpper)) {
                     return 'week';
                 }
             }

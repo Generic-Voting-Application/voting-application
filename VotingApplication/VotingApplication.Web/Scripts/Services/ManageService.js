@@ -49,11 +49,11 @@
             });
         };
 
-        self.updatePollExpiry = function (manageId, expiryDate) {
+        self.updatePollExpiry = function (manageId, expiryDateUtc) {
             return $http({
                 method: 'PUT',
                 url: '/api/manage/' + manageId + '/expiry/',
-                data: { ExpiryDate: expiryDate }
+                data: { ExpiryDateUtc: expiryDateUtc }
             });
         };
 
