@@ -3,7 +3,7 @@
     <p>Distribute {{poll.MaxPoints}} points amongst the various choices. <br />
     You don't have to use all {{poll.MaxPoints}} points and can allocate up to {{poll.MaxPerVote}} points per choice.</p>
 
-    <h4>Unallocated points: {{unallocatedPoints()}}/{{poll.MaxPoints}}</h4>
+    <h4 id="points-display">Unallocated points: {{unallocatedPoints()}}/{{poll.MaxPoints}}</h4>
     <div class="progress" id="progress-bar">
         <div ng-style="{ 'width': unallocatedPointsPercentage() + '%' }" class="progress-bar" role="progressbar"></div>
 
