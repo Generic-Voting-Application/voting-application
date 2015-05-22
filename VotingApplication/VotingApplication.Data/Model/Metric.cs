@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VotingApplication.Data.Model
 {
@@ -16,12 +17,14 @@ namespace VotingApplication.Data.Model
         public long Id { get; set; }
 
         [Required]
+        [Index]
         public DateTime Timestamp { get; set; }
 
         [Required]
         public MetricType MetricType { get; set; }
 
         [Required]
+        [Index]
         public Guid PollId { get; set; }
 
         public int StatusCode { get; set; }
