@@ -23,10 +23,6 @@ namespace VotingApplication.Data.Migrations
                 from Choices c
                 join choice_cte cte on cte.ChoiceId = c.Id");
 
-            // Add a check constraint
-            Sql(@"alter table Choices with check add constraint CK_Choices_PollChoiceNumber_GreaterThanZero
-                    check (PollChoiceNumber > 0)");
-
             // Add a trigger to update when values inserted (add or update).
             Sql(@"create trigger TR_Choices_insert_update
                     on dbo.Choices
@@ -76,7 +72,6 @@ namespace VotingApplication.Data.Migrations
         {
             AlterColumn("dbo.Choices", "PollChoiceNumber", c => c.Int(nullable: false));
 
-            Sql(@"alter table Choices drop constraint CK_Choices_PollChoiceNumber_GreaterThanZero");
             Sql(@"drop trigger TR_Choices_insert_update");
             Sql(@"drop trigger TR_Choices_delete");
         }
