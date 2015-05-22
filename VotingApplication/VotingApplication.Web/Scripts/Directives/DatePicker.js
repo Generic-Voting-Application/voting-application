@@ -31,7 +31,7 @@
 
             function updateDisplay(date) {
                 scope.rows = calculateRowDates(date, scope.filter());
-                scope.displayDate = date.format('MMMM YYYY');
+                scope.monthYearDisplay = date.format('MMMM YYYY');
             }
 
             function activate() {
