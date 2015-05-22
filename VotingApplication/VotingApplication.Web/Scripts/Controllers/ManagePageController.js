@@ -61,11 +61,11 @@
         }
 
         function formatPollExpiryDate() {
-            if (!$scope.poll.ExpiryDate) {
+            if (!$scope.poll.ExpiryDateUtc) {
                 return 'Never';
             }
 
-            var expiryDate = new Date($scope.poll.ExpiryDate);
+            var expiryDate = new Date($scope.poll.ExpiryDateUtc);
             return moment(expiryDate).format('ddd, MMM Do YYYY, HH:mm');
         }
 
