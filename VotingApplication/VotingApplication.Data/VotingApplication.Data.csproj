@@ -145,6 +145,10 @@
     <Compile Include="Migrations\201505210852163_PollChoiceNumberTrigger.Designer.cs">
       <DependentUpon>201505210852163_PollChoiceNumberTrigger.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505211251487_MetricIndex.cs" />
+    <Compile Include="Migrations\201505211251487_MetricIndex.Designer.cs">
+      <DependentUpon>201505211251487_MetricIndex.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
     <Compile Include="Model\Metric.cs" />
@@ -230,6 +234,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505210852163_PollChoiceNumberTrigger.resx">
       <DependentUpon>201505210852163_PollChoiceNumberTrigger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505211251487_MetricIndex.resx">
+      <DependentUpon>201505211251487_MetricIndex.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

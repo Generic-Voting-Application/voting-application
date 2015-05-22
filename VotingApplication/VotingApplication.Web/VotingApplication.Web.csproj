@@ -289,7 +289,6 @@
     <Compile Include="Api\Validators\IVoteValidatorFactory.cs" />
     <Compile Include="Api\Validators\MultiVoteValidator.cs" />
     <Compile Include="Api\Validators\PointsVoteValidator.cs" />
-    <Compile Include="Api\Validators\RankedVoteValidator.cs" />
     <Compile Include="Api\Validators\UpDownVoteValidator.cs" />
     <Compile Include="Api\Validators\VoteValidatorFactory.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
