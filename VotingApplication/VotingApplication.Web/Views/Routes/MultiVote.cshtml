@@ -4,8 +4,6 @@
 
     <div class="choice-area">
 
-        <h3>Choices</h3>
-
         <div ng-repeat="choice in poll.Choices">
             <div class="choice-block clickable" ng-class="{'selected-choice': choice.voteValue }" ng-click="choice.voteValue = choice.voteValue ? 0 : 1">
                 <div class="choice-block-row">
