@@ -5,16 +5,13 @@ namespace VotingApplication.Web.Api.Validators
     {
         public IVoteValidator CreateValidator(PollType voteType)
         {
-            switch(voteType)
+            switch (voteType)
             {
                 case PollType.Basic:
                     return new BasicVoteValidator();
 
                 case PollType.Points:
                     return new PointsVoteValidator();
-
-                case PollType.Ranked:
-                    return new RankedVoteValidator();
 
                 case PollType.UpDown:
                     return new UpDownVoteValidator();
