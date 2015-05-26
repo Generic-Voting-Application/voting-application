@@ -179,7 +179,7 @@ namespace VotingApplication.Web.Tests.E2E
                 IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
 
                 IReadOnlyCollection<IWebElement> firstChoiceButtons = choices.First().FindElements(By.TagName("Button"));
-                IWebElement totalPoints = _driver.FindElement(NgBy.Binding("poll.MaxPoints"));
+                IWebElement totalPoints = _driver.FindElement(By.Id("points-display"));
 
                 IReadOnlyCollection<IWebElement> increaseChoiceButtons = _driver.FindElements(By.Id("increase-button"));
                 IReadOnlyCollection<IWebElement> decreaseChoiceButtons = _driver.FindElements(By.Id("decrease-button"));
