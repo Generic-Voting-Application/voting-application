@@ -94,6 +94,7 @@
     <Compile Include="Controllers\PollResultControllerTests.cs" />
     <Compile Include="Controllers\TokenPollVoteControllerTests.cs" />
     <Compile Include="E2E\BasicPollTests.cs" />
+    <Compile Include="E2E\E2ETest.cs" />
     <Compile Include="E2E\Helpers\Clearers\Clearer.cs" />
     <Compile Include="E2E\Helpers\Clearers\DBClearer.cs" />
     <Compile Include="E2E\Helpers\Clearers\PollClearer.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="E2E\ManageTests.cs" />
     <Compile Include="E2E\MultiPollTests.cs" />
     <Compile Include="E2E\PointsPollTests.cs" />
+    <Compile Include="E2E\UnregisteredDashboardTests.cs" />
     <Compile Include="E2E\UpDownPollTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers\ContextFactoryTestHelper.cs" />
