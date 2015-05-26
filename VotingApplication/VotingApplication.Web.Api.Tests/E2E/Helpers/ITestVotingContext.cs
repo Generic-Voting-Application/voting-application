@@ -1,5 +1,7 @@
 ﻿
-namespace VotingApplication.Data.Context
+using VotingApplication.Data.Context;
+
+namespace VotingApplication.Web.Api.Tests.E2E.Helpers
 {
     public interface ITestVotingContext : IVotingContext
     {

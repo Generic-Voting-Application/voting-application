@@ -100,6 +100,8 @@
     <Compile Include="E2E\Helpers\Clearers\PollClearer.cs" />
     <Compile Include="E2E\Helpers\Clearers\VoteClearer.cs" />
     <Compile Include="E2E\Helpers\Extensions.cs" />
+    <Compile Include="E2E\Helpers\ITestVotingContext.cs" />
+    <Compile Include="E2E\Helpers\TestVotingContext.cs" />
     <Compile Include="E2E\ManageBallotsTests.cs" />
     <Compile Include="E2E\ManageMiscTests.cs" />
     <Compile Include="E2E\ManageChoicesTests.cs" />
