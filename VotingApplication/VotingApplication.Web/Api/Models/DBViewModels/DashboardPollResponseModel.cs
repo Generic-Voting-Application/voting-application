@@ -7,8 +7,6 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
         public Guid UUID { get; set; }
         public Guid ManageId { get; set; }
         public string Name { get; set; }
-        public string Creator { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTimeOffset? ExpiryDate { get; set; }
+        public DateTime CreatedDateUtc { get; set; }
     }
 }

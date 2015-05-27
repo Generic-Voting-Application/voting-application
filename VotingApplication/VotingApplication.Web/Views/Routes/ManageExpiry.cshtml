@@ -10,10 +10,10 @@
             <em>{{formatExpiry()}}</em>
         </div>
         <div class="manage-section">
-            <date-picker ng-model="poll.ExpiryDate" filter="dateFilter" />
+            <date-picker ng-model="ExpiryDateLocal" filter="dateFilter" />
         </div>
         <div class="manage-section">
-            <time-picker ng-model="poll.ExpiryDate" debounce="1000"/>
+            <time-picker ng-model="ExpiryDateLocal" debounce="1000" />
         </div>
         <h3>
             Fast choices
@@ -23,7 +23,7 @@
                 <button id="hour-adjust-button" class="inactive-btn" ng-click="setDate('hour');" ng-class="{'active-btn': timeOffset()=='hour'}">1 Hour</button>
                 <button id="day-adjust-button" class="inactive-btn" ng-click="setDate('day');" ng-class="{'active-btn': timeOffset()=='day'}">1 Day</button>
                 <button id="week-adjust-button" class="inactive-btn" ng-click="setDate('week');" ng-class="{'active-btn': timeOffset()=='week'}">1 Week</button>
-                <button id="never-adjust-button" class="inactive-btn" ng-click="removeExpiry();" ng-class="{'active-btn': !poll.ExpiryDate}">Never</button>
+                <button id="never-adjust-button" class="inactive-btn" ng-click="removeExpiry();" ng-class="{'active-btn': !ExpiryDateLocal}">Never</button>
             </div>
         </div>
 

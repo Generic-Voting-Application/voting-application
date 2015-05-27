@@ -53,13 +53,13 @@ namespace VotingApplication.Web.Api.Controllers
                 InviteOnly = poll.InviteOnly,
                 Name = poll.Name,
                 NamedVoting = poll.NamedVoting,
-                ExpiryDate = poll.ExpiryDate,
+                ExpiryDateUtc = poll.ExpiryDateUtc,
                 ChoiceAdding = poll.ChoiceAdding,
                 HiddenResults = poll.HiddenResults
             };
         }
 
-        private ManageInvitationResponseModel CreateManagePollRequestResponseModel(Ballot ballot)
+        private static ManageInvitationResponseModel CreateManagePollRequestResponseModel(Ballot ballot)
         {
             return new ManageInvitationResponseModel
             {

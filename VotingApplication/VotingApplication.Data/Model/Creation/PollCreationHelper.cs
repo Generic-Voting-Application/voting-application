@@ -19,11 +19,11 @@ namespace VotingApplication.Data.Model.Creation
                 MaxPerVote = null,
                 InviteOnly = false,
                 NamedVoting = false,
-                ExpiryDate = null,
+                ExpiryDateUtc = null,
                 ChoiceAdding = false,
 
-                CreatedDateUtc = DateTime.Now,
-                LastUpdatedUtc = DateTime.Now
+                CreatedDateUtc = DateTime.UtcNow,
+                LastUpdatedUtc = DateTime.UtcNow
             };
         }
 

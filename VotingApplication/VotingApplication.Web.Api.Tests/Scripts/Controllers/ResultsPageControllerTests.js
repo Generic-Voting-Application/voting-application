@@ -279,7 +279,7 @@ describe('Results Page Controller', function () {
         jasmine.clock().mockDate(baseTime);
 
         var pollData = {
-            ExpiryDate: new Date(2014, 12, 25)
+            ExpiryDateUtc: new Date(2014, 12, 25)
         };
 
         getPollPromise.resolve(pollData);

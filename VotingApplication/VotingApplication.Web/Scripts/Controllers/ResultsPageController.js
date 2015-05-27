@@ -75,8 +75,8 @@
         }
 
         function getPollSuccessCallback(pollData) {
-            if (pollData.ExpiryDate) {
-                $scope.hasExpired = moment(pollData.ExpiryDate).isBefore(moment());
+            if (pollData.ExpiryDateUtc) {
+                $scope.hasExpired = moment.utc(pollData.ExpiryDateUtc).isBefore(moment.utc());
             }
         }
 

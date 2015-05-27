@@ -43,9 +43,7 @@ namespace VotingApplication.Web.Api.Controllers
                 UUID = poll.UUID,
                 ManageId = poll.ManageId,
                 Name = poll.Name,
-                Creator = poll.Creator,
-                CreatedDate = poll.CreatedDateUtc,
-                ExpiryDate = poll.ExpiryDate
+                CreatedDateUtc = poll.CreatedDateUtc
             };
         }
 
@@ -119,9 +117,9 @@ namespace VotingApplication.Web.Api.Controllers
                 NamedVoting = pollToCopy.NamedVoting,
                 ChoiceAdding = pollToCopy.ChoiceAdding,
 
-                ExpiryDate = pollToCopy.ExpiryDate,
-                LastUpdatedUtc = DateTime.Now,
-                CreatedDateUtc = DateTime.Now,
+                ExpiryDateUtc = pollToCopy.ExpiryDateUtc,
+                LastUpdatedUtc = DateTime.UtcNow,
+                CreatedDateUtc = DateTime.UtcNow,
 
 
                 Choices = CopyOptions(pollToCopy.Choices)
