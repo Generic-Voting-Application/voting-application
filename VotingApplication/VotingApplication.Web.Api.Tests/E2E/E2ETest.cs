@@ -1,13 +1,36 @@
-﻿using OpenQA.Selenium;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Protractor;
 using System;
 using System.Threading;
+using VotingApplication.Web.Api.Tests.E2E.Helpers;
 
 namespace VotingApplication.Web.Api.Tests.E2E
 {
+    [TestClass]
     public class E2ETest
     {
+        [TestInitialize]
+        public void EnsureDbIsEmptyBeforeTest()
+        {
+            ClearDatabase();
+        }
+
+        [TestCleanup]
+        public void EnsureDbIsEmptyAfterTest()
+        {
+            ClearDatabase();
+        }
+
+        private static void ClearDatabase()
+        {
+            using (var dbContext = new TestVotingContext())
+            {
+                dbContext.ClearDatabase();
+            }
+        }
+
         protected const string ChromeDriverDir = @"..\..\";
         protected const string SiteBaseUri = @"http://localhost:64205/";
 

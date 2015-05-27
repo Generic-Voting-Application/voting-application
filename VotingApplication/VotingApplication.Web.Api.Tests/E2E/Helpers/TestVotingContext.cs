@@ -8,12 +8,12 @@ namespace VotingApplication.Web.Api.Tests.E2E.Helpers
         public TestVotingContext()
             : base("TestVotingContext")
         {
-            this.Configuration.LazyLoadingEnabled = false;
-            this.Configuration.ProxyCreationEnabled = false;
-            this.Configuration.ValidateOnSaveEnabled = false;
-            this.Configuration.UseDatabaseNullSemantics = true;
+            Configuration.LazyLoadingEnabled = false;
+            Configuration.ProxyCreationEnabled = false;
+            Configuration.ValidateOnSaveEnabled = false;
+            Configuration.UseDatabaseNullSemantics = true;
 
-            Database.SetInitializer<TestVotingContext>(new CreateDatabaseIfNotExists<TestVotingContext>());
+            Database.SetInitializer(new CreateDatabaseIfNotExists<TestVotingContext>());
         }
 
         public IDbSet<Choice> Choices { get; set; }
@@ -25,6 +25,17 @@ namespace VotingApplication.Web.Api.Tests.E2E.Helpers
         public void ReloadEntity(object entity)
         {
             Entry(entity).Reload();
+        }
+
+        public void ClearDatabase()
+        {
+            ((DbSet<Choice>)Choices).RemoveRange(Choices);
+            ((DbSet<Vote>)Votes).RemoveRange(Votes);
+            ((DbSet<Poll>)Polls).RemoveRange(Polls);
+            ((DbSet<Ballot>)Ballots).RemoveRange(Ballots);
+            ((DbSet<Metric>)Metrics).RemoveRange(Metrics);
+
+            SaveChanges();
         }
     }
 }
