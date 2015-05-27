@@ -57,7 +57,7 @@
                     return result;
                 });
 
-                var chartHeight = Math.min(data.length * 60 + 30, 600);
+                var chartHeight = data.length * 60 + 30
                 var chartWidth = chartElement.parentElement.parentElement.offsetWidth;
 
                 var longestTextWidth = d3.max(data, function (d) { return textWidth(d.Name); });
