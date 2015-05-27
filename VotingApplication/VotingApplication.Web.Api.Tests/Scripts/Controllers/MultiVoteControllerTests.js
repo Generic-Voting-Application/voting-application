@@ -30,31 +30,31 @@ describe('MultiVoteController', function () {
         expect(scope.setVoteCallback).toHaveBeenCalled();
     });
 
-    describe('Add Option', function () {
+    describe('Add Choice', function () {
 
         var expectedTemplate = jasmine.objectContaining({
-            template: '/Routes/AddOptionDialog'
+            template: '/Routes/AddChoiceDialog'
         });
 
         var expectedController = jasmine.objectContaining({
-            controller: 'AddVoterOptionDialogController'
+            controller: 'AddVoterChoiceDialogController'
         });
 
         it('Calls ngDialog to open the dialog', function () {
 
-            scope.addOption();
+            scope.addChoice();
 
             expect(mockngDialog.open).toHaveBeenCalled();
         });
 
         it('Calls ngDialog with the correct template', function () {
-            scope.addOption();
+            scope.addChoice();
 
             expect(mockngDialog.open).toHaveBeenCalledWith(expectedTemplate);
         });
 
         it('Calls ngDialog with the correct controller', function () {
-            scope.addOption();
+            scope.addChoice();
 
             expect(mockngDialog.open).toHaveBeenCalledWith(expectedController);
         });
@@ -66,7 +66,7 @@ describe('MultiVoteController', function () {
                 data: { pollId: 67 }
             });
 
-            scope.addOption();
+            scope.addChoice();
 
             expect(mockngDialog.open).toHaveBeenCalledWith(expectedData);
         });
@@ -114,7 +114,7 @@ describe('MultiVoteController', function () {
             var votes = voteCallback(options);
 
             expect(votes.length).toBe(1);
-            expect(votes[0].OptionId).toBe(23);
+            expect(votes[0].ChoiceId).toBe(23);
         });
 
         it('VoteValue is always 1', function () {

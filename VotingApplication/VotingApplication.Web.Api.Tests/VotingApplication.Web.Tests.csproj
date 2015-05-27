@@ -84,13 +84,13 @@
     <Compile Include="Controllers\ManagePollTypeControllerTests.cs" />
     <Compile Include="Controllers\ManageExpiryControllerTests.cs" />
     <Compile Include="Controllers\ManageInvitationControllerTests.cs" />
-    <Compile Include="Controllers\ManageOptionControllerTests.cs" />
+    <Compile Include="Controllers\ManageChoiceControllerTests.cs" />
     <Compile Include="Controllers\ManageMiscControllerTests.cs" />
     <Compile Include="Controllers\ManageVoterControllerTests.cs" />
     <Compile Include="Controllers\WebApiControllerTests.cs" />
     <Compile Include="Controllers\PollControllerTests.cs" />
     <Compile Include="Controllers\PollTokenControllerTests.cs" />
-    <Compile Include="Controllers\PollOptionControllerTests.cs" />
+    <Compile Include="Controllers\PollChoiceControllerTests.cs" />
     <Compile Include="Controllers\PollResultControllerTests.cs" />
     <Compile Include="Controllers\TokenPollVoteControllerTests.cs" />
     <Compile Include="E2E\BasicPollTests.cs" />
@@ -101,7 +101,7 @@
     <Compile Include="E2E\Helpers\Extensions.cs" />
     <Compile Include="E2E\ManageBallotsTests.cs" />
     <Compile Include="E2E\ManageMiscTests.cs" />
-    <Compile Include="E2E\ManageOptionsTests.cs" />
+    <Compile Include="E2E\ManageChoicesTests.cs" />
     <Compile Include="E2E\ManageExpiryTests.cs" />
     <Compile Include="E2E\ManagePollTypeTests.cs" />
     <Compile Include="E2E\ManageTests.cs" />
@@ -111,9 +111,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers\ContextFactoryTestHelper.cs" />
     <Compile Include="TestHelpers\DbSetTestHelper.cs" />
+    <Compile Include="Validators\MultiVoteValidatorTests.cs" />
+    <Compile Include="Validators\UpDownVoteValidatorTests.cs" />
     <Compile Include="Validators\BasicVoteValidatorTests.cs" />
     <Compile Include="Validators\PointsVoteValidatorTests.cs" />
-    <Compile Include="Validators\RankedVoteValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
@@ -176,4 +177,3 @@
   </Target>
   -->
 </Project>
-

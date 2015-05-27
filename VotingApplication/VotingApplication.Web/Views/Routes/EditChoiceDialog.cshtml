@@ -1,0 +1,14 @@
+﻿<div class="dialog-box-small dialog-content centered">
+    <form name="editChoiceForm" ng-submit="updateChoice()">
+        <h2>Edit Choice</h2>
+        <div class="form-section-block centered">
+            <label for="name">Name</label>
+            <input autofocus class="form-input" id="name" ng-model="editChoiceFormName" required>
+
+            <label for="description">Description</label>
+            <input class="form-input" id="description" ng-model="editChoiceFormDescription">
+        </div>
+        <button id="dialog-save-button" class="active-btn" ng-disabled="editChoiceForm.$invalid" ng-click="updateChoice()" type="submit">Save</button>
+    </form>
+</div>
+<span class="dialog-error-bar-bottom" ng-show="displayError">{{displayError}}</span>

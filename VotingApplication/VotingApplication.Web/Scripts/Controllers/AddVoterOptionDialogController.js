@@ -4,20 +4,20 @@
 (function () {
     angular
         .module('GVA.Voting')
-        .controller('AddVoterOptionDialogController', AddVoterOptionDialogController);
+        .controller('AddVoterChoiceDialogController', AddVoterChoiceDialogController);
 
-    AddVoterOptionDialogController.$inject = ['$scope', 'VoteService'];
+    AddVoterChoiceDialogController.$inject = ['$scope', 'VoteService'];
 
-    function AddVoterOptionDialogController($scope, VoteService) {
+    function AddVoterChoiceDialogController($scope, VoteService) {
 
         $scope.multipleAddingAllowed = false;
 
-        $scope.addOption = addOption;
-        $scope.addOptionAndClose = addOptionAndClose;
+        $scope.addChoice = addChoice;
+        $scope.addChoiceAndClose = addChoiceAndClose;
+        $scope.addAnotherToggle = false;
 
-        function addOption(form) {
+        function addChoice(form) {
             add(form);
-            dismiss();
         }
 
         function add(form) {
@@ -25,16 +25,16 @@
                 return;
             }
 
-            var newVoterOption = {
+            var newVoterChoice = {
                 Name: form.name,
                 Description: form.description
             };
 
-            VoteService.addVoterOption($scope.ngDialogData.pollId, newVoterOption)
-                .then($scope.notifyOptionAdded);
+            VoteService.addVoterChoice($scope.ngDialogData.pollId, newVoterChoice)
+                .then($scope.notifyChoiceAdded);
         }
 
-        function addOptionAndClose(form) {
+        function addChoiceAndClose(form) {
             add(form);
             dismiss();
         }

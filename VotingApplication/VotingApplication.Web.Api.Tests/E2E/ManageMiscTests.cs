@@ -31,19 +31,19 @@ namespace VotingApplication.Web.Tests.E2E
         {
             _context = new TestVotingContext();
 
-            // Open, Anonymous, No Option Adding, Shown Results
+            // Open, Anonymous, No Choice Adding, Shown Results
             _defaultPoll = new Poll()
             {
                 UUID = PollGuid,
                 ManageId = PollManageGuid,
                 PollType = PollType.Basic,
                 Name = "Test Poll",
-                LastUpdated = DateTime.Now,
-                CreatedDate = DateTime.Now,
-                Options = new List<Option>(),
+                LastUpdatedUtc = DateTime.Now,
+                CreatedDateUtc = DateTime.Now,
+                Choices = new List<Choice>(),
                 InviteOnly = false,
                 NamedVoting = false,
-                OptionAdding = false,
+                ChoiceAdding = false,
                 HiddenResults = false,
                 MaxPerVote = 3,
                 MaxPoints = 4
@@ -106,12 +106,12 @@ namespace VotingApplication.Web.Tests.E2E
 
             IWebElement inviteOnlySwitch = _driver.FindElement(By.Id("InviteOnly"));
             IWebElement namedVotingSwitch = _driver.FindElement(By.Id("NamedVoting"));
-            IWebElement optionAddingSwitch = _driver.FindElement(By.Id("OptionAdding"));
+            IWebElement choiceAddingSwitch = _driver.FindElement(By.Id("ChoiceAdding"));
             IWebElement hiddenResultsSwitch = _driver.FindElement(By.Id("HiddenResults"));
 
             inviteOnlySwitch.Click();
             namedVotingSwitch.Click();
-            optionAddingSwitch.Click();
+            choiceAddingSwitch.Click();
             hiddenResultsSwitch.Click();
 
             IWebElement saveButton = _driver.FindElement(By.Id("save-button"));
@@ -125,7 +125,7 @@ namespace VotingApplication.Web.Tests.E2E
 
             Assert.IsTrue(dbPoll.InviteOnly);
             Assert.IsTrue(dbPoll.NamedVoting);
-            Assert.IsTrue(dbPoll.OptionAdding);
+            Assert.IsTrue(dbPoll.ChoiceAdding);
             Assert.IsTrue(dbPoll.HiddenResults);
         }
     }

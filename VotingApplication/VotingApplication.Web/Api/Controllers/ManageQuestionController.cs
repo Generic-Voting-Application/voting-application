@@ -42,7 +42,7 @@ namespace VotingApplication.Web.Api.Controllers
                 _metricHandler.HandleQuestionChangedEvent(request.Question, poll.UUID);
 
                 poll.Name = request.Question;
-                poll.LastUpdated = DateTime.Now;
+                poll.LastUpdatedUtc = DateTime.Now;
 
                 context.SaveChanges();
             }

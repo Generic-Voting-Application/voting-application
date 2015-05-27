@@ -21,7 +21,7 @@ describe('VotingPageController', function () {
     var mockPollValue = {
         MaxPoints: 5,
         MaxPerVote: 1,
-        Options: [{ Id: 1 }, { Id: 2 }, { Id: 3 }, { Id: 4 }],
+        Choices: [{ Id: 1 }, { Id: 2 }, { Id: 3 }, { Id: 4 }],
         NamedVoting: false
     };
 
@@ -29,7 +29,7 @@ describe('VotingPageController', function () {
 
         scope = $rootScope.$new();
 
-        scope.poll = { Options: [] };
+        scope.poll = { Choices: [] };
 
         getTokenPromise = $q.defer();
 
@@ -116,8 +116,8 @@ describe('VotingPageController', function () {
 
     it('Sets the value for the vote into the options', function () {
         var tokenVotes = [
-            { OptionId: 1, VoteValue: 1 },
-            { OptionId: 3, VoteValue: 1 }
+            { ChoiceId: 1, VoteValue: 1 },
+            { ChoiceId: 3, VoteValue: 1 }
         ];
 
 
@@ -128,7 +128,7 @@ describe('VotingPageController', function () {
         getPollPromise.resolve(pollResponse);
 
 
-        var expectedVoteUpdatedOptions = {
+        var expectedVoteUpdatedChoices = {
             data: [
                 { Id: 1, voteValue: 1 },
                 { Id: 2, voteValue: 0 },
@@ -139,7 +139,7 @@ describe('VotingPageController', function () {
 
 
         scope.$apply();
-        expect(scope.poll.Options).toEqual(expectedVoteUpdatedOptions.data);
+        expect(scope.poll.Choices).toEqual(expectedVoteUpdatedChoices.data);
     });
 
     describe('Submit Vote', function () {
@@ -205,7 +205,7 @@ describe('VotingPageController', function () {
         });
     });
 
-    describe('Voter Option Added Event', function () {
+    describe('Voter Choice Added Event', function () {
 
         it('Gets poll from PollService and saves it into scope', function () {
 
@@ -216,7 +216,7 @@ describe('VotingPageController', function () {
             // Clear the spied calls, as it gets called during construction.
             mockPollService.getPoll.calls.reset();
 
-            scope.$emit('voterOptionAddedEvent');
+            scope.$emit('voterChoiceAddedEvent');
 
             expect(mockPollService.getPoll).toHaveBeenCalled();
             expect(scope.poll).toBe(mockPollValue);
@@ -227,7 +227,7 @@ describe('VotingPageController', function () {
             var poll = {
                 data:
                     {
-                        Options: [
+                        Choices: [
                             { Id: 1, voteValue: 1 },
                             { Id: 2, voteValue: 2 },
                             { Id: 3, voteValue: 0 },
@@ -238,14 +238,14 @@ describe('VotingPageController', function () {
 
             };
 
-            var selectedOptions = [
+            var selectedChoices = [
                 { Id: 1, voteValue: 1 },
                 { Id: 2, voteValue: 0 },
                 { Id: 3, voteValue: 0 },
                 { Id: 4, voteValue: 2 }
             ];
 
-            var expectedOptions = [
+            var expectedChoices = [
                 { Id: 1, voteValue: 1 },
                 { Id: 2, voteValue: 0 },
                 { Id: 3, voteValue: 0 },
@@ -253,13 +253,13 @@ describe('VotingPageController', function () {
                 { Id: 5, voteValue: 0 }
             ];
 
-            scope.poll.Options = selectedOptions;
+            scope.poll.Choices = selectedChoices;
 
             getPollPromise.resolve(poll);
-            scope.$emit('voterOptionAddedEvent');
+            scope.$emit('voterChoiceAddedEvent');
 
             scope.$apply();
-            expect(scope.poll.Options).toEqual(expectedOptions);
+            expect(scope.poll.Choices).toEqual(expectedChoices);
         });
 
     });
@@ -277,7 +277,12 @@ describe('VotingPageController', function () {
 
             scope.clearVote();
 
-            expect(mockVoteService.submitVote).toHaveBeenCalledWith(jasmine.any(String), [], jasmine.any(String));
+            var expectedBallot = {
+                VoterName: null,
+                Votes: []
+            };
+
+            expect(mockVoteService.submitVote).toHaveBeenCalledWith(jasmine.any(String), expectedBallot, jasmine.any(String));
         });
 
         it('Calls Routing Service to navigate to the results page when the Vote Service submit is successful', function () {

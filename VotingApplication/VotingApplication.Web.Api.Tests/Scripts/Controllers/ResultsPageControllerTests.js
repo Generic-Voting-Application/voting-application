@@ -176,12 +176,12 @@ describe('Results Page Controller', function () {
         var resultData = {
             Results: [
             {
-                Option: { Name: 'Option 1' },
+                Choice: { Name: 'Choice 1' },
                 Sum: 1,
                 Voters: [{ Name: 'Bob', Value: 1 }]
             },
             {
-                Option: { Name: 'Option 2' },
+                Choice: { Name: 'Choice 2' },
                 Sum: 3,
                 Voters: [{ Name: 'Bob', Value: 2 }, { Name: 'Derek', Value: 1 }]
             }]
@@ -192,12 +192,12 @@ describe('Results Page Controller', function () {
 
         var expectedChartData = [
             {
-                Name: 'Option 1',
+                Name: 'Choice 1',
                 Sum: 1,
                 Voters: [{ Name: 'Bob', Value: 1 }]
             },
             {
-                Name: 'Option 2',
+                Name: 'Choice 2',
                 Sum: 3,
                 Voters: [{ Name: 'Bob', Value: 2 }, { Name: 'Derek', Value: 1 }]
             }];
@@ -216,12 +216,12 @@ describe('Results Page Controller', function () {
 
         var chartData = [
             {
-                Name: 'Option 1',
+                Name: 'Choice 1',
                 Sum: 1,
                 Voters: [{ Name: 'Bob', Value: 1 }]
             },
             {
-                Name: 'Option 2',
+                Name: 'Choice 2',
                 Sum: 3,
                 Voters: [{ Name: 'Bob', Value: 2 }, { Name: 'Derek', Value: 1 }]
             }];

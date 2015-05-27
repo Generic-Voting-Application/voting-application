@@ -14,6 +14,10 @@ $DeepOrange500: #FF5722;
 $Black: #000000;
 $White: #FFFFFF;
 
+a {
+    color: $Blue500;
+}
+
 h2 {
     -webkit-margin-after: 0.2em;
 }
@@ -46,7 +50,7 @@ body {
 }
 
 #register-block {
-    width: 205px;
+    width: 215px;
     margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
@@ -80,14 +84,6 @@ body {
     box-shadow: 1px 1px 4px rgba(0,0,0,0.6);
 }
 
-.account-login {
-    max-width: 320px;
-}
-
-.account-register {
-    max-width: 320px;
-}
-
 .account-control-box {
     position: absolute;
     border-style: solid;
@@ -104,8 +100,6 @@ body {
 
         &:first-of-type {
             border-top: none;
-
-
         }
     }
 }
@@ -161,6 +155,18 @@ body {
     padding-left: 20px;
 }
 
+.icon-margin-left {
+    margin-left: 20px;
+}
+
+.icon-margin-bottom {
+    margin-bottom: 15px;
+}
+
+.padded-top-small {
+    padding-top: 5px;
+}
+
 .form-aligned-top {
     margin-top: 4px;
     margin-left: 5px;
@@ -181,6 +187,11 @@ body {
     }
 }
 
+.manage-input {
+    @extend .input;
+    border-color: $Blue500;
+}
+
 .manage-area {
     max-width: 300px;
 }
@@ -191,6 +202,10 @@ body {
 
 .manage-section-row {
     margin-bottom: 5px;
+}
+
+.margin-right-medium {
+    margin-right: 20px;
 }
 
 .warn-box {
@@ -228,6 +243,7 @@ body {
 
 .poll-type-btn {
     height: 48px;
+    width: 100%;
 
     .fa {
         margin-right: 10px;
@@ -235,10 +251,10 @@ body {
 }
 
 .poll-type-btn-extended {
-    @extend .manage-section;
     border: 1px solid;
     border-color: $Grey400;
     border-radius: 7px;
+    width: 100%;
 
     > .poll-type-btn {
         border-top: none;

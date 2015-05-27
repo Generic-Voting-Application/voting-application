@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
@@ -39,10 +38,10 @@ namespace VotingApplication.Web.Api.Controllers
                     _metricHandler.HandleNamedVotingChangedEvent(poll.NamedVoting, poll.UUID);
                 }
 
-                if (poll.OptionAdding != updateRequest.OptionAdding)
+                if (poll.ChoiceAdding != updateRequest.ChoiceAdding)
                 {
-                    poll.OptionAdding = updateRequest.OptionAdding;
-                    _metricHandler.HandleOptionAddingChangedEvent(poll.OptionAdding, poll.UUID);
+                    poll.ChoiceAdding = updateRequest.ChoiceAdding;
+                    _metricHandler.HandleChoiceAddingChangedEvent(poll.ChoiceAdding, poll.UUID);
                 }
 
                 if (poll.HiddenResults != updateRequest.HiddenResults)
@@ -51,7 +50,7 @@ namespace VotingApplication.Web.Api.Controllers
                     _metricHandler.HandleHiddenResultsChangedEvent(poll.HiddenResults, poll.UUID);
                 }
 
-                poll.LastUpdated = DateTime.Now;
+                poll.LastUpdatedUtc = DateTime.Now;
 
                 context.SaveChanges();
             }

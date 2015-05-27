@@ -23,7 +23,7 @@
                             {{Question}}
                         </span>
                         <span ng-if="toggleNameEdit">
-                            <input class="wide-input" ng-model="$parent.Question" required />
+                            <input class="wide-input manage-input" ng-model="$parent.Question" required />
                             <span class="fa fa-remove pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.discardNameChanges()"></span>
                             <span class="fa fa-check pull-right clickable form-aligned-top" ng-click="$parent.toggleNameEdit=false;$parent.updateQuestion()"></span>
                         </span>
@@ -31,16 +31,16 @@
                 </form>
             </div>
         </div>
-        <div class="manage-section" id="manage-options-section">
+        <div class="manage-section" id="manage-choices-section">
             <div>
                 <span class="fa fa-list pull-left" aria-hidden="true"></span>
                 <h4 class="icon-padded-left">
-                    Options
-                    <span id="edit-link" class="pull-right"><a href="{{manageSubPageUrl('Options')}}">Edit</a></span>
+                    Choices
+                    <span id="edit-link" class="pull-right"><a href="{{manageSubPageUrl('Choices')}}">Edit</a></span>
                 </h4>
             </div>
             <div>
-                <span class="icon-padded-left">{{poll.Options.length}} Option{{poll.Options.length !== 1 ? 's' : ''}}</span>
+                <span class="icon-padded-left">{{poll.Choices.length}} Choice{{poll.Choices.length !== 1 ? 's' : ''}}</span>
             </div>
         </div>
         <div class="manage-section" id="manage-poll-type-section">
@@ -101,14 +101,35 @@
             </div>
         </div>
         <div class="manage-section" ng-show="!poll.InviteOnly" id="manage-share-section">
-            <div>
+            <div class="icon-margin-bottom">
                 <span class="fa fa-share-alt pull-left" aria-hidden="true"></span>
                 <div class="pull-right">
                     <a href="mailto:&amp;body={{fullPollUrl()}}"><i class="fa fa-envelope-square fa-2x"></i></a>
-                    <i class="fa fa-facebook-square fa-2x"></i>
-                    <i class="fa fa-google-plus-square fa-2x"></i>
                 </div>
                 <h4 class="icon-padded-left">Share</h4>
+            </div>
+        </div>
+
+        <div class="manage-section" ng-show="!poll.InviteOnly" id="manage-link-section">
+            <div>
+                <span class="fa fa-link pull-left" aria-hidden="true"></span>
+                <h4 class="icon-padded-left">Link</h4>
+            </div>
+            <div>
+                <div class="icon-margin-left input-btn-group" ng-if="!copyError">
+                    <input class="manage-input" contenteditable="false" ng-readonly="true" ng-value="fullPollUrl()" />
+                    <button id="copy-button"
+                            class="active-btn"
+                            ui-zeroclip
+                            zeroclip-copied="copied=true"
+                            zeroclip-model="fullPollUrl()"
+                            zeroclip-on-error="$parent.copyError=true">
+                        <i class="fa fa-clipboard"></i>
+                    </button>
+                </div>
+                <div class="margin-right-medium" ng-if="copyError">
+                    <input class="manage-input icon-margin-left full-width" ng-value="fullPollUrl()" />
+                </div>
             </div>
         </div>
         <div class="clear"></div>

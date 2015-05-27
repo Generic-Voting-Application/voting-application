@@ -30,19 +30,19 @@ namespace VotingApplication.Web.Tests.E2E
         {
             _context = new TestVotingContext();
 
-            // Open, Anonymous, No Option Adding, Shown Results
+            // Open, Anonymous, No Choice Adding, Shown Results
             _defaultPoll = new Poll()
             {
                 UUID = PollGuid,
                 ManageId = PollManageGuid,
                 PollType = PollType.Basic,
                 Name = "Test Poll",
-                LastUpdated = DateTime.Now,
-                CreatedDate = DateTime.Now,
-                Options = new List<Option>(),
+                LastUpdatedUtc = DateTime.Now,
+                CreatedDateUtc = DateTime.Now,
+                Choices = new List<Choice>(),
                 InviteOnly = false,
                 NamedVoting = false,
-                OptionAdding = false,
+                ChoiceAdding = false,
                 HiddenResults = false
             };
 
@@ -100,16 +100,16 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageNavigation_OptionSectionEditButton_NavigatesToOptionManagement()
+        public void ManageNavigation_ChoiceSectionEditButton_NavigatesToChoiceManagement()
         {
             _driver.Navigate().GoToUrl(PollUrl);
-            IWebElement manageSection = _driver.FindElement(By.Id("manage-options-section"));
+            IWebElement manageSection = _driver.FindElement(By.Id("manage-choices-section"));
 
             IWebElement editLink = manageSection.FindElement(By.Id("edit-link"));
 
             editLink.Click();
 
-            Assert.AreEqual(PollUrl + "/Options", _driver.Url);
+            Assert.AreEqual(PollUrl + "/Choices", _driver.Url);
         }
 
         [TestMethod, TestCategory("E2E")]

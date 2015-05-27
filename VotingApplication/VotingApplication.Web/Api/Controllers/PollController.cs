@@ -34,14 +34,14 @@ namespace VotingApplication.Web.Api.Controllers
                 Name = poll.Name,
                 Creator = poll.Creator,
                 PollType = poll.PollType.ToString(),
-                CreatedDate = poll.CreatedDate,
+                CreatedDate = poll.CreatedDateUtc,
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,
                 InviteOnly = poll.InviteOnly,
                 NamedVoting = poll.NamedVoting,
                 ExpiryDate = poll.ExpiryDate,
-                OptionAdding = poll.OptionAdding,
-                Options = poll.Options,
+                ChoiceAdding = poll.ChoiceAdding,
+                Choices = poll.Choices,
                 HiddenResults = poll.HiddenResults
             };
         }

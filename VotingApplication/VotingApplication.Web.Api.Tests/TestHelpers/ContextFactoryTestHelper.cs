@@ -12,7 +12,7 @@ namespace VotingApplication.Web.Tests.TestHelpers
             return CreateContextFactory(polls, DbSetTestHelper.CreateMockDbSet<Ballot>());
         }
 
-        public static IContextFactory CreateContextFactory(IDbSet<Poll> polls, IDbSet<Option> options)
+        public static IContextFactory CreateContextFactory(IDbSet<Poll> polls, IDbSet<Choice> options)
         {
             return CreateContextFactory(polls, DbSetTestHelper.CreateMockDbSet<Ballot>(), DbSetTestHelper.CreateMockDbSet<Vote>(), options);
         }
@@ -24,17 +24,17 @@ namespace VotingApplication.Web.Tests.TestHelpers
 
         public static IContextFactory CreateContextFactory(IDbSet<Poll> polls, IDbSet<Ballot> ballots, IDbSet<Vote> votes)
         {
-            return CreateContextFactory(polls, ballots, votes, DbSetTestHelper.CreateMockDbSet<Option>());
+            return CreateContextFactory(polls, ballots, votes, DbSetTestHelper.CreateMockDbSet<Choice>());
         }
 
-        public static IContextFactory CreateContextFactory(IDbSet<Poll> polls, IDbSet<Ballot> ballots, IDbSet<Vote> votes, IDbSet<Option> options)
+        public static IContextFactory CreateContextFactory(IDbSet<Poll> polls, IDbSet<Ballot> ballots, IDbSet<Vote> votes, IDbSet<Choice> options)
         {
             Mock<IVotingContext> mockContext = CreateMockContext();
 
             MockOutPolls(mockContext, polls);
             MockOutBallots(mockContext, ballots);
             MockOutVotes(mockContext, votes);
-            MockOutOptions(mockContext, options);
+            MockOutChoices(mockContext, options);
 
             return CreateMockFactory(mockContext);
         }
@@ -65,10 +65,10 @@ namespace VotingApplication.Web.Tests.TestHelpers
                 .Returns(votes);
         }
 
-        private static void MockOutOptions(Mock<IVotingContext> mockContext, IDbSet<Option> options)
+        private static void MockOutChoices(Mock<IVotingContext> mockContext, IDbSet<Choice> options)
         {
             mockContext
-                .Setup(p => p.Options)
+                .Setup(p => p.Choices)
                 .Returns(options);
         }
 

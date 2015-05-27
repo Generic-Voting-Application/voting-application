@@ -3,36 +3,37 @@
 
     angular
         .module('GVA.Common')
-        .controller('AddOptionDialogController', AddOptionDialogController);
+        .controller('AddChoiceDialogController', AddChoiceDialogController);
 
-    AddOptionDialogController.$inject = ['$scope'];
+    AddChoiceDialogController.$inject = ['$scope'];
 
-    function AddOptionDialogController($scope) {
+    function AddChoiceDialogController($scope) {
 
         $scope.multipleAddingAllowed = true;
 
-        $scope.addOption = addOption;
-        $scope.addOptionAndClose = addOptionAndClose;
+        $scope.addChoice = addChoice;
+        $scope.addChoiceAndClose = addChoiceAndClose;
+        $scope.addAnotherToggle = true;
 
-        function addOption(form) {
+        function addChoice(form) {
             if (form.name === null) {
                 return;
             }
 
-            var newOption = {
+            var newChoice = {
                 Name: form.name,
                 Description: form.description,
-                OptionNumber: null
+                ChoiceNumber: null
             };
 
             form.name = null;
             form.description = null;
 
-            $scope.options.push(newOption);
+            $scope.choices.push(newChoice);
         }
 
-        function addOptionAndClose(form) {
-            addOption(form);
+        function addChoiceAndClose(form) {
+            addChoice(form);
 
             dismiss();
         }

@@ -3,21 +3,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace VotingApplication.Web.Api.Models.DBViewModels
 {
-    public class ManageOptionUpdateRequest
+    public class ManageChoiceUpdateRequest
     {
-        public ManageOptionUpdateRequest()
+        public ManageChoiceUpdateRequest()
         {
-            Options = new List<OptionUpdate>();
+            Choices = new List<ChoiceUpdate>();
         }
 
-        public List<OptionUpdate> Options { get; set; }
+        public List<ChoiceUpdate> Choices { get; set; }
     }
 
-    public class OptionUpdate
+    public class ChoiceUpdate
     {
         [Required]
         public string Name { get; set; }
         public string Description { get; set; }
-        public int? OptionNumber { get; set; }
+        public int? ChoiceNumber { get; set; }
     }
 }

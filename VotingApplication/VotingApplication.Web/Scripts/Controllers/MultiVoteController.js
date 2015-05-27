@@ -9,8 +9,8 @@
 
     function MultiVoteController($scope, $routeParams, ngDialog) {
 
-        $scope.addOption = addOption;
-        $scope.notifyOptionAdded = notifyOptionAdded;
+        $scope.addChoice = addChoice;
+        $scope.notifyChoiceAdded = notifyChoiceAdded;
 
         activate();
 
@@ -19,28 +19,28 @@
             $scope.setVoteCallback(getVotes);
         }
 
-        function getVotes(options) {
-            return options
-                .filter(function (option) { return option.voteValue; })
-                .map(function (option) {
+        function getVotes(choices) {
+            return choices
+                .filter(function (choice) { return choice.voteValue; })
+                .map(function (choice) {
                     return {
-                        OptionId: option.Id,
+                        ChoiceId: choice.Id,
                         VoteValue: 1
                     };
                 });
         }
 
-        function addOption() {
+        function addChoice() {
             ngDialog.open({
-                template: '/Routes/AddOptionDialog',
-                controller: 'AddVoterOptionDialogController',
+                template: '/Routes/AddChoiceDialog',
+                controller: 'AddVoterChoiceDialogController',
                 scope: $scope,
                 data: { pollId: $scope.pollId }
             });
         }
 
-        function notifyOptionAdded() {
-            $scope.$emit('voterOptionAddedEvent');
+        function notifyChoiceAdded() {
+            $scope.$emit('voterChoiceAddedEvent');
         }
     }
 })();

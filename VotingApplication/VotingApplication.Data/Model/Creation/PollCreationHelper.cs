@@ -14,16 +14,16 @@ namespace VotingApplication.Data.Model.Creation
                 ManageId = Guid.NewGuid(),
 
                 PollType = PollType.Basic,
-                Options = new List<Option>(),
+                Choices = new List<Choice>(),
                 MaxPoints = null,
                 MaxPerVote = null,
                 InviteOnly = false,
                 NamedVoting = false,
                 ExpiryDate = null,
-                OptionAdding = false,
+                ChoiceAdding = false,
 
-                CreatedDate = DateTime.Now,
-                LastUpdated = DateTime.Now
+                CreatedDateUtc = DateTime.Now,
+                LastUpdatedUtc = DateTime.Now
             };
         }
 

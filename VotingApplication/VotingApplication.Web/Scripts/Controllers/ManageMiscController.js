@@ -22,7 +22,7 @@
             var miscConfig = {
                 InviteOnly: $scope.poll.InviteOnly,
                 NamedVoting: $scope.poll.NamedVoting,
-                OptionAdding: $scope.poll.OptionAdding,
+                ChoiceAdding: $scope.poll.ChoiceAdding,
                 HiddenResults: $scope.poll.HiddenResults
             };
 

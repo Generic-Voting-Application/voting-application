@@ -55,9 +55,9 @@ namespace VotingApplication.Web.Api.Controllers
             {
                 var voteResponse = new VoteResponse
                 {
-                    OptionNumber = vote.Option.PollOptionNumber,
+                    ChoiceNumber = vote.Choice.PollChoiceNumber,
                     Value = vote.VoteValue,
-                    OptionName = vote.Option.Name
+                    ChoiceName = vote.Choice.Name
                 };
                 model.Votes.Add(voteResponse);
             }
@@ -110,11 +110,11 @@ namespace VotingApplication.Web.Api.Controllers
 
                     foreach (DeleteVoteRequestModel voteRequest in ballotRequest.VoteDeleteRequests)
                     {
-                        Vote vote = ballot.Votes.ToList().SingleOrDefault(v => v.Option.PollOptionNumber == voteRequest.OptionNumber);
+                        Vote vote = ballot.Votes.ToList().SingleOrDefault(v => v.Choice.PollChoiceNumber == voteRequest.ChoiceNumber);
 
                         if (vote == null)
                         {
-                            ThrowError(HttpStatusCode.NotFound, String.Format("Ballot {0} does not contain an option {1}", ballotRequest.BallotManageGuid, voteRequest.OptionNumber));
+                            ThrowError(HttpStatusCode.NotFound, String.Format("Ballot {0} does not contain an option {1}", ballotRequest.BallotManageGuid, voteRequest.ChoiceNumber));
                         }
 
                         _metricHandler.HandleVoteDeletedEvent(vote, poll.UUID);
@@ -129,7 +129,7 @@ namespace VotingApplication.Web.Api.Controllers
                     }
                 }
 
-                poll.LastUpdated = DateTime.Now;
+                poll.LastUpdatedUtc = DateTime.Now;
 
                 context.SaveChanges();
             }

@@ -32,19 +32,19 @@ namespace VotingApplication.Web.Tests.E2E
         {
             _context = new TestVotingContext();
 
-            // Open, Anonymous, No Option Adding, Shown Results
+            // Open, Anonymous, No Choice Adding, Shown Results
             _defaultPoll = new Poll()
             {
                 UUID = PollGuid,
                 ManageId = PollManageGuid,
                 PollType = PollType.Basic,
                 Name = "Test Poll",
-                LastUpdated = DateTime.Now,
-                CreatedDate = DateTime.Now,
-                Options = new List<Option>(),
+                LastUpdatedUtc = DateTime.Now,
+                CreatedDateUtc = DateTime.Now,
+                Choices = new List<Choice>(),
                 InviteOnly = false,
                 NamedVoting = false,
-                OptionAdding = false,
+                ChoiceAdding = false,
                 HiddenResults = false,
                 ExpiryDate = DefaultTime
             };

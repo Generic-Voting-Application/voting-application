@@ -30,6 +30,11 @@ header {
     box-shadow: 0px 0px 14px 0px rgba(0,0,0,0.6);
     display: flex;
     flex-direction: column;
+    /* This isn't caught by auto prefix */
+    display: -webkit-flex;
+    -webkit-flex-direction: column;
+    /* Safari hack */
+    -webkit-box-orient: vertical;
     margin: 0 auto;
     min-height: 100vh;
     min-width: 320px;
@@ -58,6 +63,10 @@ footer {
 
 .body-content {
     flex: 1;
+    /* IE fix*/
+    flex-basis: auto;
+    /* This isn't caught by auto prefix */
+    -webkit-flex: 1;
     padding: 5px 20px;
 }
 
@@ -79,6 +88,12 @@ button {
     cursor: pointer;
 }
 
+.input {
+    border-radius: 5px;
+    border-width: 1px;
+    padding: 5px;
+}
+
 .btn {
     border-radius: 5px;
     font: bold 12pt Open Sans;
@@ -86,6 +101,7 @@ button {
     border-style: solid;
     text-align: center;
     outline: none;
+    display: inline-block;
 }
 
 .inactive-btn {
@@ -150,7 +166,6 @@ button {
     }
 }
 
-
 .btn-group {
     border: 1px solid;
     border-radius: 5px;
@@ -160,6 +175,31 @@ button {
     > button {
         border-radius: 0px;
         border-width: 0px;
+        margin: 0px;
+    }
+}
+
+.input-btn-group {
+    @extend .flexbox;
+
+    > input {
+        min-height: 35px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+        border-right: none;
+        margin-right: 0px;
+        float: left;
+        flex: 1;
+    }
+
+    > button {
+        min-height: 35px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+        margin-left: 0px;
+        margin-right: 20px;
+        padding-left: 7px;
+        padding-right: 7px;
     }
 }
 
@@ -170,6 +210,12 @@ button {
 .flexbox {
     width: 100%;
     display: flex;
+    /* This isn't caught by auto prefix */
+    display: -webkit-flex;
+}
+
+.dialog-box-small {
+    max-width: 320px;
 }
 
 .centered {
