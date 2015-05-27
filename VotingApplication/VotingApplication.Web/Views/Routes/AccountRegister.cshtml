@@ -1,4 +1,4 @@
-﻿<div class="dialog-box-small dialog-content centered">
+﻿<div id="register-dialog" class="dialog-box-small dialog-content centered">
     <form name="registerForm" ng-submit="registerAccountAndLogin(registerForm)">
         <div class="form-section-block centered">
             <label for="email">Email</label>
@@ -7,7 +7,7 @@
             <label for="password">Password</label>
             <input type="password" required class="form-input" id="password" placeholder="Password" ng-model="registerForm.password">
         </div>
-        <button class="active-btn" ng-disabled="registerForm.$invalid" type="submit">Register</button>
+        <button id="register-button-dialog" class="active-btn" ng-disabled="registerForm.$invalid" type="submit">Register</button>
     </form>
 </div>
 <span class="dialog-error-bar-bottom" ng-show="displayError">{{displayError}}</span>

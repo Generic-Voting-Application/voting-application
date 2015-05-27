@@ -1,9 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Protractor;
 using System;
 using System.Threading;
+using VotingApplication.Web.Api.Models;
 using VotingApplication.Web.Api.Tests.E2E.Helpers;
 
 namespace VotingApplication.Web.Api.Tests.E2E
@@ -29,10 +31,17 @@ namespace VotingApplication.Web.Api.Tests.E2E
             {
                 dbContext.ClearDatabase();
             }
+
+            using (var identityContext = new TestIdentityDbContext())
+            {
+                identityContext.ClearUsers();
+            }
         }
 
         protected const string ChromeDriverDir = @"..\..\";
         protected const string SiteBaseUri = @"http://localhost:64205/";
+        protected const string NewUserEmail = "bob@example.com";
+        protected const string NewUserPassword = "ASooperSecurePassword";
 
         public NgWebDriver NgDriver
         {
@@ -64,6 +73,27 @@ namespace VotingApplication.Web.Api.Tests.E2E
         public void WaitForPageChange()
         {
             Thread.Sleep(1000);
+        }
+
+        public void CreateNewUser()
+        {
+            var hasher = new PasswordHasher();
+            string hash = hasher.HashPassword(NewUserPassword);
+
+            var newUser = new ApplicationUser()
+            {
+                UserName = NewUserEmail,
+                Email = NewUserEmail,
+                PasswordHash = hash,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+
+            using (var dbContext = new TestIdentityDbContext())
+            {
+                dbContext.Users.Add(newUser);
+
+                dbContext.SaveChanges();
+            }
         }
     }
 }
