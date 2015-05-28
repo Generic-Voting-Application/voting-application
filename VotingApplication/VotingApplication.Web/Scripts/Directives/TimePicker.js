@@ -27,12 +27,14 @@
                 time.hours((time.hours() + offset + 24) % 24);
                 modelDirty = true;
                 scope.ngModel = time.toDate();
+                scope.update();
             }
 
             function moveMinute(offset) {
                 time.minutes((time.minutes() + offset + 60) % 60);
                 modelDirty = true;
                 scope.ngModel = time.toDate();
+                scope.update();
             }
 
             function activate() {
@@ -52,11 +54,9 @@
                             clearTimeout(debounce);
                             debounce = setTimeout(function () {
                                 modelDirty = false;
-                                scope.update();
                             }, parseInt(scope.debounce));
                         } else {
                             modelDirty = false;
-                            scope.update();
                         }
                     }
 
@@ -68,7 +68,7 @@
             restrict: 'E',
             scope: {
                 ngModel: '=',
-                update: '&',
+                update: '&?',
                 debounce: '@'
             },
             link: link,
