@@ -63,8 +63,8 @@
 
         function copyPoll(pollId) {
             PollService.copyPoll(pollId)
-                .then(function (data) {
-                    goToManagePage(data.newManageId);
+                .then(function (response) {
+                    goToManagePage(response.data.newManageId);
                 });
         }
     }
