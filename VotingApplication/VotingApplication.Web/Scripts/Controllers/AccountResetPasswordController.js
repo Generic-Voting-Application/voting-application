@@ -20,13 +20,15 @@
 
         function resetPassword(form) {
 
-            AccountService.resetPassword(emailParameter, codeParameter, form.password, form.confirmpassword).success(function () {
-                $location.path('/');
-            }).error(function (data, status) {
-                if (status === 400 && data.ModelState) {
-                    ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
-                }
-            });
+            AccountService.resetPassword(emailParameter, codeParameter, form.password)
+                .success(function () {
+                    $location.path('/');
+                })
+                .error(function (data, status) {
+                    if (status === 400 && data.ModelState) {
+                        ErrorService.bindModelStateToForm(data.ModelState, form, displayError);
+                    }
+                });
         }
 
         function displayError(errorMessage) {
