@@ -11,6 +11,18 @@
 
         function link($scope) {
 
+            // Keep track of mouse position
+            var mouseXPos = null;
+            var mouseYPos = null;
+
+            document.addEventListener('mousemove', onMouseUpdate, false);
+            document.addEventListener('mouseenter', onMouseUpdate, false);
+
+            function onMouseUpdate(e) {
+                mouseXPos = e.pageX;
+                mouseYPos = e.pageY;
+            }
+
             var canvas = document.createElement('canvas');
 
             $scope.$watch('data', function (newVal, oldVal) {
@@ -45,6 +57,12 @@
 
             function drawChart() {
                 // Hack to fix lack of data reloading
+                var tooltips = document.getElementsByClassName('d3-tip');
+                for (var i = 0; i < tooltips.length; i++) {
+                    var element = tooltips[i];
+                    element.parentElement.removeChild(element);
+                }
+
                 var chartElement = document.getElementById('inner-chart');
                 chartElement.innerHTML = '';
 
@@ -133,6 +151,14 @@
                         .on('mouseout', tooltip.hide);
 
                 chart.call(tooltip);
+
+                // Hack to simulate a mouseover
+                var mouseElement = document.elementFromPoint(mouseXPos, mouseYPos);
+                if (mouseElement) {
+                    var eventObj = document.createEvent('Events');
+                    eventObj.initEvent('mouseover', true, false);
+                    mouseElement.dispatchEvent(eventObj);
+                }
             }
 
             function createToolTipText(result) {
