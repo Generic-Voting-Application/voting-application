@@ -6,14 +6,14 @@
         </div>
 
         <div id="quickpoll-block">
-            <button type="submit" class="active-btn btn-medium shadowed" ng-disabled="quickPollForm.$invalid">Quick Poll</button>
+            <button id="quickpoll-button" type="submit" class="active-btn btn-medium shadowed" ng-disabled="quickPollForm.$invalid">Quick Poll</button>
         </div>
     </form>
 
     <h3 class="centered-text horizontal-ruled">or</h3>
 
     <div id="register-block">
-        <button class="active-btn btn-medium shadowed pull-left" ng-click="openLoginDialog()">Sign In</button>
-        <button class="active-btn btn-medium shadowed pull-right" ng-click="openRegisterDialog()">Register</button>
+        <button id="signin-button" class="active-btn btn-medium shadowed pull-left" ng-click="openLoginDialog()">Sign In</button>
+        <button id="register-button" class="active-btn btn-medium shadowed pull-right" ng-click="openRegisterDialog()">Register</button>
     </div>
 </div>

@@ -6,6 +6,8 @@ namespace VotingApplication.Data.Model
 {
     public class Metric
     {
+        internal Metric() { }
+
         public Metric(MetricType metricType, Guid pollId)
         {
             TimestampUtc = DateTime.UtcNow;
