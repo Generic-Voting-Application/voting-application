@@ -40,7 +40,7 @@
 
         self.forgotPassword = forgotPassword;
 
-        self.resetPassword = function (email, code, password, confirmPassword) {
+        self.resetPassword = function (email, code, password) {
             return $http({
                 method: 'POST',
                 url: '/api/Account/ResetPassword',
@@ -48,8 +48,7 @@
                 data: JSON.stringify({
                     Email: email,
                     Code: code,
-                    Password: password,
-                    ConfirmPassword: confirmPassword
+                    Password: password
                 })
             });
         };
