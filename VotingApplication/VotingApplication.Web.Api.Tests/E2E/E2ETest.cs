@@ -13,6 +13,13 @@ namespace VotingApplication.Web.Api.Tests.E2E
     [TestClass]
     public class E2ETest
     {
+        protected const string ChromeDriverDir = @"..\..\";
+        protected const string SiteBaseUri = @"http://localhost:64205/";
+
+        protected const string NewUserId = "8558135A-6E0A-477A-9FB5-44F3A73335E0";
+        protected const string NewUserEmail = "bob@example.com";
+        protected const string NewUserPassword = "ASooperSecurePassword";
+
         [TestInitialize]
         public void EnsureDbIsEmptyBeforeTest()
         {
@@ -38,12 +45,7 @@ namespace VotingApplication.Web.Api.Tests.E2E
             }
         }
 
-        protected const string ChromeDriverDir = @"..\..\";
-        protected const string SiteBaseUri = @"http://localhost:64205/";
-        protected const string NewUserEmail = "bob@example.com";
-        protected const string NewUserPassword = "ASooperSecurePassword";
-
-        public NgWebDriver NgDriver
+        public IWebDriver Driver
         {
             get
             {
@@ -53,11 +55,6 @@ namespace VotingApplication.Web.Api.Tests.E2E
 
                 return driver;
             }
-        }
-
-        public IWebDriver Driver
-        {
-            get { return NgDriver; }
         }
 
         public static void GoToBaseUri(IWebDriver driver)
@@ -82,6 +79,7 @@ namespace VotingApplication.Web.Api.Tests.E2E
 
             var newUser = new ApplicationUser()
             {
+                Id = NewUserId,
                 UserName = NewUserEmail,
                 Email = NewUserEmail,
                 PasswordHash = hash,

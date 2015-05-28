@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
-using Protractor;
 using System.Linq;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Tests.E2E.Helpers;
@@ -33,7 +32,7 @@ namespace VotingApplication.Web.Api.Tests.E2E
         {
             using (IWebDriver driver = Driver)
             {
-                driver.Navigate().GoToUrl(SiteBaseUri);
+                GoToBaseUri(driver);
 
                 IWebElement questionBox = FindElementById(driver, "question");
                 questionBox.SendKeys("?");
@@ -48,7 +47,7 @@ namespace VotingApplication.Web.Api.Tests.E2E
         [TestCategory("E2E")]
         public void QuickPoll_NavigatesToManagePollPage()
         {
-            using (NgWebDriver driver = NgDriver)
+            using (IWebDriver driver = Driver)
             {
                 using (var context = new TestVotingContext())
                 {
