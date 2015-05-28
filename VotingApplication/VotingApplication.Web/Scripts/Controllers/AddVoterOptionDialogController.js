@@ -32,6 +32,15 @@
 
             VoteService.addVoterChoice($scope.ngDialogData.pollId, newVoterChoice)
                 .then($scope.notifyChoiceAdded);
+
+            var formElement = angular.element(document.querySelector('#addChoiceDialog-Form'));
+            formElement.attr('novalidate', '');
+
+            form.name = null;
+            form.description = null;
+            form.reset();
+
+            formElement.removeAttr('novalidate', '');
         }
 
         function addChoiceAndClose(form) {
