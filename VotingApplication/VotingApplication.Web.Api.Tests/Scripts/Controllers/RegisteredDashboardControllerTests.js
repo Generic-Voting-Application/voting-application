@@ -210,7 +210,7 @@ describe('Registered Dashboard Controller', function () {
         it('Given a successful copy of a poll, calls routing service to navigate to the manage page', function () {
             var pollId = '07A2FD4E-71CC-42AF-84DC-504398289FC6';
 
-            var copiedPollData = { newManageId: 'E6DF016D-F10D-4E1C-9DB8-68D4073CD5F4' };
+            var copiedPollData = { data: { newManageId: 'E6DF016D-F10D-4E1C-9DB8-68D4073CD5F4' } };
 
             copyPollPromise.resolve(copiedPollData);
 
@@ -224,7 +224,7 @@ describe('Registered Dashboard Controller', function () {
         it('Given a successful copy of a poll, calls routing service with the new manage id', function () {
             var pollId = '07A2FD4E-71CC-42AF-84DC-504398289FC6';
             var manageId = 'E6DF016D-F10D-4E1C-9DB8-68D4073CD5F4';
-            var copiedPollData = { newManageId: manageId };
+            var copiedPollData = { data: { newManageId: manageId } };
 
             copyPollPromise.resolve(copiedPollData);
 
