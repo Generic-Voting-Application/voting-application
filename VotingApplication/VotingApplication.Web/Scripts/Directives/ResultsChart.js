@@ -152,7 +152,7 @@
 
                 chart.call(tooltip);
 
-                // Hack to simiulate a mouseover
+                // Hack to simulate a mouseover
                 var mouseElement = document.elementFromPoint(mouseXPos, mouseYPos);
                 if (mouseElement) {
                     var eventObj = document.createEvent('Events');
