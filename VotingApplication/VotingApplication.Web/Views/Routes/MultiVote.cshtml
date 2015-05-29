@@ -1,6 +1,9 @@
 ﻿<div ng-controller="MultiVoteController" ng-app="GVA.Voting" class="voting-area">
 
-    <p>Select as many choices as you wish.</p>
+    <p ng-if="poll.Choices.length > 0">
+        Select as many choices as you wish.
+    </p>
+    <p ng-if="poll.Choices.length == 0">This poll has no choices.</p>
 
     <div class="choice-area">
 
@@ -25,7 +28,10 @@
             </p>
         </div>
     </div>
-    <div class="flexbox">
+
+    <p ng-show="!poll.ChoiceAdding && poll.Choices.length == 0">Hopefully the poll creator will add some soon.</p>
+
+    <div class="flexbox" ng-show="poll.Choices.length > 0">
         <button id="vote-button" class="active-btn btn-medium centered" ng-click="submitVote(poll.Choices)">Vote</button>
     </div>
 </div>
