@@ -33,7 +33,6 @@
 
             form.name = null;
             form.description = null;
-            form.reset();
 
             formElement.removeAttr('novalidate', '');
         }
