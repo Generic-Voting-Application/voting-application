@@ -9,17 +9,23 @@
 
     function EditChoiceDialogController($scope) {
         $scope.updateChoice = updateChoice;
+        
+        $scope.setForm = setForm;
 
-        $scope.editChoiceFormName = $scope.ngDialogData.choice.Name;
-        $scope.editChoiceFormDescription = $scope.ngDialogData.choice.Description;
+        function setForm(form) {
+            $scope.editChoiceForm = form;
+
+            $scope.editChoiceForm.name = $scope.ngDialogData.choice.Name;
+            $scope.editChoiceForm.description = $scope.ngDialogData.choice.Description;
+        }
 
         function updateChoice() {
             if ($scope.name === null) {
                 return;
             }
 
-            $scope.ngDialogData.choice.Name = $scope.editChoiceFormName;
-            $scope.ngDialogData.choice.Description = $scope.editChoiceFormDescription;
+            $scope.ngDialogData.choice.Name = $scope.editChoiceForm.name;
+            $scope.ngDialogData.choice.Description = $scope.editChoiceForm.description;
 
             $scope.closeThisDialog();
         }

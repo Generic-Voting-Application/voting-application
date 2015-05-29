@@ -6,13 +6,14 @@
     <form name="quickPollForm" ng-submit="createPoll(pollQuestion)">
         <div id="question-block">
             Your Question <br />
-            <input id="question" placeholder="E.g. Where should we go for lunch?" ng-model="pollQuestion" required />
+            <input id="question" placeholder="E.g. Where should we go for lunch?" ng-model="quickPollForm.pollQuestion" />
         </div>
 
         <div id="quickpoll-block">
-            <button id="quickpoll-button" type="submit" class="active-btn btn-medium shadowed" ng-disabled="quickPollForm.$invalid">Create Poll</button>
+            <button id="quickpoll-button" type="submit" class="active-btn btn-medium shadowed" ng-disabled="!quickPollForm.pollQuestion">Create Poll</button>
         </div>
     </form>
+
     <h2>Your polls</h2>
     <div ng-repeat="poll in userPolls">
 
