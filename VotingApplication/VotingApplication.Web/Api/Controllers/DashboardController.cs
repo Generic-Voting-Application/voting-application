@@ -86,13 +86,17 @@ namespace VotingApplication.Web.Api.Controllers
 
                 _metricHandler.HandlePollClonedEvent(newPoll);
 
+                Ballot creatorBallot = CreateBallotForCreator();
+                newPoll.Ballots.Add(creatorBallot);
+
                 context.Polls.Add(newPoll);
                 context.SaveChanges();
 
                 return new CopyPollResponseModel()
                 {
-                    newPollId = newPoll.UUID,
-                    newManageId = newPoll.ManageId
+                    NewPollId = newPoll.UUID,
+                    NewManageId = newPoll.ManageId,
+                    CreatorBallotToken = creatorBallot.TokenGuid
                 };
             }
         }
@@ -140,6 +144,15 @@ namespace VotingApplication.Web.Api.Controllers
                     Description = o.Description
                 })
                 .ToList();
+        }
+
+        private static Ballot CreateBallotForCreator()
+        {
+            return new Ballot
+            {
+                TokenGuid = Guid.NewGuid(),
+                ManageGuid = Guid.NewGuid()
+            };
         }
     }
 }

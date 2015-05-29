@@ -63,9 +63,14 @@
 
         function copyPoll(pollId) {
             PollService.copyPoll(pollId)
-                .then(function (response) {
-                    goToManagePage(response.data.newManageId);
-                });
+                .then(saveTokenAndGoToManage);
+        }
+
+        function saveTokenAndGoToManage(response) {
+            var data = response.data;
+
+            TokenService.setToken(data.NewPollId, data.CreatorBallotToken)
+                .then(function () { goToManagePage(data.NewManageId); });
         }
     }
 
