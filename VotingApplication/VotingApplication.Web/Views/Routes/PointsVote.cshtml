@@ -1,13 +1,20 @@
 ﻿<div ng-controller="PointsVoteController" ng-app="GVA.Voting" class="voting-area">
 
-    <p>Distribute {{poll.MaxPoints}} points amongst the various choices. <br />
-    You don't have to use all {{poll.MaxPoints}} points and can allocate up to {{poll.MaxPerVote}} points per choice.</p>
 
-    <h4 id="points-display">Unallocated points: {{unallocatedPoints()}}/{{poll.MaxPoints}}</h4>
-    <div class="progress" id="progress-bar">
-        <div ng-style="{ 'width': unallocatedPointsPercentage() + '%' }" class="progress-bar" role="progressbar"></div>
+    <div ng-if="poll.Choices.length > 0">
+        <p>
+            Distribute {{poll.MaxPoints}} points amongst the various choices. <br />
+            You don't have to use all {{poll.MaxPoints}} points and can allocate up to {{poll.MaxPerVote}} points per choice.
+        </p>
+
+        <h4 id="points-display">Unallocated points: {{unallocatedPoints()}}/{{poll.MaxPoints}}</h4>
+        <div class="progress spaced-bottom" id="progress-bar">
+            <div ng-style="{ 'width': unallocatedPointsPercentage() + '%' }" class="progress-bar" role="progressbar"></div>
+
+        </div>
 
     </div>
+    <p ng-if="poll.Choices.length == 0">This poll has no choices.</p>
 
     <div class="choice-area">
         
@@ -38,7 +45,10 @@
             </p>
         </div>
     </div>
-    <div class="flexbox">
+
+    <p ng-show="!poll.ChoiceAdding && poll.Choices.length == 0">Hopefully the poll creator will add some soon.</p>
+
+    <div class="flexbox" ng-show="poll.Choices.length > 0">
         <button id="vote-button" class="active-btn btn-medium centered" ng-click="submitVote(poll.Choices)">Vote</button>
     </div>
 </div>

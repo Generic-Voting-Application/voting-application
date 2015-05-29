@@ -1,6 +1,9 @@
 ﻿<div ng-controller="UpDownVoteController" ng-app="GVA.Voting" class="voting-area">
 
-    <p>Select if you are for or against each choice</p>
+    <p ng-if="poll.Choices.length > 0">
+        Select if you are for or against each choice.
+    </p>
+    <p ng-if="poll.Choices.length == 0">This poll has no choices.</p>
 
     <div class="choice-area">
 
@@ -31,8 +34,11 @@
                 <button id="add-choice-link" class="active-btn icon-padded-left clickable" ng-click="addChoice()">Add a choice</button>
             </p>
         </div>
+
+        <p ng-show="!poll.ChoiceAdding && poll.Choices.length == 0">Hopefully the poll creator will add some soon.</p>
+
     </div>
-    <div class="flexbox">
+    <div class="flexbox" ng-show="poll.Choices.length > 0">
         <button id="vote-button" class="active-btn btn-medium centered" ng-click="submitVote(poll.Choices)">Vote</button>
     </div>
 </div>
