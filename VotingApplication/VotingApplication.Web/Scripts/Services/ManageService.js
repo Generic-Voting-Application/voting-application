@@ -131,17 +131,6 @@
             return deleteRequests;
         }
 
-        self.setVisited = function (manageId) {
-            $localStorage[manageId] = { visited: true };
-        };
-
-        self.getVisited = function (manageId) {
-            if (!$localStorage[manageId]) {
-                return false;
-            }
-            return $localStorage[manageId].visited;
-        };
-
         self.getInvitations = function (manageId) {
             return $http.get('/api/manage/' + manageId + '/invitation');
         };
