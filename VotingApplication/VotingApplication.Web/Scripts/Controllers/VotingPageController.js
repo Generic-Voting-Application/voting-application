@@ -57,7 +57,7 @@
             TokenService.getManageId($scope.pollId)
             .then(function (manageData) {
                 $scope.manageId = manageData;
-            })
+            });
         }
 
         function getPollData() {

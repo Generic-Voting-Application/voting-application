@@ -79,7 +79,7 @@
             if ($localStorage[pollId]) {
 
                 // Fallback for old system
-                if (typeof ($localStorage[pollId]) === "string") {
+                if (typeof ($localStorage[pollId]) === 'string') {
                     deferred.resolve($localStorage[pollId]);
                 } else {
                     deferred.resolve($localStorage[pollId].token);
