@@ -3,7 +3,7 @@
         <h2>Welcome {{account.email}}</h2>
     </div>
 
-    <form name="quickPollForm" ng-submit="createPoll(pollQuestion)">
+    <form name="quickPollForm" ng-submit="createPoll(quickPollForm.pollQuestion)">
         <div id="question-block">
             Your Question <br />
             <input id="question" placeholder="E.g. Where should we go for lunch?" ng-model="quickPollForm.pollQuestion" />
@@ -14,7 +14,7 @@
         </div>
     </form>
 
-    <h2>Your polls</h2>
+    <h2 ng-show="userPolls.length > 0">Your polls</h2>
     <div ng-repeat="poll in userPolls">
 
         <div class="poll-panel">
@@ -31,4 +31,9 @@
 
         </div>
     </div>
+
+    <h4 class="text-centered" ng-show="!userPolls || userPolls.length == 0">
+        You don't appear to have created any polls. <br />
+        Any polls you create will be listed here
+    </h4>
 </div>
