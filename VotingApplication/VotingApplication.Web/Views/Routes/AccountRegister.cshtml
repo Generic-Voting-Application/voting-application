@@ -2,12 +2,12 @@
     <form name="registerForm" ng-submit="registerAccountAndLogin(registerForm)">
         <div class="form-section-block centered">
             <label for="email">Email</label>
-            <input autofocus required class="form-input" type="email" id="email" placeholder="user@example.com" ng-model="registerForm.email">
+            <input autofocus class="form-input" type="email" id="email" placeholder="user@example.com" ng-model="registerForm.email">
 
             <label for="password">Password</label>
-            <input type="password" required class="form-input" id="password" placeholder="Password" ng-model="registerForm.password">
+            <input type="password" class="form-input" id="password" placeholder="Password" ng-model="registerForm.password">
         </div>
-        <button id="register-button-dialog" class="active-btn" ng-disabled="registerForm.$invalid" type="submit">Register</button>
+        <button id="register-button-dialog" class="active-btn" ng-disabled="!registerForm.email || !registerForm.password" type="submit">Register</button>
     </form>
 </div>
 <span class="dialog-error-bar-bottom" ng-show="displayError">{{displayError}}</span>

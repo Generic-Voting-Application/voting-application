@@ -3,7 +3,7 @@
         <h2>New Choice</h2>
         <div class="form-section-block centered">
             <label for="name">Name</label>
-            <input autofocus class="form-input" id="name" ng-model="addChoiceForm.name" focus required/>
+            <input autofocus class="form-input" id="name" ng-model="addChoiceForm.name" focus/>
 
             <label for="description">Description</label>
             <input class="form-input" id="description" ng-model="addChoiceForm.description">
@@ -12,7 +12,7 @@
         <div>
             <button class="active-btn"
                     id="add-button"
-                    ng-disabled="addChoiceForm.$invalid"
+                    ng-disabled="!addChoiceForm.name"
                     ng-click="addChoice(addChoiceForm)"
                     ng-if="addAnotherToggle"
                     type="submit"
@@ -21,7 +21,7 @@
             </button>
             <button class="active-btn"
                     id="add-button"
-                    ng-disabled="addChoiceForm.$invalid"
+                    ng-disabled="!addChoiceForm.name"
                     ng-click="addChoiceAndClose(addChoiceForm)"
                     ng-if="!addAnotherToggle"
                     type="submit">
