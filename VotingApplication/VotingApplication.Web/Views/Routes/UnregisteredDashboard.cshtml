@@ -1,5 +1,5 @@
 ﻿<div ng-controller="UnregisteredDashboardController">
-    <form name="quickPollForm" ng-submit="createPoll(pollQuestion)">
+    <form name="quickPollForm" ng-submit="createPoll(quickPollForm.pollQuestion)">
         <div id="question-block">
             Your Question <br />
             <input id="question" placeholder="E.g. Where should we go for lunch?" ng-model="quickPollForm.pollQuestion" />
