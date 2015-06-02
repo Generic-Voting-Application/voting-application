@@ -1,12 +1,7 @@
-﻿using Microsoft.AspNet.Identity;
-using SendGrid;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using SendGrid;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace VotingApplication.Web.Api.Services
 {
@@ -25,7 +20,7 @@ namespace VotingApplication.Web.Api.Services
         {
             SendGridMessage mail = new SendGridMessage();
 
-            mail.From = new MailAddress(this.hostEmail, "Voting App");
+            mail.From = new MailAddress(this.hostEmail, "Vote On");
             mail.AddTo(to);
             mail.Subject = subject;
             mail.Html = message;
