@@ -21,7 +21,7 @@
 
         $scope.poll = { Choices: [] };
         $scope.resultsLink = RoutingService.getResultsPageUrl($scope.pollId, $scope.token);
-        $scope.manageLink = getManagePageUrl;
+        $scope.manageLink = null;
 
         $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
         $scope.logoutIdentity = IdentityService.clearIdentityName;
@@ -43,7 +43,7 @@
                 $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
             });
 
-            getManageId();
+            getManageLink();
             getToken();
         }
 
@@ -53,10 +53,10 @@
             .then(getPollData);
         }
 
-        function getManageId() {
+        function getManageLink() {
             TokenService.getManageId($scope.pollId)
             .then(function (manageData) {
-                $scope.manageId = manageData;
+                $scope.manageLink = RoutingService.getManagePageUrl(manageData);
             });
         }
 
@@ -69,11 +69,7 @@
                     setSelectedValues();
                 });
         }
-
-        function getManagePageUrl() {
-            return RoutingService.getManagePageUrl($scope.manageId);
-        }
-
+        
         function setSelectedValues() {
             VoteService.getTokenVotes($scope.pollId, $scope.token)
             .then(function (response) {
