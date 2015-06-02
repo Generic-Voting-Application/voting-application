@@ -11,18 +11,7 @@
         </div>
 
         <h4>
-            Pick a preset option:
-        </h4>
-
-        <div class="manage-section">
-            <button id="hour-adjust-button" class="active-btn" ng-click="setDate('hour')">1 Hour</button>
-            <button id="day-adjust-button" class="active-btn" ng-click="setDate('day')">1 Day</button>
-            <button id="week-adjust-button" class="active-btn" ng-click="setDate('week')">1 Week</button>
-            <button id="never-adjust-button" class="active-btn" ng-click="removeExpiry()">Never</button>
-        </div>
-
-        <h4>
-            Or pick a date:
+            Pick a date:
         </h4>
 
         <div class="manage-section">
@@ -31,6 +20,13 @@
 
         <div class="manage-section">
             <time-picker ng-model="ExpiryDateLocal" debounce="1000"/>
+        </div>
+
+        <div class="manage-section">
+            <button id="hour-adjust-button" class="active-btn" ng-click="setDate('hour')">1 Hour</button>
+            <button id="day-adjust-button" class="active-btn" ng-click="setDate('day')">1 Day</button>
+            <button id="week-adjust-button" class="active-btn" ng-click="setDate('week')">1 Week</button>
+            <button id="never-adjust-button" class="active-btn" ng-click="removeExpiry()">Never</button>
         </div>
 
         <div class="manage-section">
