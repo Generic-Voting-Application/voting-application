@@ -42,7 +42,8 @@ describe('Registered Dashboard Controller', function () {
         spyOn(mockRoutingService, 'navigateToManagePage').and.callThrough();
 
         mockTokenService = {
-            setToken: function () { }
+            setToken: function () { },
+            setManageId: function() { }
         };
         setTokenPromise = $q.defer();
         spyOn(mockTokenService, 'setToken').and.callFake(function () { return setTokenPromise.promise; });

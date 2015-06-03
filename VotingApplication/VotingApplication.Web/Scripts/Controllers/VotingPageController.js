@@ -17,15 +17,17 @@
 
         $scope.pollId = $routeParams['pollId'];
         $scope.token = $routeParams['tokenId'] || '';
+        $scope.manageId = '';
 
         $scope.poll = { Choices: [] };
         $scope.resultsLink = RoutingService.getResultsPageUrl($scope.pollId, $scope.token);
+        $scope.manageLink = null;
 
         $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
         $scope.logoutIdentity = IdentityService.clearIdentityName;
         $scope.gvaExpiredCallback = redirectIfExpired;
         $scope.submitVote = submitVote;
-        $scope.clearVote = clearVote;
+        $scope.clearVote = clearVote;        
 
         var getVotes = function () { return []; };
         $scope.setVoteCallback = function (votesFunc) { getVotes = votesFunc; };
@@ -41,6 +43,7 @@
                 $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
             });
 
+            getManageLink();
             getToken();
         }
 
@@ -48,6 +51,13 @@
             TokenService.getToken($scope.pollId)
             .then(function (tokenData) { $scope.token = tokenData; })
             .then(getPollData);
+        }
+
+        function getManageLink() {
+            TokenService.getManageId($scope.pollId)
+            .then(function (manageData) {
+                $scope.manageLink = RoutingService.getManagePageUrl(manageData);
+            });
         }
 
         function getPollData() {
@@ -59,7 +69,7 @@
                     setSelectedValues();
                 });
         }
-
+        
         function setSelectedValues() {
             VoteService.getTokenVotes($scope.pollId, $scope.token)
             .then(function (response) {

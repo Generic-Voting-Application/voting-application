@@ -40,11 +40,6 @@
                 $scope.poll = data;
                 $scope.Question = data.Name;
             });
-
-            $scope.visited = ManageService.getVisited(manageId);
-            if (!$scope.visited) {
-                ManageService.setVisited(manageId);
-            }
         }
 
         function updateQuestion() {

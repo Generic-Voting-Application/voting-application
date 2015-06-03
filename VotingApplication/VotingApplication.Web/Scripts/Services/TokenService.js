@@ -11,7 +11,9 @@
 
         var service = {
             getToken: getTokenForPoll,
-            setToken: setTokenForPoll
+            setToken: setTokenForPoll,
+            getManageId: getManageIdForPoll,
+            setManageId: setManageIdForPoll
         };
 
         return service;
@@ -19,9 +21,43 @@
         function setTokenForPoll(pollId, token) {
             var deferred = $q.defer();
 
-            $localStorage[pollId] = token;
+            if (!$localStorage[pollId]) {
+                $localStorage[pollId] = {};
+            }
+
+            $localStorage[pollId].token = token;
             // Ensure that we've actually saved the values before continuing. (see https://github.com/gsklee/ngStorage/issues/39)
             $timeout(function () { deferred.resolve(); }, 110);
+
+            return deferred.promise;
+        }
+
+        function setManageIdForPoll(pollId, manageId) {
+            var deferred = $q.defer();
+
+            if (!$localStorage[pollId]) {
+                $localStorage[pollId] = {};
+            }
+
+            $localStorage[pollId].manageId = manageId;
+            // Ensure that we've actually saved the values before continuing. (see https://github.com/gsklee/ngStorage/issues/39)
+            $timeout(function () { deferred.resolve(); }, 110);
+
+            return deferred.promise;
+        }
+
+        function getManageIdForPoll(pollId) {
+            var deferred = $q.defer();
+
+            if (!pollId) {
+                deferred.reject();
+                return deferred.promise;
+            }
+
+            if ($localStorage[pollId]) {
+                deferred.resolve($localStorage[pollId].manageId);
+                return deferred.promise;
+            }
 
             return deferred.promise;
         }
@@ -41,7 +77,14 @@
             }
 
             if ($localStorage[pollId]) {
-                deferred.resolve($localStorage[pollId]);
+
+                // Fallback for old system
+                if (typeof ($localStorage[pollId]) === 'string') {
+                    deferred.resolve($localStorage[pollId]);
+                } else {
+                    deferred.resolve($localStorage[pollId].token);
+                }
+
                 return deferred.promise;
             }
 

@@ -30,7 +30,6 @@
             PollService.getPoll(pollId)
                 .then(function (response) {
                     var data = response.data;
-                    $scope.pollName = data.Name;
 
                     if (data.ExpiryDateUtc) {
                         var expiryDateUtc = moment.utc(data.ExpiryDateUtc);

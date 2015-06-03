@@ -37,8 +37,12 @@
 
         function createPollSuccessCallback(response) {
             var data = response.data;
-            TokenService.setToken(data.UUID, data.CreatorBallot.TokenGuid)
-                .then(function () { goToManagePage(data.ManageId); });
+
+            TokenService.setManageId(data.UUID, data.ManageId)
+               .then(TokenService.setToken(data.UUID, data.CreatorBallot.TokenGuid)
+               .then(function () {
+                   RoutingService.navigateToManagePage(data.ManageId);
+               }));
         }
 
         function getUserPolls() {
@@ -71,6 +75,7 @@
 
             TokenService.setToken(data.NewPollId, data.CreatorBallotToken)
                 .then(function () { goToManagePage(data.NewManageId); });
+
         }
     }
 

@@ -13,9 +13,11 @@ describe('Unregistered Dashboard Controller', function () {
 
     var createPollPromise;
     var setTokenPromise;
+    var setManageIdPromise;
 
     var newPollUUID = '9C884B24-9B76-4FF8-A074-36AEB1EC3920';
     var newTokenGuid = 'B14A90C0-078A-4996-B0FA-EA09A0EB6FFE';
+    var newManageGuid = '7385e700-365f-4bd5-a680-36784fff0c95';
 
     beforeEach(inject(function ($rootScope, $q, $controller) {
 
@@ -33,10 +35,14 @@ describe('Unregistered Dashboard Controller', function () {
         spyOn(mockRoutingService, 'navigateToManagePage').and.callThrough();
 
         mockTokenService = {
-            setToken: function () { }
+            setToken: function () { },
+            setManageId : function() {}
         };
         setTokenPromise = $q.defer();
         spyOn(mockTokenService, 'setToken').and.callFake(function () { return setTokenPromise.promise; });
+
+        setManageIdPromise = $q.defer();
+        spyOn(mockTokenService, 'setManageId').and.callFake(function () { return setManageIdPromise.promise; });
 
 
         $controller('UnregisteredDashboardController', {
@@ -78,8 +84,6 @@ describe('Unregistered Dashboard Controller', function () {
         });
 
         it('Given a successful creation of a poll, calls routing service with new ManageId', function () {
-            var manageGuid = '0F4F3122-B786-4F5A-B2F0-808A67B916FA';
-
             var question = 'Where shall we go?';
 
             var data = {
@@ -87,7 +91,7 @@ describe('Unregistered Dashboard Controller', function () {
                 CreatorBallot: {
                     TokenGuid: newTokenGuid
                 },
-                ManageId: manageGuid
+                ManageId: newManageGuid
             };
             var response = { data: data };
             createPollPromise.resolve(response);
@@ -97,7 +101,7 @@ describe('Unregistered Dashboard Controller', function () {
 
 
             scope.$apply();
-            expect(mockRoutingService.navigateToManagePage).toHaveBeenCalledWith(manageGuid);
+            expect(mockRoutingService.navigateToManagePage).toHaveBeenCalledWith(newManageGuid);
         });
 
         it('Given a successful creation of a poll, calls token service to set the token', function () {
@@ -123,7 +127,8 @@ describe('Unregistered Dashboard Controller', function () {
                 UUID: newPollUUID,
                 CreatorBallot: {
                     TokenGuid: newTokenGuid
-                }
+                },
+                ManageId: newManageGuid
             };
             var response = { data: data };
             createPollPromise.resolve(response);
@@ -134,6 +139,7 @@ describe('Unregistered Dashboard Controller', function () {
 
             scope.$apply();
             expect(mockTokenService.setToken).toHaveBeenCalledWith(newPollUUID, newTokenGuid);
+            expect(mockTokenService.setManageId).toHaveBeenCalledWith(newPollUUID, newManageGuid);
         });
 
         it('Given a successful creation of a poll, calls routing service only once token service has finished', function () {
