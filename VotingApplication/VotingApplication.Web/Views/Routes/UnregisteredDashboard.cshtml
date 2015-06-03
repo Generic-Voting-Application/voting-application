@@ -1,24 +1,19 @@
 ﻿<div ng-controller="UnregisteredDashboardController">
-    <div>
-        <h2>Regular Poller?</h2>
-        Register for more config choices. It's free!
-    </div>
-
-    <form name="quickPollForm" ng-submit="createPoll(pollQuestion)">
+    <form name="quickPollForm" ng-submit="createPoll(quickPollForm.pollQuestion)">
         <div id="question-block">
             Your Question <br />
-            <input id="question" placeholder="E.g. Where should we go for lunch?" ng-model="pollQuestion" required />
+            <input id="question" placeholder="E.g. Where should we go for lunch?" ng-model="quickPollForm.pollQuestion" />
         </div>
 
         <div id="quickpoll-block">
-            <button type="submit" class="active-btn btn-medium shadowed" ng-disabled="quickPollForm.$invalid">Quick Poll</button>
+            <button id="quickpoll-button" type="submit" class="active-btn btn-medium shadowed" ng-disabled="!quickPollForm.pollQuestion">Quick Poll</button>
         </div>
     </form>
 
     <h3 class="centered-text horizontal-ruled">or</h3>
 
     <div id="register-block">
-        <button class="active-btn btn-medium shadowed pull-left" ng-click="openLoginDialog()">Sign In</button>
-        <button class="active-btn btn-medium shadowed pull-right" ng-click="openRegisterDialog()">Register</button>
+        <button id="signin-button" class="active-btn btn-medium shadowed pull-left" ng-click="openLoginDialog()">Sign In</button>
+        <button id="register-button" class="active-btn btn-medium shadowed pull-right" ng-click="openRegisterDialog()">Register</button>
     </div>
 </div>

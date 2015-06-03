@@ -1,4 +1,6 @@
-﻿(function () {
+﻿/// <reference path="../Services/PollService.js" />
+/// <reference path="../Services/ExpiryStringService.js" />
+(function () {
     'use strict';
 
     angular
@@ -12,15 +14,15 @@
         function link($scope) {
             var pollId = $routeParams.pollId;
 
-            function calculateExpiry(expiryDate) {
-                $scope.pollExpiry = ExpiryStringService.timeStringForExpiry(expiryDate, calculateExpiry);
+            function calculateExpiry(expiryDateUtc) {
+                $scope.pollExpiry = ExpiryStringService.timeStringForExpiry(expiryDateUtc, calculateExpiry);
                 $scope.$apply();
 
-                resolveExpiryCallback(expiryDate);
+                resolveExpiryCallback(expiryDateUtc);
             }
 
-            function resolveExpiryCallback(expiryDate) {
-                if (expiryDate < Date.now()) {
+            function resolveExpiryCallback(expiryDateUtc) {
+                if (expiryDateUtc < moment.utc()) {
                     $scope.gvaExpiredCallback();
                 }
             }
@@ -28,12 +30,11 @@
             PollService.getPoll(pollId)
                 .then(function (response) {
                     var data = response.data;
-                    $scope.pollName = data.Name;
 
-                    if (data.ExpiryDate) {
-                        var expiryDate = new Date(data.ExpiryDate);
-                        $scope.pollExpiry = ExpiryStringService.timeStringForExpiry(expiryDate, calculateExpiry);
-                        resolveExpiryCallback(expiryDate);
+                    if (data.ExpiryDateUtc) {
+                        var expiryDateUtc = moment.utc(data.ExpiryDateUtc);
+                        $scope.pollExpiry = ExpiryStringService.timeStringForExpiry(expiryDateUtc, calculateExpiry);
+                        resolveExpiryCallback(expiryDateUtc);
                     }
                 });
         }

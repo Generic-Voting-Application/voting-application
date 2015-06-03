@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Tests.E2E.Helpers;
 using VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers;
@@ -40,8 +39,8 @@ namespace VotingApplication.Web.Tests.E2E
                 ManageId = PollManageGuid,
                 PollType = PollType.Basic,
                 Name = "Test Poll",
-                LastUpdatedUtc = DateTime.Now,
-                CreatedDateUtc = DateTime.Now,
+                LastUpdatedUtc = DateTime.UtcNow,
+                CreatedDateUtc = DateTime.UtcNow,
                 Choices = new List<Choice>(),
                 InviteOnly = false,
                 NamedVoting = false,
@@ -314,8 +313,8 @@ namespace VotingApplication.Web.Tests.E2E
             IReadOnlyCollection<IWebElement> editButtons = _driver.FindElements(By.ClassName("fa-pencil"));
             editButtons.First().Click();
 
-            IWebElement formName = _driver.FindElement(NgBy.Model("editChoiceFormName"));
-            IWebElement formDescription = _driver.FindElement(NgBy.Model("editChoiceFormDescription"));
+            IWebElement formName = _driver.FindElement(NgBy.Model("editChoiceForm.name"));
+            IWebElement formDescription = _driver.FindElement(NgBy.Model("editChoiceForm.description"));
 
             Assert.IsTrue(formName.IsVisible());
             Assert.IsTrue(formDescription.IsVisible());
@@ -331,8 +330,8 @@ namespace VotingApplication.Web.Tests.E2E
 
             IWebElement form = _driver.FindElement(By.Name("editChoiceForm"));
 
-            IWebElement formName = _driver.FindElement(NgBy.Model("editChoiceFormName"));
-            IWebElement formDescription = _driver.FindElement(NgBy.Model("editChoiceFormDescription"));
+            IWebElement formName = _driver.FindElement(NgBy.Model("editChoiceForm.name"));
+            IWebElement formDescription = _driver.FindElement(NgBy.Model("editChoiceForm.description"));
 
             string newName = "Changed Name";
             string newDescription = "Changed Description";
@@ -366,7 +365,7 @@ namespace VotingApplication.Web.Tests.E2E
 
             IWebElement form = _driver.FindElement(By.Name("editChoiceForm"));
 
-            IWebElement formName = _driver.FindElement(NgBy.Model("editChoiceFormName"));
+            IWebElement formName = _driver.FindElement(NgBy.Model("editChoiceForm.name"));
             formName.Clear();
 
             IWebElement saveButton = _driver.FindElement(By.Id("dialog-save-button"));

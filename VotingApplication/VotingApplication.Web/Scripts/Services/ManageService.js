@@ -49,11 +49,11 @@
             });
         };
 
-        self.updatePollExpiry = function (manageId, expiryDate) {
+        self.updatePollExpiry = function (manageId, expiryDateUtc) {
             return $http({
                 method: 'PUT',
                 url: '/api/manage/' + manageId + '/expiry/',
-                data: { ExpiryDate: expiryDate }
+                data: { ExpiryDateUtc: expiryDateUtc }
             });
         };
 
@@ -130,17 +130,6 @@
 
             return deleteRequests;
         }
-
-        self.setVisited = function (manageId) {
-            $localStorage[manageId] = { visited: true };
-        };
-
-        self.getVisited = function (manageId) {
-            if (!$localStorage[manageId]) {
-                return false;
-            }
-            return $localStorage[manageId].visited;
-        };
 
         self.getInvitations = function (manageId) {
             return $http.get('/api/manage/' + manageId + '/invitation');

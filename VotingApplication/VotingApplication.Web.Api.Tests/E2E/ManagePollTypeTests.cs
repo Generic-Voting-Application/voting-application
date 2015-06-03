@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Tests.E2E.Helpers;
 using VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers;
@@ -39,8 +38,8 @@ namespace VotingApplication.Web.Tests.E2E
                 ManageId = PollManageGuid,
                 PollType = PollType.Basic,
                 Name = "Test Poll",
-                LastUpdatedUtc = DateTime.Now,
-                CreatedDateUtc = DateTime.Now,
+                LastUpdatedUtc = DateTime.UtcNow,
+                CreatedDateUtc = DateTime.UtcNow,
                 Choices = new List<Choice>(),
                 InviteOnly = false,
                 NamedVoting = false,

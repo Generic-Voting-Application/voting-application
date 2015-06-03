@@ -5,8 +5,8 @@ using Protractor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
+using VotingApplication.Web.Api.Tests.E2E.Helpers;
 using VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers;
 
 namespace VotingApplication.Web.Tests.E2E
@@ -16,11 +16,10 @@ namespace VotingApplication.Web.Tests.E2E
     {
         private static readonly string ChromeDriverDir = @"..\..\";
         private static readonly string SiteBaseUri = @"http://localhost:64205/";
-        private static readonly int WaitTime = 500;
         private static readonly Guid PollGuid = Guid.NewGuid();
         private static readonly Guid PollManageGuid = Guid.NewGuid();
         private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid + "/Expiry";
-        private static readonly DateTimeOffset DefaultTime = DateTime.Now;
+        private static readonly DateTime DefaultTime = DateTime.UtcNow;
 
         private ITestVotingContext _context;
         private Poll _defaultPoll;
@@ -39,14 +38,14 @@ namespace VotingApplication.Web.Tests.E2E
                 ManageId = PollManageGuid,
                 PollType = PollType.Basic,
                 Name = "Test Poll",
-                LastUpdatedUtc = DateTime.Now,
-                CreatedDateUtc = DateTime.Now,
+                LastUpdatedUtc = DateTime.UtcNow,
+                CreatedDateUtc = DateTime.UtcNow,
                 Choices = new List<Choice>(),
                 InviteOnly = false,
                 NamedVoting = false,
                 ChoiceAdding = false,
                 HiddenResults = false,
-                ExpiryDate = DefaultTime
+                ExpiryDateUtc = DefaultTime
             };
 
             _context.Polls.Add(_defaultPoll);
@@ -93,7 +92,7 @@ namespace VotingApplication.Web.Tests.E2E
 
             Poll dbPoll = _context.Polls.Where(p => p.UUID == _defaultPoll.UUID).Single();
 
-            Assert.AreEqual(DefaultTime, dbPoll.ExpiryDate);
+            Assert.AreEqual(DefaultTime, dbPoll.ExpiryDateUtc);
         }
     }
 }

@@ -88,6 +88,10 @@ button {
     cursor: pointer;
 }
 
+.small-text {
+    font-size:small;
+}
+
 .input {
     border-radius: 5px;
     border-width: 1px;
@@ -212,6 +216,16 @@ button {
     display: flex;
     /* This isn't caught by auto prefix */
     display: -webkit-flex;
+}
+
+.flexbox-centered {
+    @extend .flexbox;
+
+    justify-content: center;
+
+    > .centered-margin {
+        margin: 5px;
+    }
 }
 
 .dialog-box-small {

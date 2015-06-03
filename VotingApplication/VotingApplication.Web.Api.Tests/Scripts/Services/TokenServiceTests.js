@@ -51,14 +51,13 @@ describe('TokenService', function () {
                 token = data;
             });
 
-
             rootScope.$apply();
             expect(token).toBe(tokenValue);
         });
 
         it('With no route token, but a token in local storage, returns the local storage token', function () {
             routeParams['tokenId'] = null;
-            localStorage[pollId] = tokenValue;
+            localStorage[pollId] = { token: tokenValue };
 
             var token;
 

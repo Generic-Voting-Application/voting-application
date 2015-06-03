@@ -2,8 +2,8 @@
     <form name="loginForm" ng-submit="loginIdentity(loginForm)">
         <div class=" form-section-inline centered">
             <label for="name-input">Enter your name to vote</label>
-            <input autofocus required class="form-input" name="name-input" id="name-input" placeholder="Magnus Carlsen" ng-model="loginForm.name">
-            <button class="go-btn" id="go-button" ng-disabled="loginForm.$invalid" type="submit">Go</button>
+            <input autofocus class="form-input" name="name-input" id="name-input" placeholder="Magnus Carlsen" ng-model="loginForm.name">
+            <button class="go-btn" id="go-button" ng-disabled="!loginForm.name" type="submit">Go</button>
         </div>
     </form>
 </div>

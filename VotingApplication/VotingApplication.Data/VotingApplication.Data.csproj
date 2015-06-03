@@ -50,9 +50,7 @@
   <ItemGroup>
     <Compile Include="Context\ContextFactory.cs" />
     <Compile Include="Context\IContextFactory.cs" />
-    <Compile Include="Context\ITestVotingContext.cs" />
     <Compile Include="Context\IVotingContext.cs" />
-    <Compile Include="Context\TestVotingContext.cs" />
     <Compile Include="Migrations\201412101113388_Initial.cs" />
     <Compile Include="Migrations\201412101113388_Initial.Designer.cs">
       <DependentUpon>201412101113388_Initial.cs</DependentUpon>
@@ -149,6 +147,14 @@
     <Compile Include="Migrations\201505211251487_MetricIndex.Designer.cs">
       <DependentUpon>201505211251487_MetricIndex.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505220738506_ExpiryDate_Utc.cs" />
+    <Compile Include="Migrations\201505220738506_ExpiryDate_Utc.Designer.cs">
+      <DependentUpon>201505220738506_ExpiryDate_Utc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505260709106_Metrics_Utc.cs" />
+    <Compile Include="Migrations\201505260709106_Metrics_Utc.Designer.cs">
+      <DependentUpon>201505260709106_Metrics_Utc.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
     <Compile Include="Model\Metric.cs" />
@@ -237,6 +243,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505211251487_MetricIndex.resx">
       <DependentUpon>201505211251487_MetricIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505220738506_ExpiryDate_Utc.resx">
+      <DependentUpon>201505220738506_ExpiryDate_Utc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505260709106_Metrics_Utc.resx">
+      <DependentUpon>201505260709106_Metrics_Utc.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

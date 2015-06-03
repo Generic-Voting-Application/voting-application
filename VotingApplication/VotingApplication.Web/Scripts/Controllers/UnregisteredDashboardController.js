@@ -34,10 +34,11 @@
         function createPollSuccessCallback(response) {
             var data = response.data;
 
-            TokenService.setToken(data.UUID, data.CreatorBallot.TokenGuid)
+            TokenService.setManageId(data.UUID, data.ManageId)
+                .then(TokenService.setToken(data.UUID, data.CreatorBallot.TokenGuid)
                 .then(function () {
                     RoutingService.navigateToManagePage(data.ManageId);
-                });
+                }));
         }
     }
 

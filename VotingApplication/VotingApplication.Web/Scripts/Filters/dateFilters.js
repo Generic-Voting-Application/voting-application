@@ -3,9 +3,10 @@
 
     angular
         .module('GVA.Common')
-        .filter('momentFilter', function () {
-            return function (input, format) {
-                return moment(input).format(format);
+        .filter('momentDisplayFilter', function () {
+            return function (utcInput, format) {
+                var utcDateTime = moment.utc(utcInput);
+                return utcDateTime.local().format(format);
             };
         });
 })();

@@ -25,11 +25,16 @@
                 Description: form.description,
                 ChoiceNumber: null
             };
+            
+            $scope.choices.push(newChoice);
+
+            var formElement = angular.element(document.querySelector('#addChoiceDialog-Form'));
+            formElement.attr('novalidate', '');
 
             form.name = null;
             form.description = null;
 
-            $scope.choices.push(newChoice);
+            formElement.removeAttr('novalidate', '');
         }
 
         function addChoiceAndClose(form) {

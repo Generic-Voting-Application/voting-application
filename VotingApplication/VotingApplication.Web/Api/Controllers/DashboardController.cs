@@ -43,9 +43,7 @@ namespace VotingApplication.Web.Api.Controllers
                 UUID = poll.UUID,
                 ManageId = poll.ManageId,
                 Name = poll.Name,
-                Creator = poll.Creator,
-                CreatedDate = poll.CreatedDateUtc,
-                ExpiryDate = poll.ExpiryDate
+                CreatedDateUtc = poll.CreatedDateUtc
             };
         }
 
@@ -88,13 +86,17 @@ namespace VotingApplication.Web.Api.Controllers
 
                 _metricHandler.HandlePollClonedEvent(newPoll);
 
+                Ballot creatorBallot = CreateBallotForCreator();
+                newPoll.Ballots.Add(creatorBallot);
+
                 context.Polls.Add(newPoll);
                 context.SaveChanges();
 
                 return new CopyPollResponseModel()
                 {
-                    newPollId = newPoll.UUID,
-                    newManageId = newPoll.ManageId
+                    NewPollId = newPoll.UUID,
+                    NewManageId = newPoll.ManageId,
+                    CreatorBallotToken = creatorBallot.TokenGuid
                 };
             }
         }
@@ -119,9 +121,9 @@ namespace VotingApplication.Web.Api.Controllers
                 NamedVoting = pollToCopy.NamedVoting,
                 ChoiceAdding = pollToCopy.ChoiceAdding,
 
-                ExpiryDate = pollToCopy.ExpiryDate,
-                LastUpdatedUtc = DateTime.Now,
-                CreatedDateUtc = DateTime.Now,
+                ExpiryDateUtc = pollToCopy.ExpiryDateUtc,
+                LastUpdatedUtc = DateTime.UtcNow,
+                CreatedDateUtc = DateTime.UtcNow,
 
 
                 Choices = CopyOptions(pollToCopy.Choices)
@@ -142,6 +144,15 @@ namespace VotingApplication.Web.Api.Controllers
                     Description = o.Description
                 })
                 .ToList();
+        }
+
+        private static Ballot CreateBallotForCreator()
+        {
+            return new Ballot
+            {
+                TokenGuid = Guid.NewGuid(),
+                ManageGuid = Guid.NewGuid()
+            };
         }
     }
 }

@@ -42,7 +42,8 @@ describe('Registered Dashboard Controller', function () {
         spyOn(mockRoutingService, 'navigateToManagePage').and.callThrough();
 
         mockTokenService = {
-            setToken: function () { }
+            setToken: function () { },
+            setManageId: function() { }
         };
         setTokenPromise = $q.defer();
         spyOn(mockTokenService, 'setToken').and.callFake(function () { return setTokenPromise.promise; });
@@ -210,9 +211,10 @@ describe('Registered Dashboard Controller', function () {
         it('Given a successful copy of a poll, calls routing service to navigate to the manage page', function () {
             var pollId = '07A2FD4E-71CC-42AF-84DC-504398289FC6';
 
-            var copiedPollData = { newManageId: 'E6DF016D-F10D-4E1C-9DB8-68D4073CD5F4' };
+            var copiedPollData = { data: { NewManageId: 'E6DF016D-F10D-4E1C-9DB8-68D4073CD5F4' } };
 
             copyPollPromise.resolve(copiedPollData);
+            setTokenPromise.resolve();
 
             scope.copyPoll(pollId);
 
@@ -224,7 +226,52 @@ describe('Registered Dashboard Controller', function () {
         it('Given a successful copy of a poll, calls routing service with the new manage id', function () {
             var pollId = '07A2FD4E-71CC-42AF-84DC-504398289FC6';
             var manageId = 'E6DF016D-F10D-4E1C-9DB8-68D4073CD5F4';
-            var copiedPollData = { newManageId: manageId };
+            var copiedPollData = { data: { NewManageId: manageId } };
+
+            copyPollPromise.resolve(copiedPollData);
+            setTokenPromise.resolve();
+
+            scope.copyPoll(pollId);
+
+
+            scope.$apply();
+            expect(mockRoutingService.navigateToManagePage).toHaveBeenCalledWith(manageId);
+        });
+
+        it('Given a successful copy of a poll, calls token service to save the returned ballot token', function () {
+            var pollId = '07A2FD4E-71CC-42AF-84DC-504398289FC6';
+            var manageId = 'E6DF016D-F10D-4E1C-9DB8-68D4073CD5F4';
+
+            var newPollId = '96D5AEAB-B409-4279-8097-6D3FAAB7DD43';
+            var creatorBallotToken = 'F6118B77-C037-4D19-96F1-A91E84C42990';
+            var copiedPollData = {
+                data: {
+                    NewPollId: newPollId,
+                    NewManageId: manageId,
+                    CreatorBallotToken: creatorBallotToken
+                }
+            };
+
+            copyPollPromise.resolve(copiedPollData);
+            setTokenPromise.resolve();
+
+            scope.copyPoll(pollId);
+
+
+            scope.$apply();
+            expect(mockTokenService.setToken).toHaveBeenCalledWith(newPollId, creatorBallotToken);
+        });
+
+        it('Given a successful copy of a poll, calls token service with the returned ballot token', function () {
+            var pollId = '07A2FD4E-71CC-42AF-84DC-504398289FC6';
+            var manageId = 'E6DF016D-F10D-4E1C-9DB8-68D4073CD5F4';
+            var creatorBallotToken = 'F6118B77-C037-4D19-96F1-A91E84C42990';
+            var copiedPollData = {
+                data: {
+                    NewManageId: manageId,
+                    CreatorBallotToken: creatorBallotToken
+                }
+            };
 
             copyPollPromise.resolve(copiedPollData);
 
@@ -232,7 +279,7 @@ describe('Registered Dashboard Controller', function () {
 
 
             scope.$apply();
-            expect(mockRoutingService.navigateToManagePage).toHaveBeenCalledWith(manageId);
+            expect(mockTokenService.setToken).toHaveBeenCalled();
         });
     });
 

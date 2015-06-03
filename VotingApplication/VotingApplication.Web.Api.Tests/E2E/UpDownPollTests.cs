@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Tests.E2E.Helpers;
 using VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers;
@@ -45,8 +44,8 @@ namespace VotingApplication.Web.Tests.E2E
                     UUID = PollGuid,
                     PollType = PollType.UpDown,
                     Name = "Test Poll",
-                    LastUpdatedUtc = DateTime.Now,
-                    CreatedDateUtc = DateTime.Now,
+                    LastUpdatedUtc = DateTime.UtcNow,
+                    CreatedDateUtc = DateTime.UtcNow,
                     Choices = testPollChoices,
                     InviteOnly = false,
                     NamedVoting = false,
@@ -206,8 +205,8 @@ namespace VotingApplication.Web.Tests.E2E
                     UUID = PollGuid,
                     PollType = PollType.UpDown,
                     Name = "Test Poll",
-                    LastUpdatedUtc = DateTime.Now,
-                    CreatedDateUtc = DateTime.Now,
+                    LastUpdatedUtc = DateTime.UtcNow,
+                    CreatedDateUtc = DateTime.UtcNow,
                     Choices = testPollChoices,
                     InviteOnly = true,
                     NamedVoting = false,
@@ -305,8 +304,8 @@ namespace VotingApplication.Web.Tests.E2E
                     UUID = PollGuid,
                     PollType = PollType.UpDown,
                     Name = "Test Poll",
-                    LastUpdatedUtc = DateTime.Now,
-                    CreatedDateUtc = DateTime.Now,
+                    LastUpdatedUtc = DateTime.UtcNow,
+                    CreatedDateUtc = DateTime.UtcNow,
                     Choices = testPollChoices,
                     InviteOnly = false,
                     NamedVoting = true,
@@ -435,8 +434,8 @@ namespace VotingApplication.Web.Tests.E2E
                     UUID = PollGuid,
                     PollType = PollType.UpDown,
                     Name = "Test Poll",
-                    LastUpdatedUtc = DateTime.Now,
-                    CreatedDateUtc = DateTime.Now,
+                    LastUpdatedUtc = DateTime.UtcNow,
+                    CreatedDateUtc = DateTime.UtcNow,
                     Choices = testPollChoices,
                     InviteOnly = false,
                     NamedVoting = false,
@@ -560,8 +559,8 @@ namespace VotingApplication.Web.Tests.E2E
                     UUID = PollGuid,
                     PollType = PollType.UpDown,
                     Name = "Test Poll",
-                    LastUpdatedUtc = DateTime.Now,
-                    CreatedDateUtc = DateTime.Now,
+                    LastUpdatedUtc = DateTime.UtcNow,
+                    CreatedDateUtc = DateTime.UtcNow,
                     Choices = testPollChoices,
                     InviteOnly = false,
                     NamedVoting = false,

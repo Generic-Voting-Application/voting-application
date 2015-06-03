@@ -13,6 +13,7 @@ describe('VotingPageController', function () {
     var mockRouteParams;
 
     var getTokenPromise;
+    var getManageIdPromise;
     var submitVotePromise;
     var getTokenVotesPromise;
     var getPollPromise;
@@ -32,6 +33,7 @@ describe('VotingPageController', function () {
         scope.poll = { Choices: [] };
 
         getTokenPromise = $q.defer();
+        getManageIdPromise = $q.defer();
 
         mockRouteParams = { pollId: '5130518A-4DA5-4FAA-B8FC-0242C9CAA079' };
 
@@ -40,7 +42,14 @@ describe('VotingPageController', function () {
             registerIdentityObserver: function () { },
             openLoginDialog: function () { }
         };
-        mockTokenService = { getToken: function () { return getTokenPromise.promise; } };
+        mockTokenService = {
+            getToken: function () {
+                return getTokenPromise.promise;
+            },
+            getManageId: function () {
+                return getManageIdPromise.promise;
+            }
+        };
 
         mockPollService = {
             getPoll: function () { }

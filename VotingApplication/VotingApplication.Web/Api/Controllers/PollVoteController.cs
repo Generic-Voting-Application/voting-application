@@ -94,7 +94,7 @@ namespace VotingApplication.Web.Api.Controllers
                     ThrowError(HttpStatusCode.NotFound, String.Format("Poll {0} not found", pollId));
                 }
 
-                if (poll.ExpiryDate.HasValue && poll.ExpiryDate < DateTime.Now)
+                if (poll.ExpiryDateUtc.HasValue && poll.ExpiryDateUtc < DateTime.UtcNow)
                 {
                     ThrowError(HttpStatusCode.Forbidden, String.Format("Poll {0} has expired", pollId));
                 }
@@ -165,7 +165,7 @@ namespace VotingApplication.Web.Api.Controllers
                     ballot.VoterName = Regex.Replace(ballotRequest.VoterName, ValidVoterNameRegex, "");
                 }
 
-                poll.LastUpdatedUtc = DateTime.Now;
+                poll.LastUpdatedUtc = DateTime.UtcNow;
 
                 context.SaveChanges();
             }

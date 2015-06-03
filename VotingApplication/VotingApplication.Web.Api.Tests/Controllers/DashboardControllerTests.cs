@@ -197,7 +197,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 const int maxPerVote = 2;
                 const bool inviteOnly = true;
                 const bool namedVoting = true;
-                DateTimeOffset? expiryDate = new DateTimeOffset(2015, 6, 2, 14, 2, 56, new TimeSpan());
+                DateTime? expiryDateUtc = new DateTime(2015, 6, 2, 14, 2, 56, DateTimeKind.Utc);
                 const bool optionAdding = true;
 
                 var existingPoll = new Poll()
@@ -210,7 +210,7 @@ namespace VotingApplication.Web.Tests.Controllers
                     MaxPerVote = maxPerVote,
                     InviteOnly = inviteOnly,
                     NamedVoting = namedVoting,
-                    ExpiryDate = expiryDate,
+                    ExpiryDateUtc = expiryDateUtc,
                     ChoiceAdding = optionAdding
                 };
 
@@ -240,7 +240,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 Assert.AreEqual(maxPerVote, copiedPoll.MaxPerVote);
                 Assert.AreEqual(inviteOnly, copiedPoll.InviteOnly);
                 Assert.AreEqual(namedVoting, copiedPoll.NamedVoting);
-                Assert.AreEqual(expiryDate, copiedPoll.ExpiryDate);
+                Assert.AreEqual(expiryDateUtc, copiedPoll.ExpiryDateUtc);
                 Assert.AreEqual(optionAdding, copiedPoll.ChoiceAdding);
             }
 
@@ -329,8 +329,8 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 Poll copiedPoll = dbPolls.ToList()[1];
 
-                Assert.AreEqual(copiedPoll.UUID, response.newPollId);
-                Assert.AreEqual(copiedPoll.ManageId, response.newManageId);
+                Assert.AreEqual(copiedPoll.UUID, response.NewPollId);
+                Assert.AreEqual(copiedPoll.ManageId, response.NewManageId);
             }
 
             [TestMethod]
@@ -351,6 +351,33 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 // Assert
                 metricHandler.Verify(m => m.HandlePollClonedEvent(It.Is<Poll>(p => p.Name == "Copy of Existing Poll" && p.UUID != Guid.Empty)), Times.Once());
+            }
+
+            [TestMethod]
+            public void CreatesBallotForCreator()
+            {
+                Guid pollId = new Guid("00DB2F1B-C4F5-44D3-960C-386CEB9690C4");
+
+                var existingPoll = new Poll() { CreatorIdentity = UserId1, UUID = pollId };
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                polls.Add(existingPoll);
+
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+
+                IContextFactory mockContextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots);
+                DashboardController controller = CreateDashboardController(mockContextFactory);
+
+                controller.User = CreateAuthenticatedUser(UserId1);
+
+                var request = new CopyPollRequestModel() { UUIDToCopy = pollId };
+
+
+                controller.Copy(request);
+
+
+                Poll copiedPoll = polls.ToList()[1];
+                Assert.AreEqual(1, copiedPoll.Ballots.Count());
             }
         }
 

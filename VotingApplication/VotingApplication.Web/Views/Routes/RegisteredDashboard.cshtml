@@ -1,25 +1,26 @@
-﻿<div ng-controller="RegisteredDashboardController">
+﻿<div id="registered-dashboard" ng-controller="RegisteredDashboardController">
     <div>
         <h2>Welcome {{account.email}}</h2>
     </div>
 
-    <form name="quickPollForm" ng-submit="createPoll(pollQuestion)">
+    <form name="quickPollForm" ng-submit="createPoll(quickPollForm.pollQuestion)">
         <div id="question-block">
             Your Question <br />
-            <input id="question" placeholder="E.g. Where should we go for lunch?" ng-model="pollQuestion" required />
+            <input id="question" placeholder="E.g. Where should we go for lunch?" ng-model="quickPollForm.pollQuestion" />
         </div>
 
         <div id="quickpoll-block">
-            <button type="submit" class="active-btn btn-medium shadowed" ng-disabled="quickPollForm.$invalid">Create Poll</button>
+            <button id="quickpoll-button" type="submit" class="active-btn btn-medium shadowed" ng-disabled="!quickPollForm.pollQuestion">Create Poll</button>
         </div>
     </form>
-    <h2>Your polls</h2>
+
+    <h2 ng-show="userPolls.length > 0">Your polls</h2>
     <div ng-repeat="poll in userPolls">
 
         <div class="poll-panel">
             <div class="poll-panel-header">
                 <span class="poll-panel-pollName">{{ poll.Name }}</span>
-                <h4>{{ poll.CreatedDate | momentFilter: 'Do MMM YYYY, h:mm a'}}</h4>
+                <h4>{{ poll.CreatedDateUtc | momentDisplayFilter: 'Do MMM YYYY, h:mm a'}}</h4>
             </div>
             <div class="poll-panel-buttons">
                 <a href="{{manageUrl(poll.ManageId)}}">
@@ -30,4 +31,9 @@
 
         </div>
     </div>
+
+    <h4 class="text-centered" ng-show="!userPolls || userPolls.length == 0">
+        You don't appear to have created any polls. <br />
+        Any polls you create will be listed here
+    </h4>
 </div>

@@ -88,7 +88,7 @@ namespace VotingApplication.Web.Api.Controllers
                 AddNewOptions(context, poll, optionUpdatesToAdd);
 
 
-                poll.LastUpdatedUtc = DateTime.Now;
+                poll.LastUpdatedUtc = DateTime.UtcNow;
                 context.SaveChanges();
             }
         }
