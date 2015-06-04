@@ -1,12 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OpenQA.Selenium;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OpenQA.Selenium;
 using VotingApplication.Data.Model;
-using VotingApplication.Web.Api.Tests.E2E.Helpers;
+using VotingApplication.Web.Tests.E2E.Helpers;
 
-namespace VotingApplication.Web.Api.Tests.E2E
+namespace VotingApplication.Web.Tests.E2E
 {
     [TestClass]
     public class RegisteredDashboardTests : E2ETest

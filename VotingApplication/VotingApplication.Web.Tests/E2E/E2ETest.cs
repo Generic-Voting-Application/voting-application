@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using System;
+using System.Threading;
+using Microsoft.AspNet.Identity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Protractor;
-using System;
-using System.Threading;
 using VotingApplication.Web.Api.Models;
-using VotingApplication.Web.Api.Tests.E2E.Helpers;
+using VotingApplication.Web.Tests.E2E.Helpers;
 
-namespace VotingApplication.Web.Api.Tests.E2E
+namespace VotingApplication.Web.Tests.E2E
 {
     [TestClass]
     public class E2ETest

@@ -1,9 +1,8 @@
 ﻿using System.Data.Entity;
 using System.Linq;
-using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 
-namespace VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers
+namespace VotingApplication.Web.Tests.E2E.Helpers.Clearers
 {
     public class PollClearer : Clearer
     {
