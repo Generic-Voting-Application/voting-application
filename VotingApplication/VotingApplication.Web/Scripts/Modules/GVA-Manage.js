@@ -50,7 +50,7 @@
                     templateUrl: '../Routes/AccountResetPassword'
                 })
                 .otherwise({
-                    templateUrl: '../Routes/HomePage'
+                    templateUrl: '../Routes/Create'
                 });
         }])
         .config(['uiZeroclipConfigProvider', function (uiZeroclipConfigProvider) {

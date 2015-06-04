@@ -154,7 +154,7 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
-        public ActionResult HomePage()
+        public ActionResult Create()
         {
             return View();
         }

@@ -343,6 +343,7 @@
     <Content Include="Scripts\Controllers\MultiVoteController.js" />
     <Content Include="Scripts\Controllers\ResultsPageController.js" />
     <Content Include="Scripts\Controllers\PointsVoteController.js" />
+    <Content Include="Scripts\Controllers\CreatePageController.js" />
     <Content Include="Scripts\Controllers\UnregisteredDashboardController.js" />
     <Content Include="Scripts\Controllers\UpDownVoteController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
@@ -396,7 +397,7 @@
     <Content Include="Views\Routes\ManageExpiry.cshtml" />
     <Content Include="Views\Routes\DatePicker.cshtml" />
     <Content Include="Views\Routes\RegisteredDashboard.cshtml" />
-    <Content Include="Views\Routes\HomePage.cshtml" />
+    <Content Include="Views\Routes\Create.cshtml" />
     <Content Include="Content\Scss\DateTimePicker.scss" />
     <Content Include="Views\Routes\TimePicker.cshtml" />
     <Content Include="Views\Routes\ManageVoters.cshtml" />
