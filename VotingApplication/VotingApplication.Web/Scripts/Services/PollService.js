@@ -44,7 +44,7 @@
             });
         }
 
-        function createPoll(question) {
+        function createPoll(question, choices) {
             var token;
             if (AccountService.account) {
                 token = AccountService.account.token;
@@ -60,7 +60,10 @@
                     'Content-Type': 'application/json; charset=utf-8',
                     'Authorization': 'Bearer ' + token
                 },
-                data: JSON.stringify({ PollName: question })
+                data: JSON.stringify({
+                    PollName: question,
+                    Choices: choices
+                })
             });
 
         }

@@ -26,7 +26,7 @@
             AccountService.openRegisterDialog($scope);
         }
 
-        function createNewPoll(question) {
+        function createNewPoll(question, options) {
             PollService.createPoll(question)
             .then(createPollSuccessCallback);
         }
