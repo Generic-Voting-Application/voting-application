@@ -143,6 +143,7 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="RunE2ETests.ps1" />
     <None Include="RunJavascriptTests.ps1" />
     <None Include="Chutzpah.json" />
   </ItemGroup>
