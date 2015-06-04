@@ -46,6 +46,11 @@
                         return '../Routes/ManageExpiry/' + params['manageId'];
                     }
                 })
+                .when('/MyPolls/', {
+                    templateUrl: function (params) {
+                        return '../Routes/MyPolls/';
+                    }
+                })
                 .when('/Account/ResetPassword', {
                     templateUrl: '../Routes/AccountResetPassword'
                 })

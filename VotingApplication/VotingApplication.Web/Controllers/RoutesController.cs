@@ -68,12 +68,6 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
-        public ActionResult UnregisteredDashboard()
-        {
-            LogPageEvent("UnregisteredDashboard");
-            return View();
-        }
-
         public ActionResult AccountLogin()
         {
             LogPageEvent("Login");
@@ -138,9 +132,9 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
-        public ActionResult RegisteredDashboard()
+        public ActionResult MyPolls()
         {
-            LogPageEvent("RegisteredDashboard");
+            LogPageEvent("MyPolls");
             return View();
         }
 
