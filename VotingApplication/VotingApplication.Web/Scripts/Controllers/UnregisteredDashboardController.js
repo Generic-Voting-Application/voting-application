@@ -6,7 +6,7 @@
     'use strict';
 
     angular
-        .module('GVA.Creation')
+        .module('GVA.Manage')
         .controller('UnregisteredDashboardController', UnregisteredDashboardController);
 
     UnregisteredDashboardController.$inject = ['$scope', 'AccountService', 'RoutingService', 'TokenService', 'PollService'];
@@ -37,7 +37,7 @@
             TokenService.setManageId(data.UUID, data.ManageId)
                 .then(TokenService.setToken(data.UUID, data.CreatorBallot.TokenGuid)
                 .then(function () {
-                    RoutingService.navigateToManagePage(data.ManageId);
+                    RoutingService.navigateToVotePage(data.UUID, data.CreatorBallot.TokenGuid);
                 }));
         }
     }

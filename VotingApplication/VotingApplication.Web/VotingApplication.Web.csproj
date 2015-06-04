@@ -299,7 +299,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\DashboardController.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RoutesController.cs" />
     <Compile Include="Controllers\PollController.cs" />
     <Compile Include="Global.asax.cs">
@@ -360,7 +360,7 @@
     <Content Include="Scripts\Lib\moment-min.js" />
     <Content Include="Scripts\Lib\ZeroClipboard-min.js" />
     <Content Include="Scripts\Modules\GVA-Common.js" />
-    <Content Include="Scripts\Modules\GVA-Creation.js" />
+    <Content Include="Scripts\Modules\GVA-Manage.js" />
     <Content Include="Scripts\Modules\GVA-Poll.js" />
     <Content Include="Scripts\Lib\angular-min.js" />
     <Content Include="Scripts\Lib\angular-route-min.js" />
@@ -387,7 +387,7 @@
     <Content Include="Views\Routes\UnregisteredDashboard.cshtml" />
     <Content Include="Scripts\Lib\angular-route-min.js.map" />
     <Content Include="Scripts\Lib\angular-min.js.map" />
-    <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Routes\Manage.cshtml" />
     <Content Include="Views\Routes\MultiVote.cshtml" />
     <Content Include="Views\Routes\ManageChoices.cshtml" />
@@ -431,7 +431,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="Content\Scss\Creation.scss" />
+    <Content Include="Content\Scss\Manage.scss" />
     <Content Include="Content\Scss\Voting.scss" />
     <Content Include="Views\Routes\Vote.cshtml" />
     <Content Include="Views\Routes\Results.cshtml" />

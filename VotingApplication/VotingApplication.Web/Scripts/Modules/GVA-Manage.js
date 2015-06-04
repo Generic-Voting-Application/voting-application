@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('GVA.Creation', ['ngRoute', 'ngDialog', 'ngStorage', 'zeroclipboard', 'toggle-switch', 'GVA.Common', 'GVA.Poll'])
+        .module('GVA.Manage', ['ngRoute', 'ngDialog', 'ngStorage', 'zeroclipboard', 'toggle-switch', 'GVA.Common', 'GVA.Poll'])
         .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider

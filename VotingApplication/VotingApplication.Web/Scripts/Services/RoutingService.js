@@ -54,7 +54,7 @@
         }
 
         function getManagePageUrl(manageId, subPage) {
-            var url = '/Dashboard/#/Manage/' + manageId;
+            var url = '/Manage/#/Manage/' + manageId;
             if (subPage) {
                 url += '/' + subPage;
             }
