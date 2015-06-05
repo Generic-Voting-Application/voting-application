@@ -1,8 +1,8 @@
 ﻿'use strict';
 
-describe('Registered Dashboard Controller', function () {
+describe('My Polls Controller', function () {
 
-    beforeEach(module('GVA.Creation'));
+    beforeEach(module('GVA.Manage'));
 
 
     var scope;
@@ -16,10 +16,7 @@ describe('Registered Dashboard Controller', function () {
     var getUserPollsPromise;
     var copyPollPromise;
     var setTokenPromise;
-
-    var newPollUUID = '9C884B24-9B76-4FF8-A074-36AEB1EC3920';
-    var newTokenGuid = 'B14A90C0-078A-4996-B0FA-EA09A0EB6FFE';
-
+    
     beforeEach(inject(function ($rootScope, $q, $controller) {
 
         scope = $rootScope.$new();
@@ -53,7 +50,7 @@ describe('Registered Dashboard Controller', function () {
         };
         spyOn(mockAccountService, 'registerAccountObserver').and.callThrough();
 
-        $controller('RegisteredDashboardController', {
+        $controller('MyPollsController', {
             $scope: scope,
             PollService: mockPollService,
             RoutingService: mockRoutingService,
@@ -82,120 +79,6 @@ describe('Registered Dashboard Controller', function () {
         getUserPollsPromise.resolve(response);
         scope.$apply();
         expect(scope.userPolls).toEqual(userPollData);
-    });
-
-    describe('Create Poll', function () {
-
-        it('Calls poll service to create new poll', function () {
-            var question = 'Where shall we go?';
-
-            scope.createPoll(question);
-
-
-            expect(mockPollService.createPoll).toHaveBeenCalled();
-        });
-
-        it('Given a successful creation of a poll, calls routing service to navigate to the manage page', function () {
-            var question = 'Where shall we go?';
-
-            var data = {
-                UUID: newPollUUID,
-                CreatorBallot: {
-                    TokenGuid: newTokenGuid
-                }
-            };
-            var response = { data: data };
-            createPollPromise.resolve(response);
-            setTokenPromise.resolve();
-
-            scope.createPoll(question);
-
-            scope.$apply();
-            expect(mockRoutingService.navigateToManagePage).toHaveBeenCalled();
-        });
-
-        it('Given a successful creation of a poll, calls routing service with new ManageId', function () {
-            var manageGuid = '0F4F3122-B786-4F5A-B2F0-808A67B916FA';
-
-            var question = 'Where shall we go?';
-
-            var data = {
-                UUID: newPollUUID,
-                CreatorBallot: {
-                    TokenGuid: newTokenGuid
-                },
-                ManageId: manageGuid
-            };
-            var response = { data: data };
-            createPollPromise.resolve(response);
-            setTokenPromise.resolve();
-
-            scope.createPoll(question);
-
-
-            scope.$apply();
-            expect(mockRoutingService.navigateToManagePage).toHaveBeenCalledWith(manageGuid);
-        });
-
-        it('Given a successful creation of a poll, calls token service to set the token', function () {
-            var question = 'Where shall we go?';
-            var data = {
-                UUID: newPollUUID,
-                CreatorBallot: {
-                    TokenGuid: newTokenGuid
-                }
-            };
-            var response = { data: data };
-            createPollPromise.resolve(response);
-
-            scope.createPoll(question);
-
-
-            scope.$apply();
-            expect(mockTokenService.setToken).toHaveBeenCalled();
-        });
-
-        it('Given a successful creation of a poll, calls token service with the new creator token', function () {
-            var data = {
-                UUID: newPollUUID,
-                CreatorBallot: {
-                    TokenGuid: newTokenGuid
-                }
-            };
-            var response = { data: data };
-            createPollPromise.resolve(response);
-
-            var question = 'Where shall we go?';
-
-            scope.createPoll(question);
-
-            scope.$apply();
-            expect(mockTokenService.setToken).toHaveBeenCalledWith(newPollUUID, newTokenGuid);
-        });
-
-        it('Given a successful creation of a poll, calls routing service only once token service has finished', function () {
-            var question = 'Where shall we go?';
-
-            var data = {
-                UUID: newPollUUID,
-                CreatorBallot: {
-                    TokenGuid: newTokenGuid
-                }
-            };
-            var response = { data: data };
-            createPollPromise.resolve(response);
-
-            scope.createPoll(question);
-
-
-            // Should not be called until the promise is resolved.
-            scope.$apply();
-            expect(mockRoutingService.navigateToManagePage).not.toHaveBeenCalled();
-
-            setTokenPromise.resolve();
-            scope.$apply();
-            expect(mockRoutingService.navigateToManagePage).toHaveBeenCalled();
-        });
     });
 
     describe('Copy Poll', function () {

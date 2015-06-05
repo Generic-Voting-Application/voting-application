@@ -47,7 +47,7 @@
                     }
                 })
                 .when('/MyPolls/', {
-                    templateUrl: function (params) {
+                    templateUrl: function () {
                         return '../Routes/MyPolls/';
                     }
                 })

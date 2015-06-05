@@ -331,7 +331,7 @@
     <Content Include="Scripts\Controllers\ManageExpiryController.js" />
     <Content Include="Scripts\Controllers\ManagePollTypeController.js" />
     <Content Include="Scripts\Controllers\AccountResetPasswordController.js" />
-    <Content Include="Scripts\Controllers\RegisteredDashboardController.js" />
+    <Content Include="Scripts\Controllers\MyPollsController.js" />
     <Content Include="Scripts\Controllers\HomepageController.js" />
     <Content Include="Scripts\Controllers\ManageInviteesController.js" />
     <Content Include="Scripts\Controllers\ManageMiscController.js" />

@@ -5,14 +5,15 @@
 
         <form name="quickPollForm" ng-submit="createQuickPoll(quickPollForm.pollQuestion, quickPollForm.choices)">
             <div class="manage-section">
-                <label for="question">Question:</label>
-                <input id="question" class="full-width form-input" placeholder="E.g. Where should we go for lunch?" ng-model="quickPollForm.pollQuestion" />
+                <label for="quickpoll-question">Question:</label>
+                <input id="quickpoll-question" class="full-width form-input" placeholder="E.g. Where should we go for lunch?" ng-model="quickPollForm.pollQuestion" />
             </div>
 
             <div id="choices-block" class="manage-section">
                 Choices:
                 <div ng-repeat="choice in quickPollForm.choices" class="manage-section-row">
-                    <input class="full-width form-input-small"
+                    <input id="quickpoll-choice"
+                           class="full-width form-input-small"
                            placeholder="{{'Choice ' + ($index + 1)}}"
                            ng-keydown="balanceChoices(quickPollForm.choices)"
                            ng-model="choice.Name" />
@@ -39,8 +40,8 @@
 
         <form name="customPollForm" ng-submit="createCustomPoll(customPollForm.pollQuestion)">
             <div id="question-block" class="manage-section">
-                <label for="question">Question:</label>
-                <input id="question" class="full-width form-input" placeholder="E.g. How do you travel to work?" ng-model="customPollForm.pollQuestion" />
+                <label for="custompoll-question">Question:</label>
+                <input id="custompoll-question" class="full-width form-input" placeholder="E.g. How do you travel to work?" ng-model="customPollForm.pollQuestion" />
             </div>
 
             <div class="manage-section flexbox">

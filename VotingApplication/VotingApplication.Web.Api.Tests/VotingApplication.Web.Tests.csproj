@@ -120,7 +120,7 @@
     <Compile Include="E2E\MultiPollTests.cs" />
     <Compile Include="E2E\PointsPollTests.cs" />
     <Compile Include="E2E\RegisteredDashboardTests.cs" />
-    <Compile Include="E2E\UnregisteredDashboardTests.cs" />
+    <Compile Include="E2E\CreationPageTests.cs" />
     <Compile Include="E2E\UpDownPollTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers\ContextFactoryTestHelper.cs" />
@@ -167,8 +167,8 @@
     <Content Include="Scripts\Controllers\ManagePollTypeControllerTests.js" />
     <Content Include="Scripts\Controllers\MultiVoteControllerTests.js" />
     <Content Include="Scripts\Controllers\PointsVoteControllerTests.js" />
-    <Content Include="Scripts\Controllers\RegisteredDashboardControllerTests.js" />
-    <Content Include="Scripts\Controllers\UnregisteredDashboardControllerTests.js" />
+    <Content Include="Scripts\Controllers\MyPollsControllerTests.js" />
+    <Content Include="Scripts\Controllers\CreatePageControllerTests.js" />
     <Content Include="Scripts\Controllers\UpDownVoteControllerTests.js" />
     <Content Include="Scripts\Controllers\VotingPageControllerTests.js" />
     <Content Include="Scripts\Services\AccountServiceTests.js" />

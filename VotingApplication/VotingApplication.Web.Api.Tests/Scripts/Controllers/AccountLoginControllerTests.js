@@ -132,6 +132,7 @@ describe('AccountLoginController', function () {
 
         it('Calls the account service for a forgotten password', function () {
             var form = {
+
                 email: 'user@example.com'
             };
 

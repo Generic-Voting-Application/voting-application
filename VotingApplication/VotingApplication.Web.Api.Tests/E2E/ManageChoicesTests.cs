@@ -21,7 +21,7 @@ namespace VotingApplication.Web.Tests.E2E
         private static readonly int DialogClearWaitTime = 1000;
         private static readonly Guid PollGuid = Guid.NewGuid();
         private static readonly Guid PollManageGuid = Guid.NewGuid();
-        private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid + "/Choices";
+        private static readonly string PollUrl = SiteBaseUri + "Manage/#/Manage/" + PollManageGuid + "/Choices";
 
         private ITestVotingContext _context;
         private Poll _defaultPoll;
@@ -119,7 +119,7 @@ namespace VotingApplication.Web.Tests.E2E
 
             cancelButton.Click();
 
-            Assert.AreEqual(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId, _driver.Url);
+            Assert.AreEqual(SiteBaseUri + "Manage/#/Manage/" + _defaultPoll.ManageId, _driver.Url);
         }
 
 

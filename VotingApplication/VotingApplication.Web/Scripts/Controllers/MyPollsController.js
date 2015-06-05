@@ -7,15 +7,14 @@
 
     angular
         .module('GVA.Manage')
-        .controller('RegisteredDashboardController', RegisteredDashboardController);
+        .controller('MyPollsController', MyPollsController);
 
-    RegisteredDashboardController.$inject = ['$scope', 'AccountService', 'PollService', 'RoutingService', 'TokenService'];
+    MyPollsController.$inject = ['$scope', 'AccountService', 'PollService', 'RoutingService', 'TokenService'];
 
-    function RegisteredDashboardController($scope, AccountService, PollService, RoutingService, TokenService) {
+    function MyPollsController($scope, AccountService, PollService, RoutingService, TokenService) {
 
         var UNAUTHORISED = 401;
 
-        $scope.createPoll = createNewPoll;
         $scope.getUserPolls = getUserPolls;
         $scope.manageUrl = manageUrl;
         $scope.copyPoll = copyPoll;
@@ -27,22 +26,6 @@
 
         function activate() {
             getUserPolls();
-        }
-
-
-        function createNewPoll(question) {
-            PollService.createPoll(question)
-            .then(createPollSuccessCallback);
-        }
-
-        function createPollSuccessCallback(response) {
-            var data = response.data;
-
-            TokenService.setManageId(data.UUID, data.ManageId)
-               .then(TokenService.setToken(data.UUID, data.CreatorBallot.TokenGuid)
-               .then(function () {
-                   RoutingService.navigateToManagePage(data.ManageId);
-               }));
         }
 
         function getUserPolls() {
