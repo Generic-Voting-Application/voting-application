@@ -10,7 +10,7 @@
 
     <br />
 
-    <div ng-hide="hasExpired" class="flexbox">
-        <a class="btn inactive-btn centered" ng-href="{{votingLink}}">Go to poll</a>
+    <div ng-hide="hasExpired || isElectionMode" class="flexbox">
+        <a id="poll-button" class="btn inactive-btn centered" ng-href="{{votingLink}}">Go to poll</a>
     </div>
 </div>

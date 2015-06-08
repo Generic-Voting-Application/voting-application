@@ -21,11 +21,11 @@ namespace VotingApplication.Web.Api.Controllers
         public PollResultsController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpGet]
-        public ResultsRequestResponseModel Get(Guid pollId)
+        public ResultsRequestResponseModel Get(ResultsRequestModel request)
         {
             using (IVotingContext context = _contextFactory.CreateContext())
             {
-                Poll poll = PollByPollId(pollId, context);
+                Poll poll = PollByPollId(request.PollId, context);
 
                 if (Request.RequestUri != null)
                 {
@@ -41,7 +41,7 @@ namespace VotingApplication.Web.Api.Controllers
 
                     if (poll.LastUpdatedUtc < clientLastUpdated)
                     {
-                        _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.NotModified, pollId);
+                        _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.NotModified, request.PollId);
                         throw new HttpResponseException(HttpStatusCode.NotModified);
                     }
                 }
@@ -49,7 +49,7 @@ namespace VotingApplication.Web.Api.Controllers
                 List<Vote> votes = context
                     .Votes
                     .Include(v => v.Poll)
-                    .Where(v => v.Poll.UUID == pollId)
+                    .Where(v => v.Poll.UUID == request.PollId)
                     .Include(v => v.Choice)
                     .Include(v => v.Ballot)
                     .ToList();
@@ -58,7 +58,7 @@ namespace VotingApplication.Web.Api.Controllers
                     .Select(VoteToModel)
                     .ToList();
 
-                _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.OK, pollId);
+                _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.OK, request.PollId);
 
                 ResultsRequestResponseModel results = SummariseVotes(votes, poll);
                 results.Votes = responseVotes;

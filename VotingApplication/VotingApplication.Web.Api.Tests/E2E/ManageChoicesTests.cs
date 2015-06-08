@@ -45,7 +45,7 @@ namespace VotingApplication.Web.Tests.E2E
                 InviteOnly = false,
                 NamedVoting = false,
                 ChoiceAdding = false,
-                HiddenResults = false,
+                IsElectionMode = false,
                 MaxPerVote = 3,
                 MaxPoints = 4
             };

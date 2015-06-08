@@ -14,6 +14,6 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
         public DateTime? ExpiryDateUtc { get; set; }
         public bool ChoiceAdding { get; set; }
         public List<Choice> Choices { get; set; }
-        public bool HiddenResults { get; set; }
+        public bool IsElectionMode { get; set; }
     }
 }

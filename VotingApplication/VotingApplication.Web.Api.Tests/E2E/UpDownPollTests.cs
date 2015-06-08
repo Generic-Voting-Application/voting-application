@@ -50,7 +50,7 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    HiddenResults = false
+                    IsElectionMode = false
                 };
 
                 _context.Polls.Add(_defaultUpDownPoll);
@@ -211,7 +211,7 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = true,
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    HiddenResults = false,
+                    IsElectionMode = false,
                     Ballots = new List<Ballot>()
                     {
                         new Ballot() { TokenGuid = Guid.NewGuid() }
@@ -310,7 +310,7 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = true,
                     ChoiceAdding = false,
-                    HiddenResults = false
+                    IsElectionMode = false
                 };
 
                 _context.Polls.Add(_namedUpDownPoll);
@@ -440,7 +440,7 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = false,
                     ChoiceAdding = true,
-                    HiddenResults = false
+                    IsElectionMode = false
                 };
 
                 _context.Polls.Add(_choiceAddingUpDownPoll);
@@ -536,10 +536,10 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestClass]
-        public class HiddenResultsConfiguration
+        public class IsElectionModeConfiguration
         {
             private static ITestVotingContext _context;
-            private static Poll _hiddenResultsUpDownPoll;
+            private static Poll _isElectionModeUpDownPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
             private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
             private IWebDriver _driver;
@@ -554,7 +554,7 @@ namespace VotingApplication.Web.Tests.E2E
                 };
 
                 // Open, Anonymous, No Choice Adding, Shown Results
-                _hiddenResultsUpDownPoll = new Poll()
+                _isElectionModeUpDownPoll = new Poll()
                 {
                     UUID = PollGuid,
                     PollType = PollType.UpDown,
@@ -565,10 +565,10 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    HiddenResults = true
+                    IsElectionMode = true
                 };
 
-                _context.Polls.Add(_hiddenResultsUpDownPoll);
+                _context.Polls.Add(_isElectionModeUpDownPoll);
                 _context.SaveChanges();
             }
 
@@ -576,7 +576,7 @@ namespace VotingApplication.Web.Tests.E2E
             public static void ClassCleanup()
             {
                 PollClearer pollTearDown = new PollClearer(_context);
-                pollTearDown.ClearPoll(_hiddenResultsUpDownPoll);
+                pollTearDown.ClearPoll(_isElectionModeUpDownPoll);
 
                 _context.Dispose();
             }
@@ -596,7 +596,7 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod, TestCategory("E2E")]
-            public void HiddenResultsPoll_DoesNotShowResultsButton()
+            public void IsElectionModePoll_DoesNotShowResultsButton()
             {
                 _driver.Navigate().GoToUrl(PollUrl);
                 IWebElement resultButton = _driver.FindElement(By.Id("results-button"));

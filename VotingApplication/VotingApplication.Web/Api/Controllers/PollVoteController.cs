@@ -141,6 +141,11 @@ namespace VotingApplication.Web.Api.Controllers
                     .Where(v => v.Ballot.TokenGuid == tokenGuid && v.Poll.UUID == pollId)
                     .ToList();
 
+                if (poll.IsElectionMode && existingVotes.Count > 0)
+                {
+                    ThrowError(HttpStatusCode.BadRequest, "Votes for this poll can not be changed");
+                }
+
                 foreach (Vote contextVote in existingVotes)
                 {
                     _metricHandler.HandleVoteDeletedEvent(contextVote, pollId);

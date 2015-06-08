@@ -146,12 +146,12 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setAllowOptionAdding);
         }
 
-        public void HandleHiddenResultsChangedEvent(bool hiddenResults, Guid pollId)
+        public void HandleIsElectionModeChangedEvent(bool isElectionMode, Guid pollId)
         {
-            Metric setHiddenResults = new Metric(MetricType.SetHiddenResults, pollId);
-            setHiddenResults.Value = (hiddenResults) ? "True" : "False";
-            setHiddenResults.Detail = (hiddenResults) ? "Results hidden before voting" : "Results visible before voting";
-            StoreEvent(setHiddenResults);
+            Metric setIsElectionMode = new Metric(MetricType.SetIsElectionMode, pollId);
+            setIsElectionMode.Value = (isElectionMode) ? "True" : "False";
+            setIsElectionMode.Detail = (isElectionMode) ? "Results hidden before voting" : "Results visible before voting";
+            StoreEvent(setIsElectionMode);
         }
 
         #endregion
@@ -264,7 +264,7 @@ namespace VotingApplication.Web.Api.Metrics
         // Make sure we are using the PollId, not the corresponding ManageId, if available
         private Guid GetExistingPollId(Guid guid)
         {
-            if(guid == Guid.Empty)
+            if (guid == Guid.Empty)
             {
                 return Guid.Empty;
             }

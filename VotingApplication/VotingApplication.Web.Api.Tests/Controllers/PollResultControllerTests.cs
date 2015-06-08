@@ -89,8 +89,14 @@ namespace VotingApplication.Web.Tests.Controllers
         [TestMethod]
         public void GetIsAllowed()
         {
+            // Arrange
+            ResultsRequestModel request = new ResultsRequestModel()
+            {
+                BallotGuid = _mainUUID
+            };
+
             // Act
-            _controller.Get(_mainUUID);
+            _controller.Get(request);
         }
 
         [TestMethod]
@@ -99,14 +105,25 @@ namespace VotingApplication.Web.Tests.Controllers
         {
             // Act
             Guid newGuid = Guid.NewGuid();
-            _controller.Get(newGuid);
+            ResultsRequestModel request = new ResultsRequestModel()
+            {
+                BallotGuid = newGuid
+            };
+
+            _controller.Get(request);
         }
 
         [TestMethod]
         public void GetReturnsVotesForThatPoll()
         {
+            // Arrange
+            ResultsRequestModel request = new ResultsRequestModel()
+            {
+                BallotGuid = _mainUUID
+            };
+
             // Act
-            var response = _controller.Get(_mainUUID);
+            var response = _controller.Get(request);
 
             // Assert
             var responseVotes = response.Votes;
@@ -117,8 +134,14 @@ namespace VotingApplication.Web.Tests.Controllers
         [TestMethod]
         public void GetOnEmptyPollReturnsEmptyList()
         {
+            // Arrange
+            ResultsRequestModel request = new ResultsRequestModel()
+            {
+                BallotGuid = _emptyUUID
+            };
+
             // Act
-            var response = _controller.Get(_emptyUUID);
+            var response = _controller.Get(request);
 
             // Assert
             var responseVotes = response.Votes;
@@ -128,8 +151,14 @@ namespace VotingApplication.Web.Tests.Controllers
         [TestMethod]
         public void GetOnAnonPollDoesNotReturnUsernames()
         {
+            // Arrange
+            ResultsRequestModel request = new ResultsRequestModel()
+            {
+                BallotGuid = _anonymousUUID
+            };
+
             // Act
-            var response = _controller.Get(_anonymousUUID);
+            var response = _controller.Get(request);
 
             // Assert
             var responseVotes = response.Votes;
@@ -140,11 +169,17 @@ namespace VotingApplication.Web.Tests.Controllers
         [TestMethod]
         public void GetWithLowTimestampReturnsResults()
         {
+            // Arrange
+            ResultsRequestModel request = new ResultsRequestModel()
+            {
+                BallotGuid = _mainUUID
+            };
+
             // Act
             Uri requestURI;
             Uri.TryCreate("http://localhost/?lastRefreshed=0", UriKind.Absolute, out requestURI);
             _controller.Request.RequestUri = requestURI;
-            var response = _controller.Get(_mainUUID);
+            var response = _controller.Get(request);
 
             // Assert
             var responseVotes = response.Votes;
@@ -155,18 +190,30 @@ namespace VotingApplication.Web.Tests.Controllers
         [ExpectedHttpResponseException(HttpStatusCode.NotModified)]
         public void GetWithHighTimestampReturnsNotModified()
         {
+            // Arrange
+            ResultsRequestModel request = new ResultsRequestModel()
+            {
+                BallotGuid = _mainUUID
+            };
+
             // Act
             Uri requestURI;
             Uri.TryCreate("http://localhost/?lastRefreshed=2145916800000", UriKind.Absolute, out requestURI);
             _controller.Request.RequestUri = requestURI;
-            var response = _controller.Get(_mainUUID);
+            var response = _controller.Get(request);
         }
 
         [TestMethod]
         public void GetReturnsWinnerForThatPoll()
         {
+            // Arrange
+            ResultsRequestModel request = new ResultsRequestModel()
+            {
+                BallotGuid = _mainUUID
+            };
+
             // Act
-            var response = _controller.Get(_mainUUID);
+            var response = _controller.Get(request);
 
             // Assert
             List<Choice> responseWinners = response.Winners;
@@ -180,8 +227,14 @@ namespace VotingApplication.Web.Tests.Controllers
         [TestMethod]
         public void GetReturnsSummaryForThatPoll()
         {
+            // Arrange
+            ResultsRequestModel request = new ResultsRequestModel()
+            {
+                BallotGuid = _mainUUID
+            };
+
             // Act
-            var response = _controller.Get(_mainUUID);
+            var response = _controller.Get(request);
 
             // Assert
             List<ResultModel> responseResults = response.Results;
@@ -249,8 +302,12 @@ namespace VotingApplication.Web.Tests.Controllers
                     Request = new HttpRequestMessage()
                 };
 
+                ResultsRequestModel request = new ResultsRequestModel()
+                {
+                    BallotGuid = _pollManageGuid
+                };
 
-                ResultsRequestResponseModel response = controller.Get(_pollManageGuid);
+                ResultsRequestResponseModel response = controller.Get(request);
 
 
                 List<ResultVoteModel> voters = response
@@ -311,8 +368,12 @@ namespace VotingApplication.Web.Tests.Controllers
                     Request = new HttpRequestMessage()
                 };
 
+                ResultsRequestModel request = new ResultsRequestModel()
+                {
+                    BallotGuid = _pollManageGuid
+                };
 
-                ResultsRequestResponseModel response = controller.Get(_pollManageGuid);
+                ResultsRequestResponseModel response = controller.Get(request);
 
 
                 List<ResultVoteModel> voters = response
@@ -373,8 +434,12 @@ namespace VotingApplication.Web.Tests.Controllers
                     Request = new HttpRequestMessage()
                 };
 
+                ResultsRequestModel request = new ResultsRequestModel()
+                {
+                    BallotGuid = _pollManageGuid
+                };
 
-                ResultsRequestResponseModel response = controller.Get(_pollManageGuid);
+                ResultsRequestResponseModel response = controller.Get(request);
 
 
                 var expectedVoterNames = new List<string>() { "Bob", "Bob", "Anonymous Voter" };
@@ -386,6 +451,62 @@ namespace VotingApplication.Web.Tests.Controllers
                     .ToList();
 
                 CollectionAssert.AreEquivalent(expectedVoterNames, voterNames);
+            }
+
+            [TestMethod]
+            [ExpectedHttpResponseException(HttpStatusCode.Forbidden)]
+            public void ElectionMode_True_ThrowsExceptionForInvalid()
+            {
+                /* poll
+                      ballot1
+                        vote1   (option 1)
+                 */
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var poll = new Poll()
+                {
+                    UUID = _pollManageGuid,
+                    NamedVoting = false
+                };
+                polls.Add(poll);
+
+                IDbSet<Choice> options = DbSetTestHelper.CreateMockDbSet<Choice>();
+                var option1 = new Choice() { PollChoiceNumber = 1 };
+                var option2 = new Choice() { PollChoiceNumber = 2 };
+                options.Add(option1);
+                options.Add(option2);
+
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                var ballot1 = new Ballot() { VoterName = "Barbara" };
+                ballots.Add(ballot1);
+
+                IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
+                var vote1 = new Vote() { Choice = option1, Poll = poll, Ballot = ballot1 };
+                votes.Add(vote1);
+
+                ballot1.Votes.Add(vote1);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes, options);
+
+                var controller = new PollResultsController(contextFactory, Mock.Of<IMetricHandler>())
+                {
+                    Request = new HttpRequestMessage()
+                };
+
+                ResultsRequestModel request = new ResultsRequestModel()
+                {
+                    BallotGuid = _pollManageGuid
+                };
+
+                ResultsRequestResponseModel response = controller.Get(request);
+
+
+                List<ResultVoteModel> voters = response
+                    .Results
+                    .SelectMany(r => r.Voters)
+                    .ToList();
+
+                Assert.IsTrue(voters.All(v => v.Name == null));
             }
         }
     }

@@ -35,6 +35,8 @@ namespace VotingApplication.Web.Tests.Controllers
         private Ballot _joeBallot;
         private Ballot _otherBallot;
 
+        private Poll _mainPoll;
+
         private Mock<IVoteValidatorFactory> _mockValidatorFactory;
         private Mock<IMetricHandler> _mockMetricHandler;
 
@@ -52,7 +54,7 @@ namespace VotingApplication.Web.Tests.Controllers
             _joeBallot = new Ballot { TokenGuid = Guid.NewGuid() };
             _otherBallot = new Ballot { TokenGuid = Guid.NewGuid() };
 
-            Poll mainPoll = new Poll() { UUID = _mainUUID, ExpiryDateUtc = DateTime.UtcNow.AddMinutes(30), Ballots = new List<Ballot>() { _bobBallot, _joeBallot, _otherBallot } };
+            _mainPoll = new Poll() { UUID = _mainUUID, ExpiryDateUtc = DateTime.UtcNow.AddMinutes(30), Ballots = new List<Ballot>() { _bobBallot, _joeBallot, _otherBallot } };
             Poll otherPoll = new Poll() { UUID = _otherUUID, Ballots = new List<Ballot>() { _otherBallot } };
             Poll pointsPoll = new Poll() { UUID = _pointsUUID, PollType = PollType.Points, MaxPerVote = 5, MaxPoints = 3, Ballots = new List<Ballot>() { _otherBallot } };
             Poll tokenPoll = new Poll() { UUID = _tokenUUID, Ballots = new List<Ballot>() { _validBallot }, InviteOnly = true };
@@ -70,22 +72,22 @@ namespace VotingApplication.Web.Tests.Controllers
             dummyChoices.Add(pizzaChoice);
             dummyChoices.Add(otherChoice);
 
-            mainPoll.Choices = new List<Choice>() { burgerChoice, pizzaChoice };
+            _mainPoll.Choices = new List<Choice>() { burgerChoice, pizzaChoice };
             otherPoll.Choices = new List<Choice>() { burgerChoice, pizzaChoice };
             pointsPoll.Choices = new List<Choice>() { burgerChoice, pizzaChoice };
             tokenPoll.Choices = new List<Choice>() { burgerChoice, pizzaChoice };
             timedPoll.Choices = new List<Choice>() { burgerChoice, pizzaChoice };
 
-            dummyPolls.Add(mainPoll);
+            dummyPolls.Add(_mainPoll);
             dummyPolls.Add(otherPoll);
             dummyPolls.Add(pointsPoll);
             dummyPolls.Add(tokenPoll);
             dummyPolls.Add(timedPoll);
 
-            _bobVote = new Vote() { Id = 1, Ballot = _bobBallot, Choice = burgerChoice, Poll = mainPoll };
+            _bobVote = new Vote() { Id = 1, Ballot = _bobBallot, Choice = burgerChoice, Poll = _mainPoll };
             _dummyVotes.Add(_bobVote);
 
-            _joeVote = new Vote() { Id = 2, Poll = mainPoll, Choice = new Choice() { Id = 1 }, Ballot = _joeBallot };
+            _joeVote = new Vote() { Id = 2, Poll = _mainPoll, Choice = new Choice() { Id = 1 }, Ballot = _joeBallot };
             _dummyVotes.Add(_joeVote);
 
             var mockContextFactory = new Mock<IContextFactory>();
@@ -207,6 +209,7 @@ namespace VotingApplication.Web.Tests.Controllers
             Assert.AreEqual(2, _dummyVotes.Local.Count);
         }
 
+
         [TestMethod]
         public void PutWithNewVoteSetsVoteValueCorrectly()
         {
@@ -298,6 +301,17 @@ namespace VotingApplication.Web.Tests.Controllers
 
             // Assert
             _mockMetricHandler.Verify(m => m.HandleVoteDeletedEvent(existingVote, _mainUUID), Times.Once());
+        }
+
+        [TestMethod]
+        [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
+        public void PutWithIsElectionModeNotAllowed()
+        {
+            // Arrange
+            _mainPoll.IsElectionMode = true;
+
+            // Act
+            _controller.Put(_mainUUID, _bobBallot.TokenGuid, new BallotRequestModel() { Votes = new List<VoteRequestModel>() { new VoteRequestModel() { ChoiceId = 1, VoteValue = 0 } } });
         }
 
         #endregion

@@ -262,9 +262,12 @@ describe('Results Page Controller', function () {
 
         var baseTime = new Date(2015, 1, 1);
         jasmine.clock().mockDate(baseTime);
-
+        
         var pollData = {
-            ExpiryDate: new Date(2015, 2, 1)
+            data:
+                {
+                    ExpiryDateUtc: new Date(2015, 2, 1)
+                }
         };
 
         mockPollService.getPoll.and.callFake(function (polllId, callback) { return callback(pollData); });
@@ -279,7 +282,10 @@ describe('Results Page Controller', function () {
         jasmine.clock().mockDate(baseTime);
 
         var pollData = {
-            ExpiryDateUtc: new Date(2014, 12, 25)
+            data:
+                {
+                    ExpiryDateUtc: new Date(2014, 12, 25)
+                }
         };
 
         getPollPromise.resolve(pollData);

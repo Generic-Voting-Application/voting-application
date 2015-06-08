@@ -24,7 +24,7 @@
         <div class="manage-section">
             <div>
                 <form class="form-section-block">
-                    <label for="ChoiceAdding">Voters can add their own choices</label>
+                    <label for="ChoiceAdding">Voters may add their own choices</label>
                     <toggle-switch id="ChoiceAdding" ng-model="poll.ChoiceAdding" on-label="Yes" off-label="No"></toggle-switch>
                     <small ng-if="poll.ChoiceAdding">Voters can add their own choices to the poll</small>
                     <small ng-if="!poll.ChoiceAdding">Voters cannot add their own choices to the poll</small>
@@ -34,10 +34,10 @@
         <div class="manage-section">
             <div>
                 <form class="form-section-block">
-                    <label for="HiddenResults">Results are hidden until a voter has voted</label>
-                    <toggle-switch id="HiddenResults" ng-model="poll.HiddenResults" on-label="Yes" off-label="No"></toggle-switch>
-                    <small ng-if="poll.HiddenResults">Voters can not see the results until they have cast a vote</small>
-                    <small ng-if="!poll.HiddenResults">Voters can see results at any time</small>
+                    <label for="IsElectionMode">Voters may only vote once</label>
+                    <toggle-switch id="IsElectionMode" ng-model="poll.IsElectionMode" on-label="Yes" off-label="No"></toggle-switch>
+                    <small ng-if="poll.IsElectionMode">Voters can not change their vote</small>
+                    <small ng-if="!poll.IsElectionMode">Voters can change their vote</small>
                 </form>
             </div>
         </div>

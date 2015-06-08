@@ -50,7 +50,7 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    HiddenResults = false
+                    IsElectionMode = false
                 };
 
                 _context.Polls.Add(_defaultMultiPoll);
@@ -201,7 +201,7 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = true,
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    HiddenResults = false,
+                    IsElectionMode = false,
                     Ballots = new List<Ballot>()
                     {
                         new Ballot() { TokenGuid = Guid.NewGuid() }
@@ -300,7 +300,7 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = true,
                     ChoiceAdding = false,
-                    HiddenResults = false
+                    IsElectionMode = false
                 };
 
                 _context.Polls.Add(_namedMultiPoll);
@@ -414,7 +414,7 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = false,
                     ChoiceAdding = true,
-                    HiddenResults = false
+                    IsElectionMode = false
                 };
 
                 _context.Polls.Add(_choiceAddingMultiPoll);
@@ -524,10 +524,10 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestClass]
-        public class HiddenResultsConfiguration
+        public class IsElectionModeConfiguration
         {
             private static ITestVotingContext _context;
-            private static Poll _hiddenResultsMultiPoll;
+            private static Poll _isElectionModeMultiPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
             private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
             private IWebDriver _driver;
@@ -545,7 +545,7 @@ namespace VotingApplication.Web.Tests.E2E
                 };
 
                 // Open, Anonymous, No Choice Adding, Shown Results
-                _hiddenResultsMultiPoll = new Poll()
+                _isElectionModeMultiPoll = new Poll()
                 {
                     UUID = PollGuid,
                     PollType = PollType.Multi,
@@ -556,10 +556,10 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    HiddenResults = true
+                    IsElectionMode = true
                 };
 
-                _context.Polls.Add(_hiddenResultsMultiPoll);
+                _context.Polls.Add(_isElectionModeMultiPoll);
                 _context.SaveChanges();
             }
 
@@ -567,7 +567,7 @@ namespace VotingApplication.Web.Tests.E2E
             public static void ClassCleanup()
             {
                 PollClearer pollTearDown = new PollClearer(_context);
-                pollTearDown.ClearPoll(_hiddenResultsMultiPoll);
+                pollTearDown.ClearPoll(_isElectionModeMultiPoll);
 
                 _context.Dispose();
             }
@@ -587,7 +587,7 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod, TestCategory("E2E")]
-            public void HiddenResultsPoll_DoesNotShowResultsButton()
+            public void IsElectionModePoll_DoesNotShowResultsButton()
             {
                 _driver.Navigate().GoToUrl(PollUrl);
                 IWebElement resultButton = _driver.FindElement(By.Id("results-button"));

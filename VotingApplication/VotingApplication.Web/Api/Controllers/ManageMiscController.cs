@@ -44,10 +44,10 @@ namespace VotingApplication.Web.Api.Controllers
                     _metricHandler.HandleChoiceAddingChangedEvent(poll.ChoiceAdding, poll.UUID);
                 }
 
-                if (poll.HiddenResults != updateRequest.HiddenResults)
+                if (poll.IsElectionMode != updateRequest.IsElectionMode)
                 {
-                    poll.HiddenResults = updateRequest.HiddenResults;
-                    _metricHandler.HandleHiddenResultsChangedEvent(poll.HiddenResults, poll.UUID);
+                    poll.IsElectionMode = updateRequest.IsElectionMode;
+                    _metricHandler.HandleIsElectionModeChangedEvent(poll.IsElectionMode, poll.UUID);
                 }
 
                 poll.LastUpdatedUtc = DateTime.UtcNow;

@@ -233,6 +233,7 @@
     <Compile Include="Api\Controllers\ManageExpiryController.cs" />
     <Compile Include="Api\Controllers\ManageInvitationController.cs" />
     <Compile Include="Api\Controllers\ManageChoiceController.cs" />
+    <Compile Include="Api\Models\DBViewModels\ResultsRequestModel.cs" />
     <Compile Include="Api\Metrics\IMetricHandler.cs" />
     <Compile Include="Api\Metrics\EmptyMetricHandler.cs" />
     <Compile Include="Api\Metrics\MetricHandler.cs" />
@@ -477,4 +478,3 @@
   <Target Name="AfterBuild">
   </Target> -->
 </Project>
-

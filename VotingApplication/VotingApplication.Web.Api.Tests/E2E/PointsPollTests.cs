@@ -61,7 +61,7 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    HiddenResults = false,
+                    IsElectionMode = false,
                     MaxPerVote = 3,
                     MaxPoints = 4
                 };
@@ -306,7 +306,7 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = true,
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    HiddenResults = false,
+                    IsElectionMode = false,
                     Ballots = new List<Ballot>()
                     {
                         new Ballot() { TokenGuid = Guid.NewGuid() }
@@ -408,7 +408,7 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = true,
                     ChoiceAdding = false,
-                    HiddenResults = false,
+                    IsElectionMode = false,
                     MaxPerVote = 3,
                     MaxPoints = 4
                 };
@@ -530,7 +530,7 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = false,
                     ChoiceAdding = true,
-                    HiddenResults = false,
+                    IsElectionMode = false,
                     MaxPerVote = 3,
                     MaxPoints = 4
                 };
@@ -643,10 +643,10 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestClass]
-        public class HiddenResultsConfiguration
+        public class IsElectionModeConfiguration
         {
             private static ITestVotingContext _context;
-            private static Poll _hiddenResultsPointsPoll;
+            private static Poll _isElectionModePointsPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
             private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
             private IWebDriver _driver;
@@ -662,7 +662,7 @@ namespace VotingApplication.Web.Tests.E2E
                               Description = "A very long test description 2 that should exceed the character limit for descriptions" }};
 
                 // Open, Anonymous, No Choice Adding, Shown Results
-                _hiddenResultsPointsPoll = new Poll()
+                _isElectionModePointsPoll = new Poll()
                 {
                     UUID = PollGuid,
                     PollType = PollType.Points,
@@ -673,12 +673,12 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    HiddenResults = true,
+                    IsElectionMode = true,
                     MaxPerVote = 3,
                     MaxPoints = 4
                 };
 
-                _context.Polls.Add(_hiddenResultsPointsPoll);
+                _context.Polls.Add(_isElectionModePointsPoll);
                 _context.SaveChanges();
             }
 
@@ -686,7 +686,7 @@ namespace VotingApplication.Web.Tests.E2E
             public static void ClassCleanup()
             {
                 PollClearer pollTearDown = new PollClearer(_context);
-                pollTearDown.ClearPoll(_hiddenResultsPointsPoll);
+                pollTearDown.ClearPoll(_isElectionModePointsPoll);
 
                 _context.Dispose();
             }
@@ -706,7 +706,7 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod, TestCategory("E2E")]
-            public void HiddenResultsPoll_DoesNotShowResultsButton()
+            public void IsElectionModePoll_DoesNotShowResultsButton()
             {
                 _driver.Navigate().GoToUrl(PollUrl);
                 IWebElement resultButton = _driver.FindElement(By.Id("results-button"));
