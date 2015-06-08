@@ -119,7 +119,7 @@
     <Compile Include="E2E\ManageTests.cs" />
     <Compile Include="E2E\MultiPollTests.cs" />
     <Compile Include="E2E\PointsPollTests.cs" />
-    <Compile Include="E2E\RegisteredDashboardTests.cs" />
+    <Compile Include="E2E\MyPollsPageTests.cs" />
     <Compile Include="E2E\CreationPageTests.cs" />
     <Compile Include="E2E\UpDownPollTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

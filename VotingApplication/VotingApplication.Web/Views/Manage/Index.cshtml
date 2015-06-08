@@ -14,14 +14,14 @@
             </div>
             <div class="pull-right" id="signin-header">
                 <span>
-                    <span ng-if="!account"><span class="clickable" ng-click="openLoginDialog()">Sign In</span> | <span class="clickable" ng-click="openRegisterDialog()">Register</span></span>
+                    <span id="signin-link" ng-if="!account"><span class="clickable" ng-click="openLoginDialog()">Sign In</span> | <span id="register-link" class="clickable" ng-click="openRegisterDialog()">Register</span></span>
                     <span ng-if="account">{{account.email}}</span>
                     <i class="fa fa-user"></i>
-                    <i ng-show="account" class="fa fa-chevron-down" ng-click="toggleAccountControls=!toggleAccountControls"></i>
+                    <i id="account-control-toggle" ng-show="account" class="fa fa-chevron-down" ng-click="toggleAccountControls=!toggleAccountControls"></i>
                 </span>
                 <div class="pull-right account-control-box" ng-show="toggleAccountControls && account">
-                    <div><a href="{{myPollsLink}}">My Polls</a></div>
-                    <div><a href="javascript:;" ng-click="toggleAccountControls=false;signOut()">Sign Out</a></div>
+                    <div><a id="my-polls-link" href="{{myPollsLink}}">My Polls</a></div>
+                    <div><a id="signout-link" href="javascript:;" ng-click="toggleAccountControls=false;signOut()">Sign Out</a></div>
                 </div>
             </div>
         </header>
