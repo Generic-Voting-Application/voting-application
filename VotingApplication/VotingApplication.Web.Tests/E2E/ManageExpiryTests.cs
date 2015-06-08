@@ -5,26 +5,26 @@ using Protractor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using VotingApplication.Data.Model;
-using VotingApplication.Web.Api.Tests.E2E.Helpers;
-using VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers;
+using VotingApplication.Web.Tests.E2E.Helpers;
+using VotingApplication.Web.Tests.E2E.Helpers.Clearers;
 
 namespace VotingApplication.Web.Tests.E2E
 {
     [TestClass]
-    public class ManageMiscTests
+    public class ManageExpiryTests
     {
         private static readonly string ChromeDriverDir = @"..\..\";
         private static readonly string SiteBaseUri = @"http://localhost:64205/";
-        private static readonly int WaitTime = 500;
         private static readonly Guid PollGuid = Guid.NewGuid();
         private static readonly Guid PollManageGuid = Guid.NewGuid();
-        private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid + "/Misc";
+        private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid + "/Expiry";
+        private static readonly DateTime DefaultTime = DateTime.UtcNow;
 
         private ITestVotingContext _context;
         private Poll _defaultPoll;
         private IWebDriver _driver;
+
 
         [TestInitialize]
         public virtual void TestInitialise()
@@ -45,8 +45,7 @@ namespace VotingApplication.Web.Tests.E2E
                 NamedVoting = false,
                 ChoiceAdding = false,
                 HiddenResults = false,
-                MaxPerVote = 3,
-                MaxPoints = 4
+                ExpiryDateUtc = DefaultTime
             };
 
             _context.Polls.Add(_defaultPoll);
@@ -68,7 +67,7 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageMisc_CancelButton_NavigatesToManagement()
+        public void ManagePollType_CancelButton_NavigatesToManagement()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
@@ -80,53 +79,20 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestMethod, TestCategory("E2E")]
-        public void ManageMisc_CancelButton_DoesNotSaveChanges()
+        public void ManagePollType_CancelButton_DoesNotSaveChanges()
         {
             _driver.Navigate().GoToUrl(PollUrl);
 
-            IWebElement inviteOnlySwitch = _driver.FindElement(By.Id("InviteOnly"));
-            inviteOnlySwitch.Click();
+            IWebElement hourAdjustButton = _driver.FindElement(By.Id("hour-adjust-button"));
+            hourAdjustButton.Click();
 
             IWebElement cancelButton = _driver.FindElement(By.Id("cancel-button"));
 
             cancelButton.Click();
 
-            Poll dbPoll = _context.Polls.Where(p => p.ManageId == _defaultPoll.ManageId).Single();
+            Poll dbPoll = _context.Polls.Where(p => p.UUID == _defaultPoll.UUID).Single();
 
-            Thread.Sleep(WaitTime);
-            _context.ReloadEntity(dbPoll);
-
-            Assert.IsFalse(dbPoll.InviteOnly);
-        }
-
-        [TestMethod, TestCategory("E2E")]
-        public void ManageMisc_Save_SavesChanges()
-        {
-            _driver.Navigate().GoToUrl(PollUrl);
-
-            IWebElement inviteOnlySwitch = _driver.FindElement(By.Id("InviteOnly"));
-            IWebElement namedVotingSwitch = _driver.FindElement(By.Id("NamedVoting"));
-            IWebElement choiceAddingSwitch = _driver.FindElement(By.Id("ChoiceAdding"));
-            IWebElement hiddenResultsSwitch = _driver.FindElement(By.Id("HiddenResults"));
-
-            inviteOnlySwitch.Click();
-            namedVotingSwitch.Click();
-            choiceAddingSwitch.Click();
-            hiddenResultsSwitch.Click();
-
-            IWebElement saveButton = _driver.FindElement(By.Id("save-button"));
-
-            saveButton.Click();
-
-            Poll dbPoll = _context.Polls.Where(p => p.ManageId == _defaultPoll.ManageId).Single();
-
-            Thread.Sleep(WaitTime);
-            _context.ReloadEntity(dbPoll);
-
-            Assert.IsTrue(dbPoll.InviteOnly);
-            Assert.IsTrue(dbPoll.NamedVoting);
-            Assert.IsTrue(dbPoll.ChoiceAdding);
-            Assert.IsTrue(dbPoll.HiddenResults);
+            Assert.AreEqual(DefaultTime, dbPoll.ExpiryDateUtc);
         }
     }
 }

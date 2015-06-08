@@ -1,23 +1,19 @@
-﻿using FakeDbSet;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Routing;
+using FakeDbSet;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers;
 using VotingApplication.Web.Api.Metrics;
-using VotingApplication.Web.Tests.Controllers;
 
-namespace VotingApplication.Web.Api.Tests.Controllers
+namespace VotingApplication.Web.Tests.Controllers
 {
     [TestClass]
     public class WebApiControllerTests

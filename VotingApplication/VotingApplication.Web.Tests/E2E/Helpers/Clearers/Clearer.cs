@@ -1,6 +1,4 @@
-﻿using VotingApplication.Data.Context;
-
-namespace VotingApplication.Web.Api.Tests.E2E.Helpers.Clearers
+﻿namespace VotingApplication.Web.Tests.E2E.Helpers.Clearers
 {
     public abstract class Clearer
     {
