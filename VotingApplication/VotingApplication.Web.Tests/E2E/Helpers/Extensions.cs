@@ -1,7 +1,7 @@
-﻿using OpenQA.Selenium;
-using System;
+﻿using System;
+using OpenQA.Selenium;
 
-namespace VotingApplication.Web.Api.Tests.E2E.Helpers
+namespace VotingApplication.Web.Tests.E2E.Helpers
 {
     public static class Extensions
     {
