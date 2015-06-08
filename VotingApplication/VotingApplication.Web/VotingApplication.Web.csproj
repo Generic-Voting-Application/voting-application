@@ -358,6 +358,8 @@
     <Content Include="Scripts\Lib\angular-zeroclipboard.js" />
     <Content Include="Scripts\Lib\d3-tip-min.js" />
     <Content Include="Scripts\Lib\moment-min.js" />
+    <Content Include="Scripts\Lib\angular-qrcode.js" />
+    <Content Include="Scripts\Lib\qrcode.js" />
     <Content Include="Scripts\Lib\ZeroClipboard-min.js" />
     <Content Include="Scripts\Modules\GVA-Common.js" />
     <Content Include="Scripts\Modules\GVA-Creation.js" />
@@ -477,4 +479,3 @@
   <Target Name="AfterBuild">
   </Target> -->
 </Project>
-
