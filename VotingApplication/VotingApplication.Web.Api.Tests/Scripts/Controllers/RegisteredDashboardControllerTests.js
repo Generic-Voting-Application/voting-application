@@ -16,6 +16,7 @@ describe('Registered Dashboard Controller', function () {
     var getUserPollsPromise;
     var copyPollPromise;
     var setTokenPromise;
+    var setManageIdPromise;
 
     var newPollUUID = '9C884B24-9B76-4FF8-A074-36AEB1EC3920';
     var newTokenGuid = 'B14A90C0-078A-4996-B0FA-EA09A0EB6FFE';
@@ -46,7 +47,9 @@ describe('Registered Dashboard Controller', function () {
             setManageId: function() { }
         };
         setTokenPromise = $q.defer();
+        setManageIdPromise = $q.defer();
         spyOn(mockTokenService, 'setToken').and.callFake(function () { return setTokenPromise.promise; });
+        spyOn(mockTokenService, 'setManageId').and.callFake(function () { return setManageIdPromise.promise; });
 
         mockAccountService = {
             registerAccountObserver: function () { }
