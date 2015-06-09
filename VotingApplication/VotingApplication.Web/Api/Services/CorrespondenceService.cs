@@ -66,16 +66,18 @@ namespace VotingApplication.Web.Api.Services
 
             StringBuilder confirmationUrl = new StringBuilder();
             confirmationUrl.Append(hostUri);
-            confirmationUrl.Append("/Account/ConfirmEmail");
+            confirmationUrl.Append("/api/Account/ConfirmEmail");
             confirmationUrl.Append("?userId=");
             confirmationUrl.Append(user.Id);
             confirmationUrl.Append("&code=");
-            confirmationUrl.Append(HttpUtility.HtmlEncode(code));
+            confirmationUrl.Append(HttpUtility.UrlEncode(code));
+
+            string confirmUri = confirmationUrl.ToString();
 
             string htmlMessage = (string)_confirmationTemplate.Clone();
 
             htmlMessage = htmlMessage.Replace("__HOSTURI__", hostUri);
-            htmlMessage = htmlMessage.Replace("__CONFIRMURI__", confirmationUrl.ToString());
+            htmlMessage = htmlMessage.Replace("__CONFIRMURI__", confirmUri);
 
             _mailSender.SendMail(user.Email, "Confirm your Email", htmlMessage);
         }
