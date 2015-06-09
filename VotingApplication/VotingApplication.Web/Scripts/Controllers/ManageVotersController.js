@@ -4,7 +4,7 @@
     'use strict';
 
     angular
-        .module('GVA.Creation')
+        .module('GVA.Manage')
         .controller('ManageVotersController', ManageVotersController);
 
     ManageVotersController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];

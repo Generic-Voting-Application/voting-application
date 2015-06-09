@@ -18,7 +18,7 @@ namespace VotingApplication.Web.Tests.E2E
         private static readonly string SiteBaseUri = @"http://localhost:64205/";
         private static readonly Guid PollGuid = Guid.NewGuid();
         private static readonly Guid PollManageGuid = Guid.NewGuid();
-        private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid + "/Expiry";
+        private static readonly string PollUrl = SiteBaseUri + "Manage/#/Manage/" + PollManageGuid + "/Expiry";
         private static readonly DateTime DefaultTime = DateTime.UtcNow;
 
         private ITestVotingContext _context;
@@ -75,7 +75,7 @@ namespace VotingApplication.Web.Tests.E2E
 
             cancelButton.Click();
 
-            Assert.AreEqual(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId, _driver.Url);
+            Assert.AreEqual(SiteBaseUri + "Manage/#/Manage/" + _defaultPoll.ManageId, _driver.Url);
         }
 
         [TestMethod, TestCategory("E2E")]

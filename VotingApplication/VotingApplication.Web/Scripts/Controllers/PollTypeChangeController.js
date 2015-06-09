@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('GVA.Creation')
+        .module('GVA.Manage')
         .controller('PollTypeChangeController', PollTypeChangeController);
 
     PollTypeChangeController.$inject = ['$scope'];

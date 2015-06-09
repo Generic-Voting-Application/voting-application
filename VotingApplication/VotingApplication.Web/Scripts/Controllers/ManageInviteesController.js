@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('GVA.Creation')
+        .module('GVA.Manage')
         .controller('ManageInviteesController', ManageInviteesController);
 
     ManageInviteesController.$inject = ['$scope', '$routeParams', 'ManageService', 'RoutingService'];

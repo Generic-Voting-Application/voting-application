@@ -81,11 +81,11 @@
                 // Fallback for old system
                 if (typeof ($localStorage[pollId]) === 'string') {
                     deferred.resolve($localStorage[pollId]);
-                } else {
+                    return deferred.promise;
+                } else if ($localStorage[pollId].token) {
                     deferred.resolve($localStorage[pollId].token);
+                    return deferred.promise;
                 }
-
-                return deferred.promise;
             }
 
             $http({
