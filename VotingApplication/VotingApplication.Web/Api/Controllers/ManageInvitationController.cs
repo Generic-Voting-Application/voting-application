@@ -12,17 +12,17 @@ namespace VotingApplication.Web.Api.Controllers
 {
     public class ManageInvitationController : WebApiController
     {
-        private IInvitationService _invitationService;
+        private ICorrespondenceService _correspondenceService;
 
-        public ManageInvitationController(IInvitationService invitationService)
+        public ManageInvitationController(ICorrespondenceService correspondenceService)
             : base()
         {
-            _invitationService = invitationService;
+            _correspondenceService = correspondenceService;
         }
-        public ManageInvitationController(IContextFactory contextFactory, IMetricHandler metricHandler, IInvitationService invitationService)
+        public ManageInvitationController(IContextFactory contextFactory, IMetricHandler metricHandler, ICorrespondenceService correspondenceService)
             : base(contextFactory, metricHandler)
         {
-            _invitationService = invitationService;
+            _correspondenceService = correspondenceService;
         }
 
         private ManageInvitationResponseModel BallotToModel(Ballot ballot)
@@ -104,7 +104,7 @@ namespace VotingApplication.Web.Api.Controllers
                 _metricHandler.HandleBallotAddedEvent(ballot, poll.UUID);
             }
 
-            _invitationService.SendInvitation(poll.UUID, ballot, poll.Name);
+            _correspondenceService.SendInvitation(poll.UUID, ballot, poll.Name);
         }
 
         private void DeleteBallot(IVotingContext context, Ballot ballot, Poll poll)

@@ -36,7 +36,7 @@
 
         self.login = login;
 
-        self.registerAccountAndLogin = registerAccountAndLogin;
+        self.register = register;
 
         self.forgotPassword = forgotPassword;
 
@@ -85,11 +85,6 @@
                     Email: email
                 })
             });
-        }
-
-        function registerAccountAndLogin(email, password) {
-            return register(email, password)
-                .then(function () { return login(email, password); });
         }
 
         function register(email, password) {

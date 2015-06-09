@@ -11,11 +11,11 @@
 
     function AccountRegisterController($scope, $route, $rootScope, AccountService) {
 
-        $scope.registerAccountAndLogin = registerAccount;
+        $scope.register = registerAccount;
 
         function registerAccount(form) {
 
-            AccountService.registerAccountAndLogin(form.email, form.password)
+            AccountService.register(form.email, form.password)
                 .then(function () {
                     closeDialog();
                     $route.reload();
