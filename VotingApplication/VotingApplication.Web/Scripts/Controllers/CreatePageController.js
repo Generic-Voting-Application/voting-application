@@ -14,8 +14,8 @@
         
         $scope.createQuickPoll = createQuickPoll;
         $scope.createCustomPoll = createCustomPoll;
-        $scope.validateChoices = validateChoices;
-        $scope.balanceChoices = balanceChoices;
+        $scope.choiceIsPresent = choiceIsPresent;
+        $scope.autoAddEmptyChoice = autoAddEmptyChoice;
         
         function createQuickPoll(question, choices) {
             var validChoices = [];
@@ -29,15 +29,15 @@
             }
 
             PollService.createPoll(question, validChoices)
-            .then(createQuickPollSuccessCallback);
+            .then(createQuickPollSuccess);
         }
 
         function createCustomPoll(question) {
             PollService.createPoll(question)
-            .then(createCustomPollSuccessCallback);
+            .then(createCustomPollSuccess);
         }
 
-        function createQuickPollSuccessCallback(response) {
+        function createQuickPollSuccess(response) {
             var data = response.data;
 
             TokenService.setManageId(data.UUID, data.ManageId)
@@ -46,7 +46,7 @@
             });
         }
 
-        function createCustomPollSuccessCallback(response) {
+        function createCustomPollSuccess(response) {
             var data = response.data;
 
             TokenService.setManageId(data.UUID, data.ManageId)
@@ -56,7 +56,7 @@
                 }));
         }
 
-        function validateChoices(choices) {
+        function choiceIsPresent(choices) {
             if (choices) {
                 for (var i = 0; i < choices.length; i++) {
                     if (choices[i].Name) {
@@ -67,7 +67,7 @@
             return false;
         }
 
-        function balanceChoices(choices) {
+        function autoAddEmptyChoice(choices) {
             if (choices && choices.length) {
                 if (choices[choices.length - 1].Name) {
                     choices.push({});

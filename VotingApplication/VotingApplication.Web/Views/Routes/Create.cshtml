@@ -15,7 +15,7 @@
                     <input id="quickpoll-choice"
                            class="full-width form-input-small"
                            placeholder="{{'Choice ' + ($index + 1)}}"
-                           ng-keydown="balanceChoices(quickPollForm.choices)"
+                           ng-keydown="autoAddEmptyChoice(quickPollForm.choices)"
                            ng-model="choice.Name" />
                 </div>
             </div>
@@ -24,7 +24,7 @@
                 <button id="quickpoll-button"
                         type="submit"
                         class="active-btn btn-medium shadowed centered"
-                        ng-disabled="!quickPollForm.pollQuestion || !validateChoices(quickPollForm.choices)">
+                        ng-disabled="!quickPollForm.pollQuestion || !choiceIsPresent(quickPollForm.choices)">
                     Create
                 </button>
             </div>
