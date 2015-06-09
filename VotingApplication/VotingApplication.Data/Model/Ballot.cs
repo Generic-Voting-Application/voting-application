@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VotingApplication.Data.Model
 {
@@ -9,6 +8,7 @@ namespace VotingApplication.Data.Model
     {
         public Ballot()
         {
+            ManageGuid = Guid.NewGuid();
             Votes = new List<Vote>();
         }
 
