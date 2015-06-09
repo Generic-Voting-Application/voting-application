@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('GVA.Creation')
+        .module('GVA.Manage')
         .directive('datePicker', datePicker);
 
     function datePicker() {

@@ -1,81 +1,17 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OpenQA.Selenium;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OpenQA.Selenium;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Tests.E2E.Helpers;
 
 namespace VotingApplication.Web.Tests.E2E
 {
     [TestClass]
-    public class RegisteredDashboardTests : E2ETest
+    public class MyPollsPageTests : E2ETest
     {
         private static readonly Guid CreatedPollManageId = new Guid("FB74707A-C9D5-4B90-9F0C-D3280041B56C");
-
-
-        [TestMethod]
-        [TestCategory("E2E")]
-        public void QuickPoll_DisabledWhenQuestionHasNoText()
-        {
-            using (IWebDriver driver = Driver)
-            {
-                SignIn(driver);
-
-                IWebElement questionBox = FindElementById(driver, "question");
-                questionBox.Clear();
-
-                IWebElement quickPollButton = FindElementById(driver, "quickpoll-button");
-
-                Assert.IsFalse(quickPollButton.Enabled);
-            }
-        }
-
-        [TestMethod]
-        [TestCategory("E2E")]
-        public void QuickPoll_EnabledWhenQuestionHasText()
-        {
-            using (IWebDriver driver = Driver)
-            {
-                SignIn(driver);
-
-                IWebElement questionBox = FindElementById(driver, "question");
-                questionBox.SendKeys("?");
-
-                IWebElement quickPollButton = FindElementById(driver, "quickpoll-button");
-
-                Assert.IsTrue(quickPollButton.Enabled);
-            }
-        }
-
-        [TestMethod]
-        [TestCategory("E2E")]
-        public void QuickPoll_NavigatesToManagePollPage()
-        {
-            using (IWebDriver driver = Driver)
-            {
-                using (var context = new TestVotingContext())
-                {
-                    SignIn(driver);
-
-                    IWebElement questionBox = FindElementById(driver, "question");
-                    questionBox.SendKeys("Does this work?");
-
-                    //WaitForPageChange();
-
-                    IWebElement quickPollButton = FindElementById(driver, "quickpoll-button");
-                    quickPollButton.Click();
-
-                    WaitForPageChange();
-
-                    Poll newPoll = context.Polls.Single();
-
-                    string expectedUrl = SiteBaseUri + "Dashboard/#/Manage/" + newPoll.ManageId;
-
-                    Assert.AreEqual(expectedUrl, driver.Url);
-                }
-            }
-        }
 
         [TestMethod]
         [TestCategory("E2E")]
@@ -89,6 +25,8 @@ namespace VotingApplication.Web.Tests.E2E
 
                     SignIn(driver);
 
+                    NavigateToMyPolls(driver);
+
                     IWebElement managePollButton = driver.FindElement(By.ClassName("poll-panel-button"));
                     managePollButton.Click();
 
@@ -96,7 +34,7 @@ namespace VotingApplication.Web.Tests.E2E
 
                     Poll newPoll = context.Polls.Single();
 
-                    string expectedUrl = SiteBaseUri + "Dashboard/#/Manage/" + newPoll.ManageId;
+                    string expectedUrl = SiteBaseUri + "Manage/#/Manage/" + newPoll.ManageId;
 
                     Assert.AreEqual(expectedUrl, driver.Url);
                 }
@@ -115,6 +53,8 @@ namespace VotingApplication.Web.Tests.E2E
 
                     SignIn(driver);
 
+                    NavigateToMyPolls(driver);
+
                     ReadOnlyCollection<IWebElement> buttons = driver.FindElements(By.ClassName("poll-panel-button"));
                     Assert.AreEqual(2, buttons.Count);
 
@@ -127,7 +67,7 @@ namespace VotingApplication.Web.Tests.E2E
                         .Polls
                         .Single(p => p.ManageId != CreatedPollManageId);
 
-                    string expectedUrl = SiteBaseUri + "Dashboard/#/Manage/" + newPoll.ManageId;
+                    string expectedUrl = SiteBaseUri + "Manage/#/Manage/" + newPoll.ManageId;
 
                     Assert.AreEqual(expectedUrl, driver.Url);
                 }
@@ -140,7 +80,7 @@ namespace VotingApplication.Web.Tests.E2E
 
             CreateNewUser();
 
-            IWebElement signInButton = FindElementById(driver, "signin-button");
+            IWebElement signInButton = FindElementById(driver, "signin-link");
             signInButton.Click();
 
             IWebElement emailInput = FindElementById(driver, "email");
@@ -169,6 +109,15 @@ namespace VotingApplication.Web.Tests.E2E
             dbContext.Polls.Add(poll);
 
             dbContext.SaveChanges();
+        }
+
+        private static void NavigateToMyPolls(IWebDriver driver)
+        {
+            IWebElement accountControlToggle = FindElementById(driver, "account-control-toggle");
+            accountControlToggle.Click();
+
+            IWebElement myPollsLink = FindElementById(driver, "my-polls-link");
+            myPollsLink.Click();
         }
     }
 }

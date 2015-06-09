@@ -1,8 +1,8 @@
 ﻿'use strict';
 
-describe('Unregistered Dashboard Controller', function () {
+describe('Create page Controller', function () {
 
-    beforeEach(module('GVA.Creation'));
+    beforeEach(module('GVA.Manage'));
 
 
     var scope;
@@ -26,13 +26,16 @@ describe('Unregistered Dashboard Controller', function () {
         mockPollService = {
             createPoll: function () { }
         };
+
         createPollPromise = $q.defer();
         spyOn(mockPollService, 'createPoll').and.callFake(function () { return createPollPromise.promise; });
 
         mockRoutingService = {
-            navigateToManagePage: function () { }
+            navigateToManagePage: function () { },
+            navigateToVotePage : function() { }
         };
         spyOn(mockRoutingService, 'navigateToManagePage').and.callThrough();
+        spyOn(mockRoutingService, 'navigateToVotePage').and.callThrough();
 
         mockTokenService = {
             setToken: function () { },
@@ -45,7 +48,7 @@ describe('Unregistered Dashboard Controller', function () {
         spyOn(mockTokenService, 'setManageId').and.callFake(function () { return setManageIdPromise.promise; });
 
 
-        $controller('UnregisteredDashboardController', {
+        $controller('CreatePageController', {
             $scope: scope,
             PollService: mockPollService,
             RoutingService: mockRoutingService,
@@ -53,12 +56,12 @@ describe('Unregistered Dashboard Controller', function () {
         });
     }));
 
-    describe('Create New Poll', function () {
+    describe('Create New Custom Poll', function () {
 
         it('Calls poll service to create new poll', function () {
             var question = 'Where shall we go?';
 
-            scope.createPoll(question);
+            scope.createCustomPoll(question);
 
 
             expect(mockPollService.createPoll).toHaveBeenCalled();
@@ -77,7 +80,7 @@ describe('Unregistered Dashboard Controller', function () {
             createPollPromise.resolve(response);
             setTokenPromise.resolve();
 
-            scope.createPoll(question);
+            scope.createCustomPoll(question);
 
             scope.$apply();
             expect(mockRoutingService.navigateToManagePage).toHaveBeenCalled();
@@ -97,7 +100,7 @@ describe('Unregistered Dashboard Controller', function () {
             createPollPromise.resolve(response);
             setTokenPromise.resolve();
 
-            scope.createPoll(question);
+            scope.createCustomPoll(question);
 
 
             scope.$apply();
@@ -115,7 +118,7 @@ describe('Unregistered Dashboard Controller', function () {
             var response = { data: data };
             createPollPromise.resolve(response);
 
-            scope.createPoll(question);
+            scope.createCustomPoll(question);
 
 
             scope.$apply();
@@ -135,7 +138,7 @@ describe('Unregistered Dashboard Controller', function () {
 
             var question = 'Where shall we go?';
 
-            scope.createPoll(question);
+            scope.createCustomPoll(question);
 
             scope.$apply();
             expect(mockTokenService.setToken).toHaveBeenCalledWith(newPollUUID, newTokenGuid);
@@ -154,7 +157,7 @@ describe('Unregistered Dashboard Controller', function () {
             var response = { data: data };
             createPollPromise.resolve(response);
 
-            scope.createPoll(question);
+            scope.createCustomPoll(question);
 
 
             // Should not be called until the promise is resolved.
@@ -164,6 +167,63 @@ describe('Unregistered Dashboard Controller', function () {
             setTokenPromise.resolve();
             scope.$apply();
             expect(mockRoutingService.navigateToManagePage).toHaveBeenCalled();
+        });
+    });
+
+    describe('Create New Quick Poll', function () {
+
+        it('Calls poll service to create new poll', function () {
+            var question = 'Where shall we go?';
+            var choices = [{ Name: 'Choice 1' }];
+
+            scope.createQuickPoll(question, choices);
+
+
+            expect(mockPollService.createPoll).toHaveBeenCalled();
+        });
+
+        it('Given a successful creation of a poll, calls routing service to navigate to the poll page', function () {
+            var question = 'Where shall we go?';
+            var choices = [{ Name: 'Choice 1' }];
+
+            var data = {
+                UUID: newPollUUID,
+                CreatorBallot: {
+                    TokenGuid: newTokenGuid
+                }
+            };
+            var response = { data: data };
+            createPollPromise.resolve(response);
+            setTokenPromise.resolve();
+            setManageIdPromise.resolve();
+
+            scope.createQuickPoll(question, choices);
+
+            scope.$apply();
+            expect(mockRoutingService.navigateToVotePage).toHaveBeenCalled();
+        });
+
+        it('Given a successful creation of a poll, calls routing service with new UUID', function () {
+            var question = 'Where shall we go?';
+            var choices = [{ Name: 'Choice 1' }];
+
+            var data = {
+                UUID: newPollUUID,
+                CreatorBallot: {
+                    TokenGuid: newTokenGuid
+                },
+                ManageId: newManageGuid
+            };
+            var response = { data: data };
+            createPollPromise.resolve(response);
+            setTokenPromise.resolve();
+            setManageIdPromise.resolve();
+
+            scope.createQuickPoll(question, choices);
+
+
+            scope.$apply();
+            expect(mockRoutingService.navigateToVotePage).toHaveBeenCalledWith(newPollUUID);
         });
     });
 

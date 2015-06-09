@@ -92,6 +92,11 @@ namespace VotingApplication.Web.Api.Controllers
         {
             Poll newPoll = PollCreationHelper.Create();
             newPoll.Name = pollCreationRequest.PollName;
+            if (pollCreationRequest.Choices != null &&
+               pollCreationRequest.Choices.Count > 0)
+            {
+                newPoll.Choices = pollCreationRequest.Choices;
+            }
 
             if (User.Identity.IsAuthenticated)
             {
