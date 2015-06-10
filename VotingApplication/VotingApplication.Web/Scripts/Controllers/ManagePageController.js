@@ -35,11 +35,13 @@
         }
 
         function activate() {
-            ManageService.getPoll(manageId)
-            .then(function (data) {
-                $scope.poll = data;
-                $scope.Question = data.Name;
-            });
+            if (manageId) {
+                ManageService.getPoll(manageId)
+               .then(function (data) {
+                   $scope.poll = data;
+                   $scope.Question = data.Name;
+               });
+            }
         }
 
         function updateQuestion() {
