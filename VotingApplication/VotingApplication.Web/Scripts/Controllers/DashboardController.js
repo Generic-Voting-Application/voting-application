@@ -3,17 +3,18 @@
     'use strict';
 
     angular
-        .module('GVA.Creation')
+        .module('GVA.Manage')
         .controller('DashboardController', DashboardController);
 
-    DashboardController.$inject = ['$scope', 'AccountService'];
+    DashboardController.$inject = ['$scope', 'AccountService', 'RoutingService'];
 
-    function DashboardController($scope, AccountService) {
+    function DashboardController($scope, AccountService, RoutingService) {
 
         $scope.account = AccountService.account;
         $scope.openLoginDialog = showLoginDialog;
         $scope.openRegisterDialog = openRegisterDialog;
         $scope.signOut = AccountService.clearAccount;
+        $scope.myPollsLink = RoutingService.getMyPollsUrl();
         
         activate();
 

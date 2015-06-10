@@ -283,6 +283,12 @@ hr {
     line-height: 21px;
 }
 
+.form-input-small {
+    @extend .form-input;
+
+    padding: 2px;
+}
+
 .form-section {
     margin-bottom: 10px;
 

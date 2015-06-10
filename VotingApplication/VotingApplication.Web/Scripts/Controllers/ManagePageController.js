@@ -5,7 +5,7 @@
     'use strict';
 
     angular
-        .module('GVA.Creation')
+        .module('GVA.Manage')
         .controller('ManagePageController', ManagePageController);
 
     ManagePageController.$inject = ['$scope', '$routeParams', 'ManageService', 'RoutingService'];
