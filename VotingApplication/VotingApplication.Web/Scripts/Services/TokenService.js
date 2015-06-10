@@ -55,7 +55,12 @@
             }
 
             if ($localStorage[pollId]) {
-                deferred.resolve($localStorage[pollId].manageId);
+                if ($localStorage[pollId].manageId) {
+                    deferred.resolve($localStorage[pollId].manageId);
+                } else {
+                    deferred.reject();
+                }
+
                 return deferred.promise;
             }
 
