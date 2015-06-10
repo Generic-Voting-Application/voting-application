@@ -51,6 +51,11 @@
                         return '../Routes/MyPolls/';
                     }
                 })
+                .when('/RegistrationConfirmation/', {
+                    templateUrl: function () {
+                        return '../Routes/RegistrationConfirmation/';
+                    }
+                })
                 .when('/Account/ResetPassword', {
                     templateUrl: '../Routes/AccountResetPassword'
                 })

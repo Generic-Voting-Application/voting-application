@@ -15,10 +15,12 @@
             navigateToManagePage: navigateToManagePage,
             navigateToHomePage: navigateToHomePage,
             navigateToMyPolls: navigateToMyPolls,
+            navigateToRegistrationConfirmation : navigateToRegistrationConfirmation,
             getVotePageUrl: getVotePageUrl,
             getResultsPageUrl: getResultsPageUrl,
             getManagePageUrl: getManagePageUrl,
-            getMyPollsUrl: getMyPollsUrl
+            getMyPollsUrl: getMyPollsUrl,
+            getRegistrationConfirmationUrl: getRegistrationConfirmationUrl
         };
 
         return service;
@@ -41,6 +43,10 @@
 
         function navigateToHomePage() {
             $window.location.href = '';
+        }
+
+        function navigateToRegistrationConfirmation() {
+            $window.location.href = getRegistrationConfirmationUrl();
         }
 
         function getVotePageUrl(pollId, tokenId) {
@@ -69,6 +75,10 @@
 
         function getMyPollsUrl() {
             return '/Manage/#/MyPolls/';
+        }
+
+        function getRegistrationConfirmationUrl() {
+            return '/Manage/#/RegistrationConfirmation';
         }
     }
 })();
