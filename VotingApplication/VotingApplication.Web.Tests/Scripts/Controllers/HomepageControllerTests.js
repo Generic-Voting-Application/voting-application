@@ -2,7 +2,7 @@
 
 describe('ManageService', function () {
 
-    beforeEach(module('GVA.Creation'));
+    beforeEach(module('GVA.Manage'));
 
     var scope;
     var accountServiceMock;

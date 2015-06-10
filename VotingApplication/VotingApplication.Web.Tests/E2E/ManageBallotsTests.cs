@@ -20,7 +20,7 @@ namespace VotingApplication.Web.Tests.E2E
         private static readonly int WaitTime = 500;
         private static readonly Guid PollGuid = Guid.NewGuid();
         private static readonly Guid PollManageGuid = Guid.NewGuid();
-        private static readonly string PollUrl = SiteBaseUri + "Dashboard/#/Manage/" + PollManageGuid + "/Voters";
+        private static readonly string PollUrl = SiteBaseUri + "Manage/#/Manage/" + PollManageGuid + "/Voters";
 
         private ITestVotingContext _context;
         private Poll _defaultPoll;
@@ -117,7 +117,7 @@ namespace VotingApplication.Web.Tests.E2E
             IWebElement cancelButton = _driver.FindElement(By.Id("cancel-button"));
             cancelButton.Click();
 
-            Assert.AreEqual(SiteBaseUri + "Dashboard/#/Manage/" + _defaultPoll.ManageId, _driver.Url);
+            Assert.AreEqual(SiteBaseUri + "Manage/#/Manage/" + _defaultPoll.ManageId, _driver.Url);
         }
 
         [TestMethod, TestCategory("E2E")]

@@ -2,7 +2,7 @@
 
 namespace VotingApplication.Web.Controllers
 {
-    public class DashboardController : Controller
+    public class ManageController : Controller
     {
         public ActionResult Index()
         {

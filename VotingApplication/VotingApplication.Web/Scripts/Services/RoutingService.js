@@ -14,9 +14,11 @@
             navigateToResultsPage: navigateToResultsPage,
             navigateToManagePage: navigateToManagePage,
             navigateToHomePage: navigateToHomePage,
+            navigateToMyPolls: navigateToMyPolls,
             getVotePageUrl: getVotePageUrl,
             getResultsPageUrl: getResultsPageUrl,
-            getManagePageUrl: getManagePageUrl
+            getManagePageUrl: getManagePageUrl,
+            getMyPollsUrl: getMyPollsUrl
         };
 
         return service;
@@ -31,6 +33,10 @@
 
         function navigateToManagePage(manageId, subPage) {
             $window.location.href = getManagePageUrl(manageId, subPage);
+        }
+
+        function navigateToMyPolls() {
+            $window.location.href = getMyPollsUrl();
         }
 
         function navigateToHomePage() {
@@ -54,11 +60,15 @@
         }
 
         function getManagePageUrl(manageId, subPage) {
-            var url = '/Dashboard/#/Manage/' + manageId;
+            var url = '/Manage/#/Manage/' + manageId;
             if (subPage) {
                 url += '/' + subPage;
             }
             return url;
+        }
+
+        function getMyPollsUrl() {
+            return '/Manage/#/MyPolls/';
         }
     }
 })();

@@ -2,7 +2,7 @@
 
 describe('ManageExpiryController', function () {
 
-    beforeEach(module('GVA.Creation'));
+    beforeEach(module('GVA.Manage'));
 
     var scope;
 

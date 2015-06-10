@@ -299,7 +299,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\DashboardController.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RoutesController.cs" />
     <Compile Include="Controllers\PollController.cs" />
     <Compile Include="Global.asax.cs">
@@ -331,7 +331,7 @@
     <Content Include="Scripts\Controllers\ManageExpiryController.js" />
     <Content Include="Scripts\Controllers\ManagePollTypeController.js" />
     <Content Include="Scripts\Controllers\AccountResetPasswordController.js" />
-    <Content Include="Scripts\Controllers\RegisteredDashboardController.js" />
+    <Content Include="Scripts\Controllers\MyPollsController.js" />
     <Content Include="Scripts\Controllers\HomepageController.js" />
     <Content Include="Scripts\Controllers\ManageInviteesController.js" />
     <Content Include="Scripts\Controllers\ManageMiscController.js" />
@@ -343,7 +343,7 @@
     <Content Include="Scripts\Controllers\MultiVoteController.js" />
     <Content Include="Scripts\Controllers\ResultsPageController.js" />
     <Content Include="Scripts\Controllers\PointsVoteController.js" />
-    <Content Include="Scripts\Controllers\UnregisteredDashboardController.js" />
+    <Content Include="Scripts\Controllers\CreatePageController.js" />
     <Content Include="Scripts\Controllers\UpDownVoteController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
     <Content Include="Scripts\Directives\ErrorBar.js" />
@@ -358,9 +358,11 @@
     <Content Include="Scripts\Lib\angular-zeroclipboard.js" />
     <Content Include="Scripts\Lib\d3-tip-min.js" />
     <Content Include="Scripts\Lib\moment-min.js" />
+    <Content Include="Scripts\Lib\angular-qrcode.js" />
+    <Content Include="Scripts\Lib\qrcode.js" />
     <Content Include="Scripts\Lib\ZeroClipboard-min.js" />
     <Content Include="Scripts\Modules\GVA-Common.js" />
-    <Content Include="Scripts\Modules\GVA-Creation.js" />
+    <Content Include="Scripts\Modules\GVA-Manage.js" />
     <Content Include="Scripts\Modules\GVA-Poll.js" />
     <Content Include="Scripts\Lib\angular-min.js" />
     <Content Include="Scripts\Lib\angular-route-min.js" />
@@ -384,10 +386,9 @@
     <Content Include="Views\Routes\AccountLogin.cshtml" />
     <Content Include="Views\Routes\AccountRegister.cshtml" />
     <Content Include="Views\Routes\AccountResetPassword.cshtml" />
-    <Content Include="Views\Routes\UnregisteredDashboard.cshtml" />
     <Content Include="Scripts\Lib\angular-route-min.js.map" />
     <Content Include="Scripts\Lib\angular-min.js.map" />
-    <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Routes\Manage.cshtml" />
     <Content Include="Views\Routes\MultiVote.cshtml" />
     <Content Include="Views\Routes\ManageChoices.cshtml" />
@@ -395,8 +396,8 @@
     <Content Include="Views\Routes\ManageInvitees.cshtml" />
     <Content Include="Views\Routes\ManageExpiry.cshtml" />
     <Content Include="Views\Routes\DatePicker.cshtml" />
-    <Content Include="Views\Routes\RegisteredDashboard.cshtml" />
-    <Content Include="Views\Routes\HomePage.cshtml" />
+    <Content Include="Views\Routes\MyPolls.cshtml" />
+    <Content Include="Views\Routes\Create.cshtml" />
     <Content Include="Content\Scss\DateTimePicker.scss" />
     <Content Include="Views\Routes\TimePicker.cshtml" />
     <Content Include="Views\Routes\ManageVoters.cshtml" />
@@ -434,7 +435,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="Content\Scss\Creation.scss" />
+    <Content Include="Content\Scss\Manage.scss" />
     <Content Include="Content\Scss\Voting.scss" />
     <Content Include="Views\Routes\Vote.cshtml" />
     <Content Include="Views\Routes\Results.cshtml" />
@@ -489,4 +490,3 @@
   <Target Name="AfterBuild">
   </Target> -->
 </Project>
-

@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('GVA.Creation', ['ngRoute', 'ngDialog', 'ngStorage', 'zeroclipboard', 'toggle-switch', 'GVA.Common', 'GVA.Poll'])
+        .module('GVA.Manage', ['ngRoute', 'ngDialog', 'ngStorage', 'zeroclipboard', 'toggle-switch', 'monospaced.qrcode', 'GVA.Common', 'GVA.Poll'])
         .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider
@@ -46,11 +46,16 @@
                         return '../Routes/ManageExpiry/' + params['manageId'];
                     }
                 })
+                .when('/MyPolls/', {
+                    templateUrl: function () {
+                        return '../Routes/MyPolls/';
+                    }
+                })
                 .when('/Account/ResetPassword', {
                     templateUrl: '../Routes/AccountResetPassword'
                 })
                 .otherwise({
-                    templateUrl: '../Routes/HomePage'
+                    templateUrl: '../Routes/Create'
                 });
         }])
         .config(['uiZeroclipConfigProvider', function (uiZeroclipConfigProvider) {

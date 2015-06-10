@@ -4,7 +4,7 @@
     'use strict';
 
     angular
-        .module('GVA.Creation')
+        .module('GVA.Manage')
         .controller('HomepageController', HomepageController);
 
     HomepageController.$inject = ['$scope', 'AccountService'];
