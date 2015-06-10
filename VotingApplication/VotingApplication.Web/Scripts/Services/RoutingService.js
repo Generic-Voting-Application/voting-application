@@ -45,7 +45,7 @@
 
         function getVotePageUrl(pollId, tokenId) {
             if (!pollId) {
-                return;
+                return null;
             }
 
             var url = '/Poll/#/Vote/' + pollId;
@@ -57,7 +57,7 @@
 
         function getResultsPageUrl(pollId, tokenId) {
             if (!pollId) {
-                return;
+                return null;
             }
 
             var url = '/Poll/#/Results/' + pollId;
@@ -69,7 +69,7 @@
 
         function getManagePageUrl(manageId, subPage) {
             if (!manageId) {
-                return;
+                return null;
             }
 
             var url = '/Manage/#/Manage/' + manageId;
