@@ -21,7 +21,7 @@
         return service;
 
 
-        function getPoll(pollId) {
+        function getPoll(pollId, ballotToken) {
 
             if (!pollId) {
                 var deferred = $q.defer();
@@ -29,9 +29,16 @@
                 return deferred.promise;
             }
 
+            var tokenGuidHeader = null;
+
+            if (ballotToken) {
+                tokenGuidHeader = { 'X-TokenGuid': ballotToken };
+            }
+
             return $http({
                 method: 'GET',
-                url: '/api/poll/' + pollId
+                url: '/api/poll/' + pollId,
+                headers: tokenGuidHeader
             });
         }
 

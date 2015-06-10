@@ -191,6 +191,40 @@ describe('Poll Service', function () {
             rootScope.$apply();
         });
 
-    });
+        it('Given no token, makes request without X-TokenGuid header', function () {
+            var pollId = '5CE7BB52-5058-4033-B2A4-5C4214AC4AFA';
 
+            var expectedUrl = '/api/poll/' + pollId;
+
+            httpBackend.expectGET(
+                    expectedUrl,
+                    function (headers) {
+                        return headers['X-TokenGuid'] === undefined;
+                    }
+                ).respond(200);
+
+            pollService.getPoll(pollId);
+
+            httpBackend.flush();
+        });
+
+        it('Given a token, makes request with the X-TokenGuid header', function () {
+            var pollId = '5CE7BB52-5058-4033-B2A4-5C4214AC4AFA';
+            var ballotTokenGuid = '0310812A-05D3-41BA-AA34-CF7BF8330B67';
+
+            var expectedUrl = '/api/poll/' + pollId;
+
+            httpBackend.expectGET(
+                    expectedUrl,
+                    function (headers) {
+                        return headers['X-TokenGuid'] === ballotTokenGuid;
+                    }
+                ).respond(200);
+
+            pollService.getPoll(pollId, ballotTokenGuid);
+
+            httpBackend.flush();
+        });
+
+    });
 });
