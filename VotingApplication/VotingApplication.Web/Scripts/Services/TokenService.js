@@ -54,8 +54,15 @@
                 return deferred.promise;
             }
 
-            if ($localStorage[pollId]) {
-                deferred.resolve($localStorage[pollId].manageId);
+            var storageData = $localStorage[pollId];
+
+            if (storageData) {
+                if (storageData.manageId) {
+                    deferred.resolve(storageData.manageId);
+                } else {
+                    deferred.reject();
+                }
+
                 return deferred.promise;
             }
 
@@ -81,11 +88,11 @@
                 // Fallback for old system
                 if (typeof ($localStorage[pollId]) === 'string') {
                     deferred.resolve($localStorage[pollId]);
-                } else {
+                    return deferred.promise;
+                } else if ($localStorage[pollId].token) {
                     deferred.resolve($localStorage[pollId].token);
+                    return deferred.promise;
                 }
-
-                return deferred.promise;
             }
 
             $http({

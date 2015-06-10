@@ -17,7 +17,6 @@
 
         $scope.pollId = $routeParams['pollId'];
         $scope.token = $routeParams['tokenId'] || '';
-        $scope.manageId = '';
 
         $scope.poll = { Choices: [] };
         $scope.resultsLink = RoutingService.getResultsPageUrl($scope.pollId, $scope.token);
@@ -56,7 +55,9 @@
         function getManageLink() {
             TokenService.getManageId($scope.pollId)
             .then(function (manageData) {
-                $scope.manageLink = RoutingService.getManagePageUrl(manageData);
+                if (manageData) {
+                    $scope.manageLink = RoutingService.getManagePageUrl(manageData);
+                }
             });
         }
 

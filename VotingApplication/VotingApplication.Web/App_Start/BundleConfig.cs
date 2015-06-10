@@ -34,12 +34,12 @@ namespace VotingApplication.Web
             votingStyle.Orderer = nullOrderer;
             bundles.Add(votingStyle);
 
-            StyleBundle createStyle = new StyleBundle("~/Bundles/CreateStyle");
-            createStyle.Include("~/Content/Scss/Creation.scss");
-            createStyle.Builder = nullBuilder;
-            createStyle.Transforms.Add(styleTransformer);
-            createStyle.Orderer = nullOrderer;
-            bundles.Add(createStyle);
+            StyleBundle manageStyle = new StyleBundle("~/Bundles/ManageStyle");
+            manageStyle.Include("~/Content/Scss/Manage.scss");
+            manageStyle.Builder = nullBuilder;
+            manageStyle.Transforms.Add(styleTransformer);
+            manageStyle.Orderer = nullOrderer;
+            bundles.Add(manageStyle);
 
             StyleBundle dateTimePickerStyle = new StyleBundle("~/Bundles/DateTimePickerStyle");
             dateTimePickerStyle.Include("~/Content/Scss/DateTimePicker.scss");

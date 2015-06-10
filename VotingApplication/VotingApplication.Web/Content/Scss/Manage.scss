@@ -1,0 +1,371 @@
+﻿@import '~/Content/Scss/Site.scss';
+
+$Blue100: #BBDEFB;
+$Blue200: #90CAF9;
+$Blue300: #64B5F6;
+$Blue500: #2196F3;
+$Blue700: #1976D2;
+$Red900: #B71C1C;
+$Red500: #f44336;
+$Grey400: #BDBDBD;
+$BlueGrey400: #78909C;
+$BlueGrey100: #CFD8DC;
+$DeepOrange500: #FF5722;
+$Black: #000000;
+$White: #FFFFFF;
+
+a {
+    color: $Blue500;
+}
+
+h2 {
+    -webkit-margin-after: 0.2em;
+}
+
+body {
+    background-color: $Blue100;
+}
+
+.active-btn {
+    background-color: $Blue500;
+    border: 1px solid $Blue700;
+}
+
+.go-btn {
+    background-color: $Blue500;
+    border: 1px solid $Blue700;
+}
+
+#signin-header {
+    font-size: 10pt;
+    color: $Blue500;
+    margin-top: 25px;
+    position: relative;
+    left: 20px;
+
+
+    > i {
+        margin: 0px 2px;
+    }
+}
+
+/*#register-block {
+    width: 215px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#question-block {
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 300px;
+    font-size: 10pt;
+
+    > input {
+        width: 100%;
+    }
+}
+
+#quickpoll-block {
+    margin-top: 15px;
+    width: 100px;
+    margin-left: auto;
+    margin-right: auto;
+}*/
+
+.centered-text {
+    width: 100%;
+    text-align: center;
+}
+
+.shadowed {
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+
+.account-control-box {
+    position: absolute;
+    border-style: solid;
+    border-width: thin;
+    border-color: $BlueGrey400;
+    width: 100px;
+    right: 0;
+
+    > div {
+        border-top-style: solid;
+        border-top-width: thin;
+        border-top-color: $BlueGrey100;
+        padding: 3px;
+
+        &:first-of-type {
+            border-top: none;
+        }
+    }
+}
+
+.btn-group-points {
+    @extend .btn-group;
+    width: 100px;
+    display: flex;
+    border-color: $Grey400;
+
+    &.selected {
+        border-color: $Blue500;
+    }
+
+    > button {
+        width: 29px;
+    }
+
+    > .points-label {
+        float: left;
+        padding: 7px 0 0 0;
+        width: 40px;
+    }
+}
+
+// Horizontal rules
+
+.horizontal-ruled:before {
+    content: '';
+    background-color: $Grey400;
+    height: 1px;
+    display: block;
+    position: relative;
+    top: 12px;
+    left: 10%;
+    width: 30%;
+}
+
+.horizontal-ruled:after {
+    content: '';
+    background-color: $Grey400;
+    height: 1px;
+    display: block;
+    position: relative;
+    top: -12px;
+    left: 60%;
+    width: 30%;
+}
+
+// Manage page specific
+
+.icon-padded-left {
+    padding-left: 20px;
+}
+
+.icon-margin-left {
+    margin-left: 20px;
+}
+
+.icon-margin-bottom {
+    margin-bottom: 15px;
+}
+
+.padded-top-small {
+    padding-top: 5px;
+}
+
+.form-aligned-top {
+    margin-top: 4px;
+    margin-left: 5px;
+}
+
+.manage-btn {
+    background-color: $Blue500;
+    color: $White;
+    border: none;
+    box-shadow: 1px 1px 4px 0px rgba($Black, 0.6);
+    padding: 5px;
+    min-width: 75px;
+    margin: 2px;
+
+    &:active {
+        background-color: $Blue300;
+        box-shadow: 0px 0px 4px 0px rgba($Black, 0.6);
+    }
+}
+
+.manage-input {
+    @extend .input;
+    border-color: $Blue500;
+}
+
+.manage-area {
+    max-width: 300px;
+}
+
+.manage-section {
+    margin-top: 1.3em;
+}
+
+.manage-section-row {
+    margin-bottom: 5px;
+}
+
+.margin-right-medium {
+    margin-right: 20px;
+}
+
+.warn-box {
+    background-color: $DeepOrange500;
+    color: $White;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.wide-input {
+    width: 75%;
+}
+
+.toggle-switch {
+    border-radius: 5px;
+    background-color: #f0f0f0;
+
+    .knob {
+        border-radius: 5px;
+    }
+}
+
+.toggle-switch-animate {
+    transition: left 0.2s;
+}
+
+.toggle-switch .switch-left {
+    background-color: $Blue500;
+}
+
+.poll-link-area {
+    padding-right: 0.1em;
+    overflow: hidden;
+}
+
+.poll-type-btn {
+    height: 48px;
+    width: 100%;
+
+    .fa {
+        margin-right: 10px;
+    }
+}
+
+.poll-type-btn-extended {
+    border: 1px solid;
+    border-color: $Grey400;
+    border-radius: 7px;
+    width: 100%;
+
+    > .poll-type-btn {
+        border-top: none;
+        border-right: none;
+        border-left: none;
+    }
+
+    > .content {
+        padding: 5px 15px 5px 15px;
+        min-height: 70px;
+    }
+
+    &.selected {
+        border-color: $Blue700;
+    }
+}
+
+#poll-link-go-btn {
+    margin-top: 1.2em;
+}
+
+.pill-box {
+    margin-top: 10px;
+}
+
+.invitee-pill {
+    border: 1px solid $BlueGrey100;
+    border-radius: 5px;
+    height: 25px;
+    display: inline-block;
+    font-size: 10pt;
+    margin: 2px;
+    overflow: hidden;
+
+    .invitee-pill-text {
+        padding: 2px 5px;
+        float: left;
+        max-width: 250px;
+    }
+
+    .invitee-pill-delete {
+        float: right;
+        background-color: $Red500;
+        color: $White;
+        font-weight: bold;
+        padding: 5px 10px;
+        height: 25px;
+        top: 0px;
+        cursor: pointer;
+    }
+}
+
+.spacing-bottom {
+    margin-bottom: 5px;
+    display: block;
+}
+
+// Dashboard specific
+
+.poll-panel {
+    background-color: $Blue100;
+    border: 2px $Grey400 solid;
+    margin-bottom: 25px;
+    min-width: 260px;
+    min-height: 120px;
+}
+
+.poll-panel-header {
+    padding-left: 14px;
+}
+
+
+.poll-panel-button {
+    @extend .manage-btn;
+    width: 115px;
+    height: 32px;
+    font: normal 12pt 'Open Sans';
+    box-shadow: none;
+}
+
+.poll-panel-buttons {
+    padding-left: 7px;
+    padding-bottom: 9px;
+}
+
+.poll-panel-pollName {
+    font: bold 14pt 'Roboto';
+}
+
+.fa-facebook-square {
+    color: #0D47A1;
+}
+
+.fa-google-plus-square {
+    color: $Red900;
+}
+
+// Manage Voters
+.manage-voters-table {
+    width: 100%;
+}
+
+.manage-voters-body {
+    border-bottom: 1px solid $BlueGrey100;
+    border-top: 1px solid $BlueGrey100;
+}
+
+.manage-voters-voter {
+    border-bottom: 1px solid $BlueGrey100;
+}
+
+.manage-voters-vote {
+    padding-left: 24px;
+}

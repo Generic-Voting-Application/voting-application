@@ -1,4 +1,4 @@
-﻿<div ng-app="GVA.Creation" ng-controller="ManagePageController">
+﻿<div ng-app="GVA.Manage" ng-controller="ManagePageController">
     <div class="manage-area centered">
 
         <h2>
@@ -100,12 +100,13 @@
             <div class="icon-margin-bottom">
                 <span class="fa fa-share-alt pull-left" aria-hidden="true"></span>
                 <div class="pull-right">
+                    <i ng-click="toggleQRCode=!toggleQRCode" class="fa fa-qrcode fa-2x clickable"></i>
                     <a href="mailto:&amp;body={{fullPollUrl()}}"><i class="fa fa-envelope-square fa-2x"></i></a>
                 </div>
                 <h4 class="icon-padded-left">Share</h4>
             </div>
+            <qrcode version="7" ng-show="toggleQRCode" data="{{fullPollUrl()}}" size="300" download></qrcode>
         </div>
-
         <div class="manage-section" ng-show="!poll.InviteOnly" id="manage-link-section">
             <div>
                 <span class="fa fa-link pull-left" aria-hidden="true"></span>

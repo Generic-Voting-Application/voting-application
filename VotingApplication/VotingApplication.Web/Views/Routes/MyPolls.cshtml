@@ -1,0 +1,28 @@
+﻿<div id="my-polls" ng-controller="MyPollsController">
+    <div>
+        <h2>Welcome {{account.email}}</h2>
+    </div>
+
+    <h2 ng-show="userPolls.length > 0">Your polls</h2>
+    <div ng-repeat="poll in userPolls">
+
+        <div class="poll-panel">
+            <div class="poll-panel-header">
+                <span class="poll-panel-pollName">{{ poll.Name }}</span>
+                <h4>{{ poll.CreatedDateUtc | momentDisplayFilter: 'Do MMM YYYY, h:mm a'}}</h4>
+            </div>
+            <div class="poll-panel-buttons">
+                <a href="{{manageUrl(poll.ManageId)}}">
+                    <button class="poll-panel-button">Manage</button>
+                </a>
+                <button class="poll-panel-button" ng-click="copyPoll(poll.UUID)">Repeat Poll</button>
+            </div>
+
+        </div>
+    </div>
+
+    <h4 class="text-centered" ng-show="!userPolls || userPolls.length == 0">
+        You don't appear to have created any polls. <br />
+        Any polls you create will be listed here
+    </h4>
+</div>

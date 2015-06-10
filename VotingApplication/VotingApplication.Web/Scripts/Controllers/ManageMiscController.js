@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('GVA.Creation')
+        .module('GVA.Manage')
         .controller('ManageMiscController', ManageMiscController);
 
     ManageMiscController.$inject = ['$scope', '$routeParams', '$location', 'ManageService', 'RoutingService'];

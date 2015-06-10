@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html ng-app="GVA.Manage" ng-controller="DashboardController">
+<head>
+    <title>Vote On</title>
+    @Styles.Render("~/Bundles/StyleLib")
+    @Styles.Render("~/Bundles/ManageStyle")
+    <meta name="viewport" content="initial-scale=1">
+</head>
+<body>
+    <div class="center-panel">
+        <header>
+            <div class="pull-left" id="logo">
+                <a href="/"><img src="/Images/Logo.png" /></a>
+            </div>
+            <div class="pull-right" id="signin-header">
+                <span>
+                    <span id="signin-link" ng-if="!account"><span class="clickable" ng-click="openLoginDialog()">Sign In</span> | <span id="register-link" class="clickable" ng-click="openRegisterDialog()">Register</span></span>
+                    <span ng-if="account">{{account.email}}</span>
+                    <i class="fa fa-user"></i>
+                    <i id="account-control-toggle" ng-show="account" class="fa fa-chevron-down" ng-click="toggleAccountControls=!toggleAccountControls"></i>
+                </span>
+                <div class="pull-right account-control-box" ng-show="toggleAccountControls && account">
+                    <div><a id="my-polls-link" href="{{myPollsLink}}">My Polls</a></div>
+                    <div><a id="signout-link" href="javascript:;" ng-click="toggleAccountControls=false;signOut()">Sign Out</a></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="body-content">
+            <div ng-view></div>
+        </div>
+        <div error-bar></div>
+        <footer><a href="mailto:generic.voting@gmail.com">Email Us</a> | © 2015 – Scott Logic Ltd</footer>
+    </div>
+    @Scripts.Render("~/Bundles/ScriptLib")
+    @Scripts.Render("~/Bundles/Script")
+</body>
+</html>
