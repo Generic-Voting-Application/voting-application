@@ -63,7 +63,7 @@ namespace VotingApplication.Web.Api.Controllers
                     context.SaveChanges();
                 }
 
-                return CreateResponse(poll, tokenGuid);
+                return CreateResponse(poll, tokenGuid.Value);
             }
         }
 
@@ -85,7 +85,7 @@ namespace VotingApplication.Web.Api.Controllers
             return null;
         }
 
-        private static PollRequestResponseModel CreateResponse(Poll poll, Guid? tokenGuid)
+        private static PollRequestResponseModel CreateResponse(Poll poll, Guid tokenGuid)
         {
             return new PollRequestResponseModel
             {
@@ -96,7 +96,7 @@ namespace VotingApplication.Web.Api.Controllers
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,
 
-                TokenGuid = tokenGuid ?? Guid.NewGuid(),
+                TokenGuid = tokenGuid,
 
                 Choices = poll.Choices,
 

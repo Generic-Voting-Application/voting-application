@@ -23,7 +23,7 @@ describe('TokenService', function () {
 
     describe('Get Token', function () {
 
-        it('Returns a null token for a null pollId', function () {
+        it('Rejects the promise for a null pollId', function () {
 
             var nullPollId = null;
 
