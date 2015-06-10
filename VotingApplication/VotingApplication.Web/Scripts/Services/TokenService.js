@@ -13,7 +13,9 @@
             getToken: getTokenForPoll,
             setToken: setTokenForPoll,
             getManageId: getManageIdForPoll,
-            setManageId: setManageIdForPoll
+            setManageId: setManageIdForPoll,
+
+            retrieveToken: retrieveToken
         };
 
         return service;
@@ -100,6 +102,30 @@
             });
 
             return deferred.promise;
+        }
+
+        function retrieveToken(pollId) {
+
+            if (!pollId) {
+                return null;
+            }
+
+            if ($routeParams['tokenId']) {
+                return $routeParams['tokenId'];
+            }
+
+            var userData = $localStorage[pollId];
+            if (userData) {
+                if (userData.token) {
+                    return userData.token;
+                }
+                    // Old style token, not stored in an object, but straight in localStorage.
+                else if (typeof userData === 'string') {
+                    return userData;
+                }
+            }
+
+            return null;
         }
     }
 })();

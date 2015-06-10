@@ -95,4 +95,55 @@ describe('TokenService', function () {
 
     });
 
+    describe('Retrieve Token', function () {
+
+        it('Returns null for a null pollId', function () {
+
+            var nullPollId = null;
+
+            var token = tokenService.retrieveToken(nullPollId);
+
+            expect(token).toBe(null);
+        });
+
+        it('With a token in the route, returns the route token', function () {
+
+            routeParams['tokenId'] = tokenValue;
+
+            var token = tokenService.retrieveToken(pollId);
+
+            expect(token).toBe(tokenValue);
+        });
+
+        it('With no route token, but a token in local storage, returns the local storage token', function() {
+            routeParams['tokenId'] = null;
+            localStorage[pollId] = { token: tokenValue };
+
+            var token = tokenService.retrieveToken(pollId);
+
+            expect(token).toBe(tokenValue);
+
+        });
+
+        it('With no route token, but an old style token in local storage, returns the local storage token', function () {
+            routeParams['tokenId'] = null;
+            localStorage[pollId] = tokenValue;
+
+            var token = tokenService.retrieveToken(pollId);
+
+            expect(token).toBe(tokenValue);
+
+        });
+
+        it('With no route token, nor a local storage token, returns null', function() {
+
+            routeParams['tokenId'] = null;
+            localStorage[pollId] = null;
+
+            var token = tokenService.retrieveToken(pollId);
+
+            expect(token).toBe(null);
+        });
+    });
+
 });
