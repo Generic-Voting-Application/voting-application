@@ -9,9 +9,9 @@
         .module('GVA.Voting')
         .controller('ResultsPageController', ResultsPageController);
 
-    ResultsPageController.$inject = ['$scope', '$routeParams', 'IdentityService', 'VoteService', 'RoutingService', 'PollService'];
+    ResultsPageController.$inject = ['$scope', '$routeParams', 'IdentityService', 'VoteService', 'RoutingService', 'PollService', 'TokenService'];
 
-    function ResultsPageController($scope, $routeParams, IdentityService, VoteService, RoutingService, PollService) {
+    function ResultsPageController($scope, $routeParams, IdentityService, VoteService, RoutingService, PollService, TokenService) {
 
         var pollId = $routeParams.pollId;
         var tokenId = $routeParams['tokenId'] || '';
@@ -82,7 +82,9 @@
 
         function activate() {
 
-            PollService.getPoll(pollId)
+            var token = TokenService.retrieveToken(pollId);
+
+            PollService.getPoll(pollId, token)
                 .then(getPollSuccessCallback);
 
             VoteService.refreshLastChecked(pollId);
