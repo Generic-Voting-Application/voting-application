@@ -13,17 +13,16 @@ namespace VotingApplication.Web.Tests.E2E
 {
     public class PointsPollTests
     {
-        private static readonly string ChromeDriverDir = @"..\..\";
-        private static readonly string SiteBaseUri = @"http://localhost:64205/";
+        private const string ChromeDriverDir = @"..\..\";
+        private const string SiteBaseUri = @"http://localhost:64205/";
 
         [TestClass]
         public class DefaultPollConfiguration
         {
             private static ITestVotingContext _context;
-            private const int truncatedTextLimit = 60;
+            private const int TruncatedTextLimit = 60;
             private static Poll _defaultPointsPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
-            private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
             private IWebDriver _driver;
 
             [TestInitialize]
@@ -103,7 +102,7 @@ namespace VotingApplication.Web.Tests.E2E
                 {
                     string truncatedDescription = choice.Description
                                                           .Split(' ')
-                                                          .Aggregate((prev, curr) => (curr.Length + prev.Length >= truncatedTextLimit) ?
+                                                          .Aggregate((prev, curr) => (curr.Length + prev.Length >= TruncatedTextLimit) ?
                                                                                      prev : prev + " " + curr);
 
                     if (truncatedDescription != choice.Description)
@@ -121,8 +120,6 @@ namespace VotingApplication.Web.Tests.E2E
             public void VotingOnChoice_NavigatesToResultsPage()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
-                IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
 
                 IReadOnlyCollection<IWebElement> increaseChoiceButtons = _driver.FindElements(By.Id("increase-button"));
                 IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
@@ -151,7 +148,6 @@ namespace VotingApplication.Web.Tests.E2E
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultPointsPoll.UUID);
                 IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
 
-                IReadOnlyCollection<IWebElement> firstChoiceButtons = choices.First().FindElements(By.TagName("Button"));
                 IWebElement selectedChoicePoints = choices.First().FindElement(NgBy.Binding("choice.voteValue"));
                 IReadOnlyCollection<IWebElement> increaseChoiceButtons = _driver.FindElements(By.Id("increase-button"));
                 IReadOnlyCollection<IWebElement> decreaseChoiceButtons = _driver.FindElements(By.Id("decrease-button"));
@@ -175,9 +171,7 @@ namespace VotingApplication.Web.Tests.E2E
             public void PointsButtons_ChangeTotalPointLimit()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
 
-                IReadOnlyCollection<IWebElement> firstChoiceButtons = choices.First().FindElements(By.TagName("Button"));
                 IWebElement totalPoints = _driver.FindElement(By.Id("points-display"));
 
                 IReadOnlyCollection<IWebElement> increaseChoiceButtons = _driver.FindElements(By.Id("increase-button"));
@@ -202,7 +196,6 @@ namespace VotingApplication.Web.Tests.E2E
             public void PointsPerChoice_CanNotExceedMaximum()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
 
                 IReadOnlyCollection<IWebElement> increaseChoiceButtons = _driver.FindElements(By.Id("increase-button"));
 
@@ -252,8 +245,6 @@ namespace VotingApplication.Web.Tests.E2E
             public void PointsVote_AfterVoting_VoteIsRemembered()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
-                IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
 
                 IReadOnlyCollection<IWebElement> increaseChoiceButtons = _driver.FindElements(By.Id("increase-button"));
 
@@ -265,7 +256,7 @@ namespace VotingApplication.Web.Tests.E2E
 
                 _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
 
-                choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
+                IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
                 IWebElement selectedChoicePoints = choices.First().FindElement(NgBy.Binding("poll.MaxPerVote"));
 
                 VoteClearer voterClearer = new VoteClearer(_context);
@@ -282,7 +273,6 @@ namespace VotingApplication.Web.Tests.E2E
             private static ITestVotingContext _context;
             private static Poll _inviteOnlyPointsPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
-            private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
             private IWebDriver _driver;
 
             [ClassInitialize]
@@ -367,7 +357,7 @@ namespace VotingApplication.Web.Tests.E2E
             public void VoteWithToken_NavigatesToResultsPage()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _inviteOnlyPointsPoll.UUID + "/" + _inviteOnlyPointsPoll.Ballots[0].TokenGuid);
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
+
                 IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
                 voteButton.Click();
 
@@ -384,7 +374,6 @@ namespace VotingApplication.Web.Tests.E2E
             private static ITestVotingContext _context;
             private static Poll _namedPointsPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
-            private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
             private IWebDriver _driver;
 
             [ClassInitialize]
@@ -444,7 +433,7 @@ namespace VotingApplication.Web.Tests.E2E
             public void VoteWithNoName_PromptsForName()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
+
                 IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
                 voteButton.Click();
 
@@ -459,11 +448,9 @@ namespace VotingApplication.Web.Tests.E2E
             public void NameInput_AcceptsValidName()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
+
                 IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
                 voteButton.Click();
-
-                buttons = _driver.FindElements(By.TagName("Button"));
 
                 IWebElement formName = _driver.FindElement(NgBy.Model("loginForm.name"));
                 IWebElement goButton = _driver.FindElement(By.Id("go-button"));
@@ -480,14 +467,11 @@ namespace VotingApplication.Web.Tests.E2E
             public void NameInput_VotesUponSubmission()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
+
                 IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
                 voteButton.Click();
 
-                buttons = _driver.FindElements(By.TagName("Button"));
-
                 IWebElement formName = _driver.FindElement(NgBy.Model("loginForm.name"));
-                IWebElement goButton = _driver.FindElement(By.Id("go-button"));
                 formName.SendKeys("User");
 
                 IWebElement form = _driver.FindElement(By.Name("loginForm"));
@@ -506,7 +490,6 @@ namespace VotingApplication.Web.Tests.E2E
             private static ITestVotingContext _context;
             private static Poll _choiceAddingPointsPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
-            private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
             private IWebDriver _driver;
 
             [ClassInitialize]
@@ -598,7 +581,6 @@ namespace VotingApplication.Web.Tests.E2E
 
                 IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
 
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
                 IWebElement addButton = _driver.FindElement(By.Id("add-button"));
 
                 Assert.IsTrue(addButton.IsVisible());
@@ -618,10 +600,7 @@ namespace VotingApplication.Web.Tests.E2E
 
                 IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
 
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
-                IWebElement addButton = _driver.FindElement(By.Id("add-button"));
-
-                String newChoiceName = "New Choice";
+                const string newChoiceName = "New Choice";
                 formName.SendKeys(newChoiceName);
 
                 IWebElement formButton = _driver.FindElement(By.Id("add-button"));
