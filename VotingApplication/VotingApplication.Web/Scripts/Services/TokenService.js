@@ -10,7 +10,6 @@
     function TokenService($location, $http, $localStorage, $routeParams, $q, $timeout) {
 
         var service = {
-            getToken: getTokenForPoll,
             setToken: setTokenForPoll,
             getManageId: getManageIdForPoll,
             setManageId: setManageIdForPoll,
@@ -67,46 +66,6 @@
 
                 return deferred.promise;
             }
-
-            return deferred.promise;
-        }
-
-        function getTokenForPoll(pollId) {
-
-            var deferred = $q.defer();
-
-            if (!pollId) {
-                deferred.reject();
-                return deferred.promise;
-            }
-
-            if ($routeParams['tokenId']) {
-                deferred.resolve($routeParams['tokenId']);
-                return deferred.promise;
-            }
-
-            if ($localStorage[pollId]) {
-
-                // Fallback for old system
-                if (typeof ($localStorage[pollId]) === 'string') {
-                    deferred.resolve($localStorage[pollId]);
-                    return deferred.promise;
-                } else if ($localStorage[pollId].token) {
-                    deferred.resolve($localStorage[pollId].token);
-                    return deferred.promise;
-                }
-            }
-
-            $http({
-                method: 'GET',
-                url: '/api/poll/' + pollId + '/token'
-            })
-            .success(function (data) {
-                var token = data.replace(/\"/g, '');
-                setTokenForPoll(pollId, token);
-
-                deferred.resolve(token);
-            });
 
             return deferred.promise;
         }

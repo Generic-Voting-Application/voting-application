@@ -241,7 +241,6 @@
     <Compile Include="Api\Controllers\ManageVoterController.cs" />
     <Compile Include="Api\Controllers\PollController.cs" />
     <Compile Include="Api\Controllers\PollChoiceController.cs" />
-    <Compile Include="Api\Controllers\PollTokenController.cs" />
     <Compile Include="Api\Controllers\PollResultsController.cs" />
     <Compile Include="Api\Controllers\PollVoteController.cs" />
     <Compile Include="Api\Controllers\WebApiController.cs" />
