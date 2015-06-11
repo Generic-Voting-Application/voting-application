@@ -50,6 +50,10 @@
         }
 
         function getVotePageUrl(pollId, tokenId) {
+            if (!pollId) {
+                return null;
+            }
+
             var url = '/Poll/#/Vote/' + pollId;
             if (tokenId) {
                 url += '/' + tokenId;
@@ -58,6 +62,10 @@
         }
 
         function getResultsPageUrl(pollId, tokenId) {
+            if (!pollId) {
+                return null;
+            }
+
             var url = '/Poll/#/Results/' + pollId;
             if (tokenId) {
                 url += '/' + tokenId;
@@ -66,6 +74,10 @@
         }
 
         function getManagePageUrl(manageId, subPage) {
+            if (!manageId) {
+                return null;
+            }
+
             var url = '/Manage/#/Manage/' + manageId;
             if (subPage) {
                 url += '/' + subPage;
