@@ -23,7 +23,9 @@ describe('VotingPageController', function () {
         MaxPoints: 5,
         MaxPerVote: 1,
         Choices: [{ Id: 1 }, { Id: 2 }, { Id: 3 }, { Id: 4 }],
-        NamedVoting: false
+        NamedVoting: false,
+
+        TokenGuid: mockTokenValue
     };
 
     beforeEach(inject(function ($rootScope, $q, $controller) {
@@ -38,13 +40,13 @@ describe('VotingPageController', function () {
         mockRouteParams = { pollId: '5130518A-4DA5-4FAA-B8FC-0242C9CAA079' };
 
         mockIdentityService = {
-            identity: {},
+            identity: { name: 'Bob' },
             registerIdentityObserver: function () { },
             openLoginDialog: function () { }
         };
         mockTokenService = {
-            getToken: function () {
-                return getTokenPromise.promise;
+            retrieveToken: function () {
+                return mockTokenValue;
             },
             getManageId: function () {
                 return getManageIdPromise.promise;
@@ -73,7 +75,7 @@ describe('VotingPageController', function () {
 
         spyOn(mockIdentityService, 'registerIdentityObserver').and.callThrough();
         spyOn(mockIdentityService, 'openLoginDialog').and.callThrough();
-        spyOn(mockTokenService, 'getToken').and.callThrough();
+        spyOn(mockTokenService, 'retrieveToken').and.callThrough();
         spyOn(mockRoutingService, 'navigateToResultsPage').and.callThrough();
 
         $controller('VotingPageController', {
@@ -87,27 +89,14 @@ describe('VotingPageController', function () {
         });
     }));
 
-    beforeEach(function () {
-        getTokenPromise.resolve(mockTokenValue);
-        scope.$apply();
-    });
-
     it('Registers callback with IdentityService', function () {
 
         expect(mockIdentityService.registerIdentityObserver).toHaveBeenCalled();
     });
 
-    it('Gets token from TokenService and saves it into scope', function () {
-        expect(mockTokenService.getToken).toHaveBeenCalled();
-
-        expect(scope.token).toBe(mockTokenValue);
-    });
-
     it('Gets poll from PollService and saves it into scope', function () {
 
-        var response = { data: mockPollValue };
-
-        getPollPromise.resolve(response);
+        getPollPromise.resolve({ data: mockPollValue });
         scope.$apply();
 
         expect(mockPollService.getPoll).toHaveBeenCalled();
@@ -117,7 +106,7 @@ describe('VotingPageController', function () {
 
     it('Gets votes for a given Token', function () {
 
-        getPollPromise.resolve(mockPollValue);
+        getPollPromise.resolve({ data: mockPollValue });
         scope.$apply();
 
         expect(mockVoteService.getTokenVotes).toHaveBeenCalled();
@@ -152,6 +141,11 @@ describe('VotingPageController', function () {
     });
 
     describe('Submit Vote', function () {
+
+        beforeEach(function () {
+            getPollPromise.resolve({ data: mockPollValue });
+            scope.$apply();
+        });
 
         it('Does not call Vote Service when options is null', function () {
 
@@ -275,6 +269,11 @@ describe('VotingPageController', function () {
 
     describe('Clear Vote', function () {
 
+        beforeEach(function () {
+            getPollPromise.resolve({ data: mockPollValue });
+            scope.$apply();
+        });
+
         it('Calls Vote Service to clear the vote', function () {
 
             scope.clearVote();
@@ -287,7 +286,7 @@ describe('VotingPageController', function () {
             scope.clearVote();
 
             var expectedBallot = {
-                VoterName: null,
+                VoterName: 'Bob',
                 Votes: []
             };
 
@@ -295,6 +294,7 @@ describe('VotingPageController', function () {
         });
 
         it('Calls Routing Service to navigate to the results page when the Vote Service submit is successful', function () {
+
             submitVotePromise.resolve();
 
             scope.clearVote();

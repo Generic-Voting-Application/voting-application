@@ -26,7 +26,7 @@
         $scope.logoutIdentity = IdentityService.clearIdentityName;
         $scope.gvaExpiredCallback = redirectIfExpired;
         $scope.submitVote = submitVote;
-        $scope.clearVote = clearVote;        
+        $scope.clearVote = clearVote;
 
         var getVotes = function () { return []; };
         $scope.setVoteCallback = function (votesFunc) { getVotes = votesFunc; };
@@ -43,13 +43,7 @@
             });
 
             getManageLink();
-            getToken();
-        }
-
-        function getToken() {
-            TokenService.getToken($scope.pollId)
-            .then(function (tokenData) { $scope.token = tokenData; })
-            .then(getPollData);
+            getPollData();
         }
 
         function getManageLink() {
@@ -62,15 +56,21 @@
         }
 
         function getPollData() {
-            PollService.getPoll($scope.pollId)
+            var token = TokenService.retrieveToken($scope.pollId);
+
+            PollService.getPoll($scope.pollId, token)
                 .then(function (response) {
 
-                    $scope.poll = response.data;
+                    var data = response.data;
+
+                    $scope.token = data.TokenGuid;
+
+                    $scope.poll = data;
 
                     setSelectedValues();
                 });
         }
-        
+
         function setSelectedValues() {
             VoteService.getTokenVotes($scope.pollId, $scope.token)
             .then(function (response) {
