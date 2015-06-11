@@ -18,7 +18,7 @@
             AccountService.register(form.email, form.password)
                 .then(function () {
                     closeDialog();
-                    RoutingService.navigateToRegistrationConfirmation();
+                    RoutingService.navigateToRegistrationConfirmation(form.email);
                 })
                 .catch(displayErrorMessage);
 

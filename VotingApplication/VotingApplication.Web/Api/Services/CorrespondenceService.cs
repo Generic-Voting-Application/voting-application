@@ -5,7 +5,6 @@ using System.Text;
 using System.Web;
 using System.Web.Configuration;
 using VotingApplication.Data.Model;
-using VotingApplication.Web.Api.Models;
 
 namespace VotingApplication.Web.Api.Services
 {
@@ -56,7 +55,7 @@ namespace VotingApplication.Web.Api.Services
         }
 
 
-        public void SendConfirmation(ApplicationUser user, string code)
+        public void SendConfirmation(string email, string code)
         {
             string hostUri = WebConfigurationManager.AppSettings["HostURI"];
             if (string.IsNullOrWhiteSpace(hostUri))
@@ -67,8 +66,8 @@ namespace VotingApplication.Web.Api.Services
             StringBuilder confirmationUrl = new StringBuilder();
             confirmationUrl.Append(hostUri);
             confirmationUrl.Append("/api/Account/ConfirmEmail");
-            confirmationUrl.Append("?userId=");
-            confirmationUrl.Append(user.Id);
+            confirmationUrl.Append("?email=");
+            confirmationUrl.Append(HttpUtility.UrlEncode(email));
             confirmationUrl.Append("&code=");
             confirmationUrl.Append(HttpUtility.UrlEncode(code));
 
@@ -79,7 +78,7 @@ namespace VotingApplication.Web.Api.Services
             htmlMessage = htmlMessage.Replace("__HOSTURI__", hostUri);
             htmlMessage = htmlMessage.Replace("__CONFIRMURI__", confirmUri);
 
-            _mailSender.SendMail(user.Email, "Confirm your Email", htmlMessage);
+            _mailSender.SendMail(email, "Confirm your Email", htmlMessage);
         }
     }
 }

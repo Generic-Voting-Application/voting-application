@@ -76,15 +76,22 @@ namespace VotingApplication.Web.Api.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("ConfirmEmail", Name = "ConfirmEmail")]
-        public async Task<IHttpActionResult> ConfirmEmail(string userId, string code)
+        public async Task<IHttpActionResult> ConfirmEmail(string email, string code)
         {
-            if (userId == null || code == null)
+            if (email == null || code == null)
             {
                 ModelState.AddModelError("error", "You need to provide your user id and confirmation code");
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await UserManager.ConfirmEmailAsync(userId, code);
+            ApplicationUser user = await UserManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return BadRequest("User for email not found");
+            }
+
+            IdentityResult result = await UserManager.ConfirmEmailAsync(user.Id, code);
             if (result.Succeeded)
             {
                 return Redirect(Url.Content("~/#/"));
@@ -424,7 +431,7 @@ namespace VotingApplication.Web.Api.Controllers
 
             String code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
 
-            _correspondenceService.SendConfirmation(user, code);
+            _correspondenceService.SendConfirmation(user.Email, code);
 
             var createResult = GetErrorResult(identityResult);
 
@@ -434,6 +441,30 @@ namespace VotingApplication.Web.Api.Controllers
             }
 
             _metricHandler.HandleRegisterEvent(user.UserName);
+
+            return Ok();
+        }
+
+        // POST api/Account/ResendConfirmation
+        [AllowAnonymous]
+        [Route("ResendConfirmation")]
+        public async Task<IHttpActionResult> ResendConfirmation(string email)
+        {
+            if (email == null)
+            {
+                return BadRequest("An email is required to resend confirmation");
+            }
+
+            ApplicationUser user = await UserManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return BadRequest("User for email not found");
+            }
+
+            String code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+
+            _correspondenceService.SendConfirmation(user.Email, code);
 
             return Ok();
         }

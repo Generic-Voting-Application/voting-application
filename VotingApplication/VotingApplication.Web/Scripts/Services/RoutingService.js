@@ -45,8 +45,8 @@
             $window.location.href = '';
         }
 
-        function navigateToRegistrationConfirmation() {
-            $window.location.href = getRegistrationConfirmationUrl();
+        function navigateToRegistrationConfirmation(email) {
+            $window.location.href = getRegistrationConfirmationUrl(email);
         }
 
         function getVotePageUrl(pollId, tokenId) {
@@ -77,8 +77,13 @@
             return '/Manage/#/MyPolls/';
         }
 
-        function getRegistrationConfirmationUrl() {
-            return '/Manage/#/RegistrationConfirmation';
+        function getRegistrationConfirmationUrl(email) {
+
+            if (!email) {
+                return null;
+            }
+
+            return '/Manage/#/RegistrationConfirmation/' + encodeURIComponent(email);
         }
     }
 })();

@@ -51,7 +51,7 @@
                         return '../Routes/MyPolls/';
                     }
                 })
-                .when('/RegistrationConfirmation/', {
+                .when('/RegistrationConfirmation/:email', {
                     templateUrl: function () {
                         return '../Routes/RegistrationConfirmation/';
                     }
