@@ -1,7 +1,8 @@
 namespace VotingApplication.Data.Migrations
 {
+    using System;
     using System.Data.Entity.Migrations;
-
+    
     public partial class RemoveTemplates : DbMigration
     {
         public override void Up()
@@ -37,36 +38,36 @@ namespace VotingApplication.Data.Migrations
             DropTable("dbo.PollOptions");
             DropTable("dbo.TemplateOptions");
         }
-
+        
         public override void Down()
         {
             CreateTable(
                 "dbo.TemplateOptions",
                 c => new
-                {
-                    Template_Id = c.Long(nullable: false),
-                    Option_Id = c.Long(nullable: false),
-                })
+                    {
+                        Template_Id = c.Long(nullable: false),
+                        Option_Id = c.Long(nullable: false),
+                    })
                 .PrimaryKey(t => new { t.Template_Id, t.Option_Id });
-
+            
             CreateTable(
                 "dbo.PollOptions",
                 c => new
-                {
-                    Poll_Id = c.Long(nullable: false),
-                    Option_Id = c.Long(nullable: false),
-                })
+                    {
+                        Poll_Id = c.Long(nullable: false),
+                        Option_Id = c.Long(nullable: false),
+                    })
                 .PrimaryKey(t => new { t.Poll_Id, t.Option_Id });
-
+            
             CreateTable(
                 "dbo.Templates",
                 c => new
-                {
-                    Id = c.Long(nullable: false, identity: true),
-                    Name = c.String(),
-                })
+                    {
+                        Id = c.Long(nullable: false, identity: true),
+                        Name = c.String(),
+                    })
                 .PrimaryKey(t => t.Id);
-
+            
             AddColumn("dbo.Polls", "TemplateId", c => c.Long(nullable: false));
             DropForeignKey("dbo.Options", "Poll_Id", "dbo.Polls");
             DropForeignKey("dbo.Users", "Token_Id", "dbo.Tokens");
