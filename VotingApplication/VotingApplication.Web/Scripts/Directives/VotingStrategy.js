@@ -1,4 +1,5 @@
 ﻿/// <reference path="../Services/PollService.js" />
+/// <reference path="../Services/TokenService.js" />
 (function () {
     'use strict';
 
@@ -6,14 +7,16 @@
         .module('GVA.Voting')
         .directive('votingStrategy', votingStrategy);
 
-    votingStrategy.$inject = ['$routeParams', 'PollService'];
+    votingStrategy.$inject = ['$routeParams', 'PollService', 'TokenService'];
 
-    function votingStrategy($routeParams, PollService) {
+    function votingStrategy($routeParams, PollService, TokenService) {
 
         var pollType = null;
         var pollId = $routeParams.pollId;
 
-        PollService.getPoll(pollId)
+        var token = TokenService.retrieveToken(pollId);
+
+        PollService.getPoll(pollId, token)
             .then(function (response) {
                 pollType = response.data.PollType;
             });
