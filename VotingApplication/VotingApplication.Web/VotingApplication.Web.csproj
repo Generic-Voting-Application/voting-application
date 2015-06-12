@@ -412,7 +412,6 @@
     <Content Include="Views\Routes\EditChoiceDialog.cshtml" />
     <Content Include="Fonts\fontawesome-webfont.woff2" />
     <Content Include="Scripts\Lib\ZeroClipboard-min.map" />
-    <None Include="Views\Routes\PollHeading.cshtml" />
     <Content Include="Views\Routes\PollTypeChange.cshtml" />
     <Content Include="Scripts\Directives\PollHeading.html" />
     <Content Include="Web.config" />
