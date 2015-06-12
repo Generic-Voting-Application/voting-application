@@ -15,6 +15,8 @@
 
     function VotingPageController($scope, $routeParams, IdentityService, VoteService, TokenService, RoutingService, PollService) {
 
+        $scope.hasError = false;
+
         $scope.pollId = $routeParams['pollId'];
         $scope.token = $routeParams['tokenId'] || '';
 
@@ -68,6 +70,9 @@
                     $scope.poll = data;
 
                     setSelectedValues();
+                })
+                .catch(function () {
+                    $scope.hasError = true;
                 });
         }
 

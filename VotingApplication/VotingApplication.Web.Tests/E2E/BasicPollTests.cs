@@ -194,7 +194,7 @@ namespace VotingApplication.Web.Tests.E2E
 
             [TestMethod]
             [TestCategory("E2E")]
-            public void AccessWithNoToken_DisplaysError()
+            public void AccessWithNoToken_DisplaysErrorPage()
             {
                 using (IWebDriver driver = Driver)
                 {
@@ -203,10 +203,10 @@ namespace VotingApplication.Web.Tests.E2E
                         CreatePoll(context);
 
                         GoToUrl(driver, PollUrl);
-                        IWebElement error = driver.FindElement(NgBy.Binding("$root.error.readableMessage"));
 
-                        Assert.IsTrue(error.IsVisible());
-                        Assert.AreEqual("This poll is invite only", error.Text);
+                        IWebElement errorDirective = FindElementById(driver, "voting-partial-error");
+
+                        Assert.IsTrue(errorDirective.IsVisible());
                     }
                 }
             }

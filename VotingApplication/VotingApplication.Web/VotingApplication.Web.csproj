@@ -345,7 +345,9 @@
     <Content Include="Scripts\Controllers\CreatePageController.js" />
     <Content Include="Scripts\Controllers\UpDownVoteController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
+    <Content Include="Scripts\Directives\ErrorHumidor.js" />
     <Content Include="Scripts\Directives\ErrorBar.js" />
+    <Content Include="Scripts\Directives\ErrorHumidor.html" />
     <Content Include="Scripts\Directives\ResultsChart.html" />
     <Content Include="Scripts\Directives\ResultsChart.js" />
     <Content Include="Scripts\Directives\TimePicker.js" />
