@@ -200,10 +200,11 @@ namespace VotingApplication.Web.Api.Controllers
 
             var user = await UserManager.FindByNameAsync(model.Email);
 
-            if (user == null || !await UserManager.IsEmailConfirmedAsync(user.Id))
+            if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
             {
                 ModelState.AddModelError("", "The user either does not exist or is not confirmed.");
                 return BadRequest(ModelState);
+
             }
 
             string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
@@ -429,7 +430,7 @@ namespace VotingApplication.Web.Api.Controllers
 
             IdentityResult identityResult = await UserManager.CreateAsync(user, model.Password);
 
-            String code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
 
             _correspondenceService.SendConfirmation(user.Email, code);
 

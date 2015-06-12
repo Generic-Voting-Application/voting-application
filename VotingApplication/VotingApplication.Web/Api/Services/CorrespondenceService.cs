@@ -21,7 +21,7 @@ namespace VotingApplication.Web.Api.Services
 
         private static string HtmlFromFile(string path)
         {
-            var assembly = Assembly.GetExecutingAssembly();
+            Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream(path))
             {
                 using (StreamReader reader = new StreamReader(stream))
@@ -33,20 +33,20 @@ namespace VotingApplication.Web.Api.Services
 
         public void SendInvitation(Guid UUID, Ballot ballot, string pollQuestion)
         {
-            if (string.IsNullOrWhiteSpace(ballot.Email))
+            if (String.IsNullOrWhiteSpace(ballot.Email))
             {
                 return;
             }
 
             string hostUri = WebConfigurationManager.AppSettings["HostURI"];
-            if (string.IsNullOrWhiteSpace(hostUri))
+            if (String.IsNullOrWhiteSpace(hostUri))
             {
                 return;
             }
 
             string link = hostUri + "/Poll/#/Vote/" + UUID + "/" + ballot.TokenGuid;
 
-            string htmlMessage = (string)_invitationTemplate.Clone();
+            string htmlMessage = (string)_invitationTemplate;
             htmlMessage = htmlMessage.Replace("__VOTEURI__", link);
             htmlMessage = htmlMessage.Replace("__HOSTURI__", hostUri);
             htmlMessage = htmlMessage.Replace("__POLLQUESTION__", pollQuestion);
@@ -55,25 +55,26 @@ namespace VotingApplication.Web.Api.Services
         }
 
 
-        public void SendConfirmation(string email, string code)
+        public void SendConfirmation(string email, string authenticationToken)
         {
             string hostUri = WebConfigurationManager.AppSettings["HostURI"];
-            if (string.IsNullOrWhiteSpace(hostUri))
+            if (String.IsNullOrWhiteSpace(hostUri))
             {
                 return;
             }
 
-            StringBuilder confirmationUrl = new StringBuilder();
+            var confirmationUrl = new StringBuilder();
             confirmationUrl.Append(hostUri);
             confirmationUrl.Append("/api/Account/ConfirmEmail");
             confirmationUrl.Append("?email=");
             confirmationUrl.Append(HttpUtility.UrlEncode(email));
             confirmationUrl.Append("&code=");
-            confirmationUrl.Append(HttpUtility.UrlEncode(code));
+
+            confirmationUrl.Append(HttpUtility.UrlEncode(authenticationToken));
 
             string confirmUri = confirmationUrl.ToString();
 
-            string htmlMessage = (string)_confirmationTemplate.Clone();
+            string htmlMessage = (string)_confirmationTemplate;
 
             htmlMessage = htmlMessage.Replace("__HOSTURI__", hostUri);
             htmlMessage = htmlMessage.Replace("__CONFIRMURI__", confirmUri);
