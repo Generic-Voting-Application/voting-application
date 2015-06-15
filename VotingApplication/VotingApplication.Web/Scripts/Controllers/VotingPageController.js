@@ -70,13 +70,7 @@
                 })
                 .catch(function (error) {
                     $scope.hasError = true;
-
-                    if (error === Errors.NotAllowed) {
-                        $scope.errorText = 'This poll is invite only. To vote, you need to be invited by the poll creator.';
-                    }
-                    else {
-                        $scope.errorText = error.Text;
-                    }
+                    $scope.errorText = error.Text;
                 });
         }
 

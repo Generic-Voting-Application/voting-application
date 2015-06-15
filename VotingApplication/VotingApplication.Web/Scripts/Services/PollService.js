@@ -51,7 +51,7 @@
             switch (response.status) {
                 case 403:
                     {
-                        throw Errors.NotAllowed;
+                        throw Errors.PollInviteOnlyNoToken;
                     }
                 case 404:
                     {
