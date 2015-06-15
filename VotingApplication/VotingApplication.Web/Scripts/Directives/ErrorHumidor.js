@@ -12,11 +12,14 @@
         .directive('errorHumidor', errorHumidor);
 
     function errorHumidor() {
-        
+
         return {
             restrict: 'E',
             replace: true,
-            templateUrl: '/Scripts/Directives/ErrorHumidor.html'
+            templateUrl: '/Scripts/Directives/ErrorHumidor.html',
+            scope: {
+                errorText: '@'
+            }
         };
     }
 })();

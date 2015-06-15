@@ -7,9 +7,9 @@
         .factory('PollService', PollService);
 
 
-    PollService.$inject = ['$http', '$q', 'AccountService'];
+    PollService.$inject = ['$http', '$q', 'AccountService', 'Errors'];
 
-    function PollService($http, $q, AccountService) {
+    function PollService($http, $q, AccountService, Errors) {
 
         var service = {
             getPoll: getPoll,
@@ -39,7 +39,27 @@
                 method: 'GET',
                 url: '/api/poll/' + pollId,
                 headers: tokenGuidHeader
-            });
+            })
+                .then(function (response) {
+                    return response.data;
+                })
+            .catch(transformError);
+        }
+
+        function transformError(response) {
+
+            switch (response.status) {
+                case 403:
+                    {
+                        throw Errors.NotAllowed;
+                    }
+                case 404:
+                    {
+                        throw Errors.PollNotFound;
+                    }
+                default:
+                    throw response.readableMessage;
+            }
         }
 
         function getUserPolls() {

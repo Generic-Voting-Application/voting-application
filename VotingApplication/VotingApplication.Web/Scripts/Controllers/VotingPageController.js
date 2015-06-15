@@ -11,11 +11,12 @@
         .controller('VotingPageController', VotingPageController);
 
 
-    VotingPageController.$inject = ['$scope', '$routeParams', 'IdentityService', 'VoteService', 'TokenService', 'RoutingService', 'PollService'];
+    VotingPageController.$inject = ['$scope', '$routeParams', 'IdentityService', 'VoteService', 'TokenService', 'RoutingService', 'PollService', 'Errors'];
 
-    function VotingPageController($scope, $routeParams, IdentityService, VoteService, TokenService, RoutingService, PollService) {
+    function VotingPageController($scope, $routeParams, IdentityService, VoteService, TokenService, RoutingService, PollService, Errors) {
 
         $scope.hasError = false;
+        $scope.errorText = null;
 
         $scope.pollId = $routeParams['pollId'];
         $scope.token = $routeParams['tokenId'] || '';
@@ -61,18 +62,21 @@
             var token = TokenService.retrieveToken($scope.pollId);
 
             PollService.getPoll($scope.pollId, token)
-                .then(function (response) {
-
-                    var data = response.data;
-
+                .then(function (data) {
                     $scope.token = data.TokenGuid;
-
                     $scope.poll = data;
 
                     setSelectedValues();
                 })
-                .catch(function () {
+                .catch(function (error) {
                     $scope.hasError = true;
+
+                    if (error === Errors.NotAllowed) {
+                        $scope.errorText = 'This poll is invite only. To vote, you need to be invited by the poll creator.';
+                    }
+                    else {
+                        $scope.errorText = error.Text;
+                    }
                 });
         }
 
@@ -103,8 +107,8 @@
             });
 
             PollService.getPoll($scope.pollId)
-                .then(function (pollData) {
-                    $scope.poll = pollData.data;
+                .then(function (data) {
+                    $scope.poll = data;
 
                     $scope.poll.Choices.forEach(function (opt) { opt.voteValue = 0; });
 

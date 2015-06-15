@@ -1,5 +1,4 @@
 ﻿<div ng-controller="VotingPageController" ng-app="GVA.Voting">
-
     <div id="voting-partial" ng-hide="hasError">
         <h2>{{poll.Name}}</h2>
 
@@ -23,5 +22,5 @@
         </div>
     </div>
 
-    <error-humidor id="voting-partial-error" ng-show="hasError"></error-humidor>
+    <error-humidor id="voting-partial-error" ng-show="hasError" error-text="{{errorText}}"></error-humidor>
 </div>

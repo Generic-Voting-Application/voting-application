@@ -17,8 +17,8 @@
         var token = TokenService.retrieveToken(pollId);
 
         PollService.getPoll(pollId, token)
-            .then(function (response) {
-                pollType = response.data.PollType;
+            .then(function (data) {
+                pollType = data.PollType;
             });
 
         var votingTemplate = function () {

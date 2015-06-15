@@ -96,7 +96,7 @@ describe('VotingPageController', function () {
 
     it('Gets poll from PollService and saves it into scope', function () {
 
-        getPollPromise.resolve({ data: mockPollValue });
+        getPollPromise.resolve(mockPollValue);
         scope.$apply();
 
         expect(mockPollService.getPoll).toHaveBeenCalled();
@@ -121,9 +121,7 @@ describe('VotingPageController', function () {
 
         var tokenResponse = { data: tokenVotes };
         getTokenVotesPromise.resolve(tokenResponse);
-
-        var pollResponse = { data: mockPollValue };
-        getPollPromise.resolve(pollResponse);
+        getPollPromise.resolve(mockPollValue);
 
 
         var expectedVoteUpdatedChoices = {
@@ -143,7 +141,7 @@ describe('VotingPageController', function () {
     describe('Submit Vote', function () {
 
         beforeEach(function () {
-            getPollPromise.resolve({ data: mockPollValue });
+            getPollPromise.resolve(mockPollValue);
             scope.$apply();
         });
 
@@ -212,8 +210,7 @@ describe('VotingPageController', function () {
 
         it('Gets poll from PollService and saves it into scope', function () {
 
-            var pollResponse = { data: mockPollValue };
-            getPollPromise.resolve(pollResponse);
+            getPollPromise.resolve(mockPollValue);
             scope.$apply();
 
             // Clear the spied calls, as it gets called during construction.
@@ -228,17 +225,13 @@ describe('VotingPageController', function () {
 
         it('Maintains selected values after poll reload', function () {
             var poll = {
-                data:
-                    {
-                        Choices: [
-                            { Id: 1, voteValue: 1 },
-                            { Id: 2, voteValue: 2 },
-                            { Id: 3, voteValue: 0 },
-                            { Id: 4, voteValue: 0 },
-                            { Id: 5, voteValue: 3 }
-                        ]
-                    }
-
+                Choices: [
+                    { Id: 1, voteValue: 1 },
+                    { Id: 2, voteValue: 2 },
+                    { Id: 3, voteValue: 0 },
+                    { Id: 4, voteValue: 0 },
+                    { Id: 5, voteValue: 3 }
+                ]
             };
 
             var selectedChoices = [
@@ -270,7 +263,7 @@ describe('VotingPageController', function () {
     describe('Clear Vote', function () {
 
         beforeEach(function () {
-            getPollPromise.resolve({ data: mockPollValue });
+            getPollPromise.resolve(mockPollValue);
             scope.$apply();
         });
 

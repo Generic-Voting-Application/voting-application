@@ -31,8 +31,7 @@
             var token = TokenService.retrieveToken(pollId);
 
             PollService.getPoll(pollId, token)
-                .then(function (response) {
-                    var data = response.data;
+                .then(function (data) {
 
                     if (data.ExpiryDateUtc) {
                         var expiryDateUtc = moment.utc(data.ExpiryDateUtc);
