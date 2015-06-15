@@ -11,9 +11,9 @@
         .controller('VotingPageController', VotingPageController);
 
 
-    VotingPageController.$inject = ['$scope', '$routeParams', 'IdentityService', 'VoteService', 'TokenService', 'RoutingService', 'PollService', 'Errors'];
+    VotingPageController.$inject = ['$scope', '$routeParams', 'IdentityService', 'VoteService', 'TokenService', 'RoutingService', 'PollService'];
 
-    function VotingPageController($scope, $routeParams, IdentityService, VoteService, TokenService, RoutingService, PollService, Errors) {
+    function VotingPageController($scope, $routeParams, IdentityService, VoteService, TokenService, RoutingService, PollService) {
 
         $scope.hasError = false;
         $scope.errorText = null;
