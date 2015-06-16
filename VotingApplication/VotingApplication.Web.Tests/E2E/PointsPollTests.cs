@@ -275,7 +275,7 @@ namespace VotingApplication.Web.Tests.E2E
                 {
                     using (var context = new TestVotingContext())
                     {
-                        Poll poll = CreatePoll(context);
+                        CreatePoll(context);
                         GoToUrl(driver, PollUrl);
 
 
@@ -334,6 +334,20 @@ namespace VotingApplication.Web.Tests.E2E
                         string expectedChoicePoints = "1/" + poll.MaxPerVote;
                         Assert.AreEqual(expectedChoicePoints, selectedChoicePoints.Text);
                     }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void NavigatingToNonExistentPoll_ShowsErrorPage()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    GoToUrl(driver, PollUrl);
+
+                    IWebElement errorDirective = FindElementById(driver, "voting-partial-error");
+
+                    Assert.IsTrue(errorDirective.IsVisible());
                 }
             }
 

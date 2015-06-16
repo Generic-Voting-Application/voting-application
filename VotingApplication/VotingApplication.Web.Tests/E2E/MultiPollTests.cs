@@ -197,6 +197,20 @@ namespace VotingApplication.Web.Tests.E2E
                 }
             }
 
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void NavigatingToNonExistentPoll_ShowsErrorPage()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    GoToUrl(driver, PollUrl);
+
+                    IWebElement errorDirective = FindElementById(driver, "voting-partial-error");
+
+                    Assert.IsTrue(errorDirective.IsVisible());
+                }
+            }
+
             public static Poll CreatePoll(TestVotingContext testContext)
             {
                 var testPollChoices = new List<Choice>()
