@@ -210,7 +210,7 @@ describe('ManagePollTypeController', function () {
             expect(ngDialogMock.open).not.toHaveBeenCalled();
         });
 
-        it('Does not ask for confirmation if there are votes for the poll, the poll type is Points, but the max points has not changed', function () {
+        it('Does not ask for confirmation if there are votes for the poll, the poll type is Points, but the max points have not changed', function () {
             var poll = {
                 MaxPoints: 10,
                 PollType: 'Points'
