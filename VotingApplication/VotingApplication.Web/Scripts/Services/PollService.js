@@ -35,31 +35,38 @@
                 tokenGuidHeader = { 'X-TokenGuid': ballotToken };
             }
 
+            var prom = $q.defer();
+
             return $http({
                 method: 'GET',
                 url: '/api/poll/' + pollId,
                 headers: tokenGuidHeader
             })
                 .then(function (response) {
-                    return response.data;
+                    prom.resolve(response.data);
+                    return prom.promise;
                 })
-            .catch(transformError);
+            .catch(function (response) { return transformError(response, prom); });
         }
 
-        function transformError(response) {
+        function transformError(response, promise) {
 
             switch (response.status) {
                 case 403:
                     {
-                        throw Errors.PollInviteOnlyNoToken;
+                        promise.reject(Errors.PollInviteOnlyNoToken);
+                        break;
                     }
                 case 404:
                     {
-                        throw Errors.PollNotFound;
+                        promise.reject(Errors.PollNotFound);
+                        break;
                     }
                 default:
-                    throw response.readableMessage;
+                    promise.reject(response.readableMessage);
             }
+
+            return promise.promise;
         }
 
         function getUserPolls() {

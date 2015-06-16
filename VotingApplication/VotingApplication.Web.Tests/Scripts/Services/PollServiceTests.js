@@ -9,12 +9,14 @@ describe('Poll Service', function () {
     var accountService;
     var httpBackend;
     var rootScope;
+    var errors;
 
-    beforeEach(inject(function (PollService, AccountService, $httpBackend, $rootScope) {
+    beforeEach(inject(function (PollService, AccountService, Errors, $httpBackend, $rootScope) {
         pollService = PollService;
         accountService = AccountService;
         httpBackend = $httpBackend;
         rootScope = $rootScope;
+        errors = Errors;
     }));
 
     afterEach(function () {
@@ -226,5 +228,121 @@ describe('Poll Service', function () {
             httpBackend.flush();
         });
 
+        it('Returns just the data for a success', function () {
+            var pollId = '5CE7BB52-5058-4033-B2A4-5C4214AC4AFA';
+            var ballotTokenGuid = '0310812A-05D3-41BA-AA34-CF7BF8330B67';
+
+            var expectedUrl = '/api/poll/' + pollId;
+
+            var expectedResponseData = 'SomeData';
+
+
+            httpBackend.whenGET(
+                    expectedUrl
+                ).respond(200, expectedResponseData);
+
+
+            var responseData = null;
+
+            pollService.getPoll(pollId, ballotTokenGuid)
+                .then(function (data) {
+                    responseData = data;
+                });
+
+            httpBackend.flush();
+
+            expect(responseData).toEqual(expectedResponseData);
+        });
+
+        it('Rejects the promise when there is an error', function () {
+            var pollId = '5CE7BB52-5058-4033-B2A4-5C4214AC4AFA';
+            var ballotTokenGuid = '0310812A-05D3-41BA-AA34-CF7BF8330B67';
+
+            var expectedUrl = '/api/poll/' + pollId;
+
+            httpBackend.whenGET(
+                    expectedUrl
+                ).respond(404);
+
+
+            var prom = pollService.getPoll(pollId, ballotTokenGuid);
+
+            httpBackend.flush();
+
+            expect(prom.$$state.status).toBe(2);
+        });
+
+        it('Returns the correct error when the poll is not found', function () {
+            var pollId = '5CE7BB52-5058-4033-B2A4-5C4214AC4AFA';
+            var ballotTokenGuid = '0310812A-05D3-41BA-AA34-CF7BF8330B67';
+
+            var expectedUrl = '/api/poll/' + pollId;
+
+            httpBackend.whenGET(
+                    expectedUrl
+                ).respond(404);
+
+
+            var errorMessage = null;
+
+            pollService.getPoll(pollId, ballotTokenGuid)
+                .catch(function (message) {
+                    errorMessage = message;
+                });
+
+            httpBackend.flush();
+
+
+            expect(errorMessage).toBe(errors.PollNotFound);
+        });
+
+        it('Returns the correct error when the poll is invite only and an invalid token is supplied', function () {
+            var pollId = '5CE7BB52-5058-4033-B2A4-5C4214AC4AFA';
+            var ballotTokenGuid = '0310812A-05D3-41BA-AA34-CF7BF8330B67';
+
+            var expectedUrl = '/api/poll/' + pollId;
+
+            httpBackend.whenGET(
+                    expectedUrl
+                ).respond(403);
+
+
+            var errorMessage = null;
+
+            pollService.getPoll(pollId, ballotTokenGuid)
+                .catch(function (message) {
+                    errorMessage = message;
+                });
+
+            httpBackend.flush();
+
+
+            expect(errorMessage).toBe(errors.PollInviteOnlyNoToken);
+        });
+
+        it('Returns the readableMessage property in unknown error cases', function () {
+
+            var pollId = '5CE7BB52-5058-4033-B2A4-5C4214AC4AFA';
+            var ballotTokenGuid = '0310812A-05D3-41BA-AA34-CF7BF8330B67';
+
+            var expectedUrl = '/api/poll/' + pollId;
+
+            httpBackend.whenGET(
+                    expectedUrl
+                ).respond(400);
+
+            var errorMessage = null;
+
+            pollService.getPoll(pollId, ballotTokenGuid)
+                .catch(function (message) {
+                    errorMessage = message;
+                });
+
+            httpBackend.flush();
+
+
+            var expectedErrorMessage = 'An error has occured';
+            expect(errorMessage).toBe(expectedErrorMessage);
+        });
     });
 });
