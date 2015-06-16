@@ -3,11 +3,11 @@
 
     angular
         .module('GVA.Manage')
-        .controller('RegistrationConfirmationController', RegistrationConfirmationController);
+        .controller('ConfirmRegistrationController', ConfirmRegistrationController);
 
-    RegistrationConfirmationController.$inject = ['$scope', '$routeParams', 'AccountService'];
+    ConfirmRegistrationController.$inject = ['$scope', '$routeParams', 'AccountService'];
 
-    function RegistrationConfirmationController($scope, $routeParams, AccountService) {
+    function ConfirmRegistrationController($scope, $routeParams, AccountService) {
 
         var email = $routeParams['email'];
 

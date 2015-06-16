@@ -458,9 +458,9 @@ namespace VotingApplication.Web.Api.Controllers
 
             ApplicationUser user = await UserManager.FindByEmailAsync(email);
 
-            if (user == null)
+            if (user == null || user.EmailConfirmed)
             {
-                return BadRequest("User for email not found");
+                return Ok();
             }
 
             String code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);

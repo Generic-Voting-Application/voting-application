@@ -430,7 +430,7 @@
     <Content Include="Views\Routes\UpDownVote.cshtml" />
     <Content Include="Views\Poll\Index.cshtml" />
     <Content Include="Views\Routes\ManageMisc.cshtml" />
-    <Content Include="Views\Routes\RegistrationConfirmation.cshtml" />
+    <Content Include="Views\Routes\ConfirmRegistration.cshtml" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -157,11 +157,10 @@ namespace VotingApplication.Web.Tests.E2E
 
         [TestMethod]
         [TestCategory("E2E")]
-        public void Register_Successfull_ShowsRegistrationConfirmation()
+        public void Register_Successfull_ShowsConfirmRegistration()
         {
             using (IWebDriver driver = Driver)
             {
-                GoToBaseUri(driver);
                 using (var context = new TestVotingContext())
                 {
                     GoToBaseUri(driver);
@@ -180,7 +179,7 @@ namespace VotingApplication.Web.Tests.E2E
 
                     WaitForPageChange();
 
-                    string expectedUrl = SiteBaseUri + "Manage/#/RegistrationConfirmation/" + NewUserEmail;
+                    string expectedUrl = SiteBaseUri + "Manage/#/ConfirmRegistration/" + NewUserEmail;
 
                     Assert.AreEqual(expectedUrl, driver.Url);
                 }
