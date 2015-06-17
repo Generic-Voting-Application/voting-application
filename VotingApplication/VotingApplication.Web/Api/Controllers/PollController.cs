@@ -26,6 +26,7 @@ namespace VotingApplication.Web.Api.Controllers
                 Poll poll = PollByPollId(id, context);
 
                 Guid? tokenGuid = GetTokenGuidFromHeaders();
+                bool userHasVoted = false;
 
                 if (poll.InviteOnly)
                 {
@@ -42,10 +43,14 @@ namespace VotingApplication.Web.Api.Controllers
 
                 if (tokenGuid.HasValue)
                 {
-                    if (poll.Ballots.All(b => b.TokenGuid != tokenGuid.Value))
+                    Ballot ballot = poll.Ballots.Where(b => b.TokenGuid == tokenGuid.Value).SingleOrDefault();
+
+                    if (ballot == null)
                     {
                         ThrowError(HttpStatusCode.NotFound);
                     }
+
+                    userHasVoted = ballot.HasVoted;
                 }
                 else
                 {
@@ -63,7 +68,7 @@ namespace VotingApplication.Web.Api.Controllers
                     context.SaveChanges();
                 }
 
-                return CreateResponse(poll, tokenGuid.Value);
+                return CreateResponse(poll, tokenGuid.Value, userHasVoted);
             }
         }
 
@@ -85,7 +90,7 @@ namespace VotingApplication.Web.Api.Controllers
             return null;
         }
 
-        private static PollRequestResponseModel CreateResponse(Poll poll, Guid tokenGuid)
+        private static PollRequestResponseModel CreateResponse(Poll poll, Guid tokenGuid, bool hasVoted)
         {
             return new PollRequestResponseModel
             {
@@ -102,7 +107,9 @@ namespace VotingApplication.Web.Api.Controllers
 
                 NamedVoting = poll.NamedVoting,
                 ChoiceAdding = poll.ChoiceAdding,
-                ElectionMode = poll.ElectionMode
+                ElectionMode = poll.ElectionMode,
+
+                UserHasVoted = hasVoted
             };
         }
 

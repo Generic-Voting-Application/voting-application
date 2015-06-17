@@ -21,5 +21,6 @@ namespace VotingApplication.Data.Model
         public string Email { get; set; }
         public String VoterName { get; set; }
         public List<Vote> Votes { get; set; }
+        public bool HasVoted { get; set; }
     }
 }

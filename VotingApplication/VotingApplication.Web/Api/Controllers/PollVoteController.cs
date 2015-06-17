@@ -135,6 +135,11 @@ namespace VotingApplication.Web.Api.Controllers
                     }
                 }
 
+                if (poll.ElectionMode && ballot.HasVoted)
+                {
+                    ThrowError(HttpStatusCode.BadRequest, "Vote changing is not permitted on this poll");
+                }
+
                 List<Vote> existingVotes = context
                     .Votes
                     .Include(v => v.Poll)
@@ -164,6 +169,8 @@ namespace VotingApplication.Web.Api.Controllers
                 {
                     ballot.VoterName = Regex.Replace(ballotRequest.VoterName, ValidVoterNameRegex, "");
                 }
+
+                ballot.HasVoted = true;
 
                 poll.LastUpdatedUtc = DateTime.UtcNow;
 
