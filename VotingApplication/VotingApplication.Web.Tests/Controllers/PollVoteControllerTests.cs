@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -14,11 +15,12 @@ using VotingApplication.Web.Api.Controllers;
 using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Api.Validators;
+using VotingApplication.Web.Tests.TestHelpers;
 
 namespace VotingApplication.Web.Tests.Controllers
 {
     [TestClass]
-    public class TokenPollVoteControllerTests
+    public class PollVoteControllerTests
     {
         private PollVoteController _controller;
         private Vote _bobVote;
@@ -34,6 +36,10 @@ namespace VotingApplication.Web.Tests.Controllers
         private Ballot _bobBallot;
         private Ballot _joeBallot;
         private Ballot _otherBallot;
+
+        public readonly Guid PollId = new Guid("5423A511-2BA7-4918-BA7D-04024FC18669");
+
+        public readonly Guid TokenGuid = new Guid("2D5A994D-5CC6-49D9-BCF0-AD1D5D2A3739");
 
         private Mock<IVoteValidatorFactory> _mockValidatorFactory;
         private Mock<IMetricHandler> _mockMetricHandler;
@@ -298,6 +304,45 @@ namespace VotingApplication.Web.Tests.Controllers
 
             // Assert
             _mockMetricHandler.Verify(m => m.HandleVoteDeletedEvent(existingVote, _mainUUID), Times.Once());
+        }
+
+        [TestMethod]
+        [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
+        public void ElectionPoll_BallotHasVoted_BadRequest()
+        {
+            const string pollName = "Why are we here?";
+            const PollType pollType = PollType.Basic;
+
+            var ballot = new Ballot() { TokenGuid = TokenGuid, HasVoted = true };
+
+            var poll = new Poll()
+            {
+                UUID = PollId,
+                Name = pollName,
+                PollType = pollType,
+
+                ExpiryDateUtc = null,
+
+                NamedVoting = false,
+                ChoiceAdding = false,
+                ElectionMode = true,
+                InviteOnly = true
+            };
+            poll.Ballots.Add(ballot);
+
+            IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+            polls.Add(poll);
+            IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+            ballots.Add(ballot);
+            IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots);
+
+            var ballotRequest = new BallotRequestModel()
+            {
+                VoterName = "Blah",
+                Votes = new List<VoteRequestModel>()
+            };
+
+            _controller.Put(PollId, TokenGuid, ballotRequest);
         }
 
         #endregion

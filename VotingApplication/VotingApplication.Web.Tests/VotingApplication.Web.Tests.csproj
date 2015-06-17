@@ -108,7 +108,7 @@
     <Compile Include="Controllers\PollControllerTests.cs" />
     <Compile Include="Controllers\PollChoiceControllerTests.cs" />
     <Compile Include="Controllers\PollResultControllerTests.cs" />
-    <Compile Include="Controllers\TokenPollVoteControllerTests.cs" />
+    <Compile Include="Controllers\PollVoteControllerTests.cs" />
     <Compile Include="E2E\BasicPollTests.cs" />
     <Compile Include="E2E\E2ETest.cs" />
     <Compile Include="E2E\Helpers\Clearers\Clearer.cs" />

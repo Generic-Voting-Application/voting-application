@@ -108,16 +108,6 @@ namespace VotingApplication.Web.Api.Controllers
                     }
                 }
 
-                // Poll specific validation
-                IVoteValidator voteValidator = _voteValidatorFactory.CreateValidator(poll.PollType);
-                voteValidator.Validate(ballotRequest.Votes, poll, ModelState);
-
-                if (!ModelState.IsValid)
-                {
-                    ThrowError(HttpStatusCode.BadRequest, ModelState);
-                }
-
-
                 Ballot ballot = poll
                     .Ballots
                     .SingleOrDefault(t => t.TokenGuid == tokenGuid);
@@ -138,6 +128,15 @@ namespace VotingApplication.Web.Api.Controllers
                 if (poll.ElectionMode && ballot.HasVoted)
                 {
                     ThrowError(HttpStatusCode.BadRequest, "Vote changing is not permitted on this poll");
+                }
+
+                // Poll specific validation
+                IVoteValidator voteValidator = _voteValidatorFactory.CreateValidator(poll.PollType);
+                voteValidator.Validate(ballotRequest.Votes, poll, ModelState);
+
+                if (!ModelState.IsValid)
+                {
+                    ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
                 List<Vote> existingVotes = context

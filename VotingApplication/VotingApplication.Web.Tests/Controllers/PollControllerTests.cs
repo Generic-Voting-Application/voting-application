@@ -281,6 +281,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 Assert.IsFalse(response.NamedVoting);
                 Assert.IsFalse(response.ChoiceAdding);
                 Assert.IsFalse(response.ElectionMode);
+                Assert.IsFalse(response.UserHasVoted);
             }
 
             [TestMethod]
@@ -465,6 +466,45 @@ namespace VotingApplication.Web.Tests.Controllers
                 Assert.IsFalse(response.NamedVoting);
                 Assert.IsFalse(response.ChoiceAdding);
                 Assert.IsFalse(response.ElectionMode);
+                Assert.IsFalse(response.UserHasVoted);
+            }
+
+            [TestMethod]
+            public void ElectionPoll_BallotHasVoted_UserHasVotedIsTrue()
+            {
+                const string pollName = "Why are we here?";
+                const PollType pollType = PollType.Basic;
+
+                var ballot = new Ballot() { TokenGuid = TokenGuid, HasVoted = true };
+
+                var poll = new Poll()
+                {
+                    UUID = PollId,
+                    Name = pollName,
+                    PollType = pollType,
+
+                    ExpiryDateUtc = null,
+
+                    NamedVoting = false,
+                    ChoiceAdding = false,
+                    ElectionMode = false,
+                    InviteOnly = true
+                };
+                poll.Ballots.Add(ballot);
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                polls.Add(poll);
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                ballots.Add(ballot);
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots);
+
+                PollController controller = CreatePollController(contextFactory);
+                AddXTokenGuidHeader(controller, TokenGuid);
+
+
+                PollRequestResponseModel response = controller.Get(PollId);
+
+                Assert.IsTrue(response.UserHasVoted);
             }
 
             [TestMethod]
