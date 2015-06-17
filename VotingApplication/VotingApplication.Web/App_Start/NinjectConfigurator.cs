@@ -51,7 +51,7 @@ namespace VotingApplication.Web
             container.Bind<IContextFactory>().To<ContextFactory>();
             container.Bind<IVotingContext>().To<VotingContext>();
             container.Bind<IVoteValidatorFactory>().To<VoteValidatorFactory>();
-            container.Bind<IInvitationService>().To<InvitationService>();
+            container.Bind<ICorrespondenceService>().To<CorrespondenceService>();
             container.Bind<IMetricHandler>().To<MetricHandler>();
 
             ConfigureMailSender(container);

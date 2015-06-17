@@ -22,10 +22,10 @@ describe('AccountRegisterController', function () {
         registerPromise = $q.defer();
 
         mockAccountService = {
-            registerAccountAndLogin: function () { }
+            register: function () { }
         };
 
-        spyOn(mockAccountService, 'registerAccountAndLogin').and.callFake(function () { return registerPromise.promise; });
+        spyOn(mockAccountService, 'register').and.callFake(function () { return registerPromise.promise; });
         spyOn(scope, 'closeThisDialog').and.callThrough();
 
         $controller('AccountRegisterController', { $scope: scope, AccountService: mockAccountService });
@@ -43,11 +43,11 @@ describe('AccountRegisterController', function () {
 
             registerPromise.resolve();
 
-            scope.registerAccountAndLogin(form.email, form.password);
+            scope.register(form.email, form.password);
 
 
             scope.$apply();
-            expect(mockAccountService.registerAccountAndLogin).toHaveBeenCalled();
+            expect(mockAccountService.register).toHaveBeenCalled();
         });
 
         it('Given a successful register call, closes the dialog', function () {
@@ -60,7 +60,7 @@ describe('AccountRegisterController', function () {
 
             registerPromise.resolve();
 
-            scope.registerAccountAndLogin(form.email, form.password);
+            scope.register(form.email, form.password);
 
 
             scope.$apply();
@@ -80,7 +80,7 @@ describe('AccountRegisterController', function () {
 
             registerPromise.reject();
 
-            scope.registerAccountAndLogin(form.email, form.password);
+            scope.register(form.email, form.password);
 
 
             scope.$apply();

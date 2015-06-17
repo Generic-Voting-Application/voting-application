@@ -89,7 +89,8 @@ namespace VotingApplication.Web.Tests.E2E
                 UserName = NewUserEmail,
                 Email = NewUserEmail,
                 PasswordHash = hash,
-                SecurityStamp = Guid.NewGuid().ToString()
+                SecurityStamp = Guid.NewGuid().ToString(),
+                EmailConfirmed = true
             };
 
             using (var dbContext = new TestIdentityDbContext())

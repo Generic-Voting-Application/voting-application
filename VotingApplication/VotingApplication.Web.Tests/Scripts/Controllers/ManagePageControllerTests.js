@@ -11,7 +11,7 @@ describe('Manage Page Controller', function () {
     var manageUpdateQuestionPromise;
     var manageGetPollPromise;
 
-    beforeEach(inject(function ($rootScope, $q, $controller) {
+    beforeEach(inject(function ($rootScope, $q, $controller, $routeParams) {
 
         scope = $rootScope.$new();
         scope.poll = {};
@@ -27,12 +27,14 @@ describe('Manage Page Controller', function () {
         spyOn(mockManageService, 'getPoll').and.callFake(function () { return manageGetPollPromise.promise; });
         spyOn(mockManageService, 'updateQuestion').and.callFake(function () { return manageUpdateQuestionPromise.promise; });
 
-
+        $routeParams.manageId = 'de60a93b-d701-432c-9443-7f025ab22ce1';
 
         $controller('ManagePageController', { $scope: scope, ManageService: mockManageService });
     }));
 
     it('Loads Poll from service', function () {
+
+
 
         expect(mockManageService.getPoll).toHaveBeenCalled();
     });

@@ -154,5 +154,36 @@ namespace VotingApplication.Web.Tests.E2E
                 }
             }
         }
+
+        [TestMethod]
+        [TestCategory("E2E")]
+        public void Register_Successfull_ShowsConfirmRegistration()
+        {
+            using (IWebDriver driver = Driver)
+            {
+                using (var context = new TestVotingContext())
+                {
+                    GoToBaseUri(driver);
+
+                    IWebElement registerLink = FindElementById(driver, "register-link");
+                    registerLink.Click();
+
+
+                    IWebElement emailInput = FindElementById(driver, "email");
+                    IWebElement passwordInput = FindElementById(driver, "password");
+                    IWebElement signInDialogButton = FindElementById(driver, "register-button-dialog");
+
+                    emailInput.SendKeys(NewUserEmail);
+                    passwordInput.SendKeys(NewUserPassword);
+                    signInDialogButton.Click();
+
+                    WaitForPageChange();
+
+                    string expectedUrl = SiteBaseUri + "Manage/#/ConfirmRegistration/" + NewUserEmail;
+
+                    Assert.AreEqual(expectedUrl, driver.Url);
+                }
+            }
+        }
     }
 }
