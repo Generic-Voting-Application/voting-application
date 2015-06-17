@@ -17,6 +17,10 @@
         var tokenId = $routeParams['tokenId'] || '';
         var reloadInterval = null;
 
+        $scope.loaded = false;
+        $scope.hasError = false;
+        $scope.errorText = null;
+
         $scope.votingLink = RoutingService.getVotePageUrl(pollId, tokenId);
         $scope.winner = 'Lorem';
         $scope.plural = '';
@@ -39,6 +43,13 @@
                     VoteService.refreshLastChecked(pollId);
                     reloadData();
                     reloadInterval = setInterval(reloadData, 3000);
+
+                    $scope.loaded = true;
+                })
+                .catch(function (error) {
+                    $scope.hasError = true;
+                    $scope.errorText = error.Text;
+                    $scope.loaded = true;
                 });
         }
 

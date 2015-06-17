@@ -6,6 +6,8 @@ describe('Results Page Controller', function () {
 
     var scope;
 
+    var errors;
+
     var mockVoteService;
     var mockPollService;
 
@@ -18,9 +20,11 @@ describe('Results Page Controller', function () {
         jasmine.clock().install();
     });
 
-    beforeEach(inject(function ($rootScope, $q, $controller) {
+    beforeEach(inject(function ($rootScope, $q, $controller, Errors) {
 
         scope = $rootScope.$new();
+
+        errors = Errors;
 
         mockVoteService = {
             refreshLastChecked: function () { },
@@ -51,7 +55,7 @@ describe('Results Page Controller', function () {
     });
 
     it('Does not calls vote service to get results when getPoll fails', function () {
-        getPollPromise.reject();
+        getPollPromise.reject(errors.PollNotFound);
         scope.$apply();
 
         expect(mockVoteService.getResults).not.toHaveBeenCalled();
@@ -73,7 +77,7 @@ describe('Results Page Controller', function () {
 
     it('Does not calls vote service to get results after 3 seconds when getPoll fails', function () {
 
-        getPollPromise.reject();
+        getPollPromise.reject(errors.PollNotFound);
         scope.$apply();
 
         mockVoteService.getResults.calls.reset();
@@ -317,6 +321,44 @@ describe('Results Page Controller', function () {
 
         scope.$apply();
         expect(scope.hasExpired).toBe(true);
+    });
+
+    it('Sets Error Text to getPoll error when PollService returns an error', function () {
+
+        getPollPromise.reject(errors.PollNotFound);
+        scope.$apply();
+
+        expect(scope.errorText).toBe(errors.PollNotFound.Text);
+    });
+
+    it('Sets hasError to true when PollService returns an error', function () {
+
+        getPollPromise.reject(errors.PollNotFound);
+        scope.$apply();
+
+        expect(scope.hasError).toBe(true);
+    });
+
+    it('loaded is false before PollService returns', function () {
+
+        expect(scope.loaded).toBe(false);
+    });
+
+    it('loaded is true when PollService returns an error', function () {
+
+        getPollPromise.reject(errors.PollNotFound);
+        scope.$apply();
+
+        expect(scope.loaded).toBe(true);
+    });
+
+    it('loaded is true when VoteService returns results', function () {
+
+        getPollPromise.resolve(getPollResponse);
+        voteGetResultsPromise.resolve({ data: null });
+        scope.$apply();
+
+        expect(scope.loaded).toBe(true);
     });
 
     describe('GVA Expired Callback', function () {
