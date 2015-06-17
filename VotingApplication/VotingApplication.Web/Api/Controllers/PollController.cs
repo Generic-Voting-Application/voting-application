@@ -102,7 +102,7 @@ namespace VotingApplication.Web.Api.Controllers
 
                 NamedVoting = poll.NamedVoting,
                 ChoiceAdding = poll.ChoiceAdding,
-                HiddenResults = poll.HiddenResults
+                ElectionMode = poll.ElectionMode
             };
         }
 

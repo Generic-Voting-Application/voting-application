@@ -172,6 +172,10 @@
     <Compile Include="Migrations\201505260709106_Metrics_Utc.Designer.cs">
       <DependentUpon>201505260709106_Metrics_Utc.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506170857064_HiddenResultsToElectionMode.cs" />
+    <Compile Include="Migrations\201506170857064_HiddenResultsToElectionMode.Designer.cs">
+      <DependentUpon>201506170857064_HiddenResultsToElectionMode.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
     <Compile Include="Model\Metric.cs" />
@@ -272,6 +276,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505260709106_Metrics_Utc.resx">
       <DependentUpon>201505260709106_Metrics_Utc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506170857064_HiddenResultsToElectionMode.resx">
+      <DependentUpon>201506170857064_HiddenResultsToElectionMode.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
