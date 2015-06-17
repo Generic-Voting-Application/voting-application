@@ -78,6 +78,20 @@ namespace VotingApplication.Web.Tests.E2E
             return driver.FindElements(By.Id(elementId));
         }
 
+        public static bool ElementExists(IWebDriver driver, By locator)
+        {
+            try
+            {
+                driver.FindElement(locator);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public void WaitForPageChange()
         {
             Thread.Sleep(1000);
