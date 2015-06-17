@@ -34,14 +34,15 @@
             var token = TokenService.retrieveToken(pollId);
 
             PollService.getPoll(pollId, token)
-                .then(getPollSuccessCallback);
-
-            VoteService.refreshLastChecked(pollId);
-            reloadData();
-            reloadInterval = setInterval(reloadData, 3000);
+                .then(setExpiryDate)
+                .then(function () {
+                    VoteService.refreshLastChecked(pollId);
+                    reloadData();
+                    reloadInterval = setInterval(reloadData, 3000);
+                });
         }
 
-        function getPollSuccessCallback(pollData) {
+        function setExpiryDate(pollData) {
             if (pollData.ExpiryDateUtc) {
                 $scope.hasExpired = moment.utc(pollData.ExpiryDateUtc).isBefore(moment.utc());
             }

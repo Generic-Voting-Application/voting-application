@@ -12,6 +12,8 @@ describe('Results Page Controller', function () {
     var voteGetResultsPromise;
     var getPollPromise;
 
+    var getPollResponse = { ExpiryDateUtc: null };
+
     beforeEach(function () {
         jasmine.clock().install();
     });
@@ -41,12 +43,24 @@ describe('Results Page Controller', function () {
         jasmine.clock().uninstall();
     });
 
-    it('Calls vote service to get results', function () {
+    it('Calls vote service to get results when getPoll is successful', function () {
+        getPollPromise.resolve(getPollResponse);
+        scope.$apply();
 
         expect(mockVoteService.getResults).toHaveBeenCalled();
     });
 
-    it('Calls vote service to get results after 3 seconds', function () {
+    it('Does not calls vote service to get results when getPoll fails', function () {
+        getPollPromise.reject();
+        scope.$apply();
+
+        expect(mockVoteService.getResults).not.toHaveBeenCalled();
+    });
+
+    it('Calls vote service to get results after 3 seconds when getPoll is successful', function () {
+
+        getPollPromise.resolve(getPollResponse);
+        scope.$apply();
 
         mockVoteService.getResults.calls.reset();
 
@@ -57,10 +71,25 @@ describe('Results Page Controller', function () {
         expect(mockVoteService.getResults).toHaveBeenCalled();
     });
 
+    it('Does not calls vote service to get results after 3 seconds when getPoll fails', function () {
+
+        getPollPromise.reject();
+        scope.$apply();
+
+        mockVoteService.getResults.calls.reset();
+
+        expect(mockVoteService.getResults).not.toHaveBeenCalled();
+
+        jasmine.clock().tick(3000);
+
+        expect(mockVoteService.getResults).not.toHaveBeenCalled();
+    });
+
     it('Removes the timer if the vote service returns an error code (400+) from get results', function () {
 
         var response = { data: {}, status: 404 };
 
+        getPollPromise.resolve(getPollResponse);
         voteGetResultsPromise.reject(response);
 
         scope.$apply();
@@ -78,7 +107,7 @@ describe('Results Page Controller', function () {
     });
 
     it('Does not remove the timer if the vote service returns a success from get results', function () {
-
+        getPollPromise.resolve(getPollResponse);
         voteGetResultsPromise.resolve({});
 
         scope.$apply();
@@ -99,6 +128,7 @@ describe('Results Page Controller', function () {
 
         var response = { data: resultData };
 
+        getPollPromise.resolve(getPollResponse);
         voteGetResultsPromise.resolve(response);
 
         scope.$apply();
@@ -115,6 +145,7 @@ describe('Results Page Controller', function () {
 
         var response = { data: resultData };
 
+        getPollPromise.resolve(getPollResponse);
         voteGetResultsPromise.resolve(response);
 
         scope.$apply();
@@ -131,6 +162,7 @@ describe('Results Page Controller', function () {
 
         var response = { data: resultData };
 
+        getPollPromise.resolve(getPollResponse);
         voteGetResultsPromise.resolve(response);
 
         scope.$apply();
@@ -147,6 +179,7 @@ describe('Results Page Controller', function () {
 
         var response = { data: resultData };
 
+        getPollPromise.resolve(getPollResponse);
         voteGetResultsPromise.resolve(response);
 
         scope.$apply();
@@ -163,6 +196,7 @@ describe('Results Page Controller', function () {
 
         var response = { data: resultData };
 
+        getPollPromise.resolve(getPollResponse);
         voteGetResultsPromise.resolve(response);
 
         scope.$apply();
@@ -188,6 +222,7 @@ describe('Results Page Controller', function () {
         };
         var response = { data: resultData };
 
+        getPollPromise.resolve(getPollResponse);
         voteGetResultsPromise.resolve(response);
 
         var expectedChartData = [
@@ -248,11 +283,7 @@ describe('Results Page Controller', function () {
 
     it('Leaves hasExpired false if poll never expires', function () {
 
-        var pollData = {
-            ExpiryDate: undefined
-        };
-
-        mockPollService.getPoll.and.callFake(function (polllId, callback) { return callback(pollData); });
+        getPollPromise.resolve(getPollResponse);
 
         scope.$apply();
         expect(scope.hasExpired).toBe(false);
@@ -267,7 +298,7 @@ describe('Results Page Controller', function () {
             ExpiryDate: new Date(2015, 2, 1)
         };
 
-        mockPollService.getPoll.and.callFake(function (polllId, callback) { return callback(pollData); });
+        getPollPromise.resolve(pollData);
 
         scope.$apply();
         expect(scope.hasExpired).toBe(false);
