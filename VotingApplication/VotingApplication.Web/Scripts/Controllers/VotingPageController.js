@@ -71,11 +71,14 @@
                     return data;
                 })
                 .then(function (data) {
-                    $scope.token = data.TokenGuid;
-                    $scope.poll = data;
-                    $scope.electionMode = data.ElectionMode;
+                    TokenService.setToken($scope.pollId, data.TokenGuid)
+                    .then(function () {
+                        $scope.token = data.TokenGuid;
+                        $scope.poll = data;
+                        $scope.electionMode = data.ElectionMode;
 
-                    setSelectedValues();
+                        setSelectedValues();
+                    });
                 })
                 .catch(function (error) {
                     $scope.hasError = true;

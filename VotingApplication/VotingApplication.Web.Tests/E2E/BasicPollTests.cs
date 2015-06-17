@@ -626,26 +626,61 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestClass]
-        public class ElectionModeConfiguration
+        public class ElectionModeConfiguration : E2ETest
         {
-            private static ITestVotingContext _context;
-            private static Poll _electionModeBasicPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
             private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
-            private IWebDriver _driver;
 
-            [ClassInitialize]
-            public static void ClassInitialise(TestContext testContext)
+            [TestMethod, TestCategory("E2E")]
+            public void ElectionModePoll_DoesNotShowResultsButton()
             {
-                _context = new TestVotingContext();
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        Poll poll = CreatePoll(context);
+                        GoToUrl(driver, PollUrl);
 
-                List<Choice> testPollChoices = new List<Choice>() {
-                new Choice(){ Name = "Test Choice 1", Description = "Test Description 1" },
-                new Choice(){ Name = "Test Choice 2", 
-                              Description = "A very long test description 2 that should exceed the character limit for descriptions" }};
+                        IWebElement resultButton = FindElementById(driver, "results-button");
+
+                        Assert.IsFalse(resultButton.IsVisible());
+                    }
+                }
+            }
+
+            [TestMethod, TestCategory("E2E")]
+            public void ElectionModePoll_WithVotes_NavigatesToResults()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        Poll poll = CreatePoll(context);
+                        GoToUrl(driver, PollUrl);
+
+                        IReadOnlyCollection<IWebElement> voteButtons = FindElementsById(driver, "vote-button");
+                        voteButtons.First().Click();
+
+                        driver.Navigate().GoToUrl(PollUrl);
+
+                        WaitForPageChange();
+
+                        string expectedUrl = SiteBaseUri + "Poll/#/Results/" + PollGuid;
+
+                        Assert.IsTrue(driver.Url.StartsWith(expectedUrl));
+                    }
+                }
+            }
+
+            public static Poll CreatePoll(TestVotingContext testContext)
+            {
+                var testPollChoices = new List<Choice>() 
+                {
+                    new Choice(){ Name = "Test Choice 1", Description = "Test Description 1" },
+                };
 
                 // Open, Anonymous, No Choice Adding, Shown Results
-                _electionModeBasicPoll = new Poll()
+                var electionBasicPoll = new Poll()
                 {
                     UUID = PollGuid,
                     PollType = PollType.Basic,
@@ -659,40 +694,10 @@ namespace VotingApplication.Web.Tests.E2E
                     ElectionMode = true
                 };
 
-                _context.Polls.Add(_electionModeBasicPoll);
-                _context.SaveChanges();
-            }
+                testContext.Polls.Add(electionBasicPoll);
+                testContext.SaveChanges();
 
-            [ClassCleanup]
-            public static void ClassCleanup()
-            {
-                PollClearer pollTearDown = new PollClearer(_context);
-                pollTearDown.ClearPoll(_electionModeBasicPoll);
-
-                _context.Dispose();
-            }
-
-            [TestInitialize]
-            public virtual void TestInitialise()
-            {
-                _driver = new NgWebDriver(new ChromeDriver(ChromeDriverDir));
-                _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromSeconds(10));
-                _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
-            }
-
-            [TestCleanup]
-            public void TestCleanUp()
-            {
-                _driver.Dispose();
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void ElectionModePoll_DoesNotShowResultsButton()
-            {
-                _driver.Navigate().GoToUrl(PollUrl);
-                IWebElement resultButton = _driver.FindElement(By.Id("results-button"));
-
-                Assert.IsFalse(resultButton.IsVisible());
+                return electionBasicPoll;
             }
         }
     }
