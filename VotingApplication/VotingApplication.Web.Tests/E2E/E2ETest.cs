@@ -60,7 +60,12 @@ namespace VotingApplication.Web.Tests.E2E
 
         public static void GoToBaseUri(IWebDriver driver)
         {
-            driver.Navigate().GoToUrl(SiteBaseUri);
+            GoToUrl(driver, SiteBaseUri);
+        }
+
+        public static void GoToUrl(IWebDriver driver, string url)
+        {
+            driver.Navigate().GoToUrl(url);
         }
 
         public static IWebElement FindElementById(IWebDriver driver, string elementId)

@@ -38,10 +38,13 @@ namespace VotingApplication.Web.Api.Controllers
 
         public void ThrowError(HttpStatusCode statusCode, string message)
         {
-            HttpResponseException exception = new HttpResponseException(new HttpResponseMessage(statusCode)
+            var httpResponseMessage = new HttpResponseMessage(statusCode);
+            if (!String.IsNullOrWhiteSpace(message))
             {
-                ReasonPhrase = message
-            });
+                httpResponseMessage.ReasonPhrase = message;
+            }
+
+            HttpResponseException exception = new HttpResponseException(httpResponseMessage);
 
             if (_metricHandler != null)
             {
