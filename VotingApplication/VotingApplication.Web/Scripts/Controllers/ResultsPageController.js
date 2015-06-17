@@ -29,8 +29,22 @@
 
         activate();
 
-        function expire() {
-            $scope.hasExpired = true;
+        function activate() {
+
+            var token = TokenService.retrieveToken(pollId);
+
+            PollService.getPoll(pollId, token)
+                .then(getPollSuccessCallback);
+
+            VoteService.refreshLastChecked(pollId);
+            reloadData();
+            reloadInterval = setInterval(reloadData, 3000);
+        }
+
+        function getPollSuccessCallback(pollData) {
+            if (pollData.ExpiryDateUtc) {
+                $scope.hasExpired = moment.utc(pollData.ExpiryDateUtc).isBefore(moment.utc());
+            }
         }
 
         function reloadData() {
@@ -74,23 +88,8 @@
             }
         }
 
-        function getPollSuccessCallback(pollData) {
-            if (pollData.ExpiryDateUtc) {
-                $scope.hasExpired = moment.utc(pollData.ExpiryDateUtc).isBefore(moment.utc());
-            }
+        function expire() {
+            $scope.hasExpired = true;
         }
-
-        function activate() {
-
-            var token = TokenService.retrieveToken(pollId);
-
-            PollService.getPoll(pollId, token)
-                .then(getPollSuccessCallback);
-
-            VoteService.refreshLastChecked(pollId);
-            reloadData();
-            reloadInterval = setInterval(reloadData, 3000);
-        }
-
     }
 })();
