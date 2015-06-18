@@ -107,7 +107,7 @@ namespace VotingApplication.Web.Tests.Controllers
 
             Assert.AreEqual(1, responseResults.Count);
             Assert.AreEqual(2, responseResults[0].Voters.Count);
-            Assert.AreEqual(_burgerChoice, responseResults[0].Choice);
+            Assert.AreEqual(_burgerChoice.Name, responseResults[0].ChoiceName);
             Assert.AreEqual(2, responseResults[0].Sum);
         }
 
@@ -486,17 +486,14 @@ namespace VotingApplication.Web.Tests.Controllers
                 Assert.AreEqual(2, response.Results.Count);
 
                 var result1 = response.Results.First();
-                Assert.AreEqual(name1, result1.Choice.Name);
-                Assert.AreEqual(pollChoiceNumber1, result1.Choice.PollChoiceNumber);
-                Assert.AreEqual(description1, result1.Choice.Description);
+                Assert.AreEqual(name1, result1.ChoiceName);
 
                 Assert.AreEqual(2, result1.Sum);
                 Assert.AreEqual(2, result1.Voters.Count);
 
                 var result2 = response.Results.Last();
-                Assert.AreEqual(name2, result2.Choice.Name);
-                Assert.AreEqual(pollChoiceNumber2, result2.Choice.PollChoiceNumber);
-                Assert.AreEqual(description2, result2.Choice.Description);
+                Assert.AreEqual(name2, result2.ChoiceName);
+
 
                 Assert.AreEqual(1, result2.Sum);
                 Assert.AreEqual(1, result2.Voters.Count);

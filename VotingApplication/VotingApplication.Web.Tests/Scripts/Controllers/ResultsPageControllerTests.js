@@ -217,12 +217,12 @@ describe('Results Page Controller', function () {
         var resultData = {
             Results: [
             {
-                Choice: { Name: 'Choice 1' },
+                ChoiceName: 'Choice 1',
                 Sum: 1,
                 Voters: [{ Name: 'Bob', Value: 1 }]
             },
             {
-                Choice: { Name: 'Choice 2' },
+                ChoiceName: 'Choice 2',
                 Sum: 3,
                 Voters: [{ Name: 'Bob', Value: 2 }, { Name: 'Derek', Value: 1 }]
             }]
@@ -267,7 +267,7 @@ describe('Results Page Controller', function () {
                 Voters: [{ Name: 'Bob', Value: 2 }, { Name: 'Derek', Value: 1 }]
             }];
 
-        scope.voteCount = 5;
+        scope.hasVotes = false;
         scope.winner = 'A winner is you!';
         scope.plural = '';
         scope.chartData = chartData;
@@ -276,7 +276,7 @@ describe('Results Page Controller', function () {
         jasmine.clock().tick(3000);
 
 
-        expect(scope.voteCount).toBe(5);
+        expect(scope.hasVotes).toBe(false);
         expect(scope.winner).toBe('A winner is you!');
         expect(scope.plural).toBe('');
         expect(scope.chartData).toBe(chartData);

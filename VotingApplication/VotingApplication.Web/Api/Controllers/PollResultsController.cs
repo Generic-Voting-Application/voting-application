@@ -147,7 +147,7 @@ namespace VotingApplication.Web.Api.Controllers
         {
             return new ResultModel
             {
-                Choice = choice,
+                ChoiceName = choice.Name,
                 Sum = sum,
                 Voters = voters
             };
