@@ -7,6 +7,5 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
     {
         public List<Choice> Winners;
         public List<ResultModel> Results;
-        public List<VoteRequestResponseModel> Votes;
     }
 }

@@ -77,14 +77,9 @@ namespace VotingApplication.Web.Api.Controllers
                     .Include(v => v.Ballot)
                     .ToList();
 
-                List<VoteRequestResponseModel> responseVotes = votes
-                    .Select(VoteToModel)
-                    .ToList();
-
                 _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.OK, pollId);
 
                 ResultsRequestResponseModel results = SummariseVotes(votes, poll);
-                results.Votes = responseVotes;
 
                 return results;
             }
@@ -156,27 +151,6 @@ namespace VotingApplication.Web.Api.Controllers
                 Sum = sum,
                 Voters = voters
             };
-        }
-
-        private static VoteRequestResponseModel VoteToModel(Vote vote)
-        {
-            var model = new VoteRequestResponseModel();
-
-            if (vote.Choice != null)
-            {
-                model.VoterId = vote.Ballot.Id;
-                model.ChoiceId = vote.Choice.Id;
-                model.ChoiceName = vote.Choice.Name;
-            }
-
-            if (vote.Ballot.VoterName != null)
-            {
-                model.VoterName = vote.Ballot.VoterName;
-            }
-
-            model.VoteValue = vote.VoteValue;
-
-            return model;
         }
     }
 }

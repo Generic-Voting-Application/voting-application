@@ -86,55 +86,6 @@ namespace VotingApplication.Web.Tests.Controllers
         }
 
         [TestMethod]
-        public void GetReturnsVotesForThatPoll()
-        {
-            // Act
-            var response = _controller.Get(_mainUuid);
-
-            // Assert
-            var responseVotes = response.Votes;
-            Assert.AreEqual(2, responseVotes.Count);
-            CollectionAssert.AreEqual(new long[] { 1, 1 }, responseVotes.Select(r => r.ChoiceId).ToArray());
-        }
-
-        [TestMethod]
-        public void GetOnEmptyPollReturnsEmptyList()
-        {
-            // Act
-            var response = _controller.Get(_emptyUuid);
-
-            // Assert
-            var responseVotes = response.Votes;
-            Assert.AreEqual(0, responseVotes.Count);
-        }
-
-        [TestMethod]
-        public void GetOnAnonPollDoesNotReturnUsernames()
-        {
-            // Act
-            var response = _controller.Get(_anonymousUuid);
-
-            // Assert
-            var responseVotes = response.Votes;
-            Assert.AreEqual(1, responseVotes.Count);
-            Assert.AreEqual("Anonymous User", responseVotes[0].VoterName);
-        }
-
-        [TestMethod]
-        public void GetWithLowTimestampReturnsResults()
-        {
-            // Act
-            Uri requestUri;
-            Uri.TryCreate("http://localhost/?lastRefreshed=0", UriKind.Absolute, out requestUri);
-            _controller.Request.RequestUri = requestUri;
-            var response = _controller.Get(_mainUuid);
-
-            // Assert
-            var responseVotes = response.Votes;
-            Assert.AreEqual(2, responseVotes.Count);
-        }
-
-        [TestMethod]
         [ExpectedHttpResponseException(HttpStatusCode.NotModified)]
         public void GetWithHighTimestampReturnsNotModified()
         {

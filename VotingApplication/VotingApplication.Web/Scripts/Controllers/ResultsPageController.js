@@ -71,7 +71,7 @@
             }
 
             if (data.Votes) {
-                $scope.voteCount = data.Votes.length;
+                $scope.voteCount = data.Winners.length;
             }
 
             if (data.Winners) {
