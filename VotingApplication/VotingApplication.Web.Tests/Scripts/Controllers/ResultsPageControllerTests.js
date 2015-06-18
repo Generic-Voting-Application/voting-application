@@ -130,10 +130,8 @@ describe('Results Page Controller', function () {
             Votes: [{}, {}, {}]
         };
 
-        var response = { data: resultData };
-
         getPollPromise.resolve(getPollResponse);
-        voteGetResultsPromise.resolve(response);
+        voteGetResultsPromise.resolve(resultData);
 
         scope.$apply();
         jasmine.clock().tick(3000);
@@ -147,10 +145,8 @@ describe('Results Page Controller', function () {
             Winners: [{ Name: 'Winning option' }]
         };
 
-        var response = { data: resultData };
-
         getPollPromise.resolve(getPollResponse);
-        voteGetResultsPromise.resolve(response);
+        voteGetResultsPromise.resolve(resultData);
 
         scope.$apply();
         jasmine.clock().tick(3000);
@@ -164,10 +160,8 @@ describe('Results Page Controller', function () {
             Winners: [{ Name: 'Winning option' }, { Name: 'Another Winning option' }]
         };
 
-        var response = { data: resultData };
-
         getPollPromise.resolve(getPollResponse);
-        voteGetResultsPromise.resolve(response);
+        voteGetResultsPromise.resolve(resultData);
 
         scope.$apply();
         jasmine.clock().tick(3000);
@@ -198,10 +192,8 @@ describe('Results Page Controller', function () {
             Winners: [{ Name: 'Winning option' }, { Name: 'Another Winning option' }]
         };
 
-        var response = { data: resultData };
-
         getPollPromise.resolve(getPollResponse);
-        voteGetResultsPromise.resolve(response);
+        voteGetResultsPromise.resolve(resultData);
 
         scope.$apply();
         jasmine.clock().tick(3000);
@@ -224,10 +216,9 @@ describe('Results Page Controller', function () {
                 Voters: [{ Name: 'Bob', Value: 2 }, { Name: 'Derek', Value: 1 }]
             }]
         };
-        var response = { data: resultData };
 
         getPollPromise.resolve(getPollResponse);
-        voteGetResultsPromise.resolve(response);
+        voteGetResultsPromise.resolve(resultData);
 
         var expectedChartData = [
             {

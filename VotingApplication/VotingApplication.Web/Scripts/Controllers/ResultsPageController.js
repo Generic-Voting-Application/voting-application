@@ -65,9 +65,7 @@
                 .catch(handleGetResultsError);
         }
 
-        function displayResults(response) {
-            var data = response.data;
-
+        function displayResults(data) {
             if (!data) {
                 return;
             }
@@ -94,8 +92,8 @@
             }
         }
 
-        function handleGetResultsError(response) {
-            if (response.status >= 400 && reloadInterval) {
+        function handleGetResultsError() {
+            if (reloadInterval) {
                 clearInterval(reloadInterval);
             }
         }

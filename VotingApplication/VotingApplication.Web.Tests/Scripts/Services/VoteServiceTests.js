@@ -7,11 +7,13 @@ describe('Vote Service', function () {
     var voteService;
     var rootScope;
     var httpBackend;
+    var errors;
 
-    beforeEach(inject(function (VoteService, $rootScope, $httpBackend) {
+    beforeEach(inject(function (VoteService, $rootScope, $httpBackend, Errors) {
         voteService = VoteService;
         rootScope = $rootScope;
         httpBackend = $httpBackend;
+        errors = Errors;
     }));
 
     afterEach(function () {
@@ -87,6 +89,61 @@ describe('Vote Service', function () {
             voteService.getResults(pollId);
 
             httpBackend.flush();
+        });
+
+        it('Returns the correct error when the poll is not found', function () {
+
+            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
+
+            var url = '/api/poll/' + pollId + '/results?lastRefreshed=0';
+
+            httpBackend.whenGET(url).respond(404, '');
+
+            var response = null;
+            voteService
+                .getResults(pollId)
+                .catch(function (error) { response = error; });
+
+            httpBackend.flush();
+
+            expect(response).toBe(errors.PollNotFound);
+        });
+
+        it('Returns the correct error when the poll is invite only and an invalid token is supplied', function () {
+
+            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
+
+            var url = '/api/poll/' + pollId + '/results?lastRefreshed=0';
+
+            httpBackend.whenGET(url).respond(403, '');
+
+            var response = null;
+            voteService
+                .getResults(pollId)
+                .catch(function (error) { response = error; });
+
+            httpBackend.flush();
+
+            expect(response).toBe(errors.PollInviteOnlyNoToken);
+        });
+
+        it('Returns the readableMessage property in unknown error cases', function () {
+
+            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
+
+            var url = '/api/poll/' + pollId + '/results?lastRefreshed=0';
+
+            httpBackend.whenGET(url).respond(400, '');
+
+            var response = null;
+            voteService
+                .getResults(pollId)
+                .catch(function (error) { response = error; });
+
+            httpBackend.flush();
+
+            var expectedErrorMessage = 'An error has occured';
+            expect(response).toBe(expectedErrorMessage);
         });
     });
 
