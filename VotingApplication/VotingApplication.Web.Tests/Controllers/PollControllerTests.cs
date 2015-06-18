@@ -326,7 +326,7 @@ namespace VotingApplication.Web.Tests.Controllers
 
             [TestMethod]
             [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
-            public void NonInviteOnly_MultipleXTokenGuidHeader_ReturnsHeaderValueAsTokenGuid()
+            public void NonInviteOnly_MultipleXTokenGuidHeader_ThrowsBadRequest()
             {
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 polls.Add(CreateNonInviteOnlyPoll());

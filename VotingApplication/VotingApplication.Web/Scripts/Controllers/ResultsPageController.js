@@ -17,43 +17,65 @@
         var tokenId = $routeParams['tokenId'] || '';
         var reloadInterval = null;
 
+        $scope.loaded = false;
+        $scope.hasError = false;
+        $scope.errorText = null;
+
         $scope.votingLink = RoutingService.getVotePageUrl(pollId, tokenId);
         $scope.winner = 'Lorem';
         $scope.plural = '';
 
         $scope.chartData = [];
 
-        $scope.voteCount = 0;
+        $scope.hasVotes = false;
         $scope.hasExpired = false;
         $scope.gvaExpiredCallback = expire;
 
         activate();
 
-        function expire() {
-            $scope.hasExpired = true;
+        function activate() {
+
+            var token = TokenService.retrieveToken(pollId);
+
+            PollService.getPoll(pollId, token)
+                .then(setExpiryDate)
+                .then(function () {
+                    VoteService.refreshLastChecked(pollId);
+                    reloadData(token);
+                    reloadInterval = setInterval(reloadData, 3000);
+
+                    $scope.loaded = true;
+                })
+                .catch(function (error) {
+                    $scope.hasError = true;
+                    $scope.errorText = error.Text;
+                    $scope.loaded = true;
+                });
         }
 
-        function reloadData() {
-            VoteService.getResults(pollId)
+        function setExpiryDate(pollData) {
+            if (pollData.ExpiryDateUtc) {
+                $scope.hasExpired = moment.utc(pollData.ExpiryDateUtc).isBefore(moment.utc());
+            }
+        }
+
+        function reloadData(token) {
+            VoteService.getResults(pollId, token)
                 .then(displayResults)
                 .catch(handleGetResultsError);
         }
 
-        function displayResults(response) {
-            var data = response.data;
-
+        function displayResults(data) {
             if (!data) {
                 return;
             }
 
-            if (data.Votes) {
-                $scope.voteCount = data.Votes.length;
+            if (data.Winners) {
+                $scope.hasVotes = data.Winners.length > 0;
             }
 
             if (data.Winners) {
-                $scope.winner = data.Winners.map(function (d) {
-                    return d.Name;
-                }).join(', ');
+                $scope.winner = data.Winners.join(', ');
 
                 $scope.plural = (data.Winners.length > 1) ? 's (Draw)' : '';
             }
@@ -61,36 +83,21 @@
             if (data.Results) {
                 var dataPoints = [];
                 data.Results.forEach(function (result) {
-                    dataPoints.push({ Name: result.Choice.Name, Sum: result.Sum, Voters: result.Voters });
+                    dataPoints.push({ Name: result.ChoiceName, Sum: result.Sum, Voters: result.Voters });
                 });
 
                 $scope.chartData = dataPoints;
             }
         }
 
-        function handleGetResultsError(response) {
-            if (response.status >= 400 && reloadInterval) {
+        function handleGetResultsError() {
+            if (reloadInterval) {
                 clearInterval(reloadInterval);
             }
         }
 
-        function getPollSuccessCallback(pollData) {
-            if (pollData.ExpiryDateUtc) {
-                $scope.hasExpired = moment.utc(pollData.ExpiryDateUtc).isBefore(moment.utc());
-            }
+        function expire() {
+            $scope.hasExpired = true;
         }
-
-        function activate() {
-
-            var token = TokenService.retrieveToken(pollId);
-
-            PollService.getPoll(pollId, token)
-                .then(getPollSuccessCallback);
-
-            VoteService.refreshLastChecked(pollId);
-            reloadData();
-            reloadInterval = setInterval(reloadData, 3000);
-        }
-
     }
 })();

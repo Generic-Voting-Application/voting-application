@@ -126,5 +126,23 @@ namespace VotingApplication.Web.Api.Controllers
 
             return Guid.Empty;
         }
+
+        protected Guid? GetTokenGuidFromHeaders()
+        {
+            IEnumerable<string> tokenHeaders;
+            bool success = Request.Headers.TryGetValues("X-TokenGuid", out tokenHeaders);
+
+            if (success)
+            {
+                if (tokenHeaders.Count() > 1)
+                {
+                    ThrowError(HttpStatusCode.BadRequest, "Multiple X-TokenGuid headers");
+                }
+
+                return new Guid(tokenHeaders.Single());
+            }
+
+            return null;
+        }
     }
 }
