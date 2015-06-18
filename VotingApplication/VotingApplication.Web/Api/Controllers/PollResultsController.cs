@@ -110,7 +110,7 @@ namespace VotingApplication.Web.Api.Controllers
 
             summary.Winners = results
                               .Where(r => r.Sum == resultsMax)
-                              .Select(r => r.Option)
+                              .Select(r => r.Option.Name)
                               .ToList();
 
             summary.Results = results

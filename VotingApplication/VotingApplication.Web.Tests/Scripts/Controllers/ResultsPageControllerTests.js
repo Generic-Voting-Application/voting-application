@@ -125,10 +125,8 @@ describe('Results Page Controller', function () {
 
     });
 
-    it('Sets voteCount to be number of votes cast', function () {
-        var resultData = {
-            Votes: [{}, {}, {}]
-        };
+    it('Sets hasVotes to true if there is a winner', function () {
+        var resultData = { Winners: ['One'] };
 
         getPollPromise.resolve(getPollResponse);
         voteGetResultsPromise.resolve(resultData);
@@ -137,12 +135,25 @@ describe('Results Page Controller', function () {
         jasmine.clock().tick(3000);
 
 
-        expect(scope.voteCount).toBe(3);
+        expect(scope.hasVotes).toBe(true);
+    });
+
+    it('Sets hasVotes to false if there are no winners', function () {
+        var resultData = { Winners: [] };
+
+        getPollPromise.resolve(getPollResponse);
+        voteGetResultsPromise.resolve(resultData);
+
+        scope.$apply();
+        jasmine.clock().tick(3000);
+
+
+        expect(scope.hasVotes).toBe(false);
     });
 
     it('Sets Winner to the single winning option', function () {
         var resultData = {
-            Winners: [{ Name: 'Winning option' }]
+            Winners: ['Winning option']
         };
 
         getPollPromise.resolve(getPollResponse);
@@ -157,7 +168,7 @@ describe('Results Page Controller', function () {
 
     it('Sets Winner to the combined list of all winners', function () {
         var resultData = {
-            Winners: [{ Name: 'Winning option' }, { Name: 'Another Winning option' }]
+            Winners: ['Winning option', 'Another Winning option']
         };
 
         getPollPromise.resolve(getPollResponse);
@@ -189,7 +200,7 @@ describe('Results Page Controller', function () {
 
     it('Sets plural if there is more than one winner', function () {
         var resultData = {
-            Winners: [{ Name: 'Winning option' }, { Name: 'Another Winning option' }]
+            Winners: ['Winning option', 'Another Winning option']
         };
 
         getPollPromise.resolve(getPollResponse);

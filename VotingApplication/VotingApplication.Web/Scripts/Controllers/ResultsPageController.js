@@ -27,7 +27,7 @@
 
         $scope.chartData = [];
 
-        $scope.voteCount = 0;
+        $scope.hasVotes = false;
         $scope.hasExpired = false;
         $scope.gvaExpiredCallback = expire;
 
@@ -70,14 +70,12 @@
                 return;
             }
 
-            if (data.Votes) {
-                $scope.voteCount = data.Winners.length;
+            if (data.Winners) {
+                $scope.hasVotes = data.Winners.length > 0;
             }
 
             if (data.Winners) {
-                $scope.winner = data.Winners.map(function (d) {
-                    return d.Name;
-                }).join(', ');
+                $scope.winner = data.Winners.join(', ');
 
                 $scope.plural = (data.Winners.length > 1) ? 's (Draw)' : '';
             }

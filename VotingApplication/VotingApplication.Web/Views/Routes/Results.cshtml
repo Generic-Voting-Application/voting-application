@@ -4,8 +4,8 @@
     <div id="results-partial" ng-show="loaded && !hasError">
         <poll-heading gva-expired-callback="gvaExpiredCallback()"></poll-heading>
         <div class="flexbox">
-            <span ng-if="voteCount > 0" id="winner-label" class="centered"><b>Leader{{plural}}:</b> {{winner}}</span>
-            <span ng-if="voteCount == 0">No votes have currently been cast for this poll</span>
+            <span ng-if="hasVotes" id="winner-label" class="centered"><b>Leader{{plural}}:</b> {{winner}}</span>
+            <span ng-if="!hasVotes">No votes have currently been cast for this poll</span>
         </div>
 
         <gva-results-chart data="chartData"></gva-results-chart>

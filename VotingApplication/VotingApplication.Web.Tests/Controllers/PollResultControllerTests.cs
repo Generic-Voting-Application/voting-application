@@ -355,10 +355,8 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 Assert.AreEqual(1, response.Winners.Count);
 
-                Choice winner = response.Winners.First();
-                Assert.AreEqual(winnerName, winner.Name);
-                Assert.AreEqual(winnerPollChoiceNumber, winner.PollChoiceNumber);
-                Assert.AreEqual(winnerDescription, winner.Description);
+                string winner = response.Winners.First();
+                Assert.AreEqual(winnerName, winner);
             }
 
             [TestMethod]
@@ -416,15 +414,12 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 Assert.AreEqual(2, response.Winners.Count);
 
-                Choice winner1 = response.Winners.First();
-                Assert.AreEqual(winner1Name, winner1.Name);
-                Assert.AreEqual(winner1PollChoiceNumber, winner1.PollChoiceNumber);
-                Assert.AreEqual(winner1Description, winner1.Description);
+                string winner1 = response.Winners.First();
+                Assert.AreEqual(winner1Name, winner1);
 
-                Choice winner2 = response.Winners.Last();
-                Assert.AreEqual(winner2Name, winner2.Name);
-                Assert.AreEqual(winner2PollChoiceNumber, winner2.PollChoiceNumber);
-                Assert.AreEqual(winner2Description, winner2.Description);
+                string winner2 = response.Winners.Last();
+                Assert.AreEqual(winner2Name, winner2);
+
             }
 
             [TestMethod]
@@ -610,10 +605,8 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 Assert.AreEqual(1, response.Winners.Count);
 
-                Choice winner = response.Winners.First();
-                Assert.AreEqual(winnerName, winner.Name);
-                Assert.AreEqual(winnerPollChoiceNumber, winner.PollChoiceNumber);
-                Assert.AreEqual(winnerDescription, winner.Description);
+                string winner = response.Winners.First();
+                Assert.AreEqual(winnerName, winner);
             }
 
             private Poll CreateNonInviteOnlyPoll()
