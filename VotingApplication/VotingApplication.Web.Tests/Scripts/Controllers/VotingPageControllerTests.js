@@ -112,7 +112,7 @@ describe('VotingPageController', function () {
         expect(mockVoteService.getTokenVotes).toHaveBeenCalled();
     });
 
-    it('Sets the value for the vote into the options', function () {
+    it('Sets the value for the vote into the choices', function () {
         var tokenVotes = [
             { ChoiceId: 1, VoteValue: 1 },
             { ChoiceId: 3, VoteValue: 1 }
@@ -145,7 +145,7 @@ describe('VotingPageController', function () {
             scope.$apply();
         });
 
-        it('Does not call Vote Service when options is null', function () {
+        it('Does not call Vote Service when choices is null', function () {
 
             scope.submitVote(null);
 
@@ -163,7 +163,7 @@ describe('VotingPageController', function () {
             expect(mockVoteService.submitVote).not.toHaveBeenCalled();
         });
 
-        it('Calls what has been set as the voteCallback when there are options to submit', function () {
+        it('Calls what has been set as the voteCallback when there are choices to submit', function () {
             var called = false;
 
             scope.setVoteCallback(function () { called = true; return []; });
@@ -174,7 +174,7 @@ describe('VotingPageController', function () {
             expect(called).toBe(true);
         });
 
-        it('Calls Vote Service when there are options to submit', function () {
+        it('Calls Vote Service when there are choices to submit', function () {
             var called = false;
 
             scope.setVoteCallback(function () { called = true; return []; });

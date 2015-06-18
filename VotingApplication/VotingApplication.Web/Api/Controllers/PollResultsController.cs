@@ -27,6 +27,29 @@ namespace VotingApplication.Web.Api.Controllers
             {
                 Poll poll = PollByPollId(pollId, context);
 
+                Guid? tokenGuid = GetTokenGuidFromHeaders();
+
+                if (poll.InviteOnly)
+                {
+                    if (!tokenGuid.HasValue)
+                    {
+                        ThrowError(HttpStatusCode.Forbidden);
+                    }
+
+                    if (poll.Ballots.All(b => b.TokenGuid != tokenGuid.Value))
+                    {
+                        ThrowError(HttpStatusCode.Forbidden);
+                    }
+                }
+
+                if (tokenGuid.HasValue)
+                {
+                    if (poll.Ballots.All(b => b.TokenGuid != tokenGuid.Value))
+                    {
+                        ThrowError(HttpStatusCode.NotFound);
+                    }
+                }
+
                 if (Request.RequestUri != null)
                 {
                     NameValueCollection queryMap = HttpUtility.ParseQueryString(Request.RequestUri.Query);
