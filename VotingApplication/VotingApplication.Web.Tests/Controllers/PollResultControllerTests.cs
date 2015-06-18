@@ -1,6 +1,4 @@
-﻿using FakeDbSet;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -11,7 +9,6 @@ using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers;
-using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
 using VotingApplication.Web.Tests.TestHelpers;
 
@@ -20,97 +17,6 @@ namespace VotingApplication.Web.Tests.Controllers
     [TestClass]
     public class PollResultControllerTests
     {
-        private PollResultsController _controller;
-        private Vote _bobVote;
-        private Vote _joeVote;
-        private Vote _otherVote;
-        private Vote _anonymousVote;
-        private Choice _burgerChoice;
-        private Guid _mainUuid;
-        private Guid _otherUuid;
-        private Guid _emptyUuid;
-        private Guid _anonymousUuid;
-        private InMemoryDbSet<Vote> _dummyVotes;
-
-        [TestInitialize]
-        public void Setup()
-        {
-            _dummyVotes = new InMemoryDbSet<Vote>(true);
-            InMemoryDbSet<Choice> dummyChoices = new InMemoryDbSet<Choice>(true);
-            InMemoryDbSet<Poll> dummyPolls = new InMemoryDbSet<Poll>(true);
-
-            _mainUuid = Guid.NewGuid();
-            _otherUuid = Guid.NewGuid();
-            _emptyUuid = Guid.NewGuid();
-            _anonymousUuid = Guid.NewGuid();
-
-            Poll mainPoll = new Poll() { UUID = _mainUuid, LastUpdatedUtc = DateTime.UtcNow };
-            Poll otherPoll = new Poll() { UUID = _otherUuid };
-            Poll emptyPoll = new Poll() { UUID = _emptyUuid };
-            Poll anonymousPoll = new Poll { UUID = _anonymousUuid, NamedVoting = false };
-
-
-            _burgerChoice = new Choice { Id = 1, Name = "Burger King" };
-
-            _bobVote = new Vote() { Id = 1, Poll = mainPoll, Choice = _burgerChoice, Ballot = new Ballot(), VoteValue = 1 };
-            _joeVote = new Vote() { Id = 2, Poll = mainPoll, Choice = _burgerChoice, Ballot = new Ballot(), VoteValue = 1 };
-            _otherVote = new Vote() { Id = 3, Poll = new Poll() { UUID = _otherUuid }, Choice = new Choice() { Id = 1 }, Ballot = new Ballot() };
-            _anonymousVote = new Vote() { Id = 4, Poll = new Poll() { UUID = _anonymousUuid }, Choice = new Choice() { Id = 1 }, Ballot = new Ballot() };
-
-            _dummyVotes.Add(_bobVote);
-            _dummyVotes.Add(_joeVote);
-            _dummyVotes.Add(_otherVote);
-            _dummyVotes.Add(_anonymousVote);
-
-            dummyChoices.Add(_burgerChoice);
-
-            dummyPolls.Add(mainPoll);
-            dummyPolls.Add(otherPoll);
-            dummyPolls.Add(emptyPoll);
-            dummyPolls.Add(anonymousPoll);
-
-            var mockContextFactory = new Mock<IContextFactory>();
-            var mockContext = new Mock<IVotingContext>();
-            mockContextFactory.Setup(a => a.CreateContext()).Returns(mockContext.Object);
-            mockContext.Setup(a => a.Votes).Returns(_dummyVotes);
-            mockContext.Setup(a => a.Choices).Returns(dummyChoices);
-            mockContext.Setup(a => a.Polls).Returns(dummyPolls);
-
-            var mockMetricHandler = new Mock<IMetricHandler>();
-
-            _controller = new PollResultsController(mockContextFactory.Object, mockMetricHandler.Object)
-            {
-                Request = new HttpRequestMessage(),
-                Configuration = new HttpConfiguration()
-            };
-        }
-
-        [TestMethod]
-        [ExpectedHttpResponseException(HttpStatusCode.NotModified)]
-        public void GetWithHighTimestampReturnsNotModified()
-        {
-            // Act
-            Uri requestUri;
-            Uri.TryCreate("http://localhost/?lastRefreshed=2145916800000", UriKind.Absolute, out requestUri);
-            _controller.Request.RequestUri = requestUri;
-            _controller.Get(_mainUuid);
-        }
-
-        [TestMethod]
-        public void GetReturnsSummaryForThatPoll()
-        {
-            // Act
-            var response = _controller.Get(_mainUuid);
-
-            // Assert
-            List<ResultModel> responseResults = response.Results;
-
-            Assert.AreEqual(1, responseResults.Count);
-            Assert.AreEqual(2, responseResults[0].Voters.Count);
-            Assert.AreEqual(_burgerChoice.Name, responseResults[0].ChoiceName);
-            Assert.AreEqual(2, responseResults[0].Sum);
-        }
-
         [TestClass]
         public class GetTests
         {
@@ -318,7 +224,6 @@ namespace VotingApplication.Web.Tests.Controllers
             {
                 const int winnerPollChoiceNumber = 1;
                 const string winnerName = "Winner-winner-chicken-dinner";
-                const string winnerDescription = "A winner is you!";
 
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var poll = CreateNonInviteOnlyPoll();
@@ -328,8 +233,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 var winningChoice = new Choice()
                 {
                     Name = winnerName,
-                    PollChoiceNumber = winnerPollChoiceNumber,
-                    Description = winnerDescription
+                    PollChoiceNumber = winnerPollChoiceNumber
                 };
                 var losingChoice = new Choice() { PollChoiceNumber = 2 };
                 choices.Add(winningChoice);
@@ -366,8 +270,6 @@ namespace VotingApplication.Web.Tests.Controllers
                 const int winner2PollChoiceNumber = 2;
                 const string winner1Name = "Winner-winner-chicken-dinner";
                 const string winner2Name = "Winning";
-                const string winner1Description = "A winner is you!";
-                const string winner2Description = "";
 
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var poll = CreateNonInviteOnlyPoll();
@@ -377,16 +279,12 @@ namespace VotingApplication.Web.Tests.Controllers
                 var winningChoice1 = new Choice()
                 {
                     Name = winner1Name,
-                    PollChoiceNumber = winner1PollChoiceNumber,
-                    Description = winner1Description,
-                    Id = 1
+                    PollChoiceNumber = winner1PollChoiceNumber
                 };
                 var winningChoice2 = new Choice()
                 {
                     Name = winner2Name,
-                    PollChoiceNumber = winner2PollChoiceNumber,
-                    Description = winner2Description,
-                    Id = 2
+                    PollChoiceNumber = winner2PollChoiceNumber
                 };
                 choices.Add(winningChoice1);
                 choices.Add(winningChoice2);
@@ -429,8 +327,6 @@ namespace VotingApplication.Web.Tests.Controllers
                 const int pollChoiceNumber2 = 2;
                 const string name1 = "Winner-winner-chicken-dinner";
                 const string name2 = "Some other option";
-                const string description1 = "A winner is you!";
-                const string description2 = "Loser";
 
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var poll = CreateNonInviteOnlyPoll();
@@ -440,16 +336,12 @@ namespace VotingApplication.Web.Tests.Controllers
                 var choice1 = new Choice()
                 {
                     Name = name1,
-                    PollChoiceNumber = pollChoiceNumber1,
-                    Description = description1,
-                    Id = 1
+                    PollChoiceNumber = pollChoiceNumber1
                 };
                 var choice2 = new Choice()
                 {
                     Name = name2,
-                    PollChoiceNumber = pollChoiceNumber2,
-                    Description = description2,
-                    Id = 2
+                    PollChoiceNumber = pollChoiceNumber2
                 };
                 choices.Add(choice1);
                 choices.Add(choice2);
@@ -563,7 +455,6 @@ namespace VotingApplication.Web.Tests.Controllers
             {
                 const int winnerPollChoiceNumber = 1;
                 const string winnerName = "Winner-winner-chicken-dinner";
-                const string winnerDescription = "A winner is you!";
 
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 var poll = CreateInviteOnlyPoll();
@@ -573,8 +464,7 @@ namespace VotingApplication.Web.Tests.Controllers
                 var winningChoice = new Choice()
                 {
                     Name = winnerName,
-                    PollChoiceNumber = winnerPollChoiceNumber,
-                    Description = winnerDescription
+                    PollChoiceNumber = winnerPollChoiceNumber
                 };
                 var losingChoice = new Choice() { PollChoiceNumber = 2 };
                 choices.Add(winningChoice);
@@ -604,6 +494,121 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 string winner = response.Winners.First();
                 Assert.AreEqual(winnerName, winner);
+            }
+
+            [TestMethod]
+            public void TimeStamp_BeforePollLastUpdatedUtc_ReturnsResults()
+            {
+                const int pollChoiceNumber1 = 1;
+                const int pollChoiceNumber2 = 2;
+                const string name1 = "Winner-winner-chicken-dinner";
+                const string name2 = "Some other option";
+
+                var pollLastUpdated = new DateTime(2015, 06, 18, 12, 20, 00, DateTimeKind.Utc);
+                // 1434554605 is equal to 2015/06/17 15:23:25Z;
+
+                Uri requestUri;
+                Uri.TryCreate("http://localhost/?lastRefreshed=1434554605000", UriKind.Absolute, out requestUri);
+
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                Poll poll = CreateNonInviteOnlyPoll();
+                poll.LastUpdatedUtc = pollLastUpdated;
+                polls.Add(poll);
+
+                IDbSet<Choice> choices = DbSetTestHelper.CreateMockDbSet<Choice>();
+                var choice1 = new Choice()
+                {
+                    Name = name1,
+                    PollChoiceNumber = pollChoiceNumber1
+                };
+                var choice2 = new Choice()
+                {
+                    Name = name2,
+                    PollChoiceNumber = pollChoiceNumber2
+                };
+                choices.Add(choice1);
+                choices.Add(choice2);
+
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                var ballot1 = new Ballot() { VoterName = "Barbara" };
+                var ballot2 = new Ballot() { VoterName = "Derek" };
+                ballots.Add(ballot1);
+                ballots.Add(ballot2);
+
+                IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
+                var vote1 = CreateVote(choice1, poll, ballot1);
+                var vote2 = CreateVote(choice2, poll, ballot1);
+
+                var vote3 = CreateVote(choice1, poll, ballot2);
+
+                votes.Add(vote1);
+                votes.Add(vote2);
+                votes.Add(vote3);
+
+                ballot1.Votes.Add(vote1);
+                ballot1.Votes.Add(vote2);
+
+                ballot2.Votes.Add(vote3);
+
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes, choices);
+                var controller = new PollResultsController(contextFactory, null)
+                {
+                    Request = new HttpRequestMessage()
+                    {
+                        RequestUri = requestUri
+                    },
+                    Configuration = new HttpConfiguration()
+                };
+
+
+                ResultsRequestResponseModel response = controller.Get(PollId);
+
+
+                Assert.AreEqual(2, response.Results.Count);
+
+                var result1 = response.Results.First();
+                Assert.AreEqual(name1, result1.ChoiceName);
+
+                Assert.AreEqual(2, result1.Sum);
+                Assert.AreEqual(2, result1.Voters.Count);
+
+                var result2 = response.Results.Last();
+                Assert.AreEqual(name2, result2.ChoiceName);
+
+
+                Assert.AreEqual(1, result2.Sum);
+                Assert.AreEqual(1, result2.Voters.Count);
+            }
+
+            [TestMethod]
+            [ExpectedHttpResponseException(HttpStatusCode.NotModified)]
+            public void TimeStamp_AfterPollLastUpdatedUtc_ReturnsNotModified()
+            {
+                var pollLastUpdated = new DateTime(2015, 06, 18, 12, 20, 00, DateTimeKind.Utc);
+                // 1434630600 is equal to 2015/06/18 12:31:12Z;
+
+                Uri requestUri;
+                Uri.TryCreate("http://localhost/?lastRefreshed=1434630600000", UriKind.Absolute, out requestUri);
+
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                Poll poll = CreateNonInviteOnlyPoll();
+                poll.LastUpdatedUtc = pollLastUpdated;
+                polls.Add(poll);
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
+
+                var controller = new PollResultsController(contextFactory, null)
+                {
+                    Request = new HttpRequestMessage()
+                    {
+                        RequestUri = requestUri
+                    },
+                    Configuration = new HttpConfiguration()
+                };
+
+                controller.Get(PollId);
             }
 
             private Poll CreateNonInviteOnlyPoll()
