@@ -41,7 +41,7 @@
                 .then(setExpiryDate)
                 .then(function () {
                     VoteService.refreshLastChecked(pollId);
-                    reloadData();
+                    reloadData(token);
                     reloadInterval = setInterval(reloadData, 3000);
 
                     $scope.loaded = true;
@@ -59,8 +59,8 @@
             }
         }
 
-        function reloadData() {
-            VoteService.getResults(pollId)
+        function reloadData(token) {
+            VoteService.getResults(pollId, token)
                 .then(displayResults)
                 .catch(handleGetResultsError);
         }
