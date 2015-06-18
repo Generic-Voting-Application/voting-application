@@ -91,6 +91,32 @@ describe('Vote Service', function () {
             httpBackend.flush();
         });
 
+        it('Returns just the data for a success', function () {
+            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
+            var ballotTokenGuid = '0310812A-05D3-41BA-AA34-CF7BF8330B67';
+
+            var expectedUrl = '/api/poll/' + pollId + '/results?lastRefreshed=0';
+
+            var expectedResponseData = 'SomeData';
+
+
+            httpBackend
+                .expectGET(expectedUrl)
+                .respond(200, expectedResponseData);
+
+
+            var responseData = null;
+
+            voteService.getResults(pollId, ballotTokenGuid)
+                .then(function (data) {
+                    responseData = data;
+                });
+
+            httpBackend.flush();
+
+            expect(responseData).toEqual(expectedResponseData);
+        });
+
         it('Returns the correct error when the poll is not found', function () {
 
             var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
@@ -144,6 +170,41 @@ describe('Vote Service', function () {
 
             var expectedErrorMessage = 'An error has occured';
             expect(response).toBe(expectedErrorMessage);
+        });
+
+        it('Given no token, makes request without X-TokenGuid header', function () {
+            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
+
+            var expectedUrl = '/api/poll/' + pollId + '/results?lastRefreshed=0';
+
+            httpBackend.expectGET(
+                    expectedUrl,
+                    function (headers) {
+                        return headers['X-TokenGuid'] === undefined;
+                    }
+                ).respond(200);
+
+            voteService.getResults(pollId);
+
+            httpBackend.flush();
+        });
+
+        it('Given a token, makes request with the X-TokenGuid header', function () {
+            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
+            var ballotTokenGuid = '0310812A-05D3-41BA-AA34-CF7BF8330B67';
+
+            var expectedUrl = '/api/poll/' + pollId + '/results?lastRefreshed=0';
+
+            httpBackend.expectGET(
+                    expectedUrl,
+                    function (headers) {
+                        return headers['X-TokenGuid'] === ballotTokenGuid;
+                    }
+                ).respond(200);
+
+            voteService.getResults(pollId, ballotTokenGuid);
+
+            httpBackend.flush();
         });
     });
 

@@ -36,17 +36,24 @@
             });
         }
 
-        function getResults(pollId) {
+        function getResults(pollId, ballotToken) {
 
             if (!lastCheckedTimestamps[pollId]) {
                 lastCheckedTimestamps[pollId] = 0;
+            }
+
+            var tokenGuidHeader = null;
+
+            if (ballotToken) {
+                tokenGuidHeader = { 'X-TokenGuid': ballotToken };
             }
 
             var prom = $q.defer();
 
             return $http({
                 method: 'GET',
-                url: '/api/poll/' + pollId + '/results?lastRefreshed=' + lastCheckedTimestamps[pollId]
+                url: '/api/poll/' + pollId + '/results?lastRefreshed=' + lastCheckedTimestamps[pollId],
+                headers: tokenGuidHeader
             })
                 .then(function (response) {
                     lastCheckedTimestamps[pollId] = Date.now();
