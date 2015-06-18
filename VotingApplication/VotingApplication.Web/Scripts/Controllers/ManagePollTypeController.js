@@ -46,7 +46,7 @@
         function tentativeUpdatePoll() {
             ManageService.getVotes($scope.poll.UUID)
             .then(function (pollSummary) {
-                if (pollSummary.data && pollSummary.data.Votes && pollSummary.data.Votes.length > 0 &&
+                if (pollSummary.data && pollSummary.data.Winners && pollSummary.data.Winners.length > 0 &&
                         ($scope.poll.PollType !== startingPollType ||
                         ($scope.poll.PollType === 'Points' &&
                             ($scope.poll.MaxPerVote !== startingMaxPerVote ||
