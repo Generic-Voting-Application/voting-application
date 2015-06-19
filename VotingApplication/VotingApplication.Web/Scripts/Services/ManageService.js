@@ -49,6 +49,24 @@
             });
         };
 
+        self.getPollType = function (manageId) {
+
+            if (!manageId) {
+                return null;
+            }
+
+            var prom = $q.defer();
+
+            return $http({
+                method: 'GET',
+                url: '/api/manage/' + manageId + '/pollType/',
+            })
+            .then(function (response) {
+                prom.resolve(response.data);
+                return prom.promise;
+            });
+        };
+
         self.updatePollExpiry = function (manageId, expiryDateUtc) {
             return $http({
                 method: 'PUT',

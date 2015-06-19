@@ -52,7 +52,7 @@ namespace VotingApplication.Web.Api.Controllers
                     context.Votes.Remove(oldVote);
                 }
 
-                _metricHandler.HandlePollTypeChangedEvent(pollType, updateRequest.MaxPerVote, updateRequest.MaxPoints, poll.UUID);
+                _metricHandler.HandlePollTypeChangedEvent(pollType, updateRequest.MaxPerVote ?? 0, updateRequest.MaxPoints ?? 0, poll.UUID);
 
                 poll.PollType = pollType;
                 poll.MaxPerVote = updateRequest.MaxPerVote;
@@ -63,6 +63,31 @@ namespace VotingApplication.Web.Api.Controllers
 
                 context.SaveChanges();
             }
+        }
+
+        [HttpGet]
+        public ManagePollTypeRequestResponse Get(Guid manageId)
+        {
+            using (var context = _contextFactory.CreateContext())
+            {
+                Poll poll = PollByManageId(manageId, context);
+
+                return pollToModel(poll);
+            }
+        }
+
+        private ManagePollTypeRequestResponse pollToModel(Poll poll)
+        {
+            var model = new ManagePollTypeRequestResponse()
+            {
+                MaxPerVote = poll.MaxPerVote,
+                MaxPoints = poll.MaxPoints,
+                PollType = poll.PollType.ToString()
+            };
+
+            model.PollHasVotes = poll.Ballots.Any(b => b.HasVoted);
+
+            return model;
         }
     }
 }

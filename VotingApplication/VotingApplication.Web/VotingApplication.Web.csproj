@@ -227,6 +227,7 @@
     <Compile Include="Api\Controllers\AccountController.cs" />
     <Compile Include="Api\Controllers\DashboardController.cs" />
     <Compile Include="Api\Controllers\ManageController.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManagePollTypeRequestResponse.cs" />
     <Compile Include="Api\Controllers\ManageQuestionController.cs" />
     <Compile Include="Api\Controllers\ManageMiscController.cs" />
     <Compile Include="Api\Controllers\ManagePollTypeController.cs" />

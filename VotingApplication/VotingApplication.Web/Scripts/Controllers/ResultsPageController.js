@@ -40,7 +40,7 @@
 
             PollService.getPoll(pollId, token)
                 .then(setPollDetails)
-                .then(function (data) {
+                .then(function () {
                     VoteService.refreshLastChecked(pollId);
                     reloadData(token);
                     reloadInterval = setInterval(function () { reloadData(token); }, 3000);
