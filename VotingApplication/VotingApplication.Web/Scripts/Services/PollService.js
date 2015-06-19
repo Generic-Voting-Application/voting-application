@@ -52,7 +52,7 @@
         function transformError(response, promise) {
 
             switch (response.status) {
-                case 403:
+                case 401:
                     {
                         promise.reject(Errors.PollInviteOnlyNoToken);
                         break;

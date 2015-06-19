@@ -69,14 +69,29 @@
         function transformError(response, promise) {
 
             switch (response.status) {
-                case 403:
+                case 400:
+                    {
+                        promise.reject(Errors.IncorrectPollOrder);
+                        break;
+                    }
+                case 401:
                     {
                         promise.reject(Errors.PollInviteOnlyNoToken);
+                        break;
+                    }
+                case 403:
+                    {
+                        promise.reject(Errors.IncorrectPollOrder);
                         break;
                     }
                 case 404:
                     {
                         promise.reject(Errors.PollNotFound);
+                        break;
+                    }
+                case 304:
+                    {
+                        promise.resolve();
                         break;
                     }
                 default:

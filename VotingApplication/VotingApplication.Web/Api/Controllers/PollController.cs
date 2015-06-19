@@ -32,12 +32,12 @@ namespace VotingApplication.Web.Api.Controllers
                 {
                     if (!tokenGuid.HasValue)
                     {
-                        ThrowError(HttpStatusCode.Forbidden);
+                        ThrowError(HttpStatusCode.Unauthorized);
                     }
 
                     if (poll.Ballots.All(b => b.TokenGuid != tokenGuid.Value))
                     {
-                        ThrowError(HttpStatusCode.Forbidden);
+                        ThrowError(HttpStatusCode.Unauthorized);
                     }
                 }
 

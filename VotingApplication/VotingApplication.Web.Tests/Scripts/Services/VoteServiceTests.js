@@ -141,7 +141,7 @@ describe('Vote Service', function () {
 
             var url = '/api/poll/' + pollId + '/results?lastRefreshed=0';
 
-            httpBackend.whenGET(url).respond(403, '');
+            httpBackend.whenGET(url).respond(401, '');
 
             var response = null;
             voteService
@@ -159,7 +159,7 @@ describe('Vote Service', function () {
 
             var url = '/api/poll/' + pollId + '/results?lastRefreshed=0';
 
-            httpBackend.whenGET(url).respond(400, '');
+            httpBackend.whenGET(url).respond(499, '');
 
             var response = null;
             voteService
