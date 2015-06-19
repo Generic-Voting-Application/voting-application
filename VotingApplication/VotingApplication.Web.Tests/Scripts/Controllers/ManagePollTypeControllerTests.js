@@ -121,18 +121,7 @@ describe('ManagePollTypeController', function () {
                 PollType: 'Points'
             };
 
-            var getVotesData = {
-
-                data: {
-                    Votes: [
-                        {
-                            ChoiceId: 1,
-                            VoteValue: 1,
-                            VoterName: 'Bob'
-                        }
-                    ]
-                }
-            };
+            var getVotesData = { data: { Winners: ['Someone'] } };
 
             manageGetVotesPromise.resolve(getVotesData);
 
@@ -153,18 +142,7 @@ describe('ManagePollTypeController', function () {
                 PollType: 'Points'
             };
 
-            var getVotesData = {
-
-                data: {
-                    Votes: [
-                        {
-                            ChoiceId: 1,
-                            VoteValue: 1,
-                            VoterName: 'Bob'
-                        }
-                    ]
-                }
-            };
+            var getVotesData = { data: { Winners: ['Someone'] } };
 
             manageGetVotesPromise.resolve(getVotesData);
 
@@ -247,18 +225,7 @@ describe('ManagePollTypeController', function () {
                 PollType: 'Points'
             };
 
-            var getVotesData = {
-
-                data: {
-                    Votes: [
-                        {
-                            ChoiceId: 1,
-                            VoteValue: 1,
-                            VoterName: 'Bob'
-                        }
-                    ]
-                }
-            };
+            var getVotesData = { data: { Winners: ['Someone'] } };
             manageGetVotesPromise.resolve(getVotesData);
 
             manageServiceMock.poll = poll;
