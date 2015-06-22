@@ -85,6 +85,10 @@ namespace VotingApplication.Web
             d3.Include("~/Scripts/Lib/d3-min.js");
             bundles.Add(d3);
 
+            var d3tip = new ScriptBundle("~/Bundles/ScriptLib/d3tip", "https://cdn.rawgit.com/Caged/d3-tip/v0.6.7/index.js");
+            d3tip.Include("~/Scripts/Lib/d3-tip.js");
+            bundles.Add(d3tip);
+
             var moment = new Bundle("~/Bundles/ScriptLib/moment", "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js");
             moment.Include("~/Scripts/Lib/moment-min.js");
             bundles.Add(moment);
