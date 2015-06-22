@@ -85,10 +85,17 @@ namespace VotingApplication.Web
             d3.Include("~/Scripts/Lib/d3-min.js");
             bundles.Add(d3);
 
-            var moment = new Bundle("~/Bundles/ScriptLib/moment", "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js");
+            var moment = new Bundle("~/Bundles/ScriptLib/moment", "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js");
             moment.Include("~/Scripts/Lib/moment-min.js");
             bundles.Add(moment);
 
+            var ngDialog = new Bundle("~/Bundles/ScriptLib/ngDialog", "https://cdnjs.cloudflare.com/ajax/libs/ng-dialog/0.3.11/js/ngDialog.min.js");
+            ngDialog.Include("~/Scripts/Lib/ngDialog-min.js");
+            bundles.Add(ngDialog);
+
+            var ngStorage = new Bundle("~/Bundles/ScriptLib/ngStorage", "https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.0/ngStorage.min.js");
+            ngStorage.Include("~/Scripts/Lib/ngStorage-min.js");
+            bundles.Add(ngStorage);
 
             ScriptBundle scriptBundle = new ScriptBundle("~/Bundles/Script");
             scriptBundle.IncludeDirectory("~/Scripts/Modules", "*.js");
