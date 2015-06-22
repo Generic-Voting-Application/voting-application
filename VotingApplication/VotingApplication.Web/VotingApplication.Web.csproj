@@ -420,9 +420,6 @@
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\Routes\PointsVote.cshtml" />
     <Content Include="Views\Routes\BasicVote.cshtml" />
@@ -432,6 +429,9 @@
     <Content Include="Views\Routes\ManageMisc.cshtml" />
     <Content Include="Views\Routes\ConfirmRegistration.cshtml" />
     <None Include="Web.Appveyor.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
