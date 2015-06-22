@@ -89,6 +89,10 @@ namespace VotingApplication.Web
             qrcode.Include("~/Scripts/Lib/qrcode.js");
             bundles.Add(qrcode);
 
+            var angularToggleSwitch = new Bundle("~/Bundles/ScriptLib/AngularToggleSwitch", "https://cdn.rawgit.com/cgarvis/angular-toggle-switch/v1.3.0/angular-toggle-switch.min.js");
+            angularToggleSwitch.Include("~/Scripts/Lib/angular-toggle-switch-min.js");
+            bundles.Add(angularToggleSwitch);
+
             var d3 = new Bundle("~/Bundles/ScriptLib/d3", "https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js");
             d3.Include("~/Scripts/Lib/d3-min.js");
             bundles.Add(d3);
