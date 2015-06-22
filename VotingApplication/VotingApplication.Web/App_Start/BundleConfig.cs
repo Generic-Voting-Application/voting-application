@@ -12,6 +12,8 @@ namespace VotingApplication.Web
     {
         public static void RegisterBundles(BundleCollection bundles)
         {
+            bundles.UseCdn = true;
+
             List<IPostProcessor> postProcessors = new List<IPostProcessor>();
             postProcessors.Add(new AutoprefixCssPostProcessor());
             var styleTransformer = new StyleTransformer(postProcessors);
@@ -68,6 +70,16 @@ namespace VotingApplication.Web
             scriptLibBundle.Transforms.Add(scriptTransformer);
             scriptLibBundle.Orderer = nullOrderer;
             bundles.Add(scriptLibBundle);
+
+            const string angularCdnBase = "https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13";
+
+            var angular = new Bundle("~/Bundles/ScriptLib/Angular", string.Format("{0}/angular.min.js", angularCdnBase));
+            angular.Include("~/Scripts/Lib/angular-min.js");
+            bundles.Add(angular);
+
+            var angularRoute = new Bundle("~/Bundles/ScriptLib/AngularRoute", string.Format("{0}/angular-route.min.js", angularCdnBase));
+            angularRoute.Include("~/Scripts/Lib/angular-route-min.js");
+            bundles.Add(angularRoute);
 
             ScriptBundle scriptBundle = new ScriptBundle("~/Bundles/Script");
             scriptBundle.IncludeDirectory("~/Scripts/Modules", "*.js");
