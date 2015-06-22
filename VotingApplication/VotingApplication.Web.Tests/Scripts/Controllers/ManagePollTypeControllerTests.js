@@ -110,6 +110,8 @@ describe('ManagePollTypeController', function () {
                 PollHasVotes: true
             });
 
+            var getVotesData = { data: { Winners: ['Someone'] } };
+
             observerCallback();
 
             scope.MaxPerVote = 7;
@@ -127,6 +129,8 @@ describe('ManagePollTypeController', function () {
                 PollType: 'Points',
                 PollHasVotes: true
             });
+
+            var getVotesData = { data: { Winners: ['Someone'] } };
 
             observerCallback();
 
@@ -174,12 +178,10 @@ describe('ManagePollTypeController', function () {
         });
 
         it('Asks for confirmation if there are votes for the poll, and the poll type has changed', function () {
-
             manageGetPollTypePromise.resolve({
                 PollType: 'Points',
                 PollHasVotes: true
             });
-
             observerCallback();
 
             scope.PollType = 'Basic';
