@@ -85,6 +85,10 @@ namespace VotingApplication.Web
             angularQr.Include("~/Scripts/Lib/angular-qrcode.js");
             bundles.Add(angularQr);
 
+            var qrcode = new ScriptBundle("~/Bundles/ScriptLib/qrcode", "https://cdn.rawgit.com/kazuhikoarase/qrcode-generator/v20140808/js/qrcode.js");
+            qrcode.Include("~/Scripts/Lib/qrcode.js");
+            bundles.Add(qrcode);
+
             var d3 = new Bundle("~/Bundles/ScriptLib/d3", "https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js");
             d3.Include("~/Scripts/Lib/d3-min.js");
             bundles.Add(d3);
