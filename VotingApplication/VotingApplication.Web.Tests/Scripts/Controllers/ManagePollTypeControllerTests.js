@@ -110,8 +110,6 @@ describe('ManagePollTypeController', function () {
                 PollHasVotes: true
             });
 
-            var getVotesData = { data: { Winners: ['Someone'] } };
-
             observerCallback();
 
             scope.MaxPerVote = 7;
@@ -129,8 +127,6 @@ describe('ManagePollTypeController', function () {
                 PollType: 'Points',
                 PollHasVotes: true
             });
-
-            var getVotesData = { data: { Winners: ['Someone'] } };
 
             observerCallback();
 
