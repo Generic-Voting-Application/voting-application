@@ -65,7 +65,7 @@ namespace VotingApplication.Web
             bundles.Add(errorBarStyle);
 
             ScriptBundle scriptLibBundle = new ScriptBundle("~/Bundles/ScriptLib");
-            scriptLibBundle.IncludeDirectory("~/Scripts/Lib", "*.js");
+            scriptLibBundle.IncludeDirectory("~/Scripts/Lib", "ZeroClipboard-min.js");
             scriptLibBundle.Builder = nullBuilder;
             scriptLibBundle.Transforms.Add(scriptTransformer);
             scriptLibBundle.Orderer = nullOrderer;
