@@ -81,6 +81,15 @@ namespace VotingApplication.Web
             angularRoute.Include("~/Scripts/Lib/angular-route-min.js");
             bundles.Add(angularRoute);
 
+            var d3 = new Bundle("~/Bundles/ScriptLib/d3", "https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js");
+            d3.Include("~/Scripts/Lib/d3-min.js");
+            bundles.Add(d3);
+
+            var moment = new Bundle("~/Bundles/ScriptLib/moment", "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js");
+            moment.Include("~/Scripts/Lib/moment-min.js");
+            bundles.Add(moment);
+
+
             ScriptBundle scriptBundle = new ScriptBundle("~/Bundles/Script");
             scriptBundle.IncludeDirectory("~/Scripts/Modules", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Directives", "*.js");
