@@ -81,6 +81,10 @@ namespace VotingApplication.Web
             angularRoute.Include("~/Scripts/Lib/angular-route-min.js");
             bundles.Add(angularRoute);
 
+            var angularQr = new ScriptBundle("~/Bundles/ScriptLib/AngularQr", "https://cdn.rawgit.com/monospaced/angular-qrcode/5.1.0/qrcode.js");
+            angularQr.Include("~/Scripts/Lib/angular-qrcode.js");
+            bundles.Add(angularQr);
+
             var d3 = new Bundle("~/Bundles/ScriptLib/d3", "https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js");
             d3.Include("~/Scripts/Lib/d3-min.js");
             bundles.Add(d3);
