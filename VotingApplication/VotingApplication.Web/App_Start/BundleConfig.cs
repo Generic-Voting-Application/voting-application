@@ -93,6 +93,10 @@ namespace VotingApplication.Web
             angularToggleSwitch.Include("~/Scripts/Lib/angular-toggle-switch-min.js");
             bundles.Add(angularToggleSwitch);
 
+            var angularZeroClipboard = new ScriptBundle("~/Bundles/ScriptLib/AngularZeroClipboard", "https://cdn.rawgit.com/lisposter/angular-zeroclipboard/v0.4.3/src/angular-zeroclipboard.js");
+            angularZeroClipboard.Include("~/Scripts/Lib/angular-zeroclipboard.js");
+            bundles.Add(angularZeroClipboard);
+
             var d3 = new Bundle("~/Bundles/ScriptLib/d3", "https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js");
             d3.Include("~/Scripts/Lib/d3-min.js");
             bundles.Add(d3);
