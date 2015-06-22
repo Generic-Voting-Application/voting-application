@@ -64,7 +64,6 @@ namespace VotingApplication.Web
 
             ScriptBundle scriptLibBundle = new ScriptBundle("~/Bundles/ScriptLib");
             scriptLibBundle.IncludeDirectory("~/Scripts/Lib", "*.js");
-            scriptLibBundle.IncludeDirectory("~/Scripts/Lib", "*.js.map");
             scriptLibBundle.Builder = nullBuilder;
             scriptLibBundle.Transforms.Add(scriptTransformer);
             scriptLibBundle.Orderer = nullOrderer;
@@ -81,8 +80,6 @@ namespace VotingApplication.Web
             scriptBundle.Transforms.Add(scriptTransformer);
             scriptBundle.Orderer = nullOrderer;
             bundles.Add(scriptBundle);
-
-            BundleTable.EnableOptimizations = false;
         }
     }
 }
