@@ -22,13 +22,29 @@ namespace VotingApplication.Web
             var scriptTransformer = new ScriptTransformer();
             var nullOrderer = new NullOrderer();
 
-            StyleBundle styleLib = new StyleBundle("~/Bundles/StyleLib");
-            styleLib.IncludeDirectory("~/Content/Lib/Css", "*.css");
-            styleLib.Builder = nullBuilder;
-            styleLib.Transforms.Add(styleTransformer);
-            styleLib.Orderer = nullOrderer;
-            bundles.Add(styleLib);
+            // Lib CSS
+            StyleBundle angularMaterialCss = new StyleBundle("~/Bundles/StyleLib/AngularMaterial", "https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.css");
+            angularMaterialCss.Include("~/Content/Lib/Css/angular-material-min.css");
+            bundles.Add(angularMaterialCss);
 
+            StyleBundle fontAwesomeCss = new StyleBundle("~/Bundles/StyleLib/FontAwesome", "//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
+            fontAwesomeCss.Include("~/Content/Lib/Css/font-awesome-min.css");
+            bundles.Add(fontAwesomeCss);
+
+            StyleBundle angularToggleSwitchCss = new StyleBundle("~/Bundles/StyleLib/AngularToggleSwitch", "https://cdn.rawgit.com/cgarvis/angular-toggle-switch/v1.3.0/angular-toggle-switch.css");
+            angularToggleSwitchCss.Include("~/Content/Lib/Css/angular-toggle-switch.css");
+            bundles.Add(angularToggleSwitchCss);
+
+            StyleBundle ngDialogCss = new StyleBundle("~/Bundles/StyleLib/ngDialog", "https://cdnjs.cloudflare.com/ajax/libs/ng-dialog/0.3.11/css/ngDialog.min.css");
+            ngDialogCss.Include("~/Content/Lib/Css/ngDialog-min.css");
+            bundles.Add(ngDialogCss);
+
+            StyleBundle ngDialogThemeCss = new StyleBundle("~/Bundles/StyleLib/ngDialogTheme", "https://cdnjs.cloudflare.com/ajax/libs/ng-dialog/0.3.11/css/ngDialog-theme-default.min.css");
+            ngDialogThemeCss.Include("~/Content/Lib/Css/ngDialog-theme-default-min.css");
+            bundles.Add(ngDialogThemeCss);
+
+
+            // VoteOn CSS
             StyleBundle votingStyle = new StyleBundle("~/Bundles/VotingStyle");
             votingStyle.Include("~/Content/Scss/Voting.scss");
             votingStyle.Builder = nullBuilder;
@@ -71,6 +87,8 @@ namespace VotingApplication.Web
             scriptLibBundle.Orderer = nullOrderer;
             bundles.Add(scriptLibBundle);
 
+
+            // Lib Javascript
             const string angularCdnBase = "https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13";
 
             // Angular
@@ -136,6 +154,9 @@ namespace VotingApplication.Web
             moment.Include("~/Scripts/Lib/moment-min.js");
             bundles.Add(moment);
 
+
+
+            // VoteOn Javascript
             ScriptBundle scriptBundle = new ScriptBundle("~/Bundles/Script");
             scriptBundle.IncludeDirectory("~/Scripts/Modules", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Directives", "*.js");
