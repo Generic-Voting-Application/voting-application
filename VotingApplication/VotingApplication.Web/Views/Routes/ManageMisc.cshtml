@@ -34,10 +34,10 @@
         <div class="manage-section">
             <div>
                 <form class="form-section-block">
-                    <label for="HiddenResults">Results are hidden until a voter has voted</label>
-                    <toggle-switch id="HiddenResults" ng-model="poll.HiddenResults" on-label="Yes" off-label="No"></toggle-switch>
-                    <small ng-if="poll.HiddenResults">Voters can not see the results until they have cast a vote</small>
-                    <small ng-if="!poll.HiddenResults">Voters can see results at any time</small>
+                    <label for="ElectionMode">Voters must vote before they can see results and can not change their vote</label>
+                    <toggle-switch id="ElectionMode" ng-model="poll.ElectionMode" on-label="Yes" off-label="No"></toggle-switch>
+                    <small ng-if="poll.ElectionMode">Voters can not see the results until they have cast a vote and can not change their vote</small>
+                    <small ng-if="!poll.ElectionMode">Voters can see results at any time and change their vote</small>
                 </form>
             </div>
         </div>

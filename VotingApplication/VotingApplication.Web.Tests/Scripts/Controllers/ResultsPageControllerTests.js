@@ -10,11 +10,13 @@ describe('Results Page Controller', function () {
 
     var mockVoteService;
     var mockPollService;
+    var mockRoutingService;
 
     var voteGetResultsPromise;
     var getPollPromise;
 
     var getPollResponse = { ExpiryDateUtc: null };
+    var getElectionPollResponse = { ElectionMode: true };
 
     beforeEach(function () {
         jasmine.clock().install();
@@ -31,6 +33,11 @@ describe('Results Page Controller', function () {
             getResults: function () { }
         };
 
+        mockRoutingService = {
+            navigateToVotePage: function () { },
+            getVotePageUrl : function() { }
+        };
+
         voteGetResultsPromise = $q.defer();
         spyOn(mockVoteService, 'getResults').and.callFake(function () { return voteGetResultsPromise.promise; });
 
@@ -40,7 +47,14 @@ describe('Results Page Controller', function () {
         getPollPromise = $q.defer();
         spyOn(mockPollService, 'getPoll').and.callFake(function () { return getPollPromise.promise; });
 
-        $controller('ResultsPageController', { $scope: scope, VoteService: mockVoteService, PollService: mockPollService });
+        spyOn(mockRoutingService, 'navigateToVotePage').and.callThrough();
+
+        $controller('ResultsPageController', {
+            $scope: scope,
+            VoteService: mockVoteService,
+            PollService: mockPollService,
+            RoutingService : mockRoutingService
+        });
     }));
 
     afterEach(function () {
@@ -362,6 +376,18 @@ describe('Results Page Controller', function () {
 
         expect(scope.loaded).toBe(true);
     });
+
+    it('Redirects to vote page on election polls', function () {
+
+        getPollPromise.resolve(getElectionPollResponse);
+        voteGetResultsPromise.reject(errors.IncorrectPollOrder);
+
+        scope.$apply();
+
+        expect(mockRoutingService.navigateToVotePage).toHaveBeenCalled();
+
+    });
+
 
     describe('GVA Expired Callback', function () {
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -25,26 +26,31 @@ namespace VotingApplication.Web.Api.Controllers
                 Poll poll = PollByPollId(id, context);
 
                 Guid? tokenGuid = GetTokenGuidFromHeaders();
+                bool userHasVoted = false;
 
                 if (poll.InviteOnly)
                 {
                     if (!tokenGuid.HasValue)
                     {
-                        ThrowError(HttpStatusCode.Forbidden);
+                        ThrowError(HttpStatusCode.Unauthorized);
                     }
 
                     if (poll.Ballots.All(b => b.TokenGuid != tokenGuid.Value))
                     {
-                        ThrowError(HttpStatusCode.Forbidden);
+                        ThrowError(HttpStatusCode.Unauthorized);
                     }
                 }
 
                 if (tokenGuid.HasValue)
                 {
-                    if (poll.Ballots.All(b => b.TokenGuid != tokenGuid.Value))
+                    Ballot ballot = poll.Ballots.Where(b => b.TokenGuid == tokenGuid.Value).SingleOrDefault();
+
+                    if (ballot == null)
                     {
                         ThrowError(HttpStatusCode.NotFound);
                     }
+
+                    userHasVoted = ballot.HasVoted;
                 }
                 else
                 {
@@ -62,11 +68,29 @@ namespace VotingApplication.Web.Api.Controllers
                     context.SaveChanges();
                 }
 
-                return CreateResponse(poll, tokenGuid.Value);
+                return CreateResponse(poll, tokenGuid.Value, userHasVoted);
             }
         }
 
-        private static PollRequestResponseModel CreateResponse(Poll poll, Guid tokenGuid)
+        private Guid? GetTokenGuidFromHeaders()
+        {
+            IEnumerable<string> tokenHeaders;
+            bool success = Request.Headers.TryGetValues("X-TokenGuid", out tokenHeaders);
+
+            if (success)
+            {
+                if (tokenHeaders.Count() > 1)
+                {
+                    ThrowError(HttpStatusCode.BadRequest, "Multiple X-TokenGuid headers");
+                }
+
+                return new Guid(tokenHeaders.Single());
+            }
+
+            return null;
+        }
+
+        private static PollRequestResponseModel CreateResponse(Poll poll, Guid tokenGuid, bool hasVoted)
         {
             return new PollRequestResponseModel
             {
@@ -83,7 +107,9 @@ namespace VotingApplication.Web.Api.Controllers
 
                 NamedVoting = poll.NamedVoting,
                 ChoiceAdding = poll.ChoiceAdding,
-                HiddenResults = poll.HiddenResults
+                ElectionMode = poll.ElectionMode,
+
+                UserHasVoted = hasVoted
             };
         }
 
