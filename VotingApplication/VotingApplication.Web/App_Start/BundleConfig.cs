@@ -73,6 +73,7 @@ namespace VotingApplication.Web
 
             const string angularCdnBase = "https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13";
 
+            // Angular
             var angular = new Bundle("~/Bundles/ScriptLib/Angular", string.Format("{0}/angular.min.js", angularCdnBase));
             angular.Include("~/Scripts/Lib/angular-min.js");
             bundles.Add(angular);
@@ -80,6 +81,22 @@ namespace VotingApplication.Web
             var angularRoute = new Bundle("~/Bundles/ScriptLib/AngularRoute", string.Format("{0}/angular-route.min.js", angularCdnBase));
             angularRoute.Include("~/Scripts/Lib/angular-route-min.js");
             bundles.Add(angularRoute);
+
+
+            // Angular Material and dependencies
+            var angularAnimate = new Bundle("~/Bundles/ScriptLib/AngularAnimate", string.Format("{0}/angular-animate.min.js", angularCdnBase));
+            angularAnimate.Include("~/Scripts/Lib/angular-animate-min.js");
+            bundles.Add(angularAnimate);
+
+            var angularAria = new Bundle("~/Bundles/ScriptLib/AngularAnimate", string.Format("{0}/angular-aria.min.js", angularCdnBase));
+            angularAria.Include("~/Scripts/Lib/angular-aria-min.js");
+            bundles.Add(angularAria);
+
+            var angularMaterial = new Bundle("~/Bundles/ScriptLib/AngularMaterial", "https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js");
+            angularMaterial.Include("~/Scripts/Lib/angular-material-min.js");
+            bundles.Add(angularMaterial);
+
+
 
             var angularQr = new ScriptBundle("~/Bundles/ScriptLib/AngularQr", "https://cdn.rawgit.com/monospaced/angular-qrcode/5.1.0/qrcode.js");
             angularQr.Include("~/Scripts/Lib/angular-qrcode.js");
@@ -97,6 +114,15 @@ namespace VotingApplication.Web
             angularZeroClipboard.Include("~/Scripts/Lib/angular-zeroclipboard.js");
             bundles.Add(angularZeroClipboard);
 
+            var ngDialog = new Bundle("~/Bundles/ScriptLib/ngDialog", "https://cdnjs.cloudflare.com/ajax/libs/ng-dialog/0.3.11/js/ngDialog.min.js");
+            ngDialog.Include("~/Scripts/Lib/ngDialog-min.js");
+            bundles.Add(ngDialog);
+
+            var ngStorage = new Bundle("~/Bundles/ScriptLib/ngStorage", "https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.0/ngStorage.min.js");
+            ngStorage.Include("~/Scripts/Lib/ngStorage-min.js");
+            bundles.Add(ngStorage);
+
+            // d3
             var d3 = new Bundle("~/Bundles/ScriptLib/d3", "https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js");
             d3.Include("~/Scripts/Lib/d3-min.js");
             bundles.Add(d3);
@@ -105,17 +131,10 @@ namespace VotingApplication.Web
             d3tip.Include("~/Scripts/Lib/d3-tip.js");
             bundles.Add(d3tip);
 
+            // moment
             var moment = new Bundle("~/Bundles/ScriptLib/moment", "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js");
             moment.Include("~/Scripts/Lib/moment-min.js");
             bundles.Add(moment);
-
-            var ngDialog = new Bundle("~/Bundles/ScriptLib/ngDialog", "https://cdnjs.cloudflare.com/ajax/libs/ng-dialog/0.3.11/js/ngDialog.min.js");
-            ngDialog.Include("~/Scripts/Lib/ngDialog-min.js");
-            bundles.Add(ngDialog);
-
-            var ngStorage = new Bundle("~/Bundles/ScriptLib/ngStorage", "https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.0/ngStorage.min.js");
-            ngStorage.Include("~/Scripts/Lib/ngStorage-min.js");
-            bundles.Add(ngStorage);
 
             ScriptBundle scriptBundle = new ScriptBundle("~/Bundles/Script");
             scriptBundle.IncludeDirectory("~/Scripts/Modules", "*.js");
