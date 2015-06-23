@@ -308,7 +308,7 @@ namespace VotingApplication.Web.Tests.Controllers
 
         [TestMethod]
         [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
-        public void ElectionPoll_BallotHasVoted_BadRequest()
+        public void ElectionPoll_BallotHasVoted_ThrowsBadRequest()
         {
             const string pollName = "Why are we here?";
             const PollType pollType = PollType.Basic;

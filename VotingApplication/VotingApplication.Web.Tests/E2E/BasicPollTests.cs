@@ -638,7 +638,7 @@ namespace VotingApplication.Web.Tests.E2E
                 {
                     using (var context = new TestVotingContext())
                     {
-                        Poll poll = CreatePoll(context, true);
+                        Poll poll = CreateElectionPoll(context);
                         GoToUrl(driver, PollUrl);
 
                         IWebElement resultButton = FindElementById(driver, "results-button");
@@ -655,13 +655,13 @@ namespace VotingApplication.Web.Tests.E2E
                 {
                     using (var context = new TestVotingContext())
                     {
-                        Poll poll = CreatePoll(context, true);
+                        Poll poll = CreateElectionPoll(context);
                         GoToUrl(driver, PollUrl);
 
                         IReadOnlyCollection<IWebElement> voteButtons = FindElementsById(driver, "vote-button");
                         voteButtons.First().Click();
 
-                        driver.Navigate().GoToUrl(PollUrl);
+                        GoToUrl(driver, PollUrl);
 
                         WaitForPageChange();
 
@@ -679,7 +679,7 @@ namespace VotingApplication.Web.Tests.E2E
                 {
                     using (var context = new TestVotingContext())
                     {
-                        Poll poll = CreatePoll(context, true);
+                        Poll poll = CreateElectionPoll(context);
 
                         string resultsUrl = PollUrl.Replace("Vote", "Results");
 
@@ -692,7 +692,7 @@ namespace VotingApplication.Web.Tests.E2E
                 }
             }
 
-            public static Poll CreatePoll(TestVotingContext testContext, bool electionMode)
+            public static Poll CreateElectionPoll(TestVotingContext testContext)
             {
                 var testPollChoices = new List<Choice>() 
                 {
@@ -711,7 +711,7 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    ElectionMode = electionMode
+                    ElectionMode = true
                 };
 
                 testContext.Polls.Add(electionBasicPoll);

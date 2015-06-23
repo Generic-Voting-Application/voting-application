@@ -159,7 +159,7 @@ namespace VotingApplication.Web.Tests.Controllers
 
             [TestMethod]
             [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
-            public void Election_WithNoVote_ThrowsBAdRequest()
+            public void ElectionPoll_WithNoVotes_ThrowsBadRequest()
             {
 
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
@@ -180,7 +180,7 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 PollResultsController controller = CreatePollController(contextFactory);
 
-                ResultsRequestResponseModel response = controller.Get(PollManageGuid);
+                controller.Get(PollManageGuid);
             }
 
             [TestMethod]

@@ -20,7 +20,7 @@ namespace VotingApplication.Web.Api.Controllers
         [HttpPut]
         public void Put(Guid manageId, ManagePollTypeRequest updateRequest)
         {
-            using (var context = _contextFactory.CreateContext())
+            using (IVotingContext context = _contextFactory.CreateContext())
             {
                 Poll poll = PollByManageId(manageId, context);
 
@@ -68,7 +68,7 @@ namespace VotingApplication.Web.Api.Controllers
         [HttpGet]
         public ManagePollTypeRequestResponse Get(Guid manageId)
         {
-            using (var context = _contextFactory.CreateContext())
+            using (IVotingContext context = _contextFactory.CreateContext())
             {
                 Poll poll = PollByManageId(manageId, context);
 

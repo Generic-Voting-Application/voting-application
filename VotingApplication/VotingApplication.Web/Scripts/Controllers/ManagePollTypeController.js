@@ -47,11 +47,7 @@
             ManageService.getPollType($scope.manageId)
             .then(function (data) {
 
-                if (data.PollHasVotes &&
-                        ($scope.PollType !== startingPollType ||
-                        ($scope.PollType === 'Points' &&
-                            ($scope.MaxPerVote !== startingMaxPerVote ||
-                            $scope.MaxPoints !== startingMaxPoints)))) {
+                if (pollHasChanged(data)) {
                     openPollChangeDialog(updatePollType);
                 } else {
                     updatePollType();
@@ -69,8 +65,6 @@
 
         // Points per vote
         function canIncrementMPV() {
-            console.log($scope.PollType === 'Points' && $scope.MaxPerVote < $scope.MaxPoints);
-
             if (!$scope.PollType) {
                 return false;
             }
@@ -110,6 +104,20 @@
                 'scope': $scope,
                 data: { 'callback': callback }
             });
+        }
+
+        function pollHasChanged(poll) {
+
+            if(!poll.PollHasVotes) {
+                return false;
+            }
+
+            if($scope.PollType !== startingPollType) {
+                return true;
+            }
+
+            return $scope.PollType === 'Points' &&
+                   ($scope.MaxPerVote !== startingMaxPerVote || $scope.MaxPoints !== startingMaxPoints);
         }
 
         function activate() {

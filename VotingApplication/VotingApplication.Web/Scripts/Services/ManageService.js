@@ -51,11 +51,11 @@
 
         self.getPollType = function (manageId) {
 
-            if (!manageId) {
-                return null;
-            }
-
             var prom = $q.defer();
+
+            if (!manageId) {
+                return prom.reject();
+            }
 
             return $http({
                 method: 'GET',
