@@ -298,7 +298,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\MaterialController.cs" />
+    <Compile Include="Controllers\CreateController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RoutesController.cs" />
     <Compile Include="Controllers\PollController.cs" />
@@ -374,7 +374,7 @@
     <Content Include="Scripts\Lib\ngDialog-min.js" />
     <Content Include="Scripts\Lib\ngQuickDate-min.js" />
     <Content Include="Scripts\Lib\ngStorage-min.js" />
-    <Content Include="Scripts\Modules\VoteOn.js" />
+    <Content Include="Scripts\Modules\VoteOn-Create.js" />
     <Content Include="Scripts\Services\AccountService.js" />
     <Content Include="Scripts\Services\ErrorService.js" />
     <Content Include="Scripts\Services\IdentityService.js" />
@@ -433,7 +433,7 @@
     <Content Include="Views\Poll\Index.cshtml" />
     <Content Include="Views\Routes\ManageMisc.cshtml" />
     <Content Include="Views\Routes\ConfirmRegistration.cshtml" />
-    <Content Include="Views\Material\Index.cshtml" />
+    <Content Include="Views\Create\Index.cshtml" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
