@@ -8,5 +8,15 @@ namespace VotingApplication.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult Step1()
+        {
+            return View();
+        }
+
+        public ActionResult Step2()
+        {
+            return View();
+        }
     }
 }

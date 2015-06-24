@@ -106,7 +106,7 @@ namespace VotingApplication.Web
             angularAnimate.Include("~/Scripts/Lib/angular-animate-min.js");
             bundles.Add(angularAnimate);
 
-            var angularAria = new Bundle("~/Bundles/ScriptLib/AngularAnimate", string.Format("{0}/angular-aria.min.js", angularCdnBase));
+            var angularAria = new Bundle("~/Bundles/ScriptLib/AngularAria", string.Format("{0}/angular-aria.min.js", angularCdnBase));
             angularAria.Include("~/Scripts/Lib/angular-aria-min.js");
             bundles.Add(angularAria);
 

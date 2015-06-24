@@ -452,6 +452,8 @@
     <Content Include="Views\Routes\ManageMisc.cshtml" />
     <Content Include="Views\Routes\ConfirmRegistration.cshtml" />
     <Content Include="Views\Create\Index.cshtml" />
+    <Content Include="Views\Create\Step1.cshtml" />
+    <Content Include="Views\Create\Step2.cshtml" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -3,14 +3,12 @@
 <head>
     <title>Vote On</title>
     <meta name="viewport" content="initial-scale=1">
-
-    <!-- Angular Material CSS now available via Google CDN; version 0.10 used here -->
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.css">
-
+    @Styles.Render("~/Bundles/StyleLib/AngularMaterial")
+    @Styles.Render("~/Bundles/StyleLib/FontAwesome")
 </head>
 <body>
 
-    <div layout="column" layout-fill>
+    <div layout="column" flex layout-fill>
 
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -20,84 +18,41 @@
             </div>
         </md-toolbar>
 
-        <md-content md-theme="default" layout="column" flex layout-align="center center">
+        <md-content md-theme="default">
 
-            <div layout="row" layout-fill>
-
-                <div flex-gt-md="60" flex-md="80" flex-sm="90"
-                     offset-gt-md="20" offset-md="10" offset-sm="5">
-
-                    <md-content md-theme="default">
-
-                        <form name="quickPollForm">
-                            <md-content layout-padding>
-
-                                <md-input-container class="md-display-1">
-                                    <label>What do you want to ask?</label>
-                                    <input required type="text" name="question" ng-model="quickPoll.question">
-                                </md-input-container>
-
-                            </md-content>
-
-                            <md-content layout-padding>
-
-                                <div layout="column">
-
-                                    <div layout="row" layout-fill>
-                                        <div flex="75">
-                                            <md-input-container>
-                                                <label>Choice 1</label>
-                                                <input type="text">
-                                            </md-input-container>
-                                        </div>
-                                    </div>
-
-                                    <div layout="row" layout-fill>
-                                        <div flex="75">
-                                            <md-input-container>
-                                                <label>Choice 2</label>
-                                                <input type="text">
-                                            </md-input-container>
-                                        </div>
-                                    </div>
-
-
-                                    <div layout="row" layout-fill>
-                                        <div flex="75">
-                                            <md-input-container>
-                                                <label>Choice 3</label>
-                                                <input type="text">
-                                            </md-input-container>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div layout="row" layout-align="start start">
-                                    <md-button class="md-raised md-primary" ng-disabled="quickPollForm.$invalid" ng-hide="loading" ng-click="loading=!loading">Create</md-button>
-                                    <md-progress-linear md-mode="indeterminate" ng-show="loading"></md-progress-linear>
-                                </div>
-
-                            </md-content>
-
-                        </form>
-                    </md-content>
-
-                </div>
-
-            </div>
-
+            <md-tabs md-center-tabs="true" md-dynamic-height="true" class="md-accent">
+                <md-tab id="tab1">
+                    <md-tab-label>Question</md-tab-label>
+                    <md-tab-body>
+                        <ng-include src="'/Create/Step1'" />
+                    </md-tab-body>
+                </md-tab>
+                <md-tab id="tab2" ng-disabled="false">
+                    <md-tab-label>Style</md-tab-label>
+                    <md-tab-body>
+                        <ng-include src="'/Create/Step2'" />
+                    </md-tab-body>
+                </md-tab>
+                <md-tab id="tab3" ng-disabled="false">
+                    <md-tab-label>Expiry</md-tab-label>
+                    <md-tab-body>
+                        Expiry Page
+                    </md-tab-body>
+                </md-tab>
+                <md-tab id="tab4" ng-disabled="true">
+                    <md-tab-label>Invitations</md-tab-label>
+                    <md-tab-body>
+                        Invitations page
+                    </md-tab-body>
+                </md-tab>
+            </md-tabs>
         </md-content>
     </div>
 
-    <!-- Angular Material Dependencies -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
-
-
-    <!-- Angular Material Javascript now available via Google CDN; version 0.10 used here -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js"></script>
-
+    @Scripts.Render("~/Bundles/ScriptLib/Angular")
+    @Scripts.Render("~/Bundles/ScriptLib/AngularAnimate")
+    @Scripts.Render("~/Bundles/ScriptLib/AngularAria")
+    @Scripts.Render("~/Bundles/ScriptLib/AngularMaterial")
     @Scripts.Render("~/Bundles/Script")
 </body>
 </html>
