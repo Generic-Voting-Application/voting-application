@@ -9,9 +9,9 @@
         .module('GVA.Voting')
         .controller('ResultsPageController', ResultsPageController);
 
-    ResultsPageController.$inject = ['$scope', '$routeParams', 'IdentityService', 'VoteService', 'RoutingService', 'PollService', 'TokenService'];
+    ResultsPageController.$inject = ['$scope', '$routeParams', 'IdentityService', 'VoteService', 'RoutingService', 'PollService', 'TokenService', 'Errors'];
 
-    function ResultsPageController($scope, $routeParams, IdentityService, VoteService, RoutingService, PollService, TokenService) {
+    function ResultsPageController($scope, $routeParams, IdentityService, VoteService, RoutingService, PollService, TokenService, Errors) {
 
         var pollId = $routeParams.pollId;
         var tokenId = $routeParams['tokenId'] || '';
@@ -20,6 +20,7 @@
         $scope.loaded = false;
         $scope.hasError = false;
         $scope.errorText = null;
+        $scope.electionMode = false;
 
         $scope.votingLink = RoutingService.getVotePageUrl(pollId, tokenId);
         $scope.winner = 'Lorem';
@@ -38,31 +39,29 @@
             var token = TokenService.retrieveToken(pollId);
 
             PollService.getPoll(pollId, token)
-                .then(setExpiryDate)
+                .then(setPollDetails)
                 .then(function () {
                     VoteService.refreshLastChecked(pollId);
                     reloadData(token);
-                    reloadInterval = setInterval(reloadData, 3000);
+                    reloadInterval = setInterval(function () { reloadData(token); }, 3000);
 
                     $scope.loaded = true;
                 })
-                .catch(function (error) {
-                    $scope.hasError = true;
-                    $scope.errorText = error.Text;
-                    $scope.loaded = true;
-                });
+                .catch(handleError);
         }
 
-        function setExpiryDate(pollData) {
+        function setPollDetails(pollData) {
             if (pollData.ExpiryDateUtc) {
                 $scope.hasExpired = moment.utc(pollData.ExpiryDateUtc).isBefore(moment.utc());
             }
+
+            $scope.electionMode = pollData.ElectionMode;
         }
 
         function reloadData(token) {
             VoteService.getResults(pollId, token)
                 .then(displayResults)
-                .catch(handleGetResultsError);
+                .catch(handleError);
         }
 
         function displayResults(data) {
@@ -90,10 +89,19 @@
             }
         }
 
-        function handleGetResultsError() {
+        function handleError(error) {
+
             if (reloadInterval) {
                 clearInterval(reloadInterval);
             }
+
+            if (error === Errors.IncorrectPollOrder) {
+                RoutingService.navigateToVotePage(pollId, tokenId);
+            }
+
+            $scope.hasError = true;
+            $scope.errorText = error.Text;
+            $scope.loaded = true;
         }
 
         function expire() {

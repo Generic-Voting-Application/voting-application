@@ -44,7 +44,7 @@ namespace VotingApplication.Web.Tests.E2E
                 InviteOnly = false,
                 NamedVoting = false,
                 ChoiceAdding = false,
-                HiddenResults = false,
+                ElectionMode = false,
                 MaxPerVote = 3,
                 MaxPoints = 4
             };
@@ -192,7 +192,7 @@ namespace VotingApplication.Web.Tests.E2E
             Choice pollChoice = new Choice() { PollChoiceNumber = 1, Name = "Choice" };
             _defaultPoll.Choices.Add(pollChoice);
 
-            Ballot pollBallot = new Ballot { ManageGuid = Guid.NewGuid(), TokenGuid = Guid.NewGuid(), Votes = new List<Vote>() };
+            Ballot pollBallot = new Ballot { ManageGuid = Guid.NewGuid(), TokenGuid = Guid.NewGuid(), Votes = new List<Vote>(), HasVoted = true };
             Vote pollVote = new Vote() { Poll = _defaultPoll, Ballot = pollBallot, Choice = pollChoice };
             pollBallot.Votes.Add(pollVote);
 

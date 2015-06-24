@@ -258,7 +258,7 @@ namespace VotingApplication.Web.Tests.Controllers
 
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    HiddenResults = false,
+                    ElectionMode = false,
                     InviteOnly = false
                 };
 
@@ -280,7 +280,8 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 Assert.IsFalse(response.NamedVoting);
                 Assert.IsFalse(response.ChoiceAdding);
-                Assert.IsFalse(response.HiddenResults);
+                Assert.IsFalse(response.ElectionMode);
+                Assert.IsFalse(response.UserHasVoted);
             }
 
             [TestMethod]
@@ -373,8 +374,8 @@ namespace VotingApplication.Web.Tests.Controllers
             }
 
             [TestMethod]
-            [ExpectedHttpResponseException(HttpStatusCode.Forbidden)]
-            public void InviteOnly_NoXTokenGuidHeader_ThrowsForbidden()
+            [ExpectedHttpResponseException(HttpStatusCode.Unauthorized)]
+            public void InviteOnly_NoXTokenGuidHeader_ThrowsUnauthorized()
             {
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 polls.Add(CreateInviteOnlyPoll());
@@ -386,7 +387,7 @@ namespace VotingApplication.Web.Tests.Controllers
             }
 
             [TestMethod]
-            [ExpectedHttpResponseException(HttpStatusCode.Forbidden)]
+            [ExpectedHttpResponseException(HttpStatusCode.Unauthorized)]
             public void InviteOnly_NoXTokenGuidHeader_DoesNotCreateBallot()
             {
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
@@ -402,8 +403,8 @@ namespace VotingApplication.Web.Tests.Controllers
             }
 
             [TestMethod]
-            [ExpectedHttpResponseException(HttpStatusCode.Forbidden)]
-            public void InviteOnly_XTokenGuidHeader_BallotNotInPoll_ThrowsForbidden()
+            [ExpectedHttpResponseException(HttpStatusCode.Unauthorized)]
+            public void InviteOnly_XTokenGuidHeader_BallotNotInPoll_ThrowsUnauthorized()
             {
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 polls.Add(CreateInviteOnlyPoll());
@@ -437,7 +438,7 @@ namespace VotingApplication.Web.Tests.Controllers
 
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    HiddenResults = false,
+                    ElectionMode = false,
                     InviteOnly = true
                 };
                 poll.Ballots.Add(ballot);
@@ -464,7 +465,46 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 Assert.IsFalse(response.NamedVoting);
                 Assert.IsFalse(response.ChoiceAdding);
-                Assert.IsFalse(response.HiddenResults);
+                Assert.IsFalse(response.ElectionMode);
+                Assert.IsFalse(response.UserHasVoted);
+            }
+
+            [TestMethod]
+            public void ElectionPoll_BallotHasVoted_UserHasVotedIsTrue()
+            {
+                const string pollName = "Why are we here?";
+                const PollType pollType = PollType.Basic;
+
+                var ballot = new Ballot() { TokenGuid = TokenGuid, HasVoted = true };
+
+                var poll = new Poll()
+                {
+                    UUID = PollId,
+                    Name = pollName,
+                    PollType = pollType,
+
+                    ExpiryDateUtc = null,
+
+                    NamedVoting = false,
+                    ChoiceAdding = false,
+                    ElectionMode = false,
+                    InviteOnly = true
+                };
+                poll.Ballots.Add(ballot);
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                polls.Add(poll);
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                ballots.Add(ballot);
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots);
+
+                PollController controller = CreatePollController(contextFactory);
+                AddXTokenGuidHeader(controller, TokenGuid);
+
+
+                PollRequestResponseModel response = controller.Get(PollId);
+
+                Assert.IsTrue(response.UserHasVoted);
             }
 
             [TestMethod]

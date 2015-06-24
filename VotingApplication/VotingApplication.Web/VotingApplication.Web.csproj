@@ -59,6 +59,10 @@
       <HintPath>$(SolutionDir)packages\BundleTransformer.SassAndScss.1.9.64\lib\net40\BundleTransformer.SassAndScss.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ClearScript, Version=5.4.2.0, Culture=neutral, PublicKeyToken=935d0c957da47c73, processorArchitecture=MSIL">
+      <HintPath>..\packages\JavaScriptEngineSwitcher.V8.1.2.7\lib\net40\ClearScript.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="dotless.Core, Version=1.5.0.0, Culture=neutral, PublicKeyToken=96b446c9e63eae34, processorArchitecture=MSIL">
       <HintPath>$(SolutionDir)packages\dotless.1.5.0\lib\dotless.Core.dll</HintPath>
       <Private>True</Private>
@@ -81,6 +85,10 @@
     </Reference>
     <Reference Include="JavaScriptEngineSwitcher.Core, Version=1.2.4.0, Culture=neutral, PublicKeyToken=c608b2a8cc9e4472, processorArchitecture=MSIL">
       <HintPath>$(SolutionDir)packages\JavaScriptEngineSwitcher.Core.1.2.4\lib\net40\JavaScriptEngineSwitcher.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JavaScriptEngineSwitcher.V8, Version=1.2.7.0, Culture=neutral, PublicKeyToken=c608b2a8cc9e4472, processorArchitecture=MSIL">
+      <HintPath>..\packages\JavaScriptEngineSwitcher.V8.1.2.7\lib\net40\JavaScriptEngineSwitcher.V8.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -227,6 +235,7 @@
     <Compile Include="Api\Controllers\AccountController.cs" />
     <Compile Include="Api\Controllers\DashboardController.cs" />
     <Compile Include="Api\Controllers\ManageController.cs" />
+    <Compile Include="Api\Models\DBViewModels\ManagePollTypeRequestResponse.cs" />
     <Compile Include="Api\Controllers\ManageQuestionController.cs" />
     <Compile Include="Api\Controllers\ManageMiscController.cs" />
     <Compile Include="Api\Controllers\ManagePollTypeController.cs" />
@@ -311,6 +320,19 @@
   <ItemGroup>
     <EmbeddedResource Include="Api\Resources\InvitationEmailTemplate.html" />
     <EmbeddedResource Include="Api\Resources\ConfirmEmailTemplate.html" />
+    <None Include="ClearScript.V8\ClearScriptV8-32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ClearScript.V8\ClearScriptV8-64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ClearScript.V8\v8-ia32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ClearScript.V8\v8-x64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="Content\Lib\Css\angular-material-min.css" />
     <Content Include="Content\Lib\Css\angular-toggle-switch.css" />
     <Content Include="Content\Lib\Css\font-awesome-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-min.css" />
@@ -359,8 +381,11 @@
     <Content Include="Scripts\Directives\TruncatedText.js" />
     <Content Include="Scripts\Filters\dateFilters.js" />
     <Content Include="Scripts\Interceptors\ErrorInterceptor.js" />
+    <Content Include="Scripts\Lib\angular-animate-min.js" />
+    <Content Include="Scripts\Lib\angular-aria-min.js" />
+    <Content Include="Scripts\Lib\angular-material-min.js" />
     <Content Include="Scripts\Lib\angular-zeroclipboard.js" />
-    <Content Include="Scripts\Lib\d3-tip-min.js" />
+    <Content Include="Scripts\Lib\d3-tip.js" />
     <Content Include="Scripts\Lib\moment-min.js" />
     <Content Include="Scripts\Lib\angular-qrcode.js" />
     <Content Include="Scripts\Lib\qrcode.js" />
@@ -372,7 +397,6 @@
     <Content Include="Scripts\Lib\angular-route-min.js" />
     <Content Include="Scripts\Lib\angular-toggle-switch-min.js" />
     <Content Include="Scripts\Lib\ngDialog-min.js" />
-    <Content Include="Scripts\Lib\ngQuickDate-min.js" />
     <Content Include="Scripts\Lib\ngStorage-min.js" />
     <Content Include="Scripts\Modules\VoteOn-Create.js" />
     <Content Include="Scripts\Services\AccountService.js" />
@@ -391,8 +415,6 @@
     <Content Include="Views\Routes\AccountLogin.cshtml" />
     <Content Include="Views\Routes\AccountRegister.cshtml" />
     <Content Include="Views\Routes\AccountResetPassword.cshtml" />
-    <Content Include="Scripts\Lib\angular-route-min.js.map" />
-    <Content Include="Scripts\Lib\angular-min.js.map" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Routes\Manage.cshtml" />
     <Content Include="Views\Routes\MultiVote.cshtml" />
@@ -415,14 +437,10 @@
     <Content Include="Views\Routes\AddChoiceDialog.cshtml" />
     <Content Include="Views\Routes\EditChoiceDialog.cshtml" />
     <Content Include="Fonts\fontawesome-webfont.woff2" />
-    <Content Include="Scripts\Lib\ZeroClipboard-min.map" />
     <Content Include="Views\Routes\PollTypeChange.cshtml" />
     <Content Include="Scripts\Directives\PollHeading.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Web.config" />
@@ -435,6 +453,9 @@
     <Content Include="Views\Routes\ConfirmRegistration.cshtml" />
     <Content Include="Views\Create\Index.cshtml" />
     <None Include="Web.Appveyor.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>

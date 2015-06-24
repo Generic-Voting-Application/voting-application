@@ -304,7 +304,7 @@ describe('Poll Service', function () {
 
             httpBackend.whenGET(
                     expectedUrl
-                ).respond(403);
+                ).respond(401);
 
 
             var errorMessage = null;
