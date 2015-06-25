@@ -1,16 +1,21 @@
 ﻿@Styles.Render("~/Bundles/VotingStyle")
 <div ng-controller="ResultsPageController" ng-app="GVA.Voting">
-    <poll-heading gva-expired-callback="gvaExpiredCallback()"></poll-heading>
-    <div class="flexbox">
-        <span ng-if="voteCount > 0" id="winner-label" class="centered"><b>Leader{{plural}}:</b> {{winner}}</span>
-        <span ng-if="voteCount == 0">No votes have currently been cast for this poll</span>
+
+    <div id="results-partial" ng-show="loaded && !hasError">
+        <poll-heading gva-expired-callback="gvaExpiredCallback()"></poll-heading>
+        <div class="flexbox">
+            <span ng-if="hasVotes" id="winner-label" class="centered"><b>Leader{{plural}}:</b> {{winner}}</span>
+            <span ng-if="!hasVotes">No votes have currently been cast for this poll</span>
+        </div>
+
+        <gva-results-chart data="chartData"></gva-results-chart>
+
+        <br />
+
+        <div ng-hide="hasExpired || electionMode" class="flexbox">
+            <a class="btn inactive-btn centered" ng-href="{{votingLink}}">Go to poll</a>
+        </div>
     </div>
 
-    <gva-results-chart data="chartData"></gva-results-chart>
-
-    <br />
-
-    <div ng-hide="hasExpired" class="flexbox">
-        <a class="btn inactive-btn centered" ng-href="{{votingLink}}">Go to poll</a>
-    </div>
+    <error-humidor id="results-partial-error" ng-show="loaded && hasError" error-text="{{errorText}}"></error-humidor>
 </div>

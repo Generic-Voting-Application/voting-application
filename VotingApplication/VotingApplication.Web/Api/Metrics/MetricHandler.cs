@@ -146,12 +146,12 @@ namespace VotingApplication.Web.Api.Metrics
             StoreEvent(setAllowOptionAdding);
         }
 
-        public void HandleHiddenResultsChangedEvent(bool hiddenResults, Guid pollId)
+        public void HandleElectionModeChangedEvent(bool electionMode, Guid pollId)
         {
-            Metric setHiddenResults = new Metric(MetricType.SetHiddenResults, pollId);
-            setHiddenResults.Value = (hiddenResults) ? "True" : "False";
-            setHiddenResults.Detail = (hiddenResults) ? "Results hidden before voting" : "Results visible before voting";
-            StoreEvent(setHiddenResults);
+            Metric setElectionMode = new Metric(MetricType.SetElectionMode, pollId);
+            setElectionMode.Value = (electionMode) ? "True" : "False";
+            setElectionMode.Detail = (electionMode) ? "Results hidden before voting" : "Results visible before voting";
+            StoreEvent(setElectionMode);
         }
 
         #endregion

@@ -24,7 +24,7 @@ namespace VotingApplication.Web.Api.Metrics
         public void HandleInviteOnlyChangedEvent(bool inviteOnly, Guid pollId) { }
         public void HandleNamedVotingChangedEvent(bool namedVoting, Guid pollId) { }
         public void HandleChoiceAddingChangedEvent(bool optionAdding, Guid pollId) { }
-        public void HandleHiddenResultsChangedEvent(bool hiddenResults, Guid pollId) { }
+        public void HandleElectionModeChangedEvent(bool electionMode, Guid pollId) { }
         public void HandleQuestionChangedEvent(string question, Guid pollId) { }
 
         public void HandleChoiceAddedEvent(Choice option, Guid pollId) { }

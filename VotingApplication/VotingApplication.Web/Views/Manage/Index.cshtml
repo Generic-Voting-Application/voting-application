@@ -2,7 +2,10 @@
 <html ng-app="GVA.Manage" ng-controller="DashboardController">
 <head>
     <title>Vote On</title>
-    @Styles.Render("~/Bundles/StyleLib")
+    @Styles.Render("~/Bundles/StyleLib/FontAwesome")
+    @Styles.Render("~/Bundles/StyleLib/AngularToggleSwitch")
+    @Styles.Render("~/Bundles/StyleLib/ngDialog")
+    @Styles.Render("~/Bundles/StyleLib/ngDialogTheme")
     @Styles.Render("~/Bundles/ManageStyle")
     <meta name="viewport" content="initial-scale=1">
 </head>
@@ -32,6 +35,15 @@
         <div error-bar></div>
         <footer><a href="mailto:generic.voting@gmail.com">Email Us</a> | © 2015 – Scott Logic Ltd</footer>
     </div>
+    @Scripts.Render("~/Bundles/ScriptLib/Angular")
+    @Scripts.Render("~/Bundles/ScriptLib/AngularRoute")
+    @Scripts.Render("~/Bundles/ScriptLib/AngularToggleSwitch")
+    @Scripts.Render("~/Bundles/ScriptLib/AngularZeroClipboard")
+    @Scripts.Render("~/Bundles/ScriptLib/AngularQr")
+    @Scripts.Render("~/Bundles/ScriptLib/qrcode")
+    @Scripts.Render("~/Bundles/ScriptLib/moment")
+    @Scripts.Render("~/Bundles/ScriptLib/ngDialog")
+    @Scripts.Render("~/Bundles/ScriptLib/ngStorage")
     @Scripts.Render("~/Bundles/ScriptLib")
     @Scripts.Render("~/Bundles/Script")
 </body>

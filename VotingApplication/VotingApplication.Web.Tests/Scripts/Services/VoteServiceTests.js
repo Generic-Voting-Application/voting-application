@@ -7,11 +7,13 @@ describe('Vote Service', function () {
     var voteService;
     var rootScope;
     var httpBackend;
+    var errors;
 
-    beforeEach(inject(function (VoteService, $rootScope, $httpBackend) {
+    beforeEach(inject(function (VoteService, $rootScope, $httpBackend, Errors) {
         voteService = VoteService;
         rootScope = $rootScope;
         httpBackend = $httpBackend;
+        errors = Errors;
     }));
 
     afterEach(function () {
@@ -85,6 +87,122 @@ describe('Vote Service', function () {
 
 
             voteService.getResults(pollId);
+
+            httpBackend.flush();
+        });
+
+        it('Returns just the data for a success', function () {
+            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
+            var ballotTokenGuid = '0310812A-05D3-41BA-AA34-CF7BF8330B67';
+
+            var expectedUrl = '/api/poll/' + pollId + '/results?lastRefreshed=0';
+
+            var expectedResponseData = 'SomeData';
+
+
+            httpBackend
+                .expectGET(expectedUrl)
+                .respond(200, expectedResponseData);
+
+
+            var responseData = null;
+
+            voteService.getResults(pollId, ballotTokenGuid)
+                .then(function (data) {
+                    responseData = data;
+                });
+
+            httpBackend.flush();
+
+            expect(responseData).toEqual(expectedResponseData);
+        });
+
+        it('Returns the correct error when the poll is not found', function () {
+
+            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
+
+            var url = '/api/poll/' + pollId + '/results?lastRefreshed=0';
+
+            httpBackend.whenGET(url).respond(404, '');
+
+            var response = null;
+            voteService
+                .getResults(pollId)
+                .catch(function (error) { response = error; });
+
+            httpBackend.flush();
+
+            expect(response).toBe(errors.PollNotFound);
+        });
+
+        it('Returns the correct error when the poll is invite only and an invalid token is supplied', function () {
+
+            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
+
+            var url = '/api/poll/' + pollId + '/results?lastRefreshed=0';
+
+            httpBackend.whenGET(url).respond(401, '');
+
+            var response = null;
+            voteService
+                .getResults(pollId)
+                .catch(function (error) { response = error; });
+
+            httpBackend.flush();
+
+            expect(response).toBe(errors.PollInviteOnlyNoToken);
+        });
+
+        it('Returns the readableMessage property in unknown error cases', function () {
+
+            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
+
+            var url = '/api/poll/' + pollId + '/results?lastRefreshed=0';
+
+            httpBackend.whenGET(url).respond(499, '');
+
+            var response = null;
+            voteService
+                .getResults(pollId)
+                .catch(function (error) { response = error; });
+
+            httpBackend.flush();
+
+            var expectedErrorMessage = 'An error has occured';
+            expect(response).toBe(expectedErrorMessage);
+        });
+
+        it('Given no token, makes request without X-TokenGuid header', function () {
+            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
+
+            var expectedUrl = '/api/poll/' + pollId + '/results?lastRefreshed=0';
+
+            httpBackend.expectGET(
+                    expectedUrl,
+                    function (headers) {
+                        return headers['X-TokenGuid'] === undefined;
+                    }
+                ).respond(200);
+
+            voteService.getResults(pollId);
+
+            httpBackend.flush();
+        });
+
+        it('Given a token, makes request with the X-TokenGuid header', function () {
+            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
+            var ballotTokenGuid = '0310812A-05D3-41BA-AA34-CF7BF8330B67';
+
+            var expectedUrl = '/api/poll/' + pollId + '/results?lastRefreshed=0';
+
+            httpBackend.expectGET(
+                    expectedUrl,
+                    function (headers) {
+                        return headers['X-TokenGuid'] === ballotTokenGuid;
+                    }
+                ).respond(200);
+
+            voteService.getResults(pollId, ballotTokenGuid);
 
             httpBackend.flush();
         });

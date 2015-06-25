@@ -36,7 +36,7 @@
 
         self.login = login;
 
-        self.registerAccountAndLogin = registerAccountAndLogin;
+        self.register = register;
 
         self.forgotPassword = forgotPassword;
 
@@ -57,9 +57,9 @@
 
         self.openRegisterDialog = openRegisterDialog;
 
+        self.resendConfirmation = resendConfirmation;
+
         return self;
-
-
 
         function login(email, password) {
             var deferred = $q.defer();
@@ -85,11 +85,6 @@
                     Email: email
                 })
             });
-        }
-
-        function registerAccountAndLogin(email, password) {
-            return register(email, password)
-                .then(function () { return login(email, password); });
         }
 
         function register(email, password) {
@@ -147,6 +142,14 @@
                 template: '../Routes/AccountRegister',
                 controller: 'AccountRegisterController',
                 'scope': scope
+            });
+        }
+
+        function resendConfirmation(email) {
+            return $http({
+                method: 'POST',
+                url: '/api/Account/ResendConfirmation?email=' + email,
+                contentType: 'application/json; charset=utf-8'
             });
         }
     }

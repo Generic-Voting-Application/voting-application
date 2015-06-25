@@ -7,9 +7,9 @@
         .factory('PollService', PollService);
 
 
-    PollService.$inject = ['$http', '$q', 'AccountService'];
+    PollService.$inject = ['$http', '$q', 'AccountService', 'Errors'];
 
-    function PollService($http, $q, AccountService) {
+    function PollService($http, $q, AccountService, Errors) {
 
         var service = {
             getPoll: getPoll,
@@ -21,7 +21,7 @@
         return service;
 
 
-        function getPoll(pollId) {
+        function getPoll(pollId, ballotToken) {
 
             if (!pollId) {
                 var deferred = $q.defer();
@@ -29,10 +29,44 @@
                 return deferred.promise;
             }
 
+            var tokenGuidHeader = null;
+
+            if (ballotToken) {
+                tokenGuidHeader = { 'X-TokenGuid': ballotToken };
+            }
+
+            var prom = $q.defer();
+
             return $http({
                 method: 'GET',
-                url: '/api/poll/' + pollId
-            });
+                url: '/api/poll/' + pollId,
+                headers: tokenGuidHeader
+            })
+                .then(function (response) {
+                    prom.resolve(response.data);
+                    return prom.promise;
+                })
+            .catch(function (response) { return transformError(response, prom); });
+        }
+
+        function transformError(response, promise) {
+
+            switch (response.status) {
+                case 401:
+                    {
+                        promise.reject(Errors.PollInviteOnlyNoToken);
+                        break;
+                    }
+                case 404:
+                    {
+                        promise.reject(Errors.PollNotFound);
+                        break;
+                    }
+                default:
+                    promise.reject(response.readableMessage);
+            }
+
+            return promise.promise;
         }
 
         function getUserPolls() {

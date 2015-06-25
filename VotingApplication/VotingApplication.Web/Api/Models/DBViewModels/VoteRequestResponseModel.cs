@@ -7,6 +7,7 @@
         public long ChoiceId { get; set; }
         public string ChoiceName { get; set; }
         public int VoteValue { get; set; }
+        public bool UserHasVoted { get; set; }
 
         public VoteRequestResponseModel()
         {

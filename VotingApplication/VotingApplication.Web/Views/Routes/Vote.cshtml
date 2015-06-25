@@ -1,18 +1,26 @@
 ﻿<div ng-controller="VotingPageController" ng-app="GVA.Voting">
-    <h2>{{poll.Name}}</h2>
-    <poll-heading gva-expired-callback="gvaExpiredCallback()"></poll-heading>
-    <div id="current-user" ng-show="identityName">
-        Voting as: {{identityName}}
-        <button id="not-user-btn" class="btn inactive-btn" ng-click="logoutIdentity()">Not {{identityName}}?</button>
-    </div>
-    <div voting-strategy></div>
-    <div class="flexbox-centered">
-        <a class="centered-margin" ng-hide="poll.HiddenResults" href="{{resultsLink}}">
-            <div id="results-button" class="btn inactive-btn clickable">Go to results</div>
-        </a>
+    <div id="voting-partial" ng-hide="hasError">
+        <h2>{{poll.Name}}</h2>
 
-        <a class="centered-margin" ng-show="manageLink" href="{{manageLink}}">
-            <div id="results-button" class="btn inactive-btn clickable">Manage Poll</div>
-        </a>
+        <poll-heading gva-expired-callback="gvaExpiredCallback()"></poll-heading>
+
+        <div id="current-user" ng-show="identityName">
+            Voting as: {{identityName}}
+            <button id="not-user-btn" class="btn inactive-btn" ng-click="logoutIdentity()">Not {{identityName}}?</button>
+        </div>
+
+        <div voting-strategy></div>
+
+        <div class="flexbox-centered">
+            <a class="centered-margin" ng-hide="poll.ElectionMode" href="{{resultsLink}}">
+                <div id="results-button" class="btn inactive-btn clickable">Go to results</div>
+            </a>
+
+            <a class="centered-margin" ng-show="manageLink" href="{{manageLink}}">
+                <div id="results-button" class="btn inactive-btn clickable">Manage Poll</div>
+            </a>
+        </div>
     </div>
+
+    <error-humidor id="voting-partial-error" ng-show="hasError" error-text="{{errorText}}"></error-humidor>
 </div>

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Web.Http;
 using VotingApplication.Data.Context;
@@ -19,26 +21,95 @@ namespace VotingApplication.Web.Api.Controllers
         [HttpGet]
         public PollRequestResponseModel Get(Guid id)
         {
-            using (var context = _contextFactory.CreateContext())
+            using (IVotingContext context = _contextFactory.CreateContext())
             {
                 Poll poll = PollByPollId(id, context);
-                return CreatePollResponseFromModel(poll);
+
+                Guid? tokenGuid = GetTokenGuidFromHeaders();
+                bool userHasVoted = false;
+
+                if (poll.InviteOnly)
+                {
+                    if (!tokenGuid.HasValue)
+                    {
+                        ThrowError(HttpStatusCode.Unauthorized);
+                    }
+
+                    if (poll.Ballots.All(b => b.TokenGuid != tokenGuid.Value))
+                    {
+                        ThrowError(HttpStatusCode.Unauthorized);
+                    }
+                }
+
+                if (tokenGuid.HasValue)
+                {
+                    Ballot ballot = poll.Ballots.Where(b => b.TokenGuid == tokenGuid.Value).SingleOrDefault();
+
+                    if (ballot == null)
+                    {
+                        ThrowError(HttpStatusCode.NotFound);
+                    }
+
+                    userHasVoted = ballot.HasVoted;
+                }
+                else
+                {
+                    tokenGuid = Guid.NewGuid();
+
+                    var ballot = new Ballot()
+                    {
+                        TokenGuid = tokenGuid.Value
+
+                    };
+
+                    poll.Ballots.Add(ballot);
+                    context.Ballots.Add(ballot);
+
+                    context.SaveChanges();
+                }
+
+                return CreateResponse(poll, tokenGuid.Value, userHasVoted);
             }
         }
 
-        private static PollRequestResponseModel CreatePollResponseFromModel(Poll poll)
+        private Guid? GetTokenGuidFromHeaders()
+        {
+            IEnumerable<string> tokenHeaders;
+            bool success = Request.Headers.TryGetValues("X-TokenGuid", out tokenHeaders);
+
+            if (success)
+            {
+                if (tokenHeaders.Count() > 1)
+                {
+                    ThrowError(HttpStatusCode.BadRequest, "Multiple X-TokenGuid headers");
+                }
+
+                return new Guid(tokenHeaders.Single());
+            }
+
+            return null;
+        }
+
+        private static PollRequestResponseModel CreateResponse(Poll poll, Guid tokenGuid, bool hasVoted)
         {
             return new PollRequestResponseModel
             {
                 Name = poll.Name,
                 PollType = poll.PollType.ToString(),
+                ExpiryDateUtc = poll.ExpiryDateUtc,
+
                 MaxPoints = poll.MaxPoints,
                 MaxPerVote = poll.MaxPerVote,
-                NamedVoting = poll.NamedVoting,
-                ExpiryDateUtc = poll.ExpiryDateUtc,
-                ChoiceAdding = poll.ChoiceAdding,
+
+                TokenGuid = tokenGuid,
+
                 Choices = poll.Choices,
-                HiddenResults = poll.HiddenResults
+
+                NamedVoting = poll.NamedVoting,
+                ChoiceAdding = poll.ChoiceAdding,
+                ElectionMode = poll.ElectionMode,
+
+                UserHasVoted = hasVoted
             };
         }
 

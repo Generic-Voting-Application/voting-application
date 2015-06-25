@@ -10,10 +10,11 @@
     function TokenService($location, $http, $localStorage, $routeParams, $q, $timeout) {
 
         var service = {
-            getToken: getTokenForPoll,
             setToken: setTokenForPoll,
             getManageId: getManageIdForPoll,
-            setManageId: setManageIdForPoll
+            setManageId: setManageIdForPoll,
+
+            retrieveToken: retrieveToken
         };
 
         return service;
@@ -69,44 +70,28 @@
             return deferred.promise;
         }
 
-        function getTokenForPoll(pollId) {
-
-            var deferred = $q.defer();
+        function retrieveToken(pollId) {
 
             if (!pollId) {
-                deferred.reject();
-                return deferred.promise;
+                return null;
             }
 
             if ($routeParams['tokenId']) {
-                deferred.resolve($routeParams['tokenId']);
-                return deferred.promise;
+                return $routeParams['tokenId'];
             }
 
-            if ($localStorage[pollId]) {
-
-                // Fallback for old system
-                if (typeof ($localStorage[pollId]) === 'string') {
-                    deferred.resolve($localStorage[pollId]);
-                    return deferred.promise;
-                } else if ($localStorage[pollId].token) {
-                    deferred.resolve($localStorage[pollId].token);
-                    return deferred.promise;
+            var userData = $localStorage[pollId];
+            if (userData) {
+                if (userData.token) {
+                    return userData.token;
+                }
+                    // Old style token, not stored in an object, but straight in localStorage.
+                else if (typeof userData === 'string') {
+                    return userData;
                 }
             }
 
-            $http({
-                method: 'GET',
-                url: '/api/poll/' + pollId + '/token'
-            })
-            .success(function (data) {
-                var token = data.replace(/\"/g, '');
-                setTokenForPoll(pollId, token);
-
-                deferred.resolve(token);
-            });
-
-            return deferred.promise;
+            return null;
         }
     }
 })();

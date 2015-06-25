@@ -6,23 +6,36 @@ describe('Results Page Controller', function () {
 
     var scope;
 
+    var errors;
+
     var mockVoteService;
     var mockPollService;
+    var mockRoutingService;
 
     var voteGetResultsPromise;
     var getPollPromise;
+
+    var getPollResponse = { ExpiryDateUtc: null };
+    var getElectionPollResponse = { ElectionMode: true };
 
     beforeEach(function () {
         jasmine.clock().install();
     });
 
-    beforeEach(inject(function ($rootScope, $q, $controller) {
+    beforeEach(inject(function ($rootScope, $q, $controller, Errors) {
 
         scope = $rootScope.$new();
+
+        errors = Errors;
 
         mockVoteService = {
             refreshLastChecked: function () { },
             getResults: function () { }
+        };
+
+        mockRoutingService = {
+            navigateToVotePage: function () { },
+            getVotePageUrl : function() { }
         };
 
         voteGetResultsPromise = $q.defer();
@@ -34,19 +47,38 @@ describe('Results Page Controller', function () {
         getPollPromise = $q.defer();
         spyOn(mockPollService, 'getPoll').and.callFake(function () { return getPollPromise.promise; });
 
-        $controller('ResultsPageController', { $scope: scope, VoteService: mockVoteService, PollService: mockPollService });
+        spyOn(mockRoutingService, 'navigateToVotePage').and.callThrough();
+
+        $controller('ResultsPageController', {
+            $scope: scope,
+            VoteService: mockVoteService,
+            PollService: mockPollService,
+            RoutingService : mockRoutingService
+        });
     }));
 
     afterEach(function () {
         jasmine.clock().uninstall();
     });
 
-    it('Calls vote service to get results', function () {
+    it('Calls vote service to get results when getPoll is successful', function () {
+        getPollPromise.resolve(getPollResponse);
+        scope.$apply();
 
         expect(mockVoteService.getResults).toHaveBeenCalled();
     });
 
-    it('Calls vote service to get results after 3 seconds', function () {
+    it('Does not calls vote service to get results when getPoll fails', function () {
+        getPollPromise.reject(errors.PollNotFound);
+        scope.$apply();
+
+        expect(mockVoteService.getResults).not.toHaveBeenCalled();
+    });
+
+    it('Calls vote service to get results after 3 seconds when getPoll is successful', function () {
+
+        getPollPromise.resolve(getPollResponse);
+        scope.$apply();
 
         mockVoteService.getResults.calls.reset();
 
@@ -57,10 +89,25 @@ describe('Results Page Controller', function () {
         expect(mockVoteService.getResults).toHaveBeenCalled();
     });
 
+    it('Does not calls vote service to get results after 3 seconds when getPoll fails', function () {
+
+        getPollPromise.reject(errors.PollNotFound);
+        scope.$apply();
+
+        mockVoteService.getResults.calls.reset();
+
+        expect(mockVoteService.getResults).not.toHaveBeenCalled();
+
+        jasmine.clock().tick(3000);
+
+        expect(mockVoteService.getResults).not.toHaveBeenCalled();
+    });
+
     it('Removes the timer if the vote service returns an error code (400+) from get results', function () {
 
         var response = { data: {}, status: 404 };
 
+        getPollPromise.resolve(getPollResponse);
         voteGetResultsPromise.reject(response);
 
         scope.$apply();
@@ -78,7 +125,7 @@ describe('Results Page Controller', function () {
     });
 
     it('Does not remove the timer if the vote service returns a success from get results', function () {
-
+        getPollPromise.resolve(getPollResponse);
         voteGetResultsPromise.resolve({});
 
         scope.$apply();
@@ -92,30 +139,39 @@ describe('Results Page Controller', function () {
 
     });
 
-    it('Sets voteCount to be number of votes cast', function () {
-        var resultData = {
-            Votes: [{}, {}, {}]
-        };
+    it('Sets hasVotes to true if there is a winner', function () {
+        var resultData = { Winners: ['One'] };
 
-        var response = { data: resultData };
-
-        voteGetResultsPromise.resolve(response);
+        getPollPromise.resolve(getPollResponse);
+        voteGetResultsPromise.resolve(resultData);
 
         scope.$apply();
         jasmine.clock().tick(3000);
 
 
-        expect(scope.voteCount).toBe(3);
+        expect(scope.hasVotes).toBe(true);
+    });
+
+    it('Sets hasVotes to false if there are no winners', function () {
+        var resultData = { Winners: [] };
+
+        getPollPromise.resolve(getPollResponse);
+        voteGetResultsPromise.resolve(resultData);
+
+        scope.$apply();
+        jasmine.clock().tick(3000);
+
+
+        expect(scope.hasVotes).toBe(false);
     });
 
     it('Sets Winner to the single winning option', function () {
         var resultData = {
-            Winners: [{ Name: 'Winning option' }]
+            Winners: ['Winning option']
         };
 
-        var response = { data: resultData };
-
-        voteGetResultsPromise.resolve(response);
+        getPollPromise.resolve(getPollResponse);
+        voteGetResultsPromise.resolve(resultData);
 
         scope.$apply();
         jasmine.clock().tick(3000);
@@ -126,12 +182,11 @@ describe('Results Page Controller', function () {
 
     it('Sets Winner to the combined list of all winners', function () {
         var resultData = {
-            Winners: [{ Name: 'Winning option' }, { Name: 'Another Winning option' }]
+            Winners: ['Winning option', 'Another Winning option']
         };
 
-        var response = { data: resultData };
-
-        voteGetResultsPromise.resolve(response);
+        getPollPromise.resolve(getPollResponse);
+        voteGetResultsPromise.resolve(resultData);
 
         scope.$apply();
         jasmine.clock().tick(3000);
@@ -147,6 +202,7 @@ describe('Results Page Controller', function () {
 
         var response = { data: resultData };
 
+        getPollPromise.resolve(getPollResponse);
         voteGetResultsPromise.resolve(response);
 
         scope.$apply();
@@ -158,12 +214,11 @@ describe('Results Page Controller', function () {
 
     it('Sets plural if there is more than one winner', function () {
         var resultData = {
-            Winners: [{ Name: 'Winning option' }, { Name: 'Another Winning option' }]
+            Winners: ['Winning option', 'Another Winning option']
         };
 
-        var response = { data: resultData };
-
-        voteGetResultsPromise.resolve(response);
+        getPollPromise.resolve(getPollResponse);
+        voteGetResultsPromise.resolve(resultData);
 
         scope.$apply();
         jasmine.clock().tick(3000);
@@ -176,19 +231,19 @@ describe('Results Page Controller', function () {
         var resultData = {
             Results: [
             {
-                Choice: { Name: 'Choice 1' },
+                ChoiceName: 'Choice 1',
                 Sum: 1,
                 Voters: [{ Name: 'Bob', Value: 1 }]
             },
             {
-                Choice: { Name: 'Choice 2' },
+                ChoiceName: 'Choice 2',
                 Sum: 3,
                 Voters: [{ Name: 'Bob', Value: 2 }, { Name: 'Derek', Value: 1 }]
             }]
         };
-        var response = { data: resultData };
 
-        voteGetResultsPromise.resolve(response);
+        getPollPromise.resolve(getPollResponse);
+        voteGetResultsPromise.resolve(resultData);
 
         var expectedChartData = [
             {
@@ -226,7 +281,7 @@ describe('Results Page Controller', function () {
                 Voters: [{ Name: 'Bob', Value: 2 }, { Name: 'Derek', Value: 1 }]
             }];
 
-        scope.voteCount = 5;
+        scope.hasVotes = false;
         scope.winner = 'A winner is you!';
         scope.plural = '';
         scope.chartData = chartData;
@@ -235,7 +290,7 @@ describe('Results Page Controller', function () {
         jasmine.clock().tick(3000);
 
 
-        expect(scope.voteCount).toBe(5);
+        expect(scope.hasVotes).toBe(false);
         expect(scope.winner).toBe('A winner is you!');
         expect(scope.plural).toBe('');
         expect(scope.chartData).toBe(chartData);
@@ -248,11 +303,7 @@ describe('Results Page Controller', function () {
 
     it('Leaves hasExpired false if poll never expires', function () {
 
-        var pollData = {
-            ExpiryDate: undefined
-        };
-
-        mockPollService.getPoll.and.callFake(function (polllId, callback) { return callback(pollData); });
+        getPollPromise.resolve(getPollResponse);
 
         scope.$apply();
         expect(scope.hasExpired).toBe(false);
@@ -267,7 +318,7 @@ describe('Results Page Controller', function () {
             ExpiryDate: new Date(2015, 2, 1)
         };
 
-        mockPollService.getPoll.and.callFake(function (polllId, callback) { return callback(pollData); });
+        getPollPromise.resolve(pollData);
 
         scope.$apply();
         expect(scope.hasExpired).toBe(false);
@@ -287,6 +338,56 @@ describe('Results Page Controller', function () {
         scope.$apply();
         expect(scope.hasExpired).toBe(true);
     });
+
+    it('Sets Error Text to getPoll error when PollService returns an error', function () {
+
+        getPollPromise.reject(errors.PollNotFound);
+        scope.$apply();
+
+        expect(scope.errorText).toBe(errors.PollNotFound.Text);
+    });
+
+    it('Sets hasError to true when PollService returns an error', function () {
+
+        getPollPromise.reject(errors.PollNotFound);
+        scope.$apply();
+
+        expect(scope.hasError).toBe(true);
+    });
+
+    it('loaded is false before PollService returns', function () {
+
+        expect(scope.loaded).toBe(false);
+    });
+
+    it('loaded is true when PollService returns an error', function () {
+
+        getPollPromise.reject(errors.PollNotFound);
+        scope.$apply();
+
+        expect(scope.loaded).toBe(true);
+    });
+
+    it('loaded is true when VoteService returns results', function () {
+
+        getPollPromise.resolve(getPollResponse);
+        voteGetResultsPromise.resolve({ data: null });
+        scope.$apply();
+
+        expect(scope.loaded).toBe(true);
+    });
+
+    it('Redirects to vote page on election polls', function () {
+
+        getPollPromise.resolve(getElectionPollResponse);
+        voteGetResultsPromise.reject(errors.IncorrectPollOrder);
+
+        scope.$apply();
+
+        expect(mockRoutingService.navigateToVotePage).toHaveBeenCalled();
+
+    });
+
 
     describe('GVA Expired Callback', function () {
 

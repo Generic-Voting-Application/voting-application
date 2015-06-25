@@ -60,7 +60,12 @@ namespace VotingApplication.Web.Tests.E2E
 
         public static void GoToBaseUri(IWebDriver driver)
         {
-            driver.Navigate().GoToUrl(SiteBaseUri);
+            GoToUrl(driver, SiteBaseUri);
+        }
+
+        public static void GoToUrl(IWebDriver driver, string url)
+        {
+            driver.Navigate().GoToUrl(url);
         }
 
         public static IWebElement FindElementById(IWebDriver driver, string elementId)
@@ -71,6 +76,20 @@ namespace VotingApplication.Web.Tests.E2E
         public static IReadOnlyCollection<IWebElement> FindElementsById(IWebDriver driver, string elementId)
         {
             return driver.FindElements(By.Id(elementId));
+        }
+
+        public static bool ElementExists(IWebDriver driver, By locator)
+        {
+            try
+            {
+                driver.FindElement(locator);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public void WaitForPageChange()
@@ -89,7 +108,8 @@ namespace VotingApplication.Web.Tests.E2E
                 UserName = NewUserEmail,
                 Email = NewUserEmail,
                 PasswordHash = hash,
-                SecurityStamp = Guid.NewGuid().ToString()
+                SecurityStamp = Guid.NewGuid().ToString(),
+                EmailConfirmed = true
             };
 
             using (var dbContext = new TestIdentityDbContext())

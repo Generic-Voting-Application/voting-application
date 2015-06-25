@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using VotingApplication.Data.Model;
 
 namespace VotingApplication.Web.Api.Models.DBViewModels
 {
     public class ResultsRequestResponseModel
     {
-        public List<Choice> Winners;
-        public List<ResultModel> Results;
-        public List<VoteRequestResponseModel> Votes;
+        public List<string> Winners { get; set; }
+        public List<ResultModel> Results { get; set; }
     }
 }

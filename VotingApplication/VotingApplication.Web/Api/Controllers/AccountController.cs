@@ -1,4 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OAuth;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Claims;
@@ -6,17 +12,12 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.OAuth;
 using VotingApplication.Data.Context;
 using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models;
 using VotingApplication.Web.Api.Providers;
 using VotingApplication.Web.Api.Results;
+using VotingApplication.Web.Api.Services;
 
 namespace VotingApplication.Web.Api.Controllers
 {
@@ -26,17 +27,21 @@ namespace VotingApplication.Web.Api.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
+        private ICorrespondenceService _correspondenceService;
         private IMetricHandler _metricHandler = new MetricHandler(new ContextFactory());
 
-        public AccountController()
+        public AccountController(ICorrespondenceService correspondenceService)
         {
+            _correspondenceService = correspondenceService;
         }
 
         public AccountController(ApplicationUserManager userManager,
-            ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
+            ISecureDataFormat<AuthenticationTicket> accessTokenFormat,
+            ICorrespondenceService correspondenceService)
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
+            _correspondenceService = correspondenceService;
         }
 
         public ApplicationUserManager UserManager
@@ -67,19 +72,26 @@ namespace VotingApplication.Web.Api.Controllers
                 LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
             };
         }
-
+        // GET api/Account/ConfirmEmail
         [HttpGet]
         [AllowAnonymous]
         [Route("ConfirmEmail", Name = "ConfirmEmail")]
-        public async Task<IHttpActionResult> ConfirmEmail(string userId, string code)
+        public async Task<IHttpActionResult> ConfirmEmail(string email, string code)
         {
-            if (userId == null || code == null)
+            if (email == null || code == null)
             {
                 ModelState.AddModelError("error", "You need to provide your user id and confirmation code");
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await UserManager.ConfirmEmailAsync(userId, code);
+            ApplicationUser user = await UserManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return BadRequest("User for email not found");
+            }
+
+            IdentityResult result = await UserManager.ConfirmEmailAsync(user.Id, code);
             if (result.Succeeded)
             {
                 return Redirect(Url.Content("~/#/"));
@@ -148,7 +160,7 @@ namespace VotingApplication.Web.Api.Controllers
 
             IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
                 model.NewPassword);
-            
+
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
@@ -188,11 +200,11 @@ namespace VotingApplication.Web.Api.Controllers
 
             var user = await UserManager.FindByNameAsync(model.Email);
 
-            // Currently email confirmation is not set up
-            if (user == null /*|| !(await UserManager.IsEmailConfirmedAsync(user.Id))*/ )
+            if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
             {
                 ModelState.AddModelError("", "The user either does not exist or is not confirmed.");
                 return BadRequest(ModelState);
+
             }
 
             string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
@@ -339,9 +351,9 @@ namespace VotingApplication.Web.Api.Controllers
             if (hasRegistered)
             {
                 Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                
-                 ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
-                    OAuthDefaults.AuthenticationType);
+
+                ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
+                   OAuthDefaults.AuthenticationType);
                 ClaimsIdentity cookieIdentity = await user.GenerateUserIdentityAsync(UserManager,
                     CookieAuthenticationDefaults.AuthenticationType);
 
@@ -409,13 +421,18 @@ namespace VotingApplication.Web.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() {
+            var user = new ApplicationUser()
+            {
                 UserName = model.Email,
                 Email = model.Email,
                 EmailConfirmed = false
             };
 
             IdentityResult identityResult = await UserManager.CreateAsync(user, model.Password);
+
+            string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+
+            _correspondenceService.SendConfirmation(user.Email, code);
 
             var createResult = GetErrorResult(identityResult);
 
@@ -425,6 +442,30 @@ namespace VotingApplication.Web.Api.Controllers
             }
 
             _metricHandler.HandleRegisterEvent(user.UserName);
+
+            return Ok();
+        }
+
+        // POST api/Account/ResendConfirmation
+        [AllowAnonymous]
+        [Route("ResendConfirmation")]
+        public async Task<IHttpActionResult> ResendConfirmation(string email)
+        {
+            if (email == null)
+            {
+                return BadRequest("An email is required to resend confirmation");
+            }
+
+            ApplicationUser user = await UserManager.FindByEmailAsync(email);
+
+            if (user == null || user.EmailConfirmed)
+            {
+                return Ok();
+            }
+
+            String code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+
+            _correspondenceService.SendConfirmation(user.Email, code);
 
             return Ok();
         }
@@ -457,7 +498,7 @@ namespace VotingApplication.Web.Api.Controllers
             result = await UserManager.AddLoginAsync(user.Id, info.Login);
             if (!result.Succeeded)
             {
-                return GetErrorResult(result); 
+                return GetErrorResult(result);
             }
             return Ok();
         }
@@ -473,7 +514,6 @@ namespace VotingApplication.Web.Api.Controllers
         }
 
         #region Helpers
-
         private IAuthenticationManager Authentication
         {
             get { return Request.GetOwinContext().Authentication; }

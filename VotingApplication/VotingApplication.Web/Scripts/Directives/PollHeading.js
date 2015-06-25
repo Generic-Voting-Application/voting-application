@@ -1,5 +1,6 @@
 ﻿/// <reference path="../Services/PollService.js" />
 /// <reference path="../Services/ExpiryStringService.js" />
+/// <reference path="../Services/TokenService.js" />
 (function () {
     'use strict';
 
@@ -7,9 +8,9 @@
         .module('GVA.Voting')
         .directive('pollHeading', pollHeading);
 
-    pollHeading.$inject = ['$routeParams', 'PollService', 'ExpiryStringService'];
+    pollHeading.$inject = ['$routeParams', 'PollService', 'ExpiryStringService', 'TokenService'];
 
-    function pollHeading($routeParams, PollService, ExpiryStringService) {
+    function pollHeading($routeParams, PollService, ExpiryStringService, TokenService) {
 
         function link($scope) {
             var pollId = $routeParams.pollId;
@@ -27,9 +28,10 @@
                 }
             }
 
-            PollService.getPoll(pollId)
-                .then(function (response) {
-                    var data = response.data;
+            var token = TokenService.retrieveToken(pollId);
+
+            PollService.getPoll(pollId, token)
+                .then(function (data) {
 
                     if (data.ExpiryDateUtc) {
                         var expiryDateUtc = moment.utc(data.ExpiryDateUtc);

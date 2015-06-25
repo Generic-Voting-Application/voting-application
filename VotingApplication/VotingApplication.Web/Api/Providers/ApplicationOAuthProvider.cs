@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
+﻿using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
-using VotingApplication.Web.Api.Models;
-using VotingApplication.Web.Api.Metrics;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using VotingApplication.Data.Context;
+using VotingApplication.Web.Api.Metrics;
+using VotingApplication.Web.Api.Models;
 
 namespace VotingApplication.Web.Api.Providers
 {
@@ -39,6 +36,12 @@ namespace VotingApplication.Web.Api.Providers
             if (user == null)
             {
                 context.SetError("invalid_grant", "The user name or password is incorrect.");
+                return;
+            }
+
+            if (!user.EmailConfirmed)
+            {
+                context.SetError("invalid_grant", "Email for this user not yet confirmed.");
                 return;
             }
 

@@ -11,35 +11,23 @@ describe('ManagePollTypeController', function () {
     var ngDialogMock;
 
     var manageUpdatePollTypePromise;
-    var manageGetVotesPromise;
+    var manageGetPollTypePromise;
 
     var observerCallback = function () { };
-
-    var pollData = {};
-    var votesData = {};
 
     beforeEach(inject(function ($rootScope, $q, $controller) {
 
         scope = $rootScope.$new();
 
         manageServiceMock = {
-            poll: {},
-
-            registerPollObserver: function () { },
-            getPoll: function () { },
-            getVotes: function () { },
+            getPollType: function () { },
             updatePollType: function () { }
         };
 
         manageUpdatePollTypePromise = $q.defer();
-        manageGetVotesPromise = $q.defer();
+        manageGetPollTypePromise = $q.defer();
         spyOn(manageServiceMock, 'updatePollType').and.callFake(function () { return manageUpdatePollTypePromise.promise; });
-        spyOn(manageServiceMock, 'getVotes').and.callFake(function () { return manageGetVotesPromise.promise; });
-        spyOn(manageServiceMock, 'registerPollObserver').and.callFake(function (callback) { observerCallback = callback; });
-        spyOn(manageServiceMock, 'getPoll').and.callFake(function () {
-            observerCallback();
-            return pollData;
-        });
+        spyOn(manageServiceMock, 'getPollType').and.callFake(function () { return manageGetPollTypePromise.promise; });
 
         routingServiceMock = { navigateToManagePage: function () { } };
         spyOn(routingServiceMock, 'navigateToManagePage');
@@ -60,7 +48,7 @@ describe('ManagePollTypeController', function () {
     describe('Update Poll', function () {
 
         it('Makes service call to update poll type', function () {
-            manageGetVotesPromise.resolve(votesData);
+            manageGetPollTypePromise.resolve({});
 
             scope.updatePoll();
 
@@ -71,7 +59,7 @@ describe('ManagePollTypeController', function () {
 
         it('Makes service call to Navigate To Manage Page when update service call succeeds', function () {
             manageUpdatePollTypePromise.resolve();
-            manageGetVotesPromise.resolve(votesData);
+            manageGetPollTypePromise.resolve({});
 
 
             scope.updatePoll();
@@ -83,7 +71,7 @@ describe('ManagePollTypeController', function () {
 
         it('Does not make service call to Navigate To Manage Page if delete service call fails', function () {
             manageUpdatePollTypePromise.reject();
-            manageGetVotesPromise.resolve(votesData);
+            manageGetPollTypePromise.resolve({});
 
 
             scope.updatePoll();
@@ -94,17 +82,17 @@ describe('ManagePollTypeController', function () {
         });
 
         it('Makes service call to see if there are any votes on the poll', function () {
-            manageGetVotesPromise.resolve(votesData);
+            manageGetPollTypePromise.resolve({});
 
 
             scope.updatePoll();
 
             scope.$apply();
-            expect(manageServiceMock.getVotes).toHaveBeenCalled();
+            expect(manageServiceMock.getPollType).toHaveBeenCalled();
         });
 
         it('Makes service call to Update Poll when getVotes service call succeeds', function () {
-            manageGetVotesPromise.resolve(votesData);
+            manageGetPollTypePromise.resolve({});
 
 
             scope.updatePoll();
@@ -116,30 +104,15 @@ describe('ManagePollTypeController', function () {
         });
 
         it('Asks for confirmation if there are votes for the poll, the poll type is Points, and the max per vote has changed', function () {
-            var poll = {
+            manageGetPollTypePromise.resolve({
                 MaxPerVote: 3,
-                PollType: 'Points'
-            };
+                PollType: 'Points',
+                PollHasVotes: true
+            });
 
-            var getVotesData = {
-
-                data: {
-                    Votes: [
-                        {
-                            ChoiceId: 1,
-                            VoteValue: 1,
-                            VoterName: 'Bob'
-                        }
-                    ]
-                }
-            };
-
-            manageGetVotesPromise.resolve(getVotesData);
-
-            manageServiceMock.poll = poll;
             observerCallback();
 
-            scope.poll.MaxPerVote = 7;
+            scope.MaxPerVote = 7;
             scope.updatePoll();
 
 
@@ -147,59 +120,31 @@ describe('ManagePollTypeController', function () {
             expect(ngDialogMock.open).toHaveBeenCalled();
         });
 
-        it('Asks for confirmation if there are votes for the poll, the poll type is Points, and the max point have changed', function () {
-            var poll = {
-                MaxPoints: 10,
-                PollType: 'Points'
-            };
+        it('Asks for confirmation if there are votes for the poll, the poll type is Points, and the max points have changed', function () {
 
-            var getVotesData = {
+            manageGetPollTypePromise.resolve({
+                MaxPerVote: 10,
+                PollType: 'Points',
+                PollHasVotes: true
+            });
 
-                data: {
-                    Votes: [
-                        {
-                            ChoiceId: 1,
-                            VoteValue: 1,
-                            VoterName: 'Bob'
-                        }
-                    ]
-                }
-            };
-
-            manageGetVotesPromise.resolve(getVotesData);
-
-            manageServiceMock.poll = poll;
             observerCallback();
 
-            scope.poll.MaxPoints = 8;
+            scope.MaxPoints = 8;
             scope.updatePoll();
-
 
             scope.$apply();
             expect(ngDialogMock.open).toHaveBeenCalled();
         });
 
         it('Does not ask for confirmation if there are votes for the poll, the poll type is Points, but the max per vote has not changed', function () {
-            var poll = {
+
+            manageGetPollTypePromise.resolve({
                 MaxPerVote: 3,
-                PollType: 'Points'
-            };
+                PollType: 'Points',
+                PollHasVotes: false
+            });
 
-            var getVotesData = {
-
-                data: {
-                    Votes: [
-                        {
-                            ChoiceId: 1,
-                            VoteValue: 1,
-                            VoterName: 'Bob'
-                        }
-                    ]
-                }
-            };
-            manageGetVotesPromise.resolve(getVotesData);
-
-            manageServiceMock.poll = poll;
             observerCallback();
 
 
@@ -210,28 +155,14 @@ describe('ManagePollTypeController', function () {
             expect(ngDialogMock.open).not.toHaveBeenCalled();
         });
 
-        it('Does not ask for confirmation if there are votes for the poll, the poll type is Points, but the max per vote has not changed', function () {
-            var poll = {
+        it('Does not ask for confirmation if there are votes for the poll, the poll type is Points, but the max points have not changed', function () {
+
+            manageGetPollTypePromise.resolve({
                 MaxPoints: 10,
-                PollType: 'Points'
-            };
+                PollType: 'Points',
+                PollHasVotes: false
+            });
 
-            var getVotesData = {
-
-                data: {
-                    Votes: [
-                        {
-                            ChoiceId: 1,
-                            VoteValue: 1,
-                            VoterName: 'Bob'
-                        }
-                    ]
-                }
-            };
-
-            manageGetVotesPromise.resolve(getVotesData);
-
-            manageServiceMock.poll = poll;
             observerCallback();
 
 
@@ -243,28 +174,13 @@ describe('ManagePollTypeController', function () {
         });
 
         it('Asks for confirmation if there are votes for the poll, and the poll type has changed', function () {
-            var poll = {
-                PollType: 'Points'
-            };
-
-            var getVotesData = {
-
-                data: {
-                    Votes: [
-                        {
-                            ChoiceId: 1,
-                            VoteValue: 1,
-                            VoterName: 'Bob'
-                        }
-                    ]
-                }
-            };
-            manageGetVotesPromise.resolve(getVotesData);
-
-            manageServiceMock.poll = poll;
+            manageGetPollTypePromise.resolve({
+                PollType: 'Points',
+                PollHasVotes: true
+            });
             observerCallback();
 
-            scope.poll.PollType = 'Basic';
+            scope.PollType = 'Basic';
             scope.updatePoll();
 
 
@@ -273,27 +189,14 @@ describe('ManagePollTypeController', function () {
         });
 
         it('Does not ask for confirmation if there are votes for the poll, but the poll type has not changed', function () {
-            var poll = {
-                PollType: 'Points'
-            };
 
-            var getVotesData = {
+            manageGetPollTypePromise.resolve({
+                MaxPoints: 7,
+                MaxPerVote: 3,
+                PollType: 'Points',
+                PollHasVotes: true
+            });
 
-                data: {
-                    Votes: [
-                        {
-                            ChoiceId: 1,
-                            VoteValue: 1,
-                            VoterName: 'Bob'
-                        }
-                    ]
-                }
-
-            };
-
-            manageGetVotesPromise.resolve(getVotesData);
-
-            manageServiceMock.poll = poll;
             observerCallback();
 
             scope.updatePoll();

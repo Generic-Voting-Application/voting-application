@@ -13,44 +13,353 @@ namespace VotingApplication.Web.Tests.E2E
 {
     public class PointsPollTests
     {
-        private static readonly string ChromeDriverDir = @"..\..\";
-        private static readonly string SiteBaseUri = @"http://localhost:64205/";
+        private const string ChromeDriverDir = @"..\..\";
+        private const string SiteBaseUri = @"http://localhost:64205/";
 
         [TestClass]
-        public class DefaultPollConfiguration
+        public class DefaultPollConfiguration : E2ETest
         {
-            private static ITestVotingContext _context;
-            private const int truncatedTextLimit = 60;
-            private static Poll _defaultPointsPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
             private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
-            private IWebDriver _driver;
 
-            [TestInitialize]
-            public virtual void TestInitialise()
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void PopulatedChoices_DisplaysAllChoices()
             {
-                _driver = new NgWebDriver(new ChromeDriver(ChromeDriverDir));
-                _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromSeconds(10));
-                _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        Poll poll = CreatePoll(context);
+                        GoToUrl(driver, PollUrl);
+
+                        IReadOnlyCollection<IWebElement> choiceNames = driver.FindElements(NgBy.Binding("choice.Name"));
+
+                        Assert.AreEqual(poll.Choices.Count, choiceNames.Count);
+
+                        List<string> expected = poll.Choices.Select(o => o.Name).ToList();
+                        List<string> actual = choiceNames.Select(o => o.Text).ToList();
+                        CollectionAssert.AreEquivalent(expected, actual);
+                    }
+                }
             }
 
-            [TestCleanup]
-            public void TestCleanUp()
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void PopulatedChoices_DisplaysAllChoiceDescriptions()
             {
-                _driver.Dispose();
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        Poll poll = CreatePoll(context);
+                        GoToUrl(driver, PollUrl);
+
+                        IReadOnlyCollection<IWebElement> choiceDescriptions = driver.FindElements(NgBy.Model("choice.Description"));
+
+                        Assert.AreEqual(poll.Choices.Count, choiceDescriptions.Count);
+
+                        List<string> expected = poll.Choices.Select(o => o.Description).ToList();
+                        List<string> actual = choiceDescriptions.Select(o => o.Text).ToList();
+                        CollectionAssert.AreEquivalent(expected, actual);
+                    }
+                }
             }
 
-            [ClassInitialize]
-            public static void ClassInitialise(TestContext testContext)
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void PopulatedChoices_TruncatesLongDescriptionsContainingAtLeastOneSpace()
             {
-                _context = new TestVotingContext();
+                const int truncationLength = 30;
+                string expectedText = new String('a', truncationLength) + "... Show More";
 
-                List<Choice> testPollChoices = new List<Choice>() {
-                    new Choice(){ Name = "Test Choice 1", Description = "Test Description 1" }
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        Poll poll = CreatePoll(context);
+
+                        string tooLongChoiceDescription = new String('a', truncationLength) + " " + new String('a', truncationLength);
+
+                        poll.Choices.Add(new Choice()
+                        {
+                            Name = "Test Choice 2",
+                            Description = tooLongChoiceDescription + " " + tooLongChoiceDescription
+                        });
+                        context.SaveChanges();
+
+
+                        GoToUrl(driver, PollUrl);
+
+                        IReadOnlyCollection<IWebElement> choiceDescriptions = driver.FindElements(NgBy.Model("choice.Description"));
+
+                        string selectedChoiceText = choiceDescriptions.Select(o => o.Text).Last();
+                        Assert.AreEqual(expectedText, selectedChoiceText);
+                    }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void PopulatedChoices_DoesNotTruncateLongDescriptionsContainingNoSpaces()
+            {
+                const int longDescriptionLength = 50;
+                string expectedText = new String('a', longDescriptionLength);
+
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        Poll poll = CreatePoll(context);
+
+                        string tooLongChoiceDescription = new String('a', longDescriptionLength);
+
+                        poll.Choices.Add(new Choice()
+                        {
+                            Name = "Test Choice 2",
+                            Description = tooLongChoiceDescription
+                        });
+                        context.SaveChanges();
+
+
+                        GoToUrl(driver, PollUrl);
+
+                        IReadOnlyCollection<IWebElement> choiceDescriptions = driver.FindElements(NgBy.Model("choice.Description"));
+
+                        string selectedChoiceText = choiceDescriptions.Select(o => o.Text).Last();
+                        Assert.AreEqual(expectedText, selectedChoiceText);
+                    }
+                }
+            }
+
+            [TestMethod, TestCategory("E2E")]
+            public void VotingOnChoice_NavigatesToResultsPage()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        Poll poll = CreatePoll(context);
+                        GoToUrl(driver, PollUrl);
+
+                        IReadOnlyCollection<IWebElement> increaseChoiceButtons = FindElementsById(driver, "increase-button");
+                        increaseChoiceButtons.First().Click();
+
+                        IWebElement voteButton = FindElementById(driver, "vote-button");
+                        voteButton.Click();
+
+
+                        string expectedUriPrefix = SiteBaseUri + "Poll/#/Results/" + poll.UUID;
+                        Assert.IsTrue(driver.Url.StartsWith(expectedUriPrefix));
+                    }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void DefaultPoll_ShowsResultsButton()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        CreatePoll(context);
+                        GoToUrl(driver, PollUrl);
+
+                        IWebElement resultsLink = FindElementById(driver, "results-button");
+
+                        Assert.IsTrue(resultsLink.IsVisible());
+                    }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void PointsButtons_ChangePointAllocations()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        Poll poll = CreatePoll(context);
+                        GoToUrl(driver, PollUrl);
+
+                        IReadOnlyCollection<IWebElement> choices = driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
+
+                        IWebElement firstChoice = choices.First();
+                        IWebElement selectedChoicePoints = firstChoice.FindElement(NgBy.Binding("choice.voteValue"));
+
+                        IReadOnlyCollection<IWebElement> increaseChoiceButtons = FindElementsById(driver, "increase-button");
+                        IWebElement plusButton = increaseChoiceButtons.First();
+
+                        IReadOnlyCollection<IWebElement> decreaseChoiceButtons = FindElementsById(driver, "decrease-button");
+                        IWebElement minusButton = decreaseChoiceButtons.First();
+
+                        string noPointsAllocatedPointsValue = "0/" + poll.MaxPerVote;
+
+                        Assert.AreEqual(noPointsAllocatedPointsValue, selectedChoicePoints.Text);
+
+                        plusButton.Click();
+                        string onePointAllocatedPointsValue = "1/" + poll.MaxPerVote;
+                        Assert.AreEqual(onePointAllocatedPointsValue, selectedChoicePoints.Text);
+
+                        minusButton.Click();
+                        Assert.AreEqual(noPointsAllocatedPointsValue, selectedChoicePoints.Text);
+                    }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void PointsButtons_ChangeTotalPointLimit()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        Poll poll = CreatePoll(context);
+                        GoToUrl(driver, PollUrl);
+
+                        IWebElement totalPoints = FindElementById(driver, "points-display");
+
+                        IReadOnlyCollection<IWebElement> increaseChoiceButtons = FindElementsById(driver, "increase-button");
+                        IWebElement plusButton = increaseChoiceButtons.First();
+
+                        IReadOnlyCollection<IWebElement> decreaseChoiceButtons = FindElementsById(driver, "decrease-button");
+                        IWebElement minusButton = decreaseChoiceButtons.First();
+
+
+                        string totalPointsNoneAllocated = "Unallocated points: " + poll.MaxPoints + "/" + poll.MaxPoints;
+                        Assert.AreEqual(totalPointsNoneAllocated, totalPoints.Text);
+
+                        plusButton.Click();
+                        string totalPointsOneAllocated = "Unallocated points: " + (poll.MaxPoints - 1) + "/" + poll.MaxPoints;
+                        Assert.AreEqual(totalPointsOneAllocated, totalPoints.Text);
+
+                        minusButton.Click();
+                        Assert.AreEqual(totalPointsNoneAllocated, totalPoints.Text);
+                    }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void PointsPerChoice_CanNotExceedMaximum()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        CreatePoll(context);
+                        GoToUrl(driver, PollUrl);
+
+                        IReadOnlyCollection<IWebElement> increaseChoiceButtons = FindElementsById(driver, "increase-button");
+
+                        IWebElement plusButton = increaseChoiceButtons.First();
+
+                        // Max points per choice is 3 (See CreatePoll).
+                        plusButton.Click();
+                        plusButton.Click();
+                        plusButton.Click();
+
+                        Assert.IsFalse(plusButton.Enabled);
+                    }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void TotalPoints_CanNotExceedMaximum()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        CreatePoll(context);
+                        GoToUrl(driver, PollUrl);
+
+
+                        IReadOnlyCollection<IWebElement> choices = driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
+
+                        // Allocate maximum points (3 - see CreatePoll) to the first choice.
+                        IWebElement firstChoice = choices.First();
+                        IWebElement firstIncreaseButton = firstChoice.FindElement(By.Id("increase-button"));
+
+                        firstIncreaseButton.Click();
+                        firstIncreaseButton.Click();
+                        firstIncreaseButton.Click();
+
+                        IWebElement secondChoice = choices.Last();
+                        IWebElement secondIncreaseButton = secondChoice.FindElement(By.Id("increase-button"));
+
+                        secondIncreaseButton.Click();
+
+
+                        Assert.IsFalse(firstIncreaseButton.Enabled);
+                        Assert.IsFalse(secondIncreaseButton.Enabled);
+                    }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void PointsVote_AfterVoting_VotePointsAreCorrectAndVisible()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        Poll poll = CreatePoll(context);
+                        GoToUrl(driver, PollUrl);
+
+                        IReadOnlyCollection<IWebElement> choices = driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
+
+                        IWebElement choice = choices.First();
+                        IWebElement increaseButton = choice.FindElement(By.Id("increase-button"));
+                        increaseButton.Click();
+
+                        IWebElement voteButton = FindElementById(driver, "vote-button");
+                        voteButton.Click();
+
+                        NavigateBackToVotePage(driver);
+
+                        IReadOnlyCollection<IWebElement> selectedChoices = driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
+
+                        IWebElement selectedChoice = selectedChoices.First();
+                        IWebElement selectedChoicePoints = selectedChoice.FindElement(NgBy.Binding("poll.MaxPerVote"));
+
+
+                        Assert.IsTrue(selectedChoicePoints.IsVisible());
+
+                        string expectedChoicePoints = "1/" + poll.MaxPerVote;
+                        Assert.AreEqual(expectedChoicePoints, selectedChoicePoints.Text);
+                    }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void NavigatingToNonExistentPoll_ShowsErrorPage()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    GoToUrl(driver, PollUrl);
+
+                    IWebElement errorDirective = FindElementById(driver, "voting-partial-error");
+
+                    Assert.IsTrue(errorDirective.IsVisible());
+                }
+            }
+
+            public static Poll CreatePoll(TestVotingContext testContext)
+            {
+                var testPollChoices = new List<Choice>() {
+                    new Choice(){ Name = "Test Choice 1", Description = "Test Description 1" },
+                    new Choice(){ Name = "Test Choice 2", Description = "Test Description 2" }
                 };
 
                 // Open, Anonymous, No Choice Adding, Shown Results
-                _defaultPointsPoll = new Poll()
+                var defaultPointsPoll = new Poll()
                 {
                     UUID = PollGuid,
                     PollType = PollType.Points,
@@ -61,241 +370,105 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    HiddenResults = false,
+                    ElectionMode = false,
                     MaxPerVote = 3,
                     MaxPoints = 4
                 };
 
-                _context.Polls.Add(_defaultPointsPoll);
-                _context.SaveChanges();
+                testContext.Polls.Add(defaultPointsPoll);
+                testContext.SaveChanges();
+
+                return defaultPointsPoll;
             }
 
-            [ClassCleanup]
-            public static void ClassCleanup()
+            private static void NavigateBackToVotePage(IWebDriver driver)
             {
-                PollClearer pollTearDown = new PollClearer(_context);
-                pollTearDown.ClearPoll(_defaultPointsPoll);
-
-                _context.Dispose();
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void PopulatedChoices_DisplaysAllChoices()
-            {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> choiceNames = _driver.FindElements(NgBy.Binding("choice.Name"));
-
-                Assert.AreEqual(_defaultPointsPoll.Choices.Count, choiceNames.Count);
-                CollectionAssert.AreEquivalent(_defaultPointsPoll.Choices.Select(o => o.Name).ToList(),
-                                               choiceNames.Select(o => o.Text).ToList());
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void PopulatedChoices_DisplaysAllChoiceDescriptions()
-            {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> choiceDescriptions = _driver.FindElements(NgBy.Model("choice.Description"));
-
-                Assert.AreEqual(_defaultPointsPoll.Choices.Count, choiceDescriptions.Count);
-                List<String> expectedDescriptions = new List<string>();
-
-                foreach (Choice choice in _defaultPointsPoll.Choices)
-                {
-                    string truncatedDescription = choice.Description
-                                                          .Split(' ')
-                                                          .Aggregate((prev, curr) => (curr.Length + prev.Length >= truncatedTextLimit) ?
-                                                                                     prev : prev + " " + curr);
-
-                    if (truncatedDescription != choice.Description)
-                    {
-                        truncatedDescription += "... Show More";
-                    }
-                    expectedDescriptions.Add(truncatedDescription);
-                }
-
-                CollectionAssert.AreEquivalent(expectedDescriptions,
-                                               choiceDescriptions.Select(o => o.Text).ToList());
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void VotingOnChoice_NavigatesToResultsPage()
-            {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
-                IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
-
-                IReadOnlyCollection<IWebElement> increaseChoiceButtons = _driver.FindElements(By.Id("increase-button"));
-                IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
-
-                increaseChoiceButtons.First().Click();
-                voteButton.Click();
-
-                VoteClearer voterClearer = new VoteClearer(_context);
-                voterClearer.ClearLast();
-
-                Assert.IsTrue(_driver.Url.StartsWith(SiteBaseUri + "Poll/#/Results/" + _defaultPointsPoll.UUID));
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void DefaultPoll_ShowsResultsButton()
-            {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultPointsPoll.UUID);
-                IWebElement resultsLink = _driver.FindElement(By.Id("results-button"));
-
-                Assert.IsTrue(resultsLink.IsVisible());
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void PointsButtons_ChangePointAllocations()
-            {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
-
-                IReadOnlyCollection<IWebElement> firstChoiceButtons = choices.First().FindElements(By.TagName("Button"));
-                IWebElement selectedChoicePoints = choices.First().FindElement(NgBy.Binding("choice.voteValue"));
-                IReadOnlyCollection<IWebElement> increaseChoiceButtons = _driver.FindElements(By.Id("increase-button"));
-                IReadOnlyCollection<IWebElement> decreaseChoiceButtons = _driver.FindElements(By.Id("decrease-button"));
-
-                IWebElement plusButton = increaseChoiceButtons.First();
-                IWebElement minusButton = decreaseChoiceButtons.First();
-
-                Assert.IsTrue(selectedChoicePoints.IsVisible());
-                Assert.AreEqual("0/" + _defaultPointsPoll.MaxPerVote, selectedChoicePoints.Text);
-
-                plusButton.Click();
-
-                Assert.AreEqual("1/" + _defaultPointsPoll.MaxPerVote, selectedChoicePoints.Text);
-
-                minusButton.Click();
-
-                Assert.AreEqual("0/" + _defaultPointsPoll.MaxPerVote, selectedChoicePoints.Text);
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void PointsButtons_ChangeTotalPointLimit()
-            {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
-
-                IReadOnlyCollection<IWebElement> firstChoiceButtons = choices.First().FindElements(By.TagName("Button"));
-                IWebElement totalPoints = _driver.FindElement(By.Id("points-display"));
-
-                IReadOnlyCollection<IWebElement> increaseChoiceButtons = _driver.FindElements(By.Id("increase-button"));
-                IReadOnlyCollection<IWebElement> decreaseChoiceButtons = _driver.FindElements(By.Id("decrease-button"));
-
-                IWebElement plusButton = increaseChoiceButtons.First();
-                IWebElement minusButton = decreaseChoiceButtons.First();
-
-                Assert.IsTrue(totalPoints.IsVisible());
-                Assert.AreEqual("Unallocated points: " + _defaultPointsPoll.MaxPoints + "/" + _defaultPointsPoll.MaxPoints, totalPoints.Text);
-
-                plusButton.Click();
-
-                Assert.AreEqual("Unallocated points: " + (_defaultPointsPoll.MaxPoints - 1) + "/" + _defaultPointsPoll.MaxPoints, totalPoints.Text);
-
-                minusButton.Click();
-
-                Assert.AreEqual("Unallocated points: " + _defaultPointsPoll.MaxPoints + "/" + _defaultPointsPoll.MaxPoints, totalPoints.Text);
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void PointsPerChoice_CanNotExceedMaximum()
-            {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
-
-                IReadOnlyCollection<IWebElement> increaseChoiceButtons = _driver.FindElements(By.Id("increase-button"));
-
-                IWebElement plusButton = increaseChoiceButtons.First();
-
-                for (int i = 0; i < _defaultPointsPoll.MaxPerVote; i++)
-                {
-                    plusButton.Click();
-                }
-
-                Assert.IsFalse(plusButton.Enabled);
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void TotalPoints_CanNotExceedMaximum()
-            {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
-
-                int allocatedPoints = 0;
-
-                foreach (IWebElement choice in choices)
-                {
-                    IReadOnlyCollection<IWebElement> increaseChoiceButtons = _driver.FindElements(By.Id("increase-button"));
-
-                    IWebElement plusButton = increaseChoiceButtons.First();
-
-                    for (int i = 0; i < _defaultPointsPoll.MaxPerVote; i++)
-                    {
-                        if (allocatedPoints < _defaultPointsPoll.MaxPoints)
-                        {
-                            plusButton.Click();
-                            allocatedPoints++;
-                        }
-                    }
-                }
-
-                foreach (IWebElement choice in choices)
-                {
-                    IWebElement increaseButton = choice.FindElement(By.Id("increase-button"));
-
-                    Assert.IsFalse(increaseButton.Enabled);
-                }
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void PointsVote_AfterVoting_VoteIsRemembered()
-            {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _defaultPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
-                IReadOnlyCollection<IWebElement> choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
-
-                IReadOnlyCollection<IWebElement> increaseChoiceButtons = _driver.FindElements(By.Id("increase-button"));
-
-                IWebElement plusButton = increaseChoiceButtons.First();
-                IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
-
-                plusButton.Click();
-                voteButton.Click();
-
-                _driver.Navigate().GoToUrl(_driver.Url.Replace("Results", "Vote"));
-
-                choices = _driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
-                IWebElement selectedChoicePoints = choices.First().FindElement(NgBy.Binding("poll.MaxPerVote"));
-
-                VoteClearer voterClearer = new VoteClearer(_context);
-                voterClearer.ClearLast();
-
-                Assert.IsTrue(selectedChoicePoints.IsVisible());
-                Assert.AreEqual("1/" + _defaultPointsPoll.MaxPerVote, selectedChoicePoints.Text);
+                // The token is on the Uri, so we can't just navigate back to
+                // PollUrl, as it won't display the selected vote.
+                string resultsUri = driver.Url.Replace("Results", "Vote");
+                GoToUrl(driver, resultsUri);
             }
         }
 
         [TestClass]
-        public class InviteOnlyPollConfiguration
+        public class InviteOnlyTests : E2ETest
         {
-            private static ITestVotingContext _context;
-            private static Poll _inviteOnlyPointsPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
             private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
-            private IWebDriver _driver;
 
-            [ClassInitialize]
-            public static void ClassInitialise(TestContext testContext)
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void AccessWithNoToken_DisplaysErrorPage()
             {
-                _context = new TestVotingContext();
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        CreatePoll(context);
 
-                List<Choice> testPollChoices = new List<Choice>() {
-                new Choice(){ Name = "Test Choice 1", Description = "Test Description 1" },
-                new Choice(){ Name = "Test Choice 2", Description = "Test Description 2" }};
+                        GoToUrl(driver, PollUrl);
+
+                        IWebElement errorDirective = FindElementById(driver, "voting-partial-error");
+
+                        Assert.IsTrue(errorDirective.IsVisible());
+                    }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void AccessWithToken_DisplaysAllChoices()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        Poll poll = CreatePoll(context);
+
+                        GoToUrl(driver, PollUrl + "/" + poll.Ballots[0].TokenGuid);
+                        IReadOnlyCollection<IWebElement> choiceNames = driver.FindElements(NgBy.Binding("choice.Name"));
+
+                        Assert.AreEqual(poll.Choices.Count, choiceNames.Count);
+
+                        List<string> expected = poll.Choices.Select(o => o.Name).ToList();
+                        List<string> actual = choiceNames.Select(o => o.Text).ToList();
+                        CollectionAssert.AreEquivalent(expected, actual);
+                    }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void VoteWithToken_NavigatesToResultsPage()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        Poll poll = CreatePoll(context);
+
+                        GoToUrl(driver, PollUrl + "/" + poll.Ballots[0].TokenGuid);
+
+                        IReadOnlyCollection<IWebElement> voteButtons = FindElementsById(driver, "vote-button");
+                        voteButtons.First().Click();
+
+                        string expectedUrlPrefix = SiteBaseUri + "Poll/#/Results/" + poll.UUID;
+                        Assert.IsTrue(driver.Url.StartsWith(expectedUrlPrefix));
+                    }
+                }
+            }
+
+            public static Poll CreatePoll(TestVotingContext testContext)
+            {
+                List<Choice> testPollChoices = new List<Choice>
+                {
+                    new Choice() { Name = "Test Choice 1", Description = "Test Description 1"},
+                    new Choice() { Name = "Test Choice 2", Description = "Test Description 2"}
+                };
+
 
                 // Invite Only, Anonymous, No Choice Adding, Shown Results
-                _inviteOnlyPointsPoll = new Poll()
+                var inviteOnlyPointsPoll = new Poll()
                 {
                     UUID = PollGuid,
                     PollType = PollType.Points,
@@ -306,75 +479,20 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = true,
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    HiddenResults = false,
+                    ElectionMode = false,
+                    MaxPerVote = 3,
+                    MaxPoints = 4,
+
                     Ballots = new List<Ballot>()
                     {
                         new Ballot() { TokenGuid = Guid.NewGuid() }
-                    },
-                    MaxPerVote = 3,
-                    MaxPoints = 4
+                    }
                 };
 
-                _context.Polls.Add(_inviteOnlyPointsPoll);
-                _context.SaveChanges();
-            }
+                testContext.Polls.Add(inviteOnlyPointsPoll);
+                testContext.SaveChanges();
 
-            [ClassCleanup]
-            public static void ClassCleanup()
-            {
-                PollClearer pollTearDown = new PollClearer(_context);
-                pollTearDown.ClearPoll(_inviteOnlyPointsPoll);
-
-                _context.Dispose();
-            }
-
-            [TestInitialize]
-            public virtual void TestInitialise()
-            {
-                _driver = new NgWebDriver(new ChromeDriver(ChromeDriverDir));
-                _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromSeconds(10));
-                _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
-            }
-
-            [TestCleanup]
-            public void TestCleanUp()
-            {
-                _driver.Dispose();
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void AccessWithNoToken_DisplaysError()
-            {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _inviteOnlyPointsPoll.UUID);
-                IWebElement error = _driver.FindElement(NgBy.Binding("$root.error.readableMessage"));
-
-                Assert.IsTrue(error.IsVisible());
-                Assert.AreEqual("This poll is invite only", error.Text);
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void AccessWithToken_DisplaysAllChoices()
-            {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _inviteOnlyPointsPoll.UUID + "/" + _inviteOnlyPointsPoll.Ballots[0].TokenGuid);
-                IReadOnlyCollection<IWebElement> choiceNames = _driver.FindElements(NgBy.Binding("choice.Name"));
-
-                Assert.AreEqual(_inviteOnlyPointsPoll.Choices.Count, choiceNames.Count);
-                CollectionAssert.AreEquivalent(_inviteOnlyPointsPoll.Choices.Select(o => o.Name).ToList(),
-                                               choiceNames.Select(o => o.Text).ToList());
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void VoteWithToken_NavigatesToResultsPage()
-            {
-                _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _inviteOnlyPointsPoll.UUID + "/" + _inviteOnlyPointsPoll.Ballots[0].TokenGuid);
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
-                IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
-                voteButton.Click();
-
-                VoteClearer voterClearer = new VoteClearer(_context);
-                voterClearer.ClearLast();
-
-                Assert.IsTrue(_driver.Url.StartsWith(SiteBaseUri + "Poll/#/Results/" + _inviteOnlyPointsPoll.UUID));
+                return inviteOnlyPointsPoll;
             }
         }
 
@@ -384,7 +502,6 @@ namespace VotingApplication.Web.Tests.E2E
             private static ITestVotingContext _context;
             private static Poll _namedPointsPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
-            private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
             private IWebDriver _driver;
 
             [ClassInitialize]
@@ -408,7 +525,7 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = true,
                     ChoiceAdding = false,
-                    HiddenResults = false,
+                    ElectionMode = false,
                     MaxPerVote = 3,
                     MaxPoints = 4
                 };
@@ -444,7 +561,7 @@ namespace VotingApplication.Web.Tests.E2E
             public void VoteWithNoName_PromptsForName()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
+
                 IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
                 voteButton.Click();
 
@@ -459,11 +576,9 @@ namespace VotingApplication.Web.Tests.E2E
             public void NameInput_AcceptsValidName()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
+
                 IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
                 voteButton.Click();
-
-                buttons = _driver.FindElements(By.TagName("Button"));
 
                 IWebElement formName = _driver.FindElement(NgBy.Model("loginForm.name"));
                 IWebElement goButton = _driver.FindElement(By.Id("go-button"));
@@ -480,14 +595,11 @@ namespace VotingApplication.Web.Tests.E2E
             public void NameInput_VotesUponSubmission()
             {
                 _driver.Navigate().GoToUrl(SiteBaseUri + "Poll/#/Vote/" + _namedPointsPoll.UUID);
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
+
                 IWebElement voteButton = _driver.FindElement(By.Id("vote-button"));
                 voteButton.Click();
 
-                buttons = _driver.FindElements(By.TagName("Button"));
-
                 IWebElement formName = _driver.FindElement(NgBy.Model("loginForm.name"));
-                IWebElement goButton = _driver.FindElement(By.Id("go-button"));
                 formName.SendKeys("User");
 
                 IWebElement form = _driver.FindElement(By.Name("loginForm"));
@@ -506,7 +618,6 @@ namespace VotingApplication.Web.Tests.E2E
             private static ITestVotingContext _context;
             private static Poll _choiceAddingPointsPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
-            private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
             private IWebDriver _driver;
 
             [ClassInitialize]
@@ -530,7 +641,7 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = false,
                     ChoiceAdding = true,
-                    HiddenResults = false,
+                    ElectionMode = false,
                     MaxPerVote = 3,
                     MaxPoints = 4
                 };
@@ -598,7 +709,6 @@ namespace VotingApplication.Web.Tests.E2E
 
                 IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
 
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
                 IWebElement addButton = _driver.FindElement(By.Id("add-button"));
 
                 Assert.IsTrue(addButton.IsVisible());
@@ -618,10 +728,7 @@ namespace VotingApplication.Web.Tests.E2E
 
                 IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
 
-                IReadOnlyCollection<IWebElement> buttons = _driver.FindElements(By.TagName("Button"));
-                IWebElement addButton = _driver.FindElement(By.Id("add-button"));
-
-                String newChoiceName = "New Choice";
+                const string newChoiceName = "New Choice";
                 formName.SendKeys(newChoiceName);
 
                 IWebElement formButton = _driver.FindElement(By.Id("add-button"));
@@ -643,10 +750,10 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestClass]
-        public class HiddenResultsConfiguration
+        public class ElectionModeConfiguration
         {
             private static ITestVotingContext _context;
-            private static Poll _hiddenResultsPointsPoll;
+            private static Poll _electionModePointsPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
             private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
             private IWebDriver _driver;
@@ -662,7 +769,7 @@ namespace VotingApplication.Web.Tests.E2E
                               Description = "A very long test description 2 that should exceed the character limit for descriptions" }};
 
                 // Open, Anonymous, No Choice Adding, Shown Results
-                _hiddenResultsPointsPoll = new Poll()
+                _electionModePointsPoll = new Poll()
                 {
                     UUID = PollGuid,
                     PollType = PollType.Points,
@@ -673,12 +780,12 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    HiddenResults = true,
+                    ElectionMode = true,
                     MaxPerVote = 3,
                     MaxPoints = 4
                 };
 
-                _context.Polls.Add(_hiddenResultsPointsPoll);
+                _context.Polls.Add(_electionModePointsPoll);
                 _context.SaveChanges();
             }
 
@@ -686,7 +793,7 @@ namespace VotingApplication.Web.Tests.E2E
             public static void ClassCleanup()
             {
                 PollClearer pollTearDown = new PollClearer(_context);
-                pollTearDown.ClearPoll(_hiddenResultsPointsPoll);
+                pollTearDown.ClearPoll(_electionModePointsPoll);
 
                 _context.Dispose();
             }
@@ -706,7 +813,7 @@ namespace VotingApplication.Web.Tests.E2E
             }
 
             [TestMethod, TestCategory("E2E")]
-            public void HiddenResultsPoll_DoesNotShowResultsButton()
+            public void ElectionModePoll_DoesNotShowResultsButton()
             {
                 _driver.Navigate().GoToUrl(PollUrl);
                 IWebElement resultButton = _driver.FindElement(By.Id("results-button"));

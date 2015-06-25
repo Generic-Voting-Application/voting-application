@@ -15,18 +15,22 @@
 
     function VotingPageController($scope, $routeParams, IdentityService, VoteService, TokenService, RoutingService, PollService) {
 
+        $scope.hasError = false;
+        $scope.errorText = null;
+
         $scope.pollId = $routeParams['pollId'];
         $scope.token = $routeParams['tokenId'] || '';
 
         $scope.poll = { Choices: [] };
         $scope.resultsLink = RoutingService.getResultsPageUrl($scope.pollId, $scope.token);
         $scope.manageLink = null;
+        $scope.electionMode = false;
 
         $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
         $scope.logoutIdentity = IdentityService.clearIdentityName;
         $scope.gvaExpiredCallback = redirectIfExpired;
         $scope.submitVote = submitVote;
-        $scope.clearVote = clearVote;        
+        $scope.clearVote = clearVote;
 
         var getVotes = function () { return []; };
         $scope.setVoteCallback = function (votesFunc) { getVotes = votesFunc; };
@@ -43,13 +47,7 @@
             });
 
             getManageLink();
-            getToken();
-        }
-
-        function getToken() {
-            TokenService.getToken($scope.pollId)
-            .then(function (tokenData) { $scope.token = tokenData; })
-            .then(getPollData);
+            getPollData();
         }
 
         function getManageLink() {
@@ -62,15 +60,32 @@
         }
 
         function getPollData() {
-            PollService.getPoll($scope.pollId)
-                .then(function (response) {
+            var token = TokenService.retrieveToken($scope.pollId);
 
-                    $scope.poll = response.data;
+            PollService.getPoll($scope.pollId, token)
+                .then(function (data) {
+                    if(data.ElectionMode && data.UserHasVoted) {
+                        RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
+                    }
 
-                    setSelectedValues();
+                    return data;
+                })
+                .then(function (data) {
+                    TokenService.setToken($scope.pollId, data.TokenGuid)
+                    .then(function () {
+                        $scope.token = data.TokenGuid;
+                        $scope.poll = data;
+                        $scope.electionMode = data.ElectionMode;
+
+                        setSelectedValues();
+                    });
+                })
+                .catch(function (error) {
+                    $scope.hasError = true;
+                    $scope.errorText = error.Text;
                 });
         }
-        
+
         function setSelectedValues() {
             VoteService.getTokenVotes($scope.pollId, $scope.token)
             .then(function (response) {
@@ -98,8 +113,8 @@
             });
 
             PollService.getPoll($scope.pollId)
-                .then(function (pollData) {
-                    $scope.poll = pollData.data;
+                .then(function (data) {
+                    $scope.poll = data;
 
                     $scope.poll.Choices.forEach(function (opt) { opt.voteValue = 0; });
 
