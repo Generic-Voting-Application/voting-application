@@ -430,16 +430,16 @@ namespace VotingApplication.Web.Api.Controllers
 
             IdentityResult identityResult = await UserManager.CreateAsync(user, model.Password);
 
-            string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-
-            _correspondenceService.SendConfirmation(user.Email, code);
-
             var createResult = GetErrorResult(identityResult);
 
             if (createResult != null)
             {
                 return createResult;
             }
+
+            string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+
+            _correspondenceService.SendConfirmation(user.Email, code);
 
             _metricHandler.HandleRegisterEvent(user.UserName);
 
