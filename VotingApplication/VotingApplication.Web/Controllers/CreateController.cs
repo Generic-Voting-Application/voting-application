@@ -9,12 +9,27 @@ namespace VotingApplication.Web.Controllers
             return View();
         }
 
-        public ActionResult Step1()
+        public ActionResult QuestionStep()
         {
             return View();
         }
 
-        public ActionResult Step2()
+        public ActionResult StyleStep()
+        {
+            return View();
+        }
+
+        public ActionResult ExpiryStep()
+        {
+            return View();
+        }
+
+        public ActionResult InvitationStep()
+        {
+            return View();
+        }
+
+        public ActionResult ConfirmStep()
         {
             return View();
         }

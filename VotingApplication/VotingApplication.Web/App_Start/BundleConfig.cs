@@ -100,6 +100,15 @@ namespace VotingApplication.Web
             angularRoute.Include("~/Scripts/Lib/angular-route-min.js");
             bundles.Add(angularRoute);
 
+            var angularMessages = new Bundle("~/Bundles/ScriptLib/AngularMessages", string.Format("{0}/angular-messages.min.js", angularCdnBase));
+            angularMessages.Include("~/Scripts/Lib/angular-messages-min.js");
+            bundles.Add(angularMessages);
+
+            // See: http://plnkr.co/edit/gBDV2ABghTMqqs5YaElB?p=preview
+            // From: https://github.com/angular/material/issues/1269
+            var angularThemeColors = new Bundle("~/Bundles/ScriptLib/AngularThemeColors");
+            angularThemeColors.Include("~/Scripts/Lib/angular-theme-colors.js");
+            bundles.Add(angularThemeColors);
 
             // Angular Material and dependencies
             var angularAnimate = new Bundle("~/Bundles/ScriptLib/AngularAnimate", string.Format("{0}/angular-animate.min.js", angularCdnBase));
@@ -113,8 +122,6 @@ namespace VotingApplication.Web
             var angularMaterial = new Bundle("~/Bundles/ScriptLib/AngularMaterial", "https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js");
             angularMaterial.Include("~/Scripts/Lib/angular-material-min.js");
             bundles.Add(angularMaterial);
-
-
 
             var angularQr = new ScriptBundle("~/Bundles/ScriptLib/AngularQr", "https://cdn.rawgit.com/monospaced/angular-qrcode/5.1.0/qrcode.js");
             angularQr.Include("~/Scripts/Lib/angular-qrcode.js");
@@ -161,7 +168,7 @@ namespace VotingApplication.Web
             scriptBundle.IncludeDirectory("~/Scripts/Modules", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Directives", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Services", "*.js");
-            scriptBundle.IncludeDirectory("~/Scripts/Controllers", "*.js");
+            scriptBundle.IncludeDirectory("~/Scripts/Controllers", "*.js", true);
             scriptBundle.IncludeDirectory("~/Scripts/Filters", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Interceptors", "*.js");
             scriptBundle.Builder = nullBuilder;

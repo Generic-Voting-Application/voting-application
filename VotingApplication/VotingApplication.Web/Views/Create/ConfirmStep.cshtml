@@ -1,0 +1,122 @@
+﻿<div layout="row" ng-controller="ConfirmStepController">
+
+    <div flex-gt-md="60" flex-md="80" flex-sm="90"
+         offset-gt-md="20" offset-md="10" offset-sm="5">
+
+        <h1 class="md-display-3">Confirm</h1>
+
+        <md-content layout-padding>
+
+            <md-list>
+                <md-list-item class="md-3-line">
+                    <md-icon ng-if="questionIsValid()" md-font-icon="fa-check" class="fa md-primary fa-2x" alt="check"></md-icon>
+                    <md-icon ng-if="!questionIsValid()" md-font-icon="fa-exclamation-circle" class="fa md-warn fa-2x" alt="exclamation circle"></md-icon>
+                    <div class="md-list-item-text">
+                        <div ng-if="newPoll.Name">
+                            <h3>{{newPoll.Name}}</h3>
+                            <p>This is what the voters will be asked</p>
+                        </div>
+                        <div ng-if="!newPoll.Name">
+                            <h3>Unnamed Poll</h3>
+                            <p ng-style="{color:mdThemeColors.warn.default}">Your poll needs to ask a question</p>
+                        </div>
+                    </div>
+                    <md-divider></md-divider>
+                </md-list-item>
+                <md-list-item class="md-3-line">
+
+                    <md-icon ng-if="choicesAreValid()" md-font-icon="fa-check" class="fa md-primary fa-2x" alt="check"></md-icon>
+                    <md-icon ng-if="!choicesAreValid()" md-font-icon="fa-exclamation-triangle" class="fa md-warn fa-2x" alt="exclamation triangle"></md-icon>
+
+                    <div class="md-list-item-text">
+                        <div>
+                            <h3>{{getNonEmptyChoices().length}} Choices</h3>
+
+                            <p ng-if="newPoll.OptionAdding">Voters may add their own choices</p>
+                            <p ng-if="!newPoll.OptionAdding">Voters may not add their own choices</p>
+
+                            <p ng-style="{color:mdThemeColors.warn.default}"
+                               ng-if="!getNonEmptyChoices().length && !newPoll.OptionAdding">There are no choices to be voted on</p>
+                        </div>
+                    </div>
+                    <md-divider></md-divider>
+                </md-list-item>
+                <md-list-item class="md-3-line">
+
+                    <md-icon ng-if="styleIsValid()" md-font-icon="fa-check" class="fa md-primary fa-2x" alt="check"></md-icon>
+                    <md-icon ng-if="!styleIsValid()" md-font-icon="fa-exclamation-triangle" class="fa md-warn fa-2x" alt="exclamation triangle"></md-icon>
+
+                    <div class="md-list-item-text" ng-switch="newPoll.PollType">
+                        <div ng-switch-when="Basic">
+                            <h3>Basic Vote</h3>
+                            <p>Voters may vote on one choice</p>
+                        </div>
+                        <div ng-switch-when="Multi">
+                            <h3>Multi Vote</h3>
+                            <p> Voters may vote on any number of choices</p>
+                        </div>
+                        <div ng-switch-when="UpDown">
+                            <h3>Up / Down Vote</h3>
+                            <p> Voters may give one positive or negative vote to each choice</p>
+                        </div>
+                        <div ng-switch-when="Points">
+                            <h3>Points Vote</h3>
+                            <p>Voters may allocate a pool of points amongst the choices with an upper limit on each choice</p>
+                        </div>
+                    </div>
+                    <md-divider></md-divider>
+                </md-list-item>
+                <md-list-item class="md-3-line">
+
+                    <md-icon ng-if="expiryIsValid()" md-font-icon="fa-check" class="fa md-primary fa-2x" alt="check"></md-icon>
+                    <md-icon ng-if="!expiryIsValid()" md-font-icon="fa-exclamation-triangle" class="fa md-warn fa-2x" alt="exclamation triangle"></md-icon>
+
+                    <div class="md-list-item-text">
+
+                        <div ng-if=" newpoll.expiry">
+                            <h3>{{newPoll.Expiry}}</h3>
+                            <p>Your poll will expire and close. Voters won't be able to vote after this time</p>
+                        </div>
+
+                        <div ng-if="!newPoll.Expiry">
+                            <h3>Continuous poll</h3>
+                            <p>Your poll won't expire.</p>
+                        </div>
+
+                    </div>
+                    <md-divider></md-divider>
+                </md-list-item>
+                <md-list-item class="md-3-line">
+
+                    <md-icon ng-if="invitationsAreValid()" md-font-icon="fa-check" class="fa md-primary fa-2x" alt="check"></md-icon>
+                    <md-icon ng-if="!invitationsAreValid()" md-font-icon="fa-exclamation-triangle" class="fa md-warn fa-2x" alt="exclamation triangle"></md-icon>
+
+                    <div class="md-list-item-text">
+                        <h3>{{newPoll.Invitations.length}} Invitations</h3>
+
+                        <p ng-if="newPoll.Invitations.length">{{newPoll.Invitations.length}} invitees will be emailed</p>
+                        <p ng-if="!newPoll.Invitations.length">No emails will be sent</p>
+
+                        <p ng-if="newPoll.InviteOnly">Only those with an invite may vote</p>
+                        <p ng-if="!newPoll.InviteOnly">Anyone with a link to the poll may vote</p>
+
+                        <p ng-style="{color:mdThemeColors.warn.default}"
+                           ng-if="newPoll.InviteOnly && !newPoll.Invitations.length">Currently no one will be able to vote</p>
+                    </div>
+                </md-list-item>
+            </md-list>
+
+            <div layout="row">
+                <md-button ng-hide="loading"
+                           ng-disabled="pollHasErrors()"
+                           ng-click="loading=!loading"
+                           ng-class="{'md-warn' : pollHasWarnings()}"
+                           class="md-raised md-primary">
+                    Create <i class="fa fa-chevron-right"></i>
+                </md-button>
+                <md-progress-linear md-mode="indeterminate" ng-show="loading"></md-progress-linear>
+            </div>
+        </md-content>
+    </div>
+
+</div>

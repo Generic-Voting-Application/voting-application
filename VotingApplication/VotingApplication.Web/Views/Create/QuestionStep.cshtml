@@ -1,0 +1,59 @@
+﻿<div layout="row" ng-controller="QuestionStepController">
+
+    <div flex-gt-md="60" flex-md="80" flex-sm="90"
+         offset-gt-md="20" offset-md="10" offset-sm="5">
+
+        <h1 class="md-display-3">Poll Question</h1>
+
+        <form name="pollQuestionForm">
+            <md-content layout-padding>
+
+                <md-input-container class="md-display-1">
+                    <label>What do you want to ask?</label>
+                    <input required type="text" name="question" ng-model="newPoll.Name">
+                </md-input-container>
+
+            </md-content>
+
+            <md-content layout-padding>
+
+                <div layout="column">
+
+                    <div layout="row" layout-fill ng-repeat="choice in newPoll.Choices">
+                        <div flex="75">
+                            <md-input-container>
+                                <label>Choice {{$index + 1}}</label>
+                                <input type="text" ng-model="choice.Name">
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+
+                <div layout="row">
+                    <md-checkbox ng-model="newPoll.OptionAdding" aria-label="Voters can add their own options">
+                        Voters may add choices
+                    </md-checkbox>
+                </div>
+
+
+                <div layout="row">
+                    <md-button class="md-raised md-primary"
+                               ng-disabled="pollQuestionForm.$invalid || (!pollHasChoices() && !newPoll.OptionAdding)"
+                               ng-hide="loading"
+                               ng-click="advanceToStep(5)">
+                        Quick Poll
+                    </md-button>
+                    <md-button class="md-raised md-primary"
+                               ng-disabled="pollQuestionForm.$invalid || (!pollHasChoices() && !newPoll.OptionAdding)"
+                               ng-hide="loading"
+                               ng-click="advanceToStep(2)">
+                        Customise
+                        <i class="fa fa-chevron-right"></i>
+                    </md-button>
+                </div>
+
+            </md-content>
+        </form>
+    </div>
+
+</div>

@@ -1,10 +1,14 @@
 ﻿<!DOCTYPE html>
-<html ng-app="VoteOn-Create">
+<html ng-app="VoteOn-Create" ng-controller="CreateController">
 <head>
     <title>Vote On</title>
     <meta name="viewport" content="initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     @Styles.Render("~/Bundles/StyleLib/AngularMaterial")
     @Styles.Render("~/Bundles/StyleLib/FontAwesome")
+
 </head>
 <body>
 
@@ -20,29 +24,11 @@
 
         <md-content md-theme="default">
 
-            <md-tabs md-center-tabs="true" md-dynamic-height="true" class="md-accent">
-                <md-tab id="tab1">
-                    <md-tab-label>Question</md-tab-label>
+            <md-tabs md-center-tabs="true" md-dynamic-height="true" md-selected="currentStep" class="md-accent">
+                <md-tab ng-repeat="step in steps" ng-disabled="step.locked">
+                    <md-tab-label>{{step.label}}</md-tab-label>
                     <md-tab-body>
-                        <ng-include src="'/Create/Step1'" />
-                    </md-tab-body>
-                </md-tab>
-                <md-tab id="tab2" ng-disabled="false">
-                    <md-tab-label>Style</md-tab-label>
-                    <md-tab-body>
-                        <ng-include src="'/Create/Step2'" />
-                    </md-tab-body>
-                </md-tab>
-                <md-tab id="tab3" ng-disabled="false">
-                    <md-tab-label>Expiry</md-tab-label>
-                    <md-tab-body>
-                        Expiry Page
-                    </md-tab-body>
-                </md-tab>
-                <md-tab id="tab4" ng-disabled="true">
-                    <md-tab-label>Invitations</md-tab-label>
-                    <md-tab-body>
-                        Invitations page
+                        <ng-include src="step.content" />
                     </md-tab-body>
                 </md-tab>
             </md-tabs>
@@ -53,6 +39,9 @@
     @Scripts.Render("~/Bundles/ScriptLib/AngularAnimate")
     @Scripts.Render("~/Bundles/ScriptLib/AngularAria")
     @Scripts.Render("~/Bundles/ScriptLib/AngularMaterial")
+    @Scripts.Render("~/Bundles/ScriptLib/AngularMessages")
+    @Scripts.Render("~/Bundles/ScriptLib/AngularThemeColors")
+    
     @Scripts.Render("~/Bundles/Script")
 </body>
 </html>
