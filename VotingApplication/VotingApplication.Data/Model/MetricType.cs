@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace VotingApplication.Data.Model
 {
     /*
@@ -27,7 +22,7 @@ namespace VotingApplication.Data.Model
         SetInviteOnly = 103,
         SetNamedVoting = 104,
         SetOptionAdding = 105,
-        SetHiddenResults = 106,
+        SetElectionMode = 106,
         AddOption = 200,
         UpdateOption = 201,
         DeleteOption = 202,

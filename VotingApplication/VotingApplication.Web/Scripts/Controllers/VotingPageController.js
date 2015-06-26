@@ -24,6 +24,7 @@
         $scope.poll = { Choices: [] };
         $scope.resultsLink = RoutingService.getResultsPageUrl($scope.pollId, $scope.token);
         $scope.manageLink = null;
+        $scope.electionMode = false;
 
         $scope.identityName = IdentityService.identity ? IdentityService.identity.name : null;
         $scope.logoutIdentity = IdentityService.clearIdentityName;
@@ -63,10 +64,21 @@
 
             PollService.getPoll($scope.pollId, token)
                 .then(function (data) {
-                    $scope.token = data.TokenGuid;
-                    $scope.poll = data;
+                    if(data.ElectionMode && data.UserHasVoted) {
+                        RoutingService.navigateToResultsPage($scope.pollId, $scope.token);
+                    }
 
-                    setSelectedValues();
+                    return data;
+                })
+                .then(function (data) {
+                    TokenService.setToken($scope.pollId, data.TokenGuid)
+                    .then(function () {
+                        $scope.token = data.TokenGuid;
+                        $scope.poll = data;
+                        $scope.electionMode = data.ElectionMode;
+
+                        setSelectedValues();
+                    });
                 })
                 .catch(function (error) {
                     $scope.hasError = true;

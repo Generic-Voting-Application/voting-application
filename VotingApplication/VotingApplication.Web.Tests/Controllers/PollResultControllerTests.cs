@@ -158,6 +158,32 @@ namespace VotingApplication.Web.Tests.Controllers
             }
 
             [TestMethod]
+            [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
+            public void ElectionPoll_WithNoVotes_ThrowsBadRequest()
+            {
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                var poll = new Poll()
+                {
+                    UUID = PollManageGuid,
+                    ElectionMode = true
+                };
+                polls.Add(poll);
+
+                IDbSet<Choice> choices = DbSetTestHelper.CreateMockDbSet<Choice>();
+                var option1 = new Choice() { PollChoiceNumber = 1 };
+                var option2 = new Choice() { PollChoiceNumber = 2 };
+                choices.Add(option1);
+                choices.Add(option2);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, choices);
+
+                PollResultsController controller = CreatePollController(contextFactory);
+
+                controller.Get(PollManageGuid);
+            }
+
+            [TestMethod]
             public void NamedVoting_True_WithPreviousAnonymousVotes_ReturnsAnonymousVoterForUnNamedVoters()
             {
                 /*  poll
@@ -423,8 +449,8 @@ namespace VotingApplication.Web.Tests.Controllers
             }
 
             [TestMethod]
-            [ExpectedHttpResponseException(HttpStatusCode.Forbidden)]
-            public void InviteOnly_NoXTokenGuidHeader_ThrowsForbidden()
+            [ExpectedHttpResponseException(HttpStatusCode.Unauthorized)]
+            public void InviteOnly_NoXTokenGuidHeader_ThrowsUnauthorized()
             {
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 polls.Add(CreateInviteOnlyPoll());
@@ -436,8 +462,8 @@ namespace VotingApplication.Web.Tests.Controllers
             }
 
             [TestMethod]
-            [ExpectedHttpResponseException(HttpStatusCode.Forbidden)]
-            public void InviteOnly_XTokenGuidHeader_BallotNotInPoll_ThrowsForbidden()
+            [ExpectedHttpResponseException(HttpStatusCode.Unauthorized)]
+            public void InviteOnly_XTokenGuidHeader_BallotNotInPoll_ThrowsUnauthorized()
             {
                 IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
                 polls.Add(CreateInviteOnlyPoll());

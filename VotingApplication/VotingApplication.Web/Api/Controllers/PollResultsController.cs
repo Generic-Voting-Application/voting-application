@@ -33,20 +33,34 @@ namespace VotingApplication.Web.Api.Controllers
                 {
                     if (!tokenGuid.HasValue)
                     {
-                        ThrowError(HttpStatusCode.Forbidden);
+                        ThrowError(HttpStatusCode.Unauthorized);
                     }
 
                     if (poll.Ballots.All(b => b.TokenGuid != tokenGuid.Value))
                     {
-                        ThrowError(HttpStatusCode.Forbidden);
+                        ThrowError(HttpStatusCode.Unauthorized);
                     }
                 }
 
-                if (tokenGuid.HasValue)
+                if (!tokenGuid.HasValue)
                 {
-                    if (poll.Ballots.All(b => b.TokenGuid != tokenGuid.Value))
+                    if (poll.ElectionMode)
+                    {
+                        ThrowError(HttpStatusCode.BadRequest);
+                    }
+                }
+                else
+                {
+                    Ballot ballot = poll.Ballots.Where(b => b.TokenGuid == tokenGuid.Value).SingleOrDefault();
+
+                    if (ballot == null)
                     {
                         ThrowError(HttpStatusCode.NotFound);
+                    }
+
+                    if (poll.ElectionMode && !ballot.HasVoted)
+                    {
+                        ThrowError(HttpStatusCode.Forbidden);
                     }
                 }
 
@@ -78,9 +92,7 @@ namespace VotingApplication.Web.Api.Controllers
 
                 _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.OK, pollId);
 
-                ResultsRequestResponseModel results = GenerateResults(votes, poll.NamedVoting);
-
-                return results;
+                return GenerateResults(votes, poll.NamedVoting);
             }
         }
 
@@ -102,7 +114,7 @@ namespace VotingApplication.Web.Api.Controllers
                                                  Sum = optionGroupVotes.Sum(v => v.VoteValue),
                                                  Voters = optionGroupVotes.Select(v => CreateResultVoteModel(v, namedVoting)).ToList()
                                              })
-                          .ToList();
+                  .ToList();
 
             if (!groupedResults.Any())
             {
