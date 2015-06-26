@@ -1,0 +1,47 @@
+﻿﻿<md-dialog id="register-account-dialog">
+    <form name="registerAccountForm" ng-submit="register(registerAccountForm)">
+
+        <md-dialog-content>
+            <md-input-container>
+                <label>Email</label>
+                <input ng-model="user.email"
+                       type="email"
+                       name="email"
+                       required
+                       ng-model-options="{ debounce: 500 }">
+
+                <div ng-messages="registerAccountForm.email.$error" ng-if="registerAccountForm.email.$touched">
+                    <span ng-message="required">Email is required</span>
+                    <span ng-message="email">Email is not valid</span>
+                </div>
+            </md-input-container>
+
+            <md-input-container>
+                <label>Password</label>
+                <input ng-model="user.password"
+                       type="password"
+                       name="password"
+                       required
+                       minlength="6"
+                       ng-model-options="{ debounce: 500 }">
+
+                <div ng-messages="registerAccountForm.password.$error" ng-if="registerAccountForm.password.$touched">
+                    <span ng-message="required">Password is required</span>
+                    <span ng-message="minlength">Password must be at least 6 characters</span>
+                </div>
+            </md-input-container>
+
+        </md-dialog-content>
+
+        <div class="md-actions">
+            <md-button ng-click="register(registerAccountForm)" class="md-primary">
+                Register
+            </md-button>
+
+            <md-button ng-click="cancel()" class="md-primary">
+                Cancel
+            </md-button>
+        </div>
+
+    </form>
+</md-dialog>
