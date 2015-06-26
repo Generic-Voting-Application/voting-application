@@ -80,13 +80,6 @@ namespace VotingApplication.Web
             errorBarStyle.Orderer = nullOrderer;
             bundles.Add(errorBarStyle);
 
-            ScriptBundle scriptLibBundle = new ScriptBundle("~/Bundles/ScriptLib");
-            scriptLibBundle.IncludeDirectory("~/Scripts/Lib", "ZeroClipboard-min.js");
-            scriptLibBundle.Builder = nullBuilder;
-            scriptLibBundle.Transforms.Add(scriptTransformer);
-            scriptLibBundle.Orderer = nullOrderer;
-            bundles.Add(scriptLibBundle);
-
 
             // Lib Javascript
             const string angularCdnBase = "https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13";
@@ -106,7 +99,7 @@ namespace VotingApplication.Web
             angularAnimate.Include("~/Scripts/Lib/angular-animate-min.js");
             bundles.Add(angularAnimate);
 
-            var angularAria = new Bundle("~/Bundles/ScriptLib/AngularAnimate", string.Format("{0}/angular-aria.min.js", angularCdnBase));
+            var angularAria = new Bundle("~/Bundles/ScriptLib/AngularAria", string.Format("{0}/angular-aria.min.js", angularCdnBase));
             angularAria.Include("~/Scripts/Lib/angular-aria-min.js");
             bundles.Add(angularAria);
 
@@ -154,6 +147,14 @@ namespace VotingApplication.Web
             moment.Include("~/Scripts/Lib/moment-min.js");
             bundles.Add(moment);
 
+
+            // ZeroClipboard
+            ScriptBundle scriptLibBundle = new ScriptBundle("~/Bundles/ScriptLib");
+            scriptLibBundle.IncludeDirectory("~/Scripts/Lib", "ZeroClipboard-min.js");
+            scriptLibBundle.Builder = nullBuilder;
+            scriptLibBundle.Transforms.Add(scriptTransformer);
+            scriptLibBundle.Orderer = nullOrderer;
+            bundles.Add(scriptLibBundle);
 
 
             // VoteOn Javascript
