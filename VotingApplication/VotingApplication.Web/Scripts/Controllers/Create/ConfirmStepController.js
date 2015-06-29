@@ -18,12 +18,6 @@
         $scope.expiryIsValid = expiryIsValid;
         $scope.invitationsAreValid = invitationsAreValid;
 
-        activate();
-
-        function activate() {
-
-        }
-
         function pollHasWarnings() {
             return !choicesAreValid() ||
                    !styleIsValid() ||
@@ -39,14 +33,13 @@
 
             if (!$scope.newPoll.Name) {
                 return false;
-                
             }
 
             return true;
         }
 
         function choicesAreValid() {
-            if (!getNonEmptyChoices().length && !$scope.newPoll.OptionAdding) {
+            if (!$scope.newPoll.OptionAdding && getNonEmptyChoices().length === 0) {
                 return false;
             }
 
@@ -62,7 +55,7 @@
         }
 
         function invitationsAreValid() {
-            if ($scope.newPoll.InviteOnly && !$scope.newPoll.Invitations.length) {
+            if ($scope.newPoll.InviteOnly && $scope.newPoll.Invitations.length === 0) {
                 return false;
             }
 

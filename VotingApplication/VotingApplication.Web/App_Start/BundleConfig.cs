@@ -100,12 +100,6 @@ namespace VotingApplication.Web
             angularMessages.Include("~/Scripts/Lib/angular-messages-min.js");
             bundles.Add(angularMessages);
 
-            // See: http://plnkr.co/edit/gBDV2ABghTMqqs5YaElB?p=preview
-            // From: https://github.com/angular/material/issues/1269
-            var angularThemeColors = new Bundle("~/Bundles/ScriptLib/AngularThemeColors");
-            angularThemeColors.Include("~/Scripts/Lib/angular-theme-colors.js");
-            bundles.Add(angularThemeColors);
-
             // Angular Material and dependencies
             var angularAnimate = new Bundle("~/Bundles/ScriptLib/AngularAnimate", string.Format("{0}/angular-animate.min.js", angularCdnBase));
             angularAnimate.Include("~/Scripts/Lib/angular-animate-min.js");
@@ -118,6 +112,12 @@ namespace VotingApplication.Web
             var angularMaterial = new Bundle("~/Bundles/ScriptLib/AngularMaterial", "https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js");
             angularMaterial.Include("~/Scripts/Lib/angular-material-min.js");
             bundles.Add(angularMaterial);
+
+            // See: http://plnkr.co/edit/gBDV2ABghTMqqs5YaElB?p=preview
+            // From: https://github.com/angular/material/issues/1269
+            var angularThemeColors = new Bundle("~/Bundles/ScriptLib/AngularThemeColors");
+            angularThemeColors.Include("~/Scripts/Lib/angular-theme-colors.js");
+            bundles.Add(angularThemeColors);
 
             var angularDateTime = new Bundle("~/Bundles/ScriptLib/AngularDateTime", "https://cdn.rawgit.com/SimeonC/md-date-time/v0.0.14/dist/md-date-time.js");
             angularDateTime.Include("~/Scripts/Lib/md-date-time.js");
