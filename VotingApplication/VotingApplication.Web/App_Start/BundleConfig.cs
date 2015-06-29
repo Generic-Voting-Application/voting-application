@@ -44,6 +44,9 @@ namespace VotingApplication.Web
             ngDialogThemeCss.Include("~/Content/Lib/Css/ngDialog-theme-default-min.css");
             bundles.Add(ngDialogThemeCss);
 
+            StyleBundle mdDateTimeCss = new StyleBundle("~/Bundles/StyleLib/mdDateTime", "https://cdn.rawgit.com/SimeonC/md-date-time/v0.0.14/dist/md-date-time.css");
+            mdDateTimeCss.Include("~/Content/Lib/Css/md-date-time.css");
+            bundles.Add(mdDateTimeCss);
 
             // VoteOn CSS
             StyleBundle votingStyle = new StyleBundle("~/Bundles/VotingStyle");
@@ -94,6 +97,9 @@ namespace VotingApplication.Web
             angularRoute.Include("~/Scripts/Lib/angular-route-min.js");
             bundles.Add(angularRoute);
 
+            var angularMessages = new Bundle("~/Bundles/ScriptLib/AngularMessages", string.Format("{0}/angular-messages.min.js", angularCdnBase));
+            angularMessages.Include("~/Scripts/Lib/angular-messages-min.js");
+            bundles.Add(angularMessages);
 
             // Angular Material and dependencies
             var angularAnimate = new Bundle("~/Bundles/ScriptLib/AngularAnimate", String.Format("{0}/angular-animate.min.js", angularCdnBase));
@@ -108,7 +114,15 @@ namespace VotingApplication.Web
             angularMaterial.Include("~/Scripts/Lib/angular-material-min.js");
             bundles.Add(angularMaterial);
 
+            // See: http://plnkr.co/edit/gBDV2ABghTMqqs5YaElB?p=preview
+            // From: https://github.com/angular/material/issues/1269
+            var angularThemeColors = new Bundle("~/Bundles/ScriptLib/AngularThemeColors");
+            angularThemeColors.Include("~/Scripts/Lib/angular-theme-colors.js");
+            bundles.Add(angularThemeColors);
 
+            var angularDateTime = new Bundle("~/Bundles/ScriptLib/AngularDateTime", "https://cdn.rawgit.com/SimeonC/md-date-time/v0.0.14/dist/md-date-time.js");
+            angularDateTime.Include("~/Scripts/Lib/md-date-time.js");
+            bundles.Add(angularDateTime);
 
             var angularQr = new ScriptBundle("~/Bundles/ScriptLib/AngularQr", "https://cdn.rawgit.com/monospaced/angular-qrcode/5.1.0/qrcode.js");
             angularQr.Include("~/Scripts/Lib/angular-qrcode.js");
@@ -163,7 +177,7 @@ namespace VotingApplication.Web
             scriptBundle.IncludeDirectory("~/Scripts/Modules", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Directives", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Services", "*.js");
-            scriptBundle.IncludeDirectory("~/Scripts/Controllers", "*.js");
+            scriptBundle.IncludeDirectory("~/Scripts/Controllers", "*.js", true);
             scriptBundle.IncludeDirectory("~/Scripts/Filters", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Interceptors", "*.js");
             scriptBundle.Builder = nullBuilder;
