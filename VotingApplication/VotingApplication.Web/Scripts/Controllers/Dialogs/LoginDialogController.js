@@ -5,9 +5,9 @@
         .module('VoteOn-Common')
         .controller('LoginDialogController', LoginDialogController);
 
-    LoginDialogController.$inject = ['$scope', '$mdDialog', '$timeout', 'AccountService'];
+    LoginDialogController.$inject = ['$scope', '$rootScope', '$mdDialog', '$timeout', 'AccountService'];
 
-    function LoginDialogController($scope, $mdDialog, $timeout, AccountService) {
+    function LoginDialogController($scope, $rootScope, $mdDialog, $timeout, AccountService) {
 
         $scope.user = {
             email: null,
@@ -41,7 +41,7 @@
         function forgottenPassword() {
             var forgotPassword = { signInSuccessful: false, forgottenPassword: true };
 
-            $timeout(function () { $mdDialog.hide(forgotPassword) });
+            $timeout(function () { $mdDialog.hide(forgotPassword); });
         }
     }
 })();
