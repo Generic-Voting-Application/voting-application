@@ -16,6 +16,7 @@
 
         $scope.login = login;
         $scope.forgottenPassword = forgottenPassword;
+        $scope.closeDialog = closeDialog;
 
         function login() {
 
@@ -42,6 +43,10 @@
             var forgotPassword = { signInSuccessful: false, forgottenPassword: true };
 
             $timeout(function () { $mdDialog.hide(forgotPassword); });
+        }
+
+        function closeDialog() {
+            $mdDialog.cancel();
         }
     }
 })();

@@ -1,4 +1,15 @@
 ﻿﻿<md-dialog id="register-account-dialog">
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Register</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" aria-label="close" ng-click="closeDialog()">
+                <md-icon md-font-icon="fa-close fa-lg" class="fa" alt="close"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
     <form name="registerAccountForm" ng-submit="register()">
 
         <md-dialog-content>

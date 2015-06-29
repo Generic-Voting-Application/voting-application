@@ -17,6 +17,7 @@
         };
 
         $scope.register = registerAccount;
+        $scope.closeDialog = closeDialog;
 
         function registerAccount() {
 
@@ -31,10 +32,14 @@
                     })
                     .catch(clearRootErrorMessage);
             }
+        }
 
-            function clearRootErrorMessage() {
-                $rootScope.error = null;
-            }
+        function clearRootErrorMessage() {
+            $rootScope.error = null;
+        }
+
+        function closeDialog() {
+            $mdDialog.cancel();
         }
     }
 })();
