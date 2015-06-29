@@ -4,12 +4,12 @@
 
     angular
         .module('VoteOn-Common')
-        .controller('AccountRegisterController', AccountRegisterController);
+        .controller('RegisterAccountDialogController', RegisterAccountDialogController);
 
-    AccountRegisterController.$inject = ['$scope', '$rootScope', '$mdDialog', 'AccountService'];
+    RegisterAccountDialogController.$inject = ['$scope', '$rootScope', '$mdDialog', 'AccountService'];
 
 
-    function AccountRegisterController($scope, $rootScope, AccountService, $mdDialog) {
+    function RegisterAccountDialogController($scope, $rootScope, $mdDialog, AccountService) {
 
         $scope.user = {
             email: null,
@@ -17,26 +17,24 @@
         };
 
         $scope.register = registerAccount;
-        $scope.cancel = cancel;
 
-        function registerAccount(form) {
+        function registerAccount() {
 
-            var userEmail = form.email.$viewValue;
-            var password = form.password.$viewValue;
+            if ($scope.registerAccountForm.$valid) {
 
-            AccountService.register(userEmail, password)
-                .then(function () {
-                    $mdDialog.hide(userEmail);
-                })
-                .catch(clearRootErrorMessage);
-        }
+                var userEmail = $scope.registerAccountForm.email.$viewValue;
+                var password = $scope.registerAccountForm.password.$viewValue;
 
-        function clearRootErrorMessage() {
-            $rootScope.error = null;
-        }
+                AccountService.register(userEmail, password)
+                    .then(function() {
+                        $mdDialog.hide();
+                    })
+                    .catch(clearRootErrorMessage);
+            }
 
-        function cancel() {
-            $mdDialog.cancel();
+            function clearRootErrorMessage() {
+                $rootScope.error = null;
+            }
         }
     }
 })();
