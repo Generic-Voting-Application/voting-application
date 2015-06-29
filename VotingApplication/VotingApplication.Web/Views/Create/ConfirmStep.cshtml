@@ -63,6 +63,11 @@
                             <h3>Points Vote</h3>
                             <p>Voters may allocate a pool of points amongst the choices with an upper limit on each choice</p>
                         </div>
+
+                        <p ng-if="newPoll.NamedVoting">Voters must give a name when voting</p>
+
+                        <p ng-if="newPoll.ElectionMode">Voters may only vote once and can not view poll results before voting</p>
+
                     </div>
                     <md-divider></md-divider>
                 </md-list-item>
@@ -92,9 +97,9 @@
                     <md-icon ng-if="!invitationsAreValid()" md-font-icon="fa-exclamation-triangle" class="fa md-warn fa-2x" alt="exclamation triangle"></md-icon>
 
                     <div class="md-list-item-text">
-                        <h3>{{newPoll.Invitations.length}} Invitations</h3>
+                        <h3>{{newPoll.Invitations.length}} Invitation(s)</h3>
 
-                        <p ng-if="newPoll.Invitations.length">{{newPoll.Invitations.length}} invitees will be emailed</p>
+                        <p ng-if="newPoll.Invitations.length">{{newPoll.Invitations.length}} invitee(s) will be emailed</p>
                         <p ng-if="!newPoll.Invitations.length">No emails will be sent</p>
 
                         <p ng-if="newPoll.InviteOnly">Only those with an invite may vote</p>
@@ -106,6 +111,10 @@
                 </md-list-item>
             </md-list>
 
+        </md-content>
+
+        <md-content layout-padding>
+
             <div layout="row">
                 <md-button ng-hide="loading"
                            ng-disabled="pollHasErrors()"
@@ -116,7 +125,9 @@
                 </md-button>
                 <md-progress-linear md-mode="indeterminate" ng-show="loading"></md-progress-linear>
             </div>
+
         </md-content>
+
     </div>
 
 </div>

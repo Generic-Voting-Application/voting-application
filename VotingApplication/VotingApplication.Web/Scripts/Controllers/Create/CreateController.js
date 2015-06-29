@@ -22,22 +22,22 @@
             {
                 label: 'Style',
                 content: '/Create/StyleStep',
-                locked: true
+                locked: false
             },
             {
                 label: 'Expiry',
                 content: '/Create/ExpiryStep',
-                locked: true
+                locked: false
             },
             {
                 label: 'Invitations',
                 content: '/Create/InvitationStep',
-                locked: true
+                locked: false
             },
             {
                 label: 'Confirm',
                 content: '/Create/ConfirmStep',
-                locked: true
+                locked: false
             }
         ];
 

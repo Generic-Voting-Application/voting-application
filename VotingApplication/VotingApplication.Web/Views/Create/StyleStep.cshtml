@@ -6,24 +6,65 @@
         <h1 class="md-display-3">Poll Style</h1>
 
         <md-content layout="row" layout-align="space-around center" layout-padding>
-            <md-button class="md-raised" ng-class="{'md-primary' : newPoll.PollType=='Basic'}" ng-click="newPoll.PollType='Basic'">
-                <span class="md-display-1">Basic</span>
-            </md-button>
-            <md-button class="md-raised" ng-class="{'md-primary' : newPoll.PollType=='Multi'}" ng-click="newPoll.PollType='Multi'">
-                <span class="md-display-1">Multi</span>
-            </md-button>
-            <md-button class="md-raised" ng-class="{'md-primary' : newPoll.PollType=='UpDown'}" ng-click="newPoll.PollType='UpDown'">
-                <span class="md-display-1">Up/Down</span>
-            </md-button>
-            <md-button class="md-raised" ng-class="{'md-primary' : newPoll.PollType=='Points'}" ng-click="newPoll.PollType='Points'">
-                <span class="md-display-1">Points</span>
-            </md-button>
+            <div layout="column" layout-align="center center">
+                <md-button ng-class="{'md-primary' : newPoll.PollType=='Basic'}" ng-click="newPoll.PollType='Basic'" aria-label="Basic" class="md-fab">
+                    <md-icon md-font-icon="fa-check" class="fa fa-2x" alt="check"></md-icon>
+                </md-button>
+                <span class="md-headline">Basic</span>
+            </div>
+            <div layout="column" layout-align="center center">
+                <md-button ng-class="{'md-primary' : newPoll.PollType=='Multi'}" ng-click="newPoll.PollType='Multi'" aria-label="Multi" class="md-fab">
+                    <md-icon md-font-icon="fa-check-square-o" class="fa fa-2x" alt="check"></md-icon>
+                </md-button>
+                <span class="md-headline">Multi</span>
+            </div>
+            <div layout="column" layout-align="center center">
+                <md-button ng-class="{'md-primary' : newPoll.PollType=='UpDown'}" ng-click="newPoll.PollType='UpDown'" aria-label="Up/Down" class="md-fab">
+                    <md-icon md-font-icon="fa-thumbs-o-up" class="fa fa-2x" alt="check"></md-icon>
+                </md-button>
+                <span class="md-headline">Up/Down</span>
+            </div>
+            <div layout="column" layout-align="center center">
+                <md-button ng-class="{'md-primary' : newPoll.PollType=='Points'}" ng-click="newPoll.PollType='Points'" aria-label="Points" class="md-fab">
+                    <md-icon md-font-icon="fa-tasks" class="fa fa-2x" alt="check"></md-icon>
+                </md-button>
+                <span class="md-headline">Points</span>
+            </div>
+        </md-content>
+
+        <md-content layout="column" layout-padding ng-switch="newPoll.PollType">
+            <p ng-switch-when="Basic">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ac tincidunt ante, id sollicitudin justo. Aliquam placerat dui mollis nulla tempus, scelerisque faucibus est interdum. Nam quam elit, accumsan suscipit sapien eu, tincidunt semper urna. Maecenas porttitor, leo ut vehicula commodo, mi sem posuere dolor, at rhoncus urna sem sit amet lectus.
+            </p>
+
+            <p ng-switch-when="Multi">
+                Nunc quis est tristique, euismod nisl vel, dapibus nunc. Nam malesuada risus mi, eu semper tellus consectetur ac. Praesent id leo blandit mi fermentum blandit. Nulla luctus dui at lectus sodales volutpat.
+            </p>
+
+            <p ng-switch-when="UpDown">
+                Nulla malesuada felis hendrerit arcu rutrum porta. Morbi et odio ut lectus pellentesque fringilla. Praesent sollicitudin pellentesque lacus, vitae auctor leo semper vel. Suspendisse potenti. Etiam pharetra sagittis leo non sagittis.
+            </p>
+
+            <p ng-switch-when="Points">
+                In fringilla rhoncus nulla, at elementum nisi vehicula elementum. In porttitor tristique sem, ultricies finibus neque faucibus et. Fusce volutpat sagittis lectus sed pulvinar. Sed elementum felis eleifend risus congue, quis pellentesque sem posuere.
+            </p>
         </md-content>
 
         <md-content layout="column" layout-padding>
+            <div layout="row">
+                <md-checkbox ng-model="newPoll.NamedVoting" aria-label="Voters must give a name to vote">
+                    Voters must give a name to vote
+                </md-checkbox>
+            </div>
 
-            Poll description
+            <div layout="row">
+                <md-checkbox ng-model="newPoll.ElectionMode" aria-label="Voters may not change their vote">
+                    Voters may not change their vote
+                </md-checkbox>
+            </div>
+        </md-content>
 
+        <md-content layout-padding>
             <div layout="row">
                 <md-button class="md-raised md-primary" ng-click="advanceToStep(3)">Next <i class="fa fa-chevron-right"></i></md-button>
             </div>

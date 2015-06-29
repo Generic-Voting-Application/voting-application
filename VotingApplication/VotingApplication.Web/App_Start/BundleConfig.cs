@@ -43,6 +43,9 @@ namespace VotingApplication.Web
             ngDialogThemeCss.Include("~/Content/Lib/Css/ngDialog-theme-default-min.css");
             bundles.Add(ngDialogThemeCss);
 
+            StyleBundle mdDateTimeCss = new StyleBundle("~/Bundles/StyleLib/mdDateTime", "https://cdn.rawgit.com/SimeonC/md-date-time/v0.0.14/dist/md-date-time.css");
+            mdDateTimeCss.Include("~/Content/Lib/Css/md-date-time.css");
+            bundles.Add(mdDateTimeCss);
 
             // VoteOn CSS
             StyleBundle votingStyle = new StyleBundle("~/Bundles/VotingStyle");
@@ -115,6 +118,10 @@ namespace VotingApplication.Web
             var angularMaterial = new Bundle("~/Bundles/ScriptLib/AngularMaterial", "https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js");
             angularMaterial.Include("~/Scripts/Lib/angular-material-min.js");
             bundles.Add(angularMaterial);
+
+            var angularDateTime = new Bundle("~/Bundles/ScriptLib/AngularDateTime", "https://cdn.rawgit.com/SimeonC/md-date-time/v0.0.14/dist/md-date-time.js");
+            angularDateTime.Include("~/Scripts/Lib/md-date-time.js");
+            bundles.Add(angularDateTime);
 
             var angularQr = new ScriptBundle("~/Bundles/ScriptLib/AngularQr", "https://cdn.rawgit.com/monospaced/angular-qrcode/5.1.0/qrcode.js");
             angularQr.Include("~/Scripts/Lib/angular-qrcode.js");
