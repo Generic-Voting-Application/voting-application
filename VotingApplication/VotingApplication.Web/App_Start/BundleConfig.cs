@@ -97,7 +97,7 @@ namespace VotingApplication.Web
             angularRoute.Include("~/Scripts/Lib/angular-route-min.js");
             bundles.Add(angularRoute);
 
-            var angularMessages = new Bundle("~/Bundles/ScriptLib/AngularMessages", string.Format("{0}/angular-messages.min.js", angularCdnBase));
+            var angularMessages = new Bundle("~/Bundles/ScriptLib/AngularMessages", String.Format("{0}/angular-messages.min.js", angularCdnBase));
             angularMessages.Include("~/Scripts/Lib/angular-messages-min.js");
             bundles.Add(angularMessages);
 

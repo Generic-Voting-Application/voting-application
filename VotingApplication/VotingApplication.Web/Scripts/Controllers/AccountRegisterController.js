@@ -1,5 +1,5 @@
 ﻿/// <reference path="../Services/AccountService.js" />
-/// <reference path="../Services/ErrorService.js" />
+/// <reference path="../Services/RoutingService.js" />
 (function () {
     'use strict';
 
@@ -7,9 +7,9 @@
         .module('GVA.Common')
         .controller('AccountRegisterController', AccountRegisterController);
 
-    AccountRegisterController.$inject = ['$scope', '$route', '$rootScope', 'AccountService', 'RoutingService'];
+    AccountRegisterController.$inject = ['$scope', '$rootScope', 'AccountService', 'RoutingService'];
 
-    function AccountRegisterController($scope, $route, $rootScope, AccountService, RoutingService) {
+    function AccountRegisterController($scope, $rootScope, AccountService, RoutingService) {
 
         $scope.register = registerAccount;
 

@@ -345,9 +345,11 @@
     <Content Include="Global.asax" />
     <Content Include="Images\Logo.png" />
     <Content Include="Scripts\Controllers\AddVoterOptionDialogController.js" />
-    <Content Include="Scripts\Controllers\Create\CreateController.js" />
+       <Content Include="Scripts\Controllers\Create\CreateController.js" />
     <Content Include="Scripts\Controllers\Create\ConfirmStepController.js" />
     <Content Include="Scripts\Controllers\Create\QuestionStepController.js" />
+	<Content Include="Scripts\Controllers\Dialogs\LoginDialogController.js" />
+    <Content Include="Scripts\Controllers\Dialogs\RegisterAccountDialogController.js" />
     <Content Include="Scripts\Controllers\EditOptionDialogController.js" />
     <Content Include="Scripts\Controllers\AddOptionDialogController.js" />
     <Content Include="Scripts\Controllers\ManageVotersController.js" />
@@ -403,6 +405,7 @@
     <Content Include="Scripts\Lib\angular-toggle-switch-min.js" />
     <Content Include="Scripts\Lib\ngDialog-min.js" />
     <Content Include="Scripts\Lib\ngStorage-min.js" />
+    <Content Include="Scripts\Modules\VoteOn-Common.js" />
     <Content Include="Scripts\Modules\VoteOn-Create.js" />
     <Content Include="Scripts\Services\AccountService.js" />
     <Content Include="Scripts\Services\ErrorService.js" />
@@ -449,7 +452,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Web.config" />
-    <Content Include="Views\Routes\PointsVote.cshtml" />
+    <Content Include="Views\Dialogs\RegisterAccount.cshtml" />
+    <Content Include="Views\Dialogs\Login.cshtml" />	
+	<Content Include="Views\Routes\PointsVote.cshtml" />
     <Content Include="Views\Routes\BasicVote.cshtml" />
     <Content Include="Views\Routes\IdentityLogin.cshtml" />
     <Content Include="Views\Routes\UpDownVote.cshtml" />
