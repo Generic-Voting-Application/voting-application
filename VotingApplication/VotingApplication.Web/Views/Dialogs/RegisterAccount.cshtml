@@ -1,5 +1,5 @@
 ﻿﻿<md-dialog id="register-account-dialog">
-    <form name="registerAccountForm" ng-submit="register(registerAccountForm)">
+    <form name="registerAccountForm" ng-submit="register()">
 
         <md-dialog-content>
             <md-input-container>
@@ -34,7 +34,7 @@
         </md-dialog-content>
 
         <div class="md-actions">
-            <md-button ng-click="register(registerAccountForm)" class="md-primary">
+            <md-button ng-click="register()" class="md-primary md-raised" type="submit">
                 Register
             </md-button>
         </div>

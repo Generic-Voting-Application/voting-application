@@ -344,6 +344,7 @@
     <Content Include="Global.asax" />
     <Content Include="Images\Logo.png" />
     <Content Include="Scripts\Controllers\AddVoterOptionDialogController.js" />
+    <Content Include="Scripts\Controllers\Dialogs\LoginDialogController.js" />
     <Content Include="Scripts\Controllers\Dialogs\RegisterAccountDialogController.js" />
     <Content Include="Scripts\Controllers\EditOptionDialogController.js" />
     <Content Include="Scripts\Controllers\AddOptionDialogController.js" />
@@ -453,6 +454,7 @@
     <Content Include="Views\Routes\ManageMisc.cshtml" />
     <Content Include="Views\Routes\ConfirmRegistration.cshtml" />
     <Content Include="Views\Dialogs\RegisterAccount.cshtml" />
+    <Content Include="Views\Dialogs\Login.cshtml" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
