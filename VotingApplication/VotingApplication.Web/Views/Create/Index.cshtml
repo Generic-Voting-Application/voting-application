@@ -5,8 +5,10 @@
     <meta name="viewport" content="initial-scale=1">
 
     @Styles.Render("~/Bundles/StyleLib/AngularMaterial")
+    @Styles.Render("~/Bundles/StyleLib/AngularDateTime")
     @Styles.Render("~/Bundles/StyleLib/FontAwesome")
-    @Styles.Render("~/Content/Lib/Css/md-date-time.css")
+    @Styles.Render("~/Bundles/AngularMaterialExtensions")
+    @Styles.Render("~/Bundles/VoteOnStyle")
     
 </head>
 <body>
@@ -21,25 +23,24 @@
             </div>
         </md-toolbar>
 
-        <md-content md-theme="default">
-
+        <md-content md-theme="default" class="md-whiteframe-z2">
             <md-tabs md-center-tabs="true" md-dynamic-height="true" md-selected="currentStep" class="md-accent">
                 <md-tab ng-repeat="step in steps" ng-disabled="step.locked">
                     <md-tab-label>{{step.label}}</md-tab-label>
                     <md-tab-body>
-                        <ng-include src="step.content" />
+                        <ng-include src="step.content"></ng-include>
                     </md-tab-body>
                 </md-tab>
             </md-tabs>
         </md-content>
     </div>
 
+    @Scripts.Render("~/Bundles/ScriptLib/Moment")
     @Scripts.Render("~/Bundles/ScriptLib/Angular")
     @Scripts.Render("~/Bundles/ScriptLib/AngularAnimate")
     @Scripts.Render("~/Bundles/ScriptLib/AngularAria")
     @Scripts.Render("~/Bundles/ScriptLib/AngularMaterial")
     @Scripts.Render("~/Bundles/ScriptLib/AngularMessages")
-    @Scripts.Render("~/Bundles/ScriptLib/AngularThemeColors")
     @Scripts.Render("~/Bundles/ScriptLib/AngularDateTime")
     
     @Scripts.Render("~/Bundles/Script")

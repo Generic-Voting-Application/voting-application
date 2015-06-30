@@ -18,12 +18,11 @@
             <md-content layout-padding>
 
                 <div layout="column">
-
                     <div layout="row" layout-fill ng-repeat="choice in newPoll.Choices">
                         <div flex="75">
                             <md-input-container>
                                 <label>Choice {{$index + 1}}</label>
-                                <input type="text" ng-model="choice.Name">
+                                <input type="text" ng-model="choice.Name" ng-change="choiceChange($index)">
                             </md-input-container>
                         </div>
                     </div>

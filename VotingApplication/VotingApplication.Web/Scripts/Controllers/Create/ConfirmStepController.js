@@ -17,6 +17,10 @@
         $scope.styleIsValid = styleIsValid;
         $scope.expiryIsValid = expiryIsValid;
         $scope.invitationsAreValid = invitationsAreValid;
+        $scope.formatUtcPollExpiry = formatUtcPollExpiry;
+        $scope.expiryDateIsInPast = expiryDateIsInPast;
+
+        var startingDate = new Date();
 
         function pollHasWarnings() {
             return !choicesAreValid() ||
@@ -51,6 +55,14 @@
         }
 
         function expiryIsValid() {
+            if (!$scope.newPoll.DoesExpire) {
+                return true;
+            }
+
+            if (expiryDateIsInPast()) {
+                return false;
+            }
+
             return true;
         }
 
@@ -66,6 +78,42 @@
             return $scope.newPoll.Choices.filter(function (choice) {
                 return choice.Name;
             });
+        }
+
+        function formatUtcPollExpiry() {
+
+            var utcDate = getUtcPollExpiry();
+
+            if (utcDate) {
+                return moment(utcDate).format('MMMM Do YYYY, h:mm a');
+            } else {
+                return "Invalid Date";
+            }
+        }
+
+        function getUtcPollExpiry() {
+            if (!$scope.newPoll.DoesExpire) {
+                return null;
+            }
+
+            var date;
+
+            if (!$scope.newPoll.ExpiryDate) {
+                date = startingDate;
+            } else {
+                date = new Date($scope.newPoll.ExpiryDate);
+            }
+
+            return moment(date).utc().toDate();
+        }
+
+        function expiryDateIsInPast() {
+            if (!$scope.newPoll.DoesExpire) {
+                return false;
+            }
+
+            var date = new Date($scope.newPoll.ExpiryDate);
+            return (moment(date).isBefore(moment()));
         }
     }
 })();

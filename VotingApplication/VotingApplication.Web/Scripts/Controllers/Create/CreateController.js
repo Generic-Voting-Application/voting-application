@@ -5,11 +5,9 @@
         .module('VoteOn-Create')
         .controller('CreateController', CreateController);
 
-    CreateController.$inject = ['$scope', '$timeout', 'mdThemeColors'];
+    CreateController.$inject = ['$scope', '$timeout'];
 
-    function CreateController($scope, $timeout, mdThemeColors) {
-
-        $scope.mdThemeColors = mdThemeColors;
+    function CreateController($scope, $timeout) {
 
         $scope.newPoll = {};
         $scope.currentStep = 0;
@@ -68,7 +66,8 @@
                 MaxPerVote: null,
                 MaxPoints: null,
                 Invitations: [],
-                OptionAdding : false
+                OptionAdding: false,
+                DoesExpire: false
             };
         }
     }

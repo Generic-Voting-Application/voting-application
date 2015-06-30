@@ -10,6 +10,7 @@
     function QuestionStepController($scope) {
 
         $scope.pollHasChoices = pollHasChoices;
+        $scope.choiceChange = choiceChange;
 
         activate();
 
@@ -34,6 +35,12 @@
             return $scope.newPoll.Choices.some(function (choice) {
                 return choice.Name;
             });
+        }
+
+        function choiceChange(index) {
+            if (index === $scope.newPoll.Choices.length - 1) {
+                $scope.newPoll.Choices.push({ Name: '' });
+            }
         }
     }
 })();

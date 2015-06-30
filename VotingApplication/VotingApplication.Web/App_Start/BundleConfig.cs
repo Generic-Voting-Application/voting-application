@@ -43,7 +43,7 @@ namespace VotingApplication.Web
             ngDialogThemeCss.Include("~/Content/Lib/Css/ngDialog-theme-default-min.css");
             bundles.Add(ngDialogThemeCss);
 
-            StyleBundle mdDateTimeCss = new StyleBundle("~/Bundles/StyleLib/mdDateTime", "https://cdn.rawgit.com/SimeonC/md-date-time/v0.0.14/dist/md-date-time.css");
+            StyleBundle mdDateTimeCss = new StyleBundle("~/Bundles/StyleLib/AngularDateTime", "https://cdn.rawgit.com/SimeonC/md-date-time/v0.0.14/dist/md-date-time.css");
             mdDateTimeCss.Include("~/Content/Lib/Css/md-date-time.css");
             bundles.Add(mdDateTimeCss);
 
@@ -83,6 +83,19 @@ namespace VotingApplication.Web
             errorBarStyle.Orderer = nullOrderer;
             bundles.Add(errorBarStyle);
 
+            StyleBundle voteOnStyle = new StyleBundle("~/Bundles/VoteOnStyle");
+            voteOnStyle.Include("~/Content/Scss/VoteOn.scss");
+            voteOnStyle.Builder = nullBuilder;
+            voteOnStyle.Transforms.Add(styleTransformer);
+            voteOnStyle.Orderer = nullOrderer;
+            bundles.Add(voteOnStyle);
+
+            StyleBundle angularMaterialExtensions = new StyleBundle("~/Bundles/AngularMaterialExtensions");
+            angularMaterialExtensions.Include("~/Content/Scss/AngularMaterialExtensions.scss");
+            angularMaterialExtensions.Builder = nullBuilder;
+            angularMaterialExtensions.Transforms.Add(styleTransformer);
+            angularMaterialExtensions.Orderer = nullOrderer;
+            bundles.Add(angularMaterialExtensions);
 
             // Lib Javascript
             const string angularCdnBase = "https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13";
@@ -112,12 +125,6 @@ namespace VotingApplication.Web
             var angularMaterial = new Bundle("~/Bundles/ScriptLib/AngularMaterial", "https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js");
             angularMaterial.Include("~/Scripts/Lib/angular-material-min.js");
             bundles.Add(angularMaterial);
-
-            // See: http://plnkr.co/edit/gBDV2ABghTMqqs5YaElB?p=preview
-            // From: https://github.com/angular/material/issues/1269
-            var angularThemeColors = new Bundle("~/Bundles/ScriptLib/AngularThemeColors");
-            angularThemeColors.Include("~/Scripts/Lib/angular-theme-colors.js");
-            bundles.Add(angularThemeColors);
 
             var angularDateTime = new Bundle("~/Bundles/ScriptLib/AngularDateTime", "https://cdn.rawgit.com/SimeonC/md-date-time/v0.0.14/dist/md-date-time.js");
             angularDateTime.Include("~/Scripts/Lib/md-date-time.js");
@@ -161,7 +168,6 @@ namespace VotingApplication.Web
             moment.Include("~/Scripts/Lib/moment-min.js");
             bundles.Add(moment);
 
-
             // ZeroClipboard
             ScriptBundle scriptLibBundle = new ScriptBundle("~/Bundles/ScriptLib");
             scriptLibBundle.IncludeDirectory("~/Scripts/Lib", "ZeroClipboard-min.js");
@@ -169,7 +175,6 @@ namespace VotingApplication.Web
             scriptLibBundle.Transforms.Add(scriptTransformer);
             scriptLibBundle.Orderer = nullOrderer;
             bundles.Add(scriptLibBundle);
-
 
             // VoteOn Javascript
             ScriptBundle scriptBundle = new ScriptBundle("~/Bundles/Script");

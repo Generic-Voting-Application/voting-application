@@ -1,0 +1,57 @@
+﻿// Angular Date-Time Picker Fixes
+// See: https://github.com/SimeonC/md-date-time/issues/16
+.time-date > .control > .slider > .date-control {
+
+    > .days > .md-button {
+        padding: 6px;
+        margin: 0px;
+        min-width: initial;
+        line-height: inherit;
+        font-size: inherit;
+    }
+
+    > .title > .md-button {
+        padding: 6px;
+        margin: 0;
+        min-width: initial;
+        line-height: inherit;
+        font-size: inherit;
+    }
+}
+
+.time-date > .control > .slider > .date-control > .headers > .day-cell {
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+.time-date > .buttons > button {
+    padding: 10px;
+    margin: 3px;
+    min-width: initial;
+    line-height: inherit;
+    font-size: 14px;
+}
+
+
+// Angular Date-Time Picker Enhancements
+
+.time-date {
+    &[disabled="disabled"] {
+        opacity: 0.2;
+        pointer-events: none;
+    }
+
+    opacity: 1;
+    -webkit-transition: opacity .5s ease-in-out;
+    transition: opacity .5s ease-in-out;
+}
+
+.time-date > .buttons {
+    padding: 0px;
+}
+
+// Fix for small whitespace between toobar and tabs
+
+md-tabs {
+    border-radius: 0px;
+}
