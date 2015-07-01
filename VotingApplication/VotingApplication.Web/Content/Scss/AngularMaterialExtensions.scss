@@ -1,4 +1,37 @@
-﻿// Angular Date-Time Picker Enhancements
+﻿// Angular Date-Time Picker Fixes
+// See: https://github.com/SimeonC/md-date-time/issues/16
+.time-date > .control > .slider > .date-control {
+
+    > .days > .md-button {
+        padding: 6px;
+        margin: 0px;
+        min-width: initial;
+        line-height: inherit;
+        font-size: inherit;
+    }
+
+    > .title > .md-button {
+        padding: 6px;
+        margin: 0;
+        min-width: initial;
+        line-height: inherit;
+        font-size: inherit;
+    }
+}
+
+.time-date > .control > .slider > .date-control > .headers > .day-cell {
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+.time-date > .buttons > button {
+    min-width: initial;
+    line-height: inherit;
+    font-size: 14px;
+}
+
+
+// Angular Date-Time Picker Enhancements
 
 .time-date {
     &[disabled="disabled"] {
