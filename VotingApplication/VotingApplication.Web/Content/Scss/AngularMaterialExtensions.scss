@@ -1,0 +1,22 @@
+﻿// Angular Date-Time Picker Enhancements
+
+.time-date {
+    &[disabled="disabled"] {
+        opacity: 0.2;
+        pointer-events: none;
+    }
+
+    opacity: 1;
+    -webkit-transition: opacity .5s ease-in-out;
+    transition: opacity .5s ease-in-out;
+}
+
+.time-date > .buttons {
+    padding: 0px;
+}
+
+// Fix for small whitespace between toobar and tabs
+
+md-tabs {
+    border-radius: 0px;
+}

@@ -1,4 +1,4 @@
-﻿<div layout="row">
+﻿<div layout="row" ng-controller="InvitationStepController">
 
     <div flex-gt-md="60" flex-md="80" flex-sm="90"
          offset-gt-md="20" offset-md="10" offset-sm="5">
@@ -6,12 +6,15 @@
         <h1 class="md-display-3">Poll Invitations</h1>
 
         <md-content layout-padding>
-            <md-chips ng-model="newPoll.Invitations">
-                <input type="email" placeholder="Enter an Email">
+            <md-chips ng-model="newPoll.Invitations" placeholder="Enter an Email">
+                <md-chip-template ng-switch="validateEmail($chip)">
+                    <span ng-switch-when="true"><i class="fa fa-user"></i> {{$chip}}</span>
+                    <span ng-switch-when="false" class="vo-error-text">{{$chip}} (Not a valid email)</span>
+                </md-chip-template>
             </md-chips>
         </md-content>
 
-        <md-content layout-padding>
+        <md-content>
             <div layout="row">
                 <md-checkbox ng-model="newPoll.InviteOnly" aria-label="Voters require an invite to vote">
                     Voters require an invite to vote
