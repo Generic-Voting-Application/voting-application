@@ -99,3 +99,40 @@
         }
     }
 })();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('VoteOn-Common')
+        .factory('RoutingService', RoutingService);
+
+    RoutingService.$inject = ['$window'];
+
+    function RoutingService($window) {
+
+        var service = {
+            navigateToVotePage: navigateToVotePage,
+            getVotePageUrl: getVotePageUrl
+        };
+
+        return service;
+
+        function navigateToVotePage(pollId, token) {
+            $window.location.href = getVotePageUrl(pollId, token);
+        }
+
+
+        function getVotePageUrl(pollId, tokenId) {
+            if (!pollId) {
+                return null;
+            }
+
+            var url = '/Poll/#/Vote/' + pollId;
+            if (tokenId) {
+                url += '/' + tokenId;
+            }
+            return url;
+        }
+    }
+})();

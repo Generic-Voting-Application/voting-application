@@ -335,6 +335,7 @@
     <Content Include="Content\Lib\Css\angular-material-min.css" />
     <Content Include="Content\Lib\Css\angular-toggle-switch.css" />
     <Content Include="Content\Lib\Css\font-awesome-min.css" />
+    <Content Include="Content\Lib\Css\md-date-time.css" />
     <Content Include="Content\Lib\Css\ngDialog-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-theme-default-min.css" />
     <Content Include="Content\Scss\ErrorBar.scss" />
@@ -347,6 +348,7 @@
     <Content Include="Scripts\Controllers\AddVoterOptionDialogController.js" />
     <Content Include="Scripts\Controllers\Create\CreateController.js" />
     <Content Include="Scripts\Controllers\Create\ConfirmStepController.js" />
+    <Content Include="Scripts\Controllers\Create\InvitationStepController.js" />
     <Content Include="Scripts\Controllers\Create\QuestionStepController.js" />
     <Content Include="Scripts\Controllers\EditOptionDialogController.js" />
     <Content Include="Scripts\Controllers\AddOptionDialogController.js" />
@@ -388,9 +390,9 @@
     <Content Include="Scripts\Lib\angular-aria-min.js" />
     <Content Include="Scripts\Lib\angular-material-min.js" />
     <Content Include="Scripts\Lib\angular-messages-min.js" />
-    <Content Include="Scripts\Lib\angular-theme-colors.js" />
     <Content Include="Scripts\Lib\angular-zeroclipboard.js" />
     <Content Include="Scripts\Lib\d3-tip.js" />
+    <Content Include="Scripts\Lib\md-date-time.js" />
     <Content Include="Scripts\Lib\moment-min.js" />
     <Content Include="Scripts\Lib\angular-qrcode.js" />
     <Content Include="Scripts\Lib\qrcode.js" />
@@ -403,6 +405,7 @@
     <Content Include="Scripts\Lib\angular-toggle-switch-min.js" />
     <Content Include="Scripts\Lib\ngDialog-min.js" />
     <Content Include="Scripts\Lib\ngStorage-min.js" />
+    <Content Include="Scripts\Modules\VoteOn-Common.js" />
     <Content Include="Scripts\Modules\VoteOn-Create.js" />
     <Content Include="Scripts\Services\AccountService.js" />
     <Content Include="Scripts\Services\ErrorService.js" />
@@ -462,6 +465,8 @@
     <Content Include="Views\Create\ExpiryStep.cshtml" />
     <Content Include="Views\Create\InvitationStep.cshtml" />
     <Content Include="Views\Create\ConfirmStep.cshtml" />
+    <Content Include="Content\Scss\AngularMaterialExtensions.scss" />
+    <Content Include="Content\Scss\VoteOn.scss" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

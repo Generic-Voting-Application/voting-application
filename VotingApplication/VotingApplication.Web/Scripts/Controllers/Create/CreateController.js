@@ -5,13 +5,11 @@
         .module('VoteOn-Create')
         .controller('CreateController', CreateController);
 
-    CreateController.$inject = ['$scope', '$timeout', 'mdThemeColors'];
+    CreateController.$inject = ['$scope', '$timeout'];
 
-    function CreateController($scope, $timeout, mdThemeColors) {
+    function CreateController($scope, $timeout) {
 
-        $scope.mdThemeColors = mdThemeColors;
-
-        $scope.newPoll = {};
+        $scope.newPoll = createDefaultPoll();
         $scope.currentStep = 0;
         $scope.steps = [
             {
@@ -43,12 +41,6 @@
 
         $scope.advanceToStep = advanceToStep;
 
-        activate();
-
-        function activate() {
-            $scope.newPoll = createDefaultPoll();
-        }
-
         function advanceToStep(step) {
             var stepIndex = step - 1;
             for (var i = 0; i <= stepIndex; i++) {
@@ -68,7 +60,8 @@
                 MaxPerVote: null,
                 MaxPoints: null,
                 Invitations: [],
-                OptionAdding : false
+                OptionAdding: false,
+                Expires: false
             };
         }
     }
