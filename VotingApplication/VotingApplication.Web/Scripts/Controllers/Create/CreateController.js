@@ -5,9 +5,9 @@
         .module('VoteOn-Create')
         .controller('CreateController', CreateController);
 
-    CreateController.$inject = ['$scope', '$timeout', 'PollService'];
+    CreateController.$inject = ['$scope', '$timeout'];
 
-    function CreateController($scope, $timeout, PollService) {
+    function CreateController($scope, $timeout) {
 
         $scope.newPoll = createDefaultPoll();
         $scope.currentStep = 0;

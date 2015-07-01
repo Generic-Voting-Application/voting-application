@@ -99,7 +99,7 @@
             if (utcDate) {
                 return moment(utcDate).format('YYYY/MM/DD - HH:mm');
             } else {
-                return "Invalid Date";
+                return 'Invalid Date';
             }
         }
 
