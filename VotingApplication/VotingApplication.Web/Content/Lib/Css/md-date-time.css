@@ -42,6 +42,30 @@
   background-color: #009688;
   color: #e1e1e1;
 }
+.time-date > .control > .slider > .date-control  > .days > .md-button {
+    padding: 6px;
+    margin: 0px;
+    min-width: initial;
+    line-height: inherit;
+    font-size: inherit;
+}
+ .time-date > .control > .slider > .date-control   > .title > .md-button {
+    padding: 6px;
+    margin: 0;
+    min-width: initial;
+    line-height: inherit;
+    font-size: inherit;
+}
+.time-date > .control > .slider > .date-control > .headers > .day-cell {
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+.time-date > .buttons > button {
+    min-width: initial;
+    line-height: inherit;
+    font-size: 14px;
+}
 .time-date > .display > .content > .super-title {
   text-transform: uppercase;
 }

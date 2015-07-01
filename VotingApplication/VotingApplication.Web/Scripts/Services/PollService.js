@@ -123,9 +123,9 @@
         .module('VoteOn-Create')
         .factory('PollService', PollService);
 
-    PollService.$inject = ['$http'];
+    PollService.$inject = ['$http', '$q'];
 
-    function PollService($http) {
+    function PollService($http, $q) {
 
         var service = {
             createPoll: createPoll
@@ -134,6 +134,9 @@
         return service;
 
         function createPoll(poll) {
+            var prom = $q.defer();
+
+            // TODO Use token from account service
             var token = null;
 
             return $http({
@@ -144,8 +147,14 @@
                     'Authorization': 'Bearer ' + token
                 },
                 data: JSON.stringify(poll)
-            });
-
+            })
+               .then(function (response) {
+                   prom.resolve(response.data);
+                   return prom.promise;
+               })
+           .catch(function () {
+               // TODO Error stuff here
+           });
         }
     }
 })();

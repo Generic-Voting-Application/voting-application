@@ -61,7 +61,7 @@
                 MaxPoints: null,
                 Invitations: [],
                 OptionAdding: false,
-                DoesExpire: false
+                Expires: false
             };
         }
     }
