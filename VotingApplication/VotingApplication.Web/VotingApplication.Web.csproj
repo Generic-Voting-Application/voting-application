@@ -346,6 +346,7 @@
     <Content Include="Global.asax" />
     <Content Include="Images\Logo.png" />
     <Content Include="Scripts\Controllers\Account\Register\RegisterController.js" />
+    <Content Include="Scripts\Controllers\Account\Register\RegistrationCompleteController.js" />
     <Content Include="Scripts\Controllers\AddVoterOptionDialogController.js" />
     <Content Include="Scripts\Controllers\Create\CreateController.js" />
     <Content Include="Scripts\Controllers\Create\ConfirmStepController.js" />
@@ -467,6 +468,7 @@
     <Content Include="Views\Create\ConfirmStep.cshtml" />
     <Content Include="Views\Register\Index.cshtml" />
     <Content Include="Views\Register\Register.cshtml" />
+    <Content Include="Views\Register\RegistrationComplete.cshtml" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
