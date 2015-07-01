@@ -5,11 +5,11 @@
         .module('VoteOn-Create')
         .controller('CreateController', CreateController);
 
-    CreateController.$inject = ['$scope', '$timeout'];
+    CreateController.$inject = ['$scope', '$timeout', 'PollService'];
 
-    function CreateController($scope, $timeout) {
+    function CreateController($scope, $timeout, PollService) {
 
-        $scope.newPoll = {};
+        $scope.newPoll = createDefaultPoll();
         $scope.currentStep = 0;
         $scope.steps = [
             {
@@ -40,12 +40,6 @@
         ];
 
         $scope.advanceToStep = advanceToStep;
-
-        activate();
-
-        function activate() {
-            $scope.newPoll = createDefaultPoll();
-        }
 
         function advanceToStep(step) {
             var stepIndex = step - 1;

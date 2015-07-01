@@ -10,7 +10,7 @@
 
                 <md-input-container class="md-display-1">
                     <label>What do you want to ask?</label>
-                    <input required type="text" name="question" ng-model="newPoll.Name">
+                    <input required type="text" name="PollName" ng-model="newPoll.PollName">
                 </md-input-container>
 
             </md-content>
@@ -30,9 +30,9 @@
 
             </md-content>
 
-            <md-content layout-padding>
+            <md-content>
                 <div layout="row">
-                    <md-checkbox ng-model="newPoll.OptionAdding" aria-label="Voters may add choices">
+                    <md-checkbox ng-model="newPoll.ChoiceAdding" aria-label="Voters may add choices">
                         Voters may add choices
                     </md-checkbox>
                 </div>

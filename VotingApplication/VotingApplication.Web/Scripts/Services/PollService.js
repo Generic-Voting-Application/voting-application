@@ -115,3 +115,37 @@
         }
     }
 })();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('VoteOn-Create')
+        .factory('PollService', PollService);
+
+    PollService.$inject = ['$http', '$q'];
+
+    function PollService($http, $q) {
+
+        var service = {
+            createPoll: createPoll
+        };
+
+        return service;
+
+        function createPoll(poll) {
+            var token = null;
+
+            return $http({
+                method: 'POST',
+                url: 'api/poll',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'Authorization': 'Bearer ' + token
+                },
+                data: JSON.stringify(poll)
+            });
+
+        }
+    }
+})();

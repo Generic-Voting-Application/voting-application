@@ -269,6 +269,7 @@
     <Compile Include="Api\Models\DBViewModels\ManageVoteResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\OptionCreationRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\OptionRequestResponseModel.cs" />
+    <Compile Include="Api\Models\DBViewModels\PollCreationRequestModel2.cs" />
     <Compile Include="Api\Models\DBViewModels\PollCreationRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\PollCreationResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\PollRequestResponseModel.cs" />
@@ -348,6 +349,7 @@
     <Content Include="Scripts\Controllers\AddVoterOptionDialogController.js" />
     <Content Include="Scripts\Controllers\Create\CreateController.js" />
     <Content Include="Scripts\Controllers\Create\ConfirmStepController.js" />
+    <Content Include="Scripts\Controllers\Create\InvitationStepController.js" />
     <Content Include="Scripts\Controllers\Create\QuestionStepController.js" />
     <Content Include="Scripts\Controllers\EditOptionDialogController.js" />
     <Content Include="Scripts\Controllers\AddOptionDialogController.js" />
@@ -404,6 +406,7 @@
     <Content Include="Scripts\Lib\angular-toggle-switch-min.js" />
     <Content Include="Scripts\Lib\ngDialog-min.js" />
     <Content Include="Scripts\Lib\ngStorage-min.js" />
+    <Content Include="Scripts\Modules\VoteOn-Common.js" />
     <Content Include="Scripts\Modules\VoteOn-Create.js" />
     <Content Include="Scripts\Services\AccountService.js" />
     <Content Include="Scripts\Services\ErrorService.js" />

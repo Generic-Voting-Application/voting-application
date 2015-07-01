@@ -159,6 +159,60 @@ namespace VotingApplication.Web.Api.Controllers
 
         }
 
+        // Can't exist simultaneously with previous method
+
+        //[HttpPost]
+        //public PollCreationResponseModel Post(PollCreationRequestModel2 pollCreationRequest)
+        //{
+        //    #region Input Validation
+
+        //    if (pollCreationRequest == null)
+        //    {
+        //        ThrowError(HttpStatusCode.BadRequest);
+        //    }
+
+        //    PollType pollType;
+        //    if (!Enum.TryParse<PollType>(pollCreationRequest.PollType, true, out pollType))
+        //    {
+        //        ModelState.AddModelError("PollType", "Invalid PollType");
+        //    }
+
+        //    if (!ModelState.IsValid)
+        //    {
+        //        ThrowError(HttpStatusCode.BadRequest, ModelState);
+        //    }
+
+        //    #endregion
+
+        //    Poll newPoll = Create2(pollCreationRequest);
+        //    Ballot creatorBallot = new Ballot
+        //    {
+        //        TokenGuid = Guid.NewGuid(),
+        //        ManageGuid = Guid.NewGuid()
+        //    };
+
+        //    using (var context = _contextFactory.CreateContext())
+        //    {
+        //        _metricHandler.HandlePollCreatedEvent(newPoll);
+
+        //        context.Polls.Add(newPoll);
+        //        newPoll.Ballots.Add(creatorBallot);
+
+        //        context.SaveChanges();
+
+        //    }
+
+        //    PollCreationResponseModel response = new PollCreationResponseModel
+        //    {
+        //        UUID = newPoll.UUID,
+        //        ManageId = newPoll.ManageId,
+        //        CreatorBallot = creatorBallot
+        //    };
+
+        //    return response;
+
+        //}
+
         private Poll Create(PollCreationRequestModel pollCreationRequest)
         {
             Poll newPoll = PollCreationHelper.Create();
@@ -168,6 +222,36 @@ namespace VotingApplication.Web.Api.Controllers
             {
                 newPoll.Choices = pollCreationRequest.Choices;
             }
+
+            if (User.Identity.IsAuthenticated)
+            {
+                newPoll.Creator = User.Identity.GetUserName();
+                newPoll.CreatorIdentity = User.Identity.GetUserId();
+            }
+            else
+            {
+                newPoll.Creator = "Anonymous";
+                newPoll.CreatorIdentity = null;
+            }
+
+            return newPoll;
+        }
+
+        private Poll Create2(PollCreationRequestModel2 pollCreationRequest)
+        {
+            Poll newPoll = PollCreationHelper.Create();
+            newPoll.Name = pollCreationRequest.PollName;
+            if (pollCreationRequest.Choices != null &&
+               pollCreationRequest.Choices.Count > 0)
+            {
+                newPoll.Choices = pollCreationRequest.Choices;
+                newPoll.ChoiceAdding = pollCreationRequest.ChoiceAdding;
+                newPoll.PollType = (PollType)Enum.Parse(typeof(PollType), pollCreationRequest.PollType);
+                newPoll.NamedVoting = pollCreationRequest.NamedVoting;
+                newPoll.ElectionMode = pollCreationRequest.ElectionMode;
+                newPoll.ExpiryDateUtc = pollCreationRequest.ExpiryDateUtc;
+                newPoll.InviteOnly = pollCreationRequest.InviteOnly;
+            };
 
             if (User.Identity.IsAuthenticated)
             {
