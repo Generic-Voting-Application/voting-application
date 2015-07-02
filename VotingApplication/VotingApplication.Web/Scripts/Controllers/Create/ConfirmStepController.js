@@ -92,12 +92,12 @@
             });
         }
 
-        function formatUtcPollExpiry() {
+        function formatUtcPollExpiry(formatString) {
 
             var utcDate = getUtcPollExpiry();
 
             if (utcDate) {
-                return moment(utcDate).format('YYYY/MM/DD - HH:mm');
+                return moment(utcDate).format(formatString);
             } else {
                 return 'Invalid Date';
             }

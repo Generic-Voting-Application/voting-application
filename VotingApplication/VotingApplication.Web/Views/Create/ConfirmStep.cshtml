@@ -78,7 +78,8 @@
                     <div class="md-list-item-text">
 
                         <div ng-if="newPoll.Expires">
-                            <h3>{{formatUtcPollExpiry()}}</h3>
+                            <h3 hide-gt-sm>{{formatUtcPollExpiry('YYYY/MM/DD - HH:mm')}}</h3>
+                            <h3 hide-sm>{{formatUtcPollExpiry('dddd, Do MMMM YYYY, HH:mm')}}</h3>
                             <p>Your poll will expire and close. Voters won't be able to vote after this time</p>
                         </div>
 
