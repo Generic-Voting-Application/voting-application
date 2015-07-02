@@ -166,11 +166,17 @@
 
     function AccountService($http, $localStorage, $q, $timeout) {
 
+        var observerCallbacks = [];
+
         var service = {
+            account: $localStorage.account,
+            registerAccountObserver: registerAccountObserver,
+
             login: login,
             register: register,
             resendConfirmation: resendConfirmation,
-            forgotPassword: forgotPassword
+            forgotPassword: forgotPassword,
+            logout: logout
         };
 
         return service;
@@ -215,9 +221,12 @@
             var account = { 'email': email, 'token': token, 'expiryDateUtc': expiryDateUtc };
 
             $localStorage.account = account;
+            service.account = account;
 
             // Ensure that we've actually saved the values before continuing. (see https://github.com/gsklee/ngStorage/issues/39)
             $timeout(function () { deferred.resolve(); }, 110);
+
+            notifyObservers();
 
             return deferred.promise;
         }
@@ -250,6 +259,28 @@
                 data: JSON.stringify({
                     Email: email
                 })
+            });
+        }
+
+        function logout() {
+            delete $localStorage.account;
+            service.account = null;
+
+            notifyObservers();
+        }
+
+        function registerAccountObserver(callback) {
+            observerCallbacks.push(callback);
+
+            var account = service.account;
+            if (account && moment.utc(account.expiryDateUtc).isBefore(moment.utc())) {
+                logout();
+            }
+        }
+
+        function notifyObservers() {
+            angular.forEach(observerCallbacks, function (callback) {
+                callback();
             });
         }
     }

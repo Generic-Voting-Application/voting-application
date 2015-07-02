@@ -1,8 +1,10 @@
-﻿(function () {
+﻿/// <reference path="../../Services/RoutingService.js" />
+/// <reference path="../../Services/AccountService.js" />
+(function () {
     'use strict';
 
     angular
-        .module('VoteOn-Common')
+        .module('VoteOn-Account')
         .directive('toolbar', toolbar);
 
     function toolbar() {
@@ -16,12 +18,22 @@
     }
 
 
-    ToolbarController.$inject = ['$scope', 'RoutingService'];
+    ToolbarController.$inject = ['$scope', 'RoutingService', 'AccountService'];
 
-    function ToolbarController($scope, RoutingService) {
+    function ToolbarController($scope, RoutingService, AccountService) {
+
+        $scope.isLoggedIn = false;
 
         $scope.login = login;
         $scope.register = register;
+        $scope.logout = logout;
+
+        activate();
+
+        function activate() {
+            AccountService.registerAccountObserver(updateAccountStatus);
+            updateAccountStatus();
+        }
 
         function login() {
             RoutingService.navigateToLoginPage();
@@ -29,6 +41,19 @@
 
         function register() {
             RoutingService.navigateToRegisterPage();
+        }
+
+        function logout() {
+            AccountService.logout();
+        }
+
+        function updateAccountStatus() {
+            if (AccountService.account === undefined || AccountService.account === null) {
+                $scope.isLoggedIn = false;
+            }
+            else {
+                $scope.isLoggedIn = true;
+            }
         }
     }
 })();

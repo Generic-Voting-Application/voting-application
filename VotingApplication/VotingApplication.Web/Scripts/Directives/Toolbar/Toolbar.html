@@ -4,7 +4,8 @@
             <span>Vote On</span>
         </h2>
         <span flex></span>
-        <div>
+
+        <div ng-hide="isLoggedIn">
             <div hide-gt-sm>
                 <md-menu md-position-mode="target-right target">
                     <md-button class="md-icon-button" ng-click="$mdOpenMenu()" aria-label="Open menu">
@@ -33,5 +34,29 @@
             </div>
 
         </div>
+
+        <div ng-show="isLoggedIn">
+            <div hide-gt-sm>
+                <md-menu md-position-mode="target-right target">
+                    <md-button class="md-icon-button" ng-click="$mdOpenMenu()" aria-label="Open menu">
+                        <md-icon md-font-icon="fa-bars fa-2x" class="fa"></md-icon>
+                    </md-button>
+                    <md-menu-content width="2">
+                        <md-menu-item>
+                            <md-button ng-click="logout()">
+                                <md-icon md-font-icon="fa-sign-out" class="fa fa-lg" md-menu-align-target></md-icon>
+                                Log out
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+
+            <div hide-sm>
+                <md-button ng-click="logout()">Log out</md-button>
+            </div>
+
+        </div>
+
     </div>
 </md-toolbar>

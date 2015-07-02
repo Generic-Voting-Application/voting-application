@@ -2,5 +2,5 @@
     'use strict';
 
     angular
-        .module('VoteOn-Create', ['VoteOn-Common', 'mdDateTime']);
+        .module('VoteOn-Create', ['VoteOn-Common', 'VoteOn-Account', 'mdDateTime']);
 })();
