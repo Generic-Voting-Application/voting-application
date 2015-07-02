@@ -403,6 +403,7 @@
     <Content Include="Scripts\Lib\qrcode.js" />
     <Content Include="Scripts\Lib\ZeroClipboard-min.js" />
     <Content Include="Scripts\Modules\Account\VoteOn-Account.js" />
+    <Content Include="Scripts\Modules\Account\VoteOn-Login.js" />
     <Content Include="Scripts\Modules\Account\VoteOn-Register.js" />
     <Content Include="Scripts\Modules\GVA-Common.js" />
     <Content Include="Scripts\Modules\GVA-Manage.js" />
@@ -478,6 +479,7 @@
     <Content Include="Content\Scss\AngularMaterialExtensions.scss" />
     <Content Include="Content\Scss\VoteOn.scss" />
     <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Login\Login.cshtml" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html ng-app="VoteOn-Account">
+<html ng-app="VoteOn-Login">
 <head>
     <title>Vote On</title>
     <meta name="viewport" content="initial-scale=1">
@@ -20,67 +20,8 @@
             </div>
         </md-toolbar>
 
-        <div layout="row">
-            <div flex-gt-md="30"
-                 flex-md="50"
-                 flex-sm="90"
-                 offset-gt-md="35"
-                 offset-md="25"
-                 offset-sm="5">
+        <div ng-view></div>
 
-                <h1 class="md-display-3">Login</h1>
-
-                <md-content>
-                    <div>
-                        <form name="loginForm" ng-submit="login()">
-
-                            <md-input-container>
-                                <label>Email</label>
-                                <input ng-model="user.email"
-                                       type="email"
-                                       name="email"
-                                       required
-                                       ng-model-options="{ debounce: 500 }">
-
-                                <div ng-messages="loginForm.email.$error" ng-if="loginForm.email.$touched">
-                                    <span ng-message="required">Email is required</span>
-                                    <span ng-message="email">Email is not valid</span>
-                                </div>
-                            </md-input-container>
-
-                            <md-input-container>
-                                <label>Password</label>
-                                <input ng-model="user.password"
-                                       type="password"
-                                       name="password"
-                                       required
-                                       minlength="6"
-                                       ng-model-options="{ debounce: 500 }">
-
-                                <div ng-messages="loginForm.password.$error" ng-if="loginForm.password.$touched">
-                                    <span ng-message="required">Password is required</span>
-                                    <span ng-message="minlength">Password must be at least 6 characters</span>
-                                </div>
-                            </md-input-container>
-
-
-                            <div layout layout="row" layout-sm="column" layout-align-gt-sm="end center">
-                                <md-button ng-click="forgottenPassword()" type="button">
-                                    Forgot your Password?
-                                </md-button>
-                                <md-button class="md-primary md-raised" type="submit">
-                                    Login
-                                </md-button>
-                            </div>
-
-                        </form>
-
-                    </div>
-
-
-                </md-content>
-            </div>
-        </div>
     </div>
 
     @Scripts.Render("~/Bundles/ScriptLib/Angular")

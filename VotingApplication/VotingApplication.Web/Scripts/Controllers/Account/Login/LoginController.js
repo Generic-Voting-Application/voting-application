@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('VoteOn-Account')
+        .module('VoteOn-Login')
         .controller('LoginController', LoginController);
 
     LoginController.$inject = ['$scope', 'AccountService'];
