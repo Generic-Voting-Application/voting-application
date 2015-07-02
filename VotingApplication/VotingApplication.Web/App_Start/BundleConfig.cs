@@ -179,7 +179,7 @@ namespace VotingApplication.Web
 
             // VoteOn Javascript
             ScriptBundle scriptBundle = new ScriptBundle("~/Bundles/Script");
-            scriptBundle.IncludeDirectory("~/Scripts/Modules", "*.js");
+            scriptBundle.IncludeDirectory("~/Scripts/Modules", "*.js", true);
             scriptBundle.IncludeDirectory("~/Scripts/Directives", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Services", "*.js");
             scriptBundle.IncludeDirectory("~/Scripts/Controllers", "*.js", true);
