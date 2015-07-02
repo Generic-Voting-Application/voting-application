@@ -388,6 +388,8 @@
     <Content Include="Scripts\Directives\TimePicker.js" />
     <Content Include="Scripts\Directives\DatePicker.js" />
     <Content Include="Scripts\Directives\PollHeading.js" />
+    <Content Include="Scripts\Directives\Toolbar\Toolbar.html" />
+    <Content Include="Scripts\Directives\Toolbar\Toolbar.js" />
     <Content Include="Scripts\Directives\TruncatedText.js" />
     <Content Include="Scripts\Filters\dateFilters.js" />
     <Content Include="Scripts\Interceptors\ErrorInterceptor.js" />
