@@ -162,9 +162,9 @@
         .module('VoteOn-Account')
         .factory('AccountService', AccountService);
 
-    AccountService.$inject = ['$http'];
+    AccountService.$inject = ['$http', '$localStorage', '$q', '$timeout'];
 
-    function AccountService($http) {
+    function AccountService($http, $localStorage, $q, $timeout) {
 
         var service = {
             login: login,
@@ -195,7 +195,31 @@
                     username: email,
                     password: password
                 }
+            })
+            .then(function (response) {
+
+                var accountToken = response.data.access_token;
+                // If you try and parse the expiry date without a format, moment will warn that this is
+                // deprecated (https://github.com/moment/moment/issues/1407)
+                // The string without the day is valid and can be parsed, but we'll just include it in
+                // the format string.
+                var expiryDateUtc = moment(response.data['.expires'], 'ddd, DD MMM YYYY h:mm a');
+
+                return setAccount(accountToken, email, expiryDateUtc);
             });
+        }
+
+        function setAccount(token, email, expiryDateUtc) {
+            var deferred = $q.defer();
+
+            var account = { 'email': email, 'token': token, 'expiryDateUtc': expiryDateUtc };
+
+            $localStorage.account = account;
+
+            // Ensure that we've actually saved the values before continuing. (see https://github.com/gsklee/ngStorage/issues/39)
+            $timeout(function () { deferred.resolve(); }, 110);
+
+            return deferred.promise;
         }
 
         function register(email, password) {

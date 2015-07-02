@@ -2,5 +2,5 @@
     'use strict';
 
     angular
-        .module('VoteOn-Account', ['VoteOn-Common', 'ngRoute']);
+        .module('VoteOn-Account', ['VoteOn-Common', 'ngRoute', 'ngStorage']);
 })();

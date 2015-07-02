@@ -119,7 +119,9 @@
             navigateToRegisterPage: navigateToRegisterPage,
 
             navigateToForgottenPasswordPage: navigateToForgottenPasswordPage,
-            navigateToRegistrationCompletePage: navigateToRegistrationCompletePage
+            navigateToRegistrationCompletePage: navigateToRegistrationCompletePage,
+
+            navigateToAccountPage: navigateToAccountPage
         };
 
         return service;
@@ -155,6 +157,11 @@
 
         function navigateToRegistrationCompletePage(email) {
             $window.location.href = '/Register/#/RegistrationComplete/' + email;
+        }
+
+        function navigateToAccountPage() {
+            // Temporarily redirect to the new homepage until we've an account page.
+            $window.location.href = '/Create/';
         }
     }
 })();

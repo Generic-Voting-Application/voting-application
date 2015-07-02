@@ -25,7 +25,8 @@
                 var userEmail = $scope.loginForm.email.$viewValue;
                 var password = $scope.loginForm.password.$viewValue;
 
-                AccountService.login(userEmail, password);
+                AccountService.login(userEmail, password)
+                    .then(RoutingService.navigateToAccountPage);
             }
         }
 
