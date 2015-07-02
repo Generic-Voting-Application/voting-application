@@ -1,13 +1,15 @@
-﻿(function () {
+﻿/// <reference path="../../../Services/AccountService.js" />
+/// <reference path="../../../Services/RoutingService.js" />
+(function () {
     'use strict';
 
     angular
         .module('VoteOn-Register')
         .controller('RegisterController', RegisterController);
 
-    RegisterController.$inject = ['$scope', '$window', 'AccountService'];
+    RegisterController.$inject = ['$scope', 'AccountService', 'RoutingService'];
 
-    function RegisterController($scope, $window, AccountService) {
+    function RegisterController($scope, AccountService, RoutingService) {
 
         $scope.user = {
             email: null,
@@ -24,11 +26,9 @@
                 var password = $scope.registerAccountForm.password.$viewValue;
 
                 $scope.sending = true;
-                
+
                 AccountService.register(userEmail, password)
-                    .then(function () {
-                        $window.location.href = '/Register/#/RegistrationComplete/' + userEmail;
-                    });
+                    .then(function () { RoutingService.navigateToRegistrationCompletePage(userEmail); });
             }
         }
     }

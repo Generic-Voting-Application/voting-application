@@ -15,7 +15,7 @@
             navigateToManagePage: navigateToManagePage,
             navigateToHomePage: navigateToHomePage,
             navigateToMyPolls: navigateToMyPolls,
-            navigateToConfirmRegistration : navigateToConfirmRegistration,
+            navigateToConfirmRegistration: navigateToConfirmRegistration,
             getVotePageUrl: getVotePageUrl,
             getResultsPageUrl: getResultsPageUrl,
             getManagePageUrl: getManagePageUrl,
@@ -116,7 +116,10 @@
             getVotePageUrl: getVotePageUrl,
 
             navigateToLoginPage: navigateToLoginPage,
-            navigateToRegisterPage: navigateToRegisterPage
+            navigateToRegisterPage: navigateToRegisterPage,
+
+            navigateToForgottenPasswordPage: navigateToForgottenPasswordPage,
+            navigateToRegistrationCompletePage: navigateToRegistrationCompletePage
         };
 
         return service;
@@ -137,13 +140,21 @@
             }
             return url;
         }
-        
+
         function navigateToLoginPage() {
             $window.location.href = '/Login';
         }
 
         function navigateToRegisterPage() {
             $window.location.href = '/Register';
+        }
+
+        function navigateToForgottenPasswordPage() {
+            $window.location.href = '/Login/#/ForgottenPassword';
+        }
+
+        function navigateToRegistrationCompletePage(email) {
+            $window.location.href = '/Register/#/RegistrationComplete/' + email;
         }
     }
 })();

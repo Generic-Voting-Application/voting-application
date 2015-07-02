@@ -1,4 +1,5 @@
-﻿(function () {
+﻿/// <reference path="../../../Services/AccountService.js" />
+(function () {
     'use strict';
 
     angular

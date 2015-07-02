@@ -1,13 +1,15 @@
-﻿(function () {
+﻿/// <reference path="../../../Services/AccountService.js" />
+/// <reference path="../../../Services/RoutingService.js" />
+(function () {
     'use strict';
 
     angular
         .module('VoteOn-Login')
         .controller('LoginController', LoginController);
 
-    LoginController.$inject = ['$scope', '$window', 'AccountService'];
+    LoginController.$inject = ['$scope', 'AccountService', 'RoutingService'];
 
-    function LoginController($scope,$window, AccountService) {
+    function LoginController($scope, AccountService, RoutingService) {
 
         $scope.user = {
             email: null,
@@ -28,7 +30,7 @@
         }
 
         function forgottenPassword() {
-            $window.location.href = '/Login/#/ForgottenPassword';
+            RoutingService.navigateToForgottenPasswordPage();
         }
     }
 })();
