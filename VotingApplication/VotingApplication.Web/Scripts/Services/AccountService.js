@@ -154,3 +154,44 @@
         }
     }
 })();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('VoteOn-Account')
+        .factory('AccountService', AccountService);
+
+    AccountService.$inject = ['$http'];
+
+    function AccountService($http) {
+
+        var service = {
+            register: register,
+            resendConfirmation: resendConfirmation
+        };
+
+        return service;
+
+
+        function register(email, password) {
+            return $http({
+                method: 'POST',
+                url: '/api/Account/Register',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({
+                    Email: email,
+                    Password: password
+                })
+            });
+        }
+
+        function resendConfirmation(email) {
+            return $http({
+                method: 'POST',
+                url: '/api/Account/ResendConfirmation?email=' + email,
+                contentType: 'application/json; charset=utf-8'
+            });
+        }
+    }
+})();

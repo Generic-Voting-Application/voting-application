@@ -309,6 +309,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CreateController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Controllers\RoutesController.cs" />
     <Compile Include="Controllers\PollController.cs" />
     <Compile Include="Global.asax.cs">
@@ -344,6 +345,8 @@
     <Content Include="Fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\Logo.png" />
+    <Content Include="Scripts\Controllers\Account\Register\RegisterController.js" />
+    <Content Include="Scripts\Controllers\Account\Register\RegistrationCompleteController.js" />
     <Content Include="Scripts\Controllers\AddVoterOptionDialogController.js" />
     <Content Include="Scripts\Controllers\Create\CreateController.js" />
     <Content Include="Scripts\Controllers\Create\ConfirmStepController.js" />
@@ -404,6 +407,7 @@
     <Content Include="Scripts\Lib\angular-toggle-switch-min.js" />
     <Content Include="Scripts\Lib\ngDialog-min.js" />
     <Content Include="Scripts\Lib\ngStorage-min.js" />
+    <Content Include="Scripts\Modules\VoteOn-Account.js" />
     <Content Include="Scripts\Modules\VoteOn-Common.js" />
     <Content Include="Scripts\Modules\VoteOn-Create.js" />
     <Content Include="Scripts\Services\AccountService.js" />
@@ -464,6 +468,9 @@
     <Content Include="Views\Create\ExpiryStep.cshtml" />
     <Content Include="Views\Create\InvitationStep.cshtml" />
     <Content Include="Views\Create\ConfirmStep.cshtml" />
+    <Content Include="Views\Register\Index.cshtml" />
+    <Content Include="Views\Register\Register.cshtml" />
+    <Content Include="Views\Register\RegistrationComplete.cshtml" />
     <Content Include="Content\Scss\AngularMaterialExtensions.scss" />
     <Content Include="Content\Scss\VoteOn.scss" />
     <None Include="Web.Appveyor.config">

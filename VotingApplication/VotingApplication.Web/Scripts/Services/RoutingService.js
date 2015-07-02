@@ -113,7 +113,9 @@
 
         var service = {
             navigateToVotePage: navigateToVotePage,
-            getVotePageUrl: getVotePageUrl
+            getVotePageUrl: getVotePageUrl,
+
+            navigateToRegisterPage: navigateToRegisterPage
         };
 
         return service;
@@ -133,6 +135,11 @@
                 url += '/' + tokenId;
             }
             return url;
+        }
+
+
+        function navigateToRegisterPage() {
+            $window.location.href = '/Register';
         }
     }
 })();

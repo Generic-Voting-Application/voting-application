@@ -5,9 +5,9 @@
         .module('VoteOn-Create')
         .controller('CreateController', CreateController);
 
-    CreateController.$inject = ['$scope', '$timeout'];
+    CreateController.$inject = ['$scope', '$timeout', 'RoutingService'];
 
-    function CreateController($scope, $timeout) {
+    function CreateController($scope, $timeout, RoutingService) {
 
         $scope.newPoll = createDefaultPoll();
         $scope.currentStep = 0;
@@ -40,6 +40,7 @@
         ];
 
         $scope.advanceToStep = advanceToStep;
+        $scope.register = register;
 
         function advanceToStep(step) {
             var stepIndex = step - 1;
@@ -63,6 +64,10 @@
                 OptionAdding: false,
                 Expires: false
             };
+        }
+
+        function register() {
+            RoutingService.navigateToRegisterPage();
         }
     }
 })();
