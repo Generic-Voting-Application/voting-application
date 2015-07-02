@@ -347,6 +347,7 @@
     <Content Include="Fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\Logo.png" />
+    <Content Include="Scripts\Controllers\Account\Login\ForgottenPasswordController.js" />
     <Content Include="Scripts\Controllers\Account\Login\LoginController.js" />
     <Content Include="Scripts\Controllers\Account\Register\RegisterController.js" />
     <Content Include="Scripts\Controllers\Account\Register\RegistrationCompleteController.js" />
@@ -480,6 +481,7 @@
     <Content Include="Content\Scss\VoteOn.scss" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\Login\ForgottenPassword.cshtml" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

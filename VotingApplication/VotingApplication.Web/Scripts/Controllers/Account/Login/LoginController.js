@@ -5,9 +5,9 @@
         .module('VoteOn-Login')
         .controller('LoginController', LoginController);
 
-    LoginController.$inject = ['$scope', 'AccountService'];
+    LoginController.$inject = ['$scope', '$window', 'AccountService'];
 
-    function LoginController($scope, AccountService) {
+    function LoginController($scope,$window, AccountService) {
 
         $scope.user = {
             email: null,
@@ -28,7 +28,7 @@
         }
 
         function forgottenPassword() {
-
+            $window.location.href = '/Login/#/ForgottenPassword';
         }
     }
 })();

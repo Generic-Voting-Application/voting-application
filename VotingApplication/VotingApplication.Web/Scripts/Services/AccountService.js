@@ -169,7 +169,8 @@
         var service = {
             login: login,
             register: register,
-            resendConfirmation: resendConfirmation
+            resendConfirmation: resendConfirmation,
+            forgotPassword: forgotPassword
         };
 
         return service;
@@ -214,6 +215,17 @@
                 method: 'POST',
                 url: '/api/Account/ResendConfirmation?email=' + email,
                 contentType: 'application/json; charset=utf-8'
+            });
+        }
+
+        function forgotPassword(email) {
+            return $http({
+                method: 'POST',
+                url: '/api/Account/ForgotPassword',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({
+                    Email: email
+                })
             });
         }
     }

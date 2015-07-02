@@ -13,5 +13,10 @@ namespace VotingApplication.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult ForgottenPassword()
+        {
+            return View();
+        }
     }
 }
