@@ -115,6 +115,7 @@
             navigateToVotePage: navigateToVotePage,
             getVotePageUrl: getVotePageUrl,
 
+            navigateToLoginPage: navigateToLoginPage,
             navigateToRegisterPage: navigateToRegisterPage
         };
 
@@ -136,7 +137,10 @@
             }
             return url;
         }
-
+        
+        function navigateToLoginPage() {
+            $window.location.href = '/Login';
+        }
 
         function navigateToRegisterPage() {
             $window.location.href = '/Register';

@@ -308,6 +308,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CreateController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Controllers\RoutesController.cs" />
@@ -346,6 +347,7 @@
     <Content Include="Fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\Logo.png" />
+    <Content Include="Scripts\Controllers\Account\Login\LoginController.js" />
     <Content Include="Scripts\Controllers\Account\Register\RegisterController.js" />
     <Content Include="Scripts\Controllers\Account\Register\RegistrationCompleteController.js" />
     <Content Include="Scripts\Controllers\AddVoterOptionDialogController.js" />
@@ -474,6 +476,7 @@
     <Content Include="Views\Register\RegistrationComplete.cshtml" />
     <Content Include="Content\Scss\AngularMaterialExtensions.scss" />
     <Content Include="Content\Scss\VoteOn.scss" />
+    <Content Include="Views\Login\Index.cshtml" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -40,6 +40,7 @@
         ];
 
         $scope.advanceToStep = advanceToStep;
+        $scope.login = login;
         $scope.register = register;
 
         function advanceToStep(step) {
@@ -64,6 +65,10 @@
                 OptionAdding: false,
                 Expires: false
             };
+        }
+
+        function login() {
+            RoutingService.navigateToLoginPage();
         }
 
         function register() {

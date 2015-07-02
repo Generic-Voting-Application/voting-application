@@ -167,12 +167,35 @@
     function AccountService($http) {
 
         var service = {
+            login: login,
             register: register,
             resendConfirmation: resendConfirmation
         };
 
         return service;
 
+        function login(email, password) {
+
+            return $http({
+                method: 'POST',
+                url: '/Token',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                transformRequest: function (obj) {
+                    var str = [];
+                    for (var p in obj) {
+                        if (obj.hasOwnProperty(p)) {
+                            str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+                        }
+                    }
+                    return str.join('&');
+                },
+                data: {
+                    grant_type: 'password',
+                    username: email,
+                    password: password
+                }
+            });
+        }
 
         function register(email, password) {
             return $http({
