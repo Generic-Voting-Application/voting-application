@@ -1,1 +1,97 @@
-﻿
+﻿$indigo50: #E8EAF6;
+$indigo100: #C5CAE9;
+$indigo200: #9FA8DA;
+$indigo300: #7986CB;
+$indigo400: #5C6BC0;
+$indigo500: #3F51B5;
+$indigo600: #3949AB;
+$indigo700: #303F9F;
+$indigo800: #283593;
+$indigo900: #1A237E;
+$indigoA100: #8C9EFF;
+$indigoA200: #536DFE;
+$indigoA400: #3D5AFE;
+$indigoA700: #304FFE;
+$white: #FFFFFF;
+$black: #000000;
+
+.vo-dp-picker {
+    &:focus {
+        outline: none;
+        border: 0;
+    }
+}
+
+.vo-dt-primary {
+    background-color: $indigo500;
+}
+
+.vo-dp-calendar {
+    min-width: 270px !important;
+    max-width: 270px;
+
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+.vo-dp-time {
+    min-width: 270px !important;
+
+     -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+.vo-dp-centered-text {
+    text-align: center;
+}
+
+.vo-dp-calendar-cell {
+    text-align: center;
+
+    &:focus {
+        outline: none;
+        border: 0;
+    }
+
+    &.date-cell {
+        border-radius: 50%;
+        cursor: pointer;
+
+
+        &.inert {
+            color: transparentize($black, 0.7);
+        }
+
+        &:hover {
+            background-color: $indigo500;
+            color: $white;
+        }
+
+        &.selected {
+            background-color: $indigo600;
+            color: $white;
+            box-shadow: 0 2px 5px 0 transparentize($black, 0.7);
+        }
+
+        -webkit-transition: background-color .2s ease-in-out;
+        transition: background-color .2s ease-in-out;
+    }
+
+    width: 2.6rem;
+    min-height: 2.2rem;
+    margin: 0.1rem;
+    background-color: none;
+    color: $black;
+
+    > .vo-dp-calendar-cell-content {
+        padding-top: 27%;
+    }
+}
+
+md-icon {
+    &.icon-padded-top {
+        padding-top: .3rem;
+    }
+}
