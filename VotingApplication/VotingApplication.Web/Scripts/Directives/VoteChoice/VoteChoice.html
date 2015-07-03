@@ -1,0 +1,13 @@
+﻿<div ng-switch="poll.PollType">
+
+    <div ng-switch-when="Basic">
+        <basic-vote-choice choices="choices"></basic-vote-choice>
+    </div>
+
+    <div ng-switch-when="Multi">MULTI</div>
+
+    <div ng-switch-when="UpDown">UPDOWN</div>
+
+    <div ng-switch-when="Points">POINTS</div>
+
+</div>
