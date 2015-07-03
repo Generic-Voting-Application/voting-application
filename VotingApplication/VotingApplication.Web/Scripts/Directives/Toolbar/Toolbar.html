@@ -43,6 +43,12 @@
                     </md-button>
                     <md-menu-content width="2">
                         <md-menu-item>
+                            <md-button ng-click="myPolls()">
+                                <md-icon md-font-icon="fa-user" class="fa fa-lg" md-menu-align-target></md-icon>
+                                My polls
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
                             <md-button ng-click="logout()">
                                 <md-icon md-font-icon="fa-sign-out" class="fa fa-lg" md-menu-align-target></md-icon>
                                 Log out
@@ -53,6 +59,7 @@
             </div>
 
             <div hide-sm>
+                <md-button ng-click="myPolls()">My polls</md-button>
                 <md-button ng-click="logout()">Log out</md-button>
             </div>
 

@@ -26,6 +26,8 @@
 
         $scope.login = login;
         $scope.register = register;
+
+        $scope.myPolls = myPolls;
         $scope.logout = logout;
 
         activate();
@@ -43,10 +45,14 @@
             RoutingService.navigateToRegisterPage();
         }
 
+        function myPolls() {
+            RoutingService.navigateToMyPollsPage();
+        }
+
         function logout() {
             AccountService.logout();
         }
-
+        
         function updateAccountStatus() {
             if (AccountService.account === undefined || AccountService.account === null) {
                 $scope.isLoggedIn = false;

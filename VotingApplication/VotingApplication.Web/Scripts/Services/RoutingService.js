@@ -121,7 +121,8 @@
             navigateToForgottenPasswordPage: navigateToForgottenPasswordPage,
             navigateToRegistrationCompletePage: navigateToRegistrationCompletePage,
 
-            navigateToAccountPage: navigateToAccountPage
+            navigateToAccountPage: navigateToAccountPage,
+            navigateToMyPollsPage: navigateToMyPollsPage
         };
 
         return service;
@@ -162,6 +163,11 @@
         function navigateToAccountPage() {
             // Temporarily redirect to the new homepage until we've an account page.
             $window.location.href = '/Create/';
+        }
+
+        function navigateToMyPollsPage() {
+            // This is the old page, but it's not been updated to material yet.
+            $window.location.href = '/Manage/#/MyPolls/';
         }
     }
 })();
