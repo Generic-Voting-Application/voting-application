@@ -9,7 +9,7 @@
 
     function VoteController($scope) {
 
-        $scope.poll = { Name: 'Why are we here?', PollType: 'Basic' };
+        $scope.poll = { Name: 'Why are we here?', PollType: 'Multi' };
 
         $scope.choices = [
             { name: 'Choice 1', selected:false },

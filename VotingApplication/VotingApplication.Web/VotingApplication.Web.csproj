@@ -394,6 +394,8 @@
     <Content Include="Scripts\Directives\TruncatedText.js" />
     <Content Include="Scripts\Directives\VoteChoice\VoteChoice.html" />
     <Content Include="Scripts\Directives\VoteChoice\VoteChoice.js" />
+    <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\MultiVoteChoice.html" />
+    <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\MultiVoteChoice.js" />
     <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\BasicVoteChoice.html" />
     <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\BasicVoteChoice.js" />
     <Content Include="Scripts\Filters\dateFilters.js" />
