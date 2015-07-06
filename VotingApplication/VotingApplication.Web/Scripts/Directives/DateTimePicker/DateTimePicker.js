@@ -7,7 +7,7 @@
 
 
     function dateTimePicker() {
-        
+
         function link(scope) {
 
             scope.displayDate = moment();
@@ -15,13 +15,14 @@
 
             scope.advanceDisplayDate = advanceDisplayDate;
             scope.selectNow = selectNow;
+            scope.selectNever = selectNever;
             scope.selectDate = selectDate;
             scope.formatModelDate = formatModelDate;
             scope.advanceMinute = advanceMinute;
             scope.advanceHour = advanceHour;
             scope.minutes = 0;
             scope.hours = 0;
-            
+
             function updateDisplay(displayDate, selectedDate) {
                 displayDate = displayDate ? moment(displayDate) : moment();
                 selectedDate = selectedDate ? moment(selectedDate) : null;
@@ -38,6 +39,10 @@
                 scope.displayDate = moment();
             }
 
+            function selectNever() {
+                scope.ngModel = null;
+            }
+
             function selectDate(date) {
                 scope.ngModel = moment(date).toDate();
                 scope.displayDate = moment(date);
@@ -52,16 +57,22 @@
                 updateDisplay(scope.displayDate, scope.ngModel);
             }
 
-            function formatModelDate() {
-                return moment(scope.ngModel).format('lll');
+            function formatModelDate(formatString) {
+                return moment(scope.ngModel).format(formatString);
             }
 
             function advanceMinute(amount) {
-                scope.ngModel = moment(scope.ngModel).add(amount, 'minute');
+                var modelTime = scope.ngModel ? moment(scope.ngModel) : moment();
+                var minute = moment(modelTime).minute();
+                var newMinute = (((minute + amount) % 60) + 60) % 60;
+                scope.ngModel = moment(modelTime).minute(newMinute);
             }
 
             function advanceHour(amount) {
-                scope.ngModel = moment(scope.ngModel).add(amount, 'hour');
+                var modelTime = scope.ngModel ? moment(scope.ngModel) : moment();
+                var hour = moment(modelTime).hour();
+                var newHour = (((hour + amount) % 24) + 24) % 24;
+                scope.ngModel = moment(modelTime).hour(newHour);
             }
 
             scope.$watch('ngModel', function () {
@@ -111,7 +122,8 @@
             replace: true,
             templateUrl: '/Scripts/Directives/DateTimePicker/DateTimePicker.html',
             scope: {
-                ngModel: '='
+                ngModel: '=',
+                ngDisabled: '='
             },
             link: link
         };

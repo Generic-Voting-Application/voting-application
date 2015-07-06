@@ -20,10 +20,19 @@ $black: #000000;
         outline: none;
         border: 0;
     }
+
+    opacity: 1;
+
+     -webkit-transition: opacity .4s ease-in-out;
+     transition: opacity .4s ease-in-out;
 }
 
-.vo-dt-primary {
+.vo-dp-primary {
     background-color: $indigo500;
+}
+
+.vo-dp-disabled {
+    opacity: 0.3;
 }
 
 .vo-dp-calendar {

@@ -59,7 +59,7 @@
         }
 
         function expiryIsValid() {
-            if (!$scope.newPoll.Expires) {
+            if (!$scope.newPoll.ExpiryDateUtc) {
                 return true;
             }
 
@@ -79,12 +79,19 @@
         }
 
         function getNonEmptyChoices() {
+            if (!$scope.newPoll.Choices) {
+                return [];
+            }
             return $scope.newPoll.Choices.filter(function (choice) {
                 return choice.Name;
             });
         }
 
         function getValidInvitees() {
+            if (!$scope.newPoll.Invitations) {
+                return [];
+            }
+
             return $scope.newPoll.Invitations.filter(function (invite) {
                 // Maybe this needs to be pulled out of this controller
                 var emailRegEx = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
@@ -104,7 +111,7 @@
         }
 
         function getUtcPollExpiry() {
-            if (!$scope.newPoll.Expires) {
+            if (!$scope.newPoll.ExpiryDateUtc) {
                 return null;
             }
 
@@ -120,7 +127,7 @@
         }
 
         function expiryDateIsInPast() {
-            if (!$scope.newPoll.Expires) {
+            if (!$scope.newPoll.ExpiryDateUtc) {
                 return false;
             }
 
