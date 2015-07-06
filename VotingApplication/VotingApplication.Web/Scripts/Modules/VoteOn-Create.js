@@ -2,5 +2,5 @@
     'use strict';
 
     angular
-        .module('VoteOn-Create', ['ngMaterial', 'ngMessages', 'mdDateTime', 'VoteOn-Common']);
+        .module('VoteOn-Create', ['VoteOn-Common', 'VoteOn-Account', 'mdDateTime']);
 })();

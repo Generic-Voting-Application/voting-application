@@ -15,7 +15,7 @@
             navigateToManagePage: navigateToManagePage,
             navigateToHomePage: navigateToHomePage,
             navigateToMyPolls: navigateToMyPolls,
-            navigateToConfirmRegistration : navigateToConfirmRegistration,
+            navigateToConfirmRegistration: navigateToConfirmRegistration,
             getVotePageUrl: getVotePageUrl,
             getResultsPageUrl: getResultsPageUrl,
             getManagePageUrl: getManagePageUrl,
@@ -115,7 +115,14 @@
             navigateToVotePage: navigateToVotePage,
             getVotePageUrl: getVotePageUrl,
 
-            navigateToRegisterPage: navigateToRegisterPage
+            navigateToLoginPage: navigateToLoginPage,
+            navigateToRegisterPage: navigateToRegisterPage,
+
+            navigateToForgottenPasswordPage: navigateToForgottenPasswordPage,
+            navigateToRegistrationCompletePage: navigateToRegistrationCompletePage,
+
+            navigateToAccountPage: navigateToAccountPage,
+            navigateToMyPollsPage: navigateToMyPollsPage
         };
 
         return service;
@@ -137,9 +144,30 @@
             return url;
         }
 
+        function navigateToLoginPage() {
+            $window.location.href = '/Login';
+        }
 
         function navigateToRegisterPage() {
             $window.location.href = '/Register';
+        }
+
+        function navigateToForgottenPasswordPage() {
+            $window.location.href = '/Login/#/ForgottenPassword';
+        }
+
+        function navigateToRegistrationCompletePage(email) {
+            $window.location.href = '/Register/#/RegistrationComplete/' + email;
+        }
+
+        function navigateToAccountPage() {
+            // Temporarily redirect to the new homepage until we've an account page.
+            $window.location.href = '/Create/';
+        }
+
+        function navigateToMyPollsPage() {
+            // This is the old page, but it's not been updated to material yet.
+            $window.location.href = '/Manage/#/MyPolls/';
         }
     }
 })();

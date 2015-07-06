@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('VoteOn-Account')
+        .module('VoteOn-Register')
         .controller('RegistrationCompleteController', RegistrationCompleteController);
 
     RegistrationCompleteController.$inject = ['$scope', '$routeParams', 'AccountService'];
