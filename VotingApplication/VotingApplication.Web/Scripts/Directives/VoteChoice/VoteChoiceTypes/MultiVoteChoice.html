@@ -2,6 +2,6 @@
     <md-list-item ng-repeat="choice in choices">
         {{choice.Name}}
         <span flex></span>
-        <md-checkbox ng-model="choice.selected" aria-label="Selected"></md-checkbox>
+        <md-checkbox ng-model="choice.selected" aria-label="Selected" ng-change="selectedChanged(choice)"></md-checkbox>
     </md-list-item>
 </md-list>
