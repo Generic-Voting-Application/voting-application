@@ -25,9 +25,9 @@
 
             $scope.choices.map(function (element) {
                 if (element === choice) {
-                    choice.selected = !choice.selected;
+                    choice.voteValue = 1;
                 } else {
-                    element.selected = false;
+                    element.voteValue = 0;
                 }
             });
 

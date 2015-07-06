@@ -1,6 +1,6 @@
 ﻿<md-list>
     <md-list-item ng-repeat="choice in choices">
-        <md-button layout layout-fill style="text-align: left" md-highlight="choice.selected" ng-click="choiceSelected(choice)">
+        <md-button layout layout-fill style="text-align: left" md-highlight="choice.voteValue" ng-click="choiceSelected(choice)">
             {{choice.Name}}
         </md-button>
     </md-list-item>
