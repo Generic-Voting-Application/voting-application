@@ -29,6 +29,10 @@ $black: #000000;
 .vo-dp-content {
     opacity: 1;
 
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+
     -webkit-transition: opacity .4s ease-in-out;
     transition: opacity .4s ease-in-out;
 
@@ -40,16 +44,6 @@ $black: #000000;
 .vo-dp-calendar {
     min-width: 270px !important;
     max-width: 270px;
-    -webkit-user-select: none;
-    user-select: none;
-    cursor: default;
-}
-
-.vo-dp-time {
-    min-width: 270px !important;
-    -webkit-user-select: none;
-    user-select: none;
-    cursor: default;
 }
 
 .vo-dp-centered-text {

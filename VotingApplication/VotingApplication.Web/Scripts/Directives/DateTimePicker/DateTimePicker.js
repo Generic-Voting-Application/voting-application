@@ -65,6 +65,7 @@
                 var modelTime = scope.ngModel ? moment(scope.ngModel) : moment();
                 var minute = moment(modelTime).minute();
                 var newMinute = (((minute + amount) % 60) + 60) % 60;
+                newMinute = Math.floor(newMinute / amount) * amount;
                 scope.ngModel = moment(modelTime).minute(newMinute);
             }
 
