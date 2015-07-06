@@ -20,25 +20,26 @@ $black: #000000;
         outline: none;
         border: 0;
     }
-
-    opacity: 1;
-
-     -webkit-transition: opacity .4s ease-in-out;
-     transition: opacity .4s ease-in-out;
 }
 
 .vo-dp-primary {
     background-color: $indigo500;
 }
 
-.vo-dp-disabled {
-    opacity: 0.3;
+.vo-dp-content {
+    opacity: 1;
+
+    -webkit-transition: opacity .4s ease-in-out;
+    transition: opacity .4s ease-in-out;
+
+    &.vo-dp-disabled {
+        opacity: 0.3;
+    }
 }
 
 .vo-dp-calendar {
     min-width: 270px !important;
     max-width: 270px;
-
     -webkit-user-select: none;
     user-select: none;
     cursor: default;
@@ -46,8 +47,7 @@ $black: #000000;
 
 .vo-dp-time {
     min-width: 270px !important;
-
-     -webkit-user-select: none;
+    -webkit-user-select: none;
     user-select: none;
     cursor: default;
 }
