@@ -120,7 +120,7 @@
     'use strict';
 
     angular
-        .module('VoteOn-Create')
+        .module('VoteOn-Poll')
         .factory('PollService', PollService);
 
     PollService.$inject = ['$http', '$q', 'AccountService'];
