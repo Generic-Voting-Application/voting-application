@@ -5,17 +5,44 @@
         .module('VoteOn-Vote')
         .controller('VoteController', VoteController);
 
-    VoteController.$inject = ['$scope'];
+    VoteController.$inject = ['$scope', '$routeParams', 'TokenService', 'PollService'];
 
-    function VoteController($scope) {
+    function VoteController($scope, $routeParams, TokenService, PollService) {
 
-        $scope.poll = { Name: 'Why are we here?', PollType: 'Multi' };
+        $scope.pollId = $routeParams['pollId'];
+        $scope.poll = {
+            Name: null,
+            PollType: null,
+            Choices: []
+        };
 
-        $scope.choices = [
-            { name: 'Choice 1', selected:false },
-            { name: 'Choice 2', selected:false },
-            { name: 'Choice 3', selected:false },
-            { name: 'Choice 4', selected:false }
-        ];
+        activate();
+
+        function activate() {
+            getPollData();
+        }
+
+        function getPollData() {
+            var token = TokenService.retrieveToken($scope.pollId);
+
+            PollService.getPoll($scope.pollId, token)
+                .then(function (data) {
+
+                    TokenService.setToken($scope.pollId, data.TokenGuid)
+                        .then(function () {
+                            loadPollData(data);
+                        });
+                });
+        }
+
+        function loadPollData(data) {
+            var poll = $scope.poll;
+            poll.Name = data.Name;
+            poll.PollType = data.PollType;
+
+            // Clear existing options
+            poll.Choices.length = 0;
+            poll.Choices = $scope.poll.Choices.concat(data.Choices);
+        }
     }
 })();

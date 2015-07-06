@@ -11,10 +11,7 @@
 
             <h2>{{poll.Name}}</h2>
 
-
-
-            <vote-choice choices="choices" poll="poll"></vote-choice>
-
+            <vote-choice choices="poll.Choices" poll="poll"></vote-choice>
 
             <div layout layout="row" layout-sm="column" layout-align-gt-sm="end center">
                 <md-button class="md-primary md-raised">Vote</md-button>

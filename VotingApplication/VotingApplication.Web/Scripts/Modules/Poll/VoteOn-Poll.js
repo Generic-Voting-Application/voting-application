@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('VoteOn-Poll', ['VoteOn-Common', 'VoteOn-Account', 'VoteOn-Vote'])
+        .module('VoteOn-Poll', ['VoteOn-Common', 'VoteOn-Account', 'VoteOn-Vote', 'VoteOn-Create'])
             .config([
             '$routeProvider',
             function ($routeProvider) {
