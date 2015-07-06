@@ -122,7 +122,9 @@
             navigateToRegistrationCompletePage: navigateToRegistrationCompletePage,
 
             navigateToAccountPage: navigateToAccountPage,
-            navigateToMyPollsPage: navigateToMyPollsPage
+            navigateToMyPollsPage: navigateToMyPollsPage,
+
+            navigateToResultsPage: navigateToResultsPage
         };
 
         return service;
@@ -168,6 +170,10 @@
         function navigateToMyPollsPage() {
             // This is the old page, but it's not been updated to material yet.
             $window.location.href = '/Manage/#/MyPolls/';
+        }
+
+        function navigateToResultsPage(pollId) {
+            $window.location.href = '/Poll/#/Results/' + pollId;
         }
     }
 })();
