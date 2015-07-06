@@ -25,6 +25,11 @@
                                 <input type="text" ng-model="choice.Name" ng-change="choiceChange($index)">
                             </md-input-container>
                         </div>
+                        <div>
+                            <md-button class="md-icon-button" type="button" aria-label="delete" ng-show="newPoll.Choices.length > 1" ng-click="removeChoice($index)">
+                                <md-icon md-font-icon="fa-times" class="fa" alt="delete"></md-icon>
+                            </md-button>
+                        </div>
                     </div>
                 </div>
 
@@ -41,10 +46,10 @@
             <md-content layout-padding>
                 <div layout="row">
                     <md-button class="md-raised md-primary"
-                    ng-disabled="pollQuestionForm.$invalid || (!pollHasChoices() && !newPoll.OptionAdding)"
-                    ng-hide="loading"
-                    ng-click="advanceToStep(5)">
-                    Quick Poll
+                               ng-disabled="pollQuestionForm.$invalid || (!pollHasChoices() && !newPoll.OptionAdding)"
+                               ng-hide="loading"
+                               ng-click="advanceToStep(5)">
+                        Quick Poll
                     </md-button>
                     <md-button class="md-raised md-primary"
                                ng-disabled="pollQuestionForm.$invalid || (!pollHasChoices() && !newPoll.OptionAdding)"
