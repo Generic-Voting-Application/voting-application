@@ -20,11 +20,11 @@
         $scope.styleIsValid = styleIsValid;
         $scope.expiryIsValid = expiryIsValid;
         $scope.invitationsAreValid = invitationsAreValid;
-        $scope.formatUtcPollExpiry = formatUtcPollExpiry;
+        $scope.formatPollExpiry = formatPollExpiry;
         $scope.expiryDateIsInPast = expiryDateIsInPast;
         $scope.createPoll = createPoll;
 
-        var startingDateUtc = moment().utc().toDate();
+        var startingDate = moment().toDate();
 
         function pollHasWarnings() {
             return !choicesAreValid() ||
@@ -59,7 +59,7 @@
         }
 
         function expiryIsValid() {
-            if (!$scope.newPoll.ExpiryDateUtc) {
+            if (!$scope.newPoll.ExpiryDate) {
                 return true;
             }
 
@@ -99,39 +99,49 @@
             });
         }
 
-        function formatUtcPollExpiry(formatString) {
+        function formatPollExpiry(formatString) {
 
-            var utcDate = getUtcPollExpiry();
+            var Date = getPollExpiry();
 
-            if (utcDate) {
-                return moment(utcDate).format(formatString);
+            if (Date) {
+                return moment(Date).format(formatString);
             } else {
                 return 'Invalid Date';
             }
         }
 
-        function getUtcPollExpiry() {
-            if (!$scope.newPoll.ExpiryDateUtc) {
+        function getPollExpiry() {
+            if (!$scope.newPoll.ExpiryDate) {
                 return null;
             }
 
             var date;
 
-            if (!$scope.newPoll.ExpiryDateUtc) {
-                date = startingDateUtc;
+            if (!$scope.newPoll.ExpiryDate) {
+                date = startingDate;
             } else {
-                date = new Date($scope.newPoll.ExpiryDateUtc);
+                date = new Date($scope.newPoll.ExpiryDate);
             }
 
-            return moment(date).utc().toDate();
+            return moment(date).toDate();
+        }
+
+        function getPollExpiryUtc() {
+            var date = getPollExpiry();
+
+            if (date) {
+                return moment(date).utc().toDate();
+            }
+
+            return null;
         }
 
         function expiryDateIsInPast() {
-            if (!$scope.newPoll.ExpiryDateUtc) {
+            if (!$scope.newPoll.ExpiryDate) {
                 return false;
             }
 
-            var date = new Date($scope.newPoll.ExpiryDateUtc);
+            var date = new Date($scope.newPoll.ExpiryDate);
             return (moment(date).isBefore(moment()));
         }
 
@@ -144,7 +154,7 @@
             poll.PollType = $scope.newPoll.PollType;
             poll.NamedVoting = $scope.newPoll.NamedVoting;
             poll.ElectionMode = $scope.newPoll.ElectionMode;
-            poll.ExpiryDateUtc = getUtcPollExpiry();
+            poll.ExpiryDateUtc = getPollExpiryUtc();
             poll.Invitations = getValidInvitees();
             poll.InviteOnly = $scope.newPoll.InviteOnly;
 

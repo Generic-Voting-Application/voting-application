@@ -64,7 +64,9 @@
             function advanceMinute(amount) {
                 var modelTime = scope.ngModel ? moment(scope.ngModel) : moment();
                 var minute = moment(modelTime).minute();
+                // JS modulo does not work correctly with negative numbers. This resolves this.
                 var newMinute = (((minute + amount) % 60) + 60) % 60;
+                // Lock the change to rounded increments
                 newMinute = Math.floor(newMinute / amount) * amount;
                 scope.ngModel = moment(modelTime).minute(newMinute);
             }

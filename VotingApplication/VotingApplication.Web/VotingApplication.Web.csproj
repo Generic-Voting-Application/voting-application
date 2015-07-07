@@ -392,6 +392,7 @@
     <Content Include="Scripts\Directives\Toolbar\Toolbar.html" />
     <Content Include="Scripts\Directives\Toolbar\Toolbar.js" />
     <Content Include="Scripts\Directives\TruncatedText.js" />
+    <Content Include="Scripts\Filters\leadingZeroFilter.js" />
     <Content Include="Scripts\Filters\dateFilters.js" />
     <Content Include="Scripts\Interceptors\ErrorInterceptor.js" />
     <Content Include="Scripts\Lib\angular-animate-min.js" />

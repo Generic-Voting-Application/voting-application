@@ -1,17 +1,4 @@
-﻿$indigo50: #E8EAF6;
-$indigo100: #C5CAE9;
-$indigo200: #9FA8DA;
-$indigo300: #7986CB;
-$indigo400: #5C6BC0;
-$indigo500: #3F51B5;
-$indigo600: #3949AB;
-$indigo700: #303F9F;
-$indigo800: #283593;
-$indigo900: #1A237E;
-$indigoA100: #8C9EFF;
-$indigoA200: #536DFE;
-$indigoA400: #3D5AFE;
-$indigoA700: #304FFE;
+﻿$blue500: #2196F3;
 $white: #FFFFFF;
 $black: #000000;
 
@@ -20,10 +7,6 @@ $black: #000000;
         outline: none;
         border: 0;
     }
-}
-
-.vo-dp-primary {
-    background-color: $indigo500;
 }
 
 .vo-dp-content {
@@ -68,12 +51,12 @@ $black: #000000;
         }
 
         &:hover {
-            background-color: $indigo500;
+            background-color: $blue500;
             color: $white;
         }
 
         &.selected {
-            background-color: $indigo600;
+            background-color: $blue500;
             color: $white;
             box-shadow: 0 2px 5px 0 transparentize($black, 0.7);
         }

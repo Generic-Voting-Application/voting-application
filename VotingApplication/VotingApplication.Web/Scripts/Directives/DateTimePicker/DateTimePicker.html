@@ -47,7 +47,7 @@
                             <md-icon md-font-icon="fa-chevron-up" class="fa icon-padded-top" alt="chevron-up"></md-icon>
                         </md-button>
                     </div>
-                    <div><div class="md-display-3 vo-dp-centered-text">{{hours <= 9 ? '0' + hours : hours}}</div></div>
+                    <div><div class="md-display-3 vo-dp-centered-text">{{ hours | leadingZeroFilter}}</div></div>
                     <div>
                         <md-button ng-click="advanceHour(-1)" aria-label=" decrease hour">
                             <md-icon md-font-icon="fa-chevron-down" class="fa icon-padded-top" alt="chevron-down"></md-icon>
@@ -60,7 +60,7 @@
                             <md-icon md-font-icon="fa-chevron-up" class="fa icon-padded-top" alt="chevron-up"></md-icon>
                         </md-button>
                     </div>
-                    <div><div class="md-display-3 vo-dp-centered-text">{{minutes <= 9 ? '0' + minutes : minutes}}</div></div>
+                    <div><div class="md-display-3 vo-dp-centered-text">{{ minutes | leadingZeroFilter}}</div></div>
                     <div>
                         <md-button ng-click="advanceMinute(-5)" aria-label="decrease minute">
                             <md-icon md-font-icon=" fa-chevron-down" class="fa icon-padded-top" alt="chevron-down"></md-icon>

@@ -5,8 +5,8 @@
         .module('VoteOn-Common', [])
         .config(function ($mdThemingProvider) {
             $mdThemingProvider.theme('default')
-                .primaryPalette('indigo')
-                .accentPalette('indigo');
+                .primaryPalette('blue')
+                .accentPalette('deep-orange');
 
             $mdThemingProvider.theme('default-dark')
                 .primaryPalette('indigo')
