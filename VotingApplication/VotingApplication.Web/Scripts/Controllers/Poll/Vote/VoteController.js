@@ -70,12 +70,12 @@
         function createVotes() {
             return $scope.poll.Choices
                 .filter(function (choice) {
-                    return choice.voteValue;
+                    return choice.VoteValue;
                 })
                 .map(function (choice) {
                     return {
                         ChoiceId: choice.Id,
-                        VoteValue: choice.voteValue
+                        VoteValue: choice.VoteValue
                     };
                 });
         }

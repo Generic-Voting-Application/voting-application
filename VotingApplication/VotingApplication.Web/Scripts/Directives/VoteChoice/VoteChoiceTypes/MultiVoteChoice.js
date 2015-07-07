@@ -22,8 +22,16 @@
 
         $scope.selectedChanged = selectedChanged;
 
+        activate();
+
+        function activate() {
+            $scope.choices.map(function (choice) {
+                choice.selected = (choice.VoteValue === 1) ? true : false;
+            });
+        }
+
         function selectedChanged(choice) {
-            choice.voteValue = choice.selected ? 1 : 0;
+            choice.VoteValue = choice.selected ? 1 : 0;
         }
     }
 })();

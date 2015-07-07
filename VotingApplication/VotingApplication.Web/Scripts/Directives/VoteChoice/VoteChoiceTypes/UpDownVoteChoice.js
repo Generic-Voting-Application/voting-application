@@ -25,15 +25,15 @@
         $scope.upSelected = upSelected;
 
         function downSelected(choice) {
-            choice.voteValue = -1;
+            choice.VoteValue = -1;
         }
 
         function neutralSelected(choice) {
-            choice.voteValue = 0;
+            choice.VoteValue = 0;
         }
 
         function upSelected(choice) {
-            choice.voteValue = 1;
+            choice.VoteValue = 1;
         }
     }
 })();

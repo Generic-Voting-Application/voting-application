@@ -24,10 +24,10 @@
         function choiceSelected(choice) {
 
             $scope.choices.map(function (element) {
-                if (element === choice && choice.voteValue === 0) {
-                    choice.voteValue = 1;
+                if (element === choice && choice.VoteValue === 0) {
+                    choice.VoteValue = 1;
                 } else {
-                    element.voteValue = 0;
+                    element.VoteValue = 0;
                 }
             });
 
