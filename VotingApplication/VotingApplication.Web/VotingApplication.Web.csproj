@@ -337,7 +337,6 @@
     <Content Include="Content\Lib\Css\angular-material-min.css" />
     <Content Include="Content\Lib\Css\angular-toggle-switch.css" />
     <Content Include="Content\Lib\Css\font-awesome-min.css" />
-    <Content Include="Content\Lib\Css\md-date-time.css" />
     <Content Include="Content\Lib\Css\ngDialog-min.css" />
     <Content Include="Content\Lib\Css\ngDialog-theme-default-min.css" />
     <Content Include="Content\Scss\ErrorBar.scss" />
@@ -380,6 +379,8 @@
     <Content Include="Scripts\Controllers\CreatePageController.js" />
     <Content Include="Scripts\Controllers\UpDownVoteController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
+    <Content Include="Scripts\Directives\DateTimePicker\DateTimePicker.html" />
+    <Content Include="Scripts\Directives\DateTimePicker\DateTimePicker.js" />
     <Content Include="Scripts\Directives\ErrorHumidor.js" />
     <Content Include="Scripts\Directives\ErrorBar.js" />
     <Content Include="Scripts\Directives\ErrorHumidor.html" />
@@ -391,6 +392,7 @@
     <Content Include="Scripts\Directives\Toolbar\Toolbar.html" />
     <Content Include="Scripts\Directives\Toolbar\Toolbar.js" />
     <Content Include="Scripts\Directives\TruncatedText.js" />
+    <Content Include="Scripts\Filters\leadingZeroFilter.js" />
     <Content Include="Scripts\Filters\dateFilters.js" />
     <Content Include="Scripts\Interceptors\ErrorInterceptor.js" />
     <Content Include="Scripts\Lib\angular-animate-min.js" />
@@ -399,7 +401,6 @@
     <Content Include="Scripts\Lib\angular-messages-min.js" />
     <Content Include="Scripts\Lib\angular-zeroclipboard.js" />
     <Content Include="Scripts\Lib\d3-tip.js" />
-    <Content Include="Scripts\Lib\md-date-time.js" />
     <Content Include="Scripts\Lib\moment-min.js" />
     <Content Include="Scripts\Lib\angular-qrcode.js" />
     <Content Include="Scripts\Lib\qrcode.js" />
@@ -416,6 +417,7 @@
     <Content Include="Scripts\Lib\ngDialog-min.js" />
     <Content Include="Scripts\Lib\ngStorage-min.js" />
     <Content Include="Scripts\Modules\VoteOn-Common.js" />
+    <Content Include="Scripts\Modules\VoteOn-Components.js" />
     <Content Include="Scripts\Modules\VoteOn-Create.js" />
     <Content Include="Scripts\Services\AccountService.js" />
     <Content Include="Scripts\Services\ErrorService.js" />
@@ -480,6 +482,7 @@
     <Content Include="Views\Register\RegistrationComplete.cshtml" />
     <Content Include="Content\Scss\AngularMaterialExtensions.scss" />
     <Content Include="Content\Scss\VoteOn.scss" />
+    <Content Include="Content\Scss\Components\DateTimePicker.scss" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Login\ForgottenPassword.cshtml" />

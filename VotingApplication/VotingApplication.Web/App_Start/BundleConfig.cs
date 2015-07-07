@@ -44,10 +44,6 @@ namespace VotingApplication.Web
             ngDialogThemeCss.Include("~/Content/Lib/Css/ngDialog-theme-default-min.css");
             bundles.Add(ngDialogThemeCss);
 
-            StyleBundle mdDateTimeCss = new StyleBundle("~/Bundles/StyleLib/AngularDateTime", "https://cdn.rawgit.com/SimeonC/md-date-time/v0.0.14/dist/md-date-time.css");
-            mdDateTimeCss.Include("~/Content/Lib/Css/md-date-time.css");
-            bundles.Add(mdDateTimeCss);
-
             // VoteOn CSS
             StyleBundle votingStyle = new StyleBundle("~/Bundles/VotingStyle");
             votingStyle.Include("~/Content/Scss/Voting.scss");
@@ -97,6 +93,14 @@ namespace VotingApplication.Web
             angularMaterialExtensions.Transforms.Add(styleTransformer);
             angularMaterialExtensions.Orderer = nullOrderer;
             bundles.Add(angularMaterialExtensions);
+
+            StyleBundle DateTimePicker = new StyleBundle("~/Bundles/Components/DateTimePicker");
+            DateTimePicker.Include("~/Content/Scss/Components/DateTimePicker.scss");
+            DateTimePicker.Builder = nullBuilder;
+            DateTimePicker.Transforms.Add(styleTransformer);
+            DateTimePicker.Orderer = nullOrderer;
+            bundles.Add(DateTimePicker);
+
 
             // Lib Javascript
             const string angularCdnBase = "https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15";
@@ -181,10 +185,10 @@ namespace VotingApplication.Web
             ScriptBundle scriptBundle = new ScriptBundle("~/Bundles/Script");
             scriptBundle.IncludeDirectory("~/Scripts/Modules", "*.js", true);
             scriptBundle.IncludeDirectory("~/Scripts/Directives", "*.js", true);
-            scriptBundle.IncludeDirectory("~/Scripts/Services", "*.js");
+            scriptBundle.IncludeDirectory("~/Scripts/Services", "*.js", true);
             scriptBundle.IncludeDirectory("~/Scripts/Controllers", "*.js", true);
-            scriptBundle.IncludeDirectory("~/Scripts/Filters", "*.js");
-            scriptBundle.IncludeDirectory("~/Scripts/Interceptors", "*.js");
+            scriptBundle.IncludeDirectory("~/Scripts/Filters", "*.js", true);
+            scriptBundle.IncludeDirectory("~/Scripts/Interceptors", "*.js", true);
             scriptBundle.Builder = nullBuilder;
             scriptBundle.Transforms.Add(scriptTransformer);
             scriptBundle.Orderer = nullOrderer;

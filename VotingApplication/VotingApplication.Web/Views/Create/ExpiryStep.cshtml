@@ -5,16 +5,8 @@
 
         <h1 class="md-display-3">Poll Expiry</h1>
 
-        <md-content layout="row" layout-align="center center">
-            <time-date-picker ng-model="newPoll.ExpiryDateUtc" ng-disabled="!newPoll.Expires" display-twentyfour="true" display-mode="full"></time-date-picker>
-        </md-content>
-
-        <md-content>
-            <div layout="row">
-                <md-checkbox ng-model="newPoll.Expires" aria-label="Poll expires">
-                    Poll expires
-                </md-checkbox>
-            </div>
+        <md-content layout="row" layout-align="center center" layout-padding>
+            <date-time-picker ng-model="newPoll.ExpiryDate" flex-gt-lg="80" ng-disabled="!newPoll.ExpiryDate"></date-time-picker>
         </md-content>
 
         <md-content layout-padding>

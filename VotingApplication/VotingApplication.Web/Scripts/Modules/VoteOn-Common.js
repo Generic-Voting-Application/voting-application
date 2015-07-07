@@ -3,15 +3,14 @@
 
     angular
         .module('VoteOn-Common', [])
-            .config(function ($mdThemingProvider) {
-                $mdThemingProvider.theme('default')
-                  .primaryPalette('teal')
-                  .accentPalette('pink');
+        .config(function ($mdThemingProvider) {
+            $mdThemingProvider.theme('default')
+                .primaryPalette('blue')
+                .accentPalette('pink');
 
-                $mdThemingProvider.theme('default-dark')
-
-                  .primaryPalette('teal')
-                   .accentPalette('pink')
-                  .dark();
+            $mdThemingProvider.theme('default-dark')
+                .primaryPalette('indigo')
+                .accentPalette('blue')
+                .dark();
             });
 })();
