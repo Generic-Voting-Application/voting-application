@@ -113,10 +113,10 @@
 
         function formatPollExpiry(formatString) {
 
-            var Date = getPollExpiry();
+            var date = getPollExpiry();
 
-            if (Date) {
-                return moment(Date).format(formatString);
+            if (date) {
+                return moment(date).format(formatString);
             } else {
                 return 'Invalid Date';
             }
