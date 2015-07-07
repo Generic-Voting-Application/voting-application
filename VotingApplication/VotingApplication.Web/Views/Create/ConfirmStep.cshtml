@@ -14,11 +14,11 @@
                     <div class="md-list-item-text">
                         <div ng-if="newPoll.PollName">
                             <h3>{{newPoll.PollName}}</h3>
-                            <p>This is what the voters will be asked</p>
+                            <p>This is what the voters will be asked.</p>
                         </div>
                         <div ng-if="!newPoll.PollName">
                             <h3>Unnamed Poll</h3>
-                            <p class="vo-error-text">Your poll needs to ask a question</p>
+                            <p class="vo-error-text">Your poll needs to ask a question.</p>
                         </div>
                     </div>
                     <md-divider></md-divider>
@@ -32,10 +32,10 @@
                         <div>
                             <h3>{{getNonEmptyChoices().length}} Choices</h3>
 
-                            <p ng-if="newPoll.OptionAdding">Voters may add their own choices</p>
-                            <p ng-if="!newPoll.OptionAdding">Voters may not add their own choices</p>
+                            <p ng-if="newPoll.OptionAdding">Voters may add their own choices.</p>
+                            <p ng-if="!newPoll.OptionAdding">Voters may not add their own choices.</p>
 
-                            <p ng-if="!getNonEmptyChoices().length && !newPoll.OptionAdding" class="vo-warn-text">There are no choices to be voted on</p>
+                            <p ng-if="!getNonEmptyChoices().length && !newPoll.OptionAdding" class="vo-warn-text">There are no choices to be voted on.</p>
                         </div>
                     </div>
                     <md-divider></md-divider>
@@ -48,24 +48,24 @@
                     <div class="md-list-item-text" ng-switch="newPoll.PollType">
                         <div ng-switch-when="Basic">
                             <h3>Basic Vote</h3>
-                            <p>Voters may vote on one choice</p>
+                            <p>Voters may vote on one choice.</p>
                         </div>
                         <div ng-switch-when="Multi">
                             <h3>Multi Vote</h3>
-                            <p> Voters may vote on any number of choices</p>
+                            <p> Voters may vote on any number of choices.</p>
                         </div>
                         <div ng-switch-when="UpDown">
                             <h3>Up / Down Vote</h3>
-                            <p> Voters may give one positive or negative vote to each choice</p>
+                            <p> Voters may give one positive or negative vote to each choice.</p>
                         </div>
                         <div ng-switch-when="Points">
                             <h3>Points Vote</h3>
-                            <p>Voters may allocate a pool of points amongst the choices with an upper limit on each choice</p>
+                            <p>Voters may allocate a pool of points amongst the choices with an upper limit on each choice.</p>
                         </div>
 
-                        <p ng-if="newPoll.NamedVoting">Voters must give a name when voting</p>
+                        <p ng-if="newPoll.NamedVoting">Voters must give a name when voting.</p>
 
-                        <p ng-if="newPoll.ElectionMode">Voters may only vote once and can not view poll results before voting</p>
+                        <p ng-if="newPoll.ElectionMode">Voters may only vote once and can not view poll results before voting.</p>
 
                     </div>
                     <md-divider></md-divider>
@@ -80,7 +80,7 @@
                         <div ng-if="newPoll.ExpiryDate">
                             <h3 hide-gt-sm>{{formatPollExpiry('YYYY/MM/DD - HH:mm')}}</h3>
                             <h3 hide-sm>{{formatPollExpiry('dddd, Do MMMM YYYY, HH:mm')}}</h3>
-                            <p>Your poll will expire and close. Voters won't be able to vote after this time</p>
+                            <p>Your poll will expire and close. Voters won't be able to vote after this time.</p>
                         </div>
 
                         <div ng-if="!newPoll.ExpiryDate">
@@ -104,13 +104,15 @@
                         @*Maybe need to investigate how many times angular evaluates getValidInvitees().length*@
                         <h3>{{getValidInvitees().length}} Invitation(s)</h3>
 
-                        <p ng-if="getValidInvitees().length > 0">{{getValidInvitees().length}} invitee(s) will be emailed</p>
-                        <p ng-if="getValidInvitees().length == 0">No emails will be sent</p>
+                        <p ng-if="getValidInvitees().length > 0">{{getValidInvitees().length}} invitee(s) will be emailed.</p>
+                        <p ng-if="getValidInvitees().length == 0">No emails will be sent.</p>
 
-                        <p ng-if="newPoll.InviteOnly">Only those with an invite may vote</p>
-                        <p ng-if="!newPoll.InviteOnly">Anyone with a link to the poll may vote</p>
+                        <p ng-if="newPoll.InviteOnly">Only those with an invite may vote.</p>
+                        <p ng-if="!newPoll.InviteOnly">Anyone with a link to the poll may vote.</p>
 
-                        <p ng-if="newPoll.InviteOnly && !newPoll.Invitations.length" class="vo-warn-text">Currently no one will be able to vote</p>
+                        <p ng-if="getInvalidInvitees().length > 0" class="vo-warn-text">{{getInvalidInvitees().length}} email address(es) are invalid. Emails won't be sent to invitees with an invalid email.</p>
+
+                        <p ng-if="newPoll.InviteOnly && getValidInvitees().length === 0" class="vo-warn-text">Currently no one will be able to vote.</p>
                     </div>
                 </md-list-item>
             </md-list>

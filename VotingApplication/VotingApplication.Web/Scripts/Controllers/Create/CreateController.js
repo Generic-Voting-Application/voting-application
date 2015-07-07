@@ -42,10 +42,13 @@
         $scope.advanceToStep = advanceToStep;
         $scope.getNonEmptyChoices = getNonEmptyChoices;
         $scope.getValidInvitees = getValidInvitees;
+        $scope.getInvalidInvitees = getInvalidInvitees;
         $scope.invitationsAreValid = invitationsAreValid;
         $scope.formatPollExpiry = formatPollExpiry;
         $scope.expiryDateIsInPast = expiryDateIsInPast;
         $scope.createPoll = createPoll;
+
+        var emailRegEx = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
         
         function advanceToStep(step) {
             var stepIndex = step - 1;
@@ -94,9 +97,17 @@
             }
 
             return $scope.newPoll.Invitations.filter(function (invite) {
-                // Maybe this needs to be pulled out of this controller
-                var emailRegEx = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
                 return emailRegEx.test(invite);
+            });
+        }
+
+        function getInvalidInvitees() {
+            if (!$scope.newPoll.Invitations) {
+                return [];
+            }
+
+            return $scope.newPoll.Invitations.filter(function (invite) {
+                return !emailRegEx.test(invite);
             });
         }
 
