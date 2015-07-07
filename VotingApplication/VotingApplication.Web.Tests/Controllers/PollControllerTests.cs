@@ -86,7 +86,7 @@ namespace VotingApplication.Web.Tests.Controllers
         public void PostIsAllowed()
         {
             // Act
-            _controller.Post(new PollCreationRequestModel() { PollName = "New Poll" });
+            _controller.Post(CreateBasicPollRequest());
         }
 
         [TestMethod]
@@ -104,7 +104,7 @@ namespace VotingApplication.Web.Tests.Controllers
         public void PostAssignsPollUUID()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
+            PollCreationRequestModel newPoll = CreateBasicPollRequest();
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -115,7 +115,7 @@ namespace VotingApplication.Web.Tests.Controllers
         public void PostAssignsPollManageId()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
+            PollCreationRequestModel newPoll = CreateBasicPollRequest();
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -126,7 +126,7 @@ namespace VotingApplication.Web.Tests.Controllers
         public void PostAssignsPollManageIdDifferentFromPollId()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
+            PollCreationRequestModel newPoll = CreateBasicPollRequest();
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -156,11 +156,7 @@ namespace VotingApplication.Web.Tests.Controllers
             _controller.User = principal.Object;
 
 
-            PollCreationRequestModel newPoll = new PollCreationRequestModel()
-            {
-                PollName = "New Poll"
-            };
-
+            PollCreationRequestModel newPoll = CreateBasicPollRequest();
 
             _controller.Post(newPoll);
 
@@ -174,7 +170,7 @@ namespace VotingApplication.Web.Tests.Controllers
         public void PostReturnsIDsOfNewPoll()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
+            PollCreationRequestModel newPoll = CreateBasicPollRequest();
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -186,7 +182,7 @@ namespace VotingApplication.Web.Tests.Controllers
         public void PostAddsNewPollToPolls()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
+            PollCreationRequestModel newPoll = CreateBasicPollRequest();
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -197,7 +193,7 @@ namespace VotingApplication.Web.Tests.Controllers
         public void SuccessfulPollCreationGeneratesMetric()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
+            PollCreationRequestModel newPoll = CreateBasicPollRequest();
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -213,6 +209,11 @@ namespace VotingApplication.Web.Tests.Controllers
 
             // Assert
             _metricHandler.Verify(m => m.HandlePollCreatedEvent(It.IsAny<Poll>()), Times.Never());
+        }
+
+        private PollCreationRequestModel CreateBasicPollRequest()
+        {
+            return new PollCreationRequestModel { PollName = "New Poll", PollType = "Basic" };
         }
 
         #endregion

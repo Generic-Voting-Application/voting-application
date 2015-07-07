@@ -11,6 +11,7 @@
 
         $scope.pollHasChoices = pollHasChoices;
         $scope.choiceChange = choiceChange;
+        $scope.removeChoice = removeChoice;
 
         activate();
 
@@ -41,6 +42,10 @@
             if (index === $scope.newPoll.Choices.length - 1) {
                 $scope.newPoll.Choices.push({ Name: '' });
             }
+        }
+
+        function removeChoice(index) {
+            $scope.newPoll.Choices.splice(index, 1);
         }
     }
 })();

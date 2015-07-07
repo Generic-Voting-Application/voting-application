@@ -5,10 +5,10 @@
     <meta name="viewport" content="initial-scale=1">
 
     @Styles.Render("~/Bundles/StyleLib/AngularMaterial")
-    @Styles.Render("~/Bundles/StyleLib/AngularDateTime")
     @Styles.Render("~/Bundles/StyleLib/FontAwesome")
     @Styles.Render("~/Bundles/AngularMaterialExtensions")
     @Styles.Render("~/Bundles/VoteOnStyle")
+    @Styles.Render("~/Bundles/Components/DateTimePicker")
 
 </head>
 <body>
@@ -17,10 +17,10 @@
 
         <toolbar></toolbar>
 
-        <md-content md-theme="default" class="md-whiteframe-z2">
+        <md-content md-theme="default">
             @*md-center-tabs Should be true. This is a stupid IE Bug*@
             @*https://github.com/angular/material/issues/2391*@
-            <md-tabs md-center-tabs="false" md-dynamic-height="true" md-selected="currentStep" class="md-accent">
+            <md-tabs md-center-tabs="false" md-dynamic-height="true" md-selected="currentStep" class="md-primary md-hue-2">
                 <md-tab ng-repeat="step in steps" ng-disabled="step.locked">
                     <md-tab-label>{{step.label}}</md-tab-label>
                     <md-tab-body>
@@ -37,7 +37,6 @@
     @Scripts.Render("~/Bundles/ScriptLib/AngularAria")
     @Scripts.Render("~/Bundles/ScriptLib/AngularMaterial")
     @Scripts.Render("~/Bundles/ScriptLib/AngularMessages")
-    @Scripts.Render("~/Bundles/ScriptLib/AngularDateTime")
     @Scripts.Render("~/Bundles/ScriptLib/AngularRoute")
 
     @Scripts.Render("~/Bundles/ScriptLib/ngStorage")

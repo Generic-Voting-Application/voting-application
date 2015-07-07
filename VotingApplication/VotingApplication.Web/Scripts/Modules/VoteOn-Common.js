@@ -5,13 +5,12 @@
         .module('VoteOn-Common', ['ngMaterial', 'ngMessages'])
         .config(function ($mdThemingProvider) {
             $mdThemingProvider.theme('default')
-                .primaryPalette('teal')
+                .primaryPalette('blue')
                 .accentPalette('pink');
 
             $mdThemingProvider.theme('default-dark')
-
-                .primaryPalette('teal')
-                .accentPalette('pink')
+                .primaryPalette('indigo')
+                .accentPalette('blue')
                 .dark();
-        });
+            });
 })();

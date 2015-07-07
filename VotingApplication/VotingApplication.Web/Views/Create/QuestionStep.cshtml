@@ -19,18 +19,26 @@
 
                 <div layout="column">
                     <div layout="row" layout-fill ng-repeat="choice in newPoll.Choices">
-                        <div flex="75">
+                        <div flex="70">
                             <md-input-container>
                                 <label>Choice {{$index + 1}}</label>
                                 <input type="text" ng-model="choice.Name" ng-change="choiceChange($index)">
                             </md-input-container>
+                        </div>
+                        <div flex="5">
+                            <md-button class="md-icon-button vo-button-margin-top"
+                                       aria-label="delete"
+                                       ng-show="choice.Name"
+                                       ng-click="removeChoice($index)">
+                                <md-icon md-font-icon="fa-times" class="fa md-accent" alt="delete"></md-icon>
+                            </md-button>
                         </div>
                     </div>
                 </div>
 
             </md-content>
 
-            <md-content>
+            <md-content layout-padding>
                 <div layout="row">
                     <md-checkbox ng-model="newPoll.ChoiceAdding" aria-label="Voters may add choices">
                         Voters may add choices
@@ -41,10 +49,10 @@
             <md-content layout-padding>
                 <div layout="row">
                     <md-button class="md-raised md-primary"
-                    ng-disabled="pollQuestionForm.$invalid || (!pollHasChoices() && !newPoll.OptionAdding)"
-                    ng-hide="loading"
-                    ng-click="advanceToStep(5)">
-                    Quick Poll
+                               ng-disabled="pollQuestionForm.$invalid || (!pollHasChoices() && !newPoll.OptionAdding)"
+                               ng-hide="loading"
+                               ng-click="advanceToStep(5)">
+                        Quick Poll
                     </md-button>
                     <md-button class="md-raised md-primary"
                                ng-disabled="pollQuestionForm.$invalid || (!pollHasChoices() && !newPoll.OptionAdding)"
