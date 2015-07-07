@@ -5,11 +5,14 @@
         .module('VoteOn-Components')
         .directive('dateTimePicker', dateTimePicker);
 
+    dateTimePicker.$inject = ['themeColor'];
 
-    function dateTimePicker() {
+    function dateTimePicker(themeColor) {
 
         function link(scope) {
 
+            scope.themeColor = themeColor.getThemeColor('default', 'primary', 'default');
+            
             scope.displayDate = moment();
             scope.weekdays = moment.weekdaysMin();
 

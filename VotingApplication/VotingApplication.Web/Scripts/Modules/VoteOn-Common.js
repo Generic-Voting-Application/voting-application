@@ -6,7 +6,7 @@
         .config(function ($mdThemingProvider) {
             $mdThemingProvider.theme('default')
                 .primaryPalette('blue')
-                .accentPalette('deep-orange');
+                .accentPalette('pink');
 
             $mdThemingProvider.theme('default-dark')
                 .primaryPalette('indigo')

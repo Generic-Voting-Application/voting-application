@@ -1,5 +1,4 @@
-﻿$blue500: #2196F3;
-$white: #FFFFFF;
+﻿$white: #FFFFFF;
 $black: #000000;
 
 .vo-dp-picker {
@@ -51,12 +50,10 @@ $black: #000000;
         }
 
         &:hover {
-            background-color: $blue500;
             color: $white;
         }
 
         &.selected {
-            background-color: $blue500;
             color: $white;
             box-shadow: 0 2px 5px 0 transparentize($black, 0.7);
         }

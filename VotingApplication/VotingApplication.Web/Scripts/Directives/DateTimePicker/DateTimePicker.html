@@ -31,7 +31,11 @@
                             <md-content ng-repeat="dateCell in row"
                                         ng-class="{'inert' : !dateCell.inMonth, 'selected' : dateCell.selected}"
                                         ng-click="selectDate(dateCell.date)"
-                                        class="vo-dp-calendar-cell date-cell" md-ink-ripple="#FFF">
+                                        ng-style="dateCell.selected ? {'background-color' : themeColor} : hoverStyle"
+                                        ng-mouseover="hoverStyle={'background-color' : themeColor}"
+                                        ng-mouseleave="hoverStyle={}"
+                                        class="vo-dp-calendar-cell date-cell"
+                                        md-ink-ripple="#FFF">
                                 <div class="vo-dp-calendar-cell-content">
                                     {{dateCell.dayOfMonth}}
                                 </div>
