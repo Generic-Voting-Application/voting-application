@@ -14,10 +14,14 @@
             Name: null,
             PollType: null,
             TokenGuid: null,
+            ExpiryDateUtc: null,
+            NamedVoting: null,
             Choices: []
         };
 
-        $scope.submitVote = submitVote;
+        $scope.VoterName = '';
+
+        $scope.castVote = castVote;
 
         activate();
 
@@ -43,17 +47,31 @@
             poll.Name = data.Name;
             poll.PollType = data.PollType;
             poll.TokenGuid = data.TokenGuid;
+            poll.ExpiryDateUtc = data.ExpiryDateUtc;
+            poll.NamedVoting = data.NamedVoting;
 
             // Clear existing options
             poll.Choices.length = 0;
             poll.Choices = $scope.poll.Choices.concat(data.Choices);
         }
 
-        function submitVote() {
+        function castVote() {
 
-            // TODO: Named voting.
+            if ($scope.poll.NamedVoting) {
+                $scope.voteClicked = true;
 
-            var voterName = null;
+                if ($scope.voterNameForm.$valid) {
+                    var voterName = $scope.VoterName;
+
+                    submitVote(voterName);
+                }
+            } else {
+                submitVote(null);
+            }
+        }
+
+        function submitVote(voterName) {
+
             var votes = createVotes();
 
             var ballot = {
