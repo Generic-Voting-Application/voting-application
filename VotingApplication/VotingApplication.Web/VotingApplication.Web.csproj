@@ -235,6 +235,7 @@
     <Compile Include="Api\Controllers\AccountController.cs" />
     <Compile Include="Api\Controllers\DashboardController.cs" />
     <Compile Include="Api\Controllers\ManageController.cs" />
+    <Compile Include="Api\Models\DBViewModels\PollRequestChoiceResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollTypeRequestResponse.cs" />
     <Compile Include="Api\Controllers\ManageQuestionController.cs" />
     <Compile Include="Api\Controllers\ManageMiscController.cs" />
@@ -373,6 +374,7 @@
     <Content Include="Scripts\Controllers\IdentityLoginController.js" />
     <Content Include="Scripts\Controllers\BasicVoteController.js" />
     <Content Include="Scripts\Controllers\MultiVoteController.js" />
+    <Content Include="Scripts\Controllers\Poll\Vote\VoteController.js" />
     <Content Include="Scripts\Controllers\RegistrationConfirmationController.js" />
     <Content Include="Scripts\Controllers\ResultsPageController.js" />
     <Content Include="Scripts\Controllers\PointsVoteController.js" />
@@ -392,6 +394,14 @@
     <Content Include="Scripts\Directives\Toolbar\Toolbar.html" />
     <Content Include="Scripts\Directives\Toolbar\Toolbar.js" />
     <Content Include="Scripts\Directives\TruncatedText.js" />
+    <Content Include="Scripts\Directives\VoteChoice\VoteChoice.html" />
+    <Content Include="Scripts\Directives\VoteChoice\VoteChoice.js" />
+    <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\UpDownVoteChoice.html" />
+    <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\UpDownVoteChoice.js" />
+    <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\MultiVoteChoice.html" />
+    <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\MultiVoteChoice.js" />
+    <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\BasicVoteChoice.html" />
+    <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\BasicVoteChoice.js" />
     <Content Include="Scripts\Filters\leadingZeroFilter.js" />
     <Content Include="Scripts\Filters\dateFilters.js" />
     <Content Include="Scripts\Interceptors\ErrorInterceptor.js" />
@@ -416,6 +426,8 @@
     <Content Include="Scripts\Lib\angular-toggle-switch-min.js" />
     <Content Include="Scripts\Lib\ngDialog-min.js" />
     <Content Include="Scripts\Lib\ngStorage-min.js" />
+    <Content Include="Scripts\Modules\Poll\VoteOn-Vote.js" />
+    <Content Include="Scripts\Modules\Poll\VoteOn-Poll.js" />
     <Content Include="Scripts\Modules\VoteOn-Common.js" />
     <Content Include="Scripts\Modules\VoteOn-Components.js" />
     <Content Include="Scripts\Modules\VoteOn-Create.js" />
@@ -486,6 +498,7 @@
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Login\ForgottenPassword.cshtml" />
+    <Content Include="Views\Poll\Vote.cshtml" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

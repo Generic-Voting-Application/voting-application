@@ -120,24 +120,56 @@
     'use strict';
 
     angular
-        .module('VoteOn-Create')
+        .module('VoteOn-Poll')
         .factory('PollService', PollService);
 
-    PollService.$inject = ['$http', '$q'];
+    PollService.$inject = ['$http', '$q', 'AccountService'];
 
-    function PollService($http, $q) {
+    function PollService($http, $q, AccountService) {
 
         var service = {
+            getPoll: getPoll,
             createPoll: createPoll
         };
 
         return service;
 
-        function createPoll(poll) {
+        function getPoll(pollId, ballotToken) {
+
             var prom = $q.defer();
 
-            // TODO Use token from account service
-            var token = null;
+            if (!pollId) {
+                prom.reject();
+                return prom.promise;
+            }
+
+            var tokenGuidHeader = null;
+
+            if (ballotToken) {
+                tokenGuidHeader = { 'X-TokenGuid': ballotToken };
+            }
+
+            return $http({
+                method: 'GET',
+                url: '/api/poll/' + pollId,
+                headers: tokenGuidHeader
+            })
+                .then(function (response) {
+                    prom.resolve(response.data);
+                    return prom.promise;
+                });
+        }
+
+        function createPoll(poll) {
+            var token;
+            if (AccountService.account) {
+                token = AccountService.account.token;
+            }
+            else {
+                token = null;
+            }
+
+            var prom = $q.defer();
 
             return $http({
                 method: 'POST',
@@ -148,13 +180,10 @@
                 },
                 data: JSON.stringify(poll)
             })
-               .then(function (response) {
-                   prom.resolve(response.data);
-                   return prom.promise;
-               })
-           .catch(function () {
-               // TODO Error stuff here
-           });
+                .then(function (response) {
+                    prom.resolve(response.data);
+                    return prom.promise;
+                });
         }
     }
 })();

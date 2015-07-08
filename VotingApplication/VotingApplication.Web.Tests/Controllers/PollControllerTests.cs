@@ -530,6 +530,127 @@ namespace VotingApplication.Web.Tests.Controllers
                 controller.Get(PollId);
             }
 
+            [TestMethod]
+            public void XTokenGuidHeader_Response_Choices_ContainsVoteValuesForBallot()
+            {
+                const int choiceId = 42;
+
+                var choice = new Choice()
+                {
+                    Id = choiceId,
+                    Name = "A choice",
+                    Description = "Some description",
+                    PollChoiceNumber = 13
+                };
+
+                var vote = new Vote() { Choice = choice, VoteValue = 3 };
+
+                var ballot = new Ballot()
+                {
+                    TokenGuid = TokenGuid
+                };
+                ballot.Votes.Add(vote);
+
+                Poll poll = CreateNonInviteOnlyPoll();
+                poll.Ballots.Add(ballot);
+                poll.Choices.Add(choice);
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                polls.Add(poll);
+                IDbSet<Choice> choices = DbSetTestHelper.CreateMockDbSet<Choice>();
+                choices.Add(choice);
+                IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
+                votes.Add(vote);
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                ballots.Add(ballot);
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes, choices);
+
+                PollController controller = CreatePollController(contextFactory);
+                AddXTokenGuidHeader(controller, TokenGuid);
+
+
+                PollRequestResponseModel response = controller.Get(PollId);
+
+                PollRequestChoiceResponseModel responseChoice = response.Choices.Single();
+
+                Assert.AreEqual(3, responseChoice.VoteValue);
+            }
+
+            [TestMethod]
+            public void XTokenGuidHeader_Response_Choices_ContainsVoteValueZero_WhenNotVotedFor()
+            {
+                const int choiceId = 42;
+
+                var choice = new Choice()
+                {
+                    Id = choiceId,
+                    Name = "A choice",
+                    Description = "Some description",
+                    PollChoiceNumber = 13
+                };
+
+                var ballot = new Ballot()
+                {
+                    TokenGuid = TokenGuid
+                };
+
+                Poll poll = CreateNonInviteOnlyPoll();
+                poll.Ballots.Add(ballot);
+                poll.Choices.Add(choice);
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                polls.Add(poll);
+                IDbSet<Choice> choices = DbSetTestHelper.CreateMockDbSet<Choice>();
+                choices.Add(choice);
+                IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                ballots.Add(ballot);
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes, choices);
+
+                PollController controller = CreatePollController(contextFactory);
+                AddXTokenGuidHeader(controller, TokenGuid);
+
+
+                PollRequestResponseModel response = controller.Get(PollId);
+
+                PollRequestChoiceResponseModel responseChoice = response.Choices.Single();
+
+                Assert.AreEqual(0, responseChoice.VoteValue);
+            }
+
+            [TestMethod]
+            public void NoXTokenGuidHeader_Response_Choices_ContainsVoteValueZero()
+            {
+                const int choiceId = 42;
+
+                var choice = new Choice()
+                {
+                    Id = choiceId,
+                    Name = "A choice",
+                    Description = "Some description",
+                    PollChoiceNumber = 13
+                };
+
+                Poll poll = CreateNonInviteOnlyPoll();
+                poll.Choices.Add(choice);
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                polls.Add(poll);
+                IDbSet<Choice> choices = DbSetTestHelper.CreateMockDbSet<Choice>();
+                choices.Add(choice);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, choices);
+
+                PollController controller = CreatePollController(contextFactory);
+
+
+                PollRequestResponseModel response = controller.Get(PollId);
+
+                PollRequestChoiceResponseModel responseChoice = response.Choices.Single();
+
+                Assert.AreEqual(0, responseChoice.VoteValue);
+            }
+
             private Poll CreateNonInviteOnlyPoll()
             {
                 return new Poll() { UUID = PollId, InviteOnly = false };

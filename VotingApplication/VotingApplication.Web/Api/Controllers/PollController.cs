@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -25,7 +26,6 @@ namespace VotingApplication.Web.Api.Controllers
                 Poll poll = PollByPollId(id, context);
 
                 Guid? tokenGuid = GetTokenGuidFromHeaders();
-                bool userHasVoted = false;
 
                 if (poll.InviteOnly)
                 {
@@ -40,22 +40,21 @@ namespace VotingApplication.Web.Api.Controllers
                     }
                 }
 
+                Ballot ballot;
                 if (tokenGuid.HasValue)
                 {
-                    Ballot ballot = poll.Ballots.Where(b => b.TokenGuid == tokenGuid.Value).SingleOrDefault();
+                    ballot = poll.Ballots.SingleOrDefault(b => b.TokenGuid == tokenGuid.Value);
 
                     if (ballot == null)
                     {
                         ThrowError(HttpStatusCode.NotFound);
                     }
-
-                    userHasVoted = ballot.HasVoted;
                 }
                 else
                 {
                     tokenGuid = Guid.NewGuid();
 
-                    var ballot = new Ballot()
+                    ballot = new Ballot()
                     {
                         TokenGuid = tokenGuid.Value
 
@@ -67,11 +66,11 @@ namespace VotingApplication.Web.Api.Controllers
                     context.SaveChanges();
                 }
 
-                return CreateResponse(poll, tokenGuid.Value, userHasVoted);
+                return CreateResponse(poll, tokenGuid.Value, ballot);
             }
         }
 
-        private static PollRequestResponseModel CreateResponse(Poll poll, Guid tokenGuid, bool hasVoted)
+        private static PollRequestResponseModel CreateResponse(Poll poll, Guid tokenGuid, Ballot ballot)
         {
             return new PollRequestResponseModel
             {
@@ -84,14 +83,33 @@ namespace VotingApplication.Web.Api.Controllers
 
                 TokenGuid = tokenGuid,
 
-                Choices = poll.Choices,
+                Choices = CreateChoiceResponse(poll.Choices, ballot.Votes),
 
                 NamedVoting = poll.NamedVoting,
                 ChoiceAdding = poll.ChoiceAdding,
                 ElectionMode = poll.ElectionMode,
 
-                UserHasVoted = hasVoted
+                UserHasVoted = ballot.HasVoted
             };
+        }
+
+        private static IEnumerable<PollRequestChoiceResponseModel> CreateChoiceResponse(IEnumerable<Choice> choices, IEnumerable<Vote> votes)
+        {
+            IEnumerable<PollRequestChoiceResponseModel> responses =
+                    from choice in choices
+                    join vote in votes on choice equals vote.Choice into voteChoices
+
+                    from voteChoice in voteChoices.DefaultIfEmpty()
+                    select new PollRequestChoiceResponseModel()
+                    {
+                        Id = choice.Id,
+                        Name = choice.Name,
+                        Description = choice.Description,
+                        PollChoiceNumber = choice.PollChoiceNumber,
+                        VoteValue = (voteChoice == null ? 0 : voteChoice.VoteValue)
+                    };
+
+            return responses.ToList();
         }
 
         [HttpPost]

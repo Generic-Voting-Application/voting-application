@@ -128,3 +128,38 @@
         }
     }
 })();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('VoteOn-Vote')
+        .factory('VoteService', VoteService);
+
+
+    VoteService.$inject = ['$http', '$q'];
+
+    function VoteService($http, $q) {
+
+        var service = {
+            submitVote: submitVote
+        };
+
+        return service;
+
+        function submitVote(pollId, votes, token) {
+            if (!pollId || !votes || !token) {
+                var deferred = $q.defer();
+                deferred.reject();
+                return deferred.promise;
+            }
+
+            return $http({
+                method: 'PUT',
+                url: '/api/poll/' + pollId + '/token/' + token + '/vote',
+                data: votes
+            });
+        }
+    }
+})();
+

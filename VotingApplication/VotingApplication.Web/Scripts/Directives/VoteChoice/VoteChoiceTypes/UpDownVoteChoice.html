@@ -1,0 +1,15 @@
+﻿<md-list>
+    <md-list-item ng-repeat="choice in choices">
+        {{choice.Name}}
+        <span flex></span>
+        <md-button class="md-icon-button md-fab md-mini md-primary" ng-class="{'md-accent': choice.VoteValue === -1}" aria-label="down" ng-click="downSelected(choice)">
+            <md-icon md-font-icon="fa-thumbs-o-down" class="fa fa-lg"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button md-fab md-mini md-primary" ng-class="{'md-accent': choice.VoteValue === 0}" ng-click="neitherSelected(choice)" aria-label="neither">
+            <md-icon md-font-icon="fa-minus" class="fa fa-lg"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button md-fab md-mini md-primary" ng-class="{'md-accent': choice.VoteValue === 1}" aria-label="up" ng-click="upSelected(choice)">
+            <md-icon md-font-icon="fa-thumbs-o-up" class="fa fa-lg"></md-icon>
+        </md-button>
+    </md-list-item>
+</md-list>
