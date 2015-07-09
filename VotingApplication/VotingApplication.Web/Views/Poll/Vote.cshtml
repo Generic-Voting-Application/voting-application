@@ -23,7 +23,7 @@
                                 <md-icon md-font-icon="fa-user" class="fa" alt="user"></md-icon>
                                 Your name
                             </label>
-                            <input ng-model="VoterName" name="voterName" required>
+                            <input ng-model="voterIdentity.name" name="voterName" required>
 
                             <div ng-messages="voterNameForm.voterName.$error" ng-if="voteClicked">
                                 <span ng-message="required">You must supply a name</span>
@@ -42,7 +42,7 @@
                             <md-icon md-font-icon="fa-user" class="fa" alt="user"></md-icon>
                             Your name
                         </label>
-                        <input ng-model="VoterName" name="voterName" required>
+                        <input ng-model="voterIdentity.name" name="voterName" required>
 
                         <div ng-messages="voterNameForm.voterName.$error" ng-if="voteClicked">
                             <span ng-message="required">You must supply a name</span>
