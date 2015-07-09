@@ -22,6 +22,7 @@
         $scope.VoterName = '';
 
         $scope.castVote = castVote;
+        $scope.pollExpired = pollExpired;
 
         activate();
 
@@ -96,6 +97,10 @@
                         VoteValue: choice.VoteValue
                     };
                 });
+        }
+
+        function pollExpired() {
+            RoutingService.redirectToResultsPage($scope.pollId);
         }
     }
 })();
