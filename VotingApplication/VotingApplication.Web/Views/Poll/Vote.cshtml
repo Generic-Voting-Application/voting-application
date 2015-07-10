@@ -31,9 +31,6 @@
                             </md-input-container>
                         </form>
                     </div>
-
-
-
                 </div>
 
                 <vote-choice choices="poll.Choices" poll="poll"></vote-choice>
@@ -45,7 +42,25 @@
                                 <md-icon md-font-icon="fa-user" class="fa" alt="user"></md-icon>
                                 Your name
                             </label>
-                            <input ng-model="VoterName" name="voterName" required>
+                            <input ng-model="voterIdentity.name" name="voterName" required>
+
+                            <div ng-messages="voterNameForm.voterName.$error" ng-if="voteClicked">
+                                <span ng-message="required">You must supply a name</span>
+                            </div>
+                        </md-input-container>
+                    </form>
+                </div>
+
+                <vote-choice choices="poll.Choices" poll="poll"></vote-choice>
+
+                <div ng-show="poll.NamedVoting" hide-gt-sm>
+                    <form name="voterNameForm">
+                        <md-input-container>
+                            <label>
+                                <md-icon md-font-icon="fa-user" class="fa" alt="user"></md-icon>
+                                Your name
+                            </label>
+                            <input ng-model="voterIdentity.name" name="voterName" required>
 
                             <div ng-messages="voterNameForm.voterName.$error" ng-if="voteClicked">
                                 <span ng-message="required">You must supply a name</span>
@@ -58,7 +73,6 @@
                     <md-button class="md-primary md-raised" ng-click="castVote()">Vote</md-button>
                 </div>
             </div>
-
         </md-content>
     </div>
 </div>
