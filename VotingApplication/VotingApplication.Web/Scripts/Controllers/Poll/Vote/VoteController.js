@@ -9,6 +9,8 @@
 
     function VoteController($scope, $routeParams, TokenService, PollService, VoteService, RoutingService) {
 
+        $scope.loaded = false;
+
         $scope.pollId = $routeParams['pollId'];
         $scope.poll = {
             Name: null,
@@ -56,6 +58,8 @@
             // Clear existing options
             poll.Choices.length = 0;
             poll.Choices = $scope.poll.Choices.concat(data.Choices);
+
+            $scope.loaded = true;
         }
 
         function castVote() {
