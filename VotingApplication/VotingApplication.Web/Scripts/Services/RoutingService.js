@@ -107,9 +107,9 @@
         .module('VoteOn-Common')
         .factory('RoutingService', RoutingService);
 
-    RoutingService.$inject = ['$window'];
+    RoutingService.$inject = ['$window', '$location'];
 
-    function RoutingService($window) {
+    function RoutingService($window, $location) {
 
         var service = {
             navigateToVotePage: navigateToVotePage,
@@ -124,7 +124,8 @@
             navigateToAccountPage: navigateToAccountPage,
             navigateToMyPollsPage: navigateToMyPollsPage,
 
-            navigateToResultsPage: navigateToResultsPage
+            navigateToResultsPage: navigateToResultsPage,
+            redirectToResultsPage: redirectToResultsPage
         };
 
         return service;
@@ -173,7 +174,13 @@
         }
 
         function navigateToResultsPage(pollId) {
-            $window.location.href = '/Poll/#/Results/' + pollId;
+            $window.location.href = '/Poll/#/' + pollId + '/Results';
+        }
+
+        function redirectToResultsPage(pollId) {
+            // This changes the current page and history, so back doesn't redirect to an invalid page.
+            // For example, when a poll expires, you can't get to the vote page anymore.
+            $location.path(pollId + '/Results').replace();
         }
     }
 })();
