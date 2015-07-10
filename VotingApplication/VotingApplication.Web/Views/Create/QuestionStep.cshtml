@@ -27,6 +27,8 @@
                         </div>
                         <div flex="5">
                             <md-button class="md-icon-button vo-button-margin-top"
+                                       type="button"
+                                       tabindex="{{$index+1}}"
                                        aria-label="delete"
                                        ng-show="choice.Name"
                                        ng-click="removeChoice($index)">
@@ -49,13 +51,13 @@
             <md-content layout-padding>
                 <div layout="row">
                     <md-button class="md-raised md-primary"
-                               ng-disabled="pollQuestionForm.$invalid || (!pollHasChoices() && !newPoll.OptionAdding)"
+                               ng-disabled="pollQuestionForm.$invalid"
                                ng-hide="loading"
                                ng-click="advanceToStep(5)">
                         Quick Poll
                     </md-button>
                     <md-button class="md-raised md-primary"
-                               ng-disabled="pollQuestionForm.$invalid || (!pollHasChoices() && !newPoll.OptionAdding)"
+                               ng-disabled="pollQuestionForm.$invalid"
                                ng-hide="loading"
                                ng-click="advanceToStep(2)">
                         Customise
