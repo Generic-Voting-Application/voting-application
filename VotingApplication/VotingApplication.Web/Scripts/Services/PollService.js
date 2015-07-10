@@ -123,13 +123,12 @@
         .module('VoteOn-Poll')
         .factory('PollService', PollService);
 
-    PollService.$inject = ['$http', '$q', 'AccountService'];
+    PollService.$inject = ['$http', '$q'];
 
-    function PollService($http, $q, AccountService) {
+    function PollService($http, $q) {
 
         var service = {
-            getPoll: getPoll,
-            createPoll: createPoll
+            getPoll: getPoll
         };
 
         return service;
@@ -153,32 +152,6 @@
                 method: 'GET',
                 url: '/api/poll/' + pollId,
                 headers: tokenGuidHeader
-            })
-                .then(function (response) {
-                    prom.resolve(response.data);
-                    return prom.promise;
-                });
-        }
-
-        function createPoll(poll) {
-            var token;
-            if (AccountService.account) {
-                token = AccountService.account.token;
-            }
-            else {
-                token = null;
-            }
-
-            var prom = $q.defer();
-
-            return $http({
-                method: 'POST',
-                url: 'api/poll',
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8',
-                    'Authorization': 'Bearer ' + token
-                },
-                data: JSON.stringify(poll)
             })
                 .then(function (response) {
                     prom.resolve(response.data);

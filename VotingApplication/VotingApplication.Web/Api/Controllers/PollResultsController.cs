@@ -92,7 +92,9 @@ namespace VotingApplication.Web.Api.Controllers
 
                 _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.OK, pollId);
 
-                return GenerateResults(votes, poll.NamedVoting);
+                ResultsRequestResponseModel results = GenerateResults(votes, poll.NamedVoting);
+                results.PollName = poll.Name;
+                return results;
             }
         }
 

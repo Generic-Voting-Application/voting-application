@@ -1,0 +1,15 @@
+﻿<md-list>
+    <div ng-repeat="result in resultBreakdown">
+        <md-list-item ng-click="showVoters=!showVoters">
+            <md-icon md-font-icon="fa-chevron-right" class="fa" alt="chevron-right"></md-icon>
+            <p>{{result.ChoiceName}}</p>
+            <md-divider></md-divider>
+        </md-list-item>
+        <div ng-if="showVoters">
+            <md-list-item ng-repeat="voter in result.Voters">
+                <p>{{voter.Name ? voter.Name : 'Anonymous User'}}</p> <p>{{voter.Value}} {{voter.Value === 1 ? 'Vote' : 'Votes'}}</p>
+            </md-list-item>
+        </div>
+
+    </div>
+</md-list>
