@@ -387,6 +387,8 @@
     <Content Include="Scripts\Directives\ErrorHumidor.js" />
     <Content Include="Scripts\Directives\ErrorBar.js" />
     <Content Include="Scripts\Directives\ErrorHumidor.html" />
+    <Content Include="Scripts\Directives\ExpiryDateCountdown\ExpiryDateCountdown.html" />
+    <Content Include="Scripts\Directives\ExpiryDateCountdown\ExpiryDateCountdown.js" />
     <Content Include="Scripts\Directives\ResultsChart.html" />
     <Content Include="Scripts\Directives\ResultsChart.js" />
     <Content Include="Scripts\Directives\ResultsTable\ResultsTable.html" />

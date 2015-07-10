@@ -5,9 +5,9 @@
         .module('VoteOn-Vote')
         .controller('VoteController', VoteController);
 
-    VoteController.$inject = ['$scope', '$routeParams', 'TokenService', 'PollService', 'VoteService', 'RoutingService'];
+    VoteController.$inject = ['$scope', '$routeParams', 'TokenService', 'PollService', 'VoteService', 'RoutingService', 'IdentityService'];
 
-    function VoteController($scope, $routeParams, TokenService, PollService, VoteService, RoutingService) {
+    function VoteController($scope, $routeParams, TokenService, PollService, VoteService, RoutingService, IdentityService) {
 
         $scope.pollId = $routeParams['pollId'];
         $scope.poll = {
@@ -19,9 +19,10 @@
             Choices: []
         };
 
-        $scope.VoterName = '';
+        $scope.voterIdentity = IdentityService.identity;
 
         $scope.castVote = castVote;
+        $scope.pollExpired = pollExpired;
 
         activate();
 
@@ -34,11 +35,11 @@
 
             PollService.getPoll($scope.pollId, token)
                 .then(function (data) {
-
-                    TokenService.setToken($scope.pollId, data.TokenGuid)
-                        .then(function () {
-                            loadPollData(data);
-                        });
+                    TokenService.setToken($scope.pollId, data.TokenGuid);
+                    return data;
+                })
+                .then(function (data) {
+                    loadPollData(data);
                 });
         }
 
@@ -61,9 +62,7 @@
                 $scope.voteClicked = true;
 
                 if ($scope.voterNameForm.$valid) {
-                    var voterName = $scope.VoterName;
-
-                    submitVote(voterName);
+                    submitVote($scope.voterIdentity.name);
                 }
             } else {
                 submitVote(null);
@@ -96,6 +95,10 @@
                         VoteValue: choice.VoteValue
                     };
                 });
+        }
+
+        function pollExpired() {
+            RoutingService.redirectToResultsPage($scope.pollId);
         }
     }
 })();
