@@ -1,0 +1,13 @@
+﻿<span>{{pointsRemaining }} of {{poll.MaxPoints}} points remaining</span>
+<md-progress-linear class="md-accent" md-mode="determinate" value="{{percentagePointsRemaining}}"></md-progress-linear>
+
+<md-list>
+    <md-list-item ng-repeat="choice in choices">
+        {{choice.Name}}
+        <span flex></span>
+        <md-input-container>
+            <label>{{choice.VoteValue}} of {{poll.MaxPerVote}} allocated</label>
+            <input required type="number" step="any" ng-model="choice.VoteValue" min="0" max="{{poll.MaxPerVote}}" ng-change="pointsChanged()">
+        </md-input-container>
+    </md-list-item>
+</md-list>

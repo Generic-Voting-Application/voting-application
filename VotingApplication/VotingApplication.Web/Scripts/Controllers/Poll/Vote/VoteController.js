@@ -50,6 +50,9 @@
             poll.ExpiryDateUtc = data.ExpiryDateUtc;
             poll.NamedVoting = data.NamedVoting;
 
+            poll.MaxPoints = data.MaxPoints;
+            poll.MaxPerVote = data.MaxPerVote;
+
             // Clear existing options
             poll.Choices.length = 0;
             poll.Choices = $scope.poll.Choices.concat(data.Choices);

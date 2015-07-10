@@ -396,6 +396,8 @@
     <Content Include="Scripts\Directives\TruncatedText.js" />
     <Content Include="Scripts\Directives\VoteChoice\VoteChoice.html" />
     <Content Include="Scripts\Directives\VoteChoice\VoteChoice.js" />
+    <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\PointsVoteChoice.html" />
+    <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\PointsVoteChoice.js" />
     <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\UpDownVoteChoice.html" />
     <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\UpDownVoteChoice.js" />
     <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\MultiVoteChoice.html" />
