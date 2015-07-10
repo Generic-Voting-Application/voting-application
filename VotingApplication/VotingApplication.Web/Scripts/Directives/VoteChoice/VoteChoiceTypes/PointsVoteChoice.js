@@ -24,15 +24,15 @@
         $scope.pointsRemaining = 0;
         $scope.percentagePointsRemaining = 0;
 
-        $scope.pointsChanged = pointsChanged;
+        $scope.decreasePoints = decreasePoints;
+        $scope.decreasePointsDisabled = shouldDecreasePointsBeDisabled;
+        $scope.increasePoints = increasePoints;
+        $scope.increasePointsDisabled = shouldIncreasePointsBeDisabled;
+
 
         activate();
 
         function activate() {
-            calculatePointsRemaining();
-        }
-
-        function pointsChanged() {
             calculatePointsRemaining();
         }
 
@@ -41,6 +41,36 @@
 
             $scope.pointsRemaining = $scope.poll.MaxPoints - totalAllocated;
             $scope.percentagePointsRemaining = ($scope.pointsRemaining / $scope.poll.MaxPoints) * 100;
+        }
+
+        function decreasePoints(choice) {
+            if (choice.VoteValue > 0) {
+                choice.VoteValue -= 1;
+            }
+
+            calculatePointsRemaining();
+        }
+
+        function shouldDecreasePointsBeDisabled(choice) {
+            return choice.VoteValue <= 0;
+        }
+
+        function increasePoints(choice) {
+            if (choice.VoteValue < $scope.poll.MaxPerVote) {
+                choice.VoteValue += 1;
+            }
+
+            calculatePointsRemaining();
+        }
+
+        function shouldIncreasePointsBeDisabled(choice) {
+            if (choice.VoteValue >= $scope.poll.MaxPerVote) {
+                return true;
+            }
+            if ($scope.pointsRemaining === 0) {
+                return true;
+            }
+            return false;
         }
     }
 })();

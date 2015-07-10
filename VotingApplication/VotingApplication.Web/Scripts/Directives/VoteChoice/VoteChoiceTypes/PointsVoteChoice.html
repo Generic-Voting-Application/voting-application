@@ -5,9 +5,9 @@
     <md-list-item ng-repeat="choice in choices">
         {{choice.Name}}
         <span flex></span>
-        <md-input-container>
-            <label>{{choice.VoteValue}} of {{poll.MaxPerVote}} allocated</label>
-            <input required type="number" step="any" ng-model="choice.VoteValue" min="0" max="{{poll.MaxPerVote}}" ng-change="pointsChanged()">
-        </md-input-container>
+        <md-button class="md-icon-button" ng-click="decreasePoints(choice)" ng-disabled="decreasePointsDisabled(choice)" aria-label="Decrease Points">-</md-button>
+        <label>{{choice.VoteValue}} / {{poll.MaxPerVote}}</label>
+        <md-button class="md-icon-button" ng-click="increasePoints(choice)" ng-disabled="increasePointsDisabled(choice)" aria-label="Increase Points">+</md-button>
+
     </md-list-item>
 </md-list>
