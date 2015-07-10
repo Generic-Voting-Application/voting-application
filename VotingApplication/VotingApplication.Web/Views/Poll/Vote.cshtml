@@ -1,19 +1,17 @@
 ﻿<div layout="row" ng-controller="VoteController">
-    
+
     <div flex-gt-md="50" flex-md="80" flex-sm="90"
          offset-gt-md="25" offset-md="10" offset-sm="5">
 
         <loading-spinner loaded="loaded"></loading-spinner>
 
-        <md-content>
+        <md-content ng-cloak>
             <div ng-if="loaded">
                 <div layout layout-gt-sm="row" layout-sm="column">
                     <div flex-order-gt_sm="1" flex-order-sm="2">
                         <h2>{{poll.Name}}</h2>
 
-                        <div hide-sm>
-                            <h5 ng-show="poll.ExpiryDateUtc"> Expires: {{poll.ExpiryDateUtc}}</h5>
-                        </div>
+                        <expiry-date-countdown expiry-date-utc="poll.ExpiryDateUtc" poll-expired-callback="pollExpired()" hide-sm></expiry-date-countdown>
                     </div>
 
                     <span flex hide-sm></span>
@@ -33,6 +31,9 @@
                             </md-input-container>
                         </form>
                     </div>
+
+
+
                 </div>
 
                 <vote-choice choices="poll.Choices" poll="poll"></vote-choice>

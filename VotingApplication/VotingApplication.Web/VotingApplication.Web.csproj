@@ -388,6 +388,8 @@
     <Content Include="Scripts\Directives\ErrorHumidor.html" />
     <Content Include="Scripts\Directives\LoadingSpinner\LoadingSpinner.html" />
     <Content Include="Scripts\Directives\LoadingSpinner\LoadingSpinner.js" />
+    <Content Include="Scripts\Directives\ExpiryDateCountdown\ExpiryDateCountdown.html" />
+    <Content Include="Scripts\Directives\ExpiryDateCountdown\ExpiryDateCountdown.js" />
     <Content Include="Scripts\Directives\ResultsChart.html" />
     <Content Include="Scripts\Directives\ResultsChart.js" />
     <Content Include="Scripts\Directives\TimePicker.js" />
