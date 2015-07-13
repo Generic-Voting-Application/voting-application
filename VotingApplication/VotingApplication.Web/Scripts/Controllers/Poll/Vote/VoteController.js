@@ -5,9 +5,9 @@
         .module('VoteOn-Vote')
         .controller('VoteController', VoteController);
 
-    VoteController.$inject = ['$scope', '$routeParams', 'TokenService', 'PollService', 'VoteService', 'RoutingService', 'IdentityService'];
+    VoteController.$inject = ['$scope', '$routeParams', 'TokenService', 'PollService', 'VoteService', 'RoutingService', 'IdentityService', '$mdDialog'];
 
-    function VoteController($scope, $routeParams, TokenService, PollService, VoteService, RoutingService, IdentityService) {
+    function VoteController($scope, $routeParams, TokenService, PollService, VoteService, RoutingService, IdentityService, $mdDialog) {
 
         $scope.loaded = false;
 
@@ -27,7 +27,8 @@
         $scope.pollExpired = pollExpired;
 
         $scope.userChoice = null;
-        $scope.addChoice = addChoice;
+        $scope.addChoiceFromPage = addChoiceFromPage;
+        $scope.addChoiceViaDialog = addChoiceViaDialog;
 
         activate();
 
@@ -112,9 +113,13 @@
             RoutingService.redirectToResultsPage($scope.pollId);
         }
 
-        function addChoice(userChoice) {
-            if (userChoice !== null) {
-                var newChoiceRequest = { Name: userChoice };
+        function addChoiceFromPage() {
+            addChoice($scope.userChoice);
+        }
+
+        function addChoice(choiceName) {
+            if (choiceName !== null) {
+                var newChoiceRequest = { Name: choiceName };
 
                 PollService.addChoice($scope.pollId, newChoiceRequest)
                     .then(reloadPoll)
@@ -122,6 +127,21 @@
                         $scope.userChoice = null;
                     });
             }
+        }
+
+        function addChoiceViaDialog(triggeringEvent) {
+            var addChoiceDialog = {
+                parent: angular.element(document.body),
+                targetEvent: triggeringEvent,
+                clickOutsideToClose: true,
+                templateUrl: '/Scripts/Dialogs/AddUserChoiceDialog/AddUserChoiceDialog.html',
+                controller: 'AddUserChoiceDialogController'
+            };
+            $mdDialog
+                .show(addChoiceDialog)
+                .then(function (name) {
+                    addChoice(name)
+                });
         }
 
         function reloadPoll() {

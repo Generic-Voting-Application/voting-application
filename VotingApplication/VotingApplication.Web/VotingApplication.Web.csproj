@@ -381,6 +381,7 @@
     <Content Include="Scripts\Controllers\CreatePageController.js" />
     <Content Include="Scripts\Controllers\UpDownVoteController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
+    <Content Include="Scripts\Dialogs\AddUserChoiceDialog\AddUserChoiceDialogController.js" />
     <Content Include="Scripts\Directives\DateTimePicker\DateTimePicker.html" />
     <Content Include="Scripts\Directives\DateTimePicker\DateTimePicker.js" />
     <Content Include="Scripts\Directives\ErrorHumidor.js" />
@@ -505,6 +506,7 @@
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Login\ForgottenPassword.cshtml" />
     <Content Include="Views\Poll\Vote.cshtml" />
+    <Content Include="Scripts\Dialogs\AddUserChoiceDialog\AddUserChoiceDialog.html" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

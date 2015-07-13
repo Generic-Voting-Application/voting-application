@@ -39,10 +39,16 @@
                     <label>Add your own choice</label>
                     <input ng-model="userChoice">
                 </md-input-container>
-                <md-button class="md-icon-button" ng-click="addChoice(userChoice)">
+                <md-button class="md-icon-button" ng-click="addChoiceFromPage(userChoice)">
                     <md-icon md-font-icon="fa-plus fa-lg" class="fa vo-button-margin-top"></md-icon>
                 </md-button>
                 <span flex></span>
+            </div>
+
+            <div ng-show="poll.ChoiceAdding" layout hide-gt-sm>
+                <md-button class="md-primary md-raised" ng-click="addChoiceViaDialog($event)">
+                    Add your own choice
+                </md-button>
             </div>
 
             <div ng-show="poll.NamedVoting" hide-gt-sm>
