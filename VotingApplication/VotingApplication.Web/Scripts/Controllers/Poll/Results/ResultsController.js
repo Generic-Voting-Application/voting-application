@@ -15,13 +15,15 @@
         $scope.winners = [];
         $scope.loaded = false;
 
-        var updateTimer = false;
+        var updateTimer = null;
 
         activate();
 
         function activate() {
 
-            updateResults();
+            updateResults().then(function () {
+                $scope.loaded = true;
+            });
 
             updateTimer = $interval(updateResults, 5000);
             $scope.$on('$destroy', clearTimer);
@@ -32,7 +34,7 @@
         }
 
         function updateResults() {
-            ResultsService.getResults($scope.pollId)
+            return ResultsService.getResults($scope.pollId)
            .then(function (data) {
                if (data) {
                    $scope.results = data.Results;
@@ -42,9 +44,6 @@
                    var chartData = ResultsService.createDataTable(data.Results, resultsTrimSize);
 
                    $scope.resultsBarChart = createBarChart(chartData, data.PollName);
-                   if (!$scope.loaded) {
-                       $scope.loaded = true;
-                   }
                }
            })
            .catch(clearTimer);

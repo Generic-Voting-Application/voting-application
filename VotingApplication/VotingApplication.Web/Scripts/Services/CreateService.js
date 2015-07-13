@@ -23,9 +23,7 @@
             else {
                 token = null;
             }
-
-            var prom = $q.defer();
-
+            
             return $http({
                 method: 'POST',
                 url: 'api/poll',
@@ -35,10 +33,9 @@
                 },
                 data: JSON.stringify(poll)
             })
-                .then(function (response) {
-                    prom.resolve(response.data);
-                    return prom.promise;
-                });
+            .then(function (response) {
+                return response.data;
+            });
         }
     }
 })();
