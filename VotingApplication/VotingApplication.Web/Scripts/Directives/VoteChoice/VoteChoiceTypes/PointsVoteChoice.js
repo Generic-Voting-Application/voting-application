@@ -34,6 +34,8 @@
 
         function activate() {
             calculatePointsRemaining();
+
+            $scope.$watch('choices', calculatePointsRemaining);
         }
 
         function calculatePointsRemaining() {

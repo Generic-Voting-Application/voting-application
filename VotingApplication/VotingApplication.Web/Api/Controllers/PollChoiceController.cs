@@ -17,11 +17,11 @@ namespace VotingApplication.Web.Api.Controllers
         public PollChoiceController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
 
         [HttpPost]
-        public void Post(Guid pollId, ChoiceCreationRequestModel optionCreationRequest)
+        public void Post(Guid pollId, ChoiceCreationRequestModel choiceCreationRequest)
         {
             using (IVotingContext context = _contextFactory.CreateContext())
             {
-                if (optionCreationRequest == null)
+                if (choiceCreationRequest == null)
                 {
                     ThrowError(HttpStatusCode.BadRequest);
                 }
@@ -46,7 +46,7 @@ namespace VotingApplication.Web.Api.Controllers
                     ThrowError(HttpStatusCode.BadRequest, ModelState);
                 }
 
-                Choice newOption = CreateOptionFromRequest(optionCreationRequest);
+                Choice newOption = CreateChoiceFromRequest(choiceCreationRequest);
 
                 _metricHandler.HandleChoiceAddedEvent(newOption, pollId);
 
@@ -59,7 +59,7 @@ namespace VotingApplication.Web.Api.Controllers
             }
         }
 
-        private static Choice CreateOptionFromRequest(ChoiceCreationRequestModel requestModel)
+        private static Choice CreateChoiceFromRequest(ChoiceCreationRequestModel requestModel)
         {
             return new Choice
             {
