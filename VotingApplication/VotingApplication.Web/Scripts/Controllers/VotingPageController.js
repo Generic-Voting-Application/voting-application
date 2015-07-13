@@ -112,7 +112,9 @@
                 return opt.voteValue !== 0;
             });
 
-            PollService.getPoll($scope.pollId)
+            var token = TokenService.retrieveToken($scope.pollId);
+
+            PollService.getPoll($scope.pollId, token)
                 .then(function (data) {
                     $scope.poll = data;
 
