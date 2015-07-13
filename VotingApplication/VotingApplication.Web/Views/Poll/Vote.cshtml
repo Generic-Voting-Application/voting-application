@@ -32,21 +32,21 @@
                 </div>
             </div>
 
-            <vote-choice choices="poll.Choices" poll="poll"></vote-choice>
+            <vote-choice choices="poll.Choices" poll="poll" ng-disabled="submitting"></vote-choice>
 
             <div ng-show="poll.ChoiceAdding" layout layout-margin hide-sm>
                 <md-input-container>
                     <label>Add your own choice</label>
-                    <input ng-model="userChoice">
+                    <input ng-model="userChoice" ng-disabled="submitting">
                 </md-input-container>
-                <md-button class="md-icon-button" ng-click="addChoiceFromPage(userChoice)">
+                <md-button class="md-icon-button" ng-click="addChoiceFromPage(userChoice)" ng-disabled="submitting">
                     <md-icon md-font-icon="fa-plus fa-lg" class="fa vo-button-margin-top"></md-icon>
                 </md-button>
                 <span flex></span>
             </div>
 
             <div ng-show="poll.ChoiceAdding" layout hide-gt-sm>
-                <md-button class="md-primary md-raised" ng-click="addChoiceViaDialog($event)">
+                <md-button class="md-primary md-raised" ng-click="addChoiceViaDialog($event)" ng-disabled="submitting">
                     Add your own choice
                 </md-button>
             </div>
@@ -68,7 +68,9 @@
             </div>
 
             <div layout="row" layout-sm="column" layout-align-gt-sm="end center">
-                <md-button class="md-primary md-raised" ng-click="castVote()">Vote</md-button>
+                <md-button class="md-primary md-raised" ng-click="castVote()" ng-disabled="submitting">
+                    Vote
+                </md-button>
             </div>
         </md-content>
     </div>

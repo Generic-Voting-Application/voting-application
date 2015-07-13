@@ -10,6 +10,7 @@
     function VoteController($scope, $routeParams, TokenService, PollService, VoteService, RoutingService, IdentityService, $mdDialog) {
 
         $scope.loaded = false;
+        $scope.submitting = false;
 
         $scope.pollId = $routeParams['pollId'];
         $scope.poll = {
@@ -69,6 +70,7 @@
         }
 
         function castVote() {
+            $scope.submitting = false;
 
             if ($scope.poll.NamedVoting) {
                 $scope.voteClicked = true;
@@ -79,6 +81,8 @@
             } else {
                 submitVote(null);
             }
+
+            $scope.submitting = false;
         }
 
         function submitVote(voterName) {
@@ -121,10 +125,13 @@
             if (choiceName !== null) {
                 var newChoiceRequest = { Name: choiceName };
 
+                $scope.submitting = true;
+
                 PollService.addChoice($scope.pollId, newChoiceRequest)
                     .then(reloadPoll)
                     .then(function () {
                         $scope.userChoice = null;
+                        $scope.submitting = false;
                     });
             }
         }
