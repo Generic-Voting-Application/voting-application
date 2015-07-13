@@ -39,14 +39,22 @@
                 headers: tokenGuidHeader
             })
             .then(function (response) {
-                lastCheckedTimestamps[pollId] = moment().utc().toDate();
+                lastCheckedTimestamps[pollId] = moment().utc().valueOf();
 
                 prom.resolve(response.data);
+                return prom.promise;
+            })
+            .catch(function (response) {
+                if (response.status === 304) {
+                    prom.resolve(response.data);
+                } else {
+                    prom.reject(response);
+                }
                 return prom.promise;
             });
         }
 
-        function createDataTable(results) {
+        function createDataTable(results, trimSize) {
             if (!results) {
                 return null;
             }
@@ -60,7 +68,12 @@
             table[0] = ['Choice', 'Votes'];
 
             sortedResults.forEach(function (result) {
-                table.push([result.ChoiceName, result.Sum]);
+                var trimmedChoiceName = result.ChoiceName.substring(0, Math.round(trimSize));
+                if (trimmedChoiceName !== result.ChoiceName) {
+                    trimmedChoiceName = trimmedChoiceName + '...';
+                }
+
+                table.push([trimmedChoiceName, result.Sum]);
             });
 
             return table;
