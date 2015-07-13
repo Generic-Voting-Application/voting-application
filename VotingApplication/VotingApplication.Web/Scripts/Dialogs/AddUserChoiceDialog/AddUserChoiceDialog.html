@@ -1,0 +1,25 @@
+﻿﻿<md-dialog id="add-user-choice-dialog">
+    <form name="addUserChoiceForm" ng-submit="register()">
+
+        <md-dialog-content>
+            <md-input-container>
+                <label>Your choice</label>
+                <input ng-model="userChoice" name="userChoice" required>
+                <div ng-messages="addUserChoiceForm.userChoice.$error" ng-if="addUserChoiceForm.userChoice.$touched">
+                    <span ng-message="required">Choice is required</span>
+                </div>
+            </md-input-container>
+
+        </md-dialog-content>
+
+        <div class="md-actions" layout layout="row">
+            <md-button ng-click="closeDialog()" class="md-primary md-raised" type="button">
+                Cancel
+            </md-button>
+            <md-button ng-click="addChoice()" class="md-primary md-raised" type="submit">
+                Add
+            </md-button>
+        </div>
+
+    </form>
+</md-dialog>

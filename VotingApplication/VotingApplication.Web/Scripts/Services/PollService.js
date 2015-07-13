@@ -128,7 +128,9 @@
     function PollService($http, $q) {
 
         var service = {
-            getPoll: getPoll
+            getPoll: getPoll,
+            createPoll: createPoll,
+            addChoice: addChoice
         };
 
         return service;
@@ -157,6 +159,40 @@
                     prom.resolve(response.data);
                     return prom.promise;
                 });
+        }
+
+        function createPoll(poll) {
+            var token;
+            if (AccountService.account) {
+                token = AccountService.account.token;
+            }
+            else {
+                token = null;
+            }
+
+            var prom = $q.defer();
+
+            return $http({
+                method: 'POST',
+                url: 'api/poll',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'Authorization': 'Bearer ' + token
+                },
+                data: JSON.stringify(poll)
+            })
+                .then(function (response) {
+                    prom.resolve(response.data);
+                    return prom.promise;
+                });
+        }
+
+        function addChoice(pollId, newChoice) {
+            return $http
+                .post(
+                    '/api/poll/' + pollId + '/choice',
+                    newChoice
+                );
         }
     }
 })();

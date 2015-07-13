@@ -268,7 +268,7 @@
     <Compile Include="Api\Models\DBViewModels\ManagePollExpiryRequest.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollRequestResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManageVoteResponseModel.cs" />
-    <Compile Include="Api\Models\DBViewModels\OptionCreationRequestModel.cs" />
+    <Compile Include="Api\Models\DBViewModels\ChoiceCreationRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\OptionRequestResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\PollCreationRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\PollCreationResponseModel.cs" />
@@ -382,6 +382,7 @@
     <Content Include="Scripts\Controllers\CreatePageController.js" />
     <Content Include="Scripts\Controllers\UpDownVoteController.js" />
     <Content Include="Scripts\Controllers\VotingPageController.js" />
+    <Content Include="Scripts\Dialogs\AddUserChoiceDialog\AddUserChoiceDialogController.js" />
     <Content Include="Scripts\Directives\DateTimePicker\DateTimePicker.html" />
     <Content Include="Scripts\Directives\DateTimePicker\DateTimePicker.js" />
     <Content Include="Scripts\Directives\ErrorHumidor.js" />
@@ -513,6 +514,7 @@
     <Content Include="Views\Login\ForgottenPassword.cshtml" />
     <Content Include="Views\Poll\Vote.cshtml" />
     <Content Include="Views\Poll\Results.cshtml" />
+    <Content Include="Scripts\Dialogs\AddUserChoiceDialog\AddUserChoiceDialog.html" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
