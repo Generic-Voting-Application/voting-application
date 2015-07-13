@@ -140,7 +140,7 @@
             $mdDialog
                 .show(addChoiceDialog)
                 .then(function (name) {
-                    addChoice(name)
+                    addChoice(name);
                 });
         }
 
