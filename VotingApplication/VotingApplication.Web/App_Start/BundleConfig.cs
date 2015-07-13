@@ -131,9 +131,9 @@ namespace VotingApplication.Web
             angularMaterial.Include("~/Scripts/Lib/angular-material-min.js");
             bundles.Add(angularMaterial);
 
-            var angularDateTime = new Bundle("~/Bundles/ScriptLib/AngularDateTime", "https://cdn.rawgit.com/SimeonC/md-date-time/v0.0.14/dist/md-date-time.js");
-            angularDateTime.Include("~/Scripts/Lib/md-date-time.js");
-            bundles.Add(angularDateTime);
+            var angularCharts = new Bundle("~/Bundles/ScriptLib/AngularCharts", "https://cdn.rawgit.com/bouil/angular-google-chart/0.0.11/ng-google-chart.js");
+            angularCharts.Include("~/Scripts/Lib/ng-google-chart.js");
+            bundles.Add(angularCharts);
 
             var angularQr = new ScriptBundle("~/Bundles/ScriptLib/AngularQr", "https://cdn.rawgit.com/monospaced/angular-qrcode/5.1.0/qrcode.js");
             angularQr.Include("~/Scripts/Lib/angular-qrcode.js");

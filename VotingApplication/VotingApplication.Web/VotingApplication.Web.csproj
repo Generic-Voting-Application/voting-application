@@ -374,6 +374,7 @@
     <Content Include="Scripts\Controllers\IdentityLoginController.js" />
     <Content Include="Scripts\Controllers\BasicVoteController.js" />
     <Content Include="Scripts\Controllers\MultiVoteController.js" />
+    <Content Include="Scripts\Controllers\Poll\Results\ResultsController.js" />
     <Content Include="Scripts\Controllers\Poll\Vote\VoteController.js" />
     <Content Include="Scripts\Controllers\RegistrationConfirmationController.js" />
     <Content Include="Scripts\Controllers\ResultsPageController.js" />
@@ -393,6 +394,8 @@
     <Content Include="Scripts\Directives\ExpiryDateCountdown\ExpiryDateCountdown.js" />
     <Content Include="Scripts\Directives\ResultsChart.html" />
     <Content Include="Scripts\Directives\ResultsChart.js" />
+    <Content Include="Scripts\Directives\ResultsTable\ResultsTable.html" />
+    <Content Include="Scripts\Directives\ResultsTable\ResultsTable.js" />
     <Content Include="Scripts\Directives\TimePicker.js" />
     <Content Include="Scripts\Directives\DatePicker.js" />
     <Content Include="Scripts\Directives\PollHeading.js" />
@@ -420,6 +423,7 @@
     <Content Include="Scripts\Lib\d3-tip.js" />
     <Content Include="Scripts\Lib\moment-min.js" />
     <Content Include="Scripts\Lib\angular-qrcode.js" />
+    <Content Include="Scripts\Lib\ng-google-chart.js" />
     <Content Include="Scripts\Lib\qrcode.js" />
     <Content Include="Scripts\Lib\ZeroClipboard-min.js" />
     <Content Include="Scripts\Modules\Account\VoteOn-Account.js" />
@@ -433,17 +437,20 @@
     <Content Include="Scripts\Lib\angular-toggle-switch-min.js" />
     <Content Include="Scripts\Lib\ngDialog-min.js" />
     <Content Include="Scripts\Lib\ngStorage-min.js" />
+    <Content Include="Scripts\Modules\Poll\VoteOn-Results.js" />
     <Content Include="Scripts\Modules\Poll\VoteOn-Vote.js" />
     <Content Include="Scripts\Modules\Poll\VoteOn-Poll.js" />
     <Content Include="Scripts\Modules\VoteOn-Common.js" />
     <Content Include="Scripts\Modules\VoteOn-Components.js" />
-    <Content Include="Scripts\Modules\VoteOn-Create.js" />
+    <Content Include="Scripts\Modules\Create\VoteOn-Create.js" />
     <Content Include="Scripts\Services\AccountService.js" />
+    <Content Include="Scripts\Services\CreateService.js" />
     <Content Include="Scripts\Services\ErrorService.js" />
     <Content Include="Scripts\Services\IdentityService.js" />
     <Content Include="Scripts\Services\ExpiryStringService.js" />
     <Content Include="Scripts\Services\ManageService.js" />
     <Content Include="Scripts\Services\PollService.js" />
+    <Content Include="Scripts\Services\ResultsService.js" />
     <Content Include="Scripts\Services\RoutingService.js" />
     <Content Include="Scripts\Services\TokenService.js" />
     <Content Include="Scripts\Directives\VotingStrategy.js" />
@@ -506,6 +513,7 @@
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Login\ForgottenPassword.cshtml" />
     <Content Include="Views\Poll\Vote.cshtml" />
+    <Content Include="Views\Poll\Results.cshtml" />
     <Content Include="Scripts\Dialogs\AddUserChoiceDialog\AddUserChoiceDialog.html" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
