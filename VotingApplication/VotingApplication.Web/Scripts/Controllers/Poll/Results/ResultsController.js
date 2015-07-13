@@ -19,33 +19,33 @@
         function activate() {
             ResultsService.getResults($scope.pollId)
             .then(function (data) {
-                console.log(data);
 
                 $scope.results = data.Results;
                 $scope.winners = data.Winners;
 
                 var chartData = ResultsService.createDataTable(data.Results);
 
-                var barChart = {};
-                barChart.type = 'google.charts.Bar';
-                barChart.data = chartData;
-                barChart.options = {
-                    height: 400,
-                    chart: {
-                        title: 'Poll Results',
-                        subtitle: data.PollName,
-                    },
-                    bars: 'horizontal',
-                    legend: {
-                        position: 'none'
-                    }
-                };
-
-                $scope.resultsBarChart = barChart;
-            })
-            .catch(function (data) {
-                console.log(data);
+                $scope.resultsBarChart = createBarChart(chartData, data.PollName);
             });
+        }
+
+        function createBarChart(chartData, pollName) {
+            var barChart = {};
+            barChart.type = 'google.charts.Bar';
+            barChart.data = chartData;
+            barChart.options = {
+                height: 400,
+                chart: {
+                    title: 'Poll Results',
+                    subtitle: pollName,
+                },
+                bars: 'horizontal',
+                legend: {
+                    position: 'none'
+                }
+            };
+
+            return barChart;
         }
     }
 })();

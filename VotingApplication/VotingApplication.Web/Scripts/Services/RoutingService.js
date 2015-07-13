@@ -113,7 +113,6 @@
 
         var service = {
             navigateToVotePage: navigateToVotePage,
-            getVotePageUrl: getVotePageUrl,
 
             navigateToLoginPage: navigateToLoginPage,
             navigateToRegisterPage: navigateToRegisterPage,
@@ -130,21 +129,8 @@
 
         return service;
 
-        function navigateToVotePage(pollId, token) {
-            $window.location.href = getVotePageUrl(pollId, token);
-        }
-
-
-        function getVotePageUrl(pollId, tokenId) {
-            if (!pollId) {
-                return null;
-            }
-
-            var url = '/Poll/#/Vote/' + pollId;
-            if (tokenId) {
-                url += '/' + tokenId;
-            }
-            return url;
+        function navigateToVotePage(pollId) {
+            $window.location.href = '/Poll/#/' + pollId + '/Vote/';
         }
 
         function navigateToLoginPage() {

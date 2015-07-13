@@ -43,9 +43,6 @@
 
                 prom.resolve(response.data);
                 return prom.promise;
-            })
-            .catch(function () {
-                //return transformError(response, prom);
             });
         }
 
@@ -54,7 +51,7 @@
                 return null;
             }
 
-            results.sort(function (a, b) {
+            var sortedResults = results.sort(function (a, b) {
                 return a.Sum < b.Sum;
             });
 
@@ -62,7 +59,7 @@
 
             table[0] = ['Choice', 'Votes'];
 
-            results.forEach(function (result) {
+            sortedResults.forEach(function (result) {
                 table.push([result.ChoiceName, result.Sum]);
             });
 
