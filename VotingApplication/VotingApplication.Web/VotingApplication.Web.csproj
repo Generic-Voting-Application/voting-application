@@ -386,6 +386,8 @@
     <Content Include="Scripts\Directives\ErrorHumidor.js" />
     <Content Include="Scripts\Directives\ErrorBar.js" />
     <Content Include="Scripts\Directives\ErrorHumidor.html" />
+    <Content Include="Scripts\Directives\LoadingSpinner\LoadingSpinner.html" />
+    <Content Include="Scripts\Directives\LoadingSpinner\LoadingSpinner.js" />
     <Content Include="Scripts\Directives\ExpiryDateCountdown\ExpiryDateCountdown.html" />
     <Content Include="Scripts\Directives\ExpiryDateCountdown\ExpiryDateCountdown.js" />
     <Content Include="Scripts\Directives\ResultsChart.html" />
@@ -398,6 +400,8 @@
     <Content Include="Scripts\Directives\TruncatedText.js" />
     <Content Include="Scripts\Directives\VoteChoice\VoteChoice.html" />
     <Content Include="Scripts\Directives\VoteChoice\VoteChoice.js" />
+    <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\PointsVoteChoice.html" />
+    <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\PointsVoteChoice.js" />
     <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\UpDownVoteChoice.html" />
     <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\UpDownVoteChoice.js" />
     <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\MultiVoteChoice.html" />

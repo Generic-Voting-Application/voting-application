@@ -3,19 +3,39 @@
     <div flex-gt-md="50" flex-md="80" flex-sm="90"
          offset-gt-md="25" offset-md="10" offset-sm="5">
 
+        <loading-spinner loaded="loaded"></loading-spinner>
+
         <md-content ng-cloak>
+            <div ng-show="loaded">
+                <div layout layout-gt-sm="row" layout-sm="column">
+                    <div flex-order-gt_sm="1" flex-order-sm="2">
+                        <h2>{{poll.Name}}</h2>
 
-            <div layout layout-gt-sm="row" layout-sm="column">
-                <div flex-order-gt_sm="1" flex-order-sm="2">
-                    <h2>{{poll.Name}}</h2>
+                        <expiry-date-countdown expiry-date-utc="poll.ExpiryDateUtc" poll-expired-callback="pollExpired()" hide-sm></expiry-date-countdown>
+                    </div>
 
-                    <expiry-date-countdown expiry-date-utc="poll.ExpiryDateUtc" poll-expired-callback="pollExpired()" hide-sm>
-                    </expiry-date-countdown>
+                    <span flex hide-sm></span>
+
+                    <div flex-order-gt_sm="2" hide-sm ng-show="poll.NamedVoting">
+                        <form name="voterNameForm">
+                            <md-input-container>
+                                <label>
+                                    <md-icon md-font-icon="fa-user" class="fa" alt="user"></md-icon>
+                                    Your name
+                                </label>
+                                <input ng-model="voterIdentity.name" name="voterName" required>
+
+                                <div ng-messages="voterNameForm.voterName.$error" ng-if="voteClicked">
+                                    <span ng-message="required">You must supply a name</span>
+                                </div>
+                            </md-input-container>
+                        </form>
+                    </div>
                 </div>
 
-                <span flex hide-sm></span>
+                <vote-choice choices="poll.Choices" poll="poll"></vote-choice>
 
-                <div flex-order-gt_sm="2" hide-sm ng-show="poll.NamedVoting">
+                <div ng-show="poll.NamedVoting" hide-gt-sm>
                     <form name="voterNameForm">
                         <md-input-container>
                             <label>
@@ -30,30 +50,11 @@
                         </md-input-container>
                     </form>
                 </div>
+
+                <div layout="row" layout-sm="column" layout-align-gt-sm="end center">
+                    <md-button class="md-primary md-raised" ng-click="castVote()">Vote</md-button>
+                </div>
             </div>
-
-            <vote-choice choices="poll.Choices" poll="poll"></vote-choice>
-
-            <div ng-show="poll.NamedVoting" hide-gt-sm>
-                <form name="voterNameForm">
-                    <md-input-container>
-                        <label>
-                            <md-icon md-font-icon="fa-user" class="fa" alt="user"></md-icon>
-                            Your name
-                        </label>
-                        <input ng-model="voterIdentity.name" name="voterName" required>
-
-                        <div ng-messages="voterNameForm.voterName.$error" ng-if="voteClicked">
-                            <span ng-message="required">You must supply a name</span>
-                        </div>
-                    </md-input-container>
-                </form>
-            </div>
-
-            <div layout layout="row" layout-sm="column" layout-align-gt-sm="end center">
-                <md-button class="md-primary md-raised" ng-click="castVote()">Vote</md-button>
-            </div>
-
         </md-content>
     </div>
 </div>
