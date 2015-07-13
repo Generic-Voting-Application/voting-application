@@ -268,7 +268,7 @@
     <Compile Include="Api\Models\DBViewModels\ManagePollExpiryRequest.cs" />
     <Compile Include="Api\Models\DBViewModels\ManagePollRequestResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\ManageVoteResponseModel.cs" />
-    <Compile Include="Api\Models\DBViewModels\OptionCreationRequestModel.cs" />
+    <Compile Include="Api\Models\DBViewModels\ChoiceCreationRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\OptionRequestResponseModel.cs" />
     <Compile Include="Api\Models\DBViewModels\PollCreationRequestModel.cs" />
     <Compile Include="Api\Models\DBViewModels\PollCreationResponseModel.cs" />

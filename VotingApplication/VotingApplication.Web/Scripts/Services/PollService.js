@@ -129,7 +129,8 @@
 
         var service = {
             getPoll: getPoll,
-            createPoll: createPoll
+            createPoll: createPoll,
+            addChoice: addChoice
         };
 
         return service;
@@ -184,6 +185,14 @@
                     prom.resolve(response.data);
                     return prom.promise;
                 });
+        }
+
+        function addChoice(pollId, newChoice) {
+            return $http
+                .post(
+                    '/api/poll/' + pollId + '/choice',
+                    newChoice
+                );
         }
     }
 })();

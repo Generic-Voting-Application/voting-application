@@ -26,6 +26,9 @@
         $scope.castVote = castVote;
         $scope.pollExpired = pollExpired;
 
+        $scope.userChoice = null;
+        $scope.addChoice = addChoice;
+
         activate();
 
         function activate() {
@@ -52,13 +55,14 @@
             poll.TokenGuid = data.TokenGuid;
             poll.ExpiryDateUtc = data.ExpiryDateUtc;
             poll.NamedVoting = data.NamedVoting;
+            poll.ChoiceAdding = data.ChoiceAdding;
 
             poll.MaxPoints = data.MaxPoints;
             poll.MaxPerVote = data.MaxPerVote;
 
             // Clear existing options
             poll.Choices.length = 0;
-            poll.Choices = $scope.poll.Choices.concat(data.Choices);
+            poll.Choices = data.Choices;
 
             $scope.loaded = true;
         }
@@ -106,6 +110,47 @@
 
         function pollExpired() {
             RoutingService.redirectToResultsPage($scope.pollId);
+        }
+
+        function addChoice(userChoice) {
+            if (userChoice !== null) {
+                var newChoiceRequest = { Name: userChoice };
+
+                PollService.addChoice($scope.pollId, newChoiceRequest)
+                    .then(reloadPoll)
+                    .then(function () {
+                        $scope.userChoice = null;
+                    });
+            }
+        }
+
+        function reloadPoll() {
+            var token = TokenService.retrieveToken($scope.pollId);
+
+            PollService.getPoll($scope.pollId, token)
+                .then(updateChoices);
+        }
+
+        function updateChoices(data) {
+
+            var currentChoices = $scope.poll.Choices;
+            var currentChoiceIds = currentChoices.map(function (elem) { return elem.Id; });
+
+            var updatedPollChoices = data.Choices;
+            var updatedPollChoiceIds = updatedPollChoices.map(function (elem) { return elem.Id; });
+
+            // Find intersection between existing and old, and select those from the current array
+            // (This then keeps any changed voteValues).
+            $scope.poll.Choices = currentChoices.filter(function (choice) {
+                return updatedPollChoiceIds.indexOf(choice.Id) !== -1;
+            });
+
+            // Find newly added choices and concat them to the choices.
+            var addedChoices = updatedPollChoices.filter(function (choice) {
+                return currentChoiceIds.indexOf(choice.Id) < 0;
+            });
+
+            $scope.poll.Choices = $scope.poll.Choices.concat(addedChoices);
         }
     }
 })();
