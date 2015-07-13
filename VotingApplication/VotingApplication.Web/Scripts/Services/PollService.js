@@ -123,9 +123,9 @@
         .module('VoteOn-Poll')
         .factory('PollService', PollService);
 
-    PollService.$inject = ['$http', '$q'];
+    PollService.$inject = ['$http', '$q', 'AccountService'];
 
-    function PollService($http, $q) {
+    function PollService($http, $q, AccountService) {
 
         var service = {
             getPoll: getPoll,
