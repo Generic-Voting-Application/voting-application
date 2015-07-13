@@ -19,6 +19,8 @@ describe('VotingPageController', function () {
     var getTokenVotesPromise;
     var getPollPromise;
 
+    var pollId = '5130518A-4DA5-4FAA-B8FC-0242C9CAA079';
+
     var mockTokenValue = '4A9AFE2C-240B-4BFF-A569-0FEF5A78FC10';
     var mockPollValue = {
         MaxPoints: 5,
@@ -39,7 +41,7 @@ describe('VotingPageController', function () {
         getManageIdPromise = $q.defer();
         setTokenPromise = $q.defer();
 
-        mockRouteParams = { pollId: '5130518A-4DA5-4FAA-B8FC-0242C9CAA079' };
+        mockRouteParams = { pollId: pollId };
 
         mockIdentityService = {
             identity: { name: 'Bob' },
@@ -276,6 +278,20 @@ describe('VotingPageController', function () {
 
             scope.$apply();
             expect(scope.poll.Choices).toEqual(expectedChoices);
+        });
+
+        it('Passes token to PollService when getting poll', function () {
+
+            getPollPromise.resolve(mockPollValue);
+            setTokenPromise.resolve();
+            scope.$apply();
+
+            // Clear the spied calls, as it gets called during construction.
+            mockPollService.getPoll.calls.reset();
+
+            scope.$emit('voterChoiceAddedEvent');
+
+            expect(mockPollService.getPoll).toHaveBeenCalledWith(pollId, mockTokenValue);
         });
 
     });
