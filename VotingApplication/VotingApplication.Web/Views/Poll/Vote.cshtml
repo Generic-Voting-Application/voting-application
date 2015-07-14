@@ -22,10 +22,10 @@
                                 <md-icon md-font-icon="fa-user" class="fa" alt="user"></md-icon>
                                 Your name
                             </label>
-                            <input ng-model="voterIdentity.name" name="voterName" required>
+                            <input id="voter-name-input" ng-model="voterIdentity.name" name="voterName" required>
 
                             <div ng-messages="voterNameForm.voterName.$error" ng-if="voteClicked">
-                                <span ng-message="required">You must supply a name</span>
+                                <span id="voter-name-required-validation-message" ng-message="required">You must supply a name</span>
                             </div>
                         </md-input-container>
                     </form>
@@ -58,10 +58,10 @@
                             <md-icon md-font-icon="fa-user" class="fa" alt="user"></md-icon>
                             Your name
                         </label>
-                        <input ng-model="voterIdentity.name" name="voterName" required>
+                        <input id="voter-name-input" ng-model="voterIdentity.name" name="voterName" required>
 
                         <div ng-messages="voterNameForm.voterName.$error" ng-if="voteClicked">
-                            <span ng-message="required">You must supply a name</span>
+                            <span id="voter-name-required-validation-message" ng-message="required">You must supply a name</span>
                         </div>
                     </md-input-container>
                 </form>

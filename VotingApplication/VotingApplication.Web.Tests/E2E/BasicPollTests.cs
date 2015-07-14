@@ -20,7 +20,8 @@ namespace VotingApplication.Web.Tests.E2E
         public class DefaultPollConfiguration : E2ETest
         {
             private static readonly Guid PollGuid = Guid.NewGuid();
-            private static readonly string PollUrl = SiteBaseUri + "Poll/#/" + PollGuid + "/Vote";
+            private static readonly string PollVoteUrl = SiteBaseUri + "Poll/#/" + PollGuid + "/Vote";
+            private static readonly string PollResultsUrl = SiteBaseUri + "Poll/#/" + PollGuid + "/Results";
 
             [TestMethod]
             [TestCategory("E2E")]
@@ -31,7 +32,7 @@ namespace VotingApplication.Web.Tests.E2E
                     using (var context = new TestVotingContext())
                     {
                         Poll poll = CreatePoll(context);
-                        GoToUrl(driver, PollUrl);
+                        GoToUrl(driver, PollVoteUrl);
 
                         IReadOnlyCollection<IWebElement> choiceNames = driver.FindElements(NgBy.Binding("choice.Name"));
 
@@ -52,18 +53,18 @@ namespace VotingApplication.Web.Tests.E2E
                 {
                     using (var context = new TestVotingContext())
                     {
-                        Poll poll = CreatePoll(context);
-                        GoToUrl(driver, PollUrl);
+                        CreatePoll(context);
+                        GoToUrl(driver, PollVoteUrl);
 
                         IReadOnlyCollection<IWebElement> voteButtons = FindElementsById(driver, "vote-button");
                         voteButtons.First().Click();
 
-                        string expectedUriPrefix = SiteBaseUri + "Poll/#/" + poll.UUID + "/Results";
-                        Assert.IsTrue(driver.Url.StartsWith(expectedUriPrefix));
+                        Assert.IsTrue(driver.Url.StartsWith(PollResultsUrl));
                     }
                 }
             }
 
+            [Ignore]
             [TestMethod]
             [TestCategory("E2E")]
             public void DefaultPoll_ShowsResultsButton()
@@ -73,7 +74,7 @@ namespace VotingApplication.Web.Tests.E2E
                     using (var context = new TestVotingContext())
                     {
                         CreatePoll(context);
-                        GoToUrl(driver, PollUrl);
+                        GoToUrl(driver, PollVoteUrl);
 
                         IWebElement resultsLink = FindElementById(driver, "results-button");
 
@@ -91,7 +92,7 @@ namespace VotingApplication.Web.Tests.E2E
                     using (var context = new TestVotingContext())
                     {
                         CreatePoll(context);
-                        GoToUrl(driver, PollUrl);
+                        GoToUrl(driver, PollVoteUrl);
 
                         IWebElement voteButtons = FindElementById(driver, "vote-button");
                         voteButtons.Click();
@@ -114,7 +115,7 @@ namespace VotingApplication.Web.Tests.E2E
                     using (var context = new TestVotingContext())
                     {
                         CreatePoll(context);
-                        GoToUrl(driver, PollUrl);
+                        GoToUrl(driver, PollVoteUrl);
 
                         IWebElement voteButtons = FindElementById(driver, "vote-button");
                         voteButtons.Click();
@@ -131,20 +132,6 @@ namespace VotingApplication.Web.Tests.E2E
 
                         Assert.IsFalse(ElementExists(driver, selectedChoiceLocator));
                     }
-                }
-            }
-
-            [TestMethod]
-            [TestCategory("E2E")]
-            public void NavigatingToNonExistentPoll_ShowsErrorPage()
-            {
-                using (IWebDriver driver = Driver)
-                {
-                    GoToUrl(driver, PollUrl);
-
-                    IWebElement errorDirective = FindElementById(driver, "voting-partial-error");
-
-                    Assert.IsTrue(errorDirective.IsVisible());
                 }
             }
 
@@ -270,25 +257,146 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestClass]
-        public class NamedVotersPollConfiguration
+        public class NamedVotingTests : E2ETest
         {
-            private static ITestVotingContext _context;
-            private static Poll _namedBasicPoll;
+            const string VoterName = "User";
             private static readonly Guid PollGuid = Guid.NewGuid();
-            private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
-            private IWebDriver _driver;
+            private static readonly string PollVoteUrl = SiteBaseUri + "Poll/#/" + PollGuid + "/Vote";
+            private static readonly string PollResultsUrl = SiteBaseUri + "Poll/#/" + PollGuid + "/Results";
 
-            [ClassInitialize]
-            public static void ClassInitialise(TestContext testContext)
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void NoNameEntered_VoteNotAllowed()
             {
-                _context = new TestVotingContext();
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        CreateNamedVotersPoll(context);
+                        GoToUrl(driver, PollVoteUrl);
 
-                List<Choice> testPollChoices = new List<Choice>() {
-                new Choice(){ Name = "Test Choice 1", Description = "Test Description 1" },
-                new Choice(){ Name = "Test Choice 2", Description = "Test Description 2" }};
 
-                // Open, Named voters, No Choice Adding, Shown Results
-                _namedBasicPoll = new Poll()
+                        IWebElement voteButton = FindElementById(driver, "vote-button");
+                        voteButton.Click();
+
+                        Assert.IsFalse(driver.Url.StartsWith(PollResultsUrl));
+                        Assert.IsTrue(driver.Url.StartsWith(PollVoteUrl));
+                    }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void NameEntered_VoteAllowed()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        CreateNamedVotersPoll(context);
+                        GoToUrl(driver, PollVoteUrl);
+
+
+                        IWebElement nameInput = FindElementById(driver, "voter-name-input");
+                        nameInput.SendKeys(VoterName);
+
+                        IWebElement voteButton = FindElementById(driver, "vote-button");
+                        voteButton.Click();
+
+                        Assert.IsTrue(driver.Url.StartsWith(PollResultsUrl));
+                    }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void NoNameEntered_ShowsFailedValidationMessage()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        CreateNamedVotersPoll(context);
+                        GoToUrl(driver, PollVoteUrl);
+
+
+                        IWebElement voteButton = FindElementById(driver, "vote-button");
+                        voteButton.Click();
+
+                        IWebElement requiredValidationMessage = FindElementById(driver, "voter-name-required-validation-message");
+
+                        Assert.IsTrue(requiredValidationMessage.IsVisible());
+                    }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void EnteringVoterName_AllowsVoting()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        CreateNamedVotersPoll(context);
+                        GoToUrl(driver, PollVoteUrl);
+
+
+                        IWebElement voteButton = FindElementById(driver, "vote-button");
+                        voteButton.Click();
+
+                        IWebElement requiredValidationMessage = FindElementById(driver, "voter-name-required-validation-message");
+
+                        Assert.IsTrue(requiredValidationMessage.IsVisible());
+
+
+
+                        IWebElement nameInput = FindElementById(driver, "voter-name-input");
+                        nameInput.SendKeys(VoterName);
+
+                        voteButton.Click();
+
+                        Assert.IsTrue(driver.Url.StartsWith(PollResultsUrl));
+                    }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void VotingAndReturning_RemembersVoterName()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        CreateNamedVotersPoll(context);
+                        GoToUrl(driver, PollVoteUrl);
+
+
+                        IWebElement nameInput = FindElementById(driver, "voter-name-input");
+                        nameInput.SendKeys(VoterName);
+
+                        IWebElement voteButton = FindElementById(driver, "vote-button");
+                        voteButton.Click();
+
+                        GoToUrl(driver, PollVoteUrl);
+
+                        IWebElement newNameInput = FindElementById(driver, "voter-name-input");
+
+                        Assert.AreEqual(VoterName, newNameInput.GetAttribute("value"));
+                    }
+                }
+            }
+
+            public static Poll CreateNamedVotersPoll(TestVotingContext testContext)
+            {
+                var testPollChoices = new List<Choice>() 
+                {
+                    new Choice(){ Name = "Test Choice 1", Description = "Test Description 1" },
+                };
+
+                // Open, Anonymous, No Choice Adding, Shown Results
+                var namedVotersPoll = new Poll()
                 {
                     UUID = PollGuid,
                     PollType = PollType.Basic,
@@ -302,82 +410,10 @@ namespace VotingApplication.Web.Tests.E2E
                     ElectionMode = false
                 };
 
-                _context.Polls.Add(_namedBasicPoll);
-                _context.SaveChanges();
-            }
+                testContext.Polls.Add(namedVotersPoll);
+                testContext.SaveChanges();
 
-            [ClassCleanup]
-            public static void ClassCleanup()
-            {
-                PollClearer pollTearDown = new PollClearer(_context);
-                pollTearDown.ClearPoll(_namedBasicPoll);
-
-                _context.Dispose();
-            }
-
-            [TestInitialize]
-            public virtual void TestInitialise()
-            {
-                _driver = new NgWebDriver(new ChromeDriver(ChromeDriverDir));
-                _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromSeconds(10));
-                _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
-            }
-
-            [TestCleanup]
-            public void TestCleanUp()
-            {
-                _driver.Dispose();
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void VoteWithNoName_PromptsForName()
-            {
-                _driver.Navigate().GoToUrl(PollUrl);
-                IReadOnlyCollection<IWebElement> voteButtons = _driver.FindElements(By.Id("vote-button"));
-                voteButtons.First().Click();
-
-                Assert.AreEqual(SiteBaseUri + "Poll/#/Vote/" + _namedBasicPoll.UUID, _driver.Url);
-
-                IWebElement formName = _driver.FindElement(NgBy.Model("loginForm.name"));
-                Assert.IsTrue(formName.IsVisible());
-                Assert.AreEqual(String.Empty, formName.Text);
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void NameInput_AcceptsValidName()
-            {
-                _driver.Navigate().GoToUrl(PollUrl);
-                IReadOnlyCollection<IWebElement> voteButtons = _driver.FindElements(By.Id("vote-button"));
-                voteButtons.First().Click();
-
-                IWebElement formName = _driver.FindElement(NgBy.Model("loginForm.name"));
-                IWebElement goButton = _driver.FindElement(By.Id("go-button"));
-
-                Assert.IsTrue(goButton.IsVisible());
-                Assert.IsFalse(goButton.Enabled);
-
-                formName.SendKeys("User");
-
-                Assert.IsTrue(goButton.Enabled);
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void NameInput_VotesUponSubmission()
-            {
-                _driver.Navigate().GoToUrl(PollUrl);
-                IReadOnlyCollection<IWebElement> voteButtons = _driver.FindElements(By.Id("vote-button"));
-                voteButtons.First().Click();
-
-                IWebElement formName = _driver.FindElement(NgBy.Model("loginForm.name"));
-                formName.SendKeys("User");
-
-                IWebElement form = _driver.FindElement(By.Name("loginForm"));
-                form.Submit();
-
-                VoteClearer voterClearer = new VoteClearer(_context);
-                voterClearer.ClearLast();
-
-                Assert.IsTrue(_driver.Url.StartsWith(SiteBaseUri + "Poll/#/Results/" + _namedBasicPoll.UUID));
+                return namedVotersPoll;
             }
         }
 
@@ -522,9 +558,12 @@ namespace VotingApplication.Web.Tests.E2E
         public class ElectionModeConfiguration : E2ETest
         {
             private static readonly Guid PollGuid = Guid.NewGuid();
-            private static readonly string PollUrl = SiteBaseUri + "Poll/#/" + PollGuid + "/Vote";
+            private static readonly string PollVoteUrl = SiteBaseUri + "Poll/#/" + PollGuid + "/Vote";
+            private static readonly string PollResultsUrl = SiteBaseUri + "Poll/#/" + PollGuid + "/Vote";
 
-            [TestMethod, TestCategory("E2E")]
+            [Ignore]
+            [TestMethod]
+            [TestCategory("E2E")]
             public void ElectionModePoll_DoesNotShowResultsButton()
             {
                 using (IWebDriver driver = Driver)
@@ -532,7 +571,7 @@ namespace VotingApplication.Web.Tests.E2E
                     using (var context = new TestVotingContext())
                     {
                         Poll poll = CreateElectionPoll(context);
-                        GoToUrl(driver, PollUrl);
+                        GoToUrl(driver, PollVoteUrl);
 
                         IWebElement resultButton = FindElementById(driver, "results-button");
 
@@ -541,31 +580,31 @@ namespace VotingApplication.Web.Tests.E2E
                 }
             }
 
-            [TestMethod, TestCategory("E2E")]
+            [TestMethod]
+            [TestCategory("E2E")]
             public void ElectionModePoll_WithVotes_NavigatesToResults()
             {
                 using (IWebDriver driver = Driver)
                 {
                     using (var context = new TestVotingContext())
                     {
-                        Poll poll = CreateElectionPoll(context);
-                        GoToUrl(driver, PollUrl);
+                        CreateElectionPoll(context);
+                        GoToUrl(driver, PollVoteUrl);
 
                         IReadOnlyCollection<IWebElement> voteButtons = FindElementsById(driver, "vote-button");
                         voteButtons.First().Click();
 
-                        GoToUrl(driver, PollUrl);
+                        GoToUrl(driver, PollVoteUrl);
 
                         WaitForPageChange();
 
-                        string expectedUrl = SiteBaseUri + "Poll/#/" + PollGuid + "/Results";
-
-                        Assert.IsTrue(driver.Url.StartsWith(expectedUrl));
+                        Assert.IsTrue(driver.Url.StartsWith(PollResultsUrl));
                     }
                 }
             }
 
-            [TestMethod, TestCategory("E2E")]
+            [TestMethod]
+            [TestCategory("E2E")]
             public void ElectionModeResults_WithoutVotes_NavigatesToVote()
             {
                 using (IWebDriver driver = Driver)
@@ -574,13 +613,13 @@ namespace VotingApplication.Web.Tests.E2E
                     {
                         Poll poll = CreateElectionPoll(context);
 
-                        string resultsUrl = PollUrl.Replace("Vote", "Results");
+                        string resultsUrl = PollVoteUrl.Replace("Vote", "Results");
 
-                        GoToUrl(driver, PollUrl);
+                        GoToUrl(driver, PollVoteUrl);
 
                         WaitForPageChange();
 
-                        Assert.AreEqual(PollUrl, driver.Url);
+                        Assert.AreEqual(PollVoteUrl, driver.Url);
                     }
                 }
             }
