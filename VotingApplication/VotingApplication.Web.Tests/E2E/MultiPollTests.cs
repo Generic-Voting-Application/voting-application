@@ -94,7 +94,7 @@ namespace VotingApplication.Web.Tests.E2E
                         CreatePoll(context);
                         GoToUrl(driver, GetPollVoteUrl(PollGuid));
 
-                        IReadOnlyCollection<IWebElement> choices = driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
+                        IReadOnlyCollection<IWebElement> choices = driver.FindElements(NgBy.Repeater("choice in choices"));
                         choices.First().Click();
 
                         IWebElement voteButton = FindElementById(driver, "vote-button");

@@ -54,7 +54,7 @@ namespace VotingApplication.Web.Tests.E2E
                     {
                         Poll poll = CreatePoll(context);
                         GoToUrl(driver, PollUrl);
-                        IReadOnlyCollection<IWebElement> choices = driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
+                        IReadOnlyCollection<IWebElement> choices = driver.FindElements(NgBy.Repeater("choice in choices"));
 
                         IReadOnlyCollection<IWebElement> firstChoiceButtons = choices.First().FindElements(By.TagName("Button"));
                         IWebElement downButton = firstChoiceButtons.First();
@@ -98,7 +98,7 @@ namespace VotingApplication.Web.Tests.E2E
                         CreatePoll(context);
                         GoToUrl(driver, PollUrl);
 
-                        IReadOnlyCollection<IWebElement> choices = driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
+                        IReadOnlyCollection<IWebElement> choices = driver.FindElements(NgBy.Repeater("choice in choices"));
 
                         IReadOnlyCollection<IWebElement> firstChoiceButtons = choices.First().FindElements(By.TagName("Button"));
                         IWebElement downButton = firstChoiceButtons.First();
@@ -109,9 +109,9 @@ namespace VotingApplication.Web.Tests.E2E
 
                         NavigateBackToVotePage(driver);
 
-                        IReadOnlyCollection<IWebElement> selectedChoices = driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
+                        IReadOnlyCollection<IWebElement> selectedChoices = driver.FindElements(NgBy.Repeater("choice in choices"));
                         IWebElement selectedChoice = selectedChoices.First();
-                        IWebElement selectedChoiceButton = selectedChoice.FindElement(By.CssSelector(".active-btn"));
+                        IWebElement selectedChoiceButton = selectedChoice.FindElement(By.CssSelector(".md-accent"));
 
 
                         Assert.IsTrue(selectedChoiceButton.IsVisible());
