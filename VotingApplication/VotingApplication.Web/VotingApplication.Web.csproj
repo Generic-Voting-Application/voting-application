@@ -463,14 +463,12 @@
     <Content Include="Views\Routes\AccountResetPassword.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Routes\Manage.cshtml" />
-    <Content Include="Views\Routes\MultiVote.cshtml" />
     <Content Include="Views\Routes\ManageChoices.cshtml" />
     <Content Include="Views\Routes\ManagePollType.cshtml" />
     <Content Include="Views\Routes\ManageInvitees.cshtml" />
     <Content Include="Views\Routes\ManageExpiry.cshtml" />
     <Content Include="Views\Routes\DatePicker.cshtml" />
     <Content Include="Views\Routes\MyPolls.cshtml" />
-    <Content Include="Views\Routes\Create.cshtml" />
     <Content Include="Content\Scss\DateTimePicker.scss" />
     <Content Include="Views\Routes\TimePicker.cshtml" />
     <Content Include="Views\Routes\ManageVoters.cshtml" />
@@ -490,10 +488,6 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Web.config" />
-    <Content Include="Views\Routes\PointsVote.cshtml" />
-    <Content Include="Views\Routes\BasicVote.cshtml" />
-    <Content Include="Views\Routes\IdentityLogin.cshtml" />
-    <Content Include="Views\Routes\UpDownVote.cshtml" />
     <Content Include="Views\Poll\Index.cshtml" />
     <Content Include="Views\Routes\ManageMisc.cshtml" />
     <Content Include="Views\Routes\ConfirmRegistration.cshtml" />
@@ -527,8 +521,6 @@
     <Content Include="packages.config" />
     <Content Include="Content\Scss\Manage.scss" />
     <Content Include="Content\Scss\Voting.scss" />
-    <Content Include="Views\Routes\Vote.cshtml" />
-    <Content Include="Views\Routes\Results.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VotingApplication.Data\VotingApplication.Data.csproj">
