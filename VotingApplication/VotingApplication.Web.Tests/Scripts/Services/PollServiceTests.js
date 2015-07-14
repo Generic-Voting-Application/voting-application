@@ -2,21 +2,19 @@
 
 describe('Poll Service', function () {
 
-    beforeEach(module('GVA.Poll'));
+    beforeEach(module('VoteOn-Poll'));
 
     var pollService;
 
     var accountService;
     var httpBackend;
     var rootScope;
-    var errors;
 
-    beforeEach(inject(function (PollService, AccountService, Errors, $httpBackend, $rootScope) {
+    beforeEach(inject(function (PollService, AccountService, $httpBackend, $rootScope) {
         pollService = PollService;
         accountService = AccountService;
         httpBackend = $httpBackend;
         rootScope = $rootScope;
-        errors = Errors;
     }));
 
     afterEach(function () {
@@ -25,80 +23,6 @@ describe('Poll Service', function () {
 
         // http://stackoverflow.com/questions/27016235/angular-js-unit-testing-httpbackend-spec-has-no-expectations
         expect('Suppress SPEC HAS NO EXPECTATIONS').toBeDefined();
-    });
-
-    describe('Copy Poll', function () {
-
-        it('Adds account token to Authorization header', function () {
-
-            var pollId = null;
-            var tokenValue = 'Some long token value...';
-
-            accountService.account = { token: tokenValue };
-
-            var expectedUrl = '/api/dashboard/copy';
-            var expectedAuthorizationHeader = 'Bearer ' + tokenValue;
-            var expectedData = '{"UUIDToCopy":null}';
-
-            httpBackend.expect(
-                   'POST',
-                   expectedUrl,
-                   expectedData,
-                   function (headers) {
-                       return headers['Authorization'] === expectedAuthorizationHeader;
-                   }
-               ).respond(200);
-
-            pollService.copyPoll(pollId);
-
-            httpBackend.flush();
-        });
-
-        it('Adds the pollId to the request', function () {
-            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
-            var expectedUrl = '/api/dashboard/copy';
-
-            var expectedData = '{"UUIDToCopy":"' + pollId + '"}';
-
-            accountService.account = { token: null };
-
-            httpBackend.expect(
-                   'POST',
-                   expectedUrl,
-                   expectedData
-               ).respond(200);
-
-            pollService.copyPoll(pollId);
-
-            httpBackend.flush();
-        });
-    });
-
-    describe('Get User Polls', function () {
-
-        it('Adds account token to Authorization header', function () {
-
-            var tokenValue = 'Some long token value...';
-
-            accountService.account = { token: tokenValue };
-
-            var expectedUrl = '/api/dashboard/polls';
-            var expectedAuthorizationHeader = 'Bearer ' + tokenValue;
-            var expectedData = null;
-
-            httpBackend.expect(
-                   'GET',
-                   expectedUrl,
-                   expectedData,
-                   function (headers) {
-                       return headers['Authorization'] === expectedAuthorizationHeader;
-                   }
-               ).respond(200);
-
-            pollService.getUserPolls();
-
-            httpBackend.flush();
-        });
     });
 
     describe('Create Poll', function () {
@@ -112,7 +36,7 @@ describe('Poll Service', function () {
 
             var expectedUrl = 'api/poll';
             var expectedAuthorizationHeader = 'Bearer ' + tokenValue;
-            var expectedData = '{"PollName":null}';
+            var expectedData = 'null';
 
             httpBackend.expect(
                    'POST',
@@ -135,7 +59,7 @@ describe('Poll Service', function () {
 
             var expectedUrl = 'api/poll';
             var expectedAuthorizationHeader = 'Bearer ' + null;
-            var expectedData = '{"PollName":null}';
+            var expectedData = 'null';
 
             httpBackend.expect(
                    'POST',
@@ -150,32 +74,6 @@ describe('Poll Service', function () {
 
             httpBackend.flush();
         });
-
-        it('Adds the new question to the request', function () {
-
-            var newQuestion = 'Aren\'t you a little short for a StormTrooper?';
-            var tokenValue = 'Some long token value...';
-
-            accountService.account = { token: tokenValue };
-
-            var expectedUrl = 'api/poll';
-            var expectedAuthorizationHeader = 'Bearer ' + tokenValue;
-            var expectedData = '{"PollName":"' + newQuestion + '"}';
-
-            httpBackend.expect(
-                   'POST',
-                   expectedUrl,
-                   expectedData,
-                   function (headers) {
-                       return headers['Authorization'] === expectedAuthorizationHeader;
-                   }
-               ).respond(200);
-
-            pollService.createPoll(newQuestion);
-
-            httpBackend.flush();
-        });
-
     });
 
     describe('Get Poll', function () {
@@ -271,78 +169,26 @@ describe('Poll Service', function () {
 
             expect(prom.$$state.status).toBe(2);
         });
+    });
 
-        it('Returns the correct error when the poll is not found', function () {
-            var pollId = '5CE7BB52-5058-4033-B2A4-5C4214AC4AFA';
-            var ballotTokenGuid = '0310812A-05D3-41BA-AA34-CF7BF8330B67';
+    describe('Add Choice', function () {
 
-            var expectedUrl = '/api/poll/' + pollId;
+        it('Makes http call to add choice', function () {
+            var pollId = '7C7CE5F8-873D-4F1F-AF3F-D24769813ABC';
+            var newChoice = {};
 
-            httpBackend.whenGET(
+            var expectedUrl = '/api/poll/' + pollId + '/choice';
+
+            httpBackend.expect(
+                    'POST',
                     expectedUrl
-                ).respond(404);
+                    ).respond(200, '');
 
-
-            var errorMessage = null;
-
-            pollService.getPoll(pollId, ballotTokenGuid)
-                .catch(function (message) {
-                    errorMessage = message;
-                });
+            pollService.addChoice(pollId, newChoice);
 
             httpBackend.flush();
 
-
-            expect(errorMessage).toBe(errors.PollNotFound);
         });
 
-        it('Returns the correct error when the poll is invite only and an invalid token is supplied', function () {
-            var pollId = '5CE7BB52-5058-4033-B2A4-5C4214AC4AFA';
-            var ballotTokenGuid = '0310812A-05D3-41BA-AA34-CF7BF8330B67';
-
-            var expectedUrl = '/api/poll/' + pollId;
-
-            httpBackend.whenGET(
-                    expectedUrl
-                ).respond(401);
-
-
-            var errorMessage = null;
-
-            pollService.getPoll(pollId, ballotTokenGuid)
-                .catch(function (message) {
-                    errorMessage = message;
-                });
-
-            httpBackend.flush();
-
-
-            expect(errorMessage).toBe(errors.PollInviteOnlyNoToken);
-        });
-
-        it('Returns the readableMessage property in unknown error cases', function () {
-
-            var pollId = '5CE7BB52-5058-4033-B2A4-5C4214AC4AFA';
-            var ballotTokenGuid = '0310812A-05D3-41BA-AA34-CF7BF8330B67';
-
-            var expectedUrl = '/api/poll/' + pollId;
-
-            httpBackend.whenGET(
-                    expectedUrl
-                ).respond(400);
-
-            var errorMessage = null;
-
-            pollService.getPoll(pollId, ballotTokenGuid)
-                .catch(function (message) {
-                    errorMessage = message;
-                });
-
-            httpBackend.flush();
-
-
-            var expectedErrorMessage = 'An error has occured';
-            expect(errorMessage).toBe(expectedErrorMessage);
-        });
     });
 });

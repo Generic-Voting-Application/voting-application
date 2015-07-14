@@ -26,48 +26,6 @@ namespace VotingApplication.Web.Controllers
             _metricHandler.HandlePageChangeEvent(route, Response.StatusCode, Guid.Parse(pollId.ToString()));
         }
 
-        public ActionResult Vote()
-        {
-            LogPageEvent("Vote");
-            return View();
-        }
-
-        public ActionResult Results()
-        {
-            LogPageEvent("Results");
-            return View();
-        }
-
-        public ActionResult BasicVote()
-        {
-            return View();
-        }
-
-        public ActionResult PointsVote()
-        {
-            return View();
-        }
-
-        public ActionResult UpDownVote()
-        {
-            return View();
-        }
-
-        public ActionResult MultiVote()
-        {
-            return View();
-        }
-
-        public ActionResult IdentityLogin()
-        {
-            return View();
-        }
-
-        public ActionResult PollHeading()
-        {
-            return View();
-        }
-
         public ActionResult AccountLogin()
         {
             LogPageEvent("Login");
@@ -144,11 +102,6 @@ namespace VotingApplication.Web.Controllers
         }
 
         public ActionResult TimePicker()
-        {
-            return View();
-        }
-
-        public ActionResult Create()
         {
             return View();
         }

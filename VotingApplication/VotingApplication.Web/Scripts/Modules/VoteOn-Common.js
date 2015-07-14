@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('VoteOn-Common', ['ngMaterial', 'ngMessages'])
+        .module('VoteOn-Common', ['ngMaterial', 'ngMessages', 'ngStorage', 'ngRoute'])
         .config(function ($mdThemingProvider) {
             $mdThemingProvider.theme('default')
                 .primaryPalette('blue')
