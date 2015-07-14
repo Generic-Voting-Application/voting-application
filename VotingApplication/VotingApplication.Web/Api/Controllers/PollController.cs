@@ -178,6 +178,8 @@ namespace VotingApplication.Web.Api.Controllers
                 newPoll.ElectionMode = pollCreationRequest.ElectionMode;
                 newPoll.ExpiryDateUtc = pollCreationRequest.ExpiryDateUtc;
                 newPoll.InviteOnly = pollCreationRequest.InviteOnly;
+                newPoll.MaxPerVote = pollCreationRequest.MaxPerVote;
+                newPoll.MaxPoints = pollCreationRequest.MaxPoints;
             };
 
             if (User.Identity.IsAuthenticated)

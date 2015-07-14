@@ -354,6 +354,7 @@
     <Content Include="Scripts\Controllers\Create\ConfirmStepController.js" />
     <Content Include="Scripts\Controllers\Create\InvitationStepController.js" />
     <Content Include="Scripts\Controllers\Create\QuestionStepController.js" />
+    <Content Include="Scripts\Controllers\Create\StyleStepController.js" />
     <Content Include="Scripts\Controllers\EditOptionDialogController.js" />
     <Content Include="Scripts\Controllers\AddOptionDialogController.js" />
     <Content Include="Scripts\Controllers\ManageVotersController.js" />

@@ -1,4 +1,4 @@
-﻿<div layout="row">
+﻿<div layout="row" ng-controller="StyleStepController">
 
     <div flex-gt-md="60" flex-md="80" flex-sm="90"
          offset-gt-md="20" offset-md="10" offset-sm="5">
@@ -32,27 +32,61 @@
             </div>
         </md-content>
 
+        <md-content layout-gt-sm="row" layout-sm="column" layout-align="space-around center" ng-if="newPoll.PollType=='Points'" ng-init="initalisePointsConfig()" layout-padding>
+
+            <md-card layout="column">
+                <md-card-content>
+                    <h1 class="md-title" layout layout-align="center">Max per Choice</h1>
+                    <div layout="row" layout-align="center center">
+                        <md-button ng-click="changeMaxPerVote(-1)" aria-label="decrease points per vote">
+                            <md-icon md-font-icon="fa-minus" class="fa icon-padded-top" alt="minus"></md-icon>
+                        </md-button>
+                        {{newPoll.MaxPerVote}}
+                        <md-button ng-click="changeMaxPerVote(1)" aria-label="increase points per vote">
+                            <md-icon md-font-icon="fa-plus" class="fa icon-padded-top" alt="plus"></md-icon>
+                        </md-button>
+                    </div>
+                </md-card-content>
+            </md-card>
+
+            <md-card layout="column">
+                <md-card-content>
+                    <h1 class="md-title" layout layout-align="center">Max Points</h1>
+                    <div layout="row" layout-align="center center">
+                        <md-button ng-click="changeMaxPoints(-1)" aria-label="decrease max points">
+                            <md-icon md-font-icon="fa-minus" class="fa icon-padded-top" alt="minus"></md-icon>
+                        </md-button>
+                        {{newPoll.MaxPoints}}
+                        <md-button ng-click="changeMaxPoints(1)" aria-label="increase max points">
+                            <md-icon md-font-icon="fa-plus" class="fa icon-padded-top" alt="plus"></md-icon>
+                        </md-button>
+                    </div>
+                </md-card-content>
+            </md-card>
+
+        </md-content>
+
         <md-content layout="column" ng-switch="newPoll.PollType" layout-padding>
-                <div ng-switch-when="Basic">
-                    <p>Each voter may vote on exactly one choice.</p>
-                    <p>Each vote given equal weighting with everybody else's vote.</p>
-                    <p>Voters can not vote for no choice.</p>
-                </div>
-                <div ng-switch-when="Multi">
-                    <p>Each voter may vote on multiple choices.</p>
-                    <p>Each vote is given equal weighting.</p>
-                    <p>Voters may decide to not vote for any option.</p>
-                </div>
-                <div ng-switch-when="UpDown">
-                    <p>Each voter may assign a positive or negative vote to each choice.</p>
-                    <p>One negative vote cancels out a negative vote and vice versa.</p>
-                    <p>Voters may decide to assign neither a positive or negative vote for a choice.</p>
-                </div>
-                <div ng-switch-when="Points">
-                    <p>Each voter is given a pool of points from which they need to distribute amongst the choices.</p>
-                    <p>Each choice has a maximum number of points that can be assigned to it.</p>
-                    <p>Voters may decide to give no points to a choice.</p>
-                </div>
+            <div ng-switch-when="Basic">
+                <p>Each voter may vote on exactly one choice.</p>
+                <p>Each vote given equal weighting with everybody else's vote.</p>
+                <p>Voters can not vote for no choice.</p>
+            </div>
+            <div ng-switch-when="Multi">
+                <p>Each voter may vote on multiple choices.</p>
+                <p>Each vote is given equal weighting.</p>
+                <p>Voters may decide to not vote for any option.</p>
+            </div>
+            <div ng-switch-when="UpDown">
+                <p>Each voter may assign a positive or negative vote to each choice.</p>
+                <p>One negative vote cancels out a negative vote and vice versa.</p>
+                <p>Voters may decide to assign neither a positive or negative vote for a choice.</p>
+            </div>
+            <div ng-switch-when="Points">
+                <p>Each voter is given a pool of points from which they need to distribute amongst the choices.</p>
+                <p>Each choice has a maximum number of points that can be assigned to it.</p>
+                <p>Voters may decide to give no points to a choice.</p>
+            </div>
         </md-content>
 
         <md-divider></md-divider>
