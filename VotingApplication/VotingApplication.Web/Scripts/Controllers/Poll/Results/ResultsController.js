@@ -52,7 +52,7 @@
         function filterDuplicates(array) {
             var hash = {};
             return array.filter(function (item) {
-                return hash.hasOwnProperty(item) ? false : (hash[item] = true);
+                return Object.prototype.hasOwnProperty.call(hash, item) ? false : (hash[item] = true);
             });
         }
 
