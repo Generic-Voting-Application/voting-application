@@ -89,12 +89,15 @@ namespace VotingApplication.Web.Tests.E2E
                         CreatePoll(context);
                         GoToUrl(driver, PollVoteUrl);
 
-                        IWebElement voteButtons = FindElementById(driver, "vote-button");
-                        voteButtons.Click();
+                        IReadOnlyCollection<IWebElement> choices = driver.FindElements(NgBy.Binding("choice.Name"));
+                        choices.First().Click();
+
+                        IWebElement voteButton = FindElementById(driver, "vote-button");
+                        voteButton.Click();
 
                         NavigateBackToVotePage(driver);
 
-                        IWebElement selectedChoice = driver.FindElement(By.CssSelector(".selected-choice"));
+                        IWebElement selectedChoice = driver.FindElement(By.CssSelector(".md-ripple-visible"));
 
                         Assert.IsTrue(selectedChoice.IsVisible());
                     }

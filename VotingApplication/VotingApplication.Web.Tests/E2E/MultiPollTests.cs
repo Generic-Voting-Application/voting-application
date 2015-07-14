@@ -102,7 +102,7 @@ namespace VotingApplication.Web.Tests.E2E
 
                         NavigateBackToVotePage(driver);
 
-                        IWebElement selectedChoice = driver.FindElement(By.CssSelector(".selected-choice"));
+                        IWebElement selectedChoice = FindElementById(driver, "multi-choice-selected");
 
 
                         Assert.IsTrue(selectedChoice.IsVisible());
