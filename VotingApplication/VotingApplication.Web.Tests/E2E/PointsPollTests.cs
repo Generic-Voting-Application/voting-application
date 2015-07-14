@@ -98,10 +98,10 @@ namespace VotingApplication.Web.Tests.E2E
                         Poll poll = CreatePoll(context);
                         GoToUrl(driver, PollUrl);
 
-                        IReadOnlyCollection<IWebElement> choices = driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
+                        IReadOnlyCollection<IWebElement> choices = driver.FindElements(NgBy.Repeater("choice in choices"));
 
                         IWebElement firstChoice = choices.First();
-                        IWebElement selectedChoicePoints = firstChoice.FindElement(NgBy.Binding("choice.voteValue"));
+                        IWebElement selectedChoicePoints = firstChoice.FindElement(NgBy.Binding("choice.VoteValue"));
 
                         IReadOnlyCollection<IWebElement> increaseChoiceButtons = FindElementsById(driver, "increase-button");
                         IWebElement plusButton = increaseChoiceButtons.First();
@@ -109,12 +109,12 @@ namespace VotingApplication.Web.Tests.E2E
                         IReadOnlyCollection<IWebElement> decreaseChoiceButtons = FindElementsById(driver, "decrease-button");
                         IWebElement minusButton = decreaseChoiceButtons.First();
 
-                        string noPointsAllocatedPointsValue = "0/" + poll.MaxPerVote;
+                        string noPointsAllocatedPointsValue = "0 / " + poll.MaxPerVote;
 
                         Assert.AreEqual(noPointsAllocatedPointsValue, selectedChoicePoints.Text);
 
                         plusButton.Click();
-                        string onePointAllocatedPointsValue = "1/" + poll.MaxPerVote;
+                        string onePointAllocatedPointsValue = "1 / " + poll.MaxPerVote;
                         Assert.AreEqual(onePointAllocatedPointsValue, selectedChoicePoints.Text);
 
                         minusButton.Click();
@@ -134,7 +134,7 @@ namespace VotingApplication.Web.Tests.E2E
                         Poll poll = CreatePoll(context);
                         GoToUrl(driver, PollUrl);
 
-                        IWebElement totalPoints = FindElementById(driver, "points-display");
+                        IWebElement totalPoints = FindElementById(driver, "points-remaining");
 
                         IReadOnlyCollection<IWebElement> increaseChoiceButtons = FindElementsById(driver, "increase-button");
                         IWebElement plusButton = increaseChoiceButtons.First();
@@ -143,11 +143,11 @@ namespace VotingApplication.Web.Tests.E2E
                         IWebElement minusButton = decreaseChoiceButtons.First();
 
 
-                        string totalPointsNoneAllocated = "Unallocated points: " + poll.MaxPoints + "/" + poll.MaxPoints;
+                        string totalPointsNoneAllocated = poll.MaxPoints + " of " + poll.MaxPoints + " points remaining";
                         Assert.AreEqual(totalPointsNoneAllocated, totalPoints.Text);
 
                         plusButton.Click();
-                        string totalPointsOneAllocated = "Unallocated points: " + (poll.MaxPoints - 1) + "/" + poll.MaxPoints;
+                        string totalPointsOneAllocated = (poll.MaxPoints - 1) + " of " + poll.MaxPoints + " points remaining";
                         Assert.AreEqual(totalPointsOneAllocated, totalPoints.Text);
 
                         minusButton.Click();
@@ -193,7 +193,7 @@ namespace VotingApplication.Web.Tests.E2E
                         GoToUrl(driver, PollUrl);
 
 
-                        IReadOnlyCollection<IWebElement> choices = driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
+                        IReadOnlyCollection<IWebElement> choices = driver.FindElements(NgBy.Repeater("choice in choices"));
 
                         // Allocate maximum points (3 - see CreatePoll) to the first choice.
                         IWebElement firstChoice = choices.First();
@@ -226,7 +226,7 @@ namespace VotingApplication.Web.Tests.E2E
                         Poll poll = CreatePoll(context);
                         GoToUrl(driver, PollUrl);
 
-                        IReadOnlyCollection<IWebElement> choices = driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
+                        IReadOnlyCollection<IWebElement> choices = driver.FindElements(NgBy.Repeater("choice in choices"));
 
                         IWebElement choice = choices.First();
                         IWebElement increaseButton = choice.FindElement(By.Id("increase-button"));
@@ -237,7 +237,7 @@ namespace VotingApplication.Web.Tests.E2E
 
                         NavigateBackToVotePage(driver);
 
-                        IReadOnlyCollection<IWebElement> selectedChoices = driver.FindElements(NgBy.Repeater("choice in poll.Choices"));
+                        IReadOnlyCollection<IWebElement> selectedChoices = driver.FindElements(NgBy.Repeater("choice in choices"));
 
                         IWebElement selectedChoice = selectedChoices.First();
                         IWebElement selectedChoicePoints = selectedChoice.FindElement(NgBy.Binding("poll.MaxPerVote"));
@@ -245,7 +245,7 @@ namespace VotingApplication.Web.Tests.E2E
 
                         Assert.IsTrue(selectedChoicePoints.IsVisible());
 
-                        string expectedChoicePoints = "1/" + poll.MaxPerVote;
+                        string expectedChoicePoints = "1 / " + poll.MaxPerVote;
                         Assert.AreEqual(expectedChoicePoints, selectedChoicePoints.Text);
                     }
                 }
