@@ -37,9 +37,9 @@
             <div ng-show="poll.ChoiceAdding" layout layout-margin hide-sm>
                 <md-input-container>
                     <label>Add your own choice</label>
-                    <input ng-model="userChoice" ng-disabled="submitting">
+                    <input id="user-choice-input" ng-model="userChoice" ng-disabled="submitting">
                 </md-input-container>
-                <md-button class="md-icon-button" ng-click="addChoiceFromPage(userChoice)" ng-disabled="submitting">
+                <md-button id="add-user-choice-button" class="md-icon-button" ng-click="addChoiceFromPage(userChoice)" ng-disabled="submitting">
                     <md-icon md-font-icon="fa-plus fa-lg" class="fa vo-button-margin-top"></md-icon>
                 </md-button>
                 <span flex></span>

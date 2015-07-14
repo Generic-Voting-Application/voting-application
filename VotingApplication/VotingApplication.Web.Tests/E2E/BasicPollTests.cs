@@ -1,21 +1,16 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using Protractor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Tests.E2E.Helpers;
-using VotingApplication.Web.Tests.E2E.Helpers.Clearers;
 
 namespace VotingApplication.Web.Tests.E2E
 {
     public class BasicPollTests
     {
-        private const string ChromeDriverDir = @"..\..\";
-        private const string SiteBaseUri = @"http://localhost:64205/";
-
         [TestClass]
         public class DefaultPollConfiguration : E2ETest
         {
@@ -418,25 +413,96 @@ namespace VotingApplication.Web.Tests.E2E
         }
 
         [TestClass]
-        public class ChoiceAddingPollConfiguration
+        public class ChoiceAddingTests : E2ETest
         {
-            private static ITestVotingContext _context;
-            private static Poll _choiceAddingBasicPoll;
             private static readonly Guid PollGuid = Guid.NewGuid();
-            private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
-            private IWebDriver _driver;
+            private static readonly string PollVoteUrl = SiteBaseUri + "Poll/#/" + PollGuid + "/Vote";
 
-            [ClassInitialize]
-            public static void ClassInitialise(TestContext testContext)
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void ChoiceAddingPoll_UserChoiceInputVisible()
             {
-                _context = new TestVotingContext();
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        CreateChoiceAddingPoll(context);
 
-                List<Choice> testPollChoices = new List<Choice>() {
-                new Choice(){ Name = "Test Choice 1", Description = "Test Description 1" },
-                new Choice(){ Name = "Test Choice 2", Description = "Test Description 2" }};
+                        GoToUrl(driver, PollVoteUrl);
 
-                // Open, Named voters, No Choice Adding, Shown Results
-                _choiceAddingBasicPoll = new Poll()
+                        IWebElement addChoiceInput = FindElementById(driver, "user-choice-input");
+
+                        Assert.IsTrue(addChoiceInput.IsVisible());
+                    }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void NonChoiceAddingPoll_UserChoiceInputNotVisible()
+            {
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        Poll poll = CreateChoiceAddingPoll(context);
+                        poll.ChoiceAdding = false;
+                        context.SaveChanges();
+
+                        GoToUrl(driver, PollVoteUrl);
+
+                        IWebElement addChoiceInput = FindElementById(driver, "user-choice-input");
+
+                        Assert.IsFalse(addChoiceInput.IsVisible());
+                    }
+                }
+            }
+
+            [TestMethod]
+            [TestCategory("E2E")]
+            public void Add_AddsChoice()
+            {
+                const string newChoiceName = "NEW CHOICE";
+
+                using (IWebDriver driver = Driver)
+                {
+                    using (var context = new TestVotingContext())
+                    {
+                        Poll poll = CreateChoiceAddingPoll(context);
+
+                        GoToUrl(driver, PollVoteUrl);
+
+                        IWebElement addChoiceInput = FindElementById(driver, "user-choice-input");
+                        addChoiceInput.SendKeys(newChoiceName);
+
+                        IWebElement formButton = FindElementById(driver, "add-user-choice-button");
+                        formButton.Click();
+
+                        IReadOnlyCollection<IWebElement> choiceNames = driver.FindElements(NgBy.Binding("choice.Name"));
+
+                        Assert.AreEqual(poll.Choices.Count + 1, choiceNames.Count);
+                        Assert.AreEqual(newChoiceName, choiceNames.Last().Text);
+
+                        // Refresh to ensure the new choice was stored in DB
+                        GoToUrl(driver, PollVoteUrl);
+
+                        IReadOnlyCollection<IWebElement> choiceNamesAfterRefresh = driver.FindElements(NgBy.Binding("choice.Name"));
+
+                        Assert.AreEqual(poll.Choices.Count + 1, choiceNamesAfterRefresh.Count);
+                        Assert.AreEqual(newChoiceName, choiceNamesAfterRefresh.Last().Text);
+                    }
+                }
+            }
+
+            public static Poll CreateChoiceAddingPoll(TestVotingContext testContext)
+            {
+                var testPollChoices = new List<Choice>() 
+                {
+                    new Choice(){ Name = "Test Choice 1", Description = "Test Description 1" },
+                };
+
+                // Open, Anonymous, Choice Adding, Shown Results
+                var choiceAddingBasicPoll = new Poll()
                 {
                     UUID = PollGuid,
                     PollType = PollType.Basic,
@@ -450,107 +516,10 @@ namespace VotingApplication.Web.Tests.E2E
                     ElectionMode = false
                 };
 
-                _context.Polls.Add(_choiceAddingBasicPoll);
-                _context.SaveChanges();
-            }
+                testContext.Polls.Add(choiceAddingBasicPoll);
+                testContext.SaveChanges();
 
-            [ClassCleanup]
-            public static void ClassCleanup()
-            {
-                PollClearer pollTearDown = new PollClearer(_context);
-                pollTearDown.ClearPoll(_choiceAddingBasicPoll);
-
-                _context.Dispose();
-            }
-
-            [TestInitialize]
-            public virtual void TestInitialise()
-            {
-                _driver = new NgWebDriver(new ChromeDriver(ChromeDriverDir));
-                _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromSeconds(10));
-                _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
-            }
-
-            [TestCleanup]
-            public void TestCleanUp()
-            {
-                _driver.Dispose();
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void ChoiceAddingPoll_ProvidesLinkForAddingChoices()
-            {
-                _driver.Navigate().GoToUrl(PollUrl);
-                IWebElement addChoiceLink = _driver.FindElement(By.Id("add-choice-link"));
-
-                Assert.IsTrue(addChoiceLink.IsVisible());
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void ChoiceAddingLink_PromptsForChoiceDetails()
-            {
-                _driver.Navigate().GoToUrl(PollUrl);
-                IWebElement addChoiceLink = _driver.FindElement(By.Id("add-choice-link"));
-                addChoiceLink.Click();
-
-                Assert.AreEqual(PollUrl, _driver.Url);
-
-                IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
-                Assert.IsTrue(formName.IsVisible());
-                Assert.AreEqual(String.Empty, formName.Text);
-
-                IWebElement formDescription = _driver.FindElement(NgBy.Model("addChoiceForm.description"));
-                Assert.IsTrue(formDescription.IsVisible());
-                Assert.AreEqual(String.Empty, formDescription.Text);
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void ChoiceAddingPrompt_AcceptsValidName()
-            {
-                _driver.Navigate().GoToUrl(PollUrl);
-                IWebElement addChoiceLink = _driver.FindElement(By.Id("add-choice-link"));
-                addChoiceLink.Click();
-
-                IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
-                IWebElement addButton = _driver.FindElement(By.Id("add-button"));
-
-                Assert.IsTrue(addButton.IsVisible());
-                Assert.IsFalse(addButton.Enabled);
-
-                formName.SendKeys("New Choice");
-
-                Assert.IsTrue(addButton.Enabled);
-            }
-
-            [TestMethod, TestCategory("E2E")]
-            public void ChoiceAddingSubmission_AddsChoice()
-            {
-                _driver.Navigate().GoToUrl(PollUrl);
-                IWebElement addChoiceLink = _driver.FindElement(By.Id("add-choice-link"));
-                addChoiceLink.Click();
-
-                IWebElement formName = _driver.FindElement(NgBy.Model("addChoiceForm.name"));
-                const string newChoiceName = "New Choice";
-                formName.SendKeys(newChoiceName);
-
-                IWebElement formButton = _driver.FindElement(By.Id("add-button"));
-                formButton.Click();
-
-                IReadOnlyCollection<IWebElement> choiceNames = _driver.FindElements(NgBy.Binding("choice.Name"));
-
-                Assert.AreEqual(_choiceAddingBasicPoll.Choices.Count + 1, choiceNames.Count);
-                Assert.AreEqual(newChoiceName, choiceNames.Last().Text);
-
-                // Refresh to ensure the new choice was stored in DB
-                _driver.Navigate().GoToUrl(PollUrl);
-
-                choiceNames = _driver.FindElements(NgBy.Binding("choice.Name"));
-
-                Assert.AreEqual(_choiceAddingBasicPoll.Choices.Count + 1, choiceNames.Count);
-                Assert.AreEqual(newChoiceName, choiceNames.Last().Text);
-
-                _choiceAddingBasicPoll.Choices.Remove(_choiceAddingBasicPoll.Choices.Last());
-                _context.SaveChanges();
+                return choiceAddingBasicPoll;
             }
         }
 
