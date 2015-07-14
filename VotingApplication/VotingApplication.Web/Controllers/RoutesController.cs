@@ -26,11 +26,6 @@ namespace VotingApplication.Web.Controllers
             _metricHandler.HandlePageChangeEvent(route, Response.StatusCode, Guid.Parse(pollId.ToString()));
         }
 
-        public ActionResult PollHeading()
-        {
-            return View();
-        }
-
         public ActionResult AccountLogin()
         {
             LogPageEvent("Login");
