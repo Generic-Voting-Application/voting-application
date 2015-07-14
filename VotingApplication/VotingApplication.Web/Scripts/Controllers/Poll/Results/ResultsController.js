@@ -38,7 +38,7 @@
            .then(function (data) {
                if (data) {
                    $scope.results = data.Results;
-                   $scope.winners = data.Winners;
+                   $scope.winners = filterDuplicates(data.Winners);
 
                    var resultsTrimSize = window.innerWidth / 30;
                    var chartData = ResultsService.createDataTable(data.Results, resultsTrimSize);
@@ -47,6 +47,13 @@
                }
            })
            .catch(clearTimer);
+        }
+
+        function filterDuplicates(array) {
+            var hash = {};
+            return array.filter(function (item) {
+                return hash.hasOwnProperty(item) ? false : (hash[item] = true);
+            });
         }
 
         function createBarChart(chartData, pollName) {

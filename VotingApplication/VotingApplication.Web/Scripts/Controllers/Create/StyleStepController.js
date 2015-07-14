@@ -36,7 +36,7 @@
         }
 
         function maxPerVoteIsValid(pointsPerVote) {
-            return pointsPerVote > 0 && pointsPerVote <= $scope.newPoll.MaxPoints
+            return pointsPerVote > 0 && pointsPerVote <= $scope.newPoll.MaxPoints;
         }
 
         function initalisePointsConfig() {
