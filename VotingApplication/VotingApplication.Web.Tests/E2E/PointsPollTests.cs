@@ -20,7 +20,7 @@ namespace VotingApplication.Web.Tests.E2E
         public class DefaultPollConfiguration : E2ETest
         {
             private static readonly Guid PollGuid = Guid.NewGuid();
-            private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
+            private static readonly string PollUrl = SiteBaseUri + "Poll/#/" + PollGuid + "/Vote";
 
             [TestMethod]
             [TestCategory("E2E")]
@@ -44,94 +44,6 @@ namespace VotingApplication.Web.Tests.E2E
                 }
             }
 
-            [TestMethod]
-            [TestCategory("E2E")]
-            public void PopulatedChoices_DisplaysAllChoiceDescriptions()
-            {
-                using (IWebDriver driver = Driver)
-                {
-                    using (var context = new TestVotingContext())
-                    {
-                        Poll poll = CreatePoll(context);
-                        GoToUrl(driver, PollUrl);
-
-                        IReadOnlyCollection<IWebElement> choiceDescriptions = driver.FindElements(NgBy.Model("choice.Description"));
-
-                        Assert.AreEqual(poll.Choices.Count, choiceDescriptions.Count);
-
-                        List<string> expected = poll.Choices.Select(o => o.Description).ToList();
-                        List<string> actual = choiceDescriptions.Select(o => o.Text).ToList();
-                        CollectionAssert.AreEquivalent(expected, actual);
-                    }
-                }
-            }
-
-            [TestMethod]
-            [TestCategory("E2E")]
-            public void PopulatedChoices_TruncatesLongDescriptionsContainingAtLeastOneSpace()
-            {
-                const int truncationLength = 30;
-                string expectedText = new String('a', truncationLength) + "... Show More";
-
-                using (IWebDriver driver = Driver)
-                {
-                    using (var context = new TestVotingContext())
-                    {
-                        Poll poll = CreatePoll(context);
-
-                        string tooLongChoiceDescription = new String('a', truncationLength) + " " + new String('a', truncationLength);
-
-                        poll.Choices.Add(new Choice()
-                        {
-                            Name = "Test Choice 2",
-                            Description = tooLongChoiceDescription + " " + tooLongChoiceDescription
-                        });
-                        context.SaveChanges();
-
-
-                        GoToUrl(driver, PollUrl);
-
-                        IReadOnlyCollection<IWebElement> choiceDescriptions = driver.FindElements(NgBy.Model("choice.Description"));
-
-                        string selectedChoiceText = choiceDescriptions.Select(o => o.Text).Last();
-                        Assert.AreEqual(expectedText, selectedChoiceText);
-                    }
-                }
-            }
-
-            [TestMethod]
-            [TestCategory("E2E")]
-            public void PopulatedChoices_DoesNotTruncateLongDescriptionsContainingNoSpaces()
-            {
-                const int longDescriptionLength = 50;
-                string expectedText = new String('a', longDescriptionLength);
-
-                using (IWebDriver driver = Driver)
-                {
-                    using (var context = new TestVotingContext())
-                    {
-                        Poll poll = CreatePoll(context);
-
-                        string tooLongChoiceDescription = new String('a', longDescriptionLength);
-
-                        poll.Choices.Add(new Choice()
-                        {
-                            Name = "Test Choice 2",
-                            Description = tooLongChoiceDescription
-                        });
-                        context.SaveChanges();
-
-
-                        GoToUrl(driver, PollUrl);
-
-                        IReadOnlyCollection<IWebElement> choiceDescriptions = driver.FindElements(NgBy.Model("choice.Description"));
-
-                        string selectedChoiceText = choiceDescriptions.Select(o => o.Text).Last();
-                        Assert.AreEqual(expectedText, selectedChoiceText);
-                    }
-                }
-            }
-
             [TestMethod, TestCategory("E2E")]
             public void VotingOnChoice_NavigatesToResultsPage()
             {
@@ -149,7 +61,7 @@ namespace VotingApplication.Web.Tests.E2E
                         voteButton.Click();
 
 
-                        string expectedUriPrefix = SiteBaseUri + "Poll/#/Results/" + poll.UUID;
+                        string expectedUriPrefix = SiteBaseUri + "Poll/#/" + poll.UUID + "/Results";
                         Assert.IsTrue(driver.Url.StartsWith(expectedUriPrefix));
                     }
                 }
@@ -394,26 +306,7 @@ namespace VotingApplication.Web.Tests.E2E
         public class InviteOnlyTests : E2ETest
         {
             private static readonly Guid PollGuid = Guid.NewGuid();
-            private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
-
-            [TestMethod]
-            [TestCategory("E2E")]
-            public void AccessWithNoToken_DisplaysErrorPage()
-            {
-                using (IWebDriver driver = Driver)
-                {
-                    using (var context = new TestVotingContext())
-                    {
-                        CreatePoll(context);
-
-                        GoToUrl(driver, PollUrl);
-
-                        IWebElement errorDirective = FindElementById(driver, "voting-partial-error");
-
-                        Assert.IsTrue(errorDirective.IsVisible());
-                    }
-                }
-            }
+            private static readonly string PollUrl = SiteBaseUri + "Poll/#/" + PollGuid + "/Vote";
 
             [TestMethod]
             [TestCategory("E2E")]
@@ -452,7 +345,7 @@ namespace VotingApplication.Web.Tests.E2E
                         IReadOnlyCollection<IWebElement> voteButtons = FindElementsById(driver, "vote-button");
                         voteButtons.First().Click();
 
-                        string expectedUrlPrefix = SiteBaseUri + "Poll/#/Results/" + poll.UUID;
+                        string expectedUrlPrefix = SiteBaseUri + "Poll/#/" + poll.UUID + "/Results";
                         Assert.IsTrue(driver.Url.StartsWith(expectedUrlPrefix));
                     }
                 }

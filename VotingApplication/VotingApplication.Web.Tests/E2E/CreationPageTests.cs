@@ -10,8 +10,9 @@ namespace VotingApplication.Web.Tests.E2E
     [TestClass]
     public class CreationPageTests : E2ETest
     {
+        [Ignore]
         [TestMethod]
-        [TestCategory("E2E")]
+        [TestCategory("E2ERewrite")]
         public void QuickPoll_DisabledWhenQuestionHasNoText()
         {
             using (IWebDriver driver = Driver)
@@ -27,8 +28,9 @@ namespace VotingApplication.Web.Tests.E2E
             }
         }
 
+        [Ignore]
         [TestMethod]
-        [TestCategory("E2E")]
+        [TestCategory("E2ERewrite")]
         public void CustomPoll_DisabledWhenQuestionHasNoText()
         {
             using (IWebDriver driver = Driver)
@@ -44,8 +46,9 @@ namespace VotingApplication.Web.Tests.E2E
             }
         }
 
+        [Ignore]
         [TestMethod]
-        [TestCategory("E2E")]
+        [TestCategory("E2ERewrite")]
         public void QuickPoll_DisabledWhenOnlyQuestionHasText()
         {
             using (IWebDriver driver = Driver)
@@ -61,8 +64,9 @@ namespace VotingApplication.Web.Tests.E2E
             }
         }
 
+        [Ignore]
         [TestMethod]
-        [TestCategory("E2E")]
+        [TestCategory("E2ERewrite")]
         public void QuickPoll_EnabledWhenQuestionAndChoiceHasText()
         {
             using (IWebDriver driver = Driver)
@@ -81,8 +85,9 @@ namespace VotingApplication.Web.Tests.E2E
             }
         }
 
+        [Ignore]
         [TestMethod]
-        [TestCategory("E2E")]
+        [TestCategory("E2ERewrite")]
         public void CustomPoll_EnabledWhenQuestionHasText()
         {
             using (IWebDriver driver = Driver)
@@ -98,8 +103,9 @@ namespace VotingApplication.Web.Tests.E2E
             }
         }
 
+        [Ignore]
         [TestMethod]
-        [TestCategory("E2E")]
+        [TestCategory("E2ERewrite")]
         public void QuickPoll_NavigatesToManagePollPage()
         {
             using (IWebDriver driver = Driver)
@@ -121,15 +127,16 @@ namespace VotingApplication.Web.Tests.E2E
 
                     Poll newPoll = context.Polls.Single();
 
-                    string expectedUrl = SiteBaseUri + "Poll/#/Vote/" + newPoll.UUID;
+                    string expectedUrl = SiteBaseUri + "Poll/#/" + newPoll.UUID + "/Vote";
 
                     Assert.AreEqual(expectedUrl, driver.Url);
                 }
             }
         }
 
+        [Ignore]
         [TestMethod]
-        [TestCategory("E2E")]
+        [TestCategory("E2ERewrite")]
         public void CustomPoll_NavigatesToManagePollPage()
         {
             using (IWebDriver driver = Driver)
@@ -149,37 +156,6 @@ namespace VotingApplication.Web.Tests.E2E
                     Poll newPoll = context.Polls.Single();
 
                     string expectedUrl = SiteBaseUri + "Manage/#/Manage/" + newPoll.ManageId;
-
-                    Assert.AreEqual(expectedUrl, driver.Url);
-                }
-            }
-        }
-
-        [TestMethod]
-        [TestCategory("E2E")]
-        public void Register_Successfull_ShowsConfirmRegistration()
-        {
-            using (IWebDriver driver = Driver)
-            {
-                using (var context = new TestVotingContext())
-                {
-                    GoToBaseUri(driver);
-
-                    IWebElement registerLink = FindElementById(driver, "register-link");
-                    registerLink.Click();
-
-
-                    IWebElement emailInput = FindElementById(driver, "email");
-                    IWebElement passwordInput = FindElementById(driver, "password");
-                    IWebElement signInDialogButton = FindElementById(driver, "register-button-dialog");
-
-                    emailInput.SendKeys(NewUserEmail);
-                    passwordInput.SendKeys(NewUserPassword);
-                    signInDialogButton.Click();
-
-                    WaitForPageChange();
-
-                    string expectedUrl = SiteBaseUri + "Manage/#/ConfirmRegistration/" + NewUserEmail;
 
                     Assert.AreEqual(expectedUrl, driver.Url);
                 }
