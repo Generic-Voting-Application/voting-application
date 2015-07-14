@@ -101,8 +101,9 @@ namespace VotingApplication.Web.Tests.E2E
                 }
             }
 
+            [Ignore]
             [TestMethod]
-            [TestCategory("E2E")]
+            [TestCategory("E2ERewrite")]
             public void ClearVote_RemovesVote()
             {
                 using (IWebDriver driver = Driver)
@@ -134,7 +135,7 @@ namespace VotingApplication.Web.Tests.E2E
             {
                 var testPollChoices = new List<Choice>() 
                 {
-                    new Choice(){ Name = "Test Choice 1", Description = "Test Description 1" },
+                    new Choice(){ Name = "TEST CHOICE 1", Description = "Test Description 1" },
                 };
 
                 // Open, Anonymous, No Choice Adding, Shown Results
@@ -220,8 +221,8 @@ namespace VotingApplication.Web.Tests.E2E
             {
                 List<Choice> testPollChoices = new List<Choice>
                 {
-                    new Choice() { Name = "Test Choice 1", Description = "Test Description 1"},
-                    new Choice() { Name = "Test Choice 2", Description = "Test Description 2"}
+                    new Choice() { Name = "TEST CHOICE 1", Description = "Test Description 1"},
+                    new Choice() { Name = "TEST CHOICE 2", Description = "Test Description 2"}
                 };
 
 
