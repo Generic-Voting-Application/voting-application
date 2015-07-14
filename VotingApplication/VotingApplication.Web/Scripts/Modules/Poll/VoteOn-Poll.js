@@ -7,7 +7,7 @@
         '$routeProvider',
         function ($routeProvider) {
             $routeProvider
-                .when('/:pollId/Vote', {
+                .when('/:pollId/Vote/:tokenId?', {
                     templateUrl: function () {
                         return '../Poll/Vote';
                     }
