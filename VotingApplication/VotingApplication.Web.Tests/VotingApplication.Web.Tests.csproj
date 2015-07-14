@@ -168,21 +168,13 @@
   <ItemGroup>
     <Content Include="Scripts\Controllers\AccountLoginControllerTests.js" />
     <Content Include="Scripts\Controllers\AccountRegisterControllerTests.js" />
-    <Content Include="Scripts\Controllers\BasicVoteControllerTests.js" />
-    <Content Include="Scripts\Controllers\ResultsPageControllerTests.js" />
     <Content Include="Scripts\Controllers\ManageExpiryControllerTests.js" />
     <Content Include="Scripts\Controllers\ManageInviteesControllerTests.js" />
     <Content Include="Scripts\Controllers\ManageMiscControllerTests.js" />
     <Content Include="Scripts\Controllers\ManagePageControllerTests.js" />
     <Content Include="Scripts\Controllers\ManagePollTypeControllerTests.js" />
-    <Content Include="Scripts\Controllers\MultiVoteControllerTests.js" />
-    <Content Include="Scripts\Controllers\PointsVoteControllerTests.js" />
     <Content Include="Scripts\Controllers\MyPollsControllerTests.js" />
-    <Content Include="Scripts\Controllers\CreatePageControllerTests.js" />
-    <Content Include="Scripts\Controllers\UpDownVoteControllerTests.js" />
-    <Content Include="Scripts\Controllers\VotingPageControllerTests.js" />
     <Content Include="Scripts\Services\AccountServiceTests.js" />
-    <Content Include="Scripts\Controllers\HomepageControllerTests.js" />
     <Content Include="Scripts\Lib\angular-mocks.js" />
     <Content Include="Scripts\Services\ManageServiceTests.js" />
     <Content Include="Scripts\Controllers\ManageOptionControllerTests.js" />
