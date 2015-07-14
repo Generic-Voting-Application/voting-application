@@ -2,7 +2,7 @@
 
 describe('AccountServiceTests', function () {
 
-    beforeEach(module('GVA.Common'));
+    beforeEach(module('VoteOn-Account'));
 
     var accountService;
     var httpBackend;
