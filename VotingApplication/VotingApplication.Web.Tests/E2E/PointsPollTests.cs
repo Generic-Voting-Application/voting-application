@@ -33,7 +33,7 @@ namespace VotingApplication.Web.Tests.E2E
                         Poll poll = CreatePoll(context);
                         GoToUrl(driver, PollUrl);
 
-                        IReadOnlyCollection<IWebElement> choiceNames = driver.FindElements(NgBy.Binding("choice.Name"));
+                        IReadOnlyCollection<IWebElement> choiceNames = FindElementsById(driver, "points-choice-name");
 
                         Assert.AreEqual(poll.Choices.Count, choiceNames.Count);
 
@@ -307,7 +307,7 @@ namespace VotingApplication.Web.Tests.E2E
                         Poll poll = CreatePoll(context);
 
                         GoToUrl(driver, PollUrl + "/" + poll.Ballots[0].TokenGuid);
-                        IReadOnlyCollection<IWebElement> choiceNames = driver.FindElements(NgBy.Binding("choice.Name"));
+                        IReadOnlyCollection<IWebElement> choiceNames = FindElementsById(driver, "points-choice-name");
 
                         Assert.AreEqual(poll.Choices.Count, choiceNames.Count);
 
