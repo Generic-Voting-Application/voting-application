@@ -350,7 +350,6 @@
     <Content Include="Scripts\Controllers\Account\Login\LoginController.js" />
     <Content Include="Scripts\Controllers\Account\Register\RegisterController.js" />
     <Content Include="Scripts\Controllers\Account\Register\RegistrationCompleteController.js" />
-    <Content Include="Scripts\Controllers\AddVoterOptionDialogController.js" />
     <Content Include="Scripts\Controllers\Create\CreateController.js" />
     <Content Include="Scripts\Controllers\Create\ConfirmStepController.js" />
     <Content Include="Scripts\Controllers\Create\InvitationStepController.js" />
@@ -370,7 +369,6 @@
     <Content Include="Scripts\Controllers\ManageOptionController.js" />
     <Content Include="Scripts\Controllers\ManagePageController.js" />
     <Content Include="Scripts\Controllers\DashboardController.js" />
-    <Content Include="Scripts\Controllers\IdentityLoginController.js" />
     <Content Include="Scripts\Controllers\Poll\Results\ResultsController.js" />
     <Content Include="Scripts\Controllers\Poll\Vote\VoteController.js" />
     <Content Include="Scripts\Controllers\RegistrationConfirmationController.js" />
