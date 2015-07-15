@@ -492,6 +492,7 @@
     <Content Include="Views\Poll\Results.cshtml" />
     <Content Include="Scripts\Dialogs\AddUserChoiceDialog\AddUserChoiceDialog.html" />
     <Content Include="Views\Login\EmailNotConfirmed.cshtml" />
+    <Content Include="Views\Poll\InviteOnly.cshtml" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

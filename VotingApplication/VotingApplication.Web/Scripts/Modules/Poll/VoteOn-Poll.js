@@ -16,6 +16,11 @@
                     templateUrl: function () {
                         return '../Poll/Results';
                     }
+                })
+                .when('/:pollId/InviteOnly', {
+                    templateUrl: function () {
+                        return '../Poll/InviteOnly';
+                    }
                 });
         }]);
 })();

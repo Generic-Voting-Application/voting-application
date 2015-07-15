@@ -18,5 +18,10 @@ namespace VotingApplication.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult InviteOnly()
+        {
+            return View();
+        }
     }
 }

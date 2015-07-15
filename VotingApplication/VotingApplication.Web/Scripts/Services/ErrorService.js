@@ -1,4 +1,4 @@
-﻿/// <reference path="RoutingService.js" />
+﻿/// <reference path="ErrorRoutingService.js" />
 (function () {
     'use strict';
 
@@ -69,7 +69,8 @@
 
 
         var service = {
-            handleLoginError: handleLoginError
+            handleLoginError: handleLoginError,
+            handleVotingError: handleVotingError
         };
 
         return service;
@@ -104,6 +105,10 @@
                         displayGenericErrorPage();
                     }
             }
+        }
+
+        function handleVotingError(response, pollId) {
+            ErrorRoutingService.navigateToPollInviteOnlyPage(pollId);
         }
 
         function displayToast(content) {
