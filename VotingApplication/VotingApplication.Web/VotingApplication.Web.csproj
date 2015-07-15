@@ -349,7 +349,7 @@
     <Content Include="Scripts\Controllers\Account\Login\ForgottenPasswordController.js" />
     <Content Include="Scripts\Controllers\Account\Login\LoginController.js" />
     <Content Include="Scripts\Controllers\Account\Register\RegisterController.js" />
-    <Content Include="Scripts\Controllers\Account\Register\RegistrationCompleteController.js" />
+    <Content Include="Scripts\Controllers\Account\SendConfirmationEmailController.js" />
     <Content Include="Scripts\Controllers\Create\CreateController.js" />
     <Content Include="Scripts\Controllers\Create\ConfirmStepController.js" />
     <Content Include="Scripts\Controllers\Create\InvitationStepController.js" />
@@ -434,6 +434,7 @@
     <Content Include="Scripts\Services\ManageService.js" />
     <Content Include="Scripts\Services\PollService.js" />
     <Content Include="Scripts\Services\ResultsService.js" />
+    <Content Include="Scripts\Services\ErrorRoutingService.js" />
     <Content Include="Scripts\Services\RoutingService.js" />
     <Content Include="Scripts\Services\TokenService.js" />
     <Content Include="Scripts\Lib\d3-min.js" />
@@ -490,6 +491,7 @@
     <Content Include="Views\Poll\Vote.cshtml" />
     <Content Include="Views\Poll\Results.cshtml" />
     <Content Include="Scripts\Dialogs\AddUserChoiceDialog\AddUserChoiceDialog.html" />
+    <Content Include="Views\Login\EmailNotConfirmed.cshtml" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
