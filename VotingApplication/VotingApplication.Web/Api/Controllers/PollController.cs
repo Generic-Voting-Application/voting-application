@@ -156,12 +156,15 @@ namespace VotingApplication.Web.Api.Controllers
                 context.Polls.Add(newPoll);
                 newPoll.Ballots.Add(creatorBallot);
 
-                foreach (string email in pollCreationRequest.Invitations)
+                if (pollCreationRequest.Invitations != null)
                 {
-                    Ballot newBallot = createBallot();
-                    newBallot.Email = email;
-                    newPoll.Ballots.Add(newBallot);
-                    invitationBallots.Add(newBallot);
+                    foreach (string email in pollCreationRequest.Invitations)
+                    {
+                        Ballot newBallot = createBallot();
+                        newBallot.Email = email;
+                        newPoll.Ballots.Add(newBallot);
+                        invitationBallots.Add(newBallot);
+                    }
                 }
 
                 context.SaveChanges();
