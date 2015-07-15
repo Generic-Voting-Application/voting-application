@@ -1,13 +1,25 @@
-﻿<span>{{pointsRemaining }} of {{poll.MaxPoints}} points remaining</span>
+﻿<span id="points-remaining">{{pointsRemaining }} of {{poll.MaxPoints}} points remaining</span>
 <md-progress-linear class="md-accent" md-mode="determinate" value="{{percentagePointsRemaining}}"></md-progress-linear>
 
 <md-list>
     <md-list-item ng-repeat="choice in choices">
-        {{choice.Name}}
+        <span id="points-choice-name">{{choice.Name}}</span>
         <span flex></span>
-        <md-button class="md-icon-button" ng-click="decreasePoints(choice)" ng-disabled="decreasePointsDisabled(choice)" aria-label="Decrease Points">-</md-button>
+        <md-button id="decrease-button"
+                   class="md-icon-button"
+                   ng-click="decreasePoints(choice)"
+                   ng-disabled="decreasePointsDisabled(choice)"
+                   aria-label="Decrease Points">
+            -
+        </md-button>
         <label>{{choice.VoteValue}} / {{poll.MaxPerVote}}</label>
-        <md-button class="md-icon-button" ng-click="increasePoints(choice)" ng-disabled="increasePointsDisabled(choice)" aria-label="Increase Points">+</md-button>
+        <md-button id="increase-button"
+                   class="md-icon-button"
+                   ng-click="increasePoints(choice)"
+                   ng-disabled="increasePointsDisabled(choice)"
+                   aria-label="Increase Points">
+            +
+        </md-button>
 
     </md-list-item>
 </md-list>
