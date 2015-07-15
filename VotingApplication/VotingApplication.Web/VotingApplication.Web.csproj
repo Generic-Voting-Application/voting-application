@@ -358,11 +358,8 @@
     <Content Include="Scripts\Controllers\AddOptionDialogController.js" />
     <Content Include="Scripts\Controllers\ManageVotersController.js" />
     <Content Include="Scripts\Controllers\PollTypeChangeController.js" />
-    <Content Include="Scripts\Controllers\AccountRegisterController.js" />
-    <Content Include="Scripts\Controllers\AccountLoginController.js" />
     <Content Include="Scripts\Controllers\ManageExpiryController.js" />
     <Content Include="Scripts\Controllers\ManagePollTypeController.js" />
-    <Content Include="Scripts\Controllers\AccountResetPasswordController.js" />
     <Content Include="Scripts\Controllers\MyPollsController.js" />
     <Content Include="Scripts\Controllers\ManageInviteesController.js" />
     <Content Include="Scripts\Controllers\ManageMiscController.js" />
@@ -371,7 +368,6 @@
     <Content Include="Scripts\Controllers\DashboardController.js" />
     <Content Include="Scripts\Controllers\Poll\Results\ResultsController.js" />
     <Content Include="Scripts\Controllers\Poll\Vote\VoteController.js" />
-    <Content Include="Scripts\Controllers\RegistrationConfirmationController.js" />
     <Content Include="Scripts\Dialogs\AddUserChoiceDialog\AddUserChoiceDialogController.js" />
     <Content Include="Scripts\Directives\DateTimePicker\DateTimePicker.html" />
     <Content Include="Scripts\Directives\DateTimePicker\DateTimePicker.js" />
@@ -404,7 +400,6 @@
     <Content Include="Scripts\Lib\angular-material-min.js" />
     <Content Include="Scripts\Lib\angular-messages-min.js" />
     <Content Include="Scripts\Lib\angular-zeroclipboard.js" />
-    <Content Include="Scripts\Lib\d3-tip.js" />
     <Content Include="Scripts\Lib\moment-min.js" />
     <Content Include="Scripts\Lib\angular-qrcode.js" />
     <Content Include="Scripts\Lib\ng-google-chart.js" />
@@ -436,13 +431,9 @@
     <Content Include="Scripts\Services\ResultsService.js" />
     <Content Include="Scripts\Services\RoutingService.js" />
     <Content Include="Scripts\Services\TokenService.js" />
-    <Content Include="Scripts\Lib\d3-min.js" />
     <Content Include="Scripts\Modules\GVA-Voting.js" />
     <Content Include="Scripts\Services\VoteService.js" />
     <Content Include="Static\Lib\ZeroClipboard.swf" />
-    <Content Include="Views\Routes\AccountLogin.cshtml" />
-    <Content Include="Views\Routes\AccountRegister.cshtml" />
-    <Content Include="Views\Routes\AccountResetPassword.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Routes\Manage.cshtml" />
     <Content Include="Views\Routes\ManageChoices.cshtml" />
@@ -454,7 +445,6 @@
     <Content Include="Content\Scss\DateTimePicker.scss" />
     <Content Include="Views\Routes\TimePicker.cshtml" />
     <Content Include="Views\Routes\ManageVoters.cshtml" />
-    <Content Include="Content\Scss\ResultsChart.scss" />
     <Content Include="Fonts\fontawesome-webfont.eot" />
     <Content Include="Fonts\fontawesome-webfont.ttf" />
     <Content Include="Fonts\fontawesome-webfont.woff" />
@@ -471,7 +461,6 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Poll\Index.cshtml" />
     <Content Include="Views\Routes\ManageMisc.cshtml" />
-    <Content Include="Views\Routes\ConfirmRegistration.cshtml" />
     <Content Include="Views\Create\Index.cshtml" />
     <Content Include="Views\Create\QuestionStep.cshtml" />
     <Content Include="Views\Create\StyleStep.cshtml" />
