@@ -14,6 +14,7 @@
         $scope.changeMaxPerVote = changeMaxPerVote;
         $scope.changeMaxPoints = changeMaxPoints;
         $scope.initalisePointsConfig = initalisePointsConfig;
+        $scope.isPollType = isPollType;
 
         function changeMaxPerVote(amount) {
             var newMaxPerVote = $scope.newPoll.MaxPerVote + amount;
@@ -37,6 +38,10 @@
 
         function maxPerVoteIsValid(pointsPerVote) {
             return pointsPerVote > 0 && pointsPerVote <= $scope.newPoll.MaxPoints;
+        }
+
+        function isPollType(type) {
+            return $scope.newPoll.PollType === type;
         }
 
         function initalisePointsConfig() {

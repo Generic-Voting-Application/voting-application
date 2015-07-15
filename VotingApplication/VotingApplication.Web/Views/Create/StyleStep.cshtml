@@ -7,32 +7,32 @@
 
         <md-content layout="row" layout-align="space-around center" layout-wrap layout-padding>
             <div layout="column" layout-align="center center" flex-sm="50" flex-gt-sm="25">
-                <md-button ng-class="{'md-primary' : newPoll.PollType=='Basic'}" ng-click="newPoll.PollType='Basic'" aria-label="Basic" class="md-fab">
+                <md-button ng-class="{'md-primary' : isPollType('Basic')}" ng-click="newPoll.PollType='Basic'" aria-label="Basic" class="md-fab">
                     <md-icon md-font-icon="fa-check" class="fa fa-2x" alt="check"></md-icon>
                 </md-button>
                 <span class="md-title">Basic</span>
             </div>
             <div layout="column" layout-align="center center" flex-sm="50" flex-gt-sm="25">
-                <md-button ng-class="{'md-primary' : newPoll.PollType=='Multi'}" ng-click="newPoll.PollType='Multi'" aria-label="Multi" class="md-fab">
+                <md-button ng-class="{'md-primary' : isPollType('Multi')}" ng-click="newPoll.PollType='Multi'" aria-label="Multi" class="md-fab">
                     <md-icon md-font-icon="fa-check-square-o" class="fa fa-2x" alt="check"></md-icon>
                 </md-button>
                 <span class="md-title">Multi</span>
             </div>
             <div layout="column" layout-align="center center" flex-sm="50" flex-gt-sm="25">
-                <md-button ng-class="{'md-primary' : newPoll.PollType=='UpDown'}" ng-click="newPoll.PollType='UpDown'" aria-label="Up/Down" class="md-fab">
+                <md-button ng-class="{'md-primary' : isPollType('UpDown')}" ng-click="newPoll.PollType='UpDown'" aria-label="Up/Down" class="md-fab">
                     <md-icon md-font-icon="fa-thumbs-o-up" class="fa fa-2x" alt="check"></md-icon>
                 </md-button>
                 <span class="md-title">Up/Down</span>
             </div>
             <div layout="column" layout-align="center center" flex-sm="50" flex-gt-sm="25">
-                <md-button ng-class="{'md-primary' : newPoll.PollType=='Points'}" ng-click="newPoll.PollType='Points'" aria-label="Points" class="md-fab">
+                <md-button ng-class="{'md-primary' : isPollType('Points')}" ng-click="newPoll.PollType='Points'" aria-label="Points" class="md-fab">
                     <md-icon md-font-icon="fa-tasks" class="fa fa-2x" alt="check"></md-icon>
                 </md-button>
                 <span class="md-title">Points</span>
             </div>
         </md-content>
 
-        <md-content layout-gt-sm="row" layout-sm="column" layout-align="space-around center" ng-if="newPoll.PollType=='Points'" ng-init="initalisePointsConfig()" layout-padding>
+        <md-content layout-gt-sm="row" layout-sm="column" layout-align="space-around center" ng-if="isPollType('Points')" ng-init="initalisePointsConfig()" layout-padding>
 
             <md-card layout="column">
                 <md-card-content>

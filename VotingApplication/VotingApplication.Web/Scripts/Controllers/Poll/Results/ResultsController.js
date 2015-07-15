@@ -45,8 +45,6 @@
                    var chartData = ResultsService.createDataTable(data.Results, resultsTrimSize);
 
                    $scope.resultsBarChart = createBarChart(chartData, data.PollName);
-
-                   //$scope.loaded = true;
                }
                
            })
@@ -54,9 +52,9 @@
         }
 
         function filterDuplicates(array) {
-            var hash = {};
+            var hashSet = {};
             return array.filter(function (item) {
-                return Object.prototype.hasOwnProperty.call(hash, item) ? false : (hash[item] = true);
+                return Object.prototype.hasOwnProperty.call(hashSet, item) ? false : (hashSet[item] = true);
             });
         }
 

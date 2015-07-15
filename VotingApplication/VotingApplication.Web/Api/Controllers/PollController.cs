@@ -146,7 +146,7 @@ namespace VotingApplication.Web.Api.Controllers
             #endregion
 
             Poll newPoll = CreatePoll(pollCreationRequest);
-            Ballot creatorBallot = createBallot();
+            Ballot creatorBallot = CreateBallot();
             List<Ballot> invitationBallots = new List<Ballot>();
 
             using (var context = _contextFactory.CreateContext())
@@ -160,7 +160,7 @@ namespace VotingApplication.Web.Api.Controllers
                 {
                     foreach (string email in pollCreationRequest.Invitations)
                     {
-                        Ballot newBallot = createBallot();
+                        Ballot newBallot = CreateBallot();
                         newBallot.Email = email;
                         newPoll.Ballots.Add(newBallot);
                         invitationBallots.Add(newBallot);
@@ -186,7 +186,7 @@ namespace VotingApplication.Web.Api.Controllers
 
         }
 
-        private Ballot createBallot()
+        private Ballot CreateBallot()
         {
             return new Ballot
             {
