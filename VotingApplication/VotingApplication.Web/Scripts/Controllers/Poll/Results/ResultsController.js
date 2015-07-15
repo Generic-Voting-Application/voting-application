@@ -36,6 +36,7 @@
         function updateResults() {
             return ResultsService.getResults($scope.pollId)
            .then(function (data) {
+
                if (data) {
                    $scope.results = data.Results;
                    $scope.winners = filterDuplicates(data.Winners);
@@ -44,7 +45,10 @@
                    var chartData = ResultsService.createDataTable(data.Results, resultsTrimSize);
 
                    $scope.resultsBarChart = createBarChart(chartData, data.PollName);
+
+                   //$scope.loaded = true;
                }
+               
            })
            .catch(clearTimer);
         }
