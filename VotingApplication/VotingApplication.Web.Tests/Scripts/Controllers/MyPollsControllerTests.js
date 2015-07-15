@@ -46,6 +46,7 @@ describe('My Polls Controller', function () {
         spyOn(mockTokenService, 'setToken').and.callFake(function () { return setTokenPromise.promise; });
 
         mockAccountService = {
+            account: {},
             registerAccountObserver: function () { }
         };
         spyOn(mockAccountService, 'registerAccountObserver').and.callThrough();

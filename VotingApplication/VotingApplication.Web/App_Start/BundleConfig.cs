@@ -66,13 +66,6 @@ namespace VotingApplication.Web
             dateTimePickerStyle.Orderer = nullOrderer;
             bundles.Add(dateTimePickerStyle);
 
-            StyleBundle resultsChartStyle = new StyleBundle("~/Bundles/ResultsChartStyle");
-            resultsChartStyle.Include("~/Content/Scss/ResultsChart.scss");
-            resultsChartStyle.Builder = nullBuilder;
-            resultsChartStyle.Transforms.Add(styleTransformer);
-            resultsChartStyle.Orderer = nullOrderer;
-            bundles.Add(resultsChartStyle);
-
             StyleBundle errorBarStyle = new StyleBundle("~/Bundles/ErrorBarStyle");
             errorBarStyle.Include("~/Content/Scss/ErrorBar.scss");
             errorBarStyle.Builder = nullBuilder;
@@ -158,15 +151,6 @@ namespace VotingApplication.Web
             var ngStorage = new Bundle("~/Bundles/ScriptLib/ngStorage", "https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js");
             ngStorage.Include("~/Scripts/Lib/ngStorage-min.js");
             bundles.Add(ngStorage);
-
-            // d3
-            var d3 = new Bundle("~/Bundles/ScriptLib/d3", "https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js");
-            d3.Include("~/Scripts/Lib/d3-min.js");
-            bundles.Add(d3);
-
-            var d3tip = new ScriptBundle("~/Bundles/ScriptLib/d3tip", "https://cdn.rawgit.com/Caged/d3-tip/v0.6.7/index.js");
-            d3tip.Include("~/Scripts/Lib/d3-tip.js");
-            bundles.Add(d3tip);
 
             // moment
             var moment = new Bundle("~/Bundles/ScriptLib/moment", "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js");

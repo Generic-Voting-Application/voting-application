@@ -1,4 +1,5 @@
 ﻿/// <reference path="../Services/AccountService.js" />
+/// <reference path="../Services/RoutingService.js" />
 (function () {
     'use strict';
 
@@ -19,11 +20,11 @@
         activate();
 
         function showLoginDialog() {
-            AccountService.openLoginDialog($scope);
+            RoutingService.navigateToLoginPage();
         }
 
         function openRegisterDialog() {
-            AccountService.openRegisterDialog($scope);
+            RoutingService.navigateToRegisterPage();
         }
 
         function activate() {

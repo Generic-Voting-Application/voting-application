@@ -166,8 +166,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\Controllers\AccountLoginControllerTests.js" />
-    <Content Include="Scripts\Controllers\AccountRegisterControllerTests.js" />
     <Content Include="Scripts\Controllers\ManageExpiryControllerTests.js" />
     <Content Include="Scripts\Controllers\ManageInviteesControllerTests.js" />
     <Content Include="Scripts\Controllers\ManageMiscControllerTests.js" />
