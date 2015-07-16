@@ -1,7 +1,9 @@
 ﻿<md-list>
-    <md-list-item ng-repeat="choice in choices">
-        <md-button layout layout-fill style="text-align: left" md-highlight="choice.VoteValue" ng-click="choiceSelected(choice)">
-            {{choice.Name}}
-        </md-button>
+    <md-list-item ng-repeat="choice in choices" ng-click="choiceSelected(choice)" class="md-2-line">
+        <md-icon md-font-icon="fa-check" class="fa fa-lg md-accent" ng-show="choice.VoteValue"></md-icon>
+        <div class="md-list-item-text" ng-class="{'md-offset': choice.VoteValue === 0 }">
+            <span>{{choice.Name}}</span>
+        </div>
+        <md-divider ng-if="!$last"></md-divider>
     </md-list-item>
 </md-list>
