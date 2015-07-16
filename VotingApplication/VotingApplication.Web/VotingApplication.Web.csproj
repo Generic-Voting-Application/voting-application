@@ -395,7 +395,6 @@
     <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\BasicVoteChoice.js" />
     <Content Include="Scripts\Filters\leadingZeroFilter.js" />
     <Content Include="Scripts\Filters\dateFilters.js" />
-    <Content Include="Scripts\Interceptors\ErrorInterceptor.js" />
     <Content Include="Scripts\Lib\angular-animate-min.js" />
     <Content Include="Scripts\Lib\angular-aria-min.js" />
     <Content Include="Scripts\Lib\angular-material-min.js" />
