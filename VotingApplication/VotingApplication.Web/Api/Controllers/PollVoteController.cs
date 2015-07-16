@@ -9,6 +9,7 @@ using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
+using VotingApplication.Web.Api.SignalR;
 using VotingApplication.Web.Api.Validators;
 
 namespace VotingApplication.Web.Api.Controllers
@@ -174,6 +175,8 @@ namespace VotingApplication.Web.Api.Controllers
                 poll.LastUpdatedUtc = DateTime.UtcNow;
 
                 context.SaveChanges();
+
+                ClientSignaller.SignalUpdate(poll.UUID.ToString());
             }
         }
 

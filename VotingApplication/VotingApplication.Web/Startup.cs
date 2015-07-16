@@ -1,6 +1,5 @@
 ﻿using Microsoft.Owin;
 using Owin;
-
 [assembly: OwinStartupAttribute(typeof(VotingApplication.Web.Startup))]
 namespace VotingApplication.Web
 {
@@ -9,6 +8,7 @@ namespace VotingApplication.Web
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+            app.MapSignalR();
         }
     }
 }
