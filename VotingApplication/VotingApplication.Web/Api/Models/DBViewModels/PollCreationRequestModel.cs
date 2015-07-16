@@ -18,6 +18,8 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
         public DateTime? ExpiryDateUtc { get; set; }
         public List<string> Invitations { get; set; }
         public bool InviteOnly { get; set; }
+        public int? MaxPerVote { get; set; }
+        public int? MaxPoints { get; set; }
 
     }
 }

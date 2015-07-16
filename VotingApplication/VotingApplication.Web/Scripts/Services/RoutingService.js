@@ -15,12 +15,14 @@
             navigateToManagePage: navigateToManagePage,
             navigateToHomePage: navigateToHomePage,
             navigateToMyPolls: navigateToMyPolls,
-            navigateToConfirmRegistration: navigateToConfirmRegistration,
             getVotePageUrl: getVotePageUrl,
             getResultsPageUrl: getResultsPageUrl,
             getManagePageUrl: getManagePageUrl,
             getMyPollsUrl: getMyPollsUrl,
-            getConfirmRegistrationUrl: getConfirmRegistrationUrl
+
+
+            navigateToLoginPage: navigateToLoginPage,
+            navigateToRegisterPage: navigateToRegisterPage
         };
 
         return service;
@@ -45,16 +47,12 @@
             $window.location.href = '';
         }
 
-        function navigateToConfirmRegistration(email) {
-            $window.location.href = getConfirmRegistrationUrl(email);
-        }
-
         function getVotePageUrl(pollId, tokenId) {
             if (!pollId) {
                 return null;
             }
 
-            var url = '/Poll/#/Vote/' + pollId;
+            var url = '/Poll/#/' + pollId + '/Vote';
             if (tokenId) {
                 url += '/' + tokenId;
             }
@@ -66,7 +64,7 @@
                 return null;
             }
 
-            var url = '/Poll/#/Results/' + pollId;
+            var url = '/Poll/#/' + pollId + '/Results';
             if (tokenId) {
                 url += '/' + tokenId;
             }
@@ -89,13 +87,13 @@
             return '/Manage/#/MyPolls/';
         }
 
-        function getConfirmRegistrationUrl(email) {
 
-            if (!email) {
-                return null;
-            }
+        function navigateToLoginPage() {
+            $window.location.href = '/Login';
+        }
 
-            return '/Manage/#/ConfirmRegistration/' + encodeURIComponent(email);
+        function navigateToRegisterPage() {
+            $window.location.href = '/Register';
         }
     }
 })();

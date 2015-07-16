@@ -29,15 +29,17 @@
         }
 
         function getUserPolls() {
-            PollService.getUserPolls()
-                .then(function (response) {
-                    $scope.userPolls = response.data;
-                })
-                .catch(function (response) {
-                    if (response.status === UNAUTHORISED) {
-                        AccountService.clearAccount();
-                    }
-                });
+            if (AccountService.account) {
+                PollService.getUserPolls()
+                    .then(function (response) {
+                        $scope.userPolls = response.data;
+                    })
+                    .catch(function (response) {
+                        if (response.status === UNAUTHORISED) {
+                            AccountService.clearAccount();
+                        }
+                    });
+            }
         }
 
         function goToManagePage(manageId) {

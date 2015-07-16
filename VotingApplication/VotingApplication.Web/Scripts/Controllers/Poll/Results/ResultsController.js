@@ -36,17 +36,26 @@
         function updateResults() {
             return ResultsService.getResults($scope.pollId)
            .then(function (data) {
+
                if (data) {
                    $scope.results = data.Results;
-                   $scope.winners = data.Winners;
+                   $scope.winners = filterDuplicates(data.Winners);
 
                    var resultsTrimSize = window.innerWidth / 30;
                    var chartData = ResultsService.createDataTable(data.Results, resultsTrimSize);
 
                    $scope.resultsBarChart = createBarChart(chartData, data.PollName);
                }
+               
            })
            .catch(clearTimer);
+        }
+
+        function filterDuplicates(array) {
+            var hashSet = {};
+            return array.filter(function (item) {
+                return Object.prototype.hasOwnProperty.call(hashSet, item) ? false : (hashSet[item] = true);
+            });
         }
 
         function createBarChart(chartData, pollName) {

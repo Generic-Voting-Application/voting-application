@@ -44,7 +44,7 @@ namespace VotingApplication.Web.Api.Services
                 return;
             }
 
-            string link = hostUri + "/Poll/#/Vote/" + UUID + "/" + ballot.TokenGuid;
+            string link = hostUri + "/Poll/#/" + UUID + "/Vote/" + ballot.TokenGuid;
 
             string htmlMessage = (string)_invitationTemplate;
             htmlMessage = htmlMessage.Replace("__VOTEURI__", link);
