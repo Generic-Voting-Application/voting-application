@@ -52,7 +52,13 @@
         }
 
         function handleVotingError(response, pollId) {
-            ErrorRoutingService.navigateToPollInviteOnlyPage(pollId);
+
+            if (response.status === 404) {
+                ErrorRoutingService.navigateToPollNotFound();
+            }
+            else if (response.status === 401) {
+                ErrorRoutingService.navigateToPollInviteOnlyPage(pollId);
+            }
         }
 
         function displayToast(content) {

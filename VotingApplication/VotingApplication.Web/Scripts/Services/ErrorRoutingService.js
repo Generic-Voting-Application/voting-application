@@ -13,7 +13,8 @@
             navigateToHomePage: navigateToHomePage,
 
             navigateToEmailNotConfirmedPage: navigateToEmailNotConfirmedPage,
-            navigateToPollInviteOnlyPage: navigateToPollInviteOnlyPage
+            navigateToPollInviteOnlyPage: navigateToPollInviteOnlyPage,
+            navigateToPollNotFound: navigateToPollNotFound
 
         };
 
@@ -31,6 +32,10 @@
             // This changes the current page and history, so back doesn't redirect to an invalid page.
             // In this case we don't want to keep redirecting away from the Vote/Result page.
             $location.path(pollId + '/InviteOnly').replace();
+        }
+
+        function navigateToPollNotFound() {
+            $location.path('/404').replace();
         }
     }
 })();

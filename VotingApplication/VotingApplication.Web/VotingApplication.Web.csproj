@@ -435,6 +435,7 @@
     <Content Include="Scripts\Modules\GVA-Voting.js" />
     <Content Include="Scripts\Services\VoteService.js" />
     <Content Include="Static\Lib\ZeroClipboard.swf" />
+    <Content Include="Static\Images\404.png" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Routes\Manage.cshtml" />
     <Content Include="Views\Routes\ManageChoices.cshtml" />
@@ -482,6 +483,7 @@
     <Content Include="Scripts\Dialogs\AddUserChoiceDialog\AddUserChoiceDialog.html" />
     <Content Include="Views\Login\EmailNotConfirmed.cshtml" />
     <Content Include="Views\Poll\InviteOnly.cshtml" />
+    <Content Include="Views\Poll\PollNotFound.cshtml" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -23,5 +23,10 @@ namespace VotingApplication.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult PollNotFound()
+        {
+            return View();
+        }
     }
 }
