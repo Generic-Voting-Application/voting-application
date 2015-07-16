@@ -14,7 +14,8 @@
 
         var service = {
             handleLoginError: handleLoginError,
-            handleVotingError: handleVotingError
+            handleVotingError: handleVotingError,
+            handleResultsError: handleResultsError
         };
 
         return service;
@@ -52,6 +53,19 @@
         }
 
         function handleVotingError(response, pollId) {
+
+            if (response.status === 404) {
+                ErrorRoutingService.navigateToPollNotFound();
+            }
+            else if (response.status === 401) {
+                ErrorRoutingService.navigateToPollInviteOnlyPage(pollId);
+            }
+            else {
+                displayGenericErrorPage();
+            }
+        }
+
+        function handleResultsError(response, pollId) {
 
             if (response.status === 404) {
                 ErrorRoutingService.navigateToPollNotFound();
