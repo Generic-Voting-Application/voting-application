@@ -59,6 +59,9 @@
             else if (response.status === 401) {
                 ErrorRoutingService.navigateToPollInviteOnlyPage(pollId);
             }
+            else {
+                displayGenericErrorPage();
+            }
         }
 
         function displayToast(content) {
