@@ -9,14 +9,24 @@ using VotingApplication.Data.Model;
 using VotingApplication.Data.Model.Creation;
 using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
+using VotingApplication.Web.Api.Services;
 
 namespace VotingApplication.Web.Api.Controllers
 {
     public class PollController : WebApiController
     {
-        public PollController() { }
+        private ICorrespondenceService _correspondenceService;
 
-        public PollController(IContextFactory contextFactory, IMetricHandler metricHandler) : base(contextFactory, metricHandler) { }
+        public PollController(ICorrespondenceService correspondenceService)
+        {
+            _correspondenceService = correspondenceService;
+        }
+
+        public PollController(IContextFactory contextFactory, IMetricHandler metricHandler, ICorrespondenceService correspondenceService)
+            : base(contextFactory, metricHandler)
+        {
+            _correspondenceService = correspondenceService;
+        }
 
         [HttpGet]
         public PollRequestResponseModel Get(Guid id)
@@ -135,12 +145,9 @@ namespace VotingApplication.Web.Api.Controllers
 
             #endregion
 
-            Poll newPoll = Create(pollCreationRequest);
-            Ballot creatorBallot = new Ballot
-            {
-                TokenGuid = Guid.NewGuid(),
-                ManageGuid = Guid.NewGuid()
-            };
+            Poll newPoll = CreatePoll(pollCreationRequest);
+            Ballot creatorBallot = CreateBallot();
+            List<Ballot> invitationBallots = new List<Ballot>();
 
             using (var context = _contextFactory.CreateContext())
             {
@@ -149,8 +156,23 @@ namespace VotingApplication.Web.Api.Controllers
                 context.Polls.Add(newPoll);
                 newPoll.Ballots.Add(creatorBallot);
 
-                context.SaveChanges();
+                if (pollCreationRequest.Invitations != null)
+                {
+                    foreach (string email in pollCreationRequest.Invitations)
+                    {
+                        Ballot newBallot = CreateBallot();
+                        newBallot.Email = email;
+                        newPoll.Ballots.Add(newBallot);
+                        invitationBallots.Add(newBallot);
+                    }
+                }
 
+                context.SaveChanges();
+            }
+
+            foreach (Ballot invitaionBallot in invitationBallots)
+            {
+                SendInvitation(invitaionBallot, newPoll);
             }
 
             PollCreationResponseModel response = new PollCreationResponseModel
@@ -164,7 +186,27 @@ namespace VotingApplication.Web.Api.Controllers
 
         }
 
-        private Poll Create(PollCreationRequestModel pollCreationRequest)
+        private Ballot CreateBallot()
+        {
+            return new Ballot
+            {
+                TokenGuid = Guid.NewGuid(),
+                ManageGuid = Guid.NewGuid()
+            };
+        }
+
+        private void SendInvitation(Ballot ballot, Poll poll)
+        {
+            if (ballot.TokenGuid == Guid.Empty)
+            {
+                ballot.TokenGuid = Guid.NewGuid();
+                _metricHandler.HandleBallotAddedEvent(ballot, poll.UUID);
+            }
+
+            _correspondenceService.SendInvitation(poll.UUID, ballot, poll.Name);
+        }
+
+        private Poll CreatePoll(PollCreationRequestModel pollCreationRequest)
         {
             Poll newPoll = PollCreationHelper.Create();
             newPoll.Name = pollCreationRequest.PollName;
@@ -178,6 +220,8 @@ namespace VotingApplication.Web.Api.Controllers
                 newPoll.ElectionMode = pollCreationRequest.ElectionMode;
                 newPoll.ExpiryDateUtc = pollCreationRequest.ExpiryDateUtc;
                 newPoll.InviteOnly = pollCreationRequest.InviteOnly;
+                newPoll.MaxPerVote = pollCreationRequest.MaxPerVote;
+                newPoll.MaxPoints = pollCreationRequest.MaxPoints;
             };
 
             if (User.Identity.IsAuthenticated)

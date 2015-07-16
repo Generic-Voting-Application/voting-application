@@ -161,6 +161,9 @@
             poll.ExpiryDateUtc = getPollExpiryUtc();
             poll.Invitations = getValidInvitees();
             poll.InviteOnly = $scope.newPoll.InviteOnly;
+            poll.PointsPerVote = $scope.newPoll.PointsPerVote;
+            poll.MaxPoints = $scope.newPoll.PollType === 'Points' ? $scope.newPoll.MaxPoints : null;
+            poll.MaxPerVote = $scope.newPoll.PollType === 'Points' ? $scope.newPoll.MaxPerVote : null;
 
             return poll;
         }

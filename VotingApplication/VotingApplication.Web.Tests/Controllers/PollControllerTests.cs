@@ -15,6 +15,7 @@ using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers;
 using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
+using VotingApplication.Web.Api.Services;
 using VotingApplication.Web.Tests.TestHelpers;
 
 namespace VotingApplication.Web.Tests.Controllers
@@ -65,7 +66,7 @@ namespace VotingApplication.Web.Tests.Controllers
 
             _metricHandler = new Mock<IMetricHandler>();
 
-            _controller = new PollController(mockContextFactory.Object, _metricHandler.Object)
+            _controller = new PollController(mockContextFactory.Object, _metricHandler.Object, new Mock<ICorrespondenceService>().Object)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()
@@ -663,7 +664,7 @@ namespace VotingApplication.Web.Tests.Controllers
 
             public static PollController CreatePollController(IContextFactory contextFactory)
             {
-                return new PollController(contextFactory, null)
+                return new PollController(contextFactory, null, new Mock<ICorrespondenceService>().Object)
                 {
                     Request = new HttpRequestMessage(),
                     Configuration = new HttpConfiguration()
