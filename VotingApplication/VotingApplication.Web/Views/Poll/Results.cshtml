@@ -5,7 +5,7 @@
 
         <h1 class="md-display-1">Results</h1>
 
-        <md-content layout="column">
+        <md-content layout="column" ng-if="results">
 
             <md-card>
 
@@ -36,6 +36,16 @@
                 </md-card-content>
             </md-card>
 
+        </md-content>
+
+        <md-content ng-if="!results">
+            <md-card>
+                <md-card-content flex layout layout-align="center center">
+                    <h2 class="md-headline">
+                        There are no results for this poll yet
+                    </h2>
+                </md-card-content>
+            </md-card>
         </md-content>
     </div>
 </div>
