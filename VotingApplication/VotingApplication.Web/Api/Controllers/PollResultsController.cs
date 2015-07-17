@@ -92,7 +92,7 @@ namespace VotingApplication.Web.Api.Controllers
 
                 _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.OK, pollId);
 
-                ResultsRequestResponseModel results = GenerateResults(votes, poll.NamedVoting);
+                ResultsRequestResponseModel results = GenerateResults(votes, poll.Choices, poll.NamedVoting);
                 results.PollName = poll.Name;
                 return results;
             }
@@ -105,22 +105,20 @@ namespace VotingApplication.Web.Api.Controllers
             return dateTime;
         }
 
-        private static ResultsRequestResponseModel GenerateResults(IEnumerable<Vote> votes, bool namedVoting)
+        private static ResultsRequestResponseModel GenerateResults(IEnumerable<Vote> votes, IEnumerable<Choice> choices, bool namedVoting)
         {
-            var groupedResults = (from vote in votes
-                                  group vote by vote.Choice.PollChoiceNumber into result
-                                  let optionGroupVotes = result.ToList()
-                                  select new
-                                             {
-                                                 ChoiceName = optionGroupVotes[0].Choice.Name,
-                                                 Sum = optionGroupVotes.Sum(v => v.VoteValue),
-                                                 Voters = optionGroupVotes.Select(v => CreateResultVoteModel(v, namedVoting)).ToList()
-                                             })
-                  .ToList();
+            List<ResultModel> groupedResults = new List<ResultModel>();
 
-            if (!groupedResults.Any())
+            foreach (Choice choice in choices)
             {
-                return new ResultsRequestResponseModel();
+                var choiceVotes = votes.Where(v => v.Choice.Id == choice.Id);
+
+                ResultModel result = new ResultModel();
+                result.ChoiceName = choice.Name;
+                result.Voters = choiceVotes.Select(v => CreateResultVoteModel(v, namedVoting)).ToList();
+                result.Sum = choiceVotes.Sum(v => v.VoteValue);
+
+                groupedResults.Add(result);
             }
 
             int resultsMax = groupedResults.Max(r => r.Sum);
