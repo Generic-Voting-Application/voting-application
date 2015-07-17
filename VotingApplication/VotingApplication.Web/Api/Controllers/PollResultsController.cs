@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
@@ -64,25 +62,6 @@ namespace VotingApplication.Web.Api.Controllers
                     }
                 }
 
-                if (Request.RequestUri != null)
-                {
-                    NameValueCollection queryMap = HttpUtility.ParseQueryString(Request.RequestUri.Query);
-                    string lastRefreshedDate = queryMap["lastRefreshed"];
-
-                    var clientLastUpdated = DateTime.MinValue;
-
-                    if (lastRefreshedDate != null)
-                    {
-                        clientLastUpdated = UnixTimeToDateTime(long.Parse(lastRefreshedDate));
-                    }
-
-                    if (poll.LastUpdatedUtc < clientLastUpdated)
-                    {
-                        _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.NotModified, pollId);
-                        throw new HttpResponseException(HttpStatusCode.NotModified);
-                    }
-                }
-
                 List<Vote> votes = context
                     .Votes
                     .Include(v => v.Choice)
@@ -107,6 +86,15 @@ namespace VotingApplication.Web.Api.Controllers
 
         private static ResultsRequestResponseModel GenerateResults(IEnumerable<Vote> votes, IEnumerable<Choice> choices, bool namedVoting)
         {
+            if (choices.Count() == 0)
+            {
+                return new ResultsRequestResponseModel
+                {
+                    Winners = new List<string>(),
+                    Results = new List<ResultModel>()
+                };
+            }
+
             List<ResultModel> groupedResults = new List<ResultModel>();
 
             foreach (Choice choice in choices)
@@ -121,13 +109,21 @@ namespace VotingApplication.Web.Api.Controllers
                 groupedResults.Add(result);
             }
 
-            int resultsMax = groupedResults.Max(r => r.Sum);
+            int? resultsMax = groupedResults.Max(r => r.Sum);
 
-            List<string> winners = groupedResults
-                .Where(r => r.Sum == resultsMax)
-                .Select(r => r.ChoiceName)
-                .ToList();
+            List<string> winners;
 
+            if (resultsMax > 0)
+            {
+                winners = groupedResults
+                            .Where(r => r.Sum == resultsMax)
+                            .Select(r => r.ChoiceName)
+                            .ToList();
+            }
+            else
+            {
+                winners = new List<string>();
+            }
 
             List<ResultModel> resultModels = groupedResults
                 .Select(r => ResultToModel(r.ChoiceName, r.Sum, r.Voters))
