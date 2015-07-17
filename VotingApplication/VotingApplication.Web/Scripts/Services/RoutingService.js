@@ -110,6 +110,7 @@
     function RoutingService($window, $location) {
 
         var service = {
+            homePageUrl: '/',
             navigateToHomePage: navigateToHomePage,
             navigateToVotePage: navigateToVotePage,
 
