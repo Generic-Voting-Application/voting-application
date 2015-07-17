@@ -40,6 +40,12 @@
         ];
 
         $scope.advanceToStep = advanceToStep;
+        $scope.goToQuestionStep = goToQuestionStep;
+        $scope.goToStyleStep = goToStyleStep;
+        $scope.goToExpiryStep = goToExpiryStep;
+        $scope.goToInvitationStep = goToInvitationStep;
+
+
         $scope.getNonEmptyChoices = getNonEmptyChoices;
         $scope.getValidInvitees = getValidInvitees;
         $scope.getInvalidInvitees = getInvalidInvitees;
@@ -49,7 +55,7 @@
         $scope.createPoll = createPoll;
 
         var emailRegEx = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-        
+
         function advanceToStep(step) {
             var stepIndex = step - 1;
             for (var i = 0; i <= stepIndex; i++) {
@@ -60,6 +66,22 @@
             $timeout(function () {
                 $scope.currentStep = stepIndex;
             });
+        }
+
+        function goToStyleStep() {
+            advanceToStep(2);
+        }
+
+        function goToQuestionStep() {
+            advanceToStep(1);
+        }
+
+        function goToExpiryStep() {
+            advanceToStep(3);
+        }
+
+        function goToInvitationStep() {
+            advanceToStep(4);
         }
 
         function createDefaultPoll() {
@@ -161,6 +183,9 @@
             poll.ExpiryDateUtc = getPollExpiryUtc();
             poll.Invitations = getValidInvitees();
             poll.InviteOnly = $scope.newPoll.InviteOnly;
+            poll.PointsPerVote = $scope.newPoll.PointsPerVote;
+            poll.MaxPoints = $scope.newPoll.PollType === 'Points' ? $scope.newPoll.MaxPoints : null;
+            poll.MaxPerVote = $scope.newPoll.PollType === 'Points' ? $scope.newPoll.MaxPerVote : null;
 
             return poll;
         }

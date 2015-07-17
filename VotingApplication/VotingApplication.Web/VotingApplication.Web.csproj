@@ -349,20 +349,18 @@
     <Content Include="Scripts\Controllers\Account\Login\ForgottenPasswordController.js" />
     <Content Include="Scripts\Controllers\Account\Login\LoginController.js" />
     <Content Include="Scripts\Controllers\Account\Register\RegisterController.js" />
-    <Content Include="Scripts\Controllers\Account\Register\RegistrationCompleteController.js" />
+    <Content Include="Scripts\Controllers\Account\SendConfirmationEmailController.js" />
     <Content Include="Scripts\Controllers\Create\CreateController.js" />
     <Content Include="Scripts\Controllers\Create\ConfirmStepController.js" />
     <Content Include="Scripts\Controllers\Create\InvitationStepController.js" />
     <Content Include="Scripts\Controllers\Create\QuestionStepController.js" />
+    <Content Include="Scripts\Controllers\Create\StyleStepController.js" />
     <Content Include="Scripts\Controllers\EditOptionDialogController.js" />
     <Content Include="Scripts\Controllers\AddOptionDialogController.js" />
     <Content Include="Scripts\Controllers\ManageVotersController.js" />
     <Content Include="Scripts\Controllers\PollTypeChangeController.js" />
-    <Content Include="Scripts\Controllers\AccountRegisterController.js" />
-    <Content Include="Scripts\Controllers\AccountLoginController.js" />
     <Content Include="Scripts\Controllers\ManageExpiryController.js" />
     <Content Include="Scripts\Controllers\ManagePollTypeController.js" />
-    <Content Include="Scripts\Controllers\AccountResetPasswordController.js" />
     <Content Include="Scripts\Controllers\MyPollsController.js" />
     <Content Include="Scripts\Controllers\ManageInviteesController.js" />
     <Content Include="Scripts\Controllers\ManageMiscController.js" />
@@ -371,7 +369,6 @@
     <Content Include="Scripts\Controllers\DashboardController.js" />
     <Content Include="Scripts\Controllers\Poll\Results\ResultsController.js" />
     <Content Include="Scripts\Controllers\Poll\Vote\VoteController.js" />
-    <Content Include="Scripts\Controllers\RegistrationConfirmationController.js" />
     <Content Include="Scripts\Dialogs\AddUserChoiceDialog\AddUserChoiceDialogController.js" />
     <Content Include="Scripts\Directives\DateTimePicker\DateTimePicker.html" />
     <Content Include="Scripts\Directives\DateTimePicker\DateTimePicker.js" />
@@ -398,13 +395,11 @@
     <Content Include="Scripts\Directives\VoteChoice\VoteChoiceTypes\BasicVoteChoice.js" />
     <Content Include="Scripts\Filters\leadingZeroFilter.js" />
     <Content Include="Scripts\Filters\dateFilters.js" />
-    <Content Include="Scripts\Interceptors\ErrorInterceptor.js" />
     <Content Include="Scripts\Lib\angular-animate-min.js" />
     <Content Include="Scripts\Lib\angular-aria-min.js" />
     <Content Include="Scripts\Lib\angular-material-min.js" />
     <Content Include="Scripts\Lib\angular-messages-min.js" />
     <Content Include="Scripts\Lib\angular-zeroclipboard.js" />
-    <Content Include="Scripts\Lib\d3-tip.js" />
     <Content Include="Scripts\Lib\moment-min.js" />
     <Content Include="Scripts\Lib\angular-qrcode.js" />
     <Content Include="Scripts\Lib\ng-google-chart.js" />
@@ -434,15 +429,13 @@
     <Content Include="Scripts\Services\ManageService.js" />
     <Content Include="Scripts\Services\PollService.js" />
     <Content Include="Scripts\Services\ResultsService.js" />
+    <Content Include="Scripts\Services\ErrorRoutingService.js" />
     <Content Include="Scripts\Services\RoutingService.js" />
     <Content Include="Scripts\Services\TokenService.js" />
-    <Content Include="Scripts\Lib\d3-min.js" />
     <Content Include="Scripts\Modules\GVA-Voting.js" />
     <Content Include="Scripts\Services\VoteService.js" />
     <Content Include="Static\Lib\ZeroClipboard.swf" />
-    <Content Include="Views\Routes\AccountLogin.cshtml" />
-    <Content Include="Views\Routes\AccountRegister.cshtml" />
-    <Content Include="Views\Routes\AccountResetPassword.cshtml" />
+    <Content Include="Static\Images\404.png" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Routes\Manage.cshtml" />
     <Content Include="Views\Routes\ManageChoices.cshtml" />
@@ -454,7 +447,6 @@
     <Content Include="Content\Scss\DateTimePicker.scss" />
     <Content Include="Views\Routes\TimePicker.cshtml" />
     <Content Include="Views\Routes\ManageVoters.cshtml" />
-    <Content Include="Content\Scss\ResultsChart.scss" />
     <Content Include="Fonts\fontawesome-webfont.eot" />
     <Content Include="Fonts\fontawesome-webfont.ttf" />
     <Content Include="Fonts\fontawesome-webfont.woff" />
@@ -471,7 +463,6 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Poll\Index.cshtml" />
     <Content Include="Views\Routes\ManageMisc.cshtml" />
-    <Content Include="Views\Routes\ConfirmRegistration.cshtml" />
     <Content Include="Views\Create\Index.cshtml" />
     <Content Include="Views\Create\QuestionStep.cshtml" />
     <Content Include="Views\Create\StyleStep.cshtml" />
@@ -490,6 +481,9 @@
     <Content Include="Views\Poll\Vote.cshtml" />
     <Content Include="Views\Poll\Results.cshtml" />
     <Content Include="Scripts\Dialogs\AddUserChoiceDialog\AddUserChoiceDialog.html" />
+    <Content Include="Views\Login\EmailNotConfirmed.cshtml" />
+    <Content Include="Views\Poll\InviteOnly.cshtml" />
+    <Content Include="Views\Poll\PollNotFound.cshtml" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

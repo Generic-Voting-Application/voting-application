@@ -12,34 +12,34 @@
         <md-content>
             <form name="registerAccountForm" ng-submit="register()">
 
-                    <md-input-container>
-                        <label><md-icon md-font-icon="fa-envelope-o" class="fa" alt="envelope"></md-icon> Email</label>
-                        <input ng-model="user.email"
-                               type="email"
-                               name="email"
-                               required
-                               ng-model-options="{ debounce: 500 }">
+                <md-input-container>
+                    <label><md-icon md-font-icon="fa-envelope-o" class="fa" alt="envelope"></md-icon> Email</label>
+                    <input ng-model="user.email"
+                           type="email"
+                           name="email"
+                           required
+                           ng-model-options="{ debounce: 500 }">
 
-                        <div ng-messages="registerAccountForm.email.$error" ng-if="registerAccountForm.email.$touched">
-                            <span ng-message="required">Email is required</span>
-                            <span ng-message="email">Email is not valid</span>
-                        </div>
-                    </md-input-container>
+                    <div ng-messages="registerAccountForm.email.$error" ng-if="registerAccountForm.email.$touched">
+                        <span ng-message="required">Email is required</span>
+                        <span ng-message="email">Email is not valid</span>
+                    </div>
+                </md-input-container>
 
-                    <md-input-container>
-                        <label><md-icon md-font-icon="fa-asterisk" class="fa" alt="asterisk"></md-icon> Password</label>
-                        <input ng-model="user.password"
-                               type="password"
-                               name="password"
-                               required
-                               minlength="6"
-                               ng-model-options="{ debounce: 500 }">
+                <md-input-container>
+                    <label><md-icon md-font-icon="fa-asterisk" class="fa" alt="asterisk"></md-icon> Password</label>
+                    <input ng-model="user.password"
+                           type="password"
+                           name="password"
+                           required
+                           minlength="6"
+                           ng-model-options="{ debounce: 500 }">
 
-                        <div ng-messages="registerAccountForm.password.$error" ng-if="registerAccountForm.password.$touched">
-                            <span ng-message="required">Password is required</span>
-                            <span ng-message="minlength">Password must be at least 6 characters</span>
-                        </div>
-                    </md-input-container>
+                    <div ng-messages="registerAccountForm.password.$error" ng-if="registerAccountForm.password.$touched">
+                        <span ng-message="required">Password is required</span>
+                        <span ng-message="minlength">Password must be at least 6 characters</span>
+                    </div>
+                </md-input-container>
 
 
                 <div layout="row" layout-sm="column" layout-align-gt-sm="end center">

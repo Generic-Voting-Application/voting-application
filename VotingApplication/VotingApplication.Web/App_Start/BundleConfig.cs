@@ -66,13 +66,6 @@ namespace VotingApplication.Web
             dateTimePickerStyle.Orderer = nullOrderer;
             bundles.Add(dateTimePickerStyle);
 
-            StyleBundle resultsChartStyle = new StyleBundle("~/Bundles/ResultsChartStyle");
-            resultsChartStyle.Include("~/Content/Scss/ResultsChart.scss");
-            resultsChartStyle.Builder = nullBuilder;
-            resultsChartStyle.Transforms.Add(styleTransformer);
-            resultsChartStyle.Orderer = nullOrderer;
-            bundles.Add(resultsChartStyle);
-
             StyleBundle errorBarStyle = new StyleBundle("~/Bundles/ErrorBarStyle");
             errorBarStyle.Include("~/Content/Scss/ErrorBar.scss");
             errorBarStyle.Builder = nullBuilder;
@@ -159,15 +152,6 @@ namespace VotingApplication.Web
             ngStorage.Include("~/Scripts/Lib/ngStorage-min.js");
             bundles.Add(ngStorage);
 
-            // d3
-            var d3 = new Bundle("~/Bundles/ScriptLib/d3", "https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js");
-            d3.Include("~/Scripts/Lib/d3-min.js");
-            bundles.Add(d3);
-
-            var d3tip = new ScriptBundle("~/Bundles/ScriptLib/d3tip", "https://cdn.rawgit.com/Caged/d3-tip/v0.6.7/index.js");
-            d3tip.Include("~/Scripts/Lib/d3-tip.js");
-            bundles.Add(d3tip);
-
             // moment
             var moment = new Bundle("~/Bundles/ScriptLib/moment", "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js");
             moment.Include("~/Scripts/Lib/moment-min.js");
@@ -189,7 +173,6 @@ namespace VotingApplication.Web
             scriptBundle.IncludeDirectory("~/Scripts/Services", "*.js", true);
             scriptBundle.IncludeDirectory("~/Scripts/Controllers", "*.js", true);
             scriptBundle.IncludeDirectory("~/Scripts/Filters", "*.js", true);
-            scriptBundle.IncludeDirectory("~/Scripts/Interceptors", "*.js", true);
             scriptBundle.Builder = nullBuilder;
             scriptBundle.Transforms.Add(scriptTransformer);
             scriptBundle.Orderer = nullOrderer;

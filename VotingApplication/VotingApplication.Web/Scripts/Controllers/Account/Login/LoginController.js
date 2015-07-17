@@ -7,9 +7,9 @@
         .module('VoteOn-Login')
         .controller('LoginController', LoginController);
 
-    LoginController.$inject = ['$scope', 'AccountService', 'RoutingService'];
+    LoginController.$inject = ['$scope', 'AccountService', 'RoutingService', 'ErrorService'];
 
-    function LoginController($scope, AccountService, RoutingService) {
+    function LoginController($scope, AccountService, RoutingService, ErrorService) {
 
         $scope.user = {
             email: null,
@@ -26,7 +26,10 @@
                 var password = $scope.loginForm.password.$viewValue;
 
                 AccountService.login(userEmail, password)
-                    .then(RoutingService.returnToReferrerPage);
+                    .then(RoutingService.returnToReferrerPage)
+                    .catch(function (response) {
+                        ErrorService.handleLoginError(response, userEmail);
+                    });
             }
         }
 

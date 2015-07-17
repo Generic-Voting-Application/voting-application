@@ -26,47 +26,6 @@ namespace VotingApplication.Web.Api.Controllers
             _voteValidatorFactory = voteValidatorFactory;
         }
 
-        [HttpGet]
-        public List<VoteRequestResponseModel> Get(Guid pollId, Guid tokenGuid)
-        {
-            using (IVotingContext context = _contextFactory.CreateContext())
-            {
-                Poll poll = PollByPollId(pollId, context);
-
-                List<Vote> votes = context
-                    .Votes
-                    .Include(v => v.Poll)
-                    .Where(v => v.Ballot.TokenGuid == tokenGuid && v.Poll.UUID == pollId)
-                    .Include(v => v.Choice)
-                    .Include(v => v.Ballot)
-                    .ToList();
-
-                return votes
-                    .Select(v => VoteToModel(v, poll))
-                    .ToList();
-            }
-        }
-
-        private static VoteRequestResponseModel VoteToModel(Vote vote, Poll poll)
-        {
-            var model = new VoteRequestResponseModel();
-
-            if (vote.Choice != null)
-            {
-                model.ChoiceId = vote.Choice.Id;
-                model.ChoiceName = vote.Choice.Name;
-            }
-
-            if (poll.NamedVoting && vote.Ballot.VoterName != null)
-            {
-                model.VoterName = vote.Ballot.VoterName;
-            }
-
-            model.VoteValue = vote.VoteValue;
-
-            return model;
-        }
-
         [HttpPut]
         public void Put(Guid pollId, Guid tokenGuid, BallotRequestModel ballotRequest)
         {

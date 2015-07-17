@@ -122,50 +122,6 @@ namespace VotingApplication.Web.Tests.Controllers
             }
         }
 
-        #region GET
-
-        [TestMethod]
-        public void GetIsAllowed()
-        {
-            // Act
-            _controller.Get(_mainUUID, _bobBallot.TokenGuid);
-        }
-
-        [TestMethod]
-        public void GetReturnsListOfVotesForUserAndPoll()
-        {
-            // Act
-            var response = _controller.Get(_mainUUID, _bobBallot.TokenGuid);
-
-            // Assert
-            Assert.AreEqual(1, response.Count);
-            Assert.AreEqual(1, response.Single().ChoiceId);
-        }
-
-        [TestMethod]
-        [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
-        public void GetNonexistentPollIsNotFound()
-        {
-            // Act
-            Guid newGuid = Guid.NewGuid();
-            _controller.Get(newGuid, _bobBallot.TokenGuid);
-
-        }
-
-        [TestMethod]
-        public void GetForValidUserAndPollWithNoVotesIsEmpty()
-        {
-            // Act
-            var response = _controller.Get(_otherUUID, _bobBallot.TokenGuid);
-
-            // Assert
-            Assert.AreEqual(0, response.Count);
-        }
-
-        #endregion
-
-        #region PUT
-
         [TestMethod]
         [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
         public void PostRejectsVoteWithInvalidInput()
@@ -344,7 +300,5 @@ namespace VotingApplication.Web.Tests.Controllers
 
             _controller.Put(PollId, TokenGuid, ballotRequest);
         }
-
-        #endregion
     }
 }
