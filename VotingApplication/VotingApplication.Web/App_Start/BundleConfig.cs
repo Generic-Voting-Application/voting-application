@@ -23,6 +23,9 @@ namespace VotingApplication.Web
             var scriptTransformer = new ScriptTransformer();
             var nullOrderer = new NullOrderer();
 
+            // No fallback for Css style sheets if the cdn fails.
+            // See http://aspnetoptimization.codeplex.com/workitem/104
+
             // Lib CSS
             StyleBundle angularMaterialCss = new StyleBundle("~/Bundles/StyleLib/AngularMaterial", "https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.css");
             angularMaterialCss.Include("~/Content/Lib/Css/angular-material-min.css");
