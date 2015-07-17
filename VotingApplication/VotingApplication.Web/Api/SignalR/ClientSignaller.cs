@@ -4,11 +4,6 @@ namespace VotingApplication.Web.Api.SignalR
 {
     public static class ClientSignaller
     {
-        private static IHubContext getHubContext()
-        {
-            return GlobalHost.ConnectionManager.GetHubContext<SignalHub>();
-        }
-
         public static void RegisterObserver(string watcher, string identifier)
         {
             getHubContext().Groups.Add(watcher, identifier.ToLower());
@@ -24,5 +19,9 @@ namespace VotingApplication.Web.Api.SignalR
             getHubContext().Clients.Group(identifier.ToLower()).update();
         }
 
+        private static IHubContext getHubContext()
+        {
+            return GlobalHost.ConnectionManager.GetHubContext<SignalHub>();
+        }
     }
 }
