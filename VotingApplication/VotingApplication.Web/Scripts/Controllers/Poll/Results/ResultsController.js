@@ -32,7 +32,7 @@
 
             updateTimer = $interval(updateResults, 5000);
             $scope.$on('$destroy', clearTimer);
-            
+
             SignalService.registerObserver($scope.pollId, updateResults);
         }
 
@@ -42,12 +42,18 @@
 
                     if (data) {
                         $scope.results = data.Results;
-                        $scope.winners = filterDuplicates(data.Winners);
 
-                        var resultsTrimSize = window.innerWidth / 30;
-                        var chartData = ResultsService.createDataTable(data.Results, resultsTrimSize);
+                        if (data.Winners) {
+                            $scope.winners = filterDuplicates(data.Winners);
+                        }
 
-                        $scope.resultsBarChart = createBarChart(chartData, data.PollName);
+                        if (data.Results) {
+
+                            var resultsTrimSize = window.innerWidth / 30;
+                            var chartData = ResultsService.createDataTable(data.Results, resultsTrimSize);
+
+                            $scope.resultsBarChart = createBarChart(chartData, data.PollName);
+                        }
                     }
 
                 })
