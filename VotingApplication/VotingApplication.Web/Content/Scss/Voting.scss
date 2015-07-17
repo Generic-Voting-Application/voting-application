@@ -1,164 +1,26 @@
-﻿@import '~/Content/Scss/Site.scss';
-
-$Green100: #C8E6C9;
-$Green200: #A5D6A7;
-$Green500: #4CAF50;
-$Green700: #388E3C;
-$BlueGrey100: #CFD8DC;
-$Grey400: #BDBDBD;
-$Grey600: #757575;
-$Black: #000000;
-$White: #FFFFFF;
-
-// Voting page specific
-
-body {
-    background-color: $Green200;
+﻿
+.btn-group-middle {
+    font-size: 16px;
+    margin: 6px 0;
+    padding: 3px 3px 3px 3px;
+    font-weight: 400;
+    width: 36px;
+    min-width: 36px;
+    border-radius: 0;
 }
 
-.active-btn {
-    background-color: $Green500;
-    border: 1px solid $Green700;
+.btn-group-left {
+    @extend .btn-group-middle;
+    border-radius: 3px 0 0 3px;
 }
 
-.go-btn {
-    background-color: $Green500;
-    border: 1px solid $Green700;
+.btn-group-right {
+    @extend .btn-group-middle;
+    border-radius: 0 3px 3px 0;
 }
 
-#current-user {
-    width: 100%;
-    display: inline-block;
-}
-
-#not-user-btn {
-    float: right;
-}
-
-#expiry-date {
-    position: relative;
-    top: -20px;
-}
-
-.choice-block {
-    flex-direction: column;
-    min-height: 50px;
-    border-radius: 5px;
-    padding: 5px;
-
-    &:last-of-type {
-        margin-bottom: 5px;
-    }
-
-    .choice-block .choice-block-row {
-        flex-direction: row;
-        margin-bottom: 5px;
-    }
-}
-
-.spaced-bottom {
-    margin-bottom: 15px;
-}
-
-.choice-area {
-    margin-bottom: 10px;
-}
-
-.selected-choice {
-    background-color: $Green100;
-}
-
-.identity-login {
-    max-width: 320px;
-}
-
-.voting-area {
-    margin-bottom: 15px;
-}
-
-.checkbox-padded-left {
-    padding-left: 33px;
-}
-
-// Points-voting specific
-
-.choice-buttons {
-    float: right;
-    /*width: 100px;*/
-}
-
-.choice-buttons > * {
-    display: block;
+.btn-group-label {
+    min-width: 48px;
+    width: 48px;
     text-align: center;
-    margin-bottom: 5px;
-}
-
-.btn-group-points {
-    border-color: $Green500;
-    @extend .btn-group;
-    width: 130px;
-
-    > button {
-        width: 40px;
-    }
-
-    > .points-label {
-        float: left;
-        padding: 7px 0 0 0;
-        width: 48px;
-        text-align: center;
-    }
-}
-
-.progress {
-    background-color: $White;
-    border: 1px solid $Green700;
-    height: 10px;
-    border-radius: 4px;
-}
-
-.progress-bar {
-    transition: width 0.2s ease-out;
-    border-width: 0px;
-    background-color: $Green500;
-    height: 100%;
-}
-
-.choice-description {
-    min-height: 1em;
-}
-
-// Results
-
-#winner-label {
-    font-size: 18pt;
-}
-
-// Up/Down vote specific
-
-.btn-group-updown {
-    @extend .btn-group;
-    width: 100px;
-    border-color: $Grey400;
-
-    > button {
-        width: 49px;
-        min-width: 0px;
-
-        &:first-of-type {
-            border-right-width: 1px;
-            border-right-color: $Grey400;
-        }
-    }
-}
-
-// Multi vote specific
-
-.choice-checkbox {
-    margin: 5px 10px 0px 10px;
-}
-
-.multivote-choice-description {
-    @extend .choice-description;
-    padding-left: 34px;
 }

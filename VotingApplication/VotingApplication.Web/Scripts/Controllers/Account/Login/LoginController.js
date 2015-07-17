@@ -26,7 +26,7 @@
                 var password = $scope.loginForm.password.$viewValue;
 
                 AccountService.login(userEmail, password)
-                    .then(RoutingService.navigateToAccountPage)
+                    .then(RoutingService.returnToReferrerPage)
                     .catch(function (response) {
                         ErrorService.handleLoginError(response, userEmail);
                     });
