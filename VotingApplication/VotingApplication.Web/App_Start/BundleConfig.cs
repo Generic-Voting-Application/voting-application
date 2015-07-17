@@ -132,6 +132,10 @@ namespace VotingApplication.Web
             angularQr.Include("~/Scripts/Lib/angular-qrcode.js");
             bundles.Add(angularQr);
 
+            var angularSignalR = new ScriptBundle("~/Bundles/ScriptLib/AngularSignalR", "https://cdn.rawgit.com/JustMaier/angular-signalr-hub/v1.5.0/signalr-hub.min.js");
+            angularSignalR.Include("~/Scripts/Lib/signalr-hub.min.js");
+            bundles.Add(angularSignalR);
+
             var qrcode = new ScriptBundle("~/Bundles/ScriptLib/qrcode", "https://cdn.rawgit.com/kazuhikoarase/qrcode-generator/v20140808/js/qrcode.js");
             qrcode.Include("~/Scripts/Lib/qrcode.js");
             bundles.Add(qrcode);
@@ -151,6 +155,15 @@ namespace VotingApplication.Web
             var ngStorage = new Bundle("~/Bundles/ScriptLib/ngStorage", "https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js");
             ngStorage.Include("~/Scripts/Lib/ngStorage-min.js");
             bundles.Add(ngStorage);
+
+            // JQuery and SignalR
+            var jQuery = new ScriptBundle("~/Bundles/ScriptLib/JQuery", " //code.jquery.com/jquery-1.11.3.min.js");
+            jQuery.Include("~/Scripts/Lib/jquery-1.11.3.min.js");
+            bundles.Add(jQuery);
+
+            var jQuerySignalR = new ScriptBundle("~/Bundles/ScriptLib/JQuerySignalR", " http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.min.js");
+            jQuerySignalR.Include("~/Scripts/Lib/jquery.signalr-2.2.0.min.js");
+            bundles.Add(jQuerySignalR);
 
             // moment
             var moment = new Bundle("~/Bundles/ScriptLib/moment", "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js");

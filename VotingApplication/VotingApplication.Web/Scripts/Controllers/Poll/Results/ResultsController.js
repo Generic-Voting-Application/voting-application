@@ -5,9 +5,9 @@
         .module('VoteOn-Results')
         .controller('ResultsController', ResultsController);
 
-    ResultsController.$inject = ['$scope', '$routeParams', '$interval', 'TokenService', 'ResultsService', 'ErrorService'];
+    ResultsController.$inject = ['$scope', '$routeParams', '$interval', 'TokenService', 'ResultsService', 'ErrorService', 'SignalService'];
 
-    function ResultsController($scope, $routeParams, $interval, TokenService, ResultsService, ErrorService) {
+    function ResultsController($scope, $routeParams, $interval, TokenService, ResultsService, ErrorService, SignalService) {
 
         $scope.pollId = $routeParams['pollId'];
         $scope.resultsBarChart = null;
@@ -32,6 +32,8 @@
 
             updateTimer = $interval(updateResults, 5000);
             $scope.$on('$destroy', clearTimer);
+            
+            SignalService.registerObserver($scope.pollId, updateResults);
         }
 
         function updateResults() {

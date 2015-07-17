@@ -103,6 +103,13 @@
       <HintPath>$(SolutionDir)packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Dynamic, Version=1.1.0.30, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <HintPath>..\packages\BundleTransformer.SassAndScss.1.9.68\lib\net40\Microsoft.Dynamic.dll</HintPath>
@@ -292,6 +299,8 @@
     <Compile Include="Api\Services\IMailSender.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Api\SignalR\ClientSignaller.cs" />
+    <Compile Include="Api\SignalR\SignalHub.cs" />
     <Compile Include="Api\Validators\BasicVoteValidator.cs" />
     <Compile Include="Api\Validators\IVoteValidator.cs" />
     <Compile Include="Api\Validators\IVoteValidatorFactory.cs" />
@@ -422,6 +431,7 @@
     <Content Include="Scripts\Modules\VoteOn-Common.js" />
     <Content Include="Scripts\Modules\VoteOn-Components.js" />
     <Content Include="Scripts\Modules\Create\VoteOn-Create.js" />
+    <Content Include="Scripts\Modules\VoteOn-Signaling.js" />
     <Content Include="Scripts\Services\AccountService.js" />
     <Content Include="Scripts\Services\CreateService.js" />
     <Content Include="Scripts\Services\ErrorService.js" />
@@ -431,6 +441,7 @@
     <Content Include="Scripts\Services\ResultsService.js" />
     <Content Include="Scripts\Services\ErrorRoutingService.js" />
     <Content Include="Scripts\Services\RoutingService.js" />
+    <Content Include="Scripts\Services\SignalService.js" />
     <Content Include="Scripts\Services\TokenService.js" />
     <Content Include="Scripts\Modules\GVA-Voting.js" />
     <Content Include="Scripts\Services\VoteService.js" />
