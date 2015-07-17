@@ -110,6 +110,8 @@
     function RoutingService($window, $location) {
 
         var service = {
+            navigateToHomePage: navigateToHomePage,
+
             navigateToVotePage: navigateToVotePage,
 
             navigateToLoginPage: navigateToLoginPage,
@@ -126,6 +128,10 @@
         };
 
         return service;
+
+        function navigateToHomePage() {
+            $window.location.href = '/';
+        }
 
         function navigateToVotePage(pollId) {
             $window.location.href = '/Poll/#/' + pollId + '/Vote/';

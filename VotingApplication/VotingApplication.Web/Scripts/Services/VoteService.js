@@ -15,7 +15,6 @@
         var service = {
             submitVote: submitVote,
             getResults: getResults,
-            getTokenVotes: getTokenVotes,
             refreshLastChecked: refreshLastChecked,
             addVoterChoice: addVoterChoice
         };
@@ -99,19 +98,6 @@
             }
 
             return promise.promise;
-        }
-
-        function getTokenVotes(pollId, token) {
-            if (!pollId || !token) {
-                var deferred = $q.defer();
-                deferred.reject();
-                return deferred.promise;
-            }
-
-            return $http({
-                method: 'GET',
-                url: '/api/poll/' + pollId + '/token/' + token + '/vote'
-            });
         }
 
         function refreshLastChecked(pollId) {
