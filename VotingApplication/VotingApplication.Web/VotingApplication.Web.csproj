@@ -342,6 +342,12 @@
     <Content Include="Content\Lib\Css\ngDialog-theme-default-min.css" />
     <Content Include="Content\Scss\ErrorBar.scss" />
     <Content Include="Content\Scss\Site.scss" />
+    <Content Include="Content\Scss\Voting.css">
+      <DependentUpon>Voting.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\Scss\Voting.min.css">
+      <DependentUpon>Voting.css</DependentUpon>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="Fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
@@ -480,6 +486,9 @@
     <Content Include="Views\Poll\Vote.cshtml" />
     <Content Include="Views\Poll\Results.cshtml" />
     <Content Include="Scripts\Dialogs\AddUserChoiceDialog\AddUserChoiceDialog.html" />
+    <Content Include="Content\Scss\Voting.css.map">
+      <DependentUpon>Voting.css</DependentUpon>
+    </Content>
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

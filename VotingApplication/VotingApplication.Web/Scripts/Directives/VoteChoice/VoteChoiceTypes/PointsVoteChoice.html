@@ -3,22 +3,29 @@
 
 <md-list>
     <md-list-item ng-repeat="choice in choices">
-        <span id="points-choice-name">{{choice.Name}}</span>
+        <div id="points-choice-name" class="md-list-item-text">
+            {{choice.Name}}
+        </div>
+
         <span flex></span>
+        
+
         <md-button id="decrease-button"
-                   class="md-icon-button"
+                   class="btn-group-left md-accent"
                    ng-click="decreasePoints(choice)"
                    ng-disabled="decreasePointsDisabled(choice)"
                    aria-label="Decrease Points">
-            -
+            <md-icon md-font-icon="fa-minus" class="fa fa-lg"></md-icon>
         </md-button>
-        <label>{{choice.VoteValue}} / {{poll.MaxPerVote}}</label>
+
+        <label class="btn-group-label">{{choice.VoteValue}} / {{poll.MaxPerVote}}</label>
+
         <md-button id="increase-button"
-                   class="md-icon-button"
+                   class="btn-group-right md-primary"
                    ng-click="increasePoints(choice)"
                    ng-disabled="increasePointsDisabled(choice)"
                    aria-label="Increase Points">
-            +
+            <md-icon md-font-icon="fa-plus" class="fa fa-lg"></md-icon>
         </md-button>
 
     </md-list-item>

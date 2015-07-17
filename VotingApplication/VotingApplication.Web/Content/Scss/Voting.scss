@@ -18,3 +18,9 @@
     @extend .btn-group-middle;
     border-radius: 0 3px 3px 0;
 }
+
+.btn-group-label {
+    min-width: 48px;
+    width: 48px;
+    text-align: center;
+}
