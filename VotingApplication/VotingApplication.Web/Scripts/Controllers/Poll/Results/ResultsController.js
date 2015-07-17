@@ -5,9 +5,9 @@
         .module('VoteOn-Results')
         .controller('ResultsController', ResultsController);
 
-    ResultsController.$inject = ['$scope', '$routeParams', '$interval', 'ResultsService'];
+    ResultsController.$inject = ['$scope', '$routeParams', '$interval', 'TokenService', 'ResultsService', 'ErrorService'];
 
-    function ResultsController($scope, $routeParams, $interval, ResultsService) {
+    function ResultsController($scope, $routeParams, $interval, TokenService, ResultsService, ErrorService) {
 
         $scope.pollId = $routeParams['pollId'];
         $scope.resultsBarChart = null;
@@ -15,40 +15,49 @@
         $scope.winners = [];
         $scope.loaded = false;
 
+        $scope.token = null;
+
         var updateTimer = null;
 
         activate();
 
         function activate() {
 
-            updateResults().then(function () {
-                $scope.loaded = true;
-            });
+            $scope.token = TokenService.retrieveToken($scope.pollId);
+
+            updateResults()
+                .then(function () {
+                    $scope.loaded = true;
+                });
 
             updateTimer = $interval(updateResults, 5000);
             $scope.$on('$destroy', clearTimer);
         }
 
-        function clearTimer() {
-            $interval.cancel(updateTimer);
+        function updateResults() {
+            return ResultsService.getResults($scope.pollId, $scope.token)
+                .then(function (data) {
+
+                    if (data) {
+                        $scope.results = data.Results;
+                        $scope.winners = filterDuplicates(data.Winners);
+
+                        var resultsTrimSize = window.innerWidth / 30;
+                        var chartData = ResultsService.createDataTable(data.Results, resultsTrimSize);
+
+                        $scope.resultsBarChart = createBarChart(chartData, data.PollName);
+                    }
+
+                })
+                .catch(function (response) {
+                    clearTimer();
+
+                    ErrorService.handleResultsError(response);
+                });
         }
 
-        function updateResults() {
-            return ResultsService.getResults($scope.pollId)
-           .then(function (data) {
-
-               if (data) {
-                   $scope.results = data.Results;
-                   $scope.winners = filterDuplicates(data.Winners);
-
-                   var resultsTrimSize = window.innerWidth / 30;
-                   var chartData = ResultsService.createDataTable(data.Results, resultsTrimSize);
-
-                   $scope.resultsBarChart = createBarChart(chartData, data.PollName);
-               }
-               
-           })
-           .catch(clearTimer);
+        function clearTimer() {
+            $interval.cancel(updateTimer);
         }
 
         function filterDuplicates(array) {

@@ -8,7 +8,8 @@
         <md-content layout-padding>
 
             <md-list>
-                <md-list-item class="md-3-line">
+                <md-list-item class="md-3-line" ng-click="goToQuestionStep()" aria-label="Poll Question">
+
                     <md-icon ng-if="questionIsValid()" md-font-icon="fa-check" class="fa md-primary fa-2x" alt="check"></md-icon>
                     <md-icon ng-if="!questionIsValid()" md-font-icon="fa-exclamation-circle" class="fa vo-error-text fa-2x" alt="exclamation circle"></md-icon>
                     <div class="md-list-item-text">
@@ -23,7 +24,7 @@
                     </div>
                     <md-divider></md-divider>
                 </md-list-item>
-                <md-list-item class="md-3-line">
+                <md-list-item class="md-3-line" ng-click="goToQuestionStep()" aria-label="Choices">
 
                     <md-icon ng-if="choicesAreValid()" md-font-icon="fa-check" class="fa md-primary fa-2x" alt="check"></md-icon>
                     <md-icon ng-if="!choicesAreValid()" md-font-icon="fa-exclamation-triangle" class="fa vo-warn-text fa-2x" alt="exclamation triangle"></md-icon>
@@ -40,7 +41,7 @@
                     </div>
                     <md-divider></md-divider>
                 </md-list-item>
-                <md-list-item class="md-3-line">
+                <md-list-item class="md-3-line" ng-click="goToStyleStep()" aria-label="Poll Type">
 
                     <md-icon ng-if="styleIsValid()" md-font-icon="fa-check" class="fa md-primary fa-2x" alt="check"></md-icon>
                     <md-icon ng-if="!styleIsValid()" md-font-icon="fa-exclamation-triangle" class="fa vo-warn-text fa-2x" alt="exclamation triangle"></md-icon>
@@ -70,7 +71,7 @@
                     </div>
                     <md-divider></md-divider>
                 </md-list-item>
-                <md-list-item class="md-3-line">
+                <md-list-item class="md-3-line" ng-click="goToExpiryStep()" aria-label="Expiry Date/Time">
 
                     <md-icon ng-if="expiryIsValid()" md-font-icon="fa-check" class="fa md-primary fa-2x" alt="check"></md-icon>
                     <md-icon ng-if="!expiryIsValid()" md-font-icon="fa-exclamation-triangle" class="fa vo-warn-text fa-2x" alt="exclamation triangle"></md-icon>
@@ -95,7 +96,7 @@
                     </div>
                     <md-divider></md-divider>
                 </md-list-item>
-                <md-list-item class="md-3-line">
+                <md-list-item class="md-3-line" ng-click="goToInvitationStep()" aria-label="Invitation">
 
                     <md-icon ng-if="invitationsAreValid()" md-font-icon="fa-check" class="fa md-primary fa-2x" alt="check"></md-icon>
                     <md-icon ng-if="!invitationsAreValid()" md-font-icon="fa-exclamation-triangle" class="fa vo-warn-text fa-2x" alt="exclamation triangle"></md-icon>
