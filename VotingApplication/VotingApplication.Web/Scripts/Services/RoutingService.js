@@ -111,7 +111,6 @@
 
         var service = {
             navigateToHomePage: navigateToHomePage,
-
             navigateToVotePage: navigateToVotePage,
 
             navigateToLoginPage: navigateToLoginPage,
@@ -124,7 +123,9 @@
             navigateToMyPollsPage: navigateToMyPollsPage,
 
             navigateToResultsPage: navigateToResultsPage,
-            redirectToResultsPage: redirectToResultsPage
+            redirectToResultsPage: redirectToResultsPage,
+
+            returnToReferrerPage : returnToReferrerPage
         };
 
         return service;
@@ -138,7 +139,7 @@
         }
 
         function navigateToLoginPage() {
-            $window.location.href = '/Login';
+            $window.location.href = '/Login#?referrer=' + encodeURIComponent($window.location);
         }
 
         function navigateToRegisterPage() {
@@ -171,6 +172,16 @@
             // This changes the current page and history, so back doesn't redirect to an invalid page.
             // For example, when a poll expires, you can't get to the vote page anymore.
             $location.path(pollId + '/Results').replace();
+        }
+
+        function returnToReferrerPage() {
+            var referrerUri = $location.search().referrer;
+            if (referrerUri) {
+                $window.location.href = decodeURIComponent(referrerUri);
+            } else {
+                navigateToHomePage();
+            }
+
         }
     }
 })();
