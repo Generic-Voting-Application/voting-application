@@ -2,12 +2,12 @@
     'use strict';
 
     angular
-        .module('VoteOn-Register')
-        .controller('RegistrationCompleteController', RegistrationCompleteController);
+        .module('VoteOn-Account')
+        .controller('SendConfirmationEmailController', SendConfirmationEmailController);
 
-    RegistrationCompleteController.$inject = ['$scope', '$routeParams', 'AccountService'];
+    SendConfirmationEmailController.$inject = ['$scope', '$routeParams', 'AccountService'];
 
-    function RegistrationCompleteController($scope, $routeParams, AccountService) {
+    function SendConfirmationEmailController($scope, $routeParams, AccountService) {
 
         $scope.emailAddress = $routeParams['emailAddress'];
 

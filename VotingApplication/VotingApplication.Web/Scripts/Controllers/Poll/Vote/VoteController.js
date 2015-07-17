@@ -5,9 +5,9 @@
         .module('VoteOn-Vote')
         .controller('VoteController', VoteController);
 
-    VoteController.$inject = ['$scope', '$routeParams', 'TokenService', 'PollService', 'VoteService', 'RoutingService', 'IdentityService', '$mdDialog'];
+    VoteController.$inject = ['$scope', '$routeParams', '$mdDialog', 'TokenService', 'PollService', 'VoteService', 'RoutingService', 'IdentityService', 'ErrorService'];
 
-    function VoteController($scope, $routeParams, TokenService, PollService, VoteService, RoutingService, IdentityService, $mdDialog) {
+    function VoteController($scope, $routeParams, $mdDialog, TokenService, PollService, VoteService, RoutingService, IdentityService, ErrorService) {
 
         $scope.loaded = false;
         $scope.submitting = false;
@@ -47,6 +47,9 @@
                 })
                 .then(function (data) {
                     loadPollData(data);
+                })
+                .catch(function (response) {
+                    ErrorService.handleVotingError(response, $scope.pollId);
                 });
         }
 

@@ -12,6 +12,11 @@
                             return '../Login/ForgottenPassword';
                         }
                     })
+                    .when('/EmailNotConfirmed/:emailAddress', {
+                        templateUrl: function () {
+                            return '../Login/EmailNotConfirmed';
+                        }
+                    })
                     .otherwise({
                         templateUrl: function () {
                             return '../Login/Login';
