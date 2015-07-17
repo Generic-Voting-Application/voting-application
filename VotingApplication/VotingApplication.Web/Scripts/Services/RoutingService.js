@@ -111,6 +111,7 @@
 
         var service = {
             homePageUrl: '/',
+            navigateToHomePage: navigateToHomePage,
 
             navigateToVotePage: navigateToVotePage,
 
@@ -128,6 +129,10 @@
         };
 
         return service;
+
+        function navigateToHomePage() {
+            $window.location.href = '/';
+        }
 
         function navigateToVotePage(pollId) {
             $window.location.href = '/Poll/#/' + pollId + '/Vote/';
