@@ -24,6 +24,8 @@
 
         $scope.isLoggedIn = false;
 
+        $scope.getHomePageUrl = getHomePageUrl;
+
         $scope.login = login;
         $scope.register = register;
 
@@ -35,6 +37,10 @@
         function activate() {
             AccountService.registerAccountObserver(updateAccountStatus);
             updateAccountStatus();
+        }
+
+        function getHomePageUrl() {
+            return RoutingService.homePageUrl;
         }
 
         function login() {
