@@ -51,6 +51,10 @@
       <HintPath>..\packages\BundleTransformer.Autoprefixer.1.9.68\lib\net40\BundleTransformer.Autoprefixer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="BundleTransformer.CleanCss, Version=1.9.68.0, Culture=neutral, PublicKeyToken=973c344c93aac60d, processorArchitecture=MSIL">
+      <HintPath>..\packages\BundleTransformer.CleanCss.1.9.68\lib\net40\BundleTransformer.CleanCss.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="BundleTransformer.Core, Version=1.9.52.0, Culture=neutral, PublicKeyToken=973c344c93aac60d, processorArchitecture=MSIL">
       <HintPath>$(SolutionDir)packages\BundleTransformer.Core.1.9.52\lib\net40\BundleTransformer.Core.dll</HintPath>
       <Private>True</Private>

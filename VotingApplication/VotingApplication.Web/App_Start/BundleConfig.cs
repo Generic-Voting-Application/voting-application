@@ -1,4 +1,5 @@
 ﻿using BundleTransformer.Autoprefixer.PostProcessors;
+using BundleTransformer.CleanCss.Minifiers;
 using BundleTransformer.Core.Builders;
 using BundleTransformer.Core.Orderers;
 using BundleTransformer.Core.PostProcessors;
@@ -17,7 +18,7 @@ namespace VotingApplication.Web
 
             List<IPostProcessor> postProcessors = new List<IPostProcessor>();
             postProcessors.Add(new AutoprefixCssPostProcessor());
-            var styleTransformer = new StyleTransformer(postProcessors);
+            var styleTransformer = new StyleTransformer(new CleanCssMinifier(), postProcessors);
 
             var nullBuilder = new NullBuilder();
             var scriptTransformer = new ScriptTransformer();
