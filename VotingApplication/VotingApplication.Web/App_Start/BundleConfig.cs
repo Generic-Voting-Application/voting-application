@@ -16,6 +16,7 @@ namespace VotingApplication.Web
 
             List<IPostProcessor> postProcessors = new List<IPostProcessor>();
             postProcessors.Add(new AutoprefixCssPostProcessor());
+
             var styleTransformer = new StyleTransformer(new CleanCssMinifier(), postProcessors);
 
             var scriptTransformer = new ScriptTransformer();
@@ -85,38 +86,38 @@ namespace VotingApplication.Web
             const string angularCdnBase = "https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15";
 
             // Angular
-            var angular = new Bundle("~/Bundles/ScriptLib/Angular", String.Format("{0}/angular.min.js", angularCdnBase));
+            var angular = new ScriptBundle("~/Bundles/ScriptLib/Angular", String.Format("{0}/angular.min.js", angularCdnBase));
             angular.CdnFallbackExpression = "window.angular";
             angular.Include("~/Scripts/Lib/angular-min.js");
             bundles.Add(angular);
 
-            var angularRoute = new Bundle("~/Bundles/ScriptLib/AngularRoute", String.Format("{0}/angular-route.min.js", angularCdnBase));
+            var angularRoute = new ScriptBundle("~/Bundles/ScriptLib/AngularRoute", String.Format("{0}/angular-route.min.js", angularCdnBase));
             angularRoute.CdnFallbackExpression = AngularModuleFallbackCheck("ngRoute");
             angularRoute.Include("~/Scripts/Lib/angular-route-min.js");
             bundles.Add(angularRoute);
 
-            var angularMessages = new Bundle("~/Bundles/ScriptLib/AngularMessages", string.Format("{0}/angular-messages.min.js", angularCdnBase));
+            var angularMessages = new ScriptBundle("~/Bundles/ScriptLib/AngularMessages", string.Format("{0}/angular-messages.min.js", angularCdnBase));
             angularMessages.CdnFallbackExpression = AngularModuleFallbackCheck("ngMessages");
             angularMessages.Include("~/Scripts/Lib/angular-messages-min.js");
             bundles.Add(angularMessages);
 
             // Angular Material and dependencies
-            var angularAnimate = new Bundle("~/Bundles/ScriptLib/AngularAnimate", String.Format("{0}/angular-animate.min.js", angularCdnBase));
+            var angularAnimate = new ScriptBundle("~/Bundles/ScriptLib/AngularAnimate", String.Format("{0}/angular-animate.min.js", angularCdnBase));
             angularAnimate.CdnFallbackExpression = AngularModuleFallbackCheck("ngAnimate");
             angularAnimate.Include("~/Scripts/Lib/angular-animate-min.js");
             bundles.Add(angularAnimate);
 
-            var angularAria = new Bundle("~/Bundles/ScriptLib/AngularAria", String.Format("{0}/angular-aria.min.js", angularCdnBase));
+            var angularAria = new ScriptBundle("~/Bundles/ScriptLib/AngularAria", String.Format("{0}/angular-aria.min.js", angularCdnBase));
             angularAria.CdnFallbackExpression = AngularModuleFallbackCheck("ngAria");
             angularAria.Include("~/Scripts/Lib/angular-aria-min.js");
             bundles.Add(angularAria);
 
-            var angularMaterial = new Bundle("~/Bundles/ScriptLib/AngularMaterial", "https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js");
+            var angularMaterial = new ScriptBundle("~/Bundles/ScriptLib/AngularMaterial", "https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js");
             angularMaterial.CdnFallbackExpression = AngularModuleFallbackCheck("ngMaterial");
             angularMaterial.Include("~/Scripts/Lib/angular-material-min.js");
             bundles.Add(angularMaterial);
 
-            var angularCharts = new Bundle("~/Bundles/ScriptLib/AngularCharts", "https://cdn.rawgit.com/bouil/angular-google-chart/0.0.11/ng-google-chart.js");
+            var angularCharts = new ScriptBundle("~/Bundles/ScriptLib/AngularCharts", "https://cdn.rawgit.com/bouil/angular-google-chart/0.0.11/ng-google-chart.js");
             angularCharts.CdnFallbackExpression = AngularModuleFallbackCheck("googlechart");
             angularCharts.Include("~/Scripts/Lib/ng-google-chart.js");
             bundles.Add(angularCharts);
@@ -136,7 +137,7 @@ namespace VotingApplication.Web
             qrcode.Include("~/Scripts/Lib/qrcode.js");
             bundles.Add(qrcode);
 
-            var angularToggleSwitch = new Bundle("~/Bundles/ScriptLib/AngularToggleSwitch", "https://cdn.rawgit.com/cgarvis/angular-toggle-switch/v1.3.0/angular-toggle-switch.min.js");
+            var angularToggleSwitch = new ScriptBundle("~/Bundles/ScriptLib/AngularToggleSwitch", "https://cdn.rawgit.com/cgarvis/angular-toggle-switch/v1.3.0/angular-toggle-switch.min.js");
             angularToggleSwitch.CdnFallbackExpression = AngularModuleFallbackCheck("toggle-switch");
             angularToggleSwitch.Include("~/Scripts/Lib/angular-toggle-switch-min.js");
             bundles.Add(angularToggleSwitch);
@@ -146,12 +147,12 @@ namespace VotingApplication.Web
             angularZeroClipboard.Include("~/Scripts/Lib/angular-zeroclipboard.js");
             bundles.Add(angularZeroClipboard);
 
-            var ngDialog = new Bundle("~/Bundles/ScriptLib/ngDialog", "https://cdnjs.cloudflare.com/ajax/libs/ng-dialog/0.4.0/js/ngDialog.min.js");
+            var ngDialog = new ScriptBundle("~/Bundles/ScriptLib/ngDialog", "https://cdnjs.cloudflare.com/ajax/libs/ng-dialog/0.4.0/js/ngDialog.min.js");
             ngDialog.CdnFallbackExpression = AngularModuleFallbackCheck("ngDialog");
             ngDialog.Include("~/Scripts/Lib/ngDialog-min.js");
             bundles.Add(ngDialog);
 
-            var ngStorage = new Bundle("~/Bundles/ScriptLib/ngStorage", "https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js");
+            var ngStorage = new ScriptBundle("~/Bundles/ScriptLib/ngStorage", "https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js");
             ngStorage.CdnFallbackExpression = AngularModuleFallbackCheck("ngStorage");
             ngStorage.Include("~/Scripts/Lib/ngStorage-min.js");
             bundles.Add(ngStorage);
@@ -162,13 +163,13 @@ namespace VotingApplication.Web
             jQuery.Include("~/Scripts/Lib/jquery-2.1.4.min.js");
             bundles.Add(jQuery);
 
-            var jQuerySignalR = new Bundle("~/Bundles/ScriptLib/JQuerySignalR", "http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.min.js");
+            var jQuerySignalR = new ScriptBundle("~/Bundles/ScriptLib/JQuerySignalR", "http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.min.js");
             jQuerySignalR.CdnFallbackExpression = "window.jQuery.signalR";
             jQuerySignalR.Include("~/Scripts/Lib/jquery.signalr-2.2.0.min.js");
             bundles.Add(jQuerySignalR);
 
             // moment
-            var moment = new Bundle("~/Bundles/ScriptLib/moment", "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js");
+            var moment = new ScriptBundle("~/Bundles/ScriptLib/moment", "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js");
             moment.CdnFallbackExpression = "window.moment";
             moment.Include("~/Scripts/Lib/moment-min.js");
             bundles.Add(moment);

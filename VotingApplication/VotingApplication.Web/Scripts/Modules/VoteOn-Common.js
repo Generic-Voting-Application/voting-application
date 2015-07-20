@@ -3,7 +3,7 @@
 
     angular
         .module('VoteOn-Common', ['ngMaterial', 'ngMessages', 'ngStorage', 'ngRoute'])
-        .config(function ($mdThemingProvider) {
+        .config(['$mdThemingProvider', function ($mdThemingProvider) {
             $mdThemingProvider.theme('default')
                 .primaryPalette('blue')
                 .accentPalette('pink');
@@ -12,5 +12,5 @@
                 .primaryPalette('indigo')
                 .accentPalette('blue')
                 .dark();
-            });
+        }]);
 })();
