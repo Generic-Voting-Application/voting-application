@@ -86,7 +86,10 @@ namespace VotingApplication.Web.Api.Controllers
 
         private static ResultsRequestResponseModel GenerateResults(IEnumerable<Vote> votes, IEnumerable<Choice> choices, bool namedVoting)
         {
-            if (choices.Count() == 0)
+            List<Choice> pollChoices = choices.ToList();
+            List<Vote> pollVotes = votes.ToList();
+
+            if (!pollChoices.Any())
             {
                 return new ResultsRequestResponseModel
                 {
@@ -95,13 +98,13 @@ namespace VotingApplication.Web.Api.Controllers
                 };
             }
 
-            List<ResultModel> groupedResults = new List<ResultModel>();
+            var groupedResults = new List<ResultModel>();
 
-            foreach (Choice choice in choices)
+            foreach (Choice choice in pollChoices)
             {
-                var choiceVotes = votes.Where(v => v.Choice.Id == choice.Id);
+                IEnumerable<Vote> choiceVotes = pollVotes.Where(v => v.Choice.Id == choice.Id);
 
-                ResultModel result = new ResultModel();
+                var result = new ResultModel();
                 result.ChoiceName = choice.Name;
                 result.Voters = choiceVotes.Select(v => CreateResultVoteModel(v, namedVoting)).ToList();
                 result.Sum = choiceVotes.Sum(v => v.VoteValue);
@@ -113,7 +116,7 @@ namespace VotingApplication.Web.Api.Controllers
 
             List<string> winners;
 
-            if (resultsMax > 0)
+            if (resultsMax.HasValue && resultsMax > 0)
             {
                 winners = groupedResults
                             .Where(r => r.Sum == resultsMax)
