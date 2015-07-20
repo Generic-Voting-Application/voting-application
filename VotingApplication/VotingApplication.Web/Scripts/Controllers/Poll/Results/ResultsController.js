@@ -80,7 +80,7 @@
             barChart.type = 'google.charts.Bar';
             barChart.data = chartData;
             barChart.options = {
-                height: 400,
+                height: Math.max(400, chartData.length * 30),
                 chart: {
                     title: 'Poll Results',
                     subtitle: pollName,
