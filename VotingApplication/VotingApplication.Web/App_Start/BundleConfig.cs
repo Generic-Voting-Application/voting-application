@@ -174,9 +174,9 @@ namespace VotingApplication.Web
             bundles.Add(ngStorage);
 
             // JQuery and SignalR
-            var jQuery = new Bundle("~/Bundles/ScriptLib/JQuery", "//code.jquery.com/jquery-1.11.3.min.js");
+            var jQuery = new Bundle("~/Bundles/ScriptLib/JQuery", "//code.jquery.com/jquery-2.1.4.min.js");
             jQuery.CdnFallbackExpression = "window.jQuery";
-            jQuery.Include("~/Scripts/Lib/jquery-1.11.3.min.js");
+            jQuery.Include("~/Scripts/Lib/jquery-2.1.4.min.js");
             bundles.Add(jQuery);
 
             var jQuerySignalR = new Bundle("~/Bundles/ScriptLib/JQuerySignalR", "http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.min.js");
