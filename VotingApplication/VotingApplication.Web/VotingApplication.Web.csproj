@@ -63,6 +63,10 @@
       <HintPath>..\packages\BundleTransformer.SassAndScss.1.9.68\lib\net40\BundleTransformer.SassAndScss.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="BundleTransformer.UglifyJs, Version=1.9.64.0, Culture=neutral, PublicKeyToken=973c344c93aac60d, processorArchitecture=MSIL">
+      <HintPath>..\packages\BundleTransformer.UglifyJs.1.9.64\lib\net40\BundleTransformer.UglifyJs.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ClearScript, Version=5.4.2.1, Culture=neutral, PublicKeyToken=935d0c957da47c73, processorArchitecture=MSIL">
       <HintPath>..\packages\JavaScriptEngineSwitcher.V8.1.2.9\lib\net40\ClearScript.dll</HintPath>
       <Private>True</Private>

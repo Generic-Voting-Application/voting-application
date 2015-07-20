@@ -2,9 +2,11 @@
 using BundleTransformer.CleanCss.Minifiers;
 using BundleTransformer.Core.PostProcessors;
 using BundleTransformer.Core.Transformers;
+using BundleTransformer.UglifyJs.Minifiers;
 using System;
 using System.Collections.Generic;
 using System.Web.Optimization;
+
 
 namespace VotingApplication.Web
 {
@@ -19,7 +21,7 @@ namespace VotingApplication.Web
 
             var styleTransformer = new StyleTransformer(new CleanCssMinifier(), postProcessors);
 
-            var scriptTransformer = new ScriptTransformer();
+            var scriptTransformer = new ScriptTransformer(new UglifyJsMinifier());
 
             // No fallback for Css style sheets if the cdn fails.
             // See http://aspnetoptimization.codeplex.com/workitem/104
@@ -76,10 +78,10 @@ namespace VotingApplication.Web
             angularMaterialExtensions.Transforms.Add(styleTransformer);
             bundles.Add(angularMaterialExtensions);
 
-            var DateTimePicker = new Bundle("~/Bundles/Components/DateTimePicker");
-            DateTimePicker.Include("~/Content/Scss/Components/DateTimePicker.scss");
-            DateTimePicker.Transforms.Add(styleTransformer);
-            bundles.Add(DateTimePicker);
+            var dateTimePicker = new Bundle("~/Bundles/Components/DateTimePicker");
+            dateTimePicker.Include("~/Content/Scss/Components/DateTimePicker.scss");
+            dateTimePicker.Transforms.Add(styleTransformer);
+            bundles.Add(dateTimePicker);
 
 
             // Lib Javascript
