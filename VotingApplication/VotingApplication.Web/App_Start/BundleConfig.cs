@@ -1,7 +1,5 @@
 ﻿using BundleTransformer.Autoprefixer.PostProcessors;
 using BundleTransformer.CleanCss.Minifiers;
-using BundleTransformer.Core.Builders;
-using BundleTransformer.Core.Orderers;
 using BundleTransformer.Core.PostProcessors;
 using BundleTransformer.Core.Transformers;
 using System;
@@ -20,82 +18,66 @@ namespace VotingApplication.Web
             postProcessors.Add(new AutoprefixCssPostProcessor());
             var styleTransformer = new StyleTransformer(new CleanCssMinifier(), postProcessors);
 
-            var nullBuilder = new NullBuilder();
             var scriptTransformer = new ScriptTransformer();
-            var nullOrderer = new NullOrderer();
 
             // No fallback for Css style sheets if the cdn fails.
             // See http://aspnetoptimization.codeplex.com/workitem/104
 
             // Lib CSS
-            StyleBundle angularMaterialCss = new StyleBundle("~/Bundles/StyleLib/AngularMaterial", "https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.css");
+            var angularMaterialCss = new Bundle("~/Bundles/StyleLib/AngularMaterial", "https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.css");
             angularMaterialCss.Include("~/Content/Lib/Css/angular-material-min.css");
             bundles.Add(angularMaterialCss);
 
-            StyleBundle fontAwesomeCss = new StyleBundle("~/Bundles/StyleLib/FontAwesome", "//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
+            var fontAwesomeCss = new Bundle("~/Bundles/StyleLib/FontAwesome", "//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
             fontAwesomeCss.Include("~/Content/Lib/Css/font-awesome-min.css");
             bundles.Add(fontAwesomeCss);
 
-            StyleBundle angularToggleSwitchCss = new StyleBundle("~/Bundles/StyleLib/AngularToggleSwitch", "https://cdn.rawgit.com/cgarvis/angular-toggle-switch/v1.3.0/angular-toggle-switch.css");
+            var angularToggleSwitchCss = new Bundle("~/Bundles/StyleLib/AngularToggleSwitch", "https://cdn.rawgit.com/cgarvis/angular-toggle-switch/v1.3.0/angular-toggle-switch.css");
             angularToggleSwitchCss.Include("~/Content/Lib/Css/angular-toggle-switch.css");
             bundles.Add(angularToggleSwitchCss);
 
-            StyleBundle ngDialogCss = new StyleBundle("~/Bundles/StyleLib/ngDialog", "https://cdnjs.cloudflare.com/ajax/libs/ng-dialog/0.4.0/css/ngDialog.min.css");
+            var ngDialogCss = new Bundle("~/Bundles/StyleLib/ngDialog", "https://cdnjs.cloudflare.com/ajax/libs/ng-dialog/0.4.0/css/ngDialog.min.css");
             ngDialogCss.Include("~/Content/Lib/Css/ngDialog-min.css");
             bundles.Add(ngDialogCss);
 
-            StyleBundle ngDialogThemeCss = new StyleBundle("~/Bundles/StyleLib/ngDialogTheme", "https://cdnjs.cloudflare.com/ajax/libs/ng-dialog/0.4.0/css/ngDialog-theme-default.min.css");
+            var ngDialogThemeCss = new Bundle("~/Bundles/StyleLib/ngDialogTheme", "https://cdnjs.cloudflare.com/ajax/libs/ng-dialog/0.4.0/css/ngDialog-theme-default.min.css");
             ngDialogThemeCss.Include("~/Content/Lib/Css/ngDialog-theme-default-min.css");
             bundles.Add(ngDialogThemeCss);
 
             // VoteOn CSS
-            StyleBundle votingStyle = new StyleBundle("~/Bundles/VotingStyle");
+            var votingStyle = new Bundle("~/Bundles/VotingStyle");
             votingStyle.Include("~/Content/Scss/Voting.scss");
-            votingStyle.Builder = nullBuilder;
             votingStyle.Transforms.Add(styleTransformer);
-            votingStyle.Orderer = nullOrderer;
             bundles.Add(votingStyle);
 
-            StyleBundle manageStyle = new StyleBundle("~/Bundles/ManageStyle");
+            var manageStyle = new Bundle("~/Bundles/ManageStyle");
             manageStyle.Include("~/Content/Scss/Manage.scss");
-            manageStyle.Builder = nullBuilder;
             manageStyle.Transforms.Add(styleTransformer);
-            manageStyle.Orderer = nullOrderer;
             bundles.Add(manageStyle);
 
-            StyleBundle dateTimePickerStyle = new StyleBundle("~/Bundles/DateTimePickerStyle");
+            var dateTimePickerStyle = new Bundle("~/Bundles/DateTimePickerStyle");
             dateTimePickerStyle.Include("~/Content/Scss/DateTimePicker.scss");
-            dateTimePickerStyle.Builder = nullBuilder;
             dateTimePickerStyle.Transforms.Add(styleTransformer);
-            dateTimePickerStyle.Orderer = nullOrderer;
             bundles.Add(dateTimePickerStyle);
 
-            StyleBundle errorBarStyle = new StyleBundle("~/Bundles/ErrorBarStyle");
+            var errorBarStyle = new Bundle("~/Bundles/ErrorBarStyle");
             errorBarStyle.Include("~/Content/Scss/ErrorBar.scss");
-            errorBarStyle.Builder = nullBuilder;
             errorBarStyle.Transforms.Add(styleTransformer);
-            errorBarStyle.Orderer = nullOrderer;
             bundles.Add(errorBarStyle);
 
-            StyleBundle voteOnStyle = new StyleBundle("~/Bundles/VoteOnStyle");
+            var voteOnStyle = new Bundle("~/Bundles/VoteOnStyle");
             voteOnStyle.Include("~/Content/Scss/VoteOn.scss");
-            voteOnStyle.Builder = nullBuilder;
             voteOnStyle.Transforms.Add(styleTransformer);
-            voteOnStyle.Orderer = nullOrderer;
             bundles.Add(voteOnStyle);
 
-            StyleBundle angularMaterialExtensions = new StyleBundle("~/Bundles/AngularMaterialExtensions");
+            var angularMaterialExtensions = new Bundle("~/Bundles/AngularMaterialExtensions");
             angularMaterialExtensions.Include("~/Content/Scss/AngularMaterialExtensions.scss");
-            angularMaterialExtensions.Builder = nullBuilder;
             angularMaterialExtensions.Transforms.Add(styleTransformer);
-            angularMaterialExtensions.Orderer = nullOrderer;
             bundles.Add(angularMaterialExtensions);
 
-            StyleBundle DateTimePicker = new StyleBundle("~/Bundles/Components/DateTimePicker");
+            var DateTimePicker = new Bundle("~/Bundles/Components/DateTimePicker");
             DateTimePicker.Include("~/Content/Scss/Components/DateTimePicker.scss");
-            DateTimePicker.Builder = nullBuilder;
             DateTimePicker.Transforms.Add(styleTransformer);
-            DateTimePicker.Orderer = nullOrderer;
             bundles.Add(DateTimePicker);
 
 
@@ -192,24 +174,20 @@ namespace VotingApplication.Web
             bundles.Add(moment);
 
             // ZeroClipboard
-            ScriptBundle scriptLibBundle = new ScriptBundle("~/Bundles/ScriptLib");
+            var scriptLibBundle = new Bundle("~/Bundles/ScriptLib");
             scriptLibBundle.IncludeDirectory("~/Scripts/Lib", "ZeroClipboard-min.js");
-            scriptLibBundle.Builder = nullBuilder;
             scriptLibBundle.Transforms.Add(scriptTransformer);
-            scriptLibBundle.Orderer = nullOrderer;
             bundles.Add(scriptLibBundle);
 
             // VoteOn Javascript
-            ScriptBundle scriptBundle = new ScriptBundle("~/Bundles/Script");
+            var scriptBundle = new Bundle("~/Bundles/Script");
             scriptBundle.IncludeDirectory("~/Scripts/Modules", "*.js", true);
             scriptBundle.IncludeDirectory("~/Scripts/Dialogs", "*.js", true);
             scriptBundle.IncludeDirectory("~/Scripts/Directives", "*.js", true);
             scriptBundle.IncludeDirectory("~/Scripts/Services", "*.js", true);
             scriptBundle.IncludeDirectory("~/Scripts/Controllers", "*.js", true);
             scriptBundle.IncludeDirectory("~/Scripts/Filters", "*.js", true);
-            scriptBundle.Builder = nullBuilder;
             scriptBundle.Transforms.Add(scriptTransformer);
-            scriptBundle.Orderer = nullOrderer;
             bundles.Add(scriptBundle);
         }
 
