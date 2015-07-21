@@ -113,7 +113,7 @@
 
                         <p ng-if="getInvalidInvitees().length > 0" class="vo-warn-text">{{getInvalidInvitees().length}} email address(es) are invalid. Emails won't be sent to invitees with an invalid email.</p>
 
-                        <p ng-if="newPoll.InviteOnly && getValidInvitees().length === 0" class="vo-warn-text">Currently no one will be able to vote.</p>
+                        <p ng-if="newPoll.InviteOnly && getValidInvitees().length === 0" class="vo-warn-text">Currently no one else will be able to vote.</p>
                     </div>
                 </md-list-item>
             </md-list>

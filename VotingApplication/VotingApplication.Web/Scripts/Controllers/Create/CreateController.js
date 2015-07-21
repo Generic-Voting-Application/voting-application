@@ -5,9 +5,9 @@
         .module('VoteOn-Create')
         .controller('CreateController', CreateController);
 
-    CreateController.$inject = ['$scope', '$timeout', 'RoutingService', 'CreateService'];
+    CreateController.$inject = ['$scope', '$timeout', 'RoutingService', 'CreateService', 'TokenService'];
 
-    function CreateController($scope, $timeout, RoutingService, CreateService) {
+    function CreateController($scope, $timeout, RoutingService, CreateService, TokenService) {
 
         $scope.newPoll = createDefaultPoll();
         $scope.currentStep = 0;
@@ -193,7 +193,10 @@
         function createPoll() {
             CreateService.createPoll(createPollModel())
                 .then(function (response) {
-                    RoutingService.navigateToVotePage(response.UUID, response.CreatorBallot.TokenGuid);
+                    TokenService.setToken(response.UUID, response.CreatorBallot.TokenGuid)
+                        .then(function () {
+                            RoutingService.navigateToVotePage(response.UUID);
+                        });
                 });
         }
     }
