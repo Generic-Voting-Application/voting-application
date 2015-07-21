@@ -5,9 +5,9 @@
         .module('VoteOn-Vote')
         .controller('VoteController', VoteController);
 
-    VoteController.$inject = ['$scope', '$routeParams', '$mdDialog', 'TokenService', 'PollService', 'VoteService', 'RoutingService', 'IdentityService', 'ErrorService'];
+    VoteController.$inject = ['$scope', '$routeParams', '$mdDialog', 'TokenService', 'PollService', 'VoteService', 'RoutingService', 'IdentityService', 'ErrorService', 'SignalService'];
 
-    function VoteController($scope, $routeParams, $mdDialog, TokenService, PollService, VoteService, RoutingService, IdentityService, ErrorService) {
+    function VoteController($scope, $routeParams, $mdDialog, TokenService, PollService, VoteService, RoutingService, IdentityService, ErrorService, SignalService) {
 
         $scope.loaded = false;
         $scope.submitting = false;
@@ -35,6 +35,7 @@
 
         function activate() {
             getPollData();
+            SignalService.registerObserver($scope.pollId, reloadPoll);
         }
 
         function getPollData() {
