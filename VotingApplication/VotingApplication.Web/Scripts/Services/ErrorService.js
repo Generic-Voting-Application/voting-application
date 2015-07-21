@@ -82,7 +82,7 @@
         function handleRegistrationError(response) {
             if (response) {
                 if (response.data && response.data.ModelState) {
-                    displayToast(response.data.ModelState[""][0]);
+                    displayToast(response.data.ModelState[''][0]);
                 }
             } else {
                 displayGenericErrorPage();
