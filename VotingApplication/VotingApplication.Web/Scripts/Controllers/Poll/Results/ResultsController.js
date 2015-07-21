@@ -17,8 +17,6 @@
 
         $scope.token = null;
 
-        var updateTimer = null;
-
         activate();
 
         function activate() {
@@ -29,9 +27,6 @@
                 .then(function () {
                     $scope.loaded = true;
                 });
-
-            updateTimer = $interval(updateResults, 5000);
-            $scope.$on('$destroy', clearTimer);
 
             SignalService.registerObserver($scope.pollId, updateResults);
         }
@@ -58,14 +53,8 @@
 
                 })
                 .catch(function (response) {
-                    clearTimer();
-
                     ErrorService.handleResultsError(response);
                 });
-        }
-
-        function clearTimer() {
-            $interval.cancel(updateTimer);
         }
 
         function filterDuplicates(array) {
