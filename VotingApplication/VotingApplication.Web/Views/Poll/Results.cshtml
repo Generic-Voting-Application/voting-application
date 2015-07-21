@@ -11,10 +11,11 @@
 
                 <loading-spinner loaded="loaded"></loading-spinner>
 
-                <md-card-content ng-cloak ng-if="loaded" flex layout layout-align="center center">
-                    <h1 class="md-headline">
+                <md-card-content ng-cloak ng-if="loaded" flex layout="column" layout-align="center center">
+                    <h1 class="md-headline">{{pollName}}</h1>
+                    <h2 class="md-title" ng-show="winners.length > 0">
                         Winner{{winners.length > 1 ? 's' : ''}}: <span ng-repeat="winner in winners">{{($index > 0 ? ', ' : '') + winner}}</span>
-                    </h1>
+                    </h2>
                 </md-card-content>
             </md-card>
 
@@ -27,7 +28,7 @@
                 </md-card-content>
             </md-card>
 
-            <md-card flex layout="row">
+            <md-card flex layout="row" ng-show="namedVoting">
 
                 <loading-spinner loaded="loaded"></loading-spinner>
 

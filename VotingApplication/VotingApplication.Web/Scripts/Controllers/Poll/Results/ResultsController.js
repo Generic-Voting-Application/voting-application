@@ -14,6 +14,7 @@
         $scope.results = [];
         $scope.winners = [];
         $scope.loaded = false;
+        $scope.namedVoting = false;
 
         $scope.token = null;
 
@@ -37,6 +38,8 @@
 
                     if (data) {
                         $scope.results = data.Results;
+                        $scope.pollName = data.PollName;
+                        $scope.namedVoting = data.NamedVoting;
 
                         if (data.Winners) {
                             $scope.winners = filterDuplicates(data.Winners);

@@ -71,9 +71,10 @@ namespace VotingApplication.Web.Api.Controllers
 
                 _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.OK, pollId);
 
-                ResultsRequestResponseModel results = GenerateResults(votes, poll.Choices, poll.NamedVoting);
-                results.PollName = poll.Name;
-                return results;
+                ResultsRequestResponseModel response = GenerateResults(votes, poll.Choices, poll.NamedVoting);
+                response.PollName = poll.Name;
+                response.NamedVoting = poll.NamedVoting;
+                return response;
             }
         }
 
