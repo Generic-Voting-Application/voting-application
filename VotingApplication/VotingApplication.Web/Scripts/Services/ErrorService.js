@@ -15,7 +15,8 @@
         var service = {
             handleLoginError: handleLoginError,
             handleVotingError: handleVotingError,
-            handleResultsError: handleResultsError
+            handleResultsError: handleResultsError,
+            handleRegistrationError: handleRegistrationError
         };
 
         return service;
@@ -76,6 +77,17 @@
             else {
                 displayGenericErrorPage();
             }
+        }
+
+        function handleRegistrationError(response) {
+            if (response) {
+                if (response.data && response.data.ModelState) {
+                    displayToast(response.data.ModelState[""][0]);
+                }
+            } else {
+                displayGenericErrorPage();
+            }
+
         }
 
         function displayToast(content) {
