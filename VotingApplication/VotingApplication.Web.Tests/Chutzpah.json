@@ -5,14 +5,14 @@
         { "Path": "Scripts/Lib", "Exclude": "*.js" }
     ],
     "References": [
-        { "Path": "../VotingApplication.Web/Scripts/Lib/angular-min.js" },
-        { "Path": "../VotingApplication.Web/Scripts/Lib/angular-aria-min.js" },
-        { "Path": "../VotingApplication.Web/Scripts/Lib/angular-animate-min.js" },
-        { "Path": "../VotingApplication.Web/Scripts/Lib/angular-material-min.js" },
-        { "Path": "../VotingApplication.Web/Scripts/Lib/angular-route-min.js" },
+        { "Path": "../VotingApplication.Web/Scripts/Lib/angular.min.js" },
+        { "Path": "../VotingApplication.Web/Scripts/Lib/angular.aria-min.js" },
+        { "Path": "../VotingApplication.Web/Scripts/Lib/angular.animate-min.js" },
+        { "Path": "../VotingApplication.Web/Scripts/Lib/angular.material-min.js" },
+        { "Path": "../VotingApplication.Web/Scripts/Lib/angular.route-min.js" },
 
-        { "Path": "../VotingApplication.Web/Scripts/Lib/angular-qrcode.js" },
-        { "Path": "../VotingApplication.Web/Scripts/Lib/angular-toggle-switch-min.js" },
+        { "Path": "../VotingApplication.Web/Scripts/Lib/angular.qrcode.js" },
+        { "Path": "../VotingApplication.Web/Scripts/Lib/angular-toggle-switch.min.js" },
         { "Path": "../VotingApplication.Web/Scripts/Lib/angular-zeroclipboard.js" },
 
         { "Path": "../VotingApplication.Web/Scripts/Lib", "Include": "*.js", "Exclude": "angular*" },
