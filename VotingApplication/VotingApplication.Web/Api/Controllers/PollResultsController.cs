@@ -107,6 +107,7 @@ namespace VotingApplication.Web.Api.Controllers
 
                 var result = new ResultModel();
                 result.ChoiceName = choice.Name;
+                result.ChoiceNumber = choice.PollChoiceNumber;
                 result.Voters = choiceVotes.Select(v => CreateResultVoteModel(v, namedVoting)).ToList();
                 result.Sum = choiceVotes.Sum(v => v.VoteValue);
 
@@ -129,14 +130,10 @@ namespace VotingApplication.Web.Api.Controllers
                 winners = new List<string>();
             }
 
-            List<ResultModel> resultModels = groupedResults
-                .Select(r => ResultToModel(r.ChoiceName, r.Sum, r.Voters))
-                .ToList();
-
             return new ResultsRequestResponseModel
             {
                 Winners = winners,
-                Results = resultModels
+                Results = groupedResults
             };
         }
 
@@ -154,16 +151,6 @@ namespace VotingApplication.Web.Api.Controllers
             }
 
             return resultVoteModel;
-        }
-
-        private static ResultModel ResultToModel(string choiceName, int sum, List<ResultVoteModel> voters)
-        {
-            return new ResultModel
-            {
-                ChoiceName = choiceName,
-                Sum = sum,
-                Voters = voters
-            };
         }
     }
 }
