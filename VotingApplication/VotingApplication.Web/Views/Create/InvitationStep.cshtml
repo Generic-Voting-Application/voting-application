@@ -7,6 +7,7 @@
 
         <md-content layout-padding>
             <md-chips ng-model="newPoll.Invitations" placeholder="Enter an Email">
+                <input placeholder="Enter an Email" ng-model="chipInput" ng-paste="evaluatePastedInput(this)" />
                 <md-chip-template ng-switch="validateEmail($chip)">
                     <span ng-switch-when="true"><i class="fa fa-user"></i> {{$chip}}</span>
                     <span ng-switch-when="false" class="vo-error-text">{{$chip}} (Not a valid email)</span>
