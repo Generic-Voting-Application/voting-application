@@ -6,9 +6,9 @@
         .module('VoteOn-Login')
         .controller('ForgottenPasswordController', ForgottenPasswordController);
 
-    ForgottenPasswordController.$inject = ['$scope', 'AccountService', 'ErrorService'];
+    ForgottenPasswordController.$inject = ['$scope', 'AccountService'];
 
-    function ForgottenPasswordController($scope, AccountService, ErrorService) {
+    function ForgottenPasswordController($scope, AccountService) {
 
         $scope.user = {
             email: null
@@ -30,7 +30,7 @@
                     $scope.sending = false;
                     $scope.resetSent = true;
                 })
-                .catch(function (response) {
+                .catch(function () {
                     $scope.resetSent = true;
                 });
             }
