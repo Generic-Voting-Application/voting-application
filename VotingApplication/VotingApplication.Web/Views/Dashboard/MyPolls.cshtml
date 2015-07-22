@@ -23,7 +23,7 @@
                         <h3><strong>{{ poll.Name }}</strong></h3>
                         <h4>Created: {{ poll.CreatedDateUtc | dateFilter: 'Do MMM YYYY, HH:mm' }}</h4>
                         <p> {{ poll.PollType }} Vote - {{ poll.ChoiceCount }} Choices - Expires: {{ poll.ExpiryDateUtc | dateFilter: 'Do MMM YYYY, HH:mm' }}</p>
-                        <md-icon md-font-icon="fa-bar-chart" class="fa fa-2x md-secondary" ng-click="navigateToResults(poll.UUID)" alt="bar-chart"></md-icon>
+                        <md-icon hide-sm md-font-icon="fa-bar-chart" class="fa fa-2x md-secondary" ng-click="navigateToResults(poll.UUID)" aria-label="chart"></md-icon>
                     </div>
                     <md-divider ng-if="$index !== (polls.length-1)"></md-divider>
                 </md-list-item>
