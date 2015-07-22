@@ -74,6 +74,7 @@ namespace VotingApplication.Web.Api.Controllers
                 ResultsRequestResponseModel response = GenerateResults(votes, poll.Choices, poll.NamedVoting);
                 response.PollName = poll.Name;
                 response.NamedVoting = poll.NamedVoting;
+                response.HasExpired = poll.ExpiryDateUtc.HasValue && poll.ExpiryDateUtc.Value < DateTime.UtcNow;
                 return response;
             }
         }

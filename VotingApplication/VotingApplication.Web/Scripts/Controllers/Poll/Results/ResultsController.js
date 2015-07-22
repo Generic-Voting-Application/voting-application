@@ -16,6 +16,7 @@
         $scope.loaded = false;
         $scope.namedVoting = false;
         $scope.token = null;
+        $scope.hasExpired = false;
 
         $scope.navigateToVotePage = navigateToVotePage;
 
@@ -41,6 +42,7 @@
                         $scope.results = data.Results;
                         $scope.pollName = data.PollName;
                         $scope.namedVoting = data.NamedVoting;
+                        $scope.hasExpired = data.HasExpired;
 
                         if (data.Winners) {
                             $scope.winners = filterDuplicates(data.Winners);
