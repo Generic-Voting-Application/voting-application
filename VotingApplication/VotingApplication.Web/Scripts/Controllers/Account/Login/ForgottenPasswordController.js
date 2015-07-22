@@ -6,22 +6,33 @@
         .module('VoteOn-Login')
         .controller('ForgottenPasswordController', ForgottenPasswordController);
 
-    ForgottenPasswordController.$inject = ['$scope', 'AccountService'];
+    ForgottenPasswordController.$inject = ['$scope', 'AccountService', 'ErrorService'];
 
-    function ForgottenPasswordController($scope, AccountService) {
+    function ForgottenPasswordController($scope, AccountService, ErrorService) {
 
         $scope.user = {
             email: null
         };
 
         $scope.sendResetLink = sendResetLink;
+        $scope.sending = false;
+        $scope.resetSent = false;
 
-        function sendResetLink() {
+        function sendResetLink(forgottenPasswordForm) {
 
-            if ($scope.forgottenPasswordForm.$valid) {
-                var userEmail = $scope.forgottenPasswordForm.email.$viewValue;
+            if (forgottenPasswordForm.$valid) {
+                $scope.sending = true;
 
-                AccountService.forgotPassword(userEmail);
+                var userEmail = forgottenPasswordForm.email.$viewValue;
+
+                AccountService.forgotPassword(userEmail)
+                .then(function () {
+                    $scope.sending = false;
+                    $scope.resetSent = true;
+                })
+                .catch(function (response) {
+                    $scope.resetSent = true;
+                });
             }
         }
     }
