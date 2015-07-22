@@ -5,9 +5,9 @@
         .module('VoteOn-Results')
         .controller('ResultsController', ResultsController);
 
-    ResultsController.$inject = ['$scope', '$routeParams', '$interval', 'TokenService', 'ResultsService', 'ErrorService', 'SignalService'];
+    ResultsController.$inject = ['$scope', '$routeParams', '$interval', 'TokenService', 'ResultsService', 'ErrorService', 'SignalService', 'RoutingService'];
 
-    function ResultsController($scope, $routeParams, $interval, TokenService, ResultsService, ErrorService, SignalService) {
+    function ResultsController($scope, $routeParams, $interval, TokenService, ResultsService, ErrorService, SignalService, RoutingService) {
 
         $scope.pollId = $routeParams['pollId'];
         $scope.resultsBarChart = null;
@@ -15,8 +15,9 @@
         $scope.winners = [];
         $scope.loaded = false;
         $scope.namedVoting = false;
-
         $scope.token = null;
+
+        $scope.navigateToVotePage = navigateToVotePage;
 
         activate();
 
@@ -84,6 +85,10 @@
             };
 
             return barChart;
+        }
+
+        function navigateToVotePage() {
+            RoutingService.navigateToVotePage($scope.pollId);
         }
     }
 })();
