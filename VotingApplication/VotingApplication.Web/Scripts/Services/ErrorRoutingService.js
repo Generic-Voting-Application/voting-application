@@ -14,7 +14,8 @@
 
             navigateToEmailNotConfirmedPage: navigateToEmailNotConfirmedPage,
             navigateToPollInviteOnlyPage: navigateToPollInviteOnlyPage,
-            navigateToPollNotFound: navigateToPollNotFound
+            navigateToPollNotFound: navigateToPollNotFound,
+            navigateToNotLoggedIn: navigateToNotLoggedIn
 
         };
 
@@ -36,6 +37,10 @@
 
         function navigateToPollNotFound() {
             $location.path('/404').replace();
+        }
+
+        function navigateToNotLoggedIn() {
+            $window.location.href = '/Dashboard/#/NotLoggedIn/';
         }
     }
 })();

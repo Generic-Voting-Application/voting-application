@@ -16,7 +16,8 @@
             handleLoginError: handleLoginError,
             handleVotingError: handleVotingError,
             handleResultsError: handleResultsError,
-            handleRegistrationError: handleRegistrationError
+            handleRegistrationError: handleRegistrationError,
+            HandleNotLoggedInError: HandleNotLoggedInError
         };
 
         return service;
@@ -88,6 +89,10 @@
                 displayGenericErrorPage();
             }
 
+        }
+
+        function HandleNotLoggedInError() {
+            ErrorRoutingService.navigateToNotLoggedIn();
         }
 
         function displayToast(content) {

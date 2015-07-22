@@ -162,7 +162,7 @@
 
         function navigateToMyPollsPage() {
             // This is the old page, but it's not been updated to material yet.
-            $window.location.href = '/Manage/#/MyPolls/';
+            $window.location.href = '/Dashboard/#/MyPolls/';
         }
 
         function navigateToResultsPage(pollId) {

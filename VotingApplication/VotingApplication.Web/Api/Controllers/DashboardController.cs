@@ -30,6 +30,7 @@ namespace VotingApplication.Web.Api.Controllers
                     .Polls
                     .Where(p => p.CreatorIdentity == userId)
                     .OrderByDescending(p => p.CreatedDateUtc)
+                    .Include(p => p.Choices)
                     .Select(CreateDashboardResponseFromModel);
 
                 return userPolls.ToList();
@@ -43,7 +44,10 @@ namespace VotingApplication.Web.Api.Controllers
                 UUID = poll.UUID,
                 ManageId = poll.ManageId,
                 Name = poll.Name,
-                CreatedDateUtc = poll.CreatedDateUtc
+                CreatedDateUtc = poll.CreatedDateUtc,
+                ChoiceCount = poll.Choices.Count,
+                ExpiryDateUtc = poll.ExpiryDateUtc,
+                PollType = poll.PollType.ToString()
             };
         }
 
