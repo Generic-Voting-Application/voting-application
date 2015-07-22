@@ -28,7 +28,9 @@
                 var match;
 
                 while ((match = emailRegEx.exec(chipInput)) !== null) {
-                    $scope.newPoll.Invitations.push(match[0]);
+                    if ($scope.newPoll.Invitations.indexOf(match[0]) === -1) {
+                        $scope.newPoll.Invitations.push(match[0]);
+                    }
                 }
 
                 chip.chipInput = '';
