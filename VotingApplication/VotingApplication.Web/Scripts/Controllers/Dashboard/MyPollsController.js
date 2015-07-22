@@ -13,6 +13,7 @@
         $scope.loaded = false;
 
         $scope.navigateToPoll = navigateToPoll;
+        $scope.navigateToResults = navigateToResults;
 
         activate();
 
@@ -26,6 +27,10 @@
 
         function navigateToPoll(UUID) {
             RoutingService.navigateToVotePage(UUID);
+        }
+
+        function navigateToResults(UUID) {
+            RoutingService.navigateToResultsPage(UUID);
         }
     }
 })();
