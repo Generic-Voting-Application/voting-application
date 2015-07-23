@@ -7,10 +7,5 @@
             $mdThemingProvider.theme('default')
                 .primaryPalette('blue')
                 .accentPalette('pink');
-
-            $mdThemingProvider.theme('default-dark')
-                .primaryPalette('indigo')
-                .accentPalette('blue')
-                .dark();
         }]);
 })();
