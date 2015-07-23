@@ -5,19 +5,20 @@
         .module('VoteOn-Results')
         .controller('ResultsController', ResultsController);
 
-    ResultsController.$inject = ['$scope', '$routeParams', '$interval', 'TokenService', 'ResultsService', 'ErrorService', 'SignalService'];
+    ResultsController.$inject = ['$scope', '$routeParams', '$interval', 'TokenService', 'ResultsService', 'ErrorService', 'SignalService', 'RoutingService'];
 
-    function ResultsController($scope, $routeParams, $interval, TokenService, ResultsService, ErrorService, SignalService) {
+    function ResultsController($scope, $routeParams, $interval, TokenService, ResultsService, ErrorService, SignalService, RoutingService) {
 
         $scope.pollId = $routeParams['pollId'];
         $scope.resultsBarChart = null;
         $scope.results = [];
         $scope.winners = [];
         $scope.loaded = false;
-
+        $scope.namedVoting = false;
         $scope.token = null;
+        $scope.hasExpired = false;
 
-        var updateTimer = null;
+        $scope.navigateToVotePage = navigateToVotePage;
 
         activate();
 
@@ -30,9 +31,6 @@
                     $scope.loaded = true;
                 });
 
-            updateTimer = $interval(updateResults, 5000);
-            $scope.$on('$destroy', clearTimer);
-
             SignalService.registerObserver($scope.pollId, updateResults);
         }
 
@@ -42,6 +40,9 @@
 
                     if (data) {
                         $scope.results = data.Results;
+                        $scope.pollName = data.PollName;
+                        $scope.namedVoting = data.NamedVoting;
+                        $scope.hasExpired = data.HasExpired;
 
                         if (data.Winners) {
                             $scope.winners = filterDuplicates(data.Winners);
@@ -58,14 +59,8 @@
 
                 })
                 .catch(function (response) {
-                    clearTimer();
-
                     ErrorService.handleResultsError(response);
                 });
-        }
-
-        function clearTimer() {
-            $interval.cancel(updateTimer);
         }
 
         function filterDuplicates(array) {
@@ -80,7 +75,7 @@
             barChart.type = 'google.charts.Bar';
             barChart.data = chartData;
             barChart.options = {
-                height: 400,
+                height: Math.max(400, chartData.length * 30),
                 chart: {
                     title: 'Poll Results',
                     subtitle: pollName,
@@ -92,6 +87,10 @@
             };
 
             return barChart;
+        }
+
+        function navigateToVotePage() {
+            RoutingService.navigateToVotePage($scope.pollId);
         }
     }
 })();

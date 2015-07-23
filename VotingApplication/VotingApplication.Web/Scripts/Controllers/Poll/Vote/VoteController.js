@@ -26,6 +26,7 @@
 
         $scope.castVote = castVote;
         $scope.pollExpired = pollExpired;
+        $scope.navigateToResultsPage = navigateToResultsPage;
 
         $scope.userChoice = null;
         $scope.addChoiceFromPage = addChoiceFromPage;
@@ -182,6 +183,10 @@
             });
 
             $scope.poll.Choices = $scope.poll.Choices.concat(addedChoices);
+        }
+
+        function navigateToResultsPage() {
+            RoutingService.navigateToResultsPage($scope.pollId);
         }
     }
 })();

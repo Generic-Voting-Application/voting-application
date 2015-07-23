@@ -120,17 +120,18 @@
     'use strict';
 
     angular
-        .module('VoteOn-Poll')
+        .module('VoteOn-Common')
         .factory('PollService', PollService);
 
-    PollService.$inject = ['$http', '$q', 'AccountService'];
+    PollService.$inject = ['$http', '$q', 'AccountService', 'ErrorService'];
 
-    function PollService($http, $q, AccountService) {
+    function PollService($http, $q, AccountService, ErrorService) {
 
         var service = {
             getPoll: getPoll,
             createPoll: createPoll,
-            addChoice: addChoice
+            addChoice: addChoice,
+            getUserPolls : getUserPolls
         };
 
         return service;
@@ -193,6 +194,29 @@
                     '/api/poll/' + pollId + '/choice',
                     newChoice
                 );
+        }
+
+        function getUserPolls() {
+
+            var prom = $q.defer();
+
+            if (!AccountService.account || !AccountService.account.token) {
+
+                ErrorService.HandleNotLoggedInError();
+
+                prom.reject();
+                return prom.promise;
+            }
+
+            return $http({
+                method: 'GET',
+                url: '/api/dashboard/polls',
+                headers: { 'Authorization': 'Bearer ' + AccountService.account.token }
+            })
+                .then(function (response) {
+                    prom.resolve(response.data);
+                    return prom.promise;
+                });
         }
     }
 })();

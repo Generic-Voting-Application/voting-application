@@ -15,13 +15,24 @@
         };
 
         $scope.sendResetLink = sendResetLink;
+        $scope.sending = false;
+        $scope.resetSent = false;
 
-        function sendResetLink() {
+        function sendResetLink(forgottenPasswordForm) {
 
-            if ($scope.forgottenPasswordForm.$valid) {
-                var userEmail = $scope.forgottenPasswordForm.email.$viewValue;
+            if (forgottenPasswordForm.$valid) {
+                $scope.sending = true;
 
-                AccountService.forgotPassword(userEmail);
+                var userEmail = forgottenPasswordForm.email.$viewValue;
+
+                AccountService.forgotPassword(userEmail)
+                .then(function () {
+                    $scope.sending = false;
+                    $scope.resetSent = true;
+                })
+                .catch(function () {
+                    $scope.resetSent = true;
+                });
             }
         }
     }

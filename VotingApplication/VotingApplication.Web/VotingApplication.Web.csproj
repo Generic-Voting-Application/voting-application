@@ -321,6 +321,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\CreateController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -368,6 +369,7 @@
     <Content Include="Scripts\Controllers\Create\InvitationStepController.js" />
     <Content Include="Scripts\Controllers\Create\QuestionStepController.js" />
     <Content Include="Scripts\Controllers\Create\StyleStepController.js" />
+    <Content Include="Scripts\Controllers\Dashboard\MyPollsController.js" />
     <Content Include="Scripts\Controllers\EditOptionDialogController.js" />
     <Content Include="Scripts\Controllers\AddOptionDialogController.js" />
     <Content Include="Scripts\Controllers\ManageVotersController.js" />
@@ -425,6 +427,7 @@
     <Content Include="Scripts\Modules\Account\VoteOn-Account.js" />
     <Content Include="Scripts\Modules\Account\VoteOn-Login.js" />
     <Content Include="Scripts\Modules\Account\VoteOn-Register.js" />
+    <Content Include="Scripts\Modules\Dashboard\VoteOn-Dashboard.js" />
     <Content Include="Scripts\Modules\GVA-Common.js" />
     <Content Include="Scripts\Modules\GVA-Manage.js" />
     <Content Include="Scripts\Modules\GVA-Poll.js" />
@@ -503,6 +506,9 @@
     <Content Include="Views\Login\EmailNotConfirmed.cshtml" />
     <Content Include="Views\Poll\InviteOnly.cshtml" />
     <Content Include="Views\Poll\PollNotFound.cshtml" />
+    <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\Dashboard\MyPolls.cshtml" />
+    <Content Include="Views\Dashboard\NotLoggedIn.cshtml" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

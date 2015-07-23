@@ -16,6 +16,7 @@
             password: null
         };
 
+        $scope.sending = false;
         $scope.login = login;
         $scope.forgottenPassword = forgottenPassword;
 
@@ -25,10 +26,13 @@
                 var userEmail = $scope.loginForm.email.$viewValue;
                 var password = $scope.loginForm.password.$viewValue;
 
+                $scope.sending = true;
+
                 AccountService.login(userEmail, password)
                     .then(RoutingService.returnToReferrerPage)
                     .catch(function (response) {
                         ErrorService.handleLoginError(response, userEmail);
+                        $scope.sending = false;
                     });
             }
         }

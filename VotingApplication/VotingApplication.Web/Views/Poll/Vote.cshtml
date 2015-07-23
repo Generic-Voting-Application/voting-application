@@ -34,26 +34,6 @@
 
             <vote-choice choices="poll.Choices" poll="poll" ng-disabled="submitting"></vote-choice>
 
-            <div ng-show="poll.ChoiceAdding" layout layout-margin hide-sm>
-                <form>
-                    <div layout="row">
-                        <md-input-container>
-                            <label>Add your own choice</label>
-                            <input id="user-choice-input" ng-model="userChoice" ng-disabled="submitting">
-                        </md-input-container>
-                        <md-button id="add-user-choice-button" class="md-icon-button" ng-click="addChoiceFromPage(userChoice)" ng-disabled="submitting" aria-label="Add a new choice">
-                            <md-icon md-font-icon="fa-plus fa-lg" class="fa vo-button-margin-top"></md-icon>
-                        </md-button>
-                    </div>
-                </form>
-            </div>
-
-            <div ng-show="poll.ChoiceAdding" layout hide-gt-sm>
-                <md-button class="md-primary md-raised" ng-click="addChoiceViaDialog($event)" ng-disabled="submitting">
-                    Add your own choice
-                </md-button>
-            </div>
-
             <div ng-show="poll.NamedVoting" hide-gt-sm>
                 <form name="voterNameForm">
                     <md-input-container>
@@ -70,9 +50,33 @@
                 </form>
             </div>
 
+            <div ng-show="poll.ChoiceAdding" layout layout-margin hide-sm>
+                <form>
+                    <div layout="row">
+                        <md-input-container>
+                            <label>Add your own choice</label>
+                            <input id="user-choice-input" ng-model="userChoice" ng-disabled="submitting">
+                        </md-input-container>
+                        <md-button id="add-user-choice-button" class="md-icon-button" ng-click="addChoiceFromPage(userChoice)" ng-disabled="submitting" aria-label="Add a new choice">
+                            <md-icon md-font-icon="fa-plus fa-lg" class="fa vo-button-margin-top"></md-icon>
+                        </md-button>
+                    </div>
+                </form>
+            </div>
+
+            <div ng-show="poll.ChoiceAdding" layout="column" hide-gt-sm>
+                <md-button class="md-primary md-raised" ng-click="addChoiceViaDialog($event)" ng-disabled="submitting">
+                    Add your own choice
+                </md-button>
+            </div>
+
             <div layout="row" layout-sm="column" layout-align-gt-sm="end center">
                 <md-button id="vote-button" class="md-primary md-raised" ng-click="castVote()" ng-disabled="submitting">
                     Vote
+                </md-button>
+                <md-button class="md-primary md-raised" ng-click="navigateToResultsPage()" ng-disabled="submitting">
+                    Results
+                    <i class="fa fa-chevron-right"></i>
                 </md-button>
             </div>
         </md-content>
