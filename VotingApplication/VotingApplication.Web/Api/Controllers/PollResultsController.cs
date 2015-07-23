@@ -40,27 +40,28 @@ namespace VotingApplication.Web.Api.Controllers
                     }
                 }
 
-                if (!tokenGuid.HasValue)
-                {
-                    if (poll.ElectionMode)
-                    {
-                        ThrowError(HttpStatusCode.BadRequest);
-                    }
-                }
-                else
-                {
-                    Ballot ballot = poll.Ballots.Where(b => b.TokenGuid == tokenGuid.Value).SingleOrDefault();
+                // This is required for election mode, but election mode has been removed for now
+                //if (!tokenGuid.HasValue)
+                //{
+                //    if (poll.ElectionMode)
+                //    {
+                //        ThrowError(HttpStatusCode.BadRequest);
+                //    }
+                //}
+                //else
+                //{
+                //    Ballot ballot = poll.Ballots.Where(b => b.TokenGuid == tokenGuid.Value).SingleOrDefault();
 
-                    if (ballot == null)
-                    {
-                        ThrowError(HttpStatusCode.NotFound);
-                    }
+                //    if (ballot == null)
+                //    {
+                //        ThrowError(HttpStatusCode.NotFound);
+                //    }
 
-                    if (poll.ElectionMode && !ballot.HasVoted)
-                    {
-                        ThrowError(HttpStatusCode.Forbidden);
-                    }
-                }
+                //    if (poll.ElectionMode && !ballot.HasVoted)
+                //    {
+                //        ThrowError(HttpStatusCode.Forbidden);
+                //    }
+                //}
 
                 List<Vote> votes = context
                     .Votes

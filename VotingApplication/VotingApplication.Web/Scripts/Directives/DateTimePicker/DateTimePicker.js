@@ -11,7 +11,10 @@
 
         function link(scope) {
 
-            scope.themeAccentColor = themeColor.getThemeColor('default', 'accent', 'default');
+            var themeAccentColor = themeColor.getThemeColor('default', 'accent', 'default');
+
+            scope.themeAccentColor = themeAccentColor.value;
+            scope.themeAccountColorContrast = themeAccentColor.contrast;
             
             scope.displayDate = moment();
             scope.weekdays = moment.weekdaysMin();

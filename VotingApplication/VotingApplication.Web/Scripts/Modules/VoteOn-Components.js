@@ -22,7 +22,10 @@
                     var themePaletteColorHue = theme.colors[paletteName].hues[hue];
                     var themePaletteColor = themingProvider._PALETTES[themePaletteColorName][themePaletteColorHue];
 
-                    return themingProvider._rgba(themePaletteColor.value);
+                    return {
+                        value: themingProvider._rgba(themePaletteColor.value),
+                        contrast: themingProvider._rgba(themePaletteColor.contrast)
+                    };
                 }
 
                 $provide.provider('themeColor', function () {
