@@ -169,7 +169,7 @@ namespace VotingApplication.Web
             jQuery.Include("~/Scripts/Lib/jquery-2.1.4.min.js");
             bundles.Add(jQuery);
 
-            var jQuerySignalR = new Bundle("~/Bundles/ScriptLib/JQuerySignalR", "http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.min.js");
+            var jQuerySignalR = new Bundle("~/Bundles/ScriptLib/JQuerySignalR", "https://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.min.js");
             jQuerySignalR.CdnFallbackExpression = "window.jQuery.signalR";
             jQuerySignalR.Include("~/Scripts/Lib/jquery.signalr-2.2.0.min.js");
             bundles.Add(jQuerySignalR);
