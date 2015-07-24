@@ -40,29 +40,6 @@ namespace VotingApplication.Web.Api.Controllers
                     }
                 }
 
-                // This is required for election mode, but election mode has been removed for now
-                //if (!tokenGuid.HasValue)
-                //{
-                //    if (poll.ElectionMode)
-                //    {
-                //        ThrowError(HttpStatusCode.BadRequest);
-                //    }
-                //}
-                //else
-                //{
-                //    Ballot ballot = poll.Ballots.Where(b => b.TokenGuid == tokenGuid.Value).SingleOrDefault();
-
-                //    if (ballot == null)
-                //    {
-                //        ThrowError(HttpStatusCode.NotFound);
-                //    }
-
-                //    if (poll.ElectionMode && !ballot.HasVoted)
-                //    {
-                //        ThrowError(HttpStatusCode.Forbidden);
-                //    }
-                //}
-
                 List<Vote> votes = context
                     .Votes
                     .Include(v => v.Choice)
@@ -75,7 +52,8 @@ namespace VotingApplication.Web.Api.Controllers
                 ResultsRequestResponseModel response = GenerateResults(votes, poll.Choices, poll.NamedVoting);
                 response.PollName = poll.Name;
                 response.NamedVoting = poll.NamedVoting;
-                response.HasExpired = poll.ExpiryDateUtc.HasValue && poll.ExpiryDateUtc.Value < DateTime.UtcNow;
+                response.ExpiryDateUtc = poll.ExpiryDateUtc;
+                response.PollType = poll.PollType.ToString();
                 return response;
             }
         }
