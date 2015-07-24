@@ -1,0 +1,11 @@
+﻿// Fix for small whitespace between toolbar and tabs
+
+md-tabs {
+    border-radius: 0px;
+}
+
+// Fix for ink expanding content areas
+
+md-content {
+    overflow: hidden;
+}

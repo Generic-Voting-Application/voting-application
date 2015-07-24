@@ -15,12 +15,14 @@
             navigateToManagePage: navigateToManagePage,
             navigateToHomePage: navigateToHomePage,
             navigateToMyPolls: navigateToMyPolls,
-            navigateToConfirmRegistration : navigateToConfirmRegistration,
             getVotePageUrl: getVotePageUrl,
             getResultsPageUrl: getResultsPageUrl,
             getManagePageUrl: getManagePageUrl,
             getMyPollsUrl: getMyPollsUrl,
-            getConfirmRegistrationUrl: getConfirmRegistrationUrl
+
+
+            navigateToLoginPage: navigateToLoginPage,
+            navigateToRegisterPage: navigateToRegisterPage
         };
 
         return service;
@@ -45,16 +47,12 @@
             $window.location.href = '';
         }
 
-        function navigateToConfirmRegistration(email) {
-            $window.location.href = getConfirmRegistrationUrl(email);
-        }
-
         function getVotePageUrl(pollId, tokenId) {
             if (!pollId) {
                 return null;
             }
 
-            var url = '/Poll/#/Vote/' + pollId;
+            var url = '/Poll/#/' + pollId + '/Vote';
             if (tokenId) {
                 url += '/' + tokenId;
             }
@@ -66,7 +64,7 @@
                 return null;
             }
 
-            var url = '/Poll/#/Results/' + pollId;
+            var url = '/Poll/#/' + pollId + '/Results';
             if (tokenId) {
                 url += '/' + tokenId;
             }
@@ -89,13 +87,102 @@
             return '/Manage/#/MyPolls/';
         }
 
-        function getConfirmRegistrationUrl(email) {
 
-            if (!email) {
-                return null;
+        function navigateToLoginPage() {
+            $window.location.href = '/Login';
+        }
+
+        function navigateToRegisterPage() {
+            $window.location.href = '/Register';
+        }
+    }
+})();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('VoteOn-Common')
+        .factory('RoutingService', RoutingService);
+
+    RoutingService.$inject = ['$window', '$location'];
+
+    function RoutingService($window, $location) {
+
+        var service = {
+            homePageUrl: '/',
+            navigateToHomePage: navigateToHomePage,
+            navigateToVotePage: navigateToVotePage,
+
+            navigateToLoginPage: navigateToLoginPage,
+            navigateToRegisterPage: navigateToRegisterPage,
+
+            navigateToForgottenPasswordPage: navigateToForgottenPasswordPage,
+            navigateToRegistrationCompletePage: navigateToRegistrationCompletePage,
+
+            navigateToAccountPage: navigateToAccountPage,
+            navigateToMyPollsPage: navigateToMyPollsPage,
+
+            navigateToResultsPage: navigateToResultsPage,
+            redirectToResultsPage: redirectToResultsPage,
+
+            returnToReferrerPage : returnToReferrerPage
+        };
+
+        return service;
+
+        function navigateToHomePage() {
+            $window.location.href = '/';
+        }
+
+        function navigateToVotePage(pollId) {
+            $window.location.href = '/Poll/#/' + pollId + '/Vote/';
+        }
+
+        function navigateToLoginPage() {
+            $window.location.href = '/Login#?referrer=' + encodeURIComponent($window.location);
+        }
+
+        function navigateToRegisterPage() {
+            $window.location.href = '/Register';
+        }
+
+        function navigateToForgottenPasswordPage() {
+            $window.location.href = '/Login/#/ForgottenPassword';
+        }
+
+        function navigateToRegistrationCompletePage(email) {
+            $window.location.href = '/Register/#/RegistrationComplete/' + email;
+        }
+
+        function navigateToAccountPage() {
+            // Temporarily redirect to the new homepage until we've an account page.
+            $window.location.href = '/Create/';
+        }
+
+        function navigateToMyPollsPage() {
+            // This is the old page, but it's not been updated to material yet.
+            $window.location.href = '/Dashboard/#/MyPolls/';
+        }
+
+        function navigateToResultsPage(pollId) {
+            $window.location.href = '/Poll/#/' + pollId + '/Results';
+        }
+
+        function redirectToResultsPage(pollId) {
+            // This changes the current page and history, so back doesn't redirect to an invalid page.
+            // For example, when a poll expires, you can't get to the vote page anymore.
+            $location.path(pollId + '/Results').replace();
+        }
+
+        function returnToReferrerPage() {
+            var referrerUri = $location.search().referrer;
+            if (referrerUri) {
+                $window.location.href = decodeURIComponent(referrerUri);
+            } else {
+                navigateToHomePage();
             }
 
-            return '/Manage/#/ConfirmRegistration/' + encodeURIComponent(email);
         }
     }
 })();

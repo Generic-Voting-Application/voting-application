@@ -13,8 +13,9 @@ namespace VotingApplication.Web.Tests.E2E
     {
         private static readonly Guid CreatedPollManageId = new Guid("FB74707A-C9D5-4B90-9F0C-D3280041B56C");
 
+        [Ignore]
         [TestMethod]
-        [TestCategory("E2E")]
+        [TestCategory("E2ERewrite")]
         public void ExistingPoll_Manage_NavigatesToManagePollPage()
         {
             using (IWebDriver driver = Driver)
@@ -41,8 +42,9 @@ namespace VotingApplication.Web.Tests.E2E
             }
         }
 
+        [Ignore]
         [TestMethod]
-        [TestCategory("E2E")]
+        [TestCategory("E2ERewrite")]
         public void ExistingPoll_Repeat_NavigatesToNewPollManagePollPage()
         {
             using (IWebDriver driver = Driver)

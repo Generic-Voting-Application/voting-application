@@ -1,0 +1,36 @@
+﻿<div layout="row" ng-controller="SendConfirmationEmailController">
+
+    <div flex-gt-md="30"
+         flex-md="50"
+         flex-sm="90"
+         offset-gt-md="35"
+         offset-md="25"
+         offset-sm="5">
+
+        <h2 class="md-display-3">Registration complete</h2>
+
+        <md-content>
+            <h3>
+                Thank you for registering!
+            </h3>
+            <p>
+                We've sent a confirmation email to {{emailAddress}}.
+                <br />
+                If you don't see the email, please check your spam folder, or click below to resend the confirmation email.
+            </p>
+
+            <div>
+                <div ng-hide="confirmationResent" layout="column" layout-align="space-around center">
+                    <md-progress-linear md-mode="indeterminate" ng-show="isSending"></md-progress-linear>
+                    <md-button class="md-primary md-raised" ng-click="resendConfirmation()" ng-disabled="isSending">
+                        Resend Confirmation Email
+                    </md-button>
+                </div>
+                <div ng-hide="!confirmationResent">
+                    <span>A confirmation email has been resent to {{emailAddress}}</span>
+                </div>
+            </div>
+        </md-content>
+
+    </div>
+</div>

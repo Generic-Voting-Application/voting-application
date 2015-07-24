@@ -2,7 +2,7 @@
 
 describe('TokenService', function () {
 
-    beforeEach(module('GVA.Common'));
+    beforeEach(module('VoteOn-Common'));
 
     var tokenService;
     var routeParams;

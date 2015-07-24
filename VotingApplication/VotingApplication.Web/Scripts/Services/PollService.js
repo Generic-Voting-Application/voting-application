@@ -115,3 +115,108 @@
         }
     }
 })();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('VoteOn-Common')
+        .factory('PollService', PollService);
+
+    PollService.$inject = ['$http', '$q', 'AccountService', 'ErrorService'];
+
+    function PollService($http, $q, AccountService, ErrorService) {
+
+        var service = {
+            getPoll: getPoll,
+            createPoll: createPoll,
+            addChoice: addChoice,
+            getUserPolls : getUserPolls
+        };
+
+        return service;
+
+        function getPoll(pollId, ballotToken) {
+
+            var prom = $q.defer();
+
+            if (!pollId) {
+                prom.reject();
+                return prom.promise;
+            }
+
+            var tokenGuidHeader = null;
+
+            if (ballotToken) {
+                tokenGuidHeader = { 'X-TokenGuid': ballotToken };
+            }
+
+            return $http({
+                method: 'GET',
+                url: '/api/poll/' + pollId,
+                headers: tokenGuidHeader
+            })
+                .then(function (response) {
+                    prom.resolve(response.data);
+                    return prom.promise;
+                });
+        }
+
+        function createPoll(poll) {
+            var token;
+            if (AccountService.account) {
+                token = AccountService.account.token;
+            }
+            else {
+                token = null;
+            }
+
+            var prom = $q.defer();
+
+            return $http({
+                method: 'POST',
+                url: 'api/poll',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'Authorization': 'Bearer ' + token
+                },
+                data: JSON.stringify(poll)
+            })
+                .then(function (response) {
+                    prom.resolve(response.data);
+                    return prom.promise;
+                });
+        }
+
+        function addChoice(pollId, newChoice) {
+            return $http
+                .post(
+                    '/api/poll/' + pollId + '/choice',
+                    newChoice
+                );
+        }
+
+        function getUserPolls() {
+
+            var prom = $q.defer();
+
+            if (!AccountService.account || !AccountService.account.token) {
+
+                ErrorService.HandleNotLoggedInError();
+
+                prom.reject();
+                return prom.promise;
+            }
+
+            return $http({
+                method: 'GET',
+                url: '/api/dashboard/polls',
+                headers: { 'Authorization': 'Bearer ' + AccountService.account.token }
+            })
+                .then(function (response) {
+                    prom.resolve(response.data);
+                    return prom.promise;
+                });
+        }
+    }
+})();

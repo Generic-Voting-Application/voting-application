@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html ng-app="VoteOn-Dashboard">
+<head>
+    <title>Vote On</title>
+    <meta name="viewport" content="initial-scale=1">
+
+    @Styles.Render("~/Bundles/StyleLib/AngularMaterial")
+    @Styles.Render("~/Bundles/StyleLib/FontAwesome")
+
+</head>
+<body>
+
+    <div layout="column" flex layout-fill>
+
+        <toolbar></toolbar>
+
+        <div ng-view></div>
+
+    </div>
+
+    @Scripts.Render("~/Bundles/ScriptLib/Angular")
+    @Scripts.Render("~/Bundles/ScriptLib/AngularAnimate")
+    @Scripts.Render("~/Bundles/ScriptLib/AngularAria")
+    @Scripts.Render("~/Bundles/ScriptLib/AngularMaterial")
+    @Scripts.Render("~/Bundles/ScriptLib/AngularMessages")
+    @Scripts.Render("~/Bundles/ScriptLib/AngularRoute")
+
+    @Scripts.Render("~/Bundles/ScriptLib/ngStorage")
+    @Scripts.Render("~/Bundles/ScriptLib/moment")
+
+    @Scripts.Render("~/Bundles/Script")
+</body>
+</html>

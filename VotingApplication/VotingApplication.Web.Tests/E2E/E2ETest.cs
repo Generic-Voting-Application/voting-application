@@ -119,5 +119,15 @@ namespace VotingApplication.Web.Tests.E2E
                 dbContext.SaveChanges();
             }
         }
+
+        public static string GetPollVoteUrl(Guid pollId)
+        {
+            return SiteBaseUri + "Poll/#/" + pollId + "/Vote";
+        }
+
+        public static string GetPollResultsUrl(Guid pollId)
+        {
+            return SiteBaseUri + "Poll/#/" + pollId + "/Results";
+        }
     }
 }

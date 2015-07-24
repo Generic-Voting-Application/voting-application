@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using VotingApplication.Data.Model;
 
 namespace VotingApplication.Web.Api.Models.DBViewModels
 {
@@ -15,7 +14,7 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
 
         public Guid TokenGuid { get; set; }
 
-        public List<Choice> Choices { get; set; }
+        public IEnumerable<PollRequestChoiceResponseModel> Choices { get; set; }
 
         public bool NamedVoting { get; set; }
         public bool ChoiceAdding { get; set; }

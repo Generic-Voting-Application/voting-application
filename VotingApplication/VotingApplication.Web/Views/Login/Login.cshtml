@@ -1,0 +1,58 @@
+﻿<div layout="row" ng-controller="LoginController">
+
+    <div flex-gt-md="30"
+         flex-md="50"
+         flex-sm="90"
+         offset-gt-md="35"
+         offset-md="25"
+         offset-sm="5">
+
+        <h1 class="md-display-3">Login</h1>
+
+        <md-content>
+            <form name="loginForm" ng-submit="login()">
+
+                <md-input-container>
+                    <label><md-icon md-font-icon="fa-envelope-o" class="fa" alt="envelope"></md-icon> Email</label>
+                    <input ng-model="user.email"
+                           type="email"
+                           name="email"
+                           required
+                           ng-model-options="{ debounce: 500 }">
+
+                    <div ng-messages="loginForm.email.$error" ng-if="loginForm.email.$touched">
+                        <span ng-message="required">Email is required</span>
+                        <span ng-message="email">Email is not valid</span>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label><md-icon md-font-icon="fa-asterisk" class="fa" alt="asterisk"></md-icon> Password</label>
+                    <input ng-model="user.password"
+                           type="password"
+                           name="password"
+                           required
+                           minlength="6"
+                           ng-model-options="{ debounce: 500 }">
+
+                    <div ng-messages="loginForm.password.$error" ng-if="loginForm.password.$touched">
+                        <span ng-message="required">Password is required</span>
+                        <span ng-message="minlength">Password must be at least 6 characters</span>
+                    </div>
+                </md-input-container>
+
+
+                <div layout="row" layout-sm="column" layout-align-gt-sm="end center">
+                    <md-button ng-click="forgottenPassword()" type="button" ng-disabled="sending">
+                        Forgot your Password?
+                    </md-button>
+                    <md-button class="md-primary md-raised" type="submit" ng-disabled="sending">
+                        Login
+                    </md-button>
+                </div>
+
+            </form>
+        </md-content>
+
+    </div>
+</div>

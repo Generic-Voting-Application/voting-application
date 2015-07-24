@@ -15,6 +15,7 @@ using VotingApplication.Data.Model;
 using VotingApplication.Web.Api.Controllers;
 using VotingApplication.Web.Api.Metrics;
 using VotingApplication.Web.Api.Models.DBViewModels;
+using VotingApplication.Web.Api.Services;
 using VotingApplication.Web.Tests.TestHelpers;
 
 namespace VotingApplication.Web.Tests.Controllers
@@ -65,7 +66,7 @@ namespace VotingApplication.Web.Tests.Controllers
 
             _metricHandler = new Mock<IMetricHandler>();
 
-            _controller = new PollController(mockContextFactory.Object, _metricHandler.Object)
+            _controller = new PollController(mockContextFactory.Object, _metricHandler.Object, new Mock<ICorrespondenceService>().Object)
             {
                 Request = new HttpRequestMessage(),
                 Configuration = new HttpConfiguration()
@@ -86,7 +87,7 @@ namespace VotingApplication.Web.Tests.Controllers
         public void PostIsAllowed()
         {
             // Act
-            _controller.Post(new PollCreationRequestModel() { PollName = "New Poll" });
+            _controller.Post(CreateBasicPollRequest());
         }
 
         [TestMethod]
@@ -104,7 +105,7 @@ namespace VotingApplication.Web.Tests.Controllers
         public void PostAssignsPollUUID()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
+            PollCreationRequestModel newPoll = CreateBasicPollRequest();
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -115,7 +116,7 @@ namespace VotingApplication.Web.Tests.Controllers
         public void PostAssignsPollManageId()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
+            PollCreationRequestModel newPoll = CreateBasicPollRequest();
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -126,7 +127,7 @@ namespace VotingApplication.Web.Tests.Controllers
         public void PostAssignsPollManageIdDifferentFromPollId()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
+            PollCreationRequestModel newPoll = CreateBasicPollRequest();
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -156,11 +157,7 @@ namespace VotingApplication.Web.Tests.Controllers
             _controller.User = principal.Object;
 
 
-            PollCreationRequestModel newPoll = new PollCreationRequestModel()
-            {
-                PollName = "New Poll"
-            };
-
+            PollCreationRequestModel newPoll = CreateBasicPollRequest();
 
             _controller.Post(newPoll);
 
@@ -174,7 +171,7 @@ namespace VotingApplication.Web.Tests.Controllers
         public void PostReturnsIDsOfNewPoll()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
+            PollCreationRequestModel newPoll = CreateBasicPollRequest();
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -186,7 +183,7 @@ namespace VotingApplication.Web.Tests.Controllers
         public void PostAddsNewPollToPolls()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
+            PollCreationRequestModel newPoll = CreateBasicPollRequest();
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -197,7 +194,7 @@ namespace VotingApplication.Web.Tests.Controllers
         public void SuccessfulPollCreationGeneratesMetric()
         {
             // Act
-            PollCreationRequestModel newPoll = new PollCreationRequestModel() { PollName = "New Poll" };
+            PollCreationRequestModel newPoll = CreateBasicPollRequest();
             var response = _controller.Post(newPoll);
 
             // Assert
@@ -213,6 +210,11 @@ namespace VotingApplication.Web.Tests.Controllers
 
             // Assert
             _metricHandler.Verify(m => m.HandlePollCreatedEvent(It.IsAny<Poll>()), Times.Never());
+        }
+
+        private PollCreationRequestModel CreateBasicPollRequest()
+        {
+            return new PollCreationRequestModel { PollName = "New Poll", PollType = "Basic" };
         }
 
         #endregion
@@ -529,6 +531,127 @@ namespace VotingApplication.Web.Tests.Controllers
                 controller.Get(PollId);
             }
 
+            [TestMethod]
+            public void XTokenGuidHeader_Response_Choices_ContainsVoteValuesForBallot()
+            {
+                const int choiceId = 42;
+
+                var choice = new Choice()
+                {
+                    Id = choiceId,
+                    Name = "A choice",
+                    Description = "Some description",
+                    PollChoiceNumber = 13
+                };
+
+                var vote = new Vote() { Choice = choice, VoteValue = 3 };
+
+                var ballot = new Ballot()
+                {
+                    TokenGuid = TokenGuid
+                };
+                ballot.Votes.Add(vote);
+
+                Poll poll = CreateNonInviteOnlyPoll();
+                poll.Ballots.Add(ballot);
+                poll.Choices.Add(choice);
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                polls.Add(poll);
+                IDbSet<Choice> choices = DbSetTestHelper.CreateMockDbSet<Choice>();
+                choices.Add(choice);
+                IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
+                votes.Add(vote);
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                ballots.Add(ballot);
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes, choices);
+
+                PollController controller = CreatePollController(contextFactory);
+                AddXTokenGuidHeader(controller, TokenGuid);
+
+
+                PollRequestResponseModel response = controller.Get(PollId);
+
+                PollRequestChoiceResponseModel responseChoice = response.Choices.Single();
+
+                Assert.AreEqual(3, responseChoice.VoteValue);
+            }
+
+            [TestMethod]
+            public void XTokenGuidHeader_Response_Choices_ContainsVoteValueZero_WhenNotVotedFor()
+            {
+                const int choiceId = 42;
+
+                var choice = new Choice()
+                {
+                    Id = choiceId,
+                    Name = "A choice",
+                    Description = "Some description",
+                    PollChoiceNumber = 13
+                };
+
+                var ballot = new Ballot()
+                {
+                    TokenGuid = TokenGuid
+                };
+
+                Poll poll = CreateNonInviteOnlyPoll();
+                poll.Ballots.Add(ballot);
+                poll.Choices.Add(choice);
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                polls.Add(poll);
+                IDbSet<Choice> choices = DbSetTestHelper.CreateMockDbSet<Choice>();
+                choices.Add(choice);
+                IDbSet<Vote> votes = DbSetTestHelper.CreateMockDbSet<Vote>();
+                IDbSet<Ballot> ballots = DbSetTestHelper.CreateMockDbSet<Ballot>();
+                ballots.Add(ballot);
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, ballots, votes, choices);
+
+                PollController controller = CreatePollController(contextFactory);
+                AddXTokenGuidHeader(controller, TokenGuid);
+
+
+                PollRequestResponseModel response = controller.Get(PollId);
+
+                PollRequestChoiceResponseModel responseChoice = response.Choices.Single();
+
+                Assert.AreEqual(0, responseChoice.VoteValue);
+            }
+
+            [TestMethod]
+            public void NoXTokenGuidHeader_Response_Choices_ContainsVoteValueZero()
+            {
+                const int choiceId = 42;
+
+                var choice = new Choice()
+                {
+                    Id = choiceId,
+                    Name = "A choice",
+                    Description = "Some description",
+                    PollChoiceNumber = 13
+                };
+
+                Poll poll = CreateNonInviteOnlyPoll();
+                poll.Choices.Add(choice);
+
+                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
+                polls.Add(poll);
+                IDbSet<Choice> choices = DbSetTestHelper.CreateMockDbSet<Choice>();
+                choices.Add(choice);
+
+                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, choices);
+
+                PollController controller = CreatePollController(contextFactory);
+
+
+                PollRequestResponseModel response = controller.Get(PollId);
+
+                PollRequestChoiceResponseModel responseChoice = response.Choices.Single();
+
+                Assert.AreEqual(0, responseChoice.VoteValue);
+            }
+
             private Poll CreateNonInviteOnlyPoll()
             {
                 return new Poll() { UUID = PollId, InviteOnly = false };
@@ -541,7 +664,7 @@ namespace VotingApplication.Web.Tests.Controllers
 
             public static PollController CreatePollController(IContextFactory contextFactory)
             {
-                return new PollController(contextFactory, null)
+                return new PollController(contextFactory, null, new Mock<ICorrespondenceService>().Object)
                 {
                     Request = new HttpRequestMessage(),
                     Configuration = new HttpConfiguration()

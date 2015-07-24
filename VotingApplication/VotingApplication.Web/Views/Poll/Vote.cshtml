@@ -1,0 +1,84 @@
+﻿<div layout="row" ng-controller="VoteController">
+
+    <div flex-gt-md="50" flex-md="80" flex-sm="90"
+         offset-gt-md="25" offset-md="10" offset-sm="5">
+
+        <loading-spinner loaded="loaded"></loading-spinner>
+
+        <md-content ng-cloak ng-show="loaded">
+            <div layout-gt-sm="row" layout-sm="column">
+                <div flex-order-gt_sm="1" flex-order-sm="2">
+                    <h2>{{poll.Name}}</h2>
+
+                    <expiry-date-countdown expiry-date-utc="poll.ExpiryDateUtc" poll-expired-callback="pollExpired()" hide-sm></expiry-date-countdown>
+                </div>
+
+                <span flex hide-sm></span>
+
+                <div flex-order-gt_sm="2" hide-sm ng-show="poll.NamedVoting">
+                    <form name="voterNameForm">
+                        <md-input-container>
+                            <label>
+                                <md-icon md-font-icon="fa-user" class="fa" alt="user"></md-icon>
+                                Your name
+                            </label>
+                            <input id="voter-name-input" ng-model="voterIdentity.name" name="voterName" required>
+
+                            <div ng-messages="voterNameForm.voterName.$error" ng-if="voteClicked">
+                                <span id="voter-name-required-validation-message" ng-message="required">You must supply a name</span>
+                            </div>
+                        </md-input-container>
+                    </form>
+                </div>
+            </div>
+
+            <vote-choice choices="poll.Choices" poll="poll" ng-disabled="submitting"></vote-choice>
+
+            <div ng-show="poll.NamedVoting" hide-gt-sm>
+                <form name="voterNameForm">
+                    <md-input-container>
+                        <label>
+                            <md-icon md-font-icon="fa-user" class="fa" alt="user"></md-icon>
+                            Your name
+                        </label>
+                        <input id="voter-name-input" ng-model="voterIdentity.name" name="voterName" required>
+
+                        <div ng-messages="voterNameForm.voterName.$error" ng-if="voteClicked">
+                            <span id="voter-name-required-validation-message" ng-message="required">You must supply a name</span>
+                        </div>
+                    </md-input-container>
+                </form>
+            </div>
+
+            <div ng-show="poll.ChoiceAdding" layout layout-margin hide-sm>
+                <form>
+                    <div layout="row">
+                        <md-input-container>
+                            <label>Add your own choice</label>
+                            <input id="user-choice-input" ng-model="userChoice" ng-disabled="submitting">
+                        </md-input-container>
+                        <md-button id="add-user-choice-button" class="md-icon-button" ng-click="addChoiceFromPage(userChoice)" ng-disabled="submitting" aria-label="Add a new choice">
+                            <md-icon md-font-icon="fa-plus fa-lg" class="fa vo-button-margin-top"></md-icon>
+                        </md-button>
+                    </div>
+                </form>
+            </div>
+
+            <div ng-show="poll.ChoiceAdding" layout="column" hide-gt-sm>
+                <md-button class="md-primary md-raised" ng-click="addChoiceViaDialog($event)" ng-disabled="submitting">
+                    Add your own choice
+                </md-button>
+            </div>
+
+            <div layout="row" layout-sm="column" layout-align-gt-sm="end center">
+                <md-button id="vote-button" class="md-primary md-raised" ng-click="castVote()" ng-disabled="submitting">
+                    Vote
+                </md-button>
+                <md-button class="md-primary md-raised" ng-click="navigateToResultsPage()" ng-disabled="submitting">
+                    Results
+                    <i class="fa fa-chevron-right"></i>
+                </md-button>
+            </div>
+        </md-content>
+    </div>
+</div>

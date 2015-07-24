@@ -1,56 +1,119 @@
-﻿(function () {
+﻿/// <reference path="ErrorRoutingService.js" />
+
+(function () {
     'use strict';
 
     angular
-        .module('GVA.Common')
+        .module('VoteOn-Common')
         .factory('ErrorService', ErrorService);
 
+    ErrorService.$inject = ['$mdToast', 'ErrorRoutingService'];
 
-    function ErrorService() {
+    function ErrorService($mdToast, ErrorRoutingService) {
 
-        var stringReplacements = {
-            'Poll .{8}-.{4}-.{4}-.{4}-.{12} not found': 'Poll does not exist',
-            'Poll .{8}-.{4}-.{4}-.{4}-.{12} is invite only': 'This poll is invite only',
-            'Invalid ExpiryDate': 'Expiry date must be in the future',
-            'Invalid or unspecified': 'Empty',
-            'Choice Name': 'choice name'
-        };
 
         var service = {
-            bindModelStateToForm: bindModelState,
-            createReadableString: createReadableString
+            handleLoginError: handleLoginError,
+            handleVotingError: handleVotingError,
+            handleResultsError: handleResultsError,
+            handleRegistrationError: handleRegistrationError,
+            HandleNotLoggedInError: HandleNotLoggedInError
         };
 
         return service;
 
-        function bindModelState(modelState, form, displayGenericError) {
-            form.errors = {};
+        function handleLoginError(errorResponse, email) {
 
-            for (var modelError in modelState) {
-                if (modelState.hasOwnProperty(modelError)) {
-                    var key = modelError.replace('model.', '').toLowerCase();
-
-                    if (form.hasOwnProperty(key)) {
-                        form.errors[key] = modelState[modelError][0];
-                    }
-                    else {
-                        displayGenericError(modelState[modelError][0]);
-                    }
+            if (errorResponse) {
+                if (errorResponse.data && errorResponse.data.error_description) {
+                    handleLoginErrorDescription(errorResponse.data.error_description, email);
                 }
+            }
+            else {
+                displayGenericErrorPage();
             }
         }
 
-        function createReadableString(string) {
-            var readableString = string;
+        function handleLoginErrorDescription(description, email) {
 
-            for (var replacement in stringReplacements) {
-                if (stringReplacements.hasOwnProperty(replacement)) {
-                    var regEx = new RegExp(replacement, 'g');
-                    readableString = readableString.replace(regEx, stringReplacements[replacement]);
+            switch (description) {
+                case 'The user name or password is incorrect.':
+                    {
+                        displayToast(description);
+                        break;
+                    }
+                case 'Email for this user not yet confirmed.':
+                    {
+                        ErrorRoutingService.navigateToEmailNotConfirmedPage(email);
+                        break;
+                    }
+                default:
+                    {
+                        displayGenericErrorPage();
+                    }
+            }
+        }
+
+        function handleVotingError(response, pollId) {
+
+            if (response.status === 404) {
+                ErrorRoutingService.navigateToPollNotFound();
+            }
+            else if (response.status === 401) {
+                ErrorRoutingService.navigateToPollInviteOnlyPage(pollId);
+            }
+            else {
+                displayGenericErrorPage();
+            }
+        }
+
+        function handleResultsError(response, pollId) {
+
+            if (response.status === 404) {
+                ErrorRoutingService.navigateToPollNotFound();
+            }
+            else if (response.status === 401) {
+                ErrorRoutingService.navigateToPollInviteOnlyPage(pollId);
+            }
+            else {
+                displayGenericErrorPage();
+            }
+        }
+
+        function handleRegistrationError(response) {
+            if (response) {
+                if (response.data && response.data.ModelState) {
+                    displayToast(response.data.ModelState[''][0]);
                 }
+            } else {
+                displayGenericErrorPage();
             }
 
-            return readableString;
+        }
+
+        function HandleNotLoggedInError() {
+            ErrorRoutingService.navigateToNotLoggedIn();
+        }
+
+        function displayToast(content) {
+
+            /*  Known issues with the toast display:
+                + Scrollbar when displaying (https://github.com/angular/material/issues/2936)
+                + Not able to centre toast (https://github.com/angular/material/issues/1773)
+            */
+
+            var toast = $mdToast.simple()
+                .content(content)
+                .action('Close')
+                .highlightAction(true)
+                .hideDelay(0)   // hideDelay of 0 never automatically hides the toast.
+                .position('bottom right');
+
+            $mdToast.show(toast);
+        }
+
+        function displayGenericErrorPage() {
+            ErrorRoutingService.navigateToHomePage();
         }
     }
 })();

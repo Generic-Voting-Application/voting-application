@@ -1,0 +1,34 @@
+﻿<div layout="row" ng-controller="MyPollsController">
+
+    <div flex-gt-md="50" flex-md="80" flex-sm="90"
+         offset-gt-md="25" offset-md="10" offset-sm="5">
+
+        <h1 class="md-display-3">My Polls</h1>
+
+        <md-content>
+
+            <loading-spinner loaded="loaded"></loading-spinner>
+
+            <div ng-show="!polls || polls.length === 0 && loaded" layout layout-align="center center">
+                You haven't created any polls using this account.
+            </div>
+
+            <md-list ng-show="loaded">
+                <md-list-item ng-repeat="poll in polls" class="md-3-line" ng-switch="poll.PollType" ng-click="navigateToPoll(poll.UUID)">
+                    <md-icon ng-switch-when="Basic" md-font-icon="fa-check" class="fa fa-2x" alt="check"></md-icon>
+                    <md-icon ng-switch-when="Multi" md-font-icon="fa-check-square-o" class="fa fa-2x" alt="square"></md-icon>
+                    <md-icon ng-switch-when="UpDown" md-font-icon="fa-thumbs-o-up" class="fa fa-2x" alt="thumbs"></md-icon>
+                    <md-icon ng-switch-when="Points" md-font-icon="fa-tasks" class="fa fa-2x" alt="tasks"></md-icon>
+                    <div class="md-list-item-text">
+                        <h3><strong>{{ poll.Name }}</strong></h3>
+                        <h4>Created: {{ poll.CreatedDateUtc | dateFilter: 'Do MMM YYYY, HH:mm' }}</h4>
+                        <p> {{ poll.PollType }} Vote - {{ poll.ChoiceCount }} Choices - Expires: {{ poll.ExpiryDateUtc | dateFilter: 'Do MMM YYYY, HH:mm' }}</p>
+                        <md-icon hide-sm md-font-icon="fa-bar-chart" class="fa fa-2x md-secondary" ng-click="navigateToResults(poll.UUID)" aria-label="chart"></md-icon>
+                    </div>
+                    <md-divider ng-if="$index !== (polls.length-1)"></md-divider>
+                </md-list-item>
+            </md-list>
+        </md-content>
+
+    </div>
+</div>

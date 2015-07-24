@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Http;
 using VotingApplication.Data.Context;
 using VotingApplication.Data.Model;
@@ -42,46 +40,28 @@ namespace VotingApplication.Web.Api.Controllers
                     }
                 }
 
-                if (!tokenGuid.HasValue)
-                {
-                    if (poll.ElectionMode)
-                    {
-                        ThrowError(HttpStatusCode.BadRequest);
-                    }
-                }
-                else
-                {
-                    Ballot ballot = poll.Ballots.Where(b => b.TokenGuid == tokenGuid.Value).SingleOrDefault();
+                // This is required for election mode, but election mode has been removed for now
+                //if (!tokenGuid.HasValue)
+                //{
+                //    if (poll.ElectionMode)
+                //    {
+                //        ThrowError(HttpStatusCode.BadRequest);
+                //    }
+                //}
+                //else
+                //{
+                //    Ballot ballot = poll.Ballots.Where(b => b.TokenGuid == tokenGuid.Value).SingleOrDefault();
 
-                    if (ballot == null)
-                    {
-                        ThrowError(HttpStatusCode.NotFound);
-                    }
+                //    if (ballot == null)
+                //    {
+                //        ThrowError(HttpStatusCode.NotFound);
+                //    }
 
-                    if (poll.ElectionMode && !ballot.HasVoted)
-                    {
-                        ThrowError(HttpStatusCode.Forbidden);
-                    }
-                }
-
-                if (Request.RequestUri != null)
-                {
-                    NameValueCollection queryMap = HttpUtility.ParseQueryString(Request.RequestUri.Query);
-                    string lastRefreshedDate = queryMap["lastRefreshed"];
-
-                    var clientLastUpdated = DateTime.MinValue;
-
-                    if (lastRefreshedDate != null)
-                    {
-                        clientLastUpdated = UnixTimeToDateTime(long.Parse(lastRefreshedDate));
-                    }
-
-                    if (poll.LastUpdatedUtc < clientLastUpdated)
-                    {
-                        _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.NotModified, pollId);
-                        throw new HttpResponseException(HttpStatusCode.NotModified);
-                    }
-                }
+                //    if (poll.ElectionMode && !ballot.HasVoted)
+                //    {
+                //        ThrowError(HttpStatusCode.Forbidden);
+                //    }
+                //}
 
                 List<Vote> votes = context
                     .Votes
@@ -92,7 +72,11 @@ namespace VotingApplication.Web.Api.Controllers
 
                 _metricHandler.HandleResultsUpdateEvent(HttpStatusCode.OK, pollId);
 
-                return GenerateResults(votes, poll.NamedVoting);
+                ResultsRequestResponseModel response = GenerateResults(votes, poll.Choices, poll.NamedVoting);
+                response.PollName = poll.Name;
+                response.NamedVoting = poll.NamedVoting;
+                response.HasExpired = poll.ExpiryDateUtc.HasValue && poll.ExpiryDateUtc.Value < DateTime.UtcNow;
+                return response;
             }
         }
 
@@ -103,40 +87,55 @@ namespace VotingApplication.Web.Api.Controllers
             return dateTime;
         }
 
-        private static ResultsRequestResponseModel GenerateResults(IEnumerable<Vote> votes, bool namedVoting)
+        private static ResultsRequestResponseModel GenerateResults(IEnumerable<Vote> votes, IEnumerable<Choice> choices, bool namedVoting)
         {
-            var groupedResults = (from vote in votes
-                                  group vote by vote.Choice.PollChoiceNumber into result
-                                  let optionGroupVotes = result.ToList()
-                                  select new
-                                             {
-                                                 ChoiceName = optionGroupVotes[0].Choice.Name,
-                                                 Sum = optionGroupVotes.Sum(v => v.VoteValue),
-                                                 Voters = optionGroupVotes.Select(v => CreateResultVoteModel(v, namedVoting)).ToList()
-                                             })
-                  .ToList();
+            List<Choice> pollChoices = choices.ToList();
+            List<Vote> pollVotes = votes.ToList();
 
-            if (!groupedResults.Any())
+            if (!pollChoices.Any())
             {
-                return new ResultsRequestResponseModel();
+                return new ResultsRequestResponseModel
+                {
+                    Winners = new List<string>(),
+                    Results = new List<ResultModel>()
+                };
             }
 
-            int resultsMax = groupedResults.Max(r => r.Sum);
+            var groupedResults = new List<ResultModel>();
 
-            List<string> winners = groupedResults
-                .Where(r => r.Sum == resultsMax)
-                .Select(r => r.ChoiceName)
-                .ToList();
+            foreach (Choice choice in pollChoices)
+            {
+                IEnumerable<Vote> choiceVotes = pollVotes.Where(v => v.Choice.Id == choice.Id);
 
+                var result = new ResultModel();
+                result.ChoiceName = choice.Name;
+                result.ChoiceNumber = choice.PollChoiceNumber;
+                result.Voters = choiceVotes.Select(v => CreateResultVoteModel(v, namedVoting)).ToList();
+                result.Sum = choiceVotes.Sum(v => v.VoteValue);
 
-            List<ResultModel> resultModels = groupedResults
-                .Select(r => ResultToModel(r.ChoiceName, r.Sum, r.Voters))
-                .ToList();
+                groupedResults.Add(result);
+            }
+
+            int? resultsMax = groupedResults.Max(r => r.Sum);
+
+            List<string> winners;
+
+            if (resultsMax.HasValue && resultsMax > 0)
+            {
+                winners = groupedResults
+                            .Where(r => r.Sum == resultsMax)
+                            .Select(r => r.ChoiceName)
+                            .ToList();
+            }
+            else
+            {
+                winners = new List<string>();
+            }
 
             return new ResultsRequestResponseModel
             {
                 Winners = winners,
-                Results = resultModels
+                Results = groupedResults
             };
         }
 
@@ -154,16 +153,6 @@ namespace VotingApplication.Web.Api.Controllers
             }
 
             return resultVoteModel;
-        }
-
-        private static ResultModel ResultToModel(string choiceName, int sum, List<ResultVoteModel> voters)
-        {
-            return new ResultModel
-            {
-                ChoiceName = choiceName,
-                Sum = sum,
-                Voters = voters
-            };
         }
     }
 }

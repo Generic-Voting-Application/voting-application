@@ -64,16 +64,17 @@
       <HintPath>$(SolutionDir)packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Moq, Version=4.2.1502.911, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)packages\Moq.4.2.1502.0911\lib\net40\Moq.dll</HintPath>
+    <Reference Include="Moq, Version=4.2.1507.118, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>$(SolutionDir)packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Protractor">
-      <HintPath>$(SolutionDir)packages\Protractor.0.5.0\lib\net40\Protractor.dll</HintPath>
+    <Reference Include="Protractor, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Protractor.0.6.0\lib\net40\Protractor.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -89,8 +90,9 @@
       <HintPath>$(SolutionDir)packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="WebDriver">
-      <HintPath>$(SolutionDir)packages\Selenium.WebDriver.2.45.0\lib\net40\WebDriver.dll</HintPath>
+    <Reference Include="WebDriver, Version=2.46.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Selenium.WebDriver.2.46.0\lib\net40\WebDriver.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -165,23 +167,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\Controllers\AccountLoginControllerTests.js" />
-    <Content Include="Scripts\Controllers\AccountRegisterControllerTests.js" />
-    <Content Include="Scripts\Controllers\BasicVoteControllerTests.js" />
-    <Content Include="Scripts\Controllers\ResultsPageControllerTests.js" />
     <Content Include="Scripts\Controllers\ManageExpiryControllerTests.js" />
     <Content Include="Scripts\Controllers\ManageInviteesControllerTests.js" />
     <Content Include="Scripts\Controllers\ManageMiscControllerTests.js" />
     <Content Include="Scripts\Controllers\ManagePageControllerTests.js" />
     <Content Include="Scripts\Controllers\ManagePollTypeControllerTests.js" />
-    <Content Include="Scripts\Controllers\MultiVoteControllerTests.js" />
-    <Content Include="Scripts\Controllers\PointsVoteControllerTests.js" />
     <Content Include="Scripts\Controllers\MyPollsControllerTests.js" />
-    <Content Include="Scripts\Controllers\CreatePageControllerTests.js" />
-    <Content Include="Scripts\Controllers\UpDownVoteControllerTests.js" />
-    <Content Include="Scripts\Controllers\VotingPageControllerTests.js" />
     <Content Include="Scripts\Services\AccountServiceTests.js" />
-    <Content Include="Scripts\Controllers\HomepageControllerTests.js" />
     <Content Include="Scripts\Lib\angular-mocks.js" />
     <Content Include="Scripts\Services\ManageServiceTests.js" />
     <Content Include="Scripts\Controllers\ManageOptionControllerTests.js" />

@@ -1,0 +1,85 @@
+﻿<div class="vo-dp-picker" layout-fill>
+    <md-whiteframe class="md-whiteframe-z1" layout="column">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 ng-if="ngModel">
+                    <span hide-sm>{{formatModelDate('LLLL')}}</span>
+                    <span hide-gt-sm>{{formatModelDate('lll')}}</span>
+                </h2>
+                <h2 ng-if="!ngModel">
+                    <span>Never (Continuous poll)</span>
+                </h2>
+            </div>
+        </md-toolbar>
+        <md-content class="vo-dp-content" ng-class="{'vo-dp-disabled' : ngDisabled}" layout-gt-md="row" layout="column" layout-align="space-around center">
+            <md-content flex-lg="50" flex-gt-lg="30" class="vo-dp-calendar" layout-padded>
+                <div layout="column">
+                    <div class="vo-dp-calendar-month vo-dp-centered-text">
+                        <h3 class="md-title">
+                            <md-button ng-click="advanceDisplayDate(-1)" aria-label="back one month"><md-icon md-font-icon="fa-chevron-left" class="fa icon-padded-top" alt="chevron-left"></md-icon></md-button>
+                            {{displayMonth}}
+                            <md-button ng-click="advanceDisplayDate(1)" aria-label="foward one month"><md-icon md-font-icon="fa-chevron-right" class="fa icon-padded-top" alt="chevron-left"></md-icon></md-button>
+                        </h3>
+                    </div>
+                    <div layout="row">
+                        <div ng-repeat="weekday in weekdays" class="vo-dp-calendar-cell">
+                            <div class="vo-dp-calendar-cell-content">{{weekday}}</div>
+                        </div>
+                    </div>
+                    <div layout="column">
+                        <div layout="row" ng-repeat="row in calendarRows">
+                            <md-content ng-repeat="dateCell in row"
+                                        ng-class="{'inert' : !dateCell.inMonth, 'selected' : dateCell.selected}"
+                                        ng-click="selectDate(dateCell.date)"
+                                        ng-style="dateCell.selected ? {'background-color' : themeAccentColor, color : themeAccountColorContrast} : hoverStyle"
+                                        ng-mouseover="hoverStyle={'background-color' : themeAccentColor, color : themeAccountColorContrast}"
+                                        ng-mouseleave="hoverStyle={}"
+                                        class="vo-dp-calendar-cell date-cell"
+                                        md-ink-ripple="#FFF">
+                                <div class="vo-dp-calendar-cell-content">
+                                    {{dateCell.dayOfMonth}}
+                                </div>
+                            </md-content>
+                        </div>
+                    </div>
+                </div>
+            </md-content>
+            <md-content flex-lg="50" flex-gt-lg="30" layout="row" layout-align="center center">
+                <div layout="column">
+                    <div>
+                        <md-button ng-click="advanceHour(1)" aria-label=" increase hour">
+                            <md-icon md-font-icon="fa-chevron-up" class="fa icon-padded-top" alt="chevron-up"></md-icon>
+                        </md-button>
+                    </div>
+                    <div><div class="md-display-3 vo-dp-centered-text">{{ hours | leadingZeroFilter}}</div></div>
+                    <div>
+                        <md-button ng-click="advanceHour(-1)" aria-label=" decrease hour">
+                            <md-icon md-font-icon="fa-chevron-down" class="fa icon-padded-top" alt="chevron-down"></md-icon>
+                        </md-button>
+                    </div>
+                </div>
+                <div layout="column">
+                    <div>
+                        <md-button ng-click="advanceMinute(5)" aria-label="increase minute">
+                            <md-icon md-font-icon="fa-chevron-up" class="fa icon-padded-top" alt="chevron-up"></md-icon>
+                        </md-button>
+                    </div>
+                    <div><div class="md-display-3 vo-dp-centered-text">{{ minutes | leadingZeroFilter}}</div></div>
+                    <div>
+                        <md-button ng-click="advanceMinute(-5)" aria-label="decrease minute">
+                            <md-icon md-font-icon=" fa-chevron-down" class="fa icon-padded-top" alt="chevron-down"></md-icon>
+                        </md-button>
+                    </div>
+                </div>
+            </md-content>
+        </md-content>
+        <md-toolbar>
+            <div class="md-toolbar-tools" layout="row" layout-align="end center">
+                <h2>
+                    <span><md-button ng-click="selectNever()">Never</md-button></span>
+                    <span><md-button ng-click="selectNow()">Now</md-button></span>
+                </h2>
+            </div>
+        </md-toolbar>
+    </md-whiteframe>
+</div>

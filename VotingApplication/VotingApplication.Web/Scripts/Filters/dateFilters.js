@@ -10,3 +10,19 @@
             };
         });
 })();
+
+(function () {
+    'use strict';
+
+    angular
+        .module('VoteOn-Common')
+        .filter('dateFilter', function () {
+            return function (utcInput, format) {
+                var utcDateTime = moment.utc(utcInput);
+                if (!utcDateTime.isValid()){
+                    return 'Never';
+                }
+                return utcDateTime.local().format(format);
+            };
+        });
+})();

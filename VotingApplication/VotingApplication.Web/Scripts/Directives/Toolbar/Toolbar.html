@@ -1,0 +1,71 @@
+﻿<md-toolbar>
+    <div class="md-toolbar-tools">
+        <h1 class="md-display-1">
+            <span>
+                <a href="{{getHomePageUrl()}}">Vote On</a>
+            </span>
+        </h1>
+        <span flex></span>
+
+        <div ng-hide="isLoggedIn">
+            <div hide-gt-sm>
+                <md-menu md-position-mode="target-right target">
+                    <md-button class="md-icon-button" ng-click="$mdOpenMenu()" aria-label="Open menu">
+                        <md-icon md-font-icon="fa-bars fa-2x" class="fa"></md-icon>
+                    </md-button>
+                    <md-menu-content width="2">
+                        <md-menu-item>
+                            <md-button ng-click="login()">
+                                <md-icon md-font-icon="fa-sign-in" class="fa fa-lg" md-menu-align-target></md-icon>
+                                Log in
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="register()">
+                                <md-icon md-font-icon="fa-user" class="fa fa-lg" md-menu-align-target></md-icon>
+                                Register
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+
+            <div hide-sm>
+                <md-button ng-click="login()">Log in</md-button>
+                <md-button ng-click="register()">Register</md-button>
+            </div>
+
+        </div>
+
+        <div ng-show="isLoggedIn">
+            <div hide-gt-sm>
+                <md-menu md-position-mode="target-right target">
+                    <md-button class="md-icon-button" ng-click="$mdOpenMenu()" aria-label="Open menu">
+                        <md-icon md-font-icon="fa-bars fa-2x" class="fa"></md-icon>
+                    </md-button>
+                    <md-menu-content width="2">
+                        <md-menu-item>
+                            <md-button ng-click="myPolls()">
+                                <md-icon md-font-icon="fa-user" class="fa fa-lg" md-menu-align-target></md-icon>
+                                My polls
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="logout()">
+                                <md-icon md-font-icon="fa-sign-out" class="fa fa-lg" md-menu-align-target></md-icon>
+                                Log out
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+
+            <div hide-sm>
+                <md-button ng-click="myPolls()">My polls</md-button>
+                <md-button ng-click="logout()">Log out</md-button>
+            </div>
+
+        </div>
+
+    </div>
+</md-toolbar>

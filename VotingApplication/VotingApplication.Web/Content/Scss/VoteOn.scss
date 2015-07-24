@@ -1,0 +1,36 @@
+﻿$White: #FFFFFF;
+$Black: #000000;
+$Red500: #F44336;
+$Red900: #B71C1C;
+$Amber500: #FFC107;
+$Amber900: #FF6F00;
+$indigo500: #3F51B5;
+
+$WarnMedium: $Amber500;
+$WarnDark: $Amber900;
+$ErrorMedium: $Red500;
+$ErrorDark: $Red900;
+
+// Errors and Warnings
+.vo-warn-text {
+    color: $WarnMedium !important;
+}
+
+.vo-error-text {
+    color: $ErrorMedium !important;
+}
+
+.vo-warn-shaded {
+    background-color: $WarnMedium !important;
+}
+
+.vo-error-shaded {
+    color: $White !important;
+    background-color: $ErrorMedium !important;
+}
+
+// Question Step
+
+.vo-button-margin-top {
+    margin-top: 12px !important;
+}
