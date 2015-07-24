@@ -12,7 +12,7 @@
                     {{voter.Name ? voter.Name : 'Anonymous User'}}
                 </p>
                 <p>
-                    {{voter.Value}} {{voter.Value === 1 ? 'Vote' : 'Votes'}}
+                    {{voter.Value}} {{voter.Value === 1 ? voteTypeName : voteTypeName + 's'}}
                 </p>
             </md-list-item>
         </div>
