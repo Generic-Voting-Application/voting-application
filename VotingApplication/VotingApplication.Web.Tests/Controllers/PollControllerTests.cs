@@ -260,7 +260,6 @@ namespace VotingApplication.Web.Tests.Controllers
 
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    ElectionMode = false,
                     InviteOnly = false
                 };
 
@@ -282,7 +281,6 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 Assert.IsFalse(response.NamedVoting);
                 Assert.IsFalse(response.ChoiceAdding);
-                Assert.IsFalse(response.ElectionMode);
                 Assert.IsFalse(response.UserHasVoted);
             }
 
@@ -440,7 +438,6 @@ namespace VotingApplication.Web.Tests.Controllers
 
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    ElectionMode = false,
                     InviteOnly = true
                 };
                 poll.Ballots.Add(ballot);
@@ -467,7 +464,6 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 Assert.IsFalse(response.NamedVoting);
                 Assert.IsFalse(response.ChoiceAdding);
-                Assert.IsFalse(response.ElectionMode);
                 Assert.IsFalse(response.UserHasVoted);
             }
 
@@ -489,7 +485,6 @@ namespace VotingApplication.Web.Tests.Controllers
 
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    ElectionMode = false,
                     InviteOnly = true
                 };
                 poll.Ballots.Add(ballot);

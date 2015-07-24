@@ -1,13 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using Protractor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using VotingApplication.Data.Model;
 using VotingApplication.Web.Tests.E2E.Helpers;
-using VotingApplication.Web.Tests.E2E.Helpers.Clearers;
 
 namespace VotingApplication.Web.Tests.E2E
 {
@@ -270,7 +268,6 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = false,
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    ElectionMode = false,
                     MaxPerVote = 3,
                     MaxPoints = 4
                 };
@@ -360,7 +357,6 @@ namespace VotingApplication.Web.Tests.E2E
                     InviteOnly = true,
                     NamedVoting = false,
                     ChoiceAdding = false,
-                    ElectionMode = false,
                     MaxPerVote = 3,
                     MaxPoints = 4,
 
@@ -527,8 +523,7 @@ namespace VotingApplication.Web.Tests.E2E
                     Choices = testPollChoices,
                     InviteOnly = false,
                     NamedVoting = true,
-                    ChoiceAdding = false,
-                    ElectionMode = false
+                    ChoiceAdding = false
                 };
 
                 testContext.Polls.Add(namedVotersPoll);
@@ -638,89 +633,13 @@ namespace VotingApplication.Web.Tests.E2E
                     Choices = testPollChoices,
                     InviteOnly = false,
                     NamedVoting = false,
-                    ChoiceAdding = true,
-                    ElectionMode = false
+                    ChoiceAdding = true
                 };
 
                 testContext.Polls.Add(choiceAddingPointsPoll);
                 testContext.SaveChanges();
 
                 return choiceAddingPointsPoll;
-            }
-        }
-
-        [TestClass]
-        public class ElectionModeConfiguration
-        {
-            private static ITestVotingContext _context;
-            private static Poll _electionModePointsPoll;
-            private static readonly Guid PollGuid = Guid.NewGuid();
-            private static readonly string PollUrl = SiteBaseUri + "Poll/#/Vote/" + PollGuid;
-            private IWebDriver _driver;
-
-            [ClassInitialize]
-            public static void ClassInitialise(TestContext testContext)
-            {
-                _context = new TestVotingContext();
-
-                List<Choice> testPollChoices = new List<Choice>() {
-                new Choice(){ Name = "Test Choice 1", Description = "Test Description 1" },
-                new Choice(){ Name = "Test Choice 2", 
-                              Description = "A very long test description 2 that should exceed the character limit for descriptions" }};
-
-                // Open, Anonymous, No Choice Adding, Shown Results
-                _electionModePointsPoll = new Poll()
-                {
-                    UUID = PollGuid,
-                    PollType = PollType.Points,
-                    Name = "Test Poll",
-                    LastUpdatedUtc = DateTime.UtcNow,
-                    CreatedDateUtc = DateTime.UtcNow,
-                    Choices = testPollChoices,
-                    InviteOnly = false,
-                    NamedVoting = false,
-                    ChoiceAdding = false,
-                    ElectionMode = true,
-                    MaxPerVote = 3,
-                    MaxPoints = 4
-                };
-
-                _context.Polls.Add(_electionModePointsPoll);
-                _context.SaveChanges();
-            }
-
-            [ClassCleanup]
-            public static void ClassCleanup()
-            {
-                PollClearer pollTearDown = new PollClearer(_context);
-                pollTearDown.ClearPoll(_electionModePointsPoll);
-
-                _context.Dispose();
-            }
-
-            [TestInitialize]
-            public virtual void TestInitialise()
-            {
-                _driver = new NgWebDriver(new ChromeDriver(ChromeDriverDir));
-                _driver.Manage().Timeouts().SetScriptTimeout(TimeSpan.FromSeconds(10));
-                _driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(10));
-            }
-
-            [TestCleanup]
-            public void TestCleanUp()
-            {
-                _driver.Dispose();
-            }
-
-            [Ignore]
-            [TestMethod]
-            [TestCategory("E2E")]
-            public void ElectionModePoll_DoesNotShowResultsButton()
-            {
-                _driver.Navigate().GoToUrl(PollUrl);
-                IWebElement resultButton = _driver.FindElement(By.Id("results-button"));
-
-                Assert.IsFalse(resultButton.IsVisible());
             }
         }
     }

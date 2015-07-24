@@ -97,7 +97,6 @@ namespace VotingApplication.Web.Api.Controllers
 
                 NamedVoting = poll.NamedVoting,
                 ChoiceAdding = poll.ChoiceAdding,
-                ElectionMode = poll.ElectionMode,
 
                 UserHasVoted = ballot.HasVoted
             };
@@ -217,7 +216,6 @@ namespace VotingApplication.Web.Api.Controllers
                 newPoll.ChoiceAdding = pollCreationRequest.ChoiceAdding;
                 newPoll.PollType = (PollType)Enum.Parse(typeof(PollType), pollCreationRequest.PollType);
                 newPoll.NamedVoting = pollCreationRequest.NamedVoting;
-                newPoll.ElectionMode = pollCreationRequest.ElectionMode;
                 newPoll.ExpiryDateUtc = pollCreationRequest.ExpiryDateUtc;
                 newPoll.InviteOnly = pollCreationRequest.InviteOnly;
                 newPoll.MaxPerVote = pollCreationRequest.MaxPerVote;
