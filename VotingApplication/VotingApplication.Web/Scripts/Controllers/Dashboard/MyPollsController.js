@@ -14,6 +14,7 @@
 
         $scope.navigateToPoll = navigateToPoll;
         $scope.navigateToResults = navigateToResults;
+        $scope.navigateToHomePage = navigateToHomePage;
 
         activate();
 
@@ -31,6 +32,10 @@
 
         function navigateToResults(UUID) {
             RoutingService.navigateToResultsPage(UUID);
+        }
+
+        function navigateToHomePage() {
+            RoutingService.navigateToHomePage();
         }
     }
 })();
