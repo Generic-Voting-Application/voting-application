@@ -6,9 +6,9 @@
         .module('VoteOn-Login')
         .controller('ResetPasswordController', ResetPasswordController);
 
-    ResetPasswordController.$inject = ['$scope', '$location', 'AccountService', 'RoutingService'];
+    ResetPasswordController.$inject = ['$scope', '$location', 'AccountService', 'RoutingService', 'ErrorService'];
 
-    function ResetPasswordController($scope, $location, AccountService, RoutingService) {
+    function ResetPasswordController($scope, $location, AccountService, RoutingService, ErrorService) {
 
         $scope.user = {
             password: null
@@ -30,6 +30,9 @@
                 AccountService.resetPassword(email, userPassword, resetToken)
                 .then(function () {
                     RoutingService.navigateToHomePage();
+                })
+                .catch(function (response) {
+                    ErrorService.handlePasswordResetError(response);
                 })
                 .finally(function () {
                     $scope.sending = false;

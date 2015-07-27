@@ -17,7 +17,8 @@
             handleVotingError: handleVotingError,
             handleResultsError: handleResultsError,
             handleRegistrationError: handleRegistrationError,
-            HandleNotLoggedInError: HandleNotLoggedInError
+            handleNotLoggedInError: handleNotLoggedInError,
+            handlePasswordResetError: handlePasswordResetError
         };
 
         return service;
@@ -91,8 +92,18 @@
 
         }
 
-        function HandleNotLoggedInError() {
+        function handleNotLoggedInError() {
             ErrorRoutingService.navigateToNotLoggedIn();
+        }
+
+        function handlePasswordResetError(response) {
+            if (response) {
+                if (response.data && response.data.ModelState) {
+                    displayToast(response.data.ModelState[''][0]);
+                }
+            } else {
+                displayGenericErrorPage();
+            }
         }
 
         function displayToast(content) {
