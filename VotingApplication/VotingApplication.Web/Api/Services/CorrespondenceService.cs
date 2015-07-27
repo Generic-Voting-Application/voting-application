@@ -13,6 +13,7 @@ namespace VotingApplication.Web.Api.Services
         private IMailSender _mailSender;
         private string _invitationTemplate = HtmlFromFile("VotingApplication.Web.Api.Resources.InvitationEmailTemplate.html");
         private string _confirmationTemplate = HtmlFromFile("VotingApplication.Web.Api.Resources.ConfirmEmailTemplate.html");
+        private string _passwordResetTemplate = HtmlFromFile("VotingApplication.Web.Api.Resources.PasswordResetTemplate.html");
 
         public CorrespondenceService(IMailSender mailSender)
         {
@@ -80,6 +81,32 @@ namespace VotingApplication.Web.Api.Services
             htmlMessage = htmlMessage.Replace("__CONFIRMURI__", confirmUri);
 
             _mailSender.SendMail(email, "Confirm your Email", htmlMessage);
+        }
+
+        public void SendPasswordReset(string email, string resetToken)
+        {
+            string hostUri = WebConfigurationManager.AppSettings["HostURI"];
+            if (String.IsNullOrWhiteSpace(hostUri))
+            {
+                return;
+            }
+
+            var resetUrl = new StringBuilder();
+            resetUrl.Append(hostUri);
+            resetUrl.Append("/Login/#/ResetPassword");
+            resetUrl.Append("?email=");
+            resetUrl.Append(HttpUtility.UrlEncode(email));
+            resetUrl.Append("&code=");
+            resetUrl.Append(HttpUtility.UrlEncode(resetToken));
+
+            string resetUri = resetUrl.ToString();
+
+            string htmlMessage = (string)_passwordResetTemplate;
+
+            htmlMessage = htmlMessage.Replace("__HOSTURI__", hostUri);
+            htmlMessage = htmlMessage.Replace("__RESETURI__", resetUri);
+
+            _mailSender.SendMail(email, "Password Reset", htmlMessage);
         }
     }
 }

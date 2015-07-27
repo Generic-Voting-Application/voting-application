@@ -60,6 +60,7 @@
             register: register,
             resendConfirmation: resendConfirmation,
             forgotPassword: forgotPassword,
+            resetPassword: resetPassword,
             logout: logout
         };
 
@@ -142,6 +143,19 @@
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify({
                     Email: email
+                })
+            });
+        }
+
+        function resetPassword(email, password, resetToken) {
+            return $http({
+                method: 'POST',
+                url: '/api/Account/ResetPassword',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({
+                    Email: email,
+                    Password: password,
+                    Code: resetToken
                 })
             });
         }
