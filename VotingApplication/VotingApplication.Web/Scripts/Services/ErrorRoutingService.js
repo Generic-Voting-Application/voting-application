@@ -14,8 +14,9 @@
 
             navigateToEmailNotConfirmedPage: navigateToEmailNotConfirmedPage,
             navigateToPollInviteOnlyPage: navigateToPollInviteOnlyPage,
-            navigateToPollNotFound: navigateToPollNotFound,
-            navigateToNotLoggedIn: navigateToNotLoggedIn
+            navigateToNotFound: navigateToNotFound,
+            navigateToNotLoggedIn: navigateToNotLoggedIn,
+            navigateToGenericErrorPage: navigateToGenericErrorPage
 
         };
 
@@ -35,12 +36,16 @@
             $location.path(pollId + '/InviteOnly').replace();
         }
 
-        function navigateToPollNotFound() {
-            $location.path('/404').replace();
+        function navigateToNotFound() {
+            $window.location.replace('/Shared/#/404');
         }
 
         function navigateToNotLoggedIn() {
             $window.location.href = '/Dashboard/#/NotLoggedIn/';
+        }
+
+        function navigateToGenericErrorPage() {
+            $window.location.replace('/Shared/#/GenericError');
         }
     }
 })();

@@ -325,6 +325,7 @@
     <Compile Include="Controllers\CreateController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SharedController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Controllers\RoutesController.cs" />
     <Compile Include="Controllers\PollController.cs" />
@@ -429,6 +430,7 @@
     <Content Include="Scripts\Modules\Account\VoteOn-Account.js" />
     <Content Include="Scripts\Modules\Account\VoteOn-Login.js" />
     <Content Include="Scripts\Modules\Account\VoteOn-Register.js" />
+    <Content Include="Scripts\Modules\Common\VoteOn-Error.js" />
     <Content Include="Scripts\Modules\Dashboard\VoteOn-Dashboard.js" />
     <Content Include="Scripts\Modules\Old\GVA-Common.js" />
     <Content Include="Scripts\Modules\Old\GVA-Manage.js" />
@@ -458,6 +460,7 @@
     <Content Include="Scripts\Services\TokenService.js" />
     <Content Include="Scripts\Modules\Old\GVA-Voting.js" />
     <Content Include="Scripts\Services\VoteService.js" />
+    <Content Include="Static\Images\tbservers.png" />
     <Content Include="Static\Lib\ZeroClipboard.swf" />
     <Content Include="Static\Images\404.png" />
     <Content Include="Views\Manage\Index.cshtml" />
@@ -507,11 +510,13 @@
     <Content Include="Scripts\Dialogs\AddUserChoiceDialog\AddUserChoiceDialog.html" />
     <Content Include="Views\Login\EmailNotConfirmed.cshtml" />
     <Content Include="Views\Poll\InviteOnly.cshtml" />
-    <Content Include="Views\Poll\PollNotFound.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Dashboard\MyPolls.cshtml" />
     <Content Include="Views\Dashboard\NotLoggedIn.cshtml" />
     <Content Include="Views\Login\PasswordReset.cshtml" />
+    <Content Include="Views\Shared\NotFound.cshtml" />
+    <Content Include="Views\Shared\Index.cshtml" />
+    <Content Include="Views\Shared\GenericError.cshtml" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

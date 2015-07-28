@@ -58,7 +58,7 @@
         function handleVotingError(response, pollId) {
 
             if (response.status === 404) {
-                ErrorRoutingService.navigateToPollNotFound();
+                ErrorRoutingService.navigateToNotFound();
             }
             else if (response.status === 401) {
                 ErrorRoutingService.navigateToPollInviteOnlyPage(pollId);
@@ -71,7 +71,7 @@
         function handleResultsError(response, pollId) {
 
             if (response.status === 404) {
-                ErrorRoutingService.navigateToPollNotFound();
+                ErrorRoutingService.navigateToNotFound();
             }
             else if (response.status === 401) {
                 ErrorRoutingService.navigateToPollInviteOnlyPage(pollId);
@@ -124,7 +124,7 @@
         }
 
         function displayGenericErrorPage() {
-            ErrorRoutingService.navigateToHomePage();
+            ErrorRoutingService.navigateToGenericErrorPage();
         }
     }
 })();
