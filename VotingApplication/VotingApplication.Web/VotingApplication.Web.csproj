@@ -325,6 +325,7 @@
     <Compile Include="Controllers\CreateController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SharedController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Controllers\RoutesController.cs" />
     <Compile Include="Controllers\PollController.cs" />
@@ -349,6 +350,7 @@
     <None Include="ClearScript.V8\v8-x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="Api\Resources\PasswordResetTemplate.html" />
     <Content Include="Content\Lib\Css\angular-material-min.css" />
     <Content Include="Content\Lib\Css\angular-toggle-switch.css" />
     <Content Include="Content\Lib\Css\font-awesome-min.css" />
@@ -362,6 +364,7 @@
     <Content Include="Images\Logo.png" />
     <Content Include="Scripts\Controllers\Account\Login\ForgottenPasswordController.js" />
     <Content Include="Scripts\Controllers\Account\Login\LoginController.js" />
+    <Content Include="Scripts\Controllers\Account\Login\ResetPasswordController.js" />
     <Content Include="Scripts\Controllers\Account\Register\RegisterController.js" />
     <Content Include="Scripts\Controllers\Account\SendConfirmationEmailController.js" />
     <Content Include="Scripts\Controllers\Create\CreateController.js" />
@@ -427,10 +430,11 @@
     <Content Include="Scripts\Modules\Account\VoteOn-Account.js" />
     <Content Include="Scripts\Modules\Account\VoteOn-Login.js" />
     <Content Include="Scripts\Modules\Account\VoteOn-Register.js" />
+    <Content Include="Scripts\Modules\Common\VoteOn-Error.js" />
     <Content Include="Scripts\Modules\Dashboard\VoteOn-Dashboard.js" />
-    <Content Include="Scripts\Modules\GVA-Common.js" />
-    <Content Include="Scripts\Modules\GVA-Manage.js" />
-    <Content Include="Scripts\Modules\GVA-Poll.js" />
+    <Content Include="Scripts\Modules\Old\GVA-Common.js" />
+    <Content Include="Scripts\Modules\Old\GVA-Manage.js" />
+    <Content Include="Scripts\Modules\Old\GVA-Poll.js" />
     <Content Include="Scripts\Lib\angular.min.js" />
     <Content Include="Scripts\Lib\angular-route.min.js" />
     <Content Include="Scripts\Lib\angular-toggle-switch.min.js" />
@@ -439,10 +443,10 @@
     <Content Include="Scripts\Modules\Poll\VoteOn-Results.js" />
     <Content Include="Scripts\Modules\Poll\VoteOn-Vote.js" />
     <Content Include="Scripts\Modules\Poll\VoteOn-Poll.js" />
-    <Content Include="Scripts\Modules\VoteOn-Common.js" />
-    <Content Include="Scripts\Modules\VoteOn-Components.js" />
+    <Content Include="Scripts\Modules\Common\VoteOn-Common.js" />
+    <Content Include="Scripts\Modules\Common\VoteOn-Components.js" />
     <Content Include="Scripts\Modules\Create\VoteOn-Create.js" />
-    <Content Include="Scripts\Modules\VoteOn-Signaling.js" />
+    <Content Include="Scripts\Modules\Common\VoteOn-Signaling.js" />
     <Content Include="Scripts\Services\AccountService.js" />
     <Content Include="Scripts\Services\CreateService.js" />
     <Content Include="Scripts\Services\ErrorService.js" />
@@ -454,8 +458,9 @@
     <Content Include="Scripts\Services\RoutingService.js" />
     <Content Include="Scripts\Services\SignalService.js" />
     <Content Include="Scripts\Services\TokenService.js" />
-    <Content Include="Scripts\Modules\GVA-Voting.js" />
+    <Content Include="Scripts\Modules\Old\GVA-Voting.js" />
     <Content Include="Scripts\Services\VoteService.js" />
+    <Content Include="Static\Images\tbservers.png" />
     <Content Include="Static\Lib\ZeroClipboard.swf" />
     <Content Include="Static\Images\404.png" />
     <Content Include="Views\Manage\Index.cshtml" />
@@ -505,10 +510,13 @@
     <Content Include="Scripts\Dialogs\AddUserChoiceDialog\AddUserChoiceDialog.html" />
     <Content Include="Views\Login\EmailNotConfirmed.cshtml" />
     <Content Include="Views\Poll\InviteOnly.cshtml" />
-    <Content Include="Views\Poll\PollNotFound.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Dashboard\MyPolls.cshtml" />
     <Content Include="Views\Dashboard\NotLoggedIn.cshtml" />
+    <Content Include="Views\Login\PasswordReset.cshtml" />
+    <Content Include="Views\Shared\NotFound.cshtml" />
+    <Content Include="Views\Shared\Index.cshtml" />
+    <Content Include="Views\Shared\GenericError.cshtml" />
     <None Include="Web.Appveyor.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

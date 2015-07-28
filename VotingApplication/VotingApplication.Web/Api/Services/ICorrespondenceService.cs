@@ -7,5 +7,6 @@ namespace VotingApplication.Web.Api.Services
     {
         void SendInvitation(Guid UUID, Ballot ballot, string pollQuestion);
         void SendConfirmation(string email, string authenticationToken);
+        void SendPasswordReset(string email, string resetToken);
     }
 }

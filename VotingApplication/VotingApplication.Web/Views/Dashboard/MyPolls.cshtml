@@ -12,7 +12,6 @@
             <div ng-show="!polls || polls.length === 0 && loaded" layout layout-align="center center">
                 You haven't created any polls using this account.
             </div>
-
             <md-list ng-show="loaded">
                 <md-list-item ng-repeat="poll in polls" class="md-3-line" ng-switch="poll.PollType" ng-click="navigateToPoll(poll.UUID)">
                     <md-icon ng-switch-when="Basic" md-font-icon="fa-check" class="fa fa-2x" alt="check"></md-icon>
@@ -28,6 +27,13 @@
                     <md-divider ng-if="$index !== (polls.length-1)"></md-divider>
                 </md-list-item>
             </md-list>
+            <div>
+                <div layout="row">
+                    <md-button class="md-primary md-raised" ng-click="navigateToHomePage()">
+                        New Poll
+                    </md-button>
+                </div>
+            </div>
         </md-content>
 
     </div>

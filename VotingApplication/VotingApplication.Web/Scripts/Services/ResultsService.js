@@ -60,7 +60,7 @@
             }
 
             var sortedResults = results.sort(function (a, b) {
-                return a.Sum < b.Sum;
+                return b.Sum - a.Sum;
             });
 
             var table = [];

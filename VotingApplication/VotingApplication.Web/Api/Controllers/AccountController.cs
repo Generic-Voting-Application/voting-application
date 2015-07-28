@@ -209,9 +209,7 @@ namespace VotingApplication.Web.Api.Controllers
 
             string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
 
-            var callbackUrl = Url.Content("~/#/Account/ResetPassword?email=") + HttpUtility.UrlEncode(user.Email) + "&code=" + HttpUtility.UrlEncode(code);
-
-            await UserManager.SendEmailAsync(user.Id, "Password Reset", "We heard you lost your password. You can <a href=\"" + callbackUrl + "\">reset your password</a> to get polling again.");
+            _correspondenceService.SendPasswordReset(user.Email, code);
 
             return Ok();
         }

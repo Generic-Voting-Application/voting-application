@@ -179,7 +179,6 @@
             poll.ChoiceAdding = $scope.newPoll.ChoiceAdding;
             poll.PollType = $scope.newPoll.PollType;
             poll.NamedVoting = $scope.newPoll.NamedVoting;
-            poll.ElectionMode = $scope.newPoll.ElectionMode;
             poll.ExpiryDateUtc = getPollExpiryUtc();
             poll.Invitations = getValidInvitees();
             poll.InviteOnly = $scope.newPoll.InviteOnly;

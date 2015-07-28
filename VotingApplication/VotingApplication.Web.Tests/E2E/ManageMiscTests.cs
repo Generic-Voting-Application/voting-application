@@ -44,7 +44,6 @@ namespace VotingApplication.Web.Tests.E2E
                 InviteOnly = false,
                 NamedVoting = false,
                 ChoiceAdding = false,
-                ElectionMode = false,
                 MaxPerVote = 3,
                 MaxPoints = 4
             };
@@ -107,12 +106,10 @@ namespace VotingApplication.Web.Tests.E2E
             IWebElement inviteOnlySwitch = _driver.FindElement(By.Id("InviteOnly"));
             IWebElement namedVotingSwitch = _driver.FindElement(By.Id("NamedVoting"));
             IWebElement choiceAddingSwitch = _driver.FindElement(By.Id("ChoiceAdding"));
-            IWebElement electionModeSwitch = _driver.FindElement(By.Id("ElectionMode"));
 
             inviteOnlySwitch.Click();
             namedVotingSwitch.Click();
             choiceAddingSwitch.Click();
-            electionModeSwitch.Click();
 
             IWebElement saveButton = _driver.FindElement(By.Id("save-button"));
 
@@ -126,7 +123,6 @@ namespace VotingApplication.Web.Tests.E2E
             Assert.IsTrue(dbPoll.InviteOnly);
             Assert.IsTrue(dbPoll.NamedVoting);
             Assert.IsTrue(dbPoll.ChoiceAdding);
-            Assert.IsTrue(dbPoll.ElectionMode);
         }
     }
 }

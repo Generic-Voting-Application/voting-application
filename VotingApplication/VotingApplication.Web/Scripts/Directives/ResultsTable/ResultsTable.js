@@ -29,6 +29,7 @@
             link : link,
             scope: {
                 resultBreakdown: '=',
+                voteTypeName: '='
             },
             templateUrl: '/Scripts/Directives/ResultsTable/ResultsTable.html'
         };

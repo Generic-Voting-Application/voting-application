@@ -172,6 +172,14 @@
     <Compile Include="Migrations\201506170950583_AddHasVoted.Designer.cs">
       <DependentUpon>201506170950583_AddHasVoted.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507241107258_Remove_Election_Mode.cs" />
+    <Compile Include="Migrations\201507241107258_Remove_Election_Mode.Designer.cs">
+      <DependentUpon>201507241107258_Remove_Election_Mode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507271045501_Unique_Ballot_Choice.cs" />
+    <Compile Include="Migrations\201507271045501_Unique_Ballot_Choice.Designer.cs">
+      <DependentUpon>201507271045501_Unique_Ballot_Choice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Creation\PollCreationHelper.cs" />
     <Compile Include="Model\Metric.cs" />
@@ -272,6 +280,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506170950583_AddHasVoted.resx">
       <DependentUpon>201506170950583_AddHasVoted.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507241107258_Remove_Election_Mode.resx">
+      <DependentUpon>201507241107258_Remove_Election_Mode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507271045501_Unique_Ballot_Choice.resx">
+      <DependentUpon>201507271045501_Unique_Ballot_Choice.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

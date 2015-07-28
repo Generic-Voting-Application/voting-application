@@ -3,7 +3,7 @@
         <md-list-item ng-click="toggleResult(result.ChoiceNumber)">
             <md-icon ng-if="!isToggled(result.ChoiceNumber)" md-font-icon="fa-chevron-right" class="fa" alt="chevron-right"></md-icon>
             <md-icon ng-if="isToggled(result.ChoiceNumber)" md-font-icon="fa-chevron-down" class="fa" alt="chevron-down"></md-icon>
-            <p>{{result.ChoiceName}}</p>
+            <p><strong>{{result.ChoiceName}}</strong></p>
             <md-divider></md-divider>
         </md-list-item>
         <div ng-if="isToggled(result.ChoiceNumber)">
@@ -12,7 +12,7 @@
                     {{voter.Name ? voter.Name : 'Anonymous User'}}
                 </p>
                 <p>
-                    {{voter.Value}} {{voter.Value === 1 ? 'Vote' : 'Votes'}}
+                    {{voter.Value}} {{voter.Value === 1 ? voteTypeName : voteTypeName + 's'}}
                 </p>
             </md-list-item>
         </div>
