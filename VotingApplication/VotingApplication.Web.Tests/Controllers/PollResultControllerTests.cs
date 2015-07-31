@@ -157,33 +157,6 @@ namespace VotingApplication.Web.Tests.Controllers
                 Assert.IsTrue(voters.All(v => v.Name != null));
             }
 
-            [Ignore]
-            [TestMethod]
-            [ExpectedHttpResponseException(HttpStatusCode.BadRequest)]
-            public void ElectionPoll_WithNoVotes_ThrowsBadRequest()
-            {
-
-                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
-                var poll = new Poll()
-                {
-                    UUID = PollManageGuid,
-                    ElectionMode = true
-                };
-                polls.Add(poll);
-
-                IDbSet<Choice> choices = DbSetTestHelper.CreateMockDbSet<Choice>();
-                var option1 = new Choice() { PollChoiceNumber = 1 };
-                var option2 = new Choice() { PollChoiceNumber = 2 };
-                choices.Add(option1);
-                choices.Add(option2);
-
-                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls, choices);
-
-                PollResultsController controller = CreatePollController(contextFactory);
-
-                controller.Get(PollManageGuid);
-            }
-
             [TestMethod]
             public void NamedVoting_True_WithPreviousAnonymousVotes_ReturnsAnonymousVoterForUnNamedVoters()
             {
@@ -441,22 +414,6 @@ namespace VotingApplication.Web.Tests.Controllers
 
                 PollResultsController controller = CreatePollController(contextFactory);
                 AddXTokenGuidHeader(controller, TokenGuid);
-                AddXTokenGuidHeader(controller, TokenGuid);
-
-
-                controller.Get(PollId);
-            }
-
-            [Ignore]
-            [TestMethod]
-            [ExpectedHttpResponseException(HttpStatusCode.NotFound)]
-            public void NonInviteOnly_XTokenGuidHeader_BallotNotInPoll_ThrowsNotFound()
-            {
-                IDbSet<Poll> polls = DbSetTestHelper.CreateMockDbSet<Poll>();
-                polls.Add(CreateNonInviteOnlyPoll());
-                IContextFactory contextFactory = ContextFactoryTestHelper.CreateContextFactory(polls);
-
-                PollResultsController controller = CreatePollController(contextFactory);
                 AddXTokenGuidHeader(controller, TokenGuid);
 
 

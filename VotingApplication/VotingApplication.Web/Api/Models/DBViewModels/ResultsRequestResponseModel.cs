@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace VotingApplication.Web.Api.Models.DBViewModels
 {
@@ -8,6 +9,7 @@ namespace VotingApplication.Web.Api.Models.DBViewModels
         public List<string> Winners { get; set; }
         public List<ResultModel> Results { get; set; }
         public bool NamedVoting { get; set; }
-        public bool HasExpired { get; set; }
+        public DateTime? ExpiryDateUtc { get; set; }
+        public string PollType { get; set; }
     }
 }

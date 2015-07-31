@@ -202,7 +202,7 @@
 
             if (!AccountService.account || !AccountService.account.token) {
 
-                ErrorService.HandleNotLoggedInError();
+                ErrorService.handleNotLoggedInError();
 
                 prom.reject();
                 return prom.promise;

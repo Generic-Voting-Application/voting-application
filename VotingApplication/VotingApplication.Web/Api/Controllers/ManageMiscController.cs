@@ -46,12 +46,6 @@ namespace VotingApplication.Web.Api.Controllers
                     _metricHandler.HandleChoiceAddingChangedEvent(poll.ChoiceAdding, poll.UUID);
                 }
 
-                if (poll.ElectionMode != updateRequest.ElectionMode)
-                {
-                    poll.ElectionMode = updateRequest.ElectionMode;
-                    _metricHandler.HandleElectionModeChangedEvent(poll.ElectionMode, poll.UUID);
-                }
-
                 poll.LastUpdatedUtc = DateTime.UtcNow;
 
                 context.SaveChanges();

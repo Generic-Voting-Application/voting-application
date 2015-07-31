@@ -17,6 +17,11 @@
                             return '../Login/EmailNotConfirmed';
                         }
                     })
+                    .when('/ResetPassword/', {
+                        templateUrl: function () {
+                            return '../Login/PasswordReset';
+                        }
+                    })
                     .otherwise({
                         templateUrl: function () {
                             return '../Login/Login';

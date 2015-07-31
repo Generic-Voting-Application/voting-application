@@ -7,6 +7,8 @@
 
         <md-content layout="column" ng-if="results">
 
+            <expiry-date-countdown expiry-date-utc="expiryDateUtc"></expiry-date-countdown>
+
             <md-card>
 
                 <loading-spinner loaded="loaded"></loading-spinner>
@@ -33,7 +35,7 @@
                 <loading-spinner loaded="loaded"></loading-spinner>
 
                 <md-card-content ng-cloak ng-if="loaded" flex>
-                    <div results-table result-breakdown="results" flex></div>
+                    <div results-table result-breakdown="results" vote-type-name="pollType==='Points' ? 'Point' : 'Vote'" flex></div>
                 </md-card-content>
             </md-card>
 

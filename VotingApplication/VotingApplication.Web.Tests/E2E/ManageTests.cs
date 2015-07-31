@@ -41,8 +41,7 @@ namespace VotingApplication.Web.Tests.E2E
                 Choices = new List<Choice>(),
                 InviteOnly = false,
                 NamedVoting = false,
-                ChoiceAdding = false,
-                ElectionMode = false
+                ChoiceAdding = false
             };
 
             _context.Polls.Add(_defaultPoll);
