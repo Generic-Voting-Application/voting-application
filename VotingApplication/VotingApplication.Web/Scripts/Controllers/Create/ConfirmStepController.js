@@ -39,7 +39,7 @@
         }
 
         function choicesAreValid() {
-            if (!$scope.newPoll.OptionAdding && $scope.getNonEmptyChoices().length === 0) {
+            if (!$scope.newPoll.ChoiceAdding && $scope.getNonEmptyChoices().length === 0) {
                 return false;
             }
 

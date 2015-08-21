@@ -91,7 +91,7 @@
                 MaxPerVote: null,
                 MaxPoints: null,
                 Invitations: [],
-                OptionAdding: false,
+                ChoiceAdding: false,
                 ExpiryDate: null
             };
         }
