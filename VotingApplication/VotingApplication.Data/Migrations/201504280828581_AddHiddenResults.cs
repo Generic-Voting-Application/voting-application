@@ -39,6 +39,8 @@ namespace VotingApplication.Data.Migrations
         public override void Down()
         {
             DropColumn("dbo.Polls", "HiddenResults");
+
+
         }
     }
 }
