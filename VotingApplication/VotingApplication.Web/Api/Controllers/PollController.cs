@@ -213,14 +213,16 @@ namespace VotingApplication.Web.Api.Controllers
                pollCreationRequest.Choices.Count > 0)
             {
                 newPoll.Choices = pollCreationRequest.Choices;
-                newPoll.ChoiceAdding = pollCreationRequest.ChoiceAdding;
-                newPoll.PollType = (PollType)Enum.Parse(typeof(PollType), pollCreationRequest.PollType);
-                newPoll.NamedVoting = pollCreationRequest.NamedVoting;
-                newPoll.ExpiryDateUtc = pollCreationRequest.ExpiryDateUtc;
-                newPoll.InviteOnly = pollCreationRequest.InviteOnly;
-                newPoll.MaxPerVote = pollCreationRequest.MaxPerVote;
-                newPoll.MaxPoints = pollCreationRequest.MaxPoints;
-            };
+            }
+
+            newPoll.ChoiceAdding = pollCreationRequest.ChoiceAdding;
+            newPoll.PollType = (PollType)Enum.Parse(typeof(PollType), pollCreationRequest.PollType);
+            newPoll.NamedVoting = pollCreationRequest.NamedVoting;
+            newPoll.ExpiryDateUtc = pollCreationRequest.ExpiryDateUtc;
+            newPoll.InviteOnly = pollCreationRequest.InviteOnly;
+            newPoll.MaxPerVote = pollCreationRequest.MaxPerVote;
+            newPoll.MaxPoints = pollCreationRequest.MaxPoints;
+            
 
             if (User.Identity.IsAuthenticated)
             {

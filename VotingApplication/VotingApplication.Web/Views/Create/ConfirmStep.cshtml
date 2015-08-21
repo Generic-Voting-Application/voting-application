@@ -33,10 +33,10 @@
                         <div>
                             <h3>{{getNonEmptyChoices().length}} Choices</h3>
 
-                            <p ng-if="newPoll.OptionAdding">Voters may add their own choices.</p>
-                            <p ng-if="!newPoll.OptionAdding">Voters may not add their own choices.</p>
+                            <p ng-if="newPoll.ChoiceAdding">Voters may add their own choices.</p>
+                            <p ng-if="!newPoll.ChoiceAdding">Voters may not add their own choices.</p>
 
-                            <p ng-if="!getNonEmptyChoices().length && !newPoll.OptionAdding" class="vo-warn-text">There are no choices to be voted on.</p>
+                            <p ng-if="!getNonEmptyChoices().length && !newPoll.ChoiceAdding" class="vo-warn-text">There are no choices to be voted on.</p>
                         </div>
                     </div>
                     <md-divider></md-divider>
